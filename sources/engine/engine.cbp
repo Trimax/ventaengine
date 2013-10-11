@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="engine" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="root\;root\internal\;root\external\;root\external\physics\;root\external\init\;root\external\structures\;root\external\strings\;root\external\sound\;root\external\physics\;root\external\network\;root\external\memory\;root\external\math\;root\external\graphics\;root\external\common\;root\external\database\;root\external\threads\;root\external\logger\;root\external\graphics\common\;root\external\graphics\gui\;root\external\time\;root\internal\container\;root\internal\threads\;root\internal\database\;root\internal\graphics\;root\internal\logger\;root\internal\memory\;root\internal\strings\;root\internal\structures\;root\internal\structures\linear\;root\internal\structures\linear\queue&amp;stack\;root\internal\structures\linear\array\;root\internal\structures\linear\list\;root\internal\structures\trees\;root\internal\structures\trees\BST\;root\internal\console\;root\external\console\;root\internal\graphics\text\;root\external\input\;root\internal\input\;root\internal\core\;root\internal\time\;root\internal\settings\;root\external\resources\;root\internal\resources\;root\external\graphics\textures\;root\internal\formats\;root\internal\graphics\textures\;root\internal\graphics\common\;root\internal\graphics\core\;root\internal\graphics\core\mesh\;root\internal\graphics\core\vertex\;root\external\graphics\light\;root\internal\formats\texture\;root\internal\formats\header\;root\external\graphics\object\;root\internal\graphics\object\;root\internal\graphics\core\geometry\;root\external\graphics\scenes\;root\internal\graphics\scenes\;root\internal\graphics\material\;root\internal\console\processors\;root\internal\console\common\;root\external\graphics\camera\;root\internal\graphics\camera\;root\external\math\vectors\;root\external\math\matrices\;root\external\math\complex\;root\external\math\quaternions\;root\external\fs\;root\internal\fs\;root\internal\graphics\light\;root\external\graphics\terrain\;root\internal\graphics\terrain\;root\internal\structures\trees\QUAD\;root\external\math\vectors\2D\;root\external\math\vectors\3D\;root\external\math\vectors\4D\;root\internal\graphics\algorithms\;root\internal\graphics\algorithms\culling\;root\external\graphics\shaders\;root\internal\graphics\shaders\;root\internal\graphics\terrain\grid\;root\internal\graphics\terrain\trimmer\;root\internal\compression\;root\internal\arguments\;root\internal\graphics\shaders\presets\;root\external\graphics\environment\;root\internal\graphics\environment\;root\external\graphics\interfaces\;root\internal\graphics\interfaces\;root\external\physics\color\;root\external\physics\mass\;root\external\physics\temperature\;root\external\physics\charge\;root\internal\graphics\bounds\;root\internal\graphics\bounds\aabb\;root\internal\graphics\bounds\sphere\;root\external\graphics\fog\;root\internal\graphics\fog\;root\external\menu\;root\internal\menu\;root\internal\graphics\gui\;root\internal\graphics\gui\widgets\;root\internal\graphics\core\primitives\;root\internal\graphics\gui\widgets\label\;root\internal\graphics\gui\widgets\button\;root\external\graphics\billboard\;root\internal\graphics\billboard\;root\external\math\matrices\2D\;root\external\math\matrices\3D\;root\external\math\matrices\4D\;" />
+		<Build>
+			<Target title="Debug">
+				<Option output="..\bin\debug\engine" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin\debug" />
+				<Option object_output="..\bin\debug\engine\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="glew32" />
+					<Add library="opengl32" />
+					<Add library="glu32" />
+					<Add library="..\3rdparty\lib\libmysql.lib" />
+					<Add library="..\3rdparty\lib\libfreeglut32.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="..\bin\release\engine" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin\release" />
+				<Option object_output="..\bin\release\engine\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="glew32" />
+					<Add library="opengl32" />
+					<Add library="glu32" />
+					<Add library="..\3rdparty\lib\libmysql.lib" />
+					<Add library="..\3rdparty\lib\libfreeglut32.a" />
+				</Linker>
+			</Target>
+			<Target title="LDebug">
+				<Option output="..\bin\debug\libengine" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin\debug" />
+				<Option object_output="..\bin\debug\engine\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-fPIC" />
+					<Add option="-Wunused-result" />
+				</Compiler>
+				<Linker>
+					<Add option="-lpthread" />
+					<Add option="-lmysqlclient" />
+					<Add library="glut" />
+					<Add library="GL" />
+					<Add library="GLU" />
+				</Linker>
+			</Target>
+			<Target title="LRelease">
+				<Option output="..\bin\release\libengine" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin\release" />
+				<Option object_output="..\bin\release\engine\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-fPIC" />
+					<Add option="-Wunused-result" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-lpthread" />
+					<Add option="-lmysqlclient" />
+					<Add library="glut" />
+					<Add library="GL" />
+					<Add library="GLU" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fpack-struct=1" />
+			<Add option="-Wno-unknown-pragmas" />
+			<Add directory="..\3rdparty\include" />
+		</Compiler>
+		<Linker>
+			<Add directory="..\3rdparty\lib" />
+		</Linker>
+		<Unit filename="arguments.h">
+			<Option virtualFolder="root\external\common\" />
+		</Unit>
+		<Unit filename="billboard.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\billboard\" />
+		</Unit>
+		<Unit filename="billboard.h">
+			<Option virtualFolder="root\external\graphics\billboard\" />
+		</Unit>
+		<Unit filename="camera.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\camera\" />
+		</Unit>
+		<Unit filename="camera.h">
+			<Option virtualFolder="root\external\graphics\camera\" />
+		</Unit>
+		<Unit filename="charge.h">
+			<Option virtualFolder="root\external\physics\charge\" />
+		</Unit>
+		<Unit filename="color.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\physics\color\" />
+		</Unit>
+		<Unit filename="color.h">
+			<Option virtualFolder="root\external\physics\color\" />
+		</Unit>
+		<Unit filename="configuration.h">
+			<Option virtualFolder="root\external\common\" />
+		</Unit>
+		<Unit filename="console.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\console\" />
+		</Unit>
+		<Unit filename="console.h">
+			<Option virtualFolder="root\external\console\" />
+		</Unit>
+		<Unit filename="criticalsection.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\threads\" />
+		</Unit>
+		<Unit filename="criticalsection.h">
+			<Option virtualFolder="root\external\threads\" />
+		</Unit>
+		<Unit filename="database.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\database\" />
+		</Unit>
+		<Unit filename="database.h">
+			<Option virtualFolder="root\external\database\" />
+		</Unit>
+		<Unit filename="dialogmanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\gui\" />
+		</Unit>
+		<Unit filename="engine.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\init\" />
+		</Unit>
+		<Unit filename="engine.h">
+			<Option virtualFolder="root\external\" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="environment.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\environment\" />
+		</Unit>
+		<Unit filename="environment.h">
+			<Option virtualFolder="root\external\graphics\environment\" />
+		</Unit>
+		<Unit filename="fog.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\fog\" />
+		</Unit>
+		<Unit filename="fog.h">
+			<Option virtualFolder="root\external\graphics\fog\" />
+		</Unit>
+		<Unit filename="fs.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\fs\" />
+		</Unit>
+		<Unit filename="fs.h">
+			<Option virtualFolder="root\external\fs\" />
+		</Unit>
+		<Unit filename="graphics.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\common\" />
+		</Unit>
+		<Unit filename="input.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\input\" />
+		</Unit>
+		<Unit filename="input.h">
+			<Option virtualFolder="root\external\input\" />
+		</Unit>
+		<Unit filename="interfacemanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\interfaces\" />
+		</Unit>
+		<Unit filename="interfacemanager.h">
+			<Option virtualFolder="root\external\graphics\interfaces\" />
+		</Unit>
+		<Unit filename="internalaabb.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\bounds\aabb\" />
+		</Unit>
+		<Unit filename="internalaabb.h">
+			<Option virtualFolder="root\internal\graphics\bounds\aabb\" />
+		</Unit>
+		<Unit filename="internalarguments.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\arguments\" />
+		</Unit>
+		<Unit filename="internalarguments.h">
+			<Option virtualFolder="root\internal\arguments\" />
+		</Unit>
+		<Unit filename="internalarray.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\structures\linear\array\" />
+		</Unit>
+		<Unit filename="internalarray.h">
+			<Option virtualFolder="root\internal\structures\linear\array\" />
+		</Unit>
+		<Unit filename="internalbillboard.h">
+			<Option virtualFolder="root\internal\graphics\billboard\" />
+		</Unit>
+		<Unit filename="internalboundsphere.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\bounds\sphere\" />
+		</Unit>
+		<Unit filename="internalboundsphere.h">
+			<Option virtualFolder="root\internal\graphics\bounds\sphere\" />
+		</Unit>
+		<Unit filename="internalbuffer.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\strings\" />
+		</Unit>
+		<Unit filename="internalbuffer.h">
+			<Option virtualFolder="root\internal\strings\" />
+		</Unit>
+		<Unit filename="internalbutton.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\gui\widgets\button\" />
+		</Unit>
+		<Unit filename="internalbutton.h">
+			<Option virtualFolder="root\internal\graphics\gui\widgets\button\" />
+		</Unit>
+		<Unit filename="internalcamera.h">
+			<Option virtualFolder="root\internal\graphics\camera\" />
+		</Unit>
+		<Unit filename="internalcompress.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\compression\" />
+		</Unit>
+		<Unit filename="internalcompress.h">
+			<Option virtualFolder="root\internal\compression\" />
+		</Unit>
+		<Unit filename="internalconsole.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\console\common\" />
+		</Unit>
+		<Unit filename="internalconsole.h">
+			<Option virtualFolder="root\internal\console\common\" />
+		</Unit>
+		<Unit filename="internalconsoleproccamera.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\console\processors\" />
+		</Unit>
+		<Unit filename="internalconsoleproclight.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\console\processors\" />
+		</Unit>
+		<Unit filename="internalconsoleprocrender.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\console\processors\" />
+		</Unit>
+		<Unit filename="internalconsoleprocresource.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\console\processors\" />
+		</Unit>
+		<Unit filename="internalconsoleprocscene.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\console\processors\" />
+		</Unit>
+		<Unit filename="internalconsoleproobject.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\console\processors\" />
+		</Unit>
+		<Unit filename="internalcontainer.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\container\" />
+		</Unit>
+		<Unit filename="internalcontainer.h">
+			<Option virtualFolder="root\internal\container\" />
+		</Unit>
+		<Unit filename="internalcore.h">
+			<Option virtualFolder="root\internal\core\" />
+		</Unit>
+		<Unit filename="internalcriticalsection.h">
+			<Option virtualFolder="root\internal\threads\" />
+		</Unit>
+		<Unit filename="internalculling.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\algorithms\culling\" />
+		</Unit>
+		<Unit filename="internalculling.h">
+			<Option virtualFolder="root\internal\graphics\algorithms\culling\" />
+		</Unit>
+		<Unit filename="internaldatabase.h">
+			<Option virtualFolder="root\internal\database\" />
+		</Unit>
+		<Unit filename="internaldialogmanager.h">
+			<Option virtualFolder="root\internal\graphics\gui\" />
+		</Unit>
+		<Unit filename="internalenvironment.h">
+			<Option virtualFolder="root\internal\graphics\environment\" />
+		</Unit>
+		<Unit filename="internalfog.h">
+			<Option virtualFolder="root\internal\graphics\fog\" />
+		</Unit>
+		<Unit filename="internalfs.h">
+			<Option virtualFolder="root\internal\fs\" />
+		</Unit>
+		<Unit filename="internalgeometry.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\core\geometry\" />
+		</Unit>
+		<Unit filename="internalgeometry.h">
+			<Option virtualFolder="root\internal\graphics\core\geometry\" />
+		</Unit>
+		<Unit filename="internalglut.h">
+			<Option virtualFolder="root\internal\core\" />
+		</Unit>
+		<Unit filename="internalgraphics.h">
+			<Option virtualFolder="root\internal\graphics\common\" />
+		</Unit>
+		<Unit filename="internalgravity.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\physics\" />
+		</Unit>
+		<Unit filename="internalheader.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\formats\header\" />
+		</Unit>
+		<Unit filename="internalheader.h">
+			<Option virtualFolder="root\internal\formats\header\" />
+		</Unit>
+		<Unit filename="internalinput.h">
+			<Option virtualFolder="root\internal\input\" />
+		</Unit>
+		<Unit filename="internalinterfacemanager.h">
+			<Option virtualFolder="root\internal\graphics\interfaces\" />
+		</Unit>
+		<Unit filename="internallabel.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\gui\widgets\label\" />
+		</Unit>
+		<Unit filename="internallabel.h">
+			<Option virtualFolder="root\internal\graphics\gui\widgets\label\" />
+		</Unit>
+		<Unit filename="internallight.h">
+			<Option virtualFolder="root\internal\graphics\light\" />
+		</Unit>
+		<Unit filename="internallist.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\structures\linear\list\" />
+		</Unit>
+		<Unit filename="internallist.h">
+			<Option virtualFolder="root\internal\structures\linear\list\" />
+		</Unit>
+		<Unit filename="internallogger.h">
+			<Option virtualFolder="root\internal\logger\" />
+		</Unit>
+		<Unit filename="internalmaterial.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\material\" />
+		</Unit>
+		<Unit filename="internalmaterial.h">
+			<Option virtualFolder="root\internal\graphics\material\" />
+		</Unit>
+		<Unit filename="internalmemorymanager.h">
+			<Option virtualFolder="root\internal\memory\" />
+		</Unit>
+		<Unit filename="internalmenu.h">
+			<Option virtualFolder="root\internal\menu\" />
+		</Unit>
+		<Unit filename="internalmesh.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\core\mesh\" />
+		</Unit>
+		<Unit filename="internalmesh.h">
+			<Option virtualFolder="root\internal\graphics\core\mesh\" />
+		</Unit>
+		<Unit filename="internalobject.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\object\" />
+		</Unit>
+		<Unit filename="internalobject.h">
+			<Option virtualFolder="root\internal\graphics\object\" />
+		</Unit>
+		<Unit filename="internalphysics.h">
+			<Option virtualFolder="root\external\physics\" />
+		</Unit>
+		<Unit filename="internalqueuestack.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\structures\linear\queue&amp;stack\" />
+		</Unit>
+		<Unit filename="internalqueuestack.h">
+			<Option virtualFolder="root\internal\structures\linear\queue&amp;stack\" />
+		</Unit>
+		<Unit filename="internalrectangle.h">
+			<Option virtualFolder="root\internal\graphics\core\primitives\" />
+		</Unit>
+		<Unit filename="internalresourcemanager.h">
+			<Option virtualFolder="root\internal\resources\" />
+		</Unit>
+		<Unit filename="internalscenemanager.h">
+			<Option virtualFolder="root\internal\graphics\scenes\" />
+		</Unit>
+		<Unit filename="internalsettings.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\settings\" />
+		</Unit>
+		<Unit filename="internalsettings.h">
+			<Option virtualFolder="root\internal\settings\" />
+		</Unit>
+		<Unit filename="internalshaderbillboard.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\shaders\presets\" />
+		</Unit>
+		<Unit filename="internalshadercartoon.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\shaders\presets\" />
+		</Unit>
+		<Unit filename="internalshaderenvironment.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\shaders\presets\" />
+		</Unit>
+		<Unit filename="internalshadermanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\shaders\" />
+		</Unit>
+		<Unit filename="internalshadermanager.h">
+			<Option virtualFolder="root\internal\graphics\shaders\" />
+		</Unit>
+		<Unit filename="internalshadernormalmapping.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\shaders\presets\" />
+		</Unit>
+		<Unit filename="internalshaderplanet.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\shaders\presets\" />
+		</Unit>
+		<Unit filename="internalshaderrender.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\shaders\presets\" />
+		</Unit>
+		<Unit filename="internalshaders.h">
+			<Option virtualFolder="root\internal\graphics\shaders\presets\" />
+		</Unit>
+		<Unit filename="internalshaderterrain.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\shaders\presets\" />
+		</Unit>
+		<Unit filename="internalstring.h">
+			<Option virtualFolder="root\internal\strings\" />
+		</Unit>
+		<Unit filename="internalstructuresmanager.h">
+			<Option virtualFolder="root\internal\structures\" />
+		</Unit>
+		<Unit filename="internalsun.h">
+			<Option virtualFolder="root\internal\graphics\environment\" />
+		</Unit>
+		<Unit filename="internaltask.h">
+			<Option virtualFolder="root\internal\threads\" />
+		</Unit>
+		<Unit filename="internalterrain.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\terrain\" />
+		</Unit>
+		<Unit filename="internalterrain.h">
+			<Option virtualFolder="root\internal\graphics\terrain\" />
+		</Unit>
+		<Unit filename="internalterraingrid.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\terrain\grid\" />
+		</Unit>
+		<Unit filename="internalterraingrid.h">
+			<Option virtualFolder="root\internal\graphics\terrain\grid\" />
+		</Unit>
+		<Unit filename="internalterraintrim.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\terrain\trimmer\" />
+		</Unit>
+		<Unit filename="internalterraintrim.h">
+			<Option virtualFolder="root\internal\graphics\terrain\trimmer\" />
+		</Unit>
+		<Unit filename="internaltext.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\text\" />
+		</Unit>
+		<Unit filename="internaltext.h">
+			<Option virtualFolder="root\internal\graphics\text\" />
+		</Unit>
+		<Unit filename="internaltexture.h">
+			<Option virtualFolder="root\internal\formats\texture\" />
+		</Unit>
+		<Unit filename="internaltexturemanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\graphics\textures\" />
+		</Unit>
+		<Unit filename="internaltexturemanager.h">
+			<Option virtualFolder="root\internal\graphics\textures\" />
+		</Unit>
+		<Unit filename="internaltime.h">
+			<Option virtualFolder="root\internal\time\" />
+		</Unit>
+		<Unit filename="internaltreebst.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\structures\trees\BST\" />
+		</Unit>
+		<Unit filename="internaltreebst.h">
+			<Option virtualFolder="root\internal\structures\trees\BST\" />
+		</Unit>
+		<Unit filename="internaltreemanager.h">
+			<Option virtualFolder="root\internal\structures\" />
+		</Unit>
+		<Unit filename="internaltreequad.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\internal\structures\trees\QUAD\" />
+		</Unit>
+		<Unit filename="internaltreequad.h">
+			<Option virtualFolder="root\internal\structures\trees\QUAD\" />
+		</Unit>
+		<Unit filename="internalvertex.h">
+			<Option virtualFolder="root\internal\graphics\core\vertex\" />
+		</Unit>
+		<Unit filename="internalwidget.h">
+			<Option virtualFolder="root\internal\graphics\gui\widgets\" />
+		</Unit>
+		<Unit filename="light.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\light\" />
+		</Unit>
+		<Unit filename="light.h">
+			<Option virtualFolder="root\external\graphics\light\" />
+		</Unit>
+		<Unit filename="logger.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\logger\" />
+		</Unit>
+		<Unit filename="logger.h">
+			<Option virtualFolder="root\external\logger\" />
+		</Unit>
+		<Unit filename="mass.h">
+			<Option virtualFolder="root\external\physics\mass\" />
+		</Unit>
+		<Unit filename="math.h">
+			<Option virtualFolder="root\external\math\" />
+		</Unit>
+		<Unit filename="matrix3d.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\math\matrices\3D\" />
+		</Unit>
+		<Unit filename="matrix3d.h">
+			<Option virtualFolder="root\external\math\matrices\3D\" />
+		</Unit>
+		<Unit filename="memorymanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\memory\" />
+		</Unit>
+		<Unit filename="memorymanager.h">
+			<Option virtualFolder="root\external\memory\" />
+		</Unit>
+		<Unit filename="menu.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\menu\" />
+		</Unit>
+		<Unit filename="menu.h">
+			<Option virtualFolder="root\external\menu\" />
+		</Unit>
+		<Unit filename="object.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\object\" />
+		</Unit>
+		<Unit filename="object.h">
+			<Option virtualFolder="root\external\graphics\object\" />
+		</Unit>
+		<Unit filename="physics.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\physics\" />
+		</Unit>
+		<Unit filename="physics.h">
+			<Option virtualFolder="root\external\physics\" />
+		</Unit>
+		<Unit filename="pool.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\threads\" />
+		</Unit>
+		<Unit filename="pool.h">
+			<Option virtualFolder="root\external\threads\" />
+		</Unit>
+		<Unit filename="quaternion.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\math\quaternions\" />
+		</Unit>
+		<Unit filename="quaternion.h">
+			<Option virtualFolder="root\external\math\quaternions\" />
+		</Unit>
+		<Unit filename="resourcemanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\resources\" />
+		</Unit>
+		<Unit filename="resourcemanager.h">
+			<Option virtualFolder="root\external\resources\" />
+		</Unit>
+		<Unit filename="scenemanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\scenes\" />
+		</Unit>
+		<Unit filename="scenemanager.h">
+			<Option virtualFolder="root\external\graphics\scenes\" />
+		</Unit>
+		<Unit filename="shadermanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\shaders\" />
+		</Unit>
+		<Unit filename="shadermanager.h">
+			<Option virtualFolder="root\external\graphics\shaders\" />
+		</Unit>
+		<Unit filename="skinmanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\gui\" />
+		</Unit>
+		<Unit filename="skinmanager.h">
+			<Option virtualFolder="root\external\graphics\gui\" />
+		</Unit>
+		<Unit filename="string.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\strings\" />
+		</Unit>
+		<Unit filename="string.h">
+			<Option virtualFolder="root\external\strings\" />
+		</Unit>
+		<Unit filename="structuresmanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\structures\" />
+		</Unit>
+		<Unit filename="structuresmanager.h">
+			<Option virtualFolder="root\external\structures\" />
+		</Unit>
+		<Unit filename="temperature.h">
+			<Option virtualFolder="root\external\physics\temperature\" />
+		</Unit>
+		<Unit filename="terrain.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\terrain\" />
+		</Unit>
+		<Unit filename="terrain.h">
+			<Option virtualFolder="root\external\graphics\terrain\" />
+		</Unit>
+		<Unit filename="texturemanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\graphics\textures\" />
+		</Unit>
+		<Unit filename="texturemanager.h">
+			<Option virtualFolder="root\external\graphics\textures\" />
+		</Unit>
+		<Unit filename="thread.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\threads\" />
+		</Unit>
+		<Unit filename="thread.h">
+			<Option virtualFolder="root\external\threads\" />
+		</Unit>
+		<Unit filename="time.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\time\" />
+		</Unit>
+		<Unit filename="time.h">
+			<Option virtualFolder="root\external\time\" />
+		</Unit>
+		<Unit filename="treemanager.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\structures\" />
+		</Unit>
+		<Unit filename="treemanager.h">
+			<Option virtualFolder="root\external\structures\" />
+		</Unit>
+		<Unit filename="types.h">
+			<Option virtualFolder="root\external\common\" />
+		</Unit>
+		<Unit filename="vector2d.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\math\vectors\2D\" />
+		</Unit>
+		<Unit filename="vector2d.h">
+			<Option virtualFolder="root\external\math\vectors\2D\" />
+		</Unit>
+		<Unit filename="vector3d.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\math\vectors\3D\" />
+		</Unit>
+		<Unit filename="vector3d.h">
+			<Option virtualFolder="root\external\math\vectors\3D\" />
+		</Unit>
+		<Unit filename="vector4d.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="root\external\math\vectors\4D\" />
+		</Unit>
+		<Unit filename="vector4d.h">
+			<Option virtualFolder="root\external\math\vectors\4D\" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

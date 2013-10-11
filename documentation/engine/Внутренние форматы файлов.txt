@@ -1,0 +1,133 @@
+Внутренние форматы файлов
+
+1. Venta Engine заголовок
+HEADER = [PREFIX(1), FORMAT(1), VERSION(4)]
+  PREFIX  = 'V'
+  FORMAT  = {VE_FORMAT_DIALOG, VE_FORMAT_TEXTURE, VE_FORMAT_SKIN, 
+             VE_FORMAT_OBJECT, VE_FORMAT_SCENE, VE_FORMAT_SOUND, 
+             VE_FORMAT_RESOURCE, VE_FORMAT_TEXTURECOMPRESSED, VE_FORMAT_TERRAIN}
+  VERSION = Версия движка
+
+2. Текстуры
+2.1. Заголовок текстуры
+TEXTUREHEADER = [HEADER(6), WIDTH(4), HEIGHT(4)]
+  HEADER = Venta Engine заголовок
+  WIDTH  = Ширина текстуры в пикселях
+  HEIGHT = Высота текстуры в пикселях
+
+2.2. Диффузные текстуры
+TEXTURE = [TEXTUREHEADER(14), DATA]
+  TEXTUREHEADER = Заголовок текстуры
+  DATA          = [R(1), G(1), B(1), A(1)]
+    R = Красный канал
+    G = Зеленый канал
+    B = Синий канал
+    A = Канал прозрачности
+
+2.3. Текстуры с нормалями
+TEXTURE = [TEXTUREHEADER(14), DATA]
+  TEXTUREHEADER = Заголовок текстуры
+  DATA = [X(1), Y(1), Z(1), S(1)]
+    X = Абсцисса нормали
+    Y = Ордината нормали
+    Z = Аппликата нормали
+    S = Specular составляющая
+
+3. Материалы
+3.1. Цвет
+COLOR = [R(1), G(1), B(1), A(1)]
+  R = Красный канал
+  G = Зеленый канал
+  B = Синий канал
+  A = Канал прозрачности
+
+3.2. Карта
+MAP = [LENGTH(4), TEXTURE_NAME(LENGTH)]
+  LENGTH       = Длина имени текстуры
+  TEXTURE_NAME = Имя текстуры
+
+3.3. Формат материалов
+MATERIAL = [ID(4), 
+            AMBIENT_COLOR(4), DIFFUSE_COLOR(4), SPECULAR_COLOR(4), ILLUMINATION_COLOR(4),
+            SHININESS(4), GLOSSINESS(4),
+            DIFFUSE_MAP, OPACITY_MAP, NORMALS_MAP, REFLECTION_MAP]
+  ID                 = Идентификатор материала
+  AMBIENT_COLOR      = Рассеянная (фоновая) составляющая
+  DIFFUSE_COLOR      = Диффузная составляющая
+  SPECULAR_COLOR     = Отражающая составляющая
+  ILLUMINATION_COLOR = Излучающая составляющая
+  SHININESS          = Сила блика
+  GLOSSINESS         = Глянцевость
+  DIFFUSE_MAP        = Диффузная текстура
+  OPACITY_MAP        = Трафаретная текстура
+  NORMALS_MAP        = Текстура с нормалями
+  REFLECTION_MAP     = Текстура с отражениями
+
+
+3. Объекты
+3.1. 2D вектор
+VECTOR2D = [X(4), Y(4)]
+  X = Абсцисса
+  Y = Ордината 
+
+3.2. 3D вектор
+VECTOR3D = [X(4), Y(4), Z(4)]
+  X = Абсцисса
+  Y = Ордината 
+  Z = Аппликата
+
+3.3. 4D вектор
+VECTOR4D = [X(4), Y(4), Z(4), W(4)]
+  X = Абсцисса
+  Y = Ордината 
+  Z = Аппликата
+  W = 4я координата
+  
+3.4. Вершина
+VERTEX = [POSITION(12), NORMAL(12)]
+  POSITION = Позиция, VECTOR3D
+  NORMAL   = Нормаль, VECTOR3D
+
+3.5. Текстурные координаты
+TEXTURECOORDINATE = VECTOR2D
+
+3.6. Фасет (грань)
+FACE = [VERTEX1(4), VERTEX2(4), VERTEX3(4),
+        TVERTEX1(4), TVERTEX2(4), TVERTEX3(4),
+        NORMAL(12), CENTER(12)]
+  VERTEX1 = Индекс первой вершины грани
+  VERTEX2 = Индекс второй вершины грани
+  VERTEX3 = Индекс третьей вершины грани
+  TVERTEX1 = Индекс текстурных координат первой вершины
+  TVERTEX2 = Индекс текстурных координат второй вершины
+  TVERTEX3 = Индекс текстурных координат третьей вершины
+  NORMAL   = Нормаль фасета (грани), VECTOR3D
+  CENTER   = Центр фасета (грани), VECTOR3D
+  
+3.7. Геометрия (файловая мешь)
+GEOMETRY = [NUMBER_OF_VERTICES(4), NUMBER_OF_FACES(4), NUMBER_OF_TVERTICES(4), MATERIAL_ID(4), 
+            VERTICES, TEXTURE_COORDINATES, FACES, POSITIONS, QUATERNIONS]
+  NUMBER_OF_VERTICES  = Количество вершин
+  NUMBER_OF_FACES     = Количество фасетов, граней
+  NUMBER_OF_TVERTICES = Количество текстурных координат
+  MATERIAL_ID         = Идентификатор материала
+  VERTICES            = Вершины, VERTEX(NUMBER_OF_VERTICES)
+  TEXTURE_COORDINATES = Текстурные координаты, TEXTURECOORDINATE(NUMBER_OF_TVERTICES)
+  FACES               = Фасеты (грани), FACE(NUMBER_OF_FACES)
+  POSITION            = Ключевые позиции меша, VECTOR3D(NUMBER_OF_FRAMES)
+  QUATERNIONS         = Кватерниона, VECTOR4D(NUMBER_OF_FRAMES)
+
+3.8. Структура объекта
+OBJECT = [HEADER(6), 
+          NUMBER_OF_MATERIALS(4), MATERIALS, 
+          NUMBER_OF_MESHES(4), NUMBER_OF_FRAMES(4), FRAME_RATE(4),
+          MESHES]
+  HEADER              = Venta Engine заголовок
+  NUMBER_OF_MATERIALS = Количество материалов
+  MATERIALS           = Материалы, MATERIAL(NUMBER_OF_MATERIALS)
+  NUMBER_OF_MESHES    = Количество мешей
+  NUMBER_OF_FRAMES    = Количество кадров анимации
+  FRAME_RATE          = Количество кадров анимации в секунду (частота)
+  MESHES              = Меши, GEOMETRY(NUMBER_OF_MESHES)
+
+

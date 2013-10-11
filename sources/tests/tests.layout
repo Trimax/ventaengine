@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="main.c" open="0" top="0" tabpos="2">
+		<Cursor position="1721" topLine="72" />
+	</File>
+	<File name="testdatabase.c" open="0" top="0" tabpos="1">
+		<Cursor position="235" topLine="0" />
+	</File>
+	<File name="testgraphics.c" open="0" top="0" tabpos="3">
+		<Cursor position="2323" topLine="47" />
+	</File>
+	<File name="testmath.c" open="1" top="1" tabpos="1">
+		<Cursor position="4080" topLine="95" />
+	</File>
+	<File name="testmemory.c" open="0" top="0" tabpos="4">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="testpool.c" open="0" top="0" tabpos="2">
+		<Cursor position="1160" topLine="33" />
+	</File>
+	<File name="tests.h" open="0" top="0" tabpos="2">
+		<Cursor position="1058" topLine="26" />
+	</File>
+	<File name="teststrings.c" open="0" top="0" tabpos="0">
+		<Cursor position="753" topLine="0" />
+	</File>
+	<File name="teststructures.c" open="0" top="0" tabpos="1">
+		<Cursor position="1844" topLine="51" />
+	</File>
+	<File name="testthreads.c" open="0" top="0" tabpos="2">
+		<Cursor position="183" topLine="3" />
+	</File>
+	<File name="testtime.c" open="0" top="0" tabpos="0">
+		<Cursor position="210" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>

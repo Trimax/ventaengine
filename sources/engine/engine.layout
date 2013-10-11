@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="arguments.h" open="0" top="0" tabpos="2">
+		<Cursor position="295" topLine="0" />
+	</File>
+	<File name="billboard.c" open="0" top="0" tabpos="0">
+		<Cursor position="909" topLine="73" />
+	</File>
+	<File name="billboard.h" open="0" top="0" tabpos="0">
+		<Cursor position="775" topLine="0" />
+	</File>
+	<File name="camera.c" open="0" top="0" tabpos="7">
+		<Cursor position="33" topLine="0" />
+	</File>
+	<File name="camera.h" open="0" top="0" tabpos="3">
+		<Cursor position="2539" topLine="59" />
+	</File>
+	<File name="color.c" open="0" top="0" tabpos="4">
+		<Cursor position="57" topLine="0" />
+	</File>
+	<File name="color.h" open="0" top="0" tabpos="3">
+		<Cursor position="132" topLine="0" />
+	</File>
+	<File name="configuration.h" open="0" top="0" tabpos="2">
+		<Cursor position="2355" topLine="0" />
+	</File>
+	<File name="console.c" open="0" top="0" tabpos="4">
+		<Cursor position="6630" topLine="195" />
+	</File>
+	<File name="console.h" open="0" top="0" tabpos="0">
+		<Cursor position="302" topLine="7" />
+	</File>
+	<File name="criticalsection.c" open="0" top="0" tabpos="5">
+		<Cursor position="756" topLine="102" />
+	</File>
+	<File name="criticalsection.h" open="0" top="0" tabpos="0">
+		<Cursor position="451" topLine="0" />
+	</File>
+	<File name="database.c" open="0" top="0" tabpos="6">
+		<Cursor position="6389" topLine="174" />
+	</File>
+	<File name="database.h" open="0" top="0" tabpos="2">
+		<Cursor position="913" topLine="24" />
+	</File>
+	<File name="dialogmanager.c" open="0" top="0" tabpos="2">
+		<Cursor position="6477" topLine="221" />
+	</File>
+	<File name="engine.c" open="0" top="0" tabpos="1">
+		<Cursor position="9586" topLine="342" />
+	</File>
+	<File name="engine.h" open="0" top="0" tabpos="9">
+		<Cursor position="728" topLine="0" />
+	</File>
+	<File name="environment.c" open="0" top="0" tabpos="1">
+		<Cursor position="26" topLine="0" />
+	</File>
+	<File name="environment.h" open="0" top="0" tabpos="5">
+		<Cursor position="250" topLine="0" />
+	</File>
+	<File name="fog.c" open="0" top="0" tabpos="1">
+		<Cursor position="708" topLine="0" />
+	</File>
+	<File name="fog.h" open="0" top="0" tabpos="3">
+		<Cursor position="352" topLine="0" />
+	</File>
+	<File name="fs.c" open="0" top="0" tabpos="15">
+		<Cursor position="633" topLine="0" />
+	</File>
+	<File name="fs.h" open="0" top="0" tabpos="14">
+		<Cursor position="295" topLine="0" />
+	</File>
+	<File name="graphics.c" open="0" top="0" tabpos="3">
+		<Cursor position="13620" topLine="378" />
+	</File>
+	<File name="input.c" open="0" top="0" tabpos="5">
+		<Cursor position="47" topLine="0" />
+	</File>
+	<File name="input.h" open="0" top="0" tabpos="4">
+		<Cursor position="357" topLine="51" />
+	</File>
+	<File name="interfacemanager.c" open="0" top="0" tabpos="1">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="interfacemanager.h" open="0" top="0" tabpos="11">
+		<Cursor position="1515" topLine="40" />
+	</File>
+	<File name="internalaabb.c" open="0" top="0" tabpos="0">
+		<Cursor position="211" topLine="0" />
+	</File>
+	<File name="internalaabb.h" open="0" top="0" tabpos="6">
+		<Cursor position="248" topLine="0" />
+	</File>
+	<File name="internalarguments.c" open="0" top="0" tabpos="7">
+		<Cursor position="6031" topLine="193" />
+	</File>
+	<File name="internalarray.c" open="0" top="0" tabpos="1">
+		<Cursor position="5062" topLine="163" />
+	</File>
+	<File name="internalarray.h" open="0" top="0" tabpos="8">
+		<Cursor position="387" topLine="12" />
+	</File>
+	<File name="internalbillboard.h" open="0" top="0" tabpos="0">
+		<Cursor position="209" topLine="0" />
+	</File>
+	<File name="internalboundsphere.c" open="0" top="0" tabpos="2">
+		<Cursor position="657" topLine="0" />
+	</File>
+	<File name="internalboundsphere.h" open="0" top="0" tabpos="0">
+		<Cursor position="308" topLine="0" />
+	</File>
+	<File name="internalbuffer.c" open="0" top="0" tabpos="3">
+		<Cursor position="3267" topLine="122" />
+	</File>
+	<File name="internalbuffer.h" open="0" top="0" tabpos="2">
+		<Cursor position="2818" topLine="70" />
+	</File>
+	<File name="internalbutton.c" open="0" top="0" tabpos="2">
+		<Cursor position="26" topLine="0" />
+	</File>
+	<File name="internalbutton.h" open="0" top="0" tabpos="0">
+		<Cursor position="723" topLine="7" />
+	</File>
+	<File name="internalcamera.h" open="0" top="0" tabpos="8">
+		<Cursor position="953" topLine="0" />
+	</File>
+	<File name="internalcompress.c" open="0" top="0" tabpos="2">
+		<Cursor position="4948" topLine="163" />
+	</File>
+	<File name="internalcompress.h" open="0" top="0" tabpos="1">
+		<Cursor position="594" topLine="0" />
+	</File>
+	<File name="internalconsole.c" open="0" top="0" tabpos="2">
+		<Cursor position="1252" topLine="16" />
+	</File>
+	<File name="internalconsole.h" open="0" top="0" tabpos="1">
+		<Cursor position="3307" topLine="83" />
+	</File>
+	<File name="internalconsoleproccamera.c" open="0" top="0" tabpos="4">
+		<Cursor position="2678" topLine="45" />
+	</File>
+	<File name="internalconsoleproclight.c" open="0" top="0" tabpos="3">
+		<Cursor position="180" topLine="0" />
+	</File>
+	<File name="internalconsoleprocrender.c" open="0" top="0" tabpos="6">
+		<Cursor position="799" topLine="0" />
+	</File>
+	<File name="internalconsoleprocresource.c" open="0" top="0" tabpos="2">
+		<Cursor position="2944" topLine="53" />
+	</File>
+	<File name="internalconsoleprocscene.c" open="0" top="0" tabpos="5">
+		<Cursor position="2457" topLine="53" />
+	</File>
+	<File name="internalconsoleproobject.c" open="0" top="0" tabpos="10">
+		<Cursor position="2290" topLine="45" />
+	</File>
+	<File name="internalcontainer.c" open="0" top="0" tabpos="3">
+		<Cursor position="6422" topLine="188" />
+	</File>
+	<File name="internalcontainer.h" open="0" top="0" tabpos="2">
+		<Cursor position="3090" topLine="55" />
+	</File>
+	<File name="internalcore.h" open="0" top="0" tabpos="0">
+		<Cursor position="243" topLine="0" />
+	</File>
+	<File name="internalcriticalsection.h" open="0" top="0" tabpos="0">
+		<Cursor position="1823" topLine="18" />
+	</File>
+	<File name="internalculling.c" open="0" top="0" tabpos="0">
+		<Cursor position="5604" topLine="72" />
+	</File>
+	<File name="internalculling.h" open="0" top="0" tabpos="0">
+		<Cursor position="99" topLine="0" />
+	</File>
+	<File name="internaldatabase.h" open="0" top="0" tabpos="0">
+		<Cursor position="76" topLine="0" />
+	</File>
+	<File name="internaldialogmanager.h" open="0" top="0" tabpos="7">
+		<Cursor position="846" topLine="21" />
+	</File>
+	<File name="internalenvironment.h" open="0" top="0" tabpos="9">
+		<Cursor position="467" topLine="0" />
+	</File>
+	<File name="internalfog.h" open="0" top="0" tabpos="4">
+		<Cursor position="101" topLine="0" />
+	</File>
+	<File name="internalfs.h" open="0" top="0" tabpos="0">
+		<Cursor position="251" topLine="7" />
+	</File>
+	<File name="internalgeometry.c" open="0" top="0" tabpos="6">
+		<Cursor position="15980" topLine="505" />
+	</File>
+	<File name="internalgeometry.h" open="0" top="0" tabpos="0">
+		<Cursor position="884" topLine="10" />
+	</File>
+	<File name="internalglut.h" open="0" top="0" tabpos="0">
+		<Cursor position="99" topLine="0" />
+	</File>
+	<File name="internalgraphics.h" open="0" top="0" tabpos="6">
+		<Cursor position="388" topLine="0" />
+	</File>
+	<File name="internalgravity.c" open="0" top="0" tabpos="1">
+		<Cursor position="3495" topLine="45" />
+	</File>
+	<File name="internalheader.c" open="0" top="0" tabpos="0">
+		<Cursor position="340" topLine="0" />
+	</File>
+	<File name="internalheader.h" open="0" top="0" tabpos="0">
+		<Cursor position="304" topLine="1" />
+	</File>
+	<File name="internalinput.h" open="0" top="0" tabpos="9">
+		<Cursor position="1569" topLine="27" />
+	</File>
+	<File name="internalinterfacemanager.h" open="0" top="0" tabpos="12">
+		<Cursor position="92" topLine="0" />
+	</File>
+	<File name="internallabel.c" open="0" top="0" tabpos="11">
+		<Cursor position="625" topLine="0" />
+	</File>
+	<File name="internallabel.h" open="0" top="0" tabpos="13">
+		<Cursor position="264" topLine="0" />
+	</File>
+	<File name="internallight.h" open="0" top="0" tabpos="7">
+		<Cursor position="883" topLine="0" />
+	</File>
+	<File name="internallist.c" open="0" top="0" tabpos="3">
+		<Cursor position="4441" topLine="140" />
+	</File>
+	<File name="internallist.h" open="0" top="0" tabpos="4">
+		<Cursor position="298" topLine="0" />
+	</File>
+	<File name="internallogger.h" open="0" top="0" tabpos="4">
+		<Cursor position="448" topLine="0" />
+	</File>
+	<File name="internalmaterial.c" open="0" top="0" tabpos="4">
+		<Cursor position="1333" topLine="12" />
+	</File>
+	<File name="internalmaterial.h" open="0" top="0" tabpos="0">
+		<Cursor position="726" topLine="5" />
+	</File>
+	<File name="internalmemorymanager.h" open="0" top="0" tabpos="7">
+		<Cursor position="434" topLine="3" />
+	</File>
+	<File name="internalmenu.h" open="0" top="0" tabpos="3">
+		<Cursor position="237" topLine="0" />
+	</File>
+	<File name="internalmesh.c" open="1" top="0" tabpos="9">
+		<Cursor position="3660" topLine="114" />
+	</File>
+	<File name="internalmesh.h" open="1" top="0" tabpos="8">
+		<Cursor position="1220" topLine="7" />
+	</File>
+	<File name="internalobject.c" open="1" top="1" tabpos="2">
+		<Cursor position="4772" topLine="141" />
+	</File>
+	<File name="internalobject.h" open="1" top="0" tabpos="3">
+		<Cursor position="681" topLine="0" />
+	</File>
+	<File name="internalphysics.h" open="0" top="0" tabpos="5">
+		<Cursor position="449" topLine="0" />
+	</File>
+	<File name="internalresourcemanager.h" open="0" top="0" tabpos="7">
+		<Cursor position="2385" topLine="48" />
+	</File>
+	<File name="internalscenemanager.h" open="0" top="0" tabpos="2">
+		<Cursor position="1684" topLine="34" />
+	</File>
+	<File name="internalsettings.c" open="0" top="0" tabpos="11">
+		<Cursor position="26" topLine="0" />
+	</File>
+	<File name="internalsettings.h" open="0" top="0" tabpos="10">
+		<Cursor position="2007" topLine="46" />
+	</File>
+	<File name="internalshaderbillboard.c" open="0" top="0" tabpos="0">
+		<Cursor position="474" topLine="0" />
+	</File>
+	<File name="internalshadercartoon.c" open="0" top="0" tabpos="1">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="internalshaderenvironment.c" open="0" top="0" tabpos="5">
+		<Cursor position="89" topLine="0" />
+	</File>
+	<File name="internalshadermanager.c" open="0" top="0" tabpos="3">
+		<Cursor position="7359" topLine="197" />
+	</File>
+	<File name="internalshadermanager.h" open="0" top="0" tabpos="9">
+		<Cursor position="411" topLine="0" />
+	</File>
+	<File name="internalshadernormalmapping.c" open="0" top="0" tabpos="7">
+		<Cursor position="1523" topLine="0" />
+	</File>
+	<File name="internalshaderplanet.c" open="0" top="0" tabpos="9">
+		<Cursor position="483" topLine="4" />
+	</File>
+	<File name="internalshaderrender.c" open="0" top="0" tabpos="4">
+		<Cursor position="6647" topLine="157" />
+	</File>
+	<File name="internalshaders.h" open="0" top="0" tabpos="4">
+		<Cursor position="397" topLine="0" />
+	</File>
+	<File name="internalshaderterrain.c" open="0" top="0" tabpos="8">
+		<Cursor position="607" topLine="33" />
+	</File>
+	<File name="internalstring.h" open="0" top="0" tabpos="4">
+		<Cursor position="314" topLine="0" />
+	</File>
+	<File name="internalstructuresmanager.h" open="0" top="0" tabpos="0">
+		<Cursor position="602" topLine="8" />
+	</File>
+	<File name="internalsun.h" open="0" top="0" tabpos="0">
+		<Cursor position="88" topLine="0" />
+	</File>
+	<File name="internaltask.h" open="0" top="0" tabpos="0">
+		<Cursor position="1266" topLine="24" />
+	</File>
+	<File name="internalterrain.c" open="0" top="0" tabpos="3">
+		<Cursor position="26" topLine="0" />
+	</File>
+	<File name="internalterrain.h" open="0" top="0" tabpos="5">
+		<Cursor position="3433" topLine="79" />
+	</File>
+	<File name="internalterraingrid.c" open="0" top="0" tabpos="2">
+		<Cursor position="2620" topLine="0" />
+	</File>
+	<File name="internalterraingrid.h" open="0" top="0" tabpos="0">
+		<Cursor position="1203" topLine="16" />
+	</File>
+	<File name="internalterraintrim.c" open="0" top="0" tabpos="4">
+		<Cursor position="7461" topLine="197" />
+	</File>
+	<File name="internalterraintrim.h" open="0" top="0" tabpos="3">
+		<Cursor position="1947" topLine="50" />
+	</File>
+	<File name="internaltext.c" open="0" top="0" tabpos="6">
+		<Cursor position="1134" topLine="24" />
+	</File>
+	<File name="internaltext.h" open="0" top="0" tabpos="5">
+		<Cursor position="272" topLine="0" />
+	</File>
+	<File name="internaltexture.h" open="0" top="0" tabpos="0">
+		<Cursor position="187" topLine="0" />
+	</File>
+	<File name="internaltexturemanager.c" open="0" top="0" tabpos="9">
+		<Cursor position="2519" topLine="71" />
+	</File>
+	<File name="internaltexturemanager.h" open="0" top="0" tabpos="8">
+		<Cursor position="883" topLine="0" />
+	</File>
+	<File name="internaltreebst.c" open="0" top="0" tabpos="0">
+		<Cursor position="18" topLine="0" />
+	</File>
+	<File name="internaltreebst.h" open="0" top="0" tabpos="0">
+		<Cursor position="355" topLine="3" />
+	</File>
+	<File name="internaltreequad.c" open="0" top="0" tabpos="0">
+		<Cursor position="59" topLine="0" />
+	</File>
+	<File name="internalvertex.h" open="0" top="0" tabpos="3">
+		<Cursor position="354" topLine="0" />
+	</File>
+	<File name="internalwidget.h" open="0" top="0" tabpos="3">
+		<Cursor position="602" topLine="0" />
+	</File>
+	<File name="light.c" open="0" top="0" tabpos="9">
+		<Cursor position="210" topLine="0" />
+	</File>
+	<File name="light.h" open="0" top="0" tabpos="5">
+		<Cursor position="410" topLine="0" />
+	</File>
+	<File name="logger.c" open="0" top="0" tabpos="5">
+		<Cursor position="5116" topLine="126" />
+	</File>
+	<File name="logger.h" open="0" top="0" tabpos="0">
+		<Cursor position="964" topLine="6" />
+	</File>
+	<File name="mass.h" open="0" top="0" tabpos="0">
+		<Cursor position="224" topLine="0" />
+	</File>
+	<File name="math.h" open="0" top="0" tabpos="0">
+		<Cursor position="75" topLine="0" />
+	</File>
+	<File name="matrix3d.c" open="0" top="0" tabpos="0">
+		<Cursor position="44" topLine="0" />
+	</File>
+	<File name="matrix3d.h" open="0" top="0" tabpos="0">
+		<Cursor position="181" topLine="0" />
+	</File>
+	<File name="memorymanager.c" open="0" top="0" tabpos="6">
+		<Cursor position="5168" topLine="169" />
+	</File>
+	<File name="memorymanager.h" open="0" top="0" tabpos="7">
+		<Cursor position="441" topLine="0" />
+	</File>
+	<File name="menu.c" open="0" top="0" tabpos="2">
+		<Cursor position="2549" topLine="58" />
+	</File>
+	<File name="menu.h" open="0" top="0" tabpos="6">
+		<Cursor position="832" topLine="0" />
+	</File>
+	<File name="object.c" open="0" top="0" tabpos="8">
+		<Cursor position="4214" topLine="109" />
+	</File>
+	<File name="object.h" open="0" top="0" tabpos="3">
+		<Cursor position="378" topLine="5" />
+	</File>
+	<File name="physics.c" open="0" top="0" tabpos="0">
+		<Cursor position="244" topLine="0" />
+	</File>
+	<File name="pool.c" open="0" top="0" tabpos="4">
+		<Cursor position="1294" topLine="18" />
+	</File>
+	<File name="quaternion.c" open="1" top="0" tabpos="6">
+		<Cursor position="5897" topLine="189" />
+	</File>
+	<File name="quaternion.h" open="1" top="0" tabpos="4">
+		<Cursor position="3012" topLine="71" />
+	</File>
+	<File name="resourcemanager.c" open="0" top="0" tabpos="4">
+		<Cursor position="430" topLine="0" />
+	</File>
+	<File name="resourcemanager.h" open="0" top="0" tabpos="3">
+		<Cursor position="352" topLine="0" />
+	</File>
+	<File name="scenemanager.c" open="1" top="0" tabpos="1">
+		<Cursor position="5471" topLine="195" />
+	</File>
+	<File name="scenemanager.h" open="0" top="0" tabpos="1">
+		<Cursor position="195" topLine="0" />
+	</File>
+	<File name="shadermanager.c" open="0" top="0" tabpos="0">
+		<Cursor position="681" topLine="11" />
+	</File>
+	<File name="shadermanager.h" open="0" top="0" tabpos="8">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="string.c" open="0" top="0" tabpos="7">
+		<Cursor position="4577" topLine="145" />
+	</File>
+	<File name="string.h" open="0" top="0" tabpos="2">
+		<Cursor position="514" topLine="28" />
+	</File>
+	<File name="structuresmanager.c" open="0" top="0" tabpos="3">
+		<Cursor position="7277" topLine="261" />
+	</File>
+	<File name="structuresmanager.h" open="0" top="0" tabpos="2">
+		<Cursor position="3938" topLine="84" />
+	</File>
+	<File name="terrain.c" open="0" top="0" tabpos="2">
+		<Cursor position="396" topLine="0" />
+	</File>
+	<File name="terrain.h" open="0" top="0" tabpos="8">
+		<Cursor position="965" topLine="0" />
+	</File>
+	<File name="texturemanager.c" open="0" top="0" tabpos="5">
+		<Cursor position="26" topLine="0" />
+	</File>
+	<File name="texturemanager.h" open="0" top="0" tabpos="3">
+		<Cursor position="286" topLine="0" />
+	</File>
+	<File name="thread.c" open="0" top="0" tabpos="5">
+		<Cursor position="1860" topLine="41" />
+	</File>
+	<File name="thread.h" open="0" top="0" tabpos="0">
+		<Cursor position="507" topLine="0" />
+	</File>
+	<File name="time.c" open="0" top="0" tabpos="0">
+		<Cursor position="784" topLine="20" />
+	</File>
+	<File name="time.h" open="0" top="0" tabpos="0">
+		<Cursor position="436" topLine="0" />
+	</File>
+	<File name="treemanager.c" open="0" top="0" tabpos="0">
+		<Cursor position="190" topLine="3" />
+	</File>
+	<File name="treemanager.h" open="0" top="0" tabpos="0">
+		<Cursor position="386" topLine="0" />
+	</File>
+	<File name="types.h" open="0" top="0" tabpos="5">
+		<Cursor position="1616" topLine="53" />
+	</File>
+	<File name="vector2d.c" open="0" top="0" tabpos="0">
+		<Cursor position="1686" topLine="37" />
+	</File>
+	<File name="vector2d.h" open="0" top="0" tabpos="0">
+		<Cursor position="208" topLine="0" />
+	</File>
+	<File name="vector3d.c" open="0" top="0" tabpos="3">
+		<Cursor position="3978" topLine="99" />
+	</File>
+	<File name="vector3d.h" open="0" top="0" tabpos="3">
+		<Cursor position="1014" topLine="29" />
+	</File>
+	<File name="vector4d.c" open="0" top="0" tabpos="0">
+		<Cursor position="2487" topLine="38" />
+	</File>
+	<File name="vector4d.h" open="0" top="0" tabpos="0">
+		<Cursor position="1954" topLine="30" />
+	</File>
+</CodeBlocks_layout_file>

@@ -1,0 +1,995 @@
+<<<<<<< .mine
+# depslib dependency file v1.0
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/camera.c
+	"internalscenemanager.h"
+	"internalsettings.h"
+	"internalcamera.h"
+	"internalobject.h"
+	"memorymanager.h"
+	"camera.h"
+	<math.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalscenemanager.h
+	"internalenvironment.h"
+	"internalcontainer.h"
+	"internalterrain.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalenvironment.h
+	"internalobject.h"
+	"internalcamera.h"
+	"internalsun.h"
+	"types.h"
+
+1329319957 /home/eliseev/Projects/venta/sources/engine/internalobject.h
+	"internalboundsphere.h"
+	"internalmaterial.h"
+	"internalmesh.h"
+	"types.h"
+	<stdio.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalmaterial.h
+	"types.h"
+	"color.h"
+	<stdio.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/types.h
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/color.h
+	"vector4d.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/vector4d.h
+	"vector3d.h"
+	"types.h"
+
+1329390748 /home/eliseev/Projects/venta/sources/engine/vector3d.h
+	"types.h"
+
+1329314007 /home/eliseev/Projects/venta/sources/engine/internalmesh.h
+	"internalboundsphere.h"
+	"internalmaterial.h"
+	"internalvertex.h"
+	"vector4d.h"
+	"color.h"
+	<stdio.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalvertex.h
+	"vector2d.h"
+	"vector3d.h"
+	"vector4d.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/vector2d.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalcamera.h
+	"vector2d.h"
+	"vector3d.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalsun.h
+	"types.h"
+
+1329317881 /home/eliseev/Projects/venta/sources/engine/internalcontainer.h
+	"internalcriticalsection.h"
+	"criticalsection.h"
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalcriticalsection.h
+	<windows.h>
+	<pthread.h>
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/criticalsection.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalterrain.h
+	"internaltexturemanager.h"
+	"internalcamera.h"
+	"internalaabb.h"
+	"internalmesh.h"
+	"vector3d.h"
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaltexturemanager.h
+	"types.h"
+	<stdio.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalaabb.h
+	"vector3d.h"
+
+1329395995 /home/eliseev/Projects/venta/sources/engine/internalsettings.h
+	"internalcriticalsection.h"
+	"internalstring.h"
+	"configuration.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalstring.h
+	"types.h"
+
+1329221091 /home/eliseev/Projects/venta/sources/engine/configuration.h
+	"types.h"
+	"input.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/input.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/memorymanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/camera.h
+	"vector2d.h"
+	"vector3d.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/color.c
+	"color.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/console.c
+	<gl/gl.h>
+	<gl/glu.h>
+	<gl/glut.h>
+	"internalcriticalsection.h"
+	"structuresmanager.h"
+	"internalconsole.h"
+	"internalstring.h"
+	"internallogger.h"
+	"internalbuffer.h"
+	"internalarray.h"
+	"memorymanager.h"
+	"internaltext.h"
+	"console.h"
+	"color.h"
+	"time.h"
+	<string.h>
+	<stdio.h>
+	"math.h"
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/gl/gl.h
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/gl/glu.h
+	<stddef.h>
+	<GL/gl.h>
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/gl/glut.h
+	<windows.h>
+	<stdlib.h>
+	<GL/gl.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/structuresmanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalconsole.h
+	"internalarray.h"
+	"types.h"
+	"input.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalarray.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internallogger.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalbuffer.h
+	"types.h"
+	"internalarray.h"
+	<stdio.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaltext.h
+	"types.h"
+	"color.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/console.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/time.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/math.h
+	"vector4d.h"
+	"vector3d.h"
+	"vector2d.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/criticalsection.c
+	"criticalsection.h"
+	"memorymanager.h"
+	"internalcriticalsection.h"
+	<stdlib.h>
+	<string.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/database.c
+	<winsock.h>
+	"mysql/mysql.h"
+	"internalcriticalsection.h"
+	"internalcontainer.h"
+	"internalstring.h"
+	"internalbuffer.h"
+	"memorymanager.h"
+	"database.h"
+	"string.h"
+	<string.h>
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/mysql/mysql.h
+	<standards.h>
+	<sys/types.h>
+	<winsock.h>
+	"mysql_version.h"
+	"mysql_com.h"
+	"mysql_time.h"
+	"typelib.h"
+	"my_list.h"
+	"my_alloc.h"
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/mysql/mysql_version.h
+	<custom_conf.h>
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/mysql/mysql_com.h
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/mysql/mysql_time.h
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/mysql/typelib.h
+	"my_alloc.h"
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/mysql/my_alloc.h
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/mysql/my_list.h
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/database.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/string.h
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/dialogmanager.c
+
+1329222114 source:/home/eliseev/Projects/venta/sources/engine/engine.c
+	"internalstructuresmanager.h"
+	"internalinterfacemanager.h"
+	"internalcriticalsection.h"
+	"internalresourcemanager.h"
+	"internaltexturemanager.h"
+	"internalmemorymanager.h"
+	"internalscenemanager.h"
+	"internaltreemanager.h"
+	"internalarguments.h"
+	"internaldatabase.h"
+	"internalsettings.h"
+	"internalgraphics.h"
+	"internalconsole.h"
+	"internalstring.h"
+	"internallogger.h"
+	"configuration.h"
+	"internalinput.h"
+	"internaltask.h"
+	"internalcore.h"
+	"engine.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalstructuresmanager.h
+	"types.h"
+	"internalcriticalsection.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalinterfacemanager.h
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalresourcemanager.h
+	"internalcriticalsection.h"
+	"internalstring.h"
+	"internalarray.h"
+	"internalfs.h"
+	"types.h"
+	<stdio.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalfs.h
+	"internalstring.h"
+	<stdio.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalmemorymanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaltreemanager.h
+	"internalstructuresmanager.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalarguments.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaldatabase.h
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalgraphics.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalinput.h
+	"input.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaltask.h
+	<windows.h>
+	<pthread.h>
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalcore.h
+	"types.h"
+
+1329215601 /home/eliseev/Projects/venta/sources/engine/engine.h
+	"structuresmanager.h"
+	"resourcemanager.h"
+	"criticalsection.h"
+	"texturemanager.h"
+	"dialogmanager.h"
+	"configuration.h"
+	"memorymanager.h"
+	"shadermanager.h"
+	"scenemanager.h"
+	"environment.h"
+	"skinmanager.h"
+	"treemanager.h"
+	"setmanager.h"
+	"arguments.h"
+	"database.h"
+	"physics.h"
+	"terrain.h"
+	"console.h"
+	"string.h"
+	"object.h"
+	"logger.h"
+	"thread.h"
+	"camera.h"
+	"light.h"
+	"types.h"
+	"time.h"
+	"pool.h"
+	"math.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/resourcemanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/texturemanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/dialogmanager.h
+
+1329396076 /home/eliseev/Projects/venta/sources/engine/shadermanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/scenemanager.h
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/environment.h
+	"types.h"
+	"color.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/skinmanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/treemanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/setmanager.h
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/arguments.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/terrain.h
+	"vector3d.h"
+	"types.h"
+
+1329229204 /home/eliseev/Projects/venta/sources/engine/object.h
+	"vector3d.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/logger.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/thread.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/light.h
+	"vector3d.h"
+	"color.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/pool.h
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/environment.c
+	"internalcriticalsection.h"
+	"internalresourcemanager.h"
+	"internalscenemanager.h"
+	"internalgraphics.h"
+	"internalsettings.h"
+	"memorymanager.h"
+	"environment.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/fs.c
+	"memorymanager.h"
+	"internalfs.h"
+	"fs.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/fs.h
+	"types.h"
+
+1329388295 source:/home/eliseev/Projects/venta/sources/engine/graphics.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glu.h>
+	<gl/glut.h>
+	<stdio.h>
+	<math.h>
+	"internalcriticalsection.h"
+	"internalshadermanager.h"
+	"internalscenemanager.h"
+	"internalgraphics.h"
+	"internalsettings.h"
+	"internalphysics.h"
+	"internalconsole.h"
+	"internalbuffer.h"
+	"internallight.h"
+	"memorymanager.h"
+	"internaltime.h"
+	"internaltext.h"
+	"internalcore.h"
+	"console.h"
+	"engine.h"
+	<string.h>
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/gl/glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalshadermanager.h
+	"internalscenemanager.h"
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internallight.h
+	"vector4d.h"
+	"light.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaltime.h
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/input.c
+	<gl/gl.h>
+	<gl/glu.h>
+	<gl/glut.h>
+	<string.h>
+	"internalconsole.h"
+	"internalinput.h"
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/interfacemanager.c
+	"internalcriticalsection.h"
+	"internalcontainer.h"
+	"interfacemanager.h"
+	"internaldialog.h"
+	"memorymanager.h"
+	"internallist.h"
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/interfacemanager.h
+	"types.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaldialog.h
+	"vector2d.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internallist.h
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalaabb.c
+	"internalaabb.h"
+
+1329317893 source:/home/eliseev/Projects/venta/sources/engine/internalarguments.c
+	"internalarguments.h"
+	"internalcontainer.h"
+	"internalsettings.h"
+	"internalbuffer.h"
+	"memorymanager.h"
+	"arguments.h"
+	<string.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalarray.c
+	"memorymanager.h"
+	"internalarray.h"
+	<string.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalbuffer.c
+	"internalbuffer.h"
+	"internalstring.h"
+	"memorymanager.h"
+	"string.h"
+	<strings.h>
+	<string.h>
+	<stdlib.h>
+
+1329140145 source:/home/eliseev/Projects/venta/sources/engine/internalcompress.c
+	"internalcompress.h"
+	"internalbuffer.h"
+	"memorymanager.h"
+	"internallist.h"
+	<string.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalcompress.h
+	"internalstring.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalconsole.c
+	"internalconsole.h"
+	"internalstring.h"
+	"internalbuffer.h"
+	"internalbuffer.h"
+	"internalcore.h"
+	"console.h"
+	"engine.h"
+	"input.h"
+	<stdlib.h>
+	<string.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalconsoleprocrender.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/glext.h>
+	"internalsettings.h"
+	"internalconsole.h"
+	"internalbuffer.h"
+	"internalstring.h"
+	"console.h"
+
+1329122857 /home/eliseev/Projects/venta/sources/3rdparty/include/gl/glext.h
+	<windows.h>
+	<stddef.h>
+	<inttypes.h>
+	<inttypes.h>
+	<inttypes.h>
+	<stdint.h>
+	<stdint.h>
+	<inttypes.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalconsoleprocresource.c
+	"resourcemanager.h"
+	"internalsettings.h"
+	"internalconsole.h"
+	"internalbuffer.h"
+	"internalstring.h"
+	"console.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalconsoleprocscene.c
+	"internalscenemanager.h"
+	"internalsettings.h"
+	"internalconsole.h"
+	"internalbuffer.h"
+	"internalstring.h"
+	"scenemanager.h"
+	"console.h"
+	<string.h>
+	<stdio.h>
+
+1329398213 source:/home/eliseev/Projects/venta/sources/engine/internalcontainer.c
+	"internalcontainer.h"
+	"memorymanager.h"
+	<string.h>
+	<stdio.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalculling.c
+	"internalsettings.h"
+	"internalculling.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalculling.h
+	"internalaabb.h"
+	"vector3d.h"
+
+1329315089 source:/home/eliseev/Projects/venta/sources/engine/internalgeometry.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/glext.h>
+	<string.h>
+	"internalgeometry.h"
+	"memorymanager.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalgeometry.h
+	"internalobject.h"
+	"internalmesh.h"
+	"vector3d.h"
+	"vector2d.h"
+	"types.h"
+	"color.h"
+	<stdio.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalheader.c
+	"internalheader.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalheader.h
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internallist.c
+	"memorymanager.h"
+	"internallist.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalmaterial.c
+	"internalmaterial.h"
+	"texturemanager.h"
+	"internalstring.h"
+	"internalbuffer.h"
+	"memorymanager.h"
+	"console.h"
+	"math.h"
+	<string.h>
+	<stdlib.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalmesh.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/glext.h>
+	"internalshadermanager.h"
+	"internalgeometry.h"
+	"internalsettings.h"
+	"memorymanager.h"
+	"internalmesh.h"
+	"vector4d.h"
+	<string.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalobject.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/glext.h>
+	"internalgeometry.h"
+	"internalmaterial.h"
+	"internalobject.h"
+	"internalheader.h"
+	"memorymanager.h"
+	"internalmesh.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalqueuestack.c
+	"structuresmanager.h"
+	"memorymanager.h"
+	"internalqueuestack.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalqueuestack.h
+	"internallist.h"
+
+1329395963 source:/home/eliseev/Projects/venta/sources/engine/internalsettings.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/glext.h>
+	"internalsettings.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalshadercartoon.c
+	"internalshadermanager.h"
+	"internalshaders.h"
+
+1329396038 /home/eliseev/Projects/venta/sources/engine/internalshaders.h
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalshaderenvironment.c
+	"internalshadermanager.h"
+	"internalshaders.h"
+
+1329395940 source:/home/eliseev/Projects/venta/sources/engine/internalshadermanager.c
+	"internalshadermanager.h"
+	"internalsettings.h"
+	"internalshaders.h"
+	"internalcamera.h"
+	"shadermanager.h"
+	"memorymanager.h"
+	<gl/glew.h>
+	<GL/gl.h>
+	"gl/glext.h"
+	<stdio.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalshadernormalmapping.c
+	"internalshadermanager.h"
+	"internalshaders.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalshaderterrain.c
+	"internalshadermanager.h"
+	"internalterrain.h"
+	"internalshaders.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalterrain.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/glext.h>
+	"internalterraintrim.h"
+	"internalterraingrid.h"
+	"internalbuffer.h"
+	"internalheader.h"
+	"memorymanager.h"
+	"math.h"
+	<stdlib.h>
+	<string.h>
+	<math.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalterraintrim.h
+	"internalterraingrid.h"
+	"internalterrain.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internalterraingrid.h
+	"internalterrain.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalterraingrid.c
+	"internalterraingrid.h"
+	"memorymanager.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internalterraintrim.c
+	"internalterraintrim.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internaltext.c
+	<gl/gl.h>
+	<gl/glu.h>
+	<gl/glut.h>
+	"internalgraphics.h"
+	"internalbuffer.h"
+	"internaltext.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internaltexturemanager.c
+	"internaltexturemanager.h"
+	"internaltexture.h"
+	"memorymanager.h"
+	<string.h>
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaltexture.h
+	"internalheader.h"
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internaltreebst.c
+	"internaltreebst.h"
+	"memorymanager.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaltreebst.h
+	"types.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/internaltreequad.c
+	"internaltreequad.h"
+	"memorymanager.h"
+
+1329122856 /home/eliseev/Projects/venta/sources/engine/internaltreequad.h
+	"vector2d.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/light.c
+	"internalscenemanager.h"
+	"internalsettings.h"
+	"memorymanager.h"
+	"internallight.h"
+	"light.h"
+	<gl/gl.h>
+	<gl/glut.h>
+	<string.h>
+
+1329140121 source:/home/eliseev/Projects/venta/sources/engine/logger.c
+	"internalcriticalsection.h"
+	"internallogger.h"
+	"internalbuffer.h"
+	"memorymanager.h"
+	"logger.h"
+	<string.h>
+	<stdio.h>
+	<time.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/memorymanager.c
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+	"internalcriticalsection.h"
+	"internalmemorymanager.h"
+	"memorymanager.h"
+	"logger.h"
+	"types.h"
+
+1329316838 source:/home/eliseev/Projects/venta/sources/engine/object.c
+	"internalresourcemanager.h"
+	"internalscenemanager.h"
+	"internalcontainer.h"
+	"internalobject.h"
+	"console.h"
+	"object.h"
+	<string.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/pool.c
+	"internalcriticalsection.h"
+	"memorymanager.h"
+	"internalcore.h"
+	"internaltask.h"
+	"thread.h"
+	"pool.h"
+	"time.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/resourcemanager.c
+	<windows.h>
+	<dirent.h>
+	"internalresourcemanager.h"
+	"internalcontainer.h"
+	"resourcemanager.h"
+	"internalheader.h"
+	"internalbuffer.h"
+	"internalstring.h"
+	"internallist.h"
+	"memorymanager.h"
+	"internalfs.h"
+	"console.h"
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/scenemanager.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glu.h>
+	<gl/glut.h>
+	<GL/glu.h>
+	<string.h>
+	<stdlib.h>
+	"internalscenemanager.h"
+	"internalenvironment.h"
+	"internalsettings.h"
+	"internalcamera.h"
+	"internalobject.h"
+	"internallight.h"
+	"memorymanager.h"
+	"scenemanager.h"
+	"console.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/setmanager.c
+
+1329396182 source:/home/eliseev/Projects/venta/sources/engine/shadermanager.c
+	<gl/glew.h>
+	<GL/gl.h>
+	<GL/glext.h>
+	"internalshadermanager.h"
+	"internalsettings.h"
+	"shadermanager.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/skinmanager.c
+	"skinmanager.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/string.c
+	"internalcontainer.h"
+	"internalstring.h"
+	"internalbuffer.h"
+	"memorymanager.h"
+	"string.h"
+	<string.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/structuresmanager.c
+	"internalstructuresmanager.h"
+	"internalcontainer.h"
+	"structuresmanager.h"
+	"memorymanager.h"
+	"internalqueuestack.h"
+	"internalarray.h"
+	"internallist.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/terrain.c
+	<gl/glew.h>
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/glext.h>
+	<string.h>
+	<stdlib.h>
+	<math.h>
+	"internalresourcemanager.h"
+	"internalshadermanager.h"
+	"internalscenemanager.h"
+	"internalsettings.h"
+	"internalgeometry.h"
+	"internalculling.h"
+	"internalterrain.h"
+	"internalbuffer.h"
+	"internalheader.h"
+	"texturemanager.h"
+	"memorymanager.h"
+	"internalfs.h"
+	"console.h"
+	"terrain.h"
+	"math.h"
+
+1329231902 source:/home/eliseev/Projects/venta/sources/engine/texturemanager.c
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/glu.h>
+	<GL/glu.h>
+	"internalresourcemanager.h"
+	"internaltexturemanager.h"
+	"internalcontainer.h"
+	"texturemanager.h"
+	"internalstring.h"
+	"internalbuffer.h"
+	"memorymanager.h"
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/thread.c
+	"internalcriticalsection.h"
+	"memorymanager.h"
+	"internaltask.h"
+	"thread.h"
+	"logger.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/time.c
+	<windows.h>
+	<time.h>
+	<unistd.h>
+	<sys/timeb.h>
+	<unistd.h>
+	<stdio.h>
+	"internalsettings.h"
+	"time.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/treemanager.c
+	"internalstructuresmanager.h"
+	"internaltreemanager.h"
+	"internalcontainer.h"
+	"internaltreebst.h"
+	"memorymanager.h"
+	"treemanager.h"
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/vector2d.c
+	"vector2d.h"
+
+1329390803 source:/home/eliseev/Projects/venta/sources/engine/vector3d.c
+	"vector3d.h"
+	<math.h>
+
+1329122856 source:/home/eliseev/Projects/venta/sources/engine/vector4d.c
+	"vector4d.h"
+
+1329214847 /home/eliseev/Projects/venta/sources/engine/physics.h
+	"temperature.h"
+	"charge.h"
+	"color.h"
+	"mass.h"
+
+1329216992 /home/eliseev/Projects/venta/sources/engine/temperature.h
+	"types.h"
+
+1329217381 /home/eliseev/Projects/venta/sources/engine/charge.h
+	"types.h"
+
+1329230981 /home/eliseev/Projects/venta/sources/engine/mass.h
+	"types.h"
+
+1329231013 source:/home/eliseev/Projects/venta/sources/engine/physics.c
+	"internalscenemanager.h"
+	"internalcontainer.h"
+	"internalphysics.h"
+	"internalobject.h"
+	"temperature.h"
+	"console.h"
+	"charge.h"
+	"mass.h"
+	"math.h"
+	<math.h>
+
+1329391461 /home/eliseev/Projects/venta/sources/engine/internalphysics.h
+	"types.h"
+
+1329390872 source:/home/eliseev/Projects/venta/sources/engine/internalgravity.c
+	"internalscenemanager.h"
+	"internalsettings.h"
+	"internalphysics.h"
+	"console.h"
+	"physics.h"
+	"math.h"
+
+1329314509 /home/eliseev/Projects/venta/sources/engine/internalboundsphere.h
+	"types.h"
+	"math.h"
+
+1329391055 source:/home/eliseev/Projects/venta/sources/engine/internalboundsphere.c
+	"internalresourcemanager.h"
+	"internalscenemanager.h"
+	"internalcontainer.h"
+	"internalobject.h"
+	"console.h"
+	"object.h"
+	<string.h>
+
+1329402998 source:/home/eliseev/Projects/venta/sources/engine/internalshaderplanet.c
+	"internalshadermanager.h"
+	"internalshaders.h"
+
+=======
+# depslib dependency file v1.0
+>>>>>>> .r245

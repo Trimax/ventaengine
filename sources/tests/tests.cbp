@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="tests" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="..\bin\debug\tests" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin" />
+				<Option object_output="..\bin\debug\tests\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="engine.dll" />
+					<Add directory="..\bin\debug" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="..\bin\release\tests" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin" />
+				<Option object_output="..\bin\release\tests\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="engine.dll" />
+					<Add directory="..\bin\release" />
+				</Linker>
+			</Target>
+			<Target title="LDebug">
+				<Option output="..\bin\debug\apptests" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin" />
+				<Option object_output="..\bin\debug\tests\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="engine" />
+					<Add directory="..\bin\debug" />
+				</Linker>
+			</Target>
+			<Target title="LRelease">
+				<Option output="..\bin\release\apptests" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin" />
+				<Option object_output="..\bin\release\tests\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="engine" />
+					<Add directory="..\bin\release" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fpack-struct=1" />
+			<Add option="-Wno-unknown-pragmas" />
+			<Add option="-D_STDCALL_SUPPORTED -D_M_IX86" />
+			<Add directory="..\..\sources" />
+			<Add directory="..\..\..\..\MinGW\include" />
+		</Compiler>
+		<Linker>
+			<Add option="-Wl" />
+			<Add directory="..\..\..\..\MinGW\lib" />
+		</Linker>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="testdatabase.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="testgraphics.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="testmath.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="testmemory.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="testpool.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tests.h" />
+		<Unit filename="teststrings.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="teststructures.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="testthreads.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="testtime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

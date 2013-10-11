@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="space" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="..\bin\debug\space" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin" />
+				<Option object_output="..\bin\debug\space\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="engine.dll" />
+					<Add directory="..\bin\debug" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="..\bin\release\space" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin\" />
+				<Option object_output="..\bin\release\space\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="engine.dll" />
+					<Add directory="..\bin\release" />
+				</Linker>
+			</Target>
+			<Target title="LDebug">
+				<Option output="..\bin\debug\appspace" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin\" />
+				<Option object_output="..\bin\debug\space\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="engine" />
+					<Add directory="..\bin\debug" />
+				</Linker>
+			</Target>
+			<Target title="LRelease">
+				<Option output="..\bin\release\appspace" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\bin\" />
+				<Option object_output="..\bin\release\space\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="engine" />
+					<Add directory="..\bin\release" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fpack-struct=1" />
+			<Add option="-Wno-unknown-pragmas" />
+			<Add directory="..\..\sources" />
+		</Compiler>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

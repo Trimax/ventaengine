@@ -1,0 +1,1 @@
+#include "skinmanager.h"

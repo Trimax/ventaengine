@@ -1,0 +1,175 @@
+# depslib dependency file v1.0
+1331990105 source:c:\data\projects\nl\sources\veoviewer\main.c
+	"engine/engine.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+	<math.h>
+
+1330515943 c:\data\projects\nl\sources\engine\engine.h
+	"structuresmanager.h"
+	"interfacemanager.h"
+	"resourcemanager.h"
+	"criticalsection.h"
+	"texturemanager.h"
+	"configuration.h"
+	"memorymanager.h"
+	"shadermanager.h"
+	"scenemanager.h"
+	"environment.h"
+	"skinmanager.h"
+	"treemanager.h"
+	"arguments.h"
+	"billboard.h"
+	"database.h"
+	"physics.h"
+	"terrain.h"
+	"console.h"
+	"string.h"
+	"object.h"
+	"logger.h"
+	"thread.h"
+	"camera.h"
+	"light.h"
+	"types.h"
+	"time.h"
+	"pool.h"
+	"math.h"
+	"menu.h"
+	"fog.h"
+
+1326552548 c:\data\projects\nl\sources\engine\structuresmanager.h
+	"types.h"
+
+1331986291 c:\data\projects\nl\sources\engine\types.h
+
+1330501704 c:\data\projects\nl\sources\engine\interfacemanager.h
+	"types.h"
+	"math.h"
+
+1331977296 c:\data\projects\nl\sources\engine\math.h
+	"quaternion.h"
+	"vector4d.h"
+	"vector3d.h"
+	"vector2d.h"
+
+1331987504 c:\data\projects\nl\sources\engine\vector4d.h
+	"vector3d.h"
+	"types.h"
+
+1329406081 c:\data\projects\nl\sources\engine\vector3d.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\vector2d.h
+	"types.h"
+
+1326552547 c:\data\projects\nl\sources\engine\resourcemanager.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\criticalsection.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\texturemanager.h
+	"types.h"
+
+1330443189 c:\data\projects\nl\sources\engine\configuration.h
+	"types.h"
+	"input.h"
+
+1330501623 c:\data\projects\nl\sources\engine\input.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\memorymanager.h
+	"types.h"
+
+1329551311 c:\data\projects\nl\sources\engine\shadermanager.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\scenemanager.h
+
+1329567552 c:\data\projects\nl\sources\engine\environment.h
+	"types.h"
+	"color.h"
+
+1326552548 c:\data\projects\nl\sources\engine\color.h
+	"vector4d.h"
+
+1326552548 c:\data\projects\nl\sources\engine\skinmanager.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\treemanager.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\arguments.h
+	"types.h"
+
+1330516289 c:\data\projects\nl\sources\engine\billboard.h
+	"types.h"
+	"math.h"
+
+1326552548 c:\data\projects\nl\sources\engine\database.h
+	"types.h"
+
+1329406081 c:\data\projects\nl\sources\engine\physics.h
+	"temperature.h"
+	"charge.h"
+	"color.h"
+	"mass.h"
+
+1329406081 c:\data\projects\nl\sources\engine\temperature.h
+	"types.h"
+
+1329406081 c:\data\projects\nl\sources\engine\charge.h
+	"types.h"
+
+1329406081 c:\data\projects\nl\sources\engine\mass.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\terrain.h
+	"vector3d.h"
+	"types.h"
+
+1330523426 c:\data\projects\nl\sources\engine\console.h
+	"physics.h"
+	"types.h"
+	"math.h"
+
+1326552548 c:\data\projects\nl\sources\engine\string.h
+	"types.h"
+
+1331984143 c:\data\projects\nl\sources\engine\object.h
+	"vector3d.h"
+
+1326552548 c:\data\projects\nl\sources\engine\logger.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\thread.h
+	"types.h"
+
+1330525111 c:\data\projects\nl\sources\engine\camera.h
+	"vector2d.h"
+	"vector3d.h"
+
+1329649627 c:\data\projects\nl\sources\engine\light.h
+	"vector3d.h"
+	"color.h"
+
+1326552548 c:\data\projects\nl\sources\engine\time.h
+	"types.h"
+
+1326552548 c:\data\projects\nl\sources\engine\pool.h
+	"types.h"
+
+1329929090 c:\data\projects\nl\sources\engine\menu.h
+	"types.h"
+
+1329929090 c:\data\projects\nl\sources\engine\fog.h
+	"physics.h"
+
+1331986670 c:\data\projects\nl\sources\engine\quaternion.h
+	"vector4d.h"
+	"matrix3d.h"
+
+1331978298 c:\data\projects\nl\sources\engine\matrix3d.h
+	"types.h"
+

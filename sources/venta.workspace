@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Venta">
+		<Project filename="engine/engine.cbp" />
+		<Project filename="mapeditor/mapeditor.cbp">
+			<Depends filename="engine/engine.cbp" />
+		</Project>
+		<Project filename="terrain/terrain.cbp">
+			<Depends filename="engine/engine.cbp" />
+		</Project>
+		<Project filename="tests/tests.cbp">
+			<Depends filename="engine/engine.cbp" />
+		</Project>
+		<Project filename="tga2vet/tga2vet.cbp">
+			<Depends filename="engine/engine.cbp" />
+		</Project>
+		<Project filename="veoviewer/veoviewer.cbp" active="1">
+			<Depends filename="engine/engine.cbp" />
+		</Project>
+		<Project filename="space/space.cbp">
+			<Depends filename="engine/engine.cbp" />
+		</Project>
+	</Workspace>
+</CodeBlocks_workspace_file>

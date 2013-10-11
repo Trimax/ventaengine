@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="definitions.c" open="0" top="0" tabpos="3">
+		<Cursor position="162" topLine="0" />
+	</File>
+	<File name="editor.h" open="0" top="0" tabpos="4">
+		<Cursor position="270" topLine="0" />
+	</File>
+	<File name="editorinput.c" open="0" top="0" tabpos="2">
+		<Cursor position="141" topLine="3" />
+	</File>
+	<File name="gui.c" open="0" top="0" tabpos="3">
+		<Cursor position="373" topLine="0" />
+	</File>
+	<File name="main.c" open="0" top="0" tabpos="0">
+		<Cursor position="1685" topLine="30" />
+	</File>
+</CodeBlocks_layout_file>

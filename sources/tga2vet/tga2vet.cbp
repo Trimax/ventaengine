@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="tga2vet" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../bin/debug/tga2vet" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../bin" />
+				<Option object_output="../bin/debug/tga2vet/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-input grass.tga -output" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="engine.dll" />
+					<Add directory="../bin/debug" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="../bin/release/tga2vet" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../bin" />
+				<Option object_output="../bin/release/tga2vet/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="engine.dll" />
+					<Add directory="../bin/release" />
+				</Linker>
+			</Target>
+			<Target title="LDebug">
+				<Option output="../bin/debug/apptga2vet" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../bin" />
+				<Option object_output="../bin/debug/tga2vet/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-input data/textures/tchest_common0_n.tga -output data/textures/tchest_common0_n.vet -swap" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="engine" />
+					<Add directory="../bin/debug" />
+				</Linker>
+			</Target>
+			<Target title="LRelease">
+				<Option output="../bin/release/apptga2vet" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../bin" />
+				<Option object_output="../bin/release/tga2vet/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="engine" />
+					<Add directory="../bin/release" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fpack-struct=1" />
+			<Add option="-Wno-unknown-pragmas" />
+			<Add directory="../../sources" />
+		</Compiler>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
