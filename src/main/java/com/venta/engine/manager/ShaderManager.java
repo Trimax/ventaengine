@@ -1,4 +1,4 @@
-package com.venta.engine.core;
+package com.venta.engine.manager;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exception.ShaderCompileException;
@@ -13,8 +13,8 @@ import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
-@AllArgsConstructor
-final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity> {
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity> {
     private final ResourceManager resourceManager;
 
     public ShaderEntity loadVertexShader(final String name) {

@@ -16,6 +16,8 @@ public final class RotatingCube implements Venta {
     public void onStartup(final String[] args, final Context context) {
         log.info("Rotating cube started");
         log.info("Context: {}", context);
+
+
     }
 
     @Override

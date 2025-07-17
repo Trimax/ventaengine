@@ -1,7 +1,9 @@
-package com.venta.engine.core;
+package com.venta.engine.manager;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exception.WindowCreationException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
-final class WindowManager extends AbstractManager<WindowManager.WindowEntity> {
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+public final class WindowManager extends AbstractManager<WindowManager.WindowEntity> {
     public WindowEntity create(final String title, final int width, final int height) {
         log.info("Creating window: {}", title);
         final var id = glfwCreateWindow(width, height, title, NULL, NULL);

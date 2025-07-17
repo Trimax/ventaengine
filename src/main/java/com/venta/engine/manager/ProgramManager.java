@@ -1,11 +1,8 @@
-package com.venta.engine.core;
+package com.venta.engine.manager;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exception.ProgramLinkException;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 import org.apache.commons.lang3.ArrayUtils;
@@ -16,8 +13,8 @@ import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity> {
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity> {
     public ProgramEntity link(final String name, final ShaderManager.ShaderEntity... shaders) {
         if (ArrayUtils.isEmpty(shaders))
             throw new ProgramLinkException(name);

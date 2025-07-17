@@ -2,6 +2,8 @@ package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configuration.WindowConfiguration;
+import com.venta.engine.manager.ProgramManager;
+import com.venta.engine.manager.WindowManager;
 import com.venta.engine.model.BakedObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
