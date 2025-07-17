@@ -16,6 +16,7 @@ public final class Context {
     private final ObjectManager objectManager;
     private final ShaderManager shaderManager;
     private final WindowManager windowManager;
+    private final SceneManager sceneManager;
 
     void cleanup() {
 //        programManager.destroy();
