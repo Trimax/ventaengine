@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <RollingFile name="FileAppender" fileName="logs/venta.log" filePattern="logs/venta-%d{dd-MM-yyyy}-%i.log">
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="2 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="2000" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n" />
+        </RollingFile>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout disableAnsi="false" alwaysWriteExceptions="false"
+                           pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n}{FATAL=red blink, ERROR=red, WARN=yellow, INFO=normal, DEBUG=cyan, TRACE=blue}" />
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="FileAppender" />
+        </Root>
+    </Loggers>
+</Configuration>

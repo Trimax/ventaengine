@@ -1,0 +1,52 @@
+{
+  "type": "object",
+  "name": "Colored cube",
+  "vertices": [
+    {
+      "position": {"x": -0.5, "y": -0.5, "z": -0.5},
+      "color": {"r": 1, "g": 0, "b": 0, "a": 1}
+    },
+    {
+      "position": {"x": 0.5, "y": -0.5, "z": -0.5},
+      "color": {"r": 0, "g": 1, "b": 0, "a": 1}
+    },
+    {
+      "position": {"x": 0.5, "y": 0.5, "z": -0.5},
+      "color": {"r": 0, "g": 0, "b": 1, "a": 1}
+    },
+    {
+      "position": {"x": -0.5, "y": 0.5, "z": -0.5},
+      "color": {"r": 1, "g": 1, "b": 0, "a": 1}
+    },
+    {
+      "position": {"x": -0.5, "y": -0.5, "z": 0.5},
+      "color": {"r": 1, "g": 0, "b": 1, "a": 1}
+    },
+    {
+      "position": {"x": 0.5, "y": -0.5, "z": 0.5},
+      "color": {"r": 0, "g": 1, "b": 1, "a": 1}
+    },
+    {
+      "position": {"x": 0.5, "y": 0.5, "z": 0.5},
+      "color": {"r": 1, "g": 1, "b": 1, "a": 1}
+    },
+    {
+      "position": {"x": -0.5, "y": 0.5, "z": 0.5},
+      "color": {"r": 0.5, "g": 0.5, "b": 0.5, "a": 1}
+    }
+  ],
+  "facets": [
+    {"vertex1": 0, "vertex2": 1, "vertex3": 2},
+    {"vertex1": 2, "vertex2": 3, "vertex3": 0},
+    {"vertex1": 4, "vertex2": 5, "vertex3": 6},
+    {"vertex1": 6, "vertex2": 7, "vertex3": 4},
+    {"vertex1": 0, "vertex2": 1, "vertex3": 5},
+    {"vertex1": 5, "vertex2": 4, "vertex3": 0},
+    {"vertex1": 2, "vertex2": 3, "vertex3": 7},
+    {"vertex1": 7, "vertex2": 6, "vertex3": 2},
+    {"vertex1": 0, "vertex2": 3, "vertex3": 7},
+    {"vertex1": 7, "vertex2": 4, "vertex3": 0},
+    {"vertex1": 1, "vertex2": 2, "vertex3": 6},
+    {"vertex1": 6, "vertex2": 5, "vertex3": 1}
+  ]
+}
