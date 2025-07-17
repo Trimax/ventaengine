@@ -1,6 +1,7 @@
 package com.venta.engine;
 
 import com.venta.engine.annotations.Inject;
+import com.venta.engine.core.Context;
 import com.venta.engine.core.Engine;
 import com.venta.engine.exception.EngineInitializationException;
 import com.venta.engine.interfaces.Venta;
@@ -30,13 +31,11 @@ public final class VentaEngine {
 
         final var engine = getComponent(Engine.class);
         engine.initialize(venta.createWindowConfiguration());
-
-
+        venta.onStartup(args, getComponent(Context.class));
 
         engine.run();
 
-        venta.onStartup(args);
-        // starter.run;
+        //TODO: Destroy all managers
     }
 
     private static void createContext() {
@@ -49,8 +48,8 @@ public final class VentaEngine {
         }
     }
 
-    private static <T> T getComponent(final Class<T> type) {
-        return type.cast(components.get(type));
+    private static <C> C getComponent(final Class<C> componentClass) {
+        return componentClass.cast(components.get(componentClass));
     }
 
     @SneakyThrows

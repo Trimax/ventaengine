@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Slf4j
 @Component
 @AllArgsConstructor
-public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
+final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
     static final ObjectManager instance = new ObjectManager();
     private static final Gson parser = new GsonBuilder().create();
     private static final AtomicLong counter = new AtomicLong();
