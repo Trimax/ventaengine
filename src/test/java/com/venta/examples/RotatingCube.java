@@ -15,9 +15,11 @@ public final class RotatingCube implements Venta {
     @Override
     public void onStartup(final String[] args, final Context context) {
         log.info("Rotating cube started");
-        log.info("Context: {}", context);
 
+        final var scene = context.getSceneManager().create("Sample scene");
 
+        final var myCube = context.getObjectManager().load("cube.json");
+        scene.getObjects().add(myCube);
     }
 
     @Override

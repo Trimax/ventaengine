@@ -7,12 +7,18 @@ import lombok.NonNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class AbstractManager<V extends AbstractManager.AbstractEntity> {
     private final Map<Long, V> values = new ConcurrentHashMap<>();
+    private final AtomicLong counter = new AtomicLong();
 
     public final V get(final Long id) {
         return values.get(id);
+    }
+
+    protected final long generateID() {
+        return counter.incrementAndGet();
     }
 
     protected final V store(final V value) {

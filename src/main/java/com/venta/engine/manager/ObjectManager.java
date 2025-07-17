@@ -1,7 +1,5 @@
 package com.venta.engine.manager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.model.VentaObject;
 import lombok.AccessLevel;
@@ -10,28 +8,17 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
     private final ResourceManager resourceManager;
 
-    private static final Gson parser = new GsonBuilder().create();
-    private static final AtomicLong counter = new AtomicLong();
-
     public ObjectEntity load(final String name) {
         log.info("Loading object {}", name);
 
-        return store(new ObjectEntity(counter.incrementAndGet(), name,
-                parse(resourceManager.load(String.format("/objects/%s", name)))));
+        return store(new ObjectEntity(generateID(), name, resourceManager.load(String.format("/objects/%s", name), VentaObject.class)));
     }
-
-    private VentaObject parse(final String serializedObject) {
-        return parser.fromJson(serializedObject, VentaObject.class);
-    }
-
 
     @Override
     protected void destroy(final ObjectEntity object) {

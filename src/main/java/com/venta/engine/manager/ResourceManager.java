@@ -1,11 +1,12 @@
 package com.venta.engine.manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
@@ -17,6 +18,8 @@ import java.nio.charset.StandardCharsets;
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity> {
+    private static final Gson parser = new GsonBuilder().create();
+
     public String load(final String path) {
         try (final InputStream stream = ResourceManager.class.getResourceAsStream(path)) {
             if (stream == null)
@@ -26,6 +29,10 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
         } catch (final IOException e) {
             throw new ResourceNotFoundException(path);
         }
+    }
+
+    public <O> O load(final String path, final Class<O> objectClass) {
+        return parser.fromJson(load(path), objectClass);
     }
 
     @Override
