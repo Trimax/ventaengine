@@ -70,9 +70,7 @@ public final class Engine implements Runnable {
 
         loop();
 
-        ProgramManager.instance.destroy();
-        ShaderManager.instance.destroy();
-        WindowManager.instance.destroy();
+        //TODO: Deinitialize managers
 
         glfwTerminate();
     }
@@ -152,9 +150,9 @@ public final class Engine implements Runnable {
     }
 
     private ProgramManager.ProgramEntity createShader() {
-        return ProgramManager.instance.link("Basic",
-                ShaderManager.instance.loadVertexShader("basic.glsl"),
-                ShaderManager.instance.loadFragmentShader("basic.glsl"));
+        return context.getProgramManager().link("Basic",
+                context.getShaderManager().loadVertexShader("basic.glsl"),
+                context.getShaderManager().loadFragmentShader("basic.glsl"));
     }
 }
 

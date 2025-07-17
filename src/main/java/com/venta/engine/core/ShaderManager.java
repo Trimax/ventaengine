@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL20C.*;
 @Component
 @AllArgsConstructor
 final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity> {
-    static final ShaderManager instance = new ShaderManager();
+    private final ResourceManager resourceManager;
 
     public ShaderEntity loadVertexShader(final String name) {
         return load(String.format("vertex/%s", name), ShaderEntity.Type.Vertex);
@@ -28,7 +28,7 @@ final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity> {
     private ShaderEntity load(final String name, final ShaderEntity.Type type) {
         log.info("Loading shader {}", name);
 
-        final var code = ResourceManager.instance.load(String.format("/shaders/%s", name));
+        final var code = resourceManager.load(String.format("/shaders/%s", name));
         final var id = glCreateShader(type.getValue());
 
         glShaderSource(id, code);

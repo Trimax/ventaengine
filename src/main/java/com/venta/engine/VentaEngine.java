@@ -23,19 +23,17 @@ public final class VentaEngine {
     public static void run(final String[] args, final Venta venta) {
         log.info("Starting VentaEngine");
 
-        final long timeStarted = System.nanoTime();
+        final long timeStarted = System.currentTimeMillis();
         createContext();
-
-        final long timeFinished = System.nanoTime();
-        log.info("VentaEngine started in {}ms", timeFinished - timeStarted);
 
         final var engine = getComponent(Engine.class);
         engine.initialize(venta.createWindowConfiguration());
+
+        final long timeFinished = System.currentTimeMillis();
+        log.info("VentaEngine started in {}ms", timeFinished - timeStarted);
+
         venta.onStartup(args, getComponent(Context.class));
-
         engine.run();
-
-        //TODO: Destroy all managers
     }
 
     private static void createContext() {
@@ -69,6 +67,8 @@ public final class VentaEngine {
         components.put(clazz, instance);
 
         creationStack.remove(clazz);
+
+        log.debug("Component {} was created successfully", clazz.getSimpleName());
         return instance;
     }
 

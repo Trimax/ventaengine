@@ -16,9 +16,9 @@
     </Appenders>
 
     <Loggers>
-        <Root level="INFO" additivity="false">
-            <AppenderRef ref="ConsoleAppender" />
-            <AppenderRef ref="FileAppender" />
+        <Root level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender" level="INFO" />
+            <AppenderRef ref="FileAppender" level="DEBUG" />
         </Root>
     </Loggers>
 </Configuration>
