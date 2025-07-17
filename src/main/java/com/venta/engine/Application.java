@@ -13,11 +13,9 @@ public final class Application {
         final var window = engine.getWindowManager().create("Venta engine", 1024, 768);
         engine.setWindow(window);
 
-//        final var program = engine.getProgramManager().link("Basic",
-//                engine.getShaderManager().loadVertexShader("basic.glsl"),
-//                engine.getShaderManager().loadFragmentShader("basic.glsl"));
-
-        final var object = engine.getObjectManager().load("cube.json");
+        //        final var program = engine.getProgramManager().link("Basic",
+        //                engine.getShaderManager().loadVertexShader("basic.glsl"),
+        //                engine.getShaderManager().loadFragmentShader("basic.glsl"));
 
         /* TODO list
          * 1. Figure out window order initialization

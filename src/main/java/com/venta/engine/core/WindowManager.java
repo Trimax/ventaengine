@@ -11,8 +11,8 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
-public final class $WindowManager extends $AbstractManager<$WindowManager.WindowEntity> {
-    final static $WindowManager instance = new $WindowManager();
+public final class WindowManager extends AbstractManager<WindowManager.WindowEntity> {
+    static final WindowManager instance = new WindowManager();
 
     public WindowEntity create(final String title, final int width, final int height) {
         log.info("Creating window: {}", title);
