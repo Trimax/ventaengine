@@ -41,7 +41,7 @@ public final class VentaEngine {
             StreamEx.of(ComponentUtil.scan(VentaEngine.class.getPackageName())).forEach(VentaEngine::createComponent);
             log.info("{} components found and loaded", components.size());
             log.debug("Found components: {}", StreamEx.of(components.keySet()).map(Class::getSimpleName).joining(","));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new EngineInitializationException(e.getMessage());
         }
     }
