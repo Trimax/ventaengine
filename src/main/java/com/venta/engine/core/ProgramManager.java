@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL20C.*;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity> {
+final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity> {
     static final ProgramManager instance = new ProgramManager();
 
     public ProgramEntity link(final String name, final ShaderManager.ShaderEntity... shaders) {

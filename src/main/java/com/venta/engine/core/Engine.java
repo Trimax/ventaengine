@@ -3,7 +3,6 @@ package com.venta.engine.core;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configuration.WindowConfiguration;
 import com.venta.engine.model.BakedObject;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,23 +21,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Component
 @RequiredArgsConstructor
 public final class Engine implements Runnable {
-    @Getter
-    private final ResourceManager resourceManager;
-
-    @Getter
-    private final ProgramManager programManager;
-
-    @Getter
-    private final ObjectManager objectManager;
-
-    @Getter
-    private final ShaderManager shaderManager;
-
-    @Getter
-    private final WindowManager windowManager;
-
-
-
+    private final Context context;
 
     @Setter
     private WindowManager.WindowEntity window;
@@ -53,7 +36,8 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = windowManager.create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height());
+        window = context.getWindowManager()
+                .create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height());
     }
 
     private ProgramManager.ProgramEntity shaderProgram;
@@ -121,7 +105,7 @@ public final class Engine implements Runnable {
     }
 
     private int createVAO() {
-        cube = getObjectManager().load("cube.json").getObject().bake();
+        cube = context.getObjectManager().load("cube.json").getObject().bake();
 
         final int vao = glGenVertexArrays();
         final int vbo = glGenBuffers();

@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL20C.*;
 @Slf4j
 @Component
 @AllArgsConstructor
-public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity> {
+final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity> {
     static final ShaderManager instance = new ShaderManager();
 
     public ShaderEntity loadVertexShader(final String name) {

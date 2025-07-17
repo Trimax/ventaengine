@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity> {
+final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity> {
     static final ResourceManager instance = new ResourceManager();
 
     public String load(final String path) {

@@ -13,7 +13,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
-public final class WindowManager extends AbstractManager<WindowManager.WindowEntity> {
+final class WindowManager extends AbstractManager<WindowManager.WindowEntity> {
     static final WindowManager instance = new WindowManager();
 
     public WindowEntity create(final String title, final int width, final int height) {
