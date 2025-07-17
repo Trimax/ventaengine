@@ -1,0 +1,76 @@
+package com.venta.engine.core;
+
+import com.venta.engine.exception.ShaderCompileException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.opengl.GL20C;
+
+import static org.lwjgl.opengl.GL20C.*;
+
+@Slf4j
+@AllArgsConstructor
+public final class $ShaderManager extends $AbstractManager<$ShaderManager.ShaderEntity> {
+    final static $ShaderManager instance = new $ShaderManager();
+
+    public ShaderEntity loadVertexShader(final String name) {
+        return load(String.format("vertex/%s", name), ShaderEntity.Type.Vertex);
+    }
+
+    public ShaderEntity loadFragmentShader(final String name) {
+        return load(String.format("fragment/%s", name), ShaderEntity.Type.Fragment);
+    }
+
+    private ShaderEntity load(final String name, final ShaderEntity.Type type) {
+        log.info("Loading shader {}", name);
+
+        final var code = $ResourceManager.instance.load(String.format("/shaders/%s", name));
+        final var id = glCreateShader(type.getValue());
+
+        glShaderSource(id, code);
+        glCompileShader(id);
+        checkCompile(id);
+
+        return store(new ShaderEntity(id, type, name, code));
+    }
+
+    private void checkCompile(final int shaderId) {
+        if (glGetShaderi(shaderId, GL_COMPILE_STATUS) == GL_FALSE) {
+            throw new ShaderCompileException(glGetShaderInfoLog(shaderId));
+        }
+    }
+
+    @Override
+    protected void destroy(final ShaderEntity shader) {
+        log.info("Unloading shader {}", shader.getName());
+        glDeleteShader(shader.getIdAsInteger());
+    }
+
+    @Getter
+    public static final class ShaderEntity extends AbstractEntity {
+        private final Type type;
+        private final String name;
+
+        @Getter(AccessLevel.NONE)
+        private final String code;
+
+        ShaderEntity(final long id, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
+            super(id);
+
+            this.type = type;
+            this.name = name;
+            this.code = code;
+        }
+
+        @Getter
+        @AllArgsConstructor(access = AccessLevel.PRIVATE)
+        public enum Type {
+            Vertex(GL20C.GL_VERTEX_SHADER),
+            Fragment(GL20C.GL_FRAGMENT_SHADER);
+
+            private final int value;
+        }
+    }
+}
