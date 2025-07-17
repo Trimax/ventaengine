@@ -15,7 +15,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 @AllArgsConstructor
 final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
-    static final ObjectManager instance = new ObjectManager();
+    private final ResourceManager resourceManager;
+
     private static final Gson parser = new GsonBuilder().create();
     private static final AtomicLong counter = new AtomicLong();
 
@@ -23,7 +24,7 @@ final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
         log.info("Loading object {}", name);
 
         return store(new ObjectEntity(counter.incrementAndGet(), name,
-                parse(ResourceManager.instance.load(String.format("/objects/%s", name)))));
+                parse(resourceManager.load(String.format("/objects/%s", name)))));
     }
 
     private VentaObject parse(final String serializedObject) {

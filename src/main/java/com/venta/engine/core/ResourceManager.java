@@ -16,8 +16,6 @@ import java.nio.charset.StandardCharsets;
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity> {
-    static final ResourceManager instance = new ResourceManager();
-
     public String load(final String path) {
         try (final InputStream stream = ResourceManager.class.getResourceAsStream(path)) {
             if (stream == null)

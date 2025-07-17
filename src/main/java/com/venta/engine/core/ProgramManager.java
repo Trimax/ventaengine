@@ -18,8 +18,6 @@ import static org.lwjgl.opengl.GL20C.*;
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity> {
-    static final ProgramManager instance = new ProgramManager();
-
     public ProgramEntity link(final String name, final ShaderManager.ShaderEntity... shaders) {
         if (ArrayUtils.isEmpty(shaders))
             throw new ProgramLinkException(name);
