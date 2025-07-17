@@ -20,10 +20,10 @@ public final class Context {
     private final SceneManager sceneManager;
 
     void cleanup() {
-//        programManager.destroy();
-//        shaderManager.destroy();
-//        objectManager.destroy();
-//        windowManager.destroy();
-//        resourceManager.destroy();
+        //programManager.destroy();
+        //shaderManager.destroy();
+        //objectManager.destroy();
+        //windowManager.destroy();
+        //resourceManager.destroy();
     }
 }
