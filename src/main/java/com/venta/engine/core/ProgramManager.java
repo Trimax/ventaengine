@@ -1,5 +1,6 @@
 package com.venta.engine.core;
 
+import com.venta.engine.annotations.Component;
 import com.venta.engine.exception.ProgramLinkException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
+@Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity> {
     static final ProgramManager instance = new ProgramManager();

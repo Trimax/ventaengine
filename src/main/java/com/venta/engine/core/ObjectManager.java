@@ -2,6 +2,7 @@ package com.venta.engine.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.venta.engine.annotations.Component;
 import com.venta.engine.model.VentaObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
+@Component
 @AllArgsConstructor
 public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
     static final ObjectManager instance = new ObjectManager();
