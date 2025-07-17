@@ -1,8 +1,9 @@
-package com.venta.engine.core;
+package com.venta.engine.manager;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,8 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity> {
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+public final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity> {
     public String load(final String path) {
         try (final InputStream stream = ResourceManager.class.getResourceAsStream(path)) {
             if (stream == null)

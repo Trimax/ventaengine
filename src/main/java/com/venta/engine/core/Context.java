@@ -1,6 +1,7 @@
 package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.manager.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -15,4 +16,12 @@ public final class Context {
     private final ObjectManager objectManager;
     private final ShaderManager shaderManager;
     private final WindowManager windowManager;
+
+    void cleanup() {
+//        programManager.destroy();
+//        shaderManager.destroy();
+//        objectManager.destroy();
+//        windowManager.destroy();
+//        resourceManager.destroy();
+    }
 }

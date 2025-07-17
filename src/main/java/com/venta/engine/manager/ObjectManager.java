@@ -1,9 +1,10 @@
-package com.venta.engine.core;
+package com.venta.engine.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.model.VentaObject;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
@@ -13,8 +14,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Component
-@AllArgsConstructor
-final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
     private final ResourceManager resourceManager;
 
     private static final Gson parser = new GsonBuilder().create();
