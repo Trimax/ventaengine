@@ -1,5 +1,6 @@
 package com.venta.engine.core;
 
+import com.venta.engine.annotations.Component;
 import com.venta.engine.exception.WindowCreationException;
 import lombok.Getter;
 import lombok.NonNull;
@@ -11,6 +12,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
+@Component
 public final class WindowManager extends AbstractManager<WindowManager.WindowEntity> {
     static final WindowManager instance = new WindowManager();
 

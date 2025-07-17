@@ -1,6 +1,10 @@
 package com.venta.engine.core;
 
+import com.venta.engine.annotations.Component;
+import com.venta.engine.configuration.WindowConfiguration;
 import com.venta.engine.model.BakedObject;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -15,11 +19,31 @@ import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 @Slf4j
-public final class VentaEngine implements Runnable {
+@Component
+@RequiredArgsConstructor
+public final class Engine implements Runnable {
+    @Getter
+    private final ResourceManager resourceManager;
+
+    @Getter
+    private final ProgramManager programManager;
+
+    @Getter
+    private final ObjectManager objectManager;
+
+    @Getter
+    private final ShaderManager shaderManager;
+
+    @Getter
+    private final WindowManager windowManager;
+
+
+
+
     @Setter
     private WindowManager.WindowEntity window;
 
-    public VentaEngine() {
+    public void initialize(final WindowConfiguration windowConfiguration) {
         rotationAxis = randomUnitVector();
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit())
@@ -28,32 +52,14 @@ public final class VentaEngine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    }
 
-    public ResourceManager getResourceManager() {
-        return ResourceManager.instance;
-    }
-
-    public ShaderManager getShaderManager() {
-        return ShaderManager.instance;
-    }
-
-    public ProgramManager getProgramManager() {
-        return ProgramManager.instance;
-    }
-
-    public WindowManager getWindowManager() {
-        return WindowManager.instance;
-    }
-
-    public ObjectManager getObjectManager() {
-        return ObjectManager.instance;
+        window = windowManager.create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height());
     }
 
     private ProgramManager.ProgramEntity shaderProgram;
     private int vao;
 
-    private final float[] rotationAxis;
+    private float[] rotationAxis;
     private BakedObject cube;
 
     private float[] randomUnitVector() {
