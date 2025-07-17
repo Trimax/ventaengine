@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Slf4j
 public final class VentaEngine implements Runnable {
     @Setter
-    private $WindowManager.WindowEntity window;
+    private WindowManager.WindowEntity window;
 
     public VentaEngine() {
         rotationAxis = randomUnitVector();
@@ -30,41 +30,43 @@ public final class VentaEngine implements Runnable {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     }
 
-    public $ResourceManager getResourceManager() {
-        return $ResourceManager.instance;
+    public ResourceManager getResourceManager() {
+        return ResourceManager.instance;
     }
 
-    public $ShaderManager getShaderManager() {
-        return $ShaderManager.instance;
+    public ShaderManager getShaderManager() {
+        return ShaderManager.instance;
     }
 
-    public $ProgramManager getProgramManager() {
-        return $ProgramManager.instance;
+    public ProgramManager getProgramManager() {
+        return ProgramManager.instance;
     }
 
-    public $WindowManager getWindowManager() {
-        return $WindowManager.instance;
+    public WindowManager getWindowManager() {
+        return WindowManager.instance;
     }
 
-    public $ObjectManager getObjectManager() {
-        return $ObjectManager.instance;
+    public ObjectManager getObjectManager() {
+        return ObjectManager.instance;
     }
 
-    private $ProgramManager.ProgramEntity shaderProgram;
+    private ProgramManager.ProgramEntity shaderProgram;
     private int vao;
 
     private final float[] rotationAxis;
     private BakedObject cube;
 
     private float[] randomUnitVector() {
-        Random rand = new Random();
-        float x = rand.nextFloat() * 2 - 1; // [-1,1]
-        float y = rand.nextFloat() * 2 - 1;
-        float z = rand.nextFloat() * 2 - 1;
+        final Random rand = new Random();
+        final float x = rand.nextFloat() * 2 - 1; // [-1,1]
+        final float y = rand.nextFloat() * 2 - 1;
+        final float z = rand.nextFloat() * 2 - 1;
 
-        float length = (float) Math.sqrt(x*x + y*y + z*z);
-        if (length == 0) return new float[]{1f, 0f, 0f}; // fallback
-        return new float[]{x/length, y/length, z/length};
+        final float length = (float) Math.sqrt(x * x + y * y + z * z);
+        if (length == 0)
+            return new float[]{1f, 0f, 0f}; // fallback
+
+        return new float[]{x / length, y / length, z / length};
     }
 
     @Override
@@ -78,9 +80,9 @@ public final class VentaEngine implements Runnable {
 
         loop();
 
-        $ProgramManager.instance.destroy();
-        $ShaderManager.instance.destroy();
-        $WindowManager.instance.destroy();
+        ProgramManager.instance.destroy();
+        ShaderManager.instance.destroy();
+        WindowManager.instance.destroy();
 
         glfwTerminate();
     }
@@ -90,8 +92,8 @@ public final class VentaEngine implements Runnable {
 
         glfwMakeContextCurrent(window.getId());
 
-        int angleLoc = glGetUniformLocation(shaderProgram.getIdAsInteger(), "angle");
-        int axisLoc = glGetUniformLocation(shaderProgram.getIdAsInteger(), "axis");
+        final int angleLoc = glGetUniformLocation(shaderProgram.getIdAsInteger(), "angle");
+        final int axisLoc = glGetUniformLocation(shaderProgram.getIdAsInteger(), "axis");
 
         while (!glfwWindowShouldClose(window.getId())) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -115,14 +117,14 @@ public final class VentaEngine implements Runnable {
     private int createVAO() {
         cube = getObjectManager().load("cube.json").getObject().bake();
 
-        int vao = glGenVertexArrays();
-        int vbo = glGenBuffers();
-        int ebo = glGenBuffers();
+        final int vao = glGenVertexArrays();
+        final int vbo = glGenBuffers();
+        final int ebo = glGenBuffers();
 
         glBindVertexArray(vao);
 
         // VBO
-        FloatBuffer vertexBuffer = memAllocFloat(cube.vertices().length);
+        final FloatBuffer vertexBuffer = memAllocFloat(cube.vertices().length);
         vertexBuffer.put(cube.vertices()).flip();
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -130,7 +132,7 @@ public final class VentaEngine implements Runnable {
         memFree(vertexBuffer);
 
         // EBO
-        IntBuffer indexBuffer = memAllocInt(cube.facets().length);
+        final IntBuffer indexBuffer = memAllocInt(cube.facets().length);
         indexBuffer.put(cube.facets()).flip();
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -159,10 +161,10 @@ public final class VentaEngine implements Runnable {
         return vao;
     }
 
-    private $ProgramManager.ProgramEntity createShader() {
-        return $ProgramManager.instance.link("Basic",
-                $ShaderManager.instance.loadVertexShader("basic.glsl"),
-                $ShaderManager.instance.loadFragmentShader("basic.glsl"));
+    private ProgramManager.ProgramEntity createShader() {
+        return ProgramManager.instance.link("Basic",
+                ShaderManager.instance.loadVertexShader("basic.glsl"),
+                ShaderManager.instance.loadFragmentShader("basic.glsl"));
     }
 }
 

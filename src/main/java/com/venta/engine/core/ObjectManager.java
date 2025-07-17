@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @AllArgsConstructor
-public final class $ObjectManager extends $AbstractManager<$ObjectManager.ObjectEntity> {
-    final static $ObjectManager instance = new $ObjectManager();
+public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
+    static final ObjectManager instance = new ObjectManager();
     private static final Gson parser = new GsonBuilder().create();
     private static final AtomicLong counter = new AtomicLong();
 
@@ -21,7 +21,7 @@ public final class $ObjectManager extends $AbstractManager<$ObjectManager.Object
         log.info("Loading object {}", name);
 
         return store(new ObjectEntity(counter.incrementAndGet(), name,
-                parse($ResourceManager.instance.load(String.format("/objects/%s", name)))));
+                parse(ResourceManager.instance.load(String.format("/objects/%s", name)))));
     }
 
     private VentaObject parse(final String serializedObject) {

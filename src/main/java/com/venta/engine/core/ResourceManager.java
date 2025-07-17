@@ -13,11 +13,11 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class $ResourceManager extends $AbstractManager<$ResourceManager.ResourceEntity> {
-    final static $ResourceManager instance = new $ResourceManager();
+public final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity> {
+    static final ResourceManager instance = new ResourceManager();
 
     public String load(final String path) {
-        try (final InputStream stream = $ResourceManager.class.getResourceAsStream(path)) {
+        try (final InputStream stream = ResourceManager.class.getResourceAsStream(path)) {
             if (stream == null)
                 throw new ResourceNotFoundException(path);
 
