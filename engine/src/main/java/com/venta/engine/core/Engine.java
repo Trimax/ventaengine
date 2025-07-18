@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import java.util.Random;
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -27,7 +25,10 @@ public final class Engine implements Runnable {
     private WindowManager.WindowEntity window;
 
     public void initialize(final WindowConfiguration windowConfiguration) {
-        rotationAxis = randomUnitVector();
+        position = new float[]{0.f, 0.f, 0f};
+        rotation = new float[]{0.f, 0.f, 0f};
+        scale    = new float[]{1.f, 1.f, 1f};
+
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit())
             throw new IllegalStateException("GLFW init failed");
@@ -44,20 +45,9 @@ public final class Engine implements Runnable {
 
     private ProgramManager.ProgramEntity shaderProgram;
 
-    private float[] rotationAxis;
-
-    private float[] randomUnitVector() {
-        final Random rand = new Random();
-        final float x = rand.nextFloat() * 2 - 1; // [-1,1]
-        final float y = rand.nextFloat() * 2 - 1;
-        final float z = rand.nextFloat() * 2 - 1;
-
-        final float length = (float) Math.sqrt(x * x + y * y + z * z);
-        if (length == 0)
-            return new float[]{1f, 0f, 0f}; // fallback
-
-        return new float[]{x / length, y / length, z / length};
-    }
+    private float[] position;
+    private float[] rotation;
+    private float[] scale;
 
     @Override
     public void run() {
@@ -73,12 +63,11 @@ public final class Engine implements Runnable {
     }
 
     private void loop() {
-        var angle = 0.0f;
-
         glfwMakeContextCurrent(window.getId());
 
-        final int angleLoc = glGetUniformLocation(shaderProgram.getIdAsInteger(), "angle");
-        final int axisLoc = glGetUniformLocation(shaderProgram.getIdAsInteger(), "axis");
+        final int positionLocation = glGetUniformLocation(shaderProgram.getIdAsInteger(), "translation");
+        final int rotationLocation = glGetUniformLocation(shaderProgram.getIdAsInteger(), "rotation");
+        final int scaleLocation    = glGetUniformLocation(shaderProgram.getIdAsInteger(), "scale");
 
         while (!glfwWindowShouldClose(window.getId())) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -86,15 +75,18 @@ public final class Engine implements Runnable {
             //TODO: Move to onUpdate
             glUseProgram(shaderProgram.getIdAsInteger());
 
-            glUniform1f(angleLoc, angle);
-            glUniform3f(axisLoc, rotationAxis[0], rotationAxis[1], rotationAxis[2]);
+            glUniform3f(positionLocation, position[0], position[1], position[2]);
+            glUniform3f(rotationLocation, rotation[0], rotation[1], rotation[2]);
+            glUniform3f(scaleLocation,    scale[0],    scale[1],    scale[2]);
 
             render(context.getSceneManager().getCurrent());
 
             glfwSwapBuffers(window.getId());
             glfwPollEvents();
 
-            angle += 0.01f;
+            rotation[0] += 0.01f;
+            rotation[1] += 0.02f;
+            rotation[2] += 0.03f;
         }
     }
 
@@ -106,6 +98,14 @@ public final class Engine implements Runnable {
     }
 
     private void render(final ObjectManager.ObjectEntity object) {
+
+        //TODO: Save programID and its arguments in object
+        //      bind position, rotation & scale to them
+
+        //glUniform3f(positionLocation, position[0], position[1], position[2]);
+        //glUniform3f(rotationLocation, rotation[0], rotation[1], rotation[2]);
+        //glUniform3f(scaleLocation,    scale[0],    scale[1],    scale[2]);
+
         glBindVertexArray(object.getVertexArrayObjectID());
         glDrawElements(GL_TRIANGLES, object.getBakedObject().facets().length, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

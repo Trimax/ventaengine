@@ -1,6 +1,7 @@
 {
   "type": "object",
   "name": "Colored cube",
+  "program": "basic",
   "vertices": [
     {
       "position": {"x": -0.5, "y": -0.5, "z": -0.5},

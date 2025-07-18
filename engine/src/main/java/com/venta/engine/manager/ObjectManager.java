@@ -2,11 +2,9 @@ package com.venta.engine.manager;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.model.BakedObject;
+import com.venta.engine.model.Vector3;
 import com.venta.engine.model.VentaObject;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.FloatBuffer;
@@ -87,6 +85,22 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final String name;
         private final VentaObject object;
         private final BakedObject bakedObject;
+
+        //TODO: Those things should be mutable
+        @Getter
+        @Setter
+        @NonNull
+        private Vector3 position = new Vector3(0.f, 0.f, 0.f);
+
+        @Getter
+        @Setter
+        @NonNull
+        private Vector3 rotation = new Vector3(0.f, 0.f, 0.f);
+
+        @Getter
+        @Setter
+        @NonNull
+        private Vector3 scale = new Vector3(1.f, 1.f, 1.f);
 
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
