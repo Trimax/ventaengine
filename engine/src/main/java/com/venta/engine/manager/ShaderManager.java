@@ -33,15 +33,10 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
 
         glShaderSource(id, code);
         glCompileShader(id);
-        checkCompile(id);
+        if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE)
+            throw new ShaderCompileException(glGetShaderInfoLog(id));
 
         return store(new ShaderEntity(id, type, name, code));
-    }
-
-    private void checkCompile(final int shaderId) {
-        if (glGetShaderi(shaderId, GL_COMPILE_STATUS) == GL_FALSE) {
-            throw new ShaderCompileException(glGetShaderInfoLog(shaderId));
-        }
     }
 
     @Override
