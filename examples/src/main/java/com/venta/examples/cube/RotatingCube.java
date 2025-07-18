@@ -1,4 +1,4 @@
-package com.venta.examples;
+package com.venta.examples.cube;
 
 import com.venta.engine.configuration.WindowConfiguration;
 import com.venta.engine.core.Context;
