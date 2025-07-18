@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class RotatingCube implements Venta {
     @Override
     public WindowConfiguration createWindowConfiguration() {
-        return new WindowConfiguration("Rotating cube",1024, 768, false);
+        return new WindowConfiguration("Rotating cube", 1024, 768, false);
     }
 
     @Override
