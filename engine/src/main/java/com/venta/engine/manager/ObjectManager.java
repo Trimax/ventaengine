@@ -30,21 +30,19 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         log.info("Loading object {}", name);
 
         final var parsedObject = resourceManager.load(String.format("/objects/%s", name), VentaObject.class);
-
         final var bakedObject = parsedObject.bake();
 
+        final int vertexArrayObjectID = glGenVertexArrays();
+        final int vertexBufferID = glGenBuffers();
+        final int indexBufferID = glGenBuffers();
 
-        final int vao = glGenVertexArrays();
-        final int vbo = glGenBuffers();
-        final int ebo = glGenBuffers();
-
-        glBindVertexArray(vao);
+        glBindVertexArray(vertexArrayObjectID);
 
         // VBO
         final FloatBuffer vertexBuffer = memAllocFloat(bakedObject.vertices().length);
         vertexBuffer.put(bakedObject.vertices()).flip();
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
         memFree(vertexBuffer);
 
@@ -52,7 +50,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         final IntBuffer indexBuffer = memAllocInt(bakedObject.facets().length);
         indexBuffer.put(bakedObject.facets()).flip();
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
         memFree(indexBuffer);
 
@@ -76,7 +74,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         glBindVertexArray(0);
 
-        return store(new ObjectEntity(generateID(), name, parsedObject, bakedObject, vao, vbo, ebo));
+        return store(new ObjectEntity(generateID(), name, parsedObject, bakedObject, vertexArrayObjectID, vertexBufferID, indexBufferID));
     }
 
     @Override
@@ -91,16 +89,16 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final BakedObject bakedObject;
 
         private final int vertexArrayObjectID;
-        private final int verticesArrayID;
-        private final int facetsArrayID;
+        private final int verticesBufferID;
+        private final int facetsBufferID;
 
         ObjectEntity(final long id,
                      @NonNull final String name,
                      @NonNull final VentaObject object,
                      @NonNull final BakedObject bakedObject,
                      @NonNull final int vertexArrayObjectID,
-                     @NonNull final int verticesArrayID,
-                     @NonNull final int facetsArrayID) {
+                     @NonNull final int verticesBufferID,
+                     @NonNull final int facetsBufferID) {
             super(id);
 
             this.name = name;
@@ -108,8 +106,8 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             this.bakedObject = bakedObject;
 
             this.vertexArrayObjectID = vertexArrayObjectID;
-            this.verticesArrayID = verticesArrayID;
-            this.facetsArrayID = facetsArrayID;
+            this.verticesBufferID = verticesBufferID;
+            this.facetsBufferID = facetsBufferID;
         }
     }
 }
