@@ -33,6 +33,8 @@ public final class VentaEngine {
         log.info("VentaEngine started in {}ms", timeFinished - timeStarted);
 
         venta.onStartup(args, getComponent(Context.class));
+
+        engine.setVenta(venta);
         engine.run();
     }
 

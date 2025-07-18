@@ -25,7 +25,7 @@ public final class RotatingCube implements Venta {
     }
 
     @Override
-    public void onUpdate(final long delta, final Context context) {
+    public void onUpdate(final double delta, final Context context) {
 
     }
 }

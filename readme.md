@@ -5,6 +5,8 @@
 3. Create camera manager
 4. Console
 5. Deinitialization of managers, resources cleanup
+6. Adjust window on resize
+7. Fullscreen mode
 
 ## Notes
 1. Scene contains list of objects
