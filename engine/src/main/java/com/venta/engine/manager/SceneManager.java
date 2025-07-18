@@ -1,10 +1,7 @@
 package com.venta.engine.manager;
 
 import com.venta.engine.annotations.Component;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -12,8 +9,12 @@ import java.util.List;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public final class SceneManager extends AbstractManager<SceneManager.SceneEntity> {
+    @Getter
+    @Setter
+    private SceneEntity current;
+
     public SceneEntity create(final String name) {
         log.info("Creating scene {}", name);
 
