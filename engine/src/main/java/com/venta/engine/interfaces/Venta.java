@@ -8,5 +8,5 @@ public interface Venta {
 
     void onStartup(final String[] args, final Context context);
 
-    void onUpdate(final long delta, final Context context);
+    void onUpdate(final double delta, final Context context);
 }

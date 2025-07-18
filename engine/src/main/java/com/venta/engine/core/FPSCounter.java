@@ -27,4 +27,8 @@ final class FPSCounter {
             glfwSetWindowTitle(window.getId(), window.getTitle() + ": " + (int) fps);
         }
     }
+
+    public double getDelta() {
+       return (System.nanoTime() - lastTime) / 1_000_000_000.0;
+    }
 }

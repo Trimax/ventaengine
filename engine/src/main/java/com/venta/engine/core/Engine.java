@@ -2,6 +2,7 @@ package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configuration.WindowConfiguration;
+import com.venta.engine.interfaces.Venta;
 import com.venta.engine.manager.ObjectManager;
 import com.venta.engine.manager.ProgramManager;
 import com.venta.engine.manager.SceneManager;
@@ -21,6 +22,9 @@ import static org.lwjgl.opengl.GL33C.*;
 public final class Engine implements Runnable {
     private final FPSCounter fpsCounter;
     private final Context context;
+
+    @Setter
+    private Venta venta;
 
     @Setter
     private WindowManager.WindowEntity window;
@@ -85,6 +89,8 @@ public final class Engine implements Runnable {
 
             glfwSwapBuffers(window.getId());
             glfwPollEvents();
+
+            venta.onUpdate(fpsCounter.getDelta(), context);
 
             rotation[0] += 0.01f;
             rotation[1] += 0.02f;
