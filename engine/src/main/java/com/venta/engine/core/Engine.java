@@ -19,6 +19,7 @@ import static org.lwjgl.opengl.GL33C.*;
 @Component
 @RequiredArgsConstructor
 public final class Engine implements Runnable {
+    private final FPSCounter fpsCounter;
     private final Context context;
 
     @Setter
@@ -64,6 +65,7 @@ public final class Engine implements Runnable {
 
     private void loop() {
         glfwMakeContextCurrent(window.getId());
+        glfwSwapInterval(1); // vertical synchronization (setting to 0 produces 5000 FPS)
 
         final int positionLocation = glGetUniformLocation(shaderProgram.getIdAsInteger(), "translation");
         final int rotationLocation = glGetUniformLocation(shaderProgram.getIdAsInteger(), "rotation");
@@ -87,6 +89,9 @@ public final class Engine implements Runnable {
             rotation[0] += 0.01f;
             rotation[1] += 0.02f;
             rotation[2] += 0.03f;
+
+
+            fpsCounter.count(window);
         }
     }
 
