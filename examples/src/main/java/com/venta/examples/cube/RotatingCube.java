@@ -20,6 +20,8 @@ public final class RotatingCube implements Venta {
 
         final var myCube = context.getObjectManager().load("cube.json");
         scene.getObjects().add(myCube);
+
+        context.getSceneManager().setCurrent(scene);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.manager.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Component
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class Context {
     private final ResourceManager resourceManager;
     private final ProgramManager programManager;

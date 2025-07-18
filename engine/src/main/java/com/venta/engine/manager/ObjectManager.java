@@ -1,12 +1,24 @@
 package com.venta.engine.manager;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.model.BakedObject;
 import com.venta.engine.model.VentaObject;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import static org.lwjgl.opengl.GL11C.GL_FLOAT;
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
+import static org.lwjgl.system.MemoryUtil.*;
 
 @Slf4j
 @Component
@@ -17,7 +29,54 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     public ObjectEntity load(final String name) {
         log.info("Loading object {}", name);
 
-        return store(new ObjectEntity(generateID(), name, resourceManager.load(String.format("/objects/%s", name), VentaObject.class)));
+        final var parsedObject = resourceManager.load(String.format("/objects/%s", name), VentaObject.class);
+
+        final var bakedObject = parsedObject.bake();
+
+
+        final int vao = glGenVertexArrays();
+        final int vbo = glGenBuffers();
+        final int ebo = glGenBuffers();
+
+        glBindVertexArray(vao);
+
+        // VBO
+        final FloatBuffer vertexBuffer = memAllocFloat(bakedObject.vertices().length);
+        vertexBuffer.put(bakedObject.vertices()).flip();
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
+        memFree(vertexBuffer);
+
+        // EBO
+        final IntBuffer indexBuffer = memAllocInt(bakedObject.facets().length);
+        indexBuffer.put(bakedObject.facets()).flip();
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
+        memFree(indexBuffer);
+
+        final int stride = 12 * Float.BYTES;
+
+        // layout(location = 0) -> position
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
+        glEnableVertexAttribArray(0);
+
+        // layout(location = 1) -> normal
+        glVertexAttribPointer(1, 3, GL_FLOAT, false, stride, 3 * Float.BYTES);
+        glEnableVertexAttribArray(1);
+
+        // layout(location = 2) -> texture coordinates
+        glVertexAttribPointer(2, 2, GL_FLOAT, false, stride, 6 * Float.BYTES);
+        glEnableVertexAttribArray(2);
+
+        // layout(location = 3) -> color
+        glVertexAttribPointer(3, 4, GL_FLOAT, false, stride, 8 * Float.BYTES);
+        glEnableVertexAttribArray(3);
+
+        glBindVertexArray(0);
+
+        return store(new ObjectEntity(generateID(), name, parsedObject, bakedObject, vao, vbo, ebo));
     }
 
     @Override
@@ -29,12 +88,28 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     public static final class ObjectEntity extends AbstractEntity {
         private final String name;
         private final VentaObject object;
+        private final BakedObject bakedObject;
 
-        ObjectEntity(final long id, @NonNull final String name, @NonNull final VentaObject object) {
+        private final int vertexArrayObjectID;
+        private final int verticesArrayID;
+        private final int facetsArrayID;
+
+        ObjectEntity(final long id,
+                     @NonNull final String name,
+                     @NonNull final VentaObject object,
+                     @NonNull final BakedObject bakedObject,
+                     @NonNull final int vertexArrayObjectID,
+                     @NonNull final int verticesArrayID,
+                     @NonNull final int facetsArrayID) {
             super(id);
 
             this.name = name;
             this.object = object;
+            this.bakedObject = bakedObject;
+
+            this.vertexArrayObjectID = vertexArrayObjectID;
+            this.verticesArrayID = verticesArrayID;
+            this.facetsArrayID = facetsArrayID;
         }
     }
 }
