@@ -1,9 +1,9 @@
-package com.venta.engine.manager;
+package com.venta.engine.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.venta.engine.annotations.Component;
-import com.venta.engine.exception.ResourceNotFoundException;
+import com.venta.engine.exceptions.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

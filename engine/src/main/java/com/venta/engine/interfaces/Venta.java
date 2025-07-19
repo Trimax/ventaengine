@@ -1,6 +1,6 @@
 package com.venta.engine.interfaces;
 
-import com.venta.engine.configuration.WindowConfiguration;
+import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 
 public interface Venta {

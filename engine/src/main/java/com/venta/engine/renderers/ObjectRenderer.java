@@ -1,7 +1,7 @@
-package com.venta.engine.renderer;
+package com.venta.engine.renderers;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.manager.ObjectManager;
+import com.venta.engine.managers.ObjectManager;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

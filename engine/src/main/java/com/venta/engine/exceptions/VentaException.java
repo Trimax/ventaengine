@@ -1,4 +1,4 @@
-package com.venta.engine.exception;
+package com.venta.engine.exceptions;
 
 abstract class VentaException extends RuntimeException {
     public VentaException(final String message) {

@@ -1,4 +1,4 @@
-package com.venta.engine.exception;
+package com.venta.engine.exceptions;
 
 public final class ResourceNotFoundException extends VentaException {
     public ResourceNotFoundException(final String resourceName) {

@@ -1,4 +1,4 @@
-package com.venta.engine.exception;
+package com.venta.engine.exceptions;
 
 public final class EngineInitializationException extends VentaException {
     public EngineInitializationException(final String message) {

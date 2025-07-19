@@ -1,7 +1,7 @@
-package com.venta.engine.manager;
+package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.exception.WindowCreationException;
+import com.venta.engine.exceptions.WindowCreationException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

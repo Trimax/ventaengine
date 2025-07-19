@@ -1,7 +1,7 @@
 package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.manager.*;
+import com.venta.engine.managers.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
