@@ -13,6 +13,7 @@
     <properties>
         <java.version>22</java.version>
         <lwjgl.version>3.3.6</lwjgl.version>
+        <checkstyle.charset>UTF-8</checkstyle.charset>
     </properties>
 
     <modules>
@@ -71,10 +72,10 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
                     <logViolationsToConsole>true</logViolationsToConsole>
-                    <consoleOutput>true</consoleOutput>
+                    <configLocation>checkstyle.xml</configLocation>
                     <failOnViolation>true</failOnViolation>
+                    <consoleOutput>true</consoleOutput>
                 </configuration>
                 <executions>
                     <execution>

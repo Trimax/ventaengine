@@ -1,14 +1,8 @@
 {
   "name": "Basic",
   "shaders": [
-    {
-      "type": "vertex",
-      "name": "basic"
-    },
-    {
-      "type": "fragment",
-      "path": "basic"
-    }
+    "basic_vertex",
+    "basic_fragment"
   ],
   "uniforms": [
     "translation",

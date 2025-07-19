@@ -29,6 +29,6 @@ final class FPSCounter {
     }
 
     public double getDelta() {
-       return (System.nanoTime() - lastTime) / 1_000_000_000.0;
+        return (System.nanoTime() - lastTime) / 1_000_000_000.0;
     }
 }

@@ -22,8 +22,8 @@ public final class RotatingCube implements Venta {
 
         cube = context.getObjectManager().load("cube.json");
 
-//        final var program = createShader(context);
-//        cube.setProgramID(program.getId());
+        //        final var program = createShader(context);
+        //        cube.setProgramID(program.getId());
 
         final var scene = context.getSceneManager().create("Sample scene");
         context.getSceneManager().setCurrent(scene);

@@ -71,19 +71,15 @@ public final class Engine implements Runnable {
         glfwMakeContextCurrent(window.getId());
         glfwSwapInterval(1); // vertical synchronization (setting to 0 produces 5000 FPS)
 
-        final int positionLocation = glGetUniformLocation(shaderProgram.getIdAsInteger(), "translation");
-        final int rotationLocation = glGetUniformLocation(shaderProgram.getIdAsInteger(), "rotation");
-        final int scaleLocation    = glGetUniformLocation(shaderProgram.getIdAsInteger(), "scale");
-
         while (!glfwWindowShouldClose(window.getId())) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             //TODO: Move to onUpdate
             glUseProgram(shaderProgram.getIdAsInteger());
 
-            glUniform3f(positionLocation, position[0], position[1], position[2]);
-            glUniform3f(rotationLocation, rotation[0], rotation[1], rotation[2]);
-            glUniform3f(scaleLocation,    scale[0],    scale[1],    scale[2]);
+            glUniform3f(shaderProgram.getUniformID("translation"), position[0], position[1], position[2]);
+            glUniform3f(shaderProgram.getUniformID("rotation"),    rotation[0], rotation[1], rotation[2]);
+            glUniform3f(shaderProgram.getUniformID("scale"),       scale[0],    scale[1],    scale[2]);
 
             render(context.getSceneManager().getCurrent());
 
@@ -95,7 +91,6 @@ public final class Engine implements Runnable {
             rotation[0] += 0.01f;
             rotation[1] += 0.02f;
             rotation[2] += 0.03f;
-
 
             fpsCounter.count(window);
         }
@@ -113,9 +108,9 @@ public final class Engine implements Runnable {
         //TODO: Save programID and its arguments in object
         //      bind position, rotation & scale to them
 
-//        glUniform3f(positionLocation, position[0], position[1], position[2]);
-//        glUniform3f(rotationLocation, rotation[0], rotation[1], rotation[2]);
-//        glUniform3f(scaleLocation,    scale[0],    scale[1],    scale[2]);
+        //        glUniform3f(positionLocation, position[0], position[1], position[2]);
+        //        glUniform3f(rotationLocation, rotation[0], rotation[1], rotation[2]);
+        //        glUniform3f(scaleLocation,    scale[0],    scale[1],    scale[2]);
 
         glBindVertexArray(object.getVertexArrayObjectID());
         glDrawElements(GL_TRIANGLES, object.getBakedObject().facets().length, GL_UNSIGNED_INT, 0);
@@ -123,9 +118,7 @@ public final class Engine implements Runnable {
     }
 
     private ProgramManager.ProgramEntity createShader() {
-        return context.getProgramManager().link("Basic",
-                context.getShaderManager().load("basic_vertex"),
-                context.getShaderManager().load("basic_fragment"));
+        return context.getProgramManager().load("basic");
     }
 }
 
