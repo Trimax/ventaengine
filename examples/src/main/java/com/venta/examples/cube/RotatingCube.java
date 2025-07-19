@@ -22,8 +22,8 @@ public final class RotatingCube implements Venta {
 
         cube = context.getObjectManager().load("cube.json");
 
-        //        final var program = createShader(context);
-        //        cube.setProgramID(program.getId());
+        final var program = createShader(context);
+        cube.setProgram(program);
 
         final var scene = context.getSceneManager().create("Sample scene");
         context.getSceneManager().setCurrent(scene);
@@ -32,12 +32,10 @@ public final class RotatingCube implements Venta {
 
     @Override
     public void onUpdate(final double delta, final Context context) {
-        cube.setRotation(cube.getRotation().add(0.1f, 0.2f, 0.3f));
+        cube.setRotation(cube.getRotation().add(0.01f, 0.02f, 0.03f));
     }
 
     private ProgramManager.ProgramEntity createShader(final Context context) {
-        return context.getProgramManager().create("Basic",
-                context.getShaderManager().load("basic_vertex"),
-                context.getShaderManager().load("basic_fragment"));
+        return context.getProgramManager().load("basic");
     }
 }

@@ -4,7 +4,6 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.configuration.WindowConfiguration;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.manager.ObjectManager;
-import com.venta.engine.manager.ProgramManager;
 import com.venta.engine.manager.SceneManager;
 import com.venta.engine.manager.WindowManager;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +29,6 @@ public final class Engine implements Runnable {
     private WindowManager.WindowEntity window;
 
     public void initialize(final WindowConfiguration windowConfiguration) {
-        position = new float[]{0.f, 0.f, 0f};
-        rotation = new float[]{0.f, 0.f, 0f};
-        scale    = new float[]{1.f, 1.f, 1f};
-
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit())
             throw new IllegalStateException("GLFW init failed");
@@ -48,38 +43,15 @@ public final class Engine implements Runnable {
         GL.createCapabilities();
     }
 
-    private ProgramManager.ProgramEntity shaderProgram;
-
-    private float[] position;
-    private float[] rotation;
-    private float[] scale;
-
     @Override
     public void run() {
         glEnable(GL_DEPTH_TEST);
 
-        shaderProgram = createShader();
-
-        loop();
-
-        //TODO: Deinitialize managers
-
-        glfwTerminate();
-    }
-
-    private void loop() {
         glfwMakeContextCurrent(window.getId());
         glfwSwapInterval(1); // vertical synchronization (setting to 0 produces 5000 FPS)
 
         while (!glfwWindowShouldClose(window.getId())) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            //TODO: Move to onUpdate
-            glUseProgram(shaderProgram.getIdAsInteger());
-
-            glUniform3f(shaderProgram.getUniformID("translation"), position[0], position[1], position[2]);
-            glUniform3f(shaderProgram.getUniformID("rotation"),    rotation[0], rotation[1], rotation[2]);
-            glUniform3f(shaderProgram.getUniformID("scale"),       scale[0],    scale[1],    scale[2]);
 
             render(context.getSceneManager().getCurrent());
 
@@ -88,12 +60,10 @@ public final class Engine implements Runnable {
 
             venta.onUpdate(fpsCounter.getDelta(), context);
 
-            rotation[0] += 0.01f;
-            rotation[1] += 0.02f;
-            rotation[2] += 0.03f;
-
             fpsCounter.count(window);
         }
+
+        glfwTerminate();
     }
 
     private void render(final SceneManager.SceneEntity scene) {
@@ -104,21 +74,23 @@ public final class Engine implements Runnable {
     }
 
     private void render(final ObjectManager.ObjectEntity object) {
+        final var program = object.getProgram();
+        if (program != null) {
+            glUseProgram(program.getIdAsInteger());
 
-        //TODO: Save programID and its arguments in object
-        //      bind position, rotation & scale to them
+            final var position = object.getPosition();
+            glUniform3f(program.getUniformID("translation"), position.x(), position.y(), position.z());
 
-        //        glUniform3f(positionLocation, position[0], position[1], position[2]);
-        //        glUniform3f(rotationLocation, rotation[0], rotation[1], rotation[2]);
-        //        glUniform3f(scaleLocation,    scale[0],    scale[1],    scale[2]);
+            final var rotation = object.getRotation();
+            glUniform3f(program.getUniformID("rotation"), rotation.x(), rotation.y(), rotation.z());
+
+            final var scale = object.getScale();
+            glUniform3f(program.getUniformID("scale"), scale.x(),    scale.y(),    scale.z());
+        }
 
         glBindVertexArray(object.getVertexArrayObjectID());
         glDrawElements(GL_TRIANGLES, object.getBakedObject().facets().length, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-    }
-
-    private ProgramManager.ProgramEntity createShader() {
-        return context.getProgramManager().load("basic");
     }
 }
 
