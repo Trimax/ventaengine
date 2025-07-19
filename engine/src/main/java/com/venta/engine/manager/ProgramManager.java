@@ -30,7 +30,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
 
         final var parsedProgram = resourceManager.load(String.format("/programs/%s.json", name), VentaProgram.class);
 
-        final ProgramEntity program = create2(parsedProgram.name(), StreamEx.of(parsedProgram.shaders()).map(shaderManager::load).toList());
+        final ProgramEntity program = create(parsedProgram.name(), StreamEx.of(parsedProgram.shaders()).map(shaderManager::load).toList());
         for (final String uniform : parsedProgram.uniforms())
             program.uniforms.put(uniform, glGetUniformLocation(program.getIdAsInteger(), uniform));
 
@@ -41,10 +41,10 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         if (ArrayUtils.isEmpty(shaders))
             throw new ProgramLinkException(name);
 
-        return store(create2(name, List.of(shaders)));
+        return store(create(name, List.of(shaders)));
     }
 
-    private ProgramEntity create2(final String name, final List<ShaderManager.ShaderEntity> shaders) {
+    private ProgramEntity create(final String name, final List<ShaderManager.ShaderEntity> shaders) {
         if (CollectionUtils.isEmpty(shaders))
             throw new ProgramLinkException(name);
 
@@ -56,6 +56,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         if (glGetProgrami(id, GL_LINK_STATUS) == GL_FALSE) {
             final var message = glGetProgramInfoLog(id);
             glDeleteProgram(id);
+
             throw new ProgramLinkException(message);
         }
 
