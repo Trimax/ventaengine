@@ -88,7 +88,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         @Getter
         @Setter
-        private Long programID;
+        private ProgramManager.ProgramEntity program;
 
         //TODO: Those things should be mutable
         @Getter
