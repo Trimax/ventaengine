@@ -1,6 +1,10 @@
 package com.venta.engine.utils;
 
-import com.venta.engine.model.*;
+import com.venta.engine.model.math.Vector2;
+import com.venta.engine.model.math.Vector3;
+import com.venta.engine.model.memory.Color;
+import com.venta.engine.model.memory.Facet;
+import com.venta.engine.model.memory.Vertex;
 import lombok.experimental.UtilityClass;
 import one.util.streamex.IntStreamEx;
 

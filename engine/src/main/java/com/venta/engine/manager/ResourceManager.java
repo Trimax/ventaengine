@@ -21,6 +21,7 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     private static final Gson parser = new GsonBuilder().create();
 
     public String load(final String path) {
+        log.debug("Loading resource: {}", path);
         try (final InputStream stream = ResourceManager.class.getResourceAsStream(path)) {
             if (stream == null)
                 throw new ResourceNotFoundException(path);
@@ -37,7 +38,7 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
 
     @Override
     protected void destroy(final ResourceEntity value) {
-        log.info("Destroying resource: {}", value.getId());
+        log.debug("Deleting resource: {}", value.getId());
     }
 
     @Getter

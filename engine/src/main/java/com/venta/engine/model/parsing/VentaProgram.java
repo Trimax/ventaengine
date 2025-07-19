@@ -1,4 +1,4 @@
-package com.venta.engine.model;
+package com.venta.engine.model.parsing;
 
 import java.util.List;
 

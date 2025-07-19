@@ -1,4 +1,7 @@
-package com.venta.engine.model;
+package com.venta.engine.model.memory;
+
+import com.venta.engine.model.math.Vector2;
+import com.venta.engine.model.math.Vector3;
 
 public record Vertex(Vector3 position, Vector3 normal, Vector2 textureCoordinates, Color color) {
     public boolean hasPosition() {

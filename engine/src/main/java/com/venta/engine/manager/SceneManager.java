@@ -23,7 +23,7 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
 
     @Override
     protected void destroy(final SceneEntity object) {
-        log.info("Unloading scene {}", object.getName());
+        log.info("Deleting scene {}", object.getName());
     }
 
     @Getter

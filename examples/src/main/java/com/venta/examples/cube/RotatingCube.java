@@ -36,7 +36,7 @@ public final class RotatingCube implements Venta {
     }
 
     private ProgramManager.ProgramEntity createShader(final Context context) {
-        return context.getProgramManager().link("Basic",
+        return context.getProgramManager().create("Basic",
                 context.getShaderManager().load("basic_vertex"),
                 context.getShaderManager().load("basic_fragment"));
     }

@@ -3,7 +3,7 @@ package com.venta.engine.manager;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exception.ShaderCompileException;
 import com.venta.engine.exception.UnknownShaderTypeException;
-import com.venta.engine.model.VentaShader;
+import com.venta.engine.model.parsing.VentaShader;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,10 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     public ShaderEntity load(final String name) {
         log.info("Loading shader {}", name);
 
-        final var parsedShader = resourceManager.load(String.format("/shaders/%s.json", name), VentaShader.class);
+        return load(name, resourceManager.load(String.format("/shaders/%s.json", name), VentaShader.class));
+    }
+
+    private ShaderEntity load(final String name, final VentaShader parsedShader) {
         final var shaderType = ShaderEntity.Type.parse(parsedShader.type());
 
         final var code = resourceManager.load(String.format("/shaders/%s", parsedShader.path()));
@@ -45,7 +48,7 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
 
     @Override
     protected void destroy(final ShaderEntity shader) {
-        log.info("Unloading shader {}", shader.getName());
+        log.info("Deleting shader {}", shader.getName());
         glDeleteShader(shader.getIdAsInteger());
     }
 
