@@ -13,7 +13,7 @@
     <properties>
         <java.version>22</java.version>
         <lwjgl.version>3.3.6</lwjgl.version>
-        <checkstyle.charset>UTF-8</checkstyle.charset>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <modules>
