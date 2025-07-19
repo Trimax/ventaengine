@@ -86,6 +86,10 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final VentaObject object;
         private final BakedObject bakedObject;
 
+        @Getter
+        @Setter
+        private Long programID;
+
         //TODO: Those things should be mutable
         @Getter
         @Setter
