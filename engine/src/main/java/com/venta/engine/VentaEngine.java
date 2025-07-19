@@ -43,8 +43,8 @@ public final class VentaEngine {
     private static void createContext() {
         try {
             StreamEx.of(ComponentUtil.scan(VentaEngine.class.getPackageName())).forEach(VentaEngine::createComponent);
-            log.info("{} components found and loaded", components.size());
             log.debug("Found components: {}", StreamEx.of(components.keySet()).map(Class::getSimpleName).joining(","));
+            log.info("{} components found and loaded", components.size());
         } catch (final Exception e) {
             throw new EngineInitializationException(e.getMessage());
         }
@@ -87,7 +87,7 @@ public final class VentaEngine {
         }
 
         throw new EngineInitializationException("Cannot determine which constructor to use for " + clazz.getName()
-                + ". Use @Inject to mark the constructor explicitly.");
+                + ". Use @" + Inject.class.getSimpleName() + " to mark the constructor explicitly.");
     }
 
     private Constructor<?> findInjectConstructor(final Class<?> clazz) {
