@@ -114,9 +114,9 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
                      @NonNull final String name,
                      @NonNull final VentaObject object,
                      @NonNull final BakedObject bakedObject,
-                     @NonNull final int vertexArrayObjectID,
-                     @NonNull final int verticesBufferID,
-                     @NonNull final int facetsBufferID) {
+                     final int vertexArrayObjectID,
+                     final int verticesBufferID,
+                     final int facetsBufferID) {
             super(id);
 
             this.name = name;
