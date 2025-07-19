@@ -1,10 +1,10 @@
 package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.configuration.WindowConfiguration;
+import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.interfaces.Venta;
-import com.venta.engine.manager.WindowManager;
-import com.venta.engine.renderer.SceneRenderer;
+import com.venta.engine.managers.WindowManager;
+import com.venta.engine.renderers.SceneRenderer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

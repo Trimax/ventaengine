@@ -1,7 +1,7 @@
-package com.venta.engine.manager;
+package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.exception.ProgramLinkException;
+import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.model.parsing.VentaProgram;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

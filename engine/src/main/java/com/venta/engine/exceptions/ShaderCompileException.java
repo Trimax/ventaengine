@@ -1,4 +1,4 @@
-package com.venta.engine.exception;
+package com.venta.engine.exceptions;
 
 public final class ShaderCompileException extends VentaException {
     public ShaderCompileException(final String message) {

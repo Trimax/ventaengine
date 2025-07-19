@@ -1,4 +1,4 @@
-package com.venta.engine.exception;
+package com.venta.engine.exceptions;
 
 public final class ProgramLinkException extends VentaException {
     public ProgramLinkException(final String message) {

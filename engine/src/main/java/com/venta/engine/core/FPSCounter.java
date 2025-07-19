@@ -1,7 +1,7 @@
 package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.manager.WindowManager;
+import com.venta.engine.managers.WindowManager;
 
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 

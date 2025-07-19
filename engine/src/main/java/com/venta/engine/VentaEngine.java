@@ -3,7 +3,7 @@ package com.venta.engine;
 import com.venta.engine.annotations.Inject;
 import com.venta.engine.core.Context;
 import com.venta.engine.core.Engine;
-import com.venta.engine.exception.EngineInitializationException;
+import com.venta.engine.exceptions.EngineInitializationException;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.utils.ComponentUtil;
 import com.venta.engine.utils.MeasurementUtil;

@@ -1,4 +1,4 @@
-package com.venta.engine.manager;
+package com.venta.engine.managers;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

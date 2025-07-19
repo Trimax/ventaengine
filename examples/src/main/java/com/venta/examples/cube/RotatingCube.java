@@ -1,10 +1,10 @@
 package com.venta.examples.cube;
 
-import com.venta.engine.configuration.WindowConfiguration;
+import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 import com.venta.engine.interfaces.Venta;
-import com.venta.engine.manager.ObjectManager;
-import com.venta.engine.manager.ProgramManager;
+import com.venta.engine.managers.ObjectManager;
+import com.venta.engine.managers.ProgramManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
