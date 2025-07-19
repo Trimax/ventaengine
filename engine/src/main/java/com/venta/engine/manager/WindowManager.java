@@ -9,8 +9,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
@@ -32,7 +30,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     @Override
     protected void destroy(final WindowEntity window) {
-        log.info("Destroying window {}", window.getTitle());
+        log.info("Deleting window {}", window.getTitle());
         glfwDestroyWindow(window.getId());
     }
 

@@ -1,9 +1,9 @@
 package com.venta.engine.manager;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.BakedObject;
-import com.venta.engine.model.Vector3;
-import com.venta.engine.model.VentaObject;
+import com.venta.engine.model.math.Vector3;
+import com.venta.engine.model.memory.BakedObject;
+import com.venta.engine.model.parsing.VentaObject;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -77,7 +77,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
     @Override
     protected void destroy(final ObjectEntity object) {
-        log.info("Unloading object {}", object.getName());
+        log.info("Deleting object {}", object.getName());
     }
 
     @Getter

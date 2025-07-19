@@ -1,5 +1,6 @@
 package com.venta.engine.model;
 
+import com.venta.engine.model.parsing.VentaObject;
 import com.venta.engine.utils.Generator;
 import org.junit.jupiter.api.Test;
 
