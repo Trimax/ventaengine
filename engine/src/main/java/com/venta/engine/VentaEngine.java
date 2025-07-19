@@ -6,6 +6,7 @@ import com.venta.engine.core.Engine;
 import com.venta.engine.exception.EngineInitializationException;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.utils.ComponentUtil;
+import com.venta.engine.utils.MeasurementUtil;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -23,19 +24,20 @@ public final class VentaEngine {
     public static void run(final String[] args, final Venta venta) {
         log.info("Starting VentaEngine");
 
-        final long timeStarted = System.currentTimeMillis();
+        final var engine = MeasurementUtil.measure("VentaEngine startup", () -> createEngine(venta));
+        venta.onStartup(args, getComponent(Context.class));
+
+        engine.setVenta(venta);
+        engine.run();
+    }
+
+    private static Engine createEngine(final Venta venta) {
         createContext();
 
         final var engine = getComponent(Engine.class);
         engine.initialize(venta.createWindowConfiguration());
 
-        final long timeFinished = System.currentTimeMillis();
-        log.info("VentaEngine started in {}ms", timeFinished - timeStarted);
-
-        venta.onStartup(args, getComponent(Context.class));
-
-        engine.setVenta(venta);
-        engine.run();
+        return engine;
     }
 
     private static void createContext() {

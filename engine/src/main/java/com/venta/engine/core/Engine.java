@@ -3,9 +3,8 @@ package com.venta.engine.core;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configuration.WindowConfiguration;
 import com.venta.engine.interfaces.Venta;
-import com.venta.engine.manager.ObjectManager;
-import com.venta.engine.manager.SceneManager;
 import com.venta.engine.manager.WindowManager;
+import com.venta.engine.renderer.SceneRenderer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +18,7 @@ import static org.lwjgl.opengl.GL33C.*;
 @Component
 @RequiredArgsConstructor
 public final class Engine implements Runnable {
+    private final SceneRenderer sceneRenderer;
     private final FPSCounter fpsCounter;
     private final Context context;
 
@@ -53,44 +53,18 @@ public final class Engine implements Runnable {
         while (!glfwWindowShouldClose(window.getId())) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            render(context.getSceneManager().getCurrent());
+            final var scene = context.getSceneManager().getCurrent();
+            if (scene != null)
+                sceneRenderer.render(scene);
 
             glfwSwapBuffers(window.getId());
             glfwPollEvents();
 
             venta.onUpdate(fpsCounter.getDelta(), context);
-
             fpsCounter.count(window);
         }
 
         glfwTerminate();
-    }
-
-    private void render(final SceneManager.SceneEntity scene) {
-        if (scene == null)
-            return;
-
-        scene.getObjects().forEach(this::render);
-    }
-
-    private void render(final ObjectManager.ObjectEntity object) {
-        final var program = object.getProgram();
-        if (program != null) {
-            glUseProgram(program.getIdAsInteger());
-
-            final var position = object.getPosition();
-            glUniform3f(program.getUniformID("translation"), position.x(), position.y(), position.z());
-
-            final var rotation = object.getRotation();
-            glUniform3f(program.getUniformID("rotation"), rotation.x(), rotation.y(), rotation.z());
-
-            final var scale = object.getScale();
-            glUniform3f(program.getUniformID("scale"), scale.x(),    scale.y(),    scale.z());
-        }
-
-        glBindVertexArray(object.getVertexArrayObjectID());
-        glDrawElements(GL_TRIANGLES, object.getBakedObject().facets().length, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
     }
 }
 
