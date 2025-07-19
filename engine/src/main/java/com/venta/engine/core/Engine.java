@@ -113,9 +113,9 @@ public final class Engine implements Runnable {
         //TODO: Save programID and its arguments in object
         //      bind position, rotation & scale to them
 
-        //glUniform3f(positionLocation, position[0], position[1], position[2]);
-        //glUniform3f(rotationLocation, rotation[0], rotation[1], rotation[2]);
-        //glUniform3f(scaleLocation,    scale[0],    scale[1],    scale[2]);
+//        glUniform3f(positionLocation, position[0], position[1], position[2]);
+//        glUniform3f(rotationLocation, rotation[0], rotation[1], rotation[2]);
+//        glUniform3f(scaleLocation,    scale[0],    scale[1],    scale[2]);
 
         glBindVertexArray(object.getVertexArrayObjectID());
         glDrawElements(GL_TRIANGLES, object.getBakedObject().facets().length, GL_UNSIGNED_INT, 0);
@@ -124,8 +124,8 @@ public final class Engine implements Runnable {
 
     private ProgramManager.ProgramEntity createShader() {
         return context.getProgramManager().link("Basic",
-                context.getShaderManager().loadVertexShader("basic.glsl"),
-                context.getShaderManager().loadFragmentShader("basic.glsl"));
+                context.getShaderManager().load("basic_vertex"),
+                context.getShaderManager().load("basic_fragment"));
     }
 }
 

@@ -1,0 +1,10 @@
+{
+  "type": "vertex",
+  "path": "vertex/basic.glsl",
+  "attributes": {
+    "position": 0,
+    "normal": 1,
+    "textureCoordinates": 2,
+    "color": 3
+  }
+}
