@@ -39,6 +39,11 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     }
 
     @Override
+    protected ResourceView createView(final String id, final ResourceEntity entity) {
+        return new ResourceView(id, entity);
+    }
+
+    @Override
     protected void destroy(final Couple<ResourceEntity, ResourceView> resource) {
         log.debug("Deleting resource: {}", resource.entity().getId());
     }

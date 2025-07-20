@@ -1,14 +1,10 @@
 # Venta Engine
 ## TODO list
-1. Create separate classes for parsed objects and in-memory objects
-2. Create scene manager and possibility to add objects to scene
-3. Create camera manager
-4. Console
-5. Deinitialization of managers, resources cleanup
-6. Adjust window on resize
-7. Fullscreen mode
-8. Calculate faces' normals
-9. Move MVP matrix computation to CPU (to avoid multiple computations per vertex)
+1. Move MVP matrix computation to CPU (to avoid multiple computations per vertex)
+2. Deinitialization of managers, resources cleanup
+3. Fullscreen mode
+4. Calculate faces' normals
+5. Console
 
 ## Notes
 1. Scene contains list of objects

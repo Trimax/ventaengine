@@ -20,8 +20,13 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     public SceneView create(final String name) {
         log.info("Creating scene {}", name);
 
-        final var entity = new SceneEntity(generateID(), name);
-        return store(entity, new SceneView(entity));
+        final var entity = new SceneEntity(name);
+        return store(entity);
+    }
+
+    @Override
+    protected SceneView createView(final String id, final SceneEntity entity) {
+        return new SceneView(id, entity);
     }
 
     @Override
@@ -34,8 +39,8 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
         private final String name;
         private final List<ObjectManager.ObjectEntity> objects;
 
-        SceneEntity(final long id, @NonNull final String name) {
-            super(id);
+        SceneEntity(@NonNull final String name) {
+            super(0L);
 
             this.name = name;
             this.objects = new ArrayList<>();

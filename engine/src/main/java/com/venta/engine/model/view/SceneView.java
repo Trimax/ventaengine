@@ -11,8 +11,8 @@ import java.util.List;
 public final class SceneView extends AbstractRenderer.AbstractView<SceneManager.SceneEntity> {
     private final List<ObjectView> objects = new ArrayList<>();
 
-    public SceneView(final SceneManager.SceneEntity entity) {
-        super(entity);
+    public SceneView(final String id, final SceneManager.SceneEntity entity) {
+        super(id, entity);
     }
 
     public void add(final ObjectView object) {
