@@ -2,6 +2,7 @@ package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.WindowCreationException;
+import com.venta.engine.model.view.WindowView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
@@ -14,7 +15,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public final class WindowManager extends AbstractManager<WindowManager.WindowEntity> {
+public final class WindowManager extends AbstractManager<WindowManager.WindowEntity, WindowView> {
     @Getter
     @Setter(onParam_ = @__(@NonNull))
     private WindowEntity current;

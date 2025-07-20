@@ -1,8 +1,9 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.memory.BakedObject;
 import com.venta.engine.model.dto.ObjectDTO;
+import com.venta.engine.model.memory.BakedObject;
+import com.venta.engine.model.view.ObjectView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -21,7 +22,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
+public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity, ObjectView> {
     private final ResourceManager resourceManager;
 
     public ObjectEntity load(final String name) {

@@ -4,6 +4,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ShaderCompileException;
 import com.venta.engine.exceptions.UnknownShaderTypeException;
 import com.venta.engine.model.dto.ShaderDTO;
+import com.venta.engine.model.view.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import static org.lwjgl.opengl.GL20C.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity> {
+public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity, ShaderView> {
     private final ResourceManager resourceManager;
 
     public ShaderEntity load(final String name) {

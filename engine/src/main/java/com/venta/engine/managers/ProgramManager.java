@@ -4,6 +4,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.exceptions.ShaderArgumentException;
 import com.venta.engine.model.dto.ProgramDTO;
+import com.venta.engine.model.view.ProgramView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,7 @@ import static org.lwjgl.opengl.GL20C.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity> {
+public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity, ProgramView> {
     private final ResourceManager resourceManager;
     private final ShaderManager shaderManager;
 
