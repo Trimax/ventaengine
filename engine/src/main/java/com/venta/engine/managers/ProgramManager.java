@@ -46,8 +46,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         if (ArrayUtils.isEmpty(shaders))
             throw new ProgramLinkException(name);
 
-        final var entity = create(name, List.of(shaders));
-        return store(entity);
+        return store(create(name, List.of(shaders)));
     }
 
     private ProgramEntity create(final String name, final List<ShaderView> shaders) {
@@ -71,7 +70,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
             throw new ProgramLinkException(message);
         }
 
-        return new ProgramEntity(id, name, shaders);
+        return new ProgramEntity(id, name);
     }
 
     @Override
@@ -90,16 +89,12 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         private final String name;
 
         @Getter(AccessLevel.NONE)
-        private final List<ShaderView> shaders;
-
-        @Getter(AccessLevel.NONE)
         private final Map<String, Integer> uniforms = new HashMap<>();
 
-        ProgramEntity(final long id, @NonNull final String name, @NonNull final List<ShaderView> shaders) {
+        ProgramEntity(final long id, @NonNull final String name) {
             super(id);
 
             this.name = name;
-            this.shaders = shaders;
         }
 
         public int getUniformID(final String name) {
