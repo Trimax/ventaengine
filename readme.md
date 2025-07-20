@@ -5,7 +5,7 @@
 3. ~~Move the cube code from engine to example~~
 4. Create separate classes for parsed objects and in-memory objects
 5. Create scene manager and possibility to add objects to scene
-6. Move renderers to a separate class
+6. ~~Move renderers to a separate class~~
 7. Create camera manager
 8. Console
 9. Deinitialization of managers, resources cleanup
