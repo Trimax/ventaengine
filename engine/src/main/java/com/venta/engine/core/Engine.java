@@ -4,6 +4,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.renderers.SceneRenderer;
+import com.venta.engine.renderers.WindowRenderer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +18,8 @@ import static org.lwjgl.opengl.GL33C.*;
 @Component
 @RequiredArgsConstructor
 public final class Engine implements Runnable {
+    private final WindowRenderer windowRenderer;
     private final SceneRenderer sceneRenderer;
-    private final FPSCounter fpsCounter;
     private final Context context;
 
     @Setter
@@ -35,7 +36,7 @@ public final class Engine implements Runnable {
 
         final var window = context.getWindowManager()
                 .create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height());
-        context.getWindowManager().set(window);
+        context.getWindowManager().setCurrent(window);
 
         final var camera = context.getCameraManager().create("Default camera");
         context.getCameraManager().setCurrent(camera);
@@ -48,21 +49,17 @@ public final class Engine implements Runnable {
         glEnable(GL_DEPTH_TEST);
 
         final var window = context.getWindowManager().getCurrent();
-        glfwMakeContextCurrent(window.getId());
-        glfwSwapInterval(1); // vertical synchronization (setting to 0 produces 5000 FPS)
-
-        while (!glfwWindowShouldClose(window.getId())) {
+        while (!windowRenderer.shouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             final var scene = context.getSceneManager().getCurrent();
             if (scene != null)
                 sceneRenderer.render(scene);
 
-            glfwSwapBuffers(window.getId());
+            windowRenderer.render(window);
             glfwPollEvents();
 
-            venta.onUpdate(fpsCounter.getDelta(), context);
-            fpsCounter.count(window);
+            venta.onUpdate(windowRenderer.getDelta(), context);
         }
 
         glfwTerminate();

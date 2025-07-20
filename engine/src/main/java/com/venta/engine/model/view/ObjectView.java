@@ -15,8 +15,8 @@ public final class ObjectView extends AbstractRenderer.AbstractView<ObjectManage
     @Setter
     private ProgramView program;
 
-    public ObjectView(final ObjectManager.ObjectEntity entity) {
-        super(entity);
+    public ObjectView(final String id, final ObjectManager.ObjectEntity entity) {
+        super(id, entity);
     }
 
     public void setPosition(final Vector3f position) {

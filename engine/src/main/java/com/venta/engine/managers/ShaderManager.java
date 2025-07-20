@@ -45,7 +45,12 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
         if (parsedShader.attributes() != null)
             shader.attributes.putAll(parsedShader.attributes());
 
-        return store(shader, new ShaderView(shader));
+        return store(shader);
+    }
+
+    @Override
+    protected ShaderView createView(final String id, final ShaderEntity entity) {
+        return new ShaderView(id, entity);
     }
 
     @Override

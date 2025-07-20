@@ -4,7 +4,7 @@ import com.venta.engine.managers.CameraManager;
 import com.venta.engine.renderers.AbstractRenderer;
 
 public final class CameraView extends AbstractRenderer.AbstractView<CameraManager.CameraEntity> {
-    public CameraView(final CameraManager.CameraEntity entity) {
-        super(entity);
+    public CameraView(final String id, final CameraManager.CameraEntity entity) {
+        super(id, entity);
     }
 }

@@ -19,8 +19,12 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     public CameraView create(final String name) {
         log.info("Creating camera {}", name);
 
-        final var entity = new CameraEntity(generateID(), name, new Vector3f(0, 0, 3), new Vector3f(0, 0, 0));
-        return store(entity, new CameraView(entity));
+        return store(new CameraEntity(name, new Vector3f(0, 0, 3), new Vector3f(0, 0, 0)));
+    }
+
+    @Override
+    protected CameraView createView(final String id, final CameraEntity entity) {
+        return new CameraView(id, entity);
     }
 
     @Override
@@ -47,8 +51,8 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
         @Getter
         private float roll;  // around Z
 
-        CameraEntity(final long id, @NonNull final String name, final Vector3f position, final Vector3f target) {
-            super(id);
+        CameraEntity(@NonNull final String name, final Vector3f position, final Vector3f target) {
+            super(0L);
 
             this.name = name;
             this.position = new Vector3f(position);
