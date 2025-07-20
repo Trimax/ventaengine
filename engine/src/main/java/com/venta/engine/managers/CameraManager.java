@@ -1,6 +1,8 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.model.core.Couple;
+import com.venta.engine.model.view.CameraView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
@@ -9,20 +11,21 @@ import org.joml.Vector3f;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public final class CameraManager extends AbstractManager<CameraManager.CameraEntity> {
+public final class CameraManager extends AbstractManager<CameraManager.CameraEntity, CameraView> {
     @Getter
     @Setter(onParam_ = @__(@NonNull))
-    private CameraEntity current;
+    private CameraView current;
 
-    public CameraEntity create(final String name) {
+    public CameraView create(final String name) {
         log.info("Creating camera {}", name);
 
-        return store(new CameraEntity(generateID(), name, new Vector3f(0, 0, 3), new Vector3f(0, 0, 0)));
+        final var entity = new CameraEntity(generateID(), name, new Vector3f(0, 0, 3), new Vector3f(0, 0, 0));
+        return store(entity, new CameraView(entity));
     }
 
     @Override
-    protected void destroy(final CameraEntity object) {
-        log.info("Deleting camera {}", object.getName());
+    protected void destroy(final Couple<CameraEntity, CameraView> camera) {
+        log.info("Deleting camera {}", camera.entity().getName());
     }
 
     @Getter

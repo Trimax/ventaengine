@@ -1,6 +1,8 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.model.core.Couple;
+import com.venta.engine.model.view.SceneView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,20 +12,21 @@ import java.util.List;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-public final class SceneManager extends AbstractManager<SceneManager.SceneEntity> {
+public final class SceneManager extends AbstractManager<SceneManager.SceneEntity, SceneView> {
     @Getter
     @Setter
-    private SceneEntity current;
+    private SceneView current;
 
-    public SceneEntity create(final String name) {
+    public SceneView create(final String name) {
         log.info("Creating scene {}", name);
 
-        return store(new SceneEntity(generateID(), name));
+        final var entity = new SceneEntity(generateID(), name);
+        return store(entity, new SceneView(entity));
     }
 
     @Override
-    protected void destroy(final SceneEntity object) {
-        log.info("Deleting scene {}", object.getName());
+    protected void destroy(final Couple<SceneEntity, SceneView> scene) {
+        log.info("Deleting scene {}", scene.entity().getName());
     }
 
     @Getter

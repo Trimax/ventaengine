@@ -1,7 +1,7 @@
 package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.managers.WindowManager;
+import com.venta.engine.model.view.WindowView;
 
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 
@@ -11,7 +11,7 @@ final class FPSCounter {
     private int frames = 0;
     private double fpsTimer = 0.0;
 
-    public void count(final WindowManager.WindowEntity window) {
+    public void count(final WindowView window) {
         final long now = System.nanoTime();
         final double delta = (now - lastTime) / 1_000_000_000.0;
 
