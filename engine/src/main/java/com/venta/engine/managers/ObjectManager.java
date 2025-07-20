@@ -74,10 +74,13 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         glBindVertexArray(0);
 
-        final var entity = new ObjectEntity(generateID(), name, vertices, facets, vertexArrayObjectID, vertexBufferID, indexBufferID);
-        return store(
-                entity,
-                new ObjectView(entity));
+        final var entity = new ObjectEntity(name, vertices, facets, vertexArrayObjectID, vertexBufferID, indexBufferID);
+        return store(entity);
+    }
+
+    @Override
+    protected ObjectView createView(final String id, final ObjectEntity entity) {
+        return new ObjectView(id, entity);
     }
 
     @Override
@@ -101,14 +104,13 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final int verticesBufferID;
         private final int facetsBufferID;
 
-        ObjectEntity(final long id,
-                     @NonNull final String name,
+        ObjectEntity(@NonNull final String name,
                      @NonNull final float[] vertices,
                      @NonNull final int[] facets,
                      final int vertexArrayObjectID,
                      final int verticesBufferID,
                      final int facetsBufferID) {
-            super(id);
+            super(0L);
 
             this.name = name;
             this.vertices = vertices;

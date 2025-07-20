@@ -39,7 +39,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         for (final String uniform : programDTO.uniforms())
             program.uniforms.put(uniform, glGetUniformLocation(program.getIdAsInteger(), uniform));
 
-        return store(program, new ProgramView(program));
+        return store(program);
     }
 
     public ProgramView create(final String name, final ShaderView... shaders) {
@@ -47,7 +47,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
             throw new ProgramLinkException(name);
 
         final var entity = create(name, List.of(shaders));
-        return store(entity, new ProgramView(entity));
+        return store(entity);
     }
 
     private ProgramEntity create(final String name, final List<ShaderView> shaders) {
@@ -57,7 +57,12 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         log.info("Creating program {}", name);
         final var id = glCreateProgram();
 
-        StreamEx.of(shaders).map(AbstractRenderer.AbstractView::getId).map(Long::intValue).forEach(shaderID -> glAttachShader(id, shaderID));
+        StreamEx.of(shaders)
+                .map(AbstractRenderer.AbstractView::getId)
+                .map(shaderManager::get)
+                .map(Couple::entity)
+                .map(AbstractEntity::getIdAsInteger)
+                .forEach(shaderID -> glAttachShader(id, shaderID));
         glLinkProgram(id);
         if (glGetProgrami(id, GL_LINK_STATUS) == GL_FALSE) {
             final var message = glGetProgramInfoLog(id);
@@ -67,6 +72,11 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         }
 
         return new ProgramEntity(id, name, shaders);
+    }
+
+    @Override
+    protected ProgramView createView(final String id, final ProgramEntity entity) {
+        return new ProgramView(id, entity);
     }
 
     @Override

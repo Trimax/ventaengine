@@ -4,7 +4,10 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.WindowView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
@@ -18,7 +21,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class WindowManager extends AbstractManager<WindowManager.WindowEntity, WindowView> {
     @Getter
-    @Setter(onParam_ = @__(@NonNull))
     private WindowView current;
 
     public WindowView create(final String title, final int width, final int height) {
@@ -28,17 +30,23 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             throw new WindowCreationException(title);
 
         glfwMakeContextCurrent(id);
-        glfwSwapInterval(1);
+        glfwSwapInterval(1); // vertical synchronization (setting to 0 produces 5000 FPS)
         glfwShowWindow(id);
 
         final var window = new WindowEntity(id, width, height, title);
         glfwSetFramebufferSizeCallback(id, window.getSizeCallback());
 
-        return store(window, new WindowView(window));
+        return store(window);
     }
 
-    public void set(@NonNull final WindowView window) {
+    public void setCurrent(@NonNull final WindowView window) {
         this.current = window;
+        glfwMakeContextCurrent(get(window.getId()).entity().getId());
+    }
+
+    @Override
+    protected WindowView createView(final String id, final WindowEntity entity) {
+        return new WindowView(id, entity);
     }
 
     @Override
