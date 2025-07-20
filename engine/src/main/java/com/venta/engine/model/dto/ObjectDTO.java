@@ -1,6 +1,5 @@
 package com.venta.engine.model.dto;
 
-import com.venta.engine.model.memory.BakedObject;
 import com.venta.engine.model.memory.Facet;
 import com.venta.engine.model.memory.Vertex;
 
@@ -51,9 +50,5 @@ public record ObjectDTO(String type, String name, List<Vertex> vertices, List<Fa
         }
 
         return packedArray;
-    }
-
-    public BakedObject bake() {
-        return new BakedObject(getVerticesArray(), getFacesArray());
     }
 }
