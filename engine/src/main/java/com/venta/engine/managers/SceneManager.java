@@ -1,6 +1,7 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.SceneView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,8 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     }
 
     @Override
-    protected void destroy(final SceneEntity object) {
-        log.info("Deleting scene {}", object.getName());
+    protected void destroy(final Couple<SceneEntity, SceneView> scene) {
+        log.info("Deleting scene {}", scene.entity().getName());
     }
 
     @Getter

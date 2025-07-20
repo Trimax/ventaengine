@@ -3,6 +3,7 @@ package com.venta.engine.managers;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.exceptions.ShaderArgumentException;
+import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ProgramDTO;
 import com.venta.engine.model.view.ProgramView;
 import com.venta.engine.model.view.ShaderView;
@@ -69,9 +70,9 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Override
-    protected void destroy(final ProgramEntity program) {
-        log.info("Deleting program {}", program.getName());
-        glDeleteProgram(program.getIdAsInteger());
+    protected void destroy(final Couple<ProgramEntity, ProgramView> program) {
+        log.info("Deleting program {}", program.entity().getName());
+        glDeleteProgram(program.entity().getIdAsInteger());
     }
 
     @Getter

@@ -1,6 +1,7 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ObjectDTO;
 import com.venta.engine.model.view.ObjectView;
 import lombok.*;
@@ -80,8 +81,8 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     }
 
     @Override
-    protected void destroy(final ObjectEntity object) {
-        log.info("Deleting object {}", object.getName());
+    protected void destroy(final Couple<ObjectEntity, ObjectView> object) {
+        log.info("Deleting object {}", object.entity().getName());
     }
 
     @Getter

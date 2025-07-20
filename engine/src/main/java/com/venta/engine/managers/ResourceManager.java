@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ResourceNotFoundException;
+import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.ResourceView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -38,8 +39,8 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     }
 
     @Override
-    protected void destroy(final ResourceEntity value) {
-        log.debug("Deleting resource: {}", value.getId());
+    protected void destroy(final Couple<ResourceEntity, ResourceView> resource) {
+        log.debug("Deleting resource: {}", resource.entity().getId());
     }
 
     @Getter

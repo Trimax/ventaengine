@@ -30,11 +30,11 @@ public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, 
     }
 
     final void destroy() {
-        StreamEx.of(values.values()).map(Couple::entity).forEach(this::destroy);
+        values.values().forEach(this::destroy);
         values.clear();
     }
 
-    protected abstract void destroy(final E value);
+    protected abstract void destroy(final Couple<E, V> couple);
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)

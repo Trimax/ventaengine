@@ -1,6 +1,7 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.CameraView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,8 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     }
 
     @Override
-    protected void destroy(final CameraEntity object) {
-        log.info("Deleting camera {}", object.getName());
+    protected void destroy(final Couple<CameraEntity, CameraView> camera) {
+        log.info("Deleting camera {}", camera.entity().getName());
     }
 
     @Getter
