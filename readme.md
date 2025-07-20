@@ -14,4 +14,5 @@
 2. Object should be assigned to a shader (or opposite)
 3. Scene render: for each object: pick shader -> render
 
+## Important
 On macOS start with VM argument: -XstartOnFirstThread
