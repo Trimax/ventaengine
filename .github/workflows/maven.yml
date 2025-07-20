@@ -42,10 +42,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get current version from parent POM
+      - name: Get current version from parent POM with Maven
         id: get_version
         run: |
-          VERSION=$(xmllint --xpath "string(//project/version)" pom.xml)
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Calculate next patch version
