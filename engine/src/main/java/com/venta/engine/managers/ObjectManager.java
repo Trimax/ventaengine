@@ -1,11 +1,11 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.memory.BakedObject;
+import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ObjectDTO;
+import com.venta.engine.model.view.ObjectView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -21,14 +21,16 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity> {
+public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity, ObjectView> {
     private final ResourceManager resourceManager;
 
-    public ObjectEntity load(final String name) {
+    public ObjectView load(final String name) {
         log.info("Loading object {}", name);
 
-        final var parsedObject = resourceManager.load(String.format("/objects/%s", name), ObjectDTO.class);
-        final var bakedObject = parsedObject.bake();
+        final var objectDTO = resourceManager.load(String.format("/objects/%s", name), ObjectDTO.class);
+
+        final var vertices = objectDTO.getVerticesArray();
+        final var facets = objectDTO.getFacesArray();
 
         final int vertexArrayObjectID = glGenVertexArrays();
         final int vertexBufferID = glGenBuffers();
@@ -37,16 +39,16 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         glBindVertexArray(vertexArrayObjectID);
 
         // VBO
-        final FloatBuffer vertexBuffer = memAllocFloat(bakedObject.vertices().length);
-        vertexBuffer.put(bakedObject.vertices()).flip();
+        final FloatBuffer vertexBuffer = memAllocFloat(vertices.length);
+        vertexBuffer.put(vertices).flip();
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
         memFree(vertexBuffer);
 
         // EBO
-        final IntBuffer indexBuffer = memAllocInt(bakedObject.facets().length);
-        indexBuffer.put(bakedObject.facets()).flip();
+        final IntBuffer indexBuffer = memAllocInt(facets.length);
+        indexBuffer.put(facets).flip();
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
@@ -72,39 +74,28 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         glBindVertexArray(0);
 
-        return store(new ObjectEntity(generateID(), name, parsedObject, bakedObject, vertexArrayObjectID, vertexBufferID, indexBufferID));
+        final var entity = new ObjectEntity(generateID(), name, vertices, facets, vertexArrayObjectID, vertexBufferID, indexBufferID);
+        return store(
+                entity,
+                new ObjectView(entity));
     }
 
     @Override
-    protected void destroy(final ObjectEntity object) {
-        log.info("Deleting object {}", object.getName());
+    protected void destroy(final Couple<ObjectEntity, ObjectView> object) {
+        log.info("Deleting object {}", object.entity().getName());
     }
 
     @Getter
     public static final class ObjectEntity extends AbstractEntity {
         private final String name;
-        private final ObjectDTO object;
-        private final BakedObject bakedObject;
+
+        // Potentially we don't need to keep this in memory (or maybe use MeshCache)
+        private final float[] vertices;
+        private final int[] facets;
 
         @Getter
         @Setter
         private ProgramManager.ProgramEntity program;
-
-        //TODO: Those things should be mutable
-        @Getter
-        @Setter
-        @NonNull
-        private Vector3f position = new Vector3f(0.f, 0.f, 0.f);
-
-        @Getter
-        @Setter
-        @NonNull
-        private Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
-
-        @Getter
-        @Setter
-        @NonNull
-        private Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
 
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
@@ -112,16 +103,16 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         ObjectEntity(final long id,
                      @NonNull final String name,
-                     @NonNull final ObjectDTO object,
-                     @NonNull final BakedObject bakedObject,
+                     @NonNull final float[] vertices,
+                     @NonNull final int[] facets,
                      final int vertexArrayObjectID,
                      final int verticesBufferID,
                      final int facetsBufferID) {
             super(id);
 
             this.name = name;
-            this.object = object;
-            this.bakedObject = bakedObject;
+            this.vertices = vertices;
+            this.facets = facets;
 
             this.vertexArrayObjectID = vertexArrayObjectID;
             this.verticesBufferID = verticesBufferID;

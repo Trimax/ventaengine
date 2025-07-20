@@ -3,13 +3,15 @@ package com.venta.examples.cube;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 import com.venta.engine.interfaces.Venta;
-import com.venta.engine.managers.ObjectManager;
-import com.venta.engine.managers.ProgramManager;
+import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.ProgramView;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 
 @Slf4j
 public final class RotatingCube implements Venta {
-    private ObjectManager.ObjectEntity cube;
+    private final Vector3f angles = new Vector3f(0.01f, 0.02f, 0.03f);
+    private ObjectView cube;
 
     @Override
     public WindowConfiguration createWindowConfiguration() {
@@ -32,10 +34,10 @@ public final class RotatingCube implements Venta {
 
     @Override
     public void onUpdate(final double delta, final Context context) {
-        cube.setRotation(cube.getRotation().add(0.01f, 0.02f, 0.03f));
+        cube.rotate(angles);
     }
 
-    private ProgramManager.ProgramEntity createShader(final Context context) {
+    private ProgramView createShader(final Context context) {
         return context.getProgramManager().load("basic");
     }
 }
