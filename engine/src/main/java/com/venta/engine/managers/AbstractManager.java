@@ -32,7 +32,9 @@ public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, 
         return view;
     }
 
-    final void destroy() {
+    @SuppressWarnings("unused")
+    final void cleanup() {
+        log.info("Cleaning up {}", getClass().getSimpleName());
         values.values().forEach(this::destroy);
         values.clear();
     }

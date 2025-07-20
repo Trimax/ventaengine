@@ -14,8 +14,7 @@ import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 @Slf4j
@@ -74,8 +73,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         glBindVertexArray(0);
 
-        final var entity = new ObjectEntity(name, vertices, facets, vertexArrayObjectID, vertexBufferID, indexBufferID);
-        return store(entity);
+        return store(new ObjectEntity(name, vertices, facets, vertexArrayObjectID, vertexBufferID, indexBufferID));
     }
 
     @Override
@@ -86,6 +84,9 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     @Override
     protected void destroy(final Couple<ObjectEntity, ObjectView> object) {
         log.info("Deleting object {}", object.entity().getName());
+        glDeleteVertexArrays(object.entity().vertexArrayObjectID);
+        glDeleteBuffers(object.entity().verticesBufferID);
+        glDeleteBuffers(object.entity().facetsBufferID);
     }
 
     @Getter
