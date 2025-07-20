@@ -1,4 +1,10 @@
 package com.venta.engine.model.view;
 
-public final class ResourceView extends AbstractView {
+import com.venta.engine.managers.ResourceManager;
+import com.venta.engine.renderers.AbstractRenderer;
+
+public final class ResourceView extends AbstractRenderer.AbstractView<ResourceManager.ResourceEntity> {
+    public ResourceView(final ResourceManager.ResourceEntity entity) {
+        super(entity);
+    }
 }

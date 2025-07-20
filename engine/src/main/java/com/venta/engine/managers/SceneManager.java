@@ -14,12 +14,13 @@ import java.util.List;
 public final class SceneManager extends AbstractManager<SceneManager.SceneEntity, SceneView> {
     @Getter
     @Setter
-    private SceneEntity current;
+    private SceneView current;
 
-    public SceneEntity create(final String name) {
+    public SceneView create(final String name) {
         log.info("Creating scene {}", name);
 
-        return store(new SceneEntity(generateID(), name));
+        final var entity = new SceneEntity(generateID(), name);
+        return store(entity, new SceneView(entity));
     }
 
     @Override

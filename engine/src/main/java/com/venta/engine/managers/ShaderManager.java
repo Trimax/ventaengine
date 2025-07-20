@@ -23,13 +23,13 @@ import static org.lwjgl.opengl.GL20C.*;
 public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity, ShaderView> {
     private final ResourceManager resourceManager;
 
-    public ShaderEntity load(final String name) {
+    public ShaderView load(final String name) {
         log.info("Loading shader {}", name);
 
         return load(name, resourceManager.load(String.format("/shaders/%s.json", name), ShaderDTO.class));
     }
 
-    private ShaderEntity load(final String name, final ShaderDTO parsedShader) {
+    private ShaderView load(final String name, final ShaderDTO parsedShader) {
         final var shaderType = ShaderEntity.Type.parse(parsedShader.type());
 
         final var code = resourceManager.load(String.format("/shaders/%s", parsedShader.path()));
@@ -44,7 +44,7 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
         if (parsedShader.attributes() != null)
             shader.attributes.putAll(parsedShader.attributes());
 
-        return store(shader);
+        return store(shader, new ShaderView(shader));
     }
 
     @Override

@@ -1,4 +1,10 @@
 package com.venta.engine.model.view;
 
-public final class ProgramView extends AbstractView {
+import com.venta.engine.managers.ProgramManager;
+import com.venta.engine.renderers.AbstractRenderer;
+
+public final class ProgramView extends AbstractRenderer.AbstractView<ProgramManager.ProgramEntity> {
+    public ProgramView(final ProgramManager.ProgramEntity entity) {
+        super(entity);
+    }
 }

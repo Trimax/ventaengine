@@ -18,9 +18,9 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public final class WindowManager extends AbstractManager<WindowManager.WindowEntity, WindowView> {
     @Getter
     @Setter(onParam_ = @__(@NonNull))
-    private WindowEntity current;
+    private WindowView current;
 
-    public WindowEntity create(final String title, final int width, final int height) {
+    public WindowView create(final String title, final int width, final int height) {
         log.info("Creating window: {}", title);
         final var id = glfwCreateWindow(width, height, title, NULL, NULL);
         if (id == NULL)
@@ -33,10 +33,10 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         final var window = new WindowEntity(id, width, height, title);
         glfwSetFramebufferSizeCallback(id, window.getSizeCallback());
 
-        return store(window);
+        return store(window, new WindowView(window));
     }
 
-    public void set(@NonNull final WindowEntity window) {
+    public void set(@NonNull final WindowView window) {
         this.current = window;
     }
 

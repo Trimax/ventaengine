@@ -5,6 +5,8 @@ import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.exceptions.ShaderArgumentException;
 import com.venta.engine.model.dto.ProgramDTO;
 import com.venta.engine.model.view.ProgramView;
+import com.venta.engine.model.view.ShaderView;
+import com.venta.engine.renderers.AbstractRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +29,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     private final ResourceManager resourceManager;
     private final ShaderManager shaderManager;
 
-    public ProgramEntity load(final String name) {
+    public ProgramView load(final String name) {
         log.info("Loading program {}", name);
 
         final var parsedProgram = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
@@ -36,24 +38,25 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         for (final String uniform : parsedProgram.uniforms())
             program.uniforms.put(uniform, glGetUniformLocation(program.getIdAsInteger(), uniform));
 
-        return store(program);
+        return store(program, new ProgramView(program));
     }
 
-    public ProgramEntity create(final String name, final ShaderManager.ShaderEntity... shaders) {
+    public ProgramView create(final String name, final ShaderView... shaders) {
         if (ArrayUtils.isEmpty(shaders))
             throw new ProgramLinkException(name);
 
-        return store(create(name, List.of(shaders)));
+        final var entity = create(name, List.of(shaders));
+        return store(entity, new ProgramView(entity));
     }
 
-    private ProgramEntity create(final String name, final List<ShaderManager.ShaderEntity> shaders) {
+    private ProgramEntity create(final String name, final List<ShaderView> shaders) {
         if (CollectionUtils.isEmpty(shaders))
             throw new ProgramLinkException(name);
 
         log.info("Creating program {}", name);
         final var id = glCreateProgram();
 
-        StreamEx.of(shaders).map(ShaderManager.ShaderEntity::getIdAsInteger).forEach(shaderID -> glAttachShader(id, shaderID));
+        StreamEx.of(shaders).map(AbstractRenderer.AbstractView::getId).map(Long::intValue).forEach(shaderID -> glAttachShader(id, shaderID));
         glLinkProgram(id);
         if (glGetProgrami(id, GL_LINK_STATUS) == GL_FALSE) {
             final var message = glGetProgramInfoLog(id);
@@ -76,12 +79,12 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         private final String name;
 
         @Getter(AccessLevel.NONE)
-        private final List<ShaderManager.ShaderEntity> shaders;
+        private final List<ShaderView> shaders;
 
         @Getter(AccessLevel.NONE)
         private final Map<String, Integer> uniforms = new HashMap<>();
 
-        ProgramEntity(final long id, @NonNull final String name, @NonNull final List<ShaderManager.ShaderEntity> shaders) {
+        ProgramEntity(final long id, @NonNull final String name, @NonNull final List<ShaderView> shaders) {
             super(id);
 
             this.name = name;
