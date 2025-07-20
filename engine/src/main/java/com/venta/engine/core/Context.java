@@ -5,7 +5,9 @@ import com.venta.engine.managers.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 @Slf4j
 @Getter
@@ -20,11 +22,19 @@ public final class Context {
     private final CameraManager cameraManager;
     private final SceneManager sceneManager;
 
+    @SneakyThrows
     void cleanup() {
-        //programManager.destroy();
-        //shaderManager.destroy();
-        //objectManager.destroy();
-        //windowManager.destroy();
-        //resourceManager.destroy();
+        cleanup(sceneManager);
+        cleanup(objectManager);
+        cleanup(programManager);
+        cleanup(shaderManager);
+        cleanup(cameraManager);
+        cleanup(windowManager);
+        cleanup(resourceManager);
+    }
+
+    @SneakyThrows
+    private void cleanup(final AbstractManager<?, ?> manager) {
+        MethodUtils.invokeMethod(manager, true, "cleanup");
     }
 }

@@ -62,6 +62,7 @@ public final class Engine implements Runnable {
             venta.onUpdate(windowRenderer.getDelta(), context);
         }
 
+        context.cleanup();
         glfwTerminate();
     }
 }

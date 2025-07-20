@@ -1,10 +1,9 @@
 # Venta Engine
 ## TODO list
 1. Move MVP matrix computation to CPU (to avoid multiple computations per vertex)
-2. Deinitialization of managers, resources cleanup
-3. Fullscreen mode
-4. Calculate faces' normals
-5. Console
+2. Fullscreen mode
+3. Calculate faces' normals
+4. Console
 
 ## Notes
 1. Scene contains list of objects
