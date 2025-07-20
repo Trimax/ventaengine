@@ -3,12 +3,10 @@ package com.venta.engine.core;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.interfaces.Venta;
-import com.venta.engine.model.Camera;
 import com.venta.engine.renderers.SceneRenderer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -38,7 +36,9 @@ public final class Engine implements Runnable {
         final var window = context.getWindowManager()
                 .create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height());
         context.getWindowManager().set(window);
-        context.getCameraManager().setCurrent(new Camera(new Vector3f(0, 0, 3), new Vector3f(0, 0, 0)));
+
+        final var camera = context.getCameraManager().create("Default camera");
+        context.getCameraManager().setCurrent(camera);
 
         GL.createCapabilities();
     }
