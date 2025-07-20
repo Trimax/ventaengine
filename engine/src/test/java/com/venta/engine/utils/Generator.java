@@ -1,12 +1,12 @@
 package com.venta.engine.utils;
 
-import com.venta.engine.model.math.Vector2;
-import com.venta.engine.model.math.Vector3;
 import com.venta.engine.model.memory.Color;
 import com.venta.engine.model.memory.Facet;
 import com.venta.engine.model.memory.Vertex;
 import lombok.experimental.UtilityClass;
 import one.util.streamex.IntStreamEx;
+import org.joml.Vector2i;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Random;
@@ -16,12 +16,12 @@ import java.util.function.Supplier;
 public final class Generator {
     private static final Random random = new Random();
 
-    public Vector3 createRandomVector3() {
-        return new Vector3(random.nextFloat(), random.nextFloat(), random.nextFloat());
+    public Vector3f createRandomVector3() {
+        return new Vector3f(random.nextFloat(), random.nextFloat(), random.nextFloat());
     }
 
-    public Vector2 createRandomVector2() {
-        return new Vector2(random.nextInt(), random.nextInt());
+    public Vector2i createRandomVector2() {
+        return new Vector2i(random.nextInt(), random.nextInt());
     }
 
     public Color createRandomColor() {

@@ -1,9 +1,9 @@
 package com.venta.engine.model.memory;
 
-import com.venta.engine.model.math.Vector2;
-import com.venta.engine.model.math.Vector3;
+import org.joml.Vector2i;
+import org.joml.Vector3f;
 
-public record Vertex(Vector3 position, Vector3 normal, Vector2 textureCoordinates, Color color) {
+public record Vertex(Vector3f position, Vector3f normal, Vector2i textureCoordinates, Color color) {
     public boolean hasPosition() {
         return position != null;
     }

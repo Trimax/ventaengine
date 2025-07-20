@@ -25,8 +25,8 @@ public record VentaObject(String type, String name, List<Vertex> vertices, List<
             }
 
             if (vertex.hasTextureCoordinates()) {
-                packedArray[12 * vertexID + 6] = vertex.textureCoordinates().u();
-                packedArray[12 * vertexID + 7] = vertex.textureCoordinates().v();
+                packedArray[12 * vertexID + 6] = vertex.textureCoordinates().x();
+                packedArray[12 * vertexID + 7] = vertex.textureCoordinates().y();
             }
 
             if (vertex.hasColor()) {

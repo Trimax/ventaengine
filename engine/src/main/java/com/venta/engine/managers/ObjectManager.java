@@ -1,11 +1,11 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.math.Vector3;
 import com.venta.engine.model.memory.BakedObject;
 import com.venta.engine.model.parsing.VentaObject;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -94,17 +94,17 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         @Getter
         @Setter
         @NonNull
-        private Vector3 position = new Vector3(0.f, 0.f, 0.f);
+        private Vector3f position = new Vector3f(0.f, 0.f, 0.f);
 
         @Getter
         @Setter
         @NonNull
-        private Vector3 rotation = new Vector3(0.f, 0.f, 0.f);
+        private Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
 
         @Getter
         @Setter
         @NonNull
-        private Vector3 scale = new Vector3(1.f, 1.f, 1.f);
+        private Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
 
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
