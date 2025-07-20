@@ -2,7 +2,7 @@ package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.model.memory.BakedObject;
-import com.venta.engine.model.parsing.VentaObject;
+import com.venta.engine.model.dto.ObjectDTO;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -27,7 +27,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     public ObjectEntity load(final String name) {
         log.info("Loading object {}", name);
 
-        final var parsedObject = resourceManager.load(String.format("/objects/%s", name), VentaObject.class);
+        final var parsedObject = resourceManager.load(String.format("/objects/%s", name), ObjectDTO.class);
         final var bakedObject = parsedObject.bake();
 
         final int vertexArrayObjectID = glGenVertexArrays();
@@ -83,7 +83,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     @Getter
     public static final class ObjectEntity extends AbstractEntity {
         private final String name;
-        private final VentaObject object;
+        private final ObjectDTO object;
         private final BakedObject bakedObject;
 
         @Getter
@@ -112,7 +112,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         ObjectEntity(final long id,
                      @NonNull final String name,
-                     @NonNull final VentaObject object,
+                     @NonNull final ObjectDTO object,
                      @NonNull final BakedObject bakedObject,
                      final int vertexArrayObjectID,
                      final int verticesBufferID,

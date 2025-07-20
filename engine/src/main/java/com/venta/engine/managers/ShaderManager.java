@@ -3,7 +3,7 @@ package com.venta.engine.managers;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ShaderCompileException;
 import com.venta.engine.exceptions.UnknownShaderTypeException;
-import com.venta.engine.model.parsing.VentaShader;
+import com.venta.engine.model.dto.ShaderDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,10 +25,10 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     public ShaderEntity load(final String name) {
         log.info("Loading shader {}", name);
 
-        return load(name, resourceManager.load(String.format("/shaders/%s.json", name), VentaShader.class));
+        return load(name, resourceManager.load(String.format("/shaders/%s.json", name), ShaderDTO.class));
     }
 
-    private ShaderEntity load(final String name, final VentaShader parsedShader) {
+    private ShaderEntity load(final String name, final ShaderDTO parsedShader) {
         final var shaderType = ShaderEntity.Type.parse(parsedShader.type());
 
         final var code = resourceManager.load(String.format("/shaders/%s", parsedShader.path()));
