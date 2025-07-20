@@ -26,10 +26,10 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     public ObjectView load(final String name) {
         log.info("Loading object {}", name);
 
-        final var parsedObject = resourceManager.load(String.format("/objects/%s", name), ObjectDTO.class);
+        final var objectDTO = resourceManager.load(String.format("/objects/%s", name), ObjectDTO.class);
 
-        final var vertices = parsedObject.getVerticesArray();
-        final var facets = parsedObject.getFacesArray();
+        final var vertices = objectDTO.getVerticesArray();
+        final var facets = objectDTO.getFacesArray();
 
         final int vertexArrayObjectID = glGenVertexArrays();
         final int vertexBufferID = glGenBuffers();
@@ -73,7 +73,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         glBindVertexArray(0);
 
-        final var entity = new ObjectEntity(generateID(), name, parsedObject, vertices, facets, vertexArrayObjectID, vertexBufferID, indexBufferID);
+        final var entity = new ObjectEntity(generateID(), name, vertices, facets, vertexArrayObjectID, vertexBufferID, indexBufferID);
         return store(
                 entity,
                 new ObjectView(entity));
@@ -87,7 +87,6 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     @Getter
     public static final class ObjectEntity extends AbstractEntity {
         private final String name;
-        private final ObjectDTO object;
 
         // Potentially we don't need to keep this in memory (or maybe use MeshCache)
         private final float[] vertices;
@@ -103,7 +102,6 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         ObjectEntity(final long id,
                      @NonNull final String name,
-                     @NonNull final ObjectDTO object,
                      @NonNull final float[] vertices,
                      @NonNull final int[] facets,
                      final int vertexArrayObjectID,
@@ -112,7 +110,6 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             super(id);
 
             this.name = name;
-            this.object = object;
             this.vertices = vertices;
             this.facets = facets;
 

@@ -32,10 +32,10 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     public ProgramView load(final String name) {
         log.info("Loading program {}", name);
 
-        final var parsedProgram = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
+        final var programDTO = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
 
-        final ProgramEntity program = create(parsedProgram.name(), StreamEx.of(parsedProgram.shaders()).map(shaderManager::load).toList());
-        for (final String uniform : parsedProgram.uniforms())
+        final ProgramEntity program = create(programDTO.name(), StreamEx.of(programDTO.shaders()).map(shaderManager::load).toList());
+        for (final String uniform : programDTO.uniforms())
             program.uniforms.put(uniform, glGetUniformLocation(program.getIdAsInteger(), uniform));
 
         return store(program, new ProgramView(program));
