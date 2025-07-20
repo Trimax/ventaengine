@@ -1,16 +1,16 @@
 package com.venta.engine.model;
 
-import com.venta.engine.model.parsing.VentaObject;
+import com.venta.engine.model.dto.ObjectDTO;
 import com.venta.engine.utils.Generator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public final class VentaObjectTest {
+public final class ObjectDTOTest {
     @Test
     public void testBaking() {
-        final var object = new VentaObject("Object", "Test",
+        final var object = new ObjectDTO("Object", "Test",
                 Generator.createRandomVertexList(10), Generator.createRandomFacetList(20));
 
         final var bakedObject = object.bake();

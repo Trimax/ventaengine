@@ -1,4 +1,4 @@
-package com.venta.engine.model.parsing;
+package com.venta.engine.model.dto;
 
 import com.venta.engine.model.memory.BakedObject;
 import com.venta.engine.model.memory.Facet;
@@ -6,7 +6,7 @@ import com.venta.engine.model.memory.Vertex;
 
 import java.util.List;
 
-public record VentaObject(String type, String name, List<Vertex> vertices, List<Facet> facets) {
+public record ObjectDTO(String type, String name, List<Vertex> vertices, List<Facet> facets) {
     public float[] getVerticesArray() {
         final var packedArray = new float[vertices.size() * 12];
         for (int vertexID = 0; vertexID < vertices.size(); vertexID++) {

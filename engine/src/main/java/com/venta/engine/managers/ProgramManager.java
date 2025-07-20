@@ -3,7 +3,7 @@ package com.venta.engine.managers;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.exceptions.ShaderArgumentException;
-import com.venta.engine.model.parsing.VentaProgram;
+import com.venta.engine.model.dto.ProgramDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     public ProgramEntity load(final String name) {
         log.info("Loading program {}", name);
 
-        final var parsedProgram = resourceManager.load(String.format("/programs/%s.json", name), VentaProgram.class);
+        final var parsedProgram = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
 
         final ProgramEntity program = create(parsedProgram.name(), StreamEx.of(parsedProgram.shaders()).map(shaderManager::load).toList());
         for (final String uniform : parsedProgram.uniforms())
