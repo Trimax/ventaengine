@@ -5,6 +5,9 @@
     "basic_fragment"
   ],
   "uniforms": [
+    "projection",
+    "view",
+
     "translation",
     "rotation",
     "scale"

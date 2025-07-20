@@ -3,11 +3,12 @@ package com.venta.engine.core;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.interfaces.Venta;
-import com.venta.engine.managers.WindowManager;
+import com.venta.engine.model.Camera;
 import com.venta.engine.renderers.SceneRenderer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -25,9 +26,6 @@ public final class Engine implements Runnable {
     @Setter
     private Venta venta;
 
-    @Setter
-    private WindowManager.WindowEntity window;
-
     public void initialize(final WindowConfiguration windowConfiguration) {
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit())
@@ -37,8 +35,10 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        window = context.getWindowManager()
+        final var window = context.getWindowManager()
                 .create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height());
+        context.getWindowManager().set(window);
+        context.getCameraManager().setCurrent(new Camera(new Vector3f(0, 0, 3), new Vector3f(0, 0, 0)));
 
         GL.createCapabilities();
     }
@@ -47,6 +47,7 @@ public final class Engine implements Runnable {
     public void run() {
         glEnable(GL_DEPTH_TEST);
 
+        final var window = context.getWindowManager().getCurrent();
         glfwMakeContextCurrent(window.getId());
         glfwSwapInterval(1); // vertical synchronization (setting to 0 produces 5000 FPS)
 

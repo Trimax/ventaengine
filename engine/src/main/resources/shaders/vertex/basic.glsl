@@ -11,6 +11,10 @@ uniform vec3 translation; // Object's position in world coordinates
 uniform vec3 rotation;    // Object's orientation, Euler angles (radians): pitch (x), yaw (y), roll (z)
 uniform vec3 scale;       // Object's scale
 
+/* Camera attributes */
+uniform mat4 projection;  // Projections matrix (built based on the window parameters)
+uniform mat4 view;        // View matrix (built based on the camera parameters)
+
 out vec4 vertexColor;
 
 mat4 createRotationMatrix(vec3 angles) {
@@ -70,6 +74,6 @@ void main() {
 
     mat4 model = T * R * S;
 
-    gl_Position = model * vec4(position, 1.0);
+    gl_Position = projection * view * model * vec4(position, 1.0);
     vertexColor = color;
 }

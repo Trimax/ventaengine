@@ -1,16 +1,18 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
+import com.venta.engine.model.Camera;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class CameraManager extends AbstractManager<CameraManager.CameraEntity> {
+    @Getter
+    @Setter(onParam_ = @__(@NonNull))
+    private Camera current;
+
     public CameraEntity create(final String name) {
         log.info("Creating camera {}", name);
 
