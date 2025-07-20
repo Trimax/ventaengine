@@ -8,6 +8,7 @@
 6. Adjust window on resize
 7. Fullscreen mode
 8. Calculate faces' normals
+9. Move MVP matrix computation to CPU (to avoid multiple computations per vertex)
 
 ## Notes
 1. Scene contains list of objects

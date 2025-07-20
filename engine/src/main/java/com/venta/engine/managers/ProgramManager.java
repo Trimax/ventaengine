@@ -2,6 +2,7 @@ package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ProgramLinkException;
+import com.venta.engine.exceptions.ShaderArgumentException;
 import com.venta.engine.model.parsing.VentaProgram;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -87,7 +88,11 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         }
 
         public int getUniformID(final String name) {
-            return uniforms.get(name);
+            final var uniformID = uniforms.get(name);
+            if (uniformID == null)
+                throw new ShaderArgumentException(String.format("%s (shader: %s)", name, this.name));
+
+            return uniformID;
         }
     }
 }
