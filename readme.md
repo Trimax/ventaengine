@@ -1,13 +1,12 @@
 # Venta Engine
 ## TODO list
-1. Fullscreen mode
-2. Calculate faces' normals
-3. Console
-
-## Notes
-1. Scene contains a list of objects
-2. Object should be assigned to a shader (or opposite)
-3. Scene render: for each object: pick shader → render
+1. Calculate faces' normals
+2. Console
+3. Light manager (extend the scene with a list of lights)
+4. Texture manager
+5. Normal mapping
+6. Environment: box/sphere (add box to the scene)
+7. Emitters (extend the scene with a list of emitters)
 
 ## Important
-On macOS start with VM argument: -XstartOnFirstThread
+On macOS start with VM argument: `-XstartOnFirstThread`
