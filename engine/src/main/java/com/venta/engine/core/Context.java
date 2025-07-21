@@ -10,6 +10,7 @@ import com.venta.engine.managers.ProgramManager;
 import com.venta.engine.managers.ResourceManager;
 import com.venta.engine.managers.SceneManager;
 import com.venta.engine.managers.ShaderManager;
+import com.venta.engine.managers.TextureManager;
 import com.venta.engine.managers.WindowManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class Context {
     private final ResourceManager resourceManager;
+    private final TextureManager textureManager;
     private final ProgramManager programManager;
     private final ObjectManager objectManager;
     private final ShaderManager shaderManager;
@@ -40,6 +42,7 @@ public final class Context {
         cleanup(shaderManager);
         cleanup(cameraManager);
         cleanup(windowManager);
+        cleanup(textureManager);
         cleanup(resourceManager);
     }
 

@@ -100,7 +100,8 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             final GLFWImage.Buffer icons = GLFWImage.malloc(1, stack);
             icons.put(0, icon);
 
-            glfwSetWindowIcon(windowID, icons);
+            if (!System.getProperty("os.name").toLowerCase().contains("mac"))
+                glfwSetWindowIcon(windowID, icons);
 
             STBImage.stbi_image_free(iconPixels);
             MemoryUtil.memFree(imageBuffer);
