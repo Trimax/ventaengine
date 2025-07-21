@@ -1,13 +1,21 @@
 package com.venta.engine.core;
 
+import org.apache.commons.lang3.reflect.MethodUtils;
+
 import com.venta.engine.annotations.Component;
-import com.venta.engine.managers.*;
+import com.venta.engine.managers.AbstractManager;
+import com.venta.engine.managers.CameraManager;
+import com.venta.engine.managers.ObjectManager;
+import com.venta.engine.managers.ProgramManager;
+import com.venta.engine.managers.ResourceManager;
+import com.venta.engine.managers.SceneManager;
+import com.venta.engine.managers.ShaderManager;
+import com.venta.engine.managers.WindowManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.reflect.MethodUtils;
 
 @Slf4j
 @Getter
@@ -18,9 +26,11 @@ public final class Context {
     private final ProgramManager programManager;
     private final ObjectManager objectManager;
     private final ShaderManager shaderManager;
-    private final WindowManager windowManager;
     private final CameraManager cameraManager;
     private final SceneManager sceneManager;
+
+    @Getter(AccessLevel.PACKAGE)
+    private final WindowManager windowManager;
 
     @SneakyThrows
     void cleanup() {
