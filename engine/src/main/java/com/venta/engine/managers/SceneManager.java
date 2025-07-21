@@ -3,11 +3,12 @@ package com.venta.engine.managers;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.SceneView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -20,8 +21,7 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     public SceneView create(final String name) {
         log.info("Creating scene {}", name);
 
-        final var entity = new SceneEntity(name);
-        return store(entity);
+        return store(new SceneEntity(name));
     }
 
     @Override
@@ -37,13 +37,11 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     @Getter
     public static final class SceneEntity extends AbstractEntity {
         private final String name;
-        private final List<ObjectManager.ObjectEntity> objects;
 
         SceneEntity(@NonNull final String name) {
             super(0L);
 
             this.name = name;
-            this.objects = new ArrayList<>();
         }
     }
 }

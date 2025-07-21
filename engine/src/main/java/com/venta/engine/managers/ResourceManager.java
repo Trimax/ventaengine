@@ -8,7 +8,9 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.venta.engine.adapters.TextureTypeAdapter;
 import com.venta.engine.annotations.Component;
+import com.venta.engine.enums.TextureType;
 import com.venta.engine.exceptions.ResourceNotFoundException;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.ResourceView;
@@ -21,7 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity, ResourceView> {
-    private static final Gson parser = new GsonBuilder().create();
+    private static final Gson parser = new GsonBuilder()
+            .registerTypeAdapter(TextureType.class, new TextureTypeAdapter())
+            .create();
 
     public byte[] loadAsBytes(final String path) {
         log.debug("Loading resource bytes: {}", path);
