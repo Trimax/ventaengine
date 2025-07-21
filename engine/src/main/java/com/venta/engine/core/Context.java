@@ -5,6 +5,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.managers.AbstractManager;
 import com.venta.engine.managers.CameraManager;
+import com.venta.engine.managers.MaterialManager;
 import com.venta.engine.managers.ObjectManager;
 import com.venta.engine.managers.ProgramManager;
 import com.venta.engine.managers.ResourceManager;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class Context {
     private final ResourceManager resourceManager;
+    private final MaterialManager materialManager;
     private final TextureManager textureManager;
     private final ProgramManager programManager;
     private final ObjectManager objectManager;
@@ -34,6 +36,7 @@ public final class Context {
     @Getter(AccessLevel.PACKAGE)
     private final WindowManager windowManager;
 
+    /* The cleanup order is important */
     @SneakyThrows
     void cleanup() {
         cleanup(sceneManager);
@@ -42,6 +45,7 @@ public final class Context {
         cleanup(shaderManager);
         cleanup(cameraManager);
         cleanup(windowManager);
+        cleanup(materialManager);
         cleanup(textureManager);
         cleanup(resourceManager);
     }

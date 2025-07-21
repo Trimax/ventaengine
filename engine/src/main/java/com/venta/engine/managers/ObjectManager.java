@@ -1,21 +1,24 @@
 package com.venta.engine.managers;
 
-import com.venta.engine.annotations.Component;
-import com.venta.engine.model.core.Couple;
-import com.venta.engine.model.dto.ObjectDTO;
-import com.venta.engine.model.view.ObjectView;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import com.venta.engine.annotations.Component;
+import com.venta.engine.model.core.Couple;
+import com.venta.engine.model.dto.ObjectDTO;
+import com.venta.engine.model.view.ObjectView;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -93,13 +96,9 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     public static final class ObjectEntity extends AbstractEntity {
         private final String name;
 
-        // Potentially we don't need to keep this in memory (or maybe use MeshCache)
+        // Potentially, we don't need to keep this in memory (or maybe use MeshCache)
         private final float[] vertices;
         private final int[] facets;
-
-        @Getter
-        @Setter
-        private ProgramManager.ProgramEntity program;
 
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
