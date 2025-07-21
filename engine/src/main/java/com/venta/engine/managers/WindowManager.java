@@ -1,6 +1,7 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.WindowView;
@@ -22,6 +23,17 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public final class WindowManager extends AbstractManager<WindowManager.WindowEntity, WindowView> {
     @Getter
     private WindowView current;
+
+    public WindowView create(final WindowConfiguration configuration) {
+        if (!configuration.isFullscreen())
+            return create(configuration.title(), configuration.width(), configuration.height());
+
+        final var videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        if (videoMode == null)
+            throw new WindowCreationException("Can't determine video mode for the fullscreen window");
+
+        return create(configuration.title(), videoMode.width(), videoMode.height());
+    }
 
     public WindowView create(final String title, final int width, final int height) {
         log.info("Creating window: {}", title);

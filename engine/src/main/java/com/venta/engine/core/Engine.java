@@ -35,9 +35,7 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        context.getWindowManager().setCurrent(context.getWindowManager()
-                .create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height()));
-
+        context.getWindowManager().setCurrent(context.getWindowManager().create(windowConfiguration));
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
 
         GL.createCapabilities();
@@ -51,11 +49,9 @@ public final class Engine implements Runnable {
         while (!windowRenderer.shouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            final var scene = context.getSceneManager().getCurrent();
-            if (scene != null)
-                sceneRenderer.render(scene);
-
+            sceneRenderer.render(context.getSceneManager().getCurrent());
             windowRenderer.render(window);
+
             glfwPollEvents();
 
             venta.onUpdate(windowRenderer.getDelta(), context);
