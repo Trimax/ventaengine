@@ -7,7 +7,7 @@ import com.venta.engine.model.view.WindowView;
 import static org.lwjgl.glfw.GLFW.*;
 
 @Component
-public final class WindowRenderer implements AbstractRenderer<WindowManager.WindowEntity, WindowView> {
+public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowEntity, WindowView> {
     private long lastTime = System.nanoTime();
     private int frames = 0;
     private double fpsTimer = 0.0;
