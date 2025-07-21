@@ -4,9 +4,18 @@
 2. Console
 3. Light manager (extend the scene with a list of lights)
 4. Texture manager
+   1. AMBIENT_OCCLUSION, 
+   2. ANISOTROPY, 
+   3. BASECOLOR, 
+   4. HEIGHT, 
+   5. METALLIC, 
+   6. NORMAL, 
+   7. ROUGHNESS;
 5. Normal mapping
 6. Environment: box/sphere (add box to the scene)
 7. Emitters (extend the scene with a list of emitters)
+8. Resource archive manager and also, pack & browse tool (!)
+
 
 ## Important
 On macOS start with VM argument: `-XstartOnFirstThread`
