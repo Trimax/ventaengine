@@ -1,5 +1,11 @@
 package com.venta.engine.core;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL33C.*;
+
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.interfaces.Venta;
@@ -8,11 +14,6 @@ import com.venta.engine.renderers.WindowRenderer;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.GL;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 @Component
@@ -34,12 +35,10 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        final var window = context.getWindowManager()
-                .create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height());
-        context.getWindowManager().setCurrent(window);
+        context.getWindowManager().setCurrent(context.getWindowManager()
+                .create(windowConfiguration.title(), windowConfiguration.width(), windowConfiguration.height()));
 
-        final var camera = context.getCameraManager().create("Default camera");
-        context.getCameraManager().setCurrent(camera);
+        context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
 
         GL.createCapabilities();
     }

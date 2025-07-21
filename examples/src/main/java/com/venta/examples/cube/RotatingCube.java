@@ -1,12 +1,13 @@
 package com.venta.examples.cube;
 
+import org.joml.Vector3f;
+
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.model.view.ObjectView;
 import com.venta.engine.model.view.ProgramView;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 @Slf4j
 public final class RotatingCube implements Venta {
