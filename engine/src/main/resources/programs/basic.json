@@ -10,6 +10,8 @@
 
     "translation",
     "rotation",
-    "scale"
+    "scale",
+
+    "textureDiffuse"
   ]
 }
