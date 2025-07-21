@@ -106,6 +106,12 @@
             <classifier>natives-${os.detected.classifier}</classifier>
             <version>${lwjgl.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-stb</artifactId>
+            <classifier>natives-${os.detected.classifier}</classifier>
+            <version>${lwjgl.version}</version>
+        </dependency>
 
         <!-- Tests -->
         <dependency>

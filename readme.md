@@ -10,3 +10,16 @@
 
 ## Important
 On macOS start with VM argument: `-XstartOnFirstThread`
+
+## Notes
+### MacOS executable
+```
+jpackage \
+--input examples/target \
+--main-jar examples-0.0.21.jar \
+--main-class com.venta.examples.CubeApplication \
+--name CubeApp \
+--app-version 1.0.21 \
+--icon engine/src/main/resources/icons/app.icns \
+--type dmg
+```
