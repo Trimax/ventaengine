@@ -9,14 +9,14 @@
     <parent>
         <groupId>com.venta</groupId>
         <artifactId>ventaengine</artifactId>
-        <version>0.0.22</version>
+        <version>0.0.23</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.venta</groupId>
             <artifactId>engine</artifactId>
-            <version>0.0.22</version>
+            <version>0.0.23</version>
         </dependency>
     </dependencies>
 </project>
