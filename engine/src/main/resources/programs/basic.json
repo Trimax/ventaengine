@@ -12,6 +12,7 @@
     "rotation",
     "scale",
 
-    "textureDiffuse"
+    "textureDiffuse",
+    "textureHeight"
   ]
 }

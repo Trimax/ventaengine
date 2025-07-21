@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class RotatingCube implements Venta {
-    private final Vector3f angles = new Vector3f(0.01f, 0.02f, 0.03f);
+    private final Vector3f angles = new Vector3f(0.f, 0.005f, 0.f);
     private ObjectView cube;
 
     @Override
@@ -25,6 +25,7 @@ public final class RotatingCube implements Venta {
 
         cube = context.getObjectManager().load("cube.json");
         cube.setMaterial(context.getMaterialManager().load("fabric.json"));
+        cube.setScale(new Vector3f(2, 2, 2));
 
         final var program = createShader(context);
         cube.setProgram(program);

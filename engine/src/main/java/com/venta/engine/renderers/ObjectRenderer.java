@@ -37,14 +37,23 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             glUniformMatrix4fv(programView.entity.getUniformID("view"), false, context.getViewMatrixBuffer());
             glUniformMatrix4fv(programView.entity.getUniformID("projection"), false, context.getProjectionMatrixBuffer());
 
-
-
             final var material = object.getMaterial();
             if (material != null) {
-                glActiveTexture(GL_TEXTURE0);
+                final var textureDiffuse = material.getTexture(TextureType.DIFFUSE);
+                if (textureDiffuse != null) {
+                    glActiveTexture(GL_TEXTURE0);
 
-                glBindTexture(GL_TEXTURE_2D, material.getTexture(TextureType.DIFFUSE).entity.getIdAsInteger());
-                glUniform1i(programView.entity.getUniformID("textureDiffuse"), 0);
+                    glBindTexture(GL_TEXTURE_2D, textureDiffuse.entity.getIdAsInteger());
+                    glUniform1i(programView.entity.getUniformID("textureDiffuse"), 0);
+                }
+
+                final var textureHeight = material.getTexture(TextureType.HEIGHT);
+                if (textureDiffuse != null) {
+                    glActiveTexture(GL_TEXTURE1);
+
+                    glBindTexture(GL_TEXTURE_2D, textureHeight.entity.getIdAsInteger());
+                    glUniform1i(programView.entity.getUniformID("textureHeight"), 0);
+                }
             }
         }
 
