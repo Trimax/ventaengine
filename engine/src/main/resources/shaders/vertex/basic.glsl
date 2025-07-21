@@ -16,6 +16,7 @@ uniform mat4 projection;  // Projections matrix (built based on the window param
 uniform mat4 view;        // View matrix (built based on the camera parameters)
 
 out vec4 vertexColor;
+out vec2 vertexTextureCoordinates;
 
 mat4 createRotationMatrix(vec3 angles) {
     float cx = cos(angles.x);
@@ -75,5 +76,7 @@ void main() {
     mat4 model = T * R * S;
 
     gl_Position = projection * view * model * vec4(position, 1.0);
+
     vertexColor = color;
+    vertexTextureCoordinates = textureCoordinates;
 }

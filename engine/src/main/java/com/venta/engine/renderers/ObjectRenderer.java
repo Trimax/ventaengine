@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.enums.TextureType;
 import com.venta.engine.exceptions.ObjectRenderingException;
 import com.venta.engine.managers.ObjectManager;
 import com.venta.engine.model.view.ObjectView;
@@ -35,6 +36,16 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
 
             glUniformMatrix4fv(programView.entity.getUniformID("view"), false, context.getViewMatrixBuffer());
             glUniformMatrix4fv(programView.entity.getUniformID("projection"), false, context.getProjectionMatrixBuffer());
+
+
+
+            final var material = object.getMaterial();
+            if (material != null) {
+                glActiveTexture(GL_TEXTURE0);
+
+                glBindTexture(GL_TEXTURE_2D, material.getTexture(TextureType.DIFFUSE).entity.getIdAsInteger());
+                glUniform1i(programView.entity.getUniformID("textureDiffuse"), 0);
+            }
         }
 
         glBindVertexArray(object.entity.getVertexArrayObjectID());

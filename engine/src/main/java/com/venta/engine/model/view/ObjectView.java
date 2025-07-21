@@ -13,6 +13,9 @@ public final class ObjectView extends AbstractRenderer.AbstractView<ObjectManage
     private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
 
     @Setter
+    private MaterialView material;
+
+    @Setter
     private ProgramView program;
 
     public ObjectView(final String id, final ObjectManager.ObjectEntity entity) {

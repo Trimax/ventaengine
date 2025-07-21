@@ -24,6 +24,7 @@ public final class RotatingCube implements Venta {
         log.info("Rotating cube started");
 
         cube = context.getObjectManager().load("cube.json");
+        cube.setMaterial(context.getMaterialManager().load("fabric.json"));
 
         final var program = createShader(context);
         cube.setProgram(program);
