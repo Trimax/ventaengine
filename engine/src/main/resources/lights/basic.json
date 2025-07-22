@@ -1,0 +1,15 @@
+{
+    "name": "basic",
+    "type": "Spot",
+    "position": {"x": -0.5, "y": -0.5, "z": 0.5},
+    "direction": {"x": 0.0, "y": 0.0, "z": 0.0},
+    "color": {"x": 0.0, "y": 0.0, "z": 0.0, "w": 0.0},
+    "attenuation": {
+        "constant": 1.0,
+        "linear": 0.0,
+        "quadratic": 0.0
+    },
+    "intensity": 10.0,
+    "range": 100.0,
+    "castShadows": false
+}

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.managers.AbstractManager;
 import com.venta.engine.managers.CameraManager;
+import com.venta.engine.managers.LightManager;
 import com.venta.engine.managers.MaterialManager;
 import com.venta.engine.managers.ObjectManager;
 import com.venta.engine.managers.ProgramManager;
@@ -32,6 +33,7 @@ public final class Context {
     private final ShaderManager shaderManager;
     private final CameraManager cameraManager;
     private final SceneManager sceneManager;
+    private final LightManager lightManager;
 
     @Getter(AccessLevel.PACKAGE)
     private final WindowManager windowManager;
@@ -40,6 +42,7 @@ public final class Context {
     @SneakyThrows
     void cleanup() {
         cleanup(sceneManager);
+        cleanup(lightManager);
         cleanup(objectManager);
         cleanup(programManager);
         cleanup(shaderManager);

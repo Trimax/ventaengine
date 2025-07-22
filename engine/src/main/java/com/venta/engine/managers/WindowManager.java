@@ -134,6 +134,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private int height;
         private final String title;
         private final VentaInputHandler inputHandler;
+        private final Matrix4f projectionMatrix;
 
         @Getter(AccessLevel.PRIVATE)
         private final GLFWFramebufferSizeCallback sizeCallback = new GLFWFramebufferSizeCallback() {
@@ -176,8 +177,6 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
                     inputHandler.onMouseMove(x, y);
             }
         };
-
-        private final Matrix4f projectionMatrix;
 
         WindowEntity(final long id, final int width, final int height, @NonNull final String title, final VentaInputHandler inputHandler) {
             super(id);
