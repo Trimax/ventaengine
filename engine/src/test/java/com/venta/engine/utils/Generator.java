@@ -1,20 +1,24 @@
 package com.venta.engine.utils;
 
-import com.venta.engine.model.memory.Color;
-import com.venta.engine.model.memory.Facet;
-import com.venta.engine.model.memory.Vertex;
-import lombok.experimental.UtilityClass;
-import one.util.streamex.IntStreamEx;
-import org.joml.Vector2i;
-import org.joml.Vector3f;
-
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import org.joml.Vector2i;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import com.venta.engine.model.dto.ObjectDTO;
+import lombok.experimental.UtilityClass;
+import one.util.streamex.IntStreamEx;
+
 @UtilityClass
 public final class Generator {
     private static final Random random = new Random();
+
+    public Vector4f createRandomVector4() {
+        return new Vector4f(random.nextFloat(), random.nextFloat(), random.nextFloat(), random.nextFloat());
+    }
 
     public Vector3f createRandomVector3() {
         return new Vector3f(random.nextFloat(), random.nextFloat(), random.nextFloat());
@@ -24,23 +28,19 @@ public final class Generator {
         return new Vector2i(random.nextInt(), random.nextInt());
     }
 
-    public Color createRandomColor() {
-        return new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), random.nextFloat());
+    public ObjectDTO.Vertex createRandomVertex() {
+        return new ObjectDTO.Vertex(createRandomVector3(), createRandomVector3(), createRandomVector2(), createRandomVector4());
     }
 
-    public Vertex createRandomVertex() {
-        return new Vertex(createRandomVector3(), createRandomVector3(), createRandomVector2(), createRandomColor());
+    public ObjectDTO.Facet createRandomFacet() {
+        return new ObjectDTO.Facet(random.nextInt(), random.nextInt(), random.nextInt());
     }
 
-    public Facet createRandomFacet() {
-        return new Facet(random.nextInt(), random.nextInt(), random.nextInt());
-    }
-
-    public List<Vertex> createRandomVertexList(final int size) {
+    public List<ObjectDTO.Vertex> createRandomVertexList(final int size) {
         return createRandomList(size, Generator::createRandomVertex);
     }
 
-    public List<Facet> createRandomFacetList(final int size) {
+    public List<ObjectDTO.Facet> createRandomFacetList(final int size) {
         return createRandomList(size, Generator::createRandomFacet);
     }
 

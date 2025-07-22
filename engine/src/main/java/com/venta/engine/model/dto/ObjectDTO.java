@@ -1,11 +1,15 @@
 package com.venta.engine.model.dto;
 
-import com.venta.engine.model.memory.Facet;
-import com.venta.engine.model.memory.Vertex;
-
 import java.util.List;
 
-public record ObjectDTO(String type, String name, List<Vertex> vertices, List<Facet> facets) {
+import org.joml.Vector2i;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+public record ObjectDTO(String type,
+                        String name,
+                        List<Vertex> vertices,
+                        List<Facet> facets) {
     public float[] getVerticesArray() {
         final var packedArray = new float[vertices.size() * 12];
         for (int vertexID = 0; vertexID < vertices.size(); vertexID++) {
@@ -29,10 +33,10 @@ public record ObjectDTO(String type, String name, List<Vertex> vertices, List<Fa
             }
 
             if (vertex.hasColor()) {
-                packedArray[12 * vertexID + 8] = vertex.color().r();
-                packedArray[12 * vertexID + 9] = vertex.color().g();
-                packedArray[12 * vertexID + 10] = vertex.color().b();
-                packedArray[12 * vertexID + 11] = vertex.color().a();
+                packedArray[12 * vertexID + 8] = vertex.color().x();
+                packedArray[12 * vertexID + 9] = vertex.color().y();
+                packedArray[12 * vertexID + 10] = vertex.color().z();
+                packedArray[12 * vertexID + 11] = vertex.color().w();
             }
         }
 
@@ -50,5 +54,31 @@ public record ObjectDTO(String type, String name, List<Vertex> vertices, List<Fa
         }
 
         return packedArray;
+    }
+
+    public record Vertex(Vector3f position,
+                         Vector3f normal,
+                         Vector2i textureCoordinates,
+                         Vector4f color) {
+        public boolean hasPosition() {
+            return position != null;
+        }
+
+        public boolean hasNormal() {
+            return normal != null;
+        }
+
+        public boolean hasTextureCoordinates() {
+            return textureCoordinates != null;
+        }
+
+        public boolean hasColor() {
+            return color != null;
+        }
+    }
+
+    public record Facet(int vertex1,
+                        int vertex2,
+                        int vertex3) {
     }
 }
