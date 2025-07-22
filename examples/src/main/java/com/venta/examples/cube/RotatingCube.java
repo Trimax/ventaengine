@@ -1,5 +1,7 @@
 package com.venta.examples.cube;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 import org.joml.Vector3f;
 
 import com.venta.engine.configurations.WindowConfiguration;
@@ -12,7 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class RotatingCube implements Venta {
-    private final Vector3f angles = new Vector3f(0.f, 0.005f, 0.f);
+    private final Vector3f angles = new Vector3f(0.f, 0.f, 0.f);
+    private final InputHandler inputHandler = new InputHandler();
     private ObjectView cube;
 
     @Override
@@ -22,7 +25,7 @@ public final class RotatingCube implements Venta {
 
     @Override
     public VentaInputHandler createInputHandler() {
-        return new InputHandler();
+        return inputHandler;
     }
 
     @Override
@@ -43,6 +46,21 @@ public final class RotatingCube implements Venta {
 
     @Override
     public void onUpdate(final double delta, final Context context) {
+        angles.x = 0.f;
+        angles.y = 0.f;
+
+        if (inputHandler.isButtonPushed(GLFW_KEY_LEFT))
+            angles.y = 0.05f;
+
+        if (inputHandler.isButtonPushed(GLFW_KEY_RIGHT))
+            angles.y = -0.05f;
+
+        if (inputHandler.isButtonPushed(GLFW_KEY_UP))
+            angles.x = 0.05f;
+
+        if (inputHandler.isButtonPushed(GLFW_KEY_DOWN))
+            angles.x = -0.05f;
+
         cube.rotate(angles);
     }
 
