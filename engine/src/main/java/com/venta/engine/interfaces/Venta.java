@@ -6,6 +6,8 @@ import com.venta.engine.core.Context;
 public interface Venta {
     WindowConfiguration createWindowConfiguration();
 
+    VentaInputHandler createInputHandler();
+
     void onStartup(final String[] args, final Context context);
 
     void onUpdate(final double delta, final Context context);

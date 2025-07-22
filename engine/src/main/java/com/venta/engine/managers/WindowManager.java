@@ -8,8 +8,11 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -17,6 +20,7 @@ import org.lwjgl.system.MemoryUtil;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.exceptions.WindowCreationException;
+import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
@@ -33,9 +37,9 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     @Getter
     private WindowView current;
 
-    public WindowView create(final WindowConfiguration configuration) {
+    public WindowView create(final WindowConfiguration configuration, final VentaInputHandler inputHandler) {
         if (!configuration.isFullscreen())
-            return create(configuration.title(), NULL, configuration.width(), configuration.height());
+            return create(configuration.title(), NULL, configuration.width(), configuration.height(), inputHandler);
 
         final var monitorID = glfwGetPrimaryMonitor();
         if (monitorID == NULL)
@@ -45,10 +49,10 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         if (videoMode == null)
             throw new WindowCreationException("Can't determine video mode for the fullscreen window");
 
-        return create(configuration.title(), monitorID, videoMode.width(), videoMode.height());
+        return create(configuration.title(), monitorID, videoMode.width(), videoMode.height(), inputHandler);
     }
 
-    private WindowView create(final String title, final long monitorID, final int width, final int height) {
+    private WindowView create(final String title, final long monitorID, final int width, final int height, final VentaInputHandler inputHandler) {
         log.info("Creating window: {}", title);
         final var id = glfwCreateWindow(width, height, title, monitorID, NULL);
         if (id == NULL)
@@ -60,8 +64,11 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         glfwRestoreWindow(id);
         glfwFocusWindow(id);
 
-        final var window = new WindowEntity(id, width, height, title);
+        final var window = new WindowEntity(id, width, height, title, inputHandler);
         glfwSetFramebufferSizeCallback(id, window.getSizeCallback());
+        glfwSetKeyCallback(id, window.getKeyCallback());
+        glfwSetMouseButtonCallback(id, window.getMouseButtonCallback());
+        glfwSetCursorPosCallback(id, window.getMousePositionCallback());
 
         setIconFromResources(id, "/icons/venta.png");
 
@@ -117,6 +124,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     protected void destroy(final Couple<WindowEntity, WindowView> window) {
         log.info("Deleting window {}", window.entity().getTitle());
         window.entity().sizeCallback.close();
+        window.entity().keyCallback.close();
         glfwDestroyWindow(window.entity().getId());
     }
 
@@ -125,6 +133,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private int width;
         private int height;
         private final String title;
+        private final VentaInputHandler inputHandler;
 
         @Getter(AccessLevel.PRIVATE)
         private final GLFWFramebufferSizeCallback sizeCallback = new GLFWFramebufferSizeCallback() {
@@ -140,14 +149,43 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
                 projectionMatrix.set(new Matrix4f().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f));
             }
         };
+
+        @Getter
+        private final GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
+            @Override
+            public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
+                if (inputHandler != null)
+                    inputHandler.onKey(key, scancode, action, mods);
+            }
+        };
+
+        @Getter
+        private final GLFWMouseButtonCallback mouseButtonCallback = new GLFWMouseButtonCallback() {
+            @Override
+            public void invoke(final long window, final int button, final int action, final int mods) {
+                if (inputHandler != null)
+                    inputHandler.onMouseButton(button, action, mods);
+            }
+        };
+
+        @Getter
+        private final GLFWCursorPosCallback mousePositionCallback = new GLFWCursorPosCallback() {
+            @Override
+            public void invoke(final long window, final double x, final double y) {
+                if (inputHandler != null)
+                    inputHandler.onMouseMove(x, y);
+            }
+        };
+
         private final Matrix4f projectionMatrix;
 
-        WindowEntity(final long id, final int width, final int height, @NonNull final String title) {
+        WindowEntity(final long id, final int width, final int height, @NonNull final String title, final VentaInputHandler inputHandler) {
             super(id);
 
             this.width = width;
             this.height = height;
             this.title = title;
+            this.inputHandler = inputHandler;
 
             final float aspectRatio = (float) width / height;
             projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f);

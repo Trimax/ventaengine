@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 import com.venta.engine.interfaces.Venta;
+import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.ObjectView;
 import com.venta.engine.model.view.ProgramView;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,11 @@ public final class RotatingCube implements Venta {
     @Override
     public WindowConfiguration createWindowConfiguration() {
         return new WindowConfiguration("Rotating cube", 1024, 768, false);
+    }
+
+    @Override
+    public VentaInputHandler createInputHandler() {
+        return new InputHandler();
     }
 
     @Override
