@@ -17,6 +17,9 @@ public final class LightView extends AbstractRenderer.AbstractView<LightManager.
     @Getter
     private final Vector4f color = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+    @Getter
+    private final Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
+
     public LightView(final String id, final LightManager.LightEntity entity) {
         super(id, entity);
     }
@@ -32,4 +35,6 @@ public final class LightView extends AbstractRenderer.AbstractView<LightManager.
     public void setColor(final Vector4f color) {
         this.color.set(color);
     }
+
+    public record Attenuation(float constant, float linear, float quadratic) {}
 }
