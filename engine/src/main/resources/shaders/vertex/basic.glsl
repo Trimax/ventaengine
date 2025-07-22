@@ -17,6 +17,8 @@ uniform mat4 view;        // View matrix (built based on the camera parameters)
 
 out vec4 vertexColor;
 out vec2 vertexTextureCoordinates;
+out vec3 vertexPosition;
+out vec3 vertexNormal;
 
 mat4 createRotationMatrix(vec3 angles) {
     float cx = cos(angles.x);
@@ -74,8 +76,14 @@ void main() {
     mat4 T = createTranslationMatrix(translation);
 
     mat4 model = T * R * S;
+    mat3 normalMatrix = transpose(inverse(mat3(R * S)));
 
-    gl_Position = projection * view * model * vec4(position, 1.0);
+    vec4 worldPos = model * vec4(position, 1.0);
+    vertexPosition = worldPos.xyz;
+
+    vertexNormal = normalize(normalMatrix * normal);
+
+    gl_Position = projection * view * worldPos;
 
     vertexColor = color;
     vertexTextureCoordinates = textureCoordinates;

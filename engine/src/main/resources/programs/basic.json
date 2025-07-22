@@ -13,6 +13,9 @@
     "scale",
 
     "textureDiffuse",
-    "textureHeight"
+    "textureHeight",
+
+    "lightCount",
+    "lights"
   ]
 }

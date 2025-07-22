@@ -22,7 +22,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEnti
         if (scene == null)
             return;
 
-        try (final var _ = objectRenderer.withContext(new RenderContext(cameraManager.getCurrent(), windowManager.getCurrent()))) {
+        try (final var _ = objectRenderer.withContext(new RenderContext(cameraManager.getCurrent(), windowManager.getCurrent(), scene.getLights()))) {
             scene.getObjects().forEach(objectRenderer::render);
         }
     }

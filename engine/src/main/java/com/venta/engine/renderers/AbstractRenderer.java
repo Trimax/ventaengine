@@ -1,11 +1,13 @@
 package com.venta.engine.renderers;
 
 import java.nio.FloatBuffer;
+import java.util.List;
 
 import org.lwjgl.system.MemoryUtil;
 
 import com.venta.engine.managers.AbstractManager;
 import com.venta.engine.model.view.CameraView;
+import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,13 +34,16 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
     static final class RenderContext implements AutoCloseable {
         private final FloatBuffer projectionMatrixBuffer;
         private final FloatBuffer viewMatrixBuffer;
+        private final List<LightView> lights;
 
-        public RenderContext(final CameraView camera, final WindowView window) {
+        public RenderContext(final CameraView camera, final WindowView window, final List<LightView> lights) {
             this.viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
             camera.entity.getViewMatrix().get(viewMatrixBuffer);
 
             this.projectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
             window.entity.getProjectionMatrix().get(projectionMatrixBuffer);
+
+            this.lights = lights;
         }
 
         @Override

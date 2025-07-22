@@ -1,5 +1,14 @@
 package com.venta.engine.managers;
 
+import static org.lwjgl.opengl.GL20C.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.exceptions.ShaderArgumentException;
@@ -14,14 +23,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
@@ -39,7 +40,41 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         for (final String uniform : programDTO.uniforms())
             program.uniforms.put(uniform, glGetUniformLocation(program.getIdAsInteger(), uniform));
 
+        registerLightUniforms(program, 64);
+
         return store(program);
+    }
+
+    //TODO: Rewrite it in more clean style
+    private static void registerLightUniforms(final ProgramEntity program, final int maxLights) {
+        final String[] lightFields = {
+                "type",
+                "position",
+                "direction",
+                "color",
+                "intensity",
+                "attenuation.constant",
+                "attenuation.linear",
+                "attenuation.quadratic",
+                "enabled",
+                "castShadows"
+        };
+
+        for (int i = 0; i < maxLights; i++) {
+            for (final var field : lightFields) {
+                final var uniformName = String.format("lights[%d].%s", i, field);
+
+                final int location = glGetUniformLocation(program.getIdAsInteger(), uniformName);
+                if (location >= 0)
+                    program.uniforms.put(uniformName, location);
+                else
+                    log.warn("Uniform {} not found in program {}", uniformName, program.getIdAsInteger());
+            }
+        }
+
+        final var lightCountLoc = glGetUniformLocation(program.getIdAsInteger(), "lightCount");
+        if (lightCountLoc >= 0)
+            program.uniforms.put("lightCount", lightCountLoc);
     }
 
     public ProgramView create(final String name, final ShaderView... shaders) {
