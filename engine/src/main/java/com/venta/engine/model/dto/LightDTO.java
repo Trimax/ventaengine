@@ -5,12 +5,13 @@ import org.joml.Vector4f;
 
 import com.venta.engine.enums.LightType;
 
-public record LightDTO(LightType type,
+public record LightDTO(String name,
+                       LightType type,
                        Vector3f position,
                        Vector3f direction,
                        Vector4f color,
                        float intensity,
-                       AttenuationDTO attenuationDTO,
+                       AttenuationDTO attenuation,
                        float range,
                        boolean castShadows) {
 
