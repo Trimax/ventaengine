@@ -7,12 +7,10 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.renderers.SceneRenderer;
 import com.venta.engine.renderers.WindowRenderer;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,10 +21,10 @@ public final class Engine implements Runnable {
     private final SceneRenderer sceneRenderer;
     private final Context context;
 
-    @Setter
     private Venta venta;
 
-    public void initialize(final WindowConfiguration windowConfiguration) {
+    public void initialize(final Venta venta) {
+        this.venta = venta;
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit())
             throw new IllegalStateException("GLFW init failed");
@@ -35,7 +33,7 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        context.getWindowManager().setCurrent(context.getWindowManager().create(windowConfiguration));
+        context.getWindowManager().setCurrent(context.getWindowManager().create(venta.createWindowConfiguration(), venta.createInputHandler()));
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
 
         GL.createCapabilities();
