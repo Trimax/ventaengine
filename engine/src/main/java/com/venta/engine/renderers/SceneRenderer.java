@@ -8,6 +8,7 @@ import org.lwjgl.system.MemoryUtil;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.managers.SceneManager;
 import com.venta.engine.model.view.CameraView;
+import com.venta.engine.model.view.ObjectView;
 import com.venta.engine.model.view.SceneView;
 import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
@@ -31,11 +32,13 @@ public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEnti
         if (scene == null)
             return;
 
-        try (final var _ = objectRenderer.getContext()
-                .withViewProjectionMatrix(getContext().viewProjectionMatrixBuffer)
-                .withScene(scene)) {
-            scene.getObjects().forEach(objectRenderer::render);
-        }
+        for (final ObjectView object : scene.getObjects())
+            try (final var _ = objectRenderer.getContext()
+                    .withViewProjectionMatrix(getContext().viewProjectionMatrixBuffer)
+                    .withModelMatrix(object.getPosition(), object.getRotation(), object.getScale())
+                    .withScene(scene)) {
+                objectRenderer.render(object);
+            }
     }
 
     @Getter(AccessLevel.PACKAGE)

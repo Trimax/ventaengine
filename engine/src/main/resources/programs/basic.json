@@ -6,10 +6,8 @@
   ],
   "uniforms": [
     "matrixViewProjection",
-
-    "translation",
-    "rotation",
-    "scale",
+    "matrixNormal",
+    "matrixModel",
 
     "textureDiffuse",
     "textureHeight",

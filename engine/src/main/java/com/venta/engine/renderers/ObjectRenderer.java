@@ -8,6 +8,9 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 
@@ -50,16 +53,9 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
                     context.getAmbientLight().z(),
                     context.getAmbientLight().w());
 
-            final var position = object.getPosition();
-            glUniform3f(programView.entity.getUniformID("translation"), position.x(), position.y(), position.z());
-
-            final var rotation = object.getRotation();
-            glUniform3f(programView.entity.getUniformID("rotation"), rotation.x(), rotation.y(), rotation.z());
-
-            final var scale = object.getScale();
-            glUniform3f(programView.entity.getUniformID("scale"), scale.x(), scale.y(), scale.z());
-
             glUniformMatrix4fv(programView.entity.getUniformID("matrixViewProjection"), false, context.getViewProjectionMatrixBuffer());
+            glUniformMatrix3fv(programView.entity.getUniformID("matrixNormal"), false, context.getNormalMatrixBuffer());
+            glUniformMatrix4fv(programView.entity.getUniformID("matrixModel"), false, context.getModelMatrixBuffer());
 
             try (final var _ = materialRenderer.getContext()
                     .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"), programView.entity.getUniformID("useTextureDiffuse"))
@@ -96,11 +92,30 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
     @Getter(AccessLevel.PACKAGE)
     static final class ObjectRenderContext extends AbstractRenderContext {
         private final FloatBuffer viewProjectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final FloatBuffer normalMatrixBuffer = MemoryUtil.memAllocFloat(9);
+        private final Matrix3f normalMatrix = new Matrix3f();
+        private final Matrix4f modelMatrix = new Matrix4f();
+
         private final List<LightView> lights = new ArrayList<>();
         private final Vector4f ambientLight = new Vector4f();
 
         public ObjectRenderContext withViewProjectionMatrix(final FloatBuffer buffer) {
             this.viewProjectionMatrixBuffer.put(buffer).flip();
+            return this;
+        }
+
+        public ObjectRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
+            modelMatrix.identity()
+                    .translate(position)
+                    .rotateX(rotation.x)
+                    .rotateY(rotation.y)
+                    .rotateZ(rotation.z)
+                    .scale(scale);
+            modelMatrix.get(modelMatrixBuffer);
+
+            modelMatrix.normal(normalMatrix);
+            normalMatrix.get(normalMatrixBuffer);
             return this;
         }
 
@@ -113,6 +128,8 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         @Override
         public void close() {
             viewProjectionMatrixBuffer.clear();
+            normalMatrixBuffer.clear();
+            modelMatrixBuffer.clear();
             ambientLight.set(0.f);
             lights.clear();
         }
@@ -120,6 +137,8 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         @Override
         public void destroy() {
             MemoryUtil.memFree(viewProjectionMatrixBuffer);
+            MemoryUtil.memFree(normalMatrixBuffer);
+            MemoryUtil.memFree(modelMatrixBuffer);
         }
     }
 }
