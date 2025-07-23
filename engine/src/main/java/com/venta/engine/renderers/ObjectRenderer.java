@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector4f;
@@ -15,18 +16,22 @@ import com.venta.engine.exceptions.ObjectRenderingException;
 import com.venta.engine.managers.ObjectManager;
 import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.SneakyThrows;
-import lombok.experimental.SuperBuilder;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, ObjectView, ObjectRenderer.ObjectRenderContext> {
     private final MaterialRenderer materialRenderer;
     private final LightRenderer lightRenderer;
+
+    @Override
+    protected ObjectRenderContext createContext() {
+        return new ObjectRenderContext();
+    }
 
     @Override
     @SneakyThrows
@@ -57,22 +62,30 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             glUniformMatrix4fv(programView.entity.getUniformID("view"), false, context.getViewMatrixBuffer());
             glUniformMatrix4fv(programView.entity.getUniformID("projection"), false, context.getProjectionMatrixBuffer());
 
-            try (final var _ = materialRenderer.withContext(MaterialRenderer.MaterialRenderContext.builder()
-                            .useTextureDiffuse(programView.entity.getUniformID("useTextureDiffuse"))
-                            .useTextureHeight(programView.entity.getUniformID("useTextureHeight"))
-                            .textureDiffuse(programView.entity.getUniformID("textureDiffuse"))
-                            .textureHeight(programView.entity.getUniformID("textureHeight"))
-                    .build())) {
+            try (final var _ = materialRenderer.getContext()
+                    .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"), programView.entity.getUniformID("useTextureDiffuse"))
+                    .withTextureHeight(programView.entity.getUniformID("textureHeight"), programView.entity.getUniformID("useTextureHeight"))) {
                 materialRenderer.render(object.getMaterial());
             }
 
             final var lights = context.getLights();
             glUniform1i(programView.entity.getUniformID("lightCount"), lights.size());
 
-            try (final var _ = lightRenderer.withContext(LightRenderer.LightRenderContext.builder()
-                    .program(programView)
-                    .build())) {
-                lights.forEach(lightRenderer::render);
+            for (int lightID = 0; lightID < lights.size(); lightID++) {
+                final var prefix = "lights[" + lightID + "]";
+                try (final var _ = lightRenderer.getContext()
+                        .withType(programView.entity.getUniformID(prefix + ".type"))
+                        .withColor(programView.entity.getUniformID(prefix + ".color"))
+                        .withEnabled(programView.entity.getUniformID(prefix + ".enabled"))
+                        .withPosition(programView.entity.getUniformID(prefix + ".position"))
+                        .withDirection(programView.entity.getUniformID(prefix + ".direction"))
+                        .withIntensity(programView.entity.getUniformID(prefix + ".intensity"))
+                        .withCastShadows(programView.entity.getUniformID(prefix + ".castShadows"))
+                        .withAttenuationLinear(programView.entity.getUniformID(prefix + ".attenuation.linear"))
+                        .withAttenuationConstant(programView.entity.getUniformID(prefix + ".attenuation.constant"))
+                        .withAttenuationQuadratic(programView.entity.getUniformID(prefix + ".attenuation.quadratic"))) {
+                    lightRenderer.render(lights.get(lightID));
+                }
             }
         }
 
@@ -81,24 +94,40 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         glBindVertexArray(0);
     }
 
-    @SuperBuilder
     @Getter(AccessLevel.PACKAGE)
     static final class ObjectRenderContext extends AbstractRenderContext {
-        @NonNull
-        private final FloatBuffer projectionMatrixBuffer;
+        //TODO: Replace with the multiplied matrix
+        private final FloatBuffer projectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final FloatBuffer viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final List<LightView> lights = new ArrayList<>();
+        private final Vector4f ambientLight = new Vector4f();
 
-        @NonNull
-        private final FloatBuffer viewMatrixBuffer;
+        public ObjectRenderContext withProjectionMatrix(final FloatBuffer buffer) {
+            projectionMatrixBuffer.put(buffer).flip();
+            return this;
+        }
 
-        @NonNull
-        private final List<LightView> lights;
+        public ObjectRenderContext withViewMatrix(final FloatBuffer buffer) {
+            viewMatrixBuffer.put(buffer).flip();
+            return this;
+        }
 
-        @NonNull
-        private final Vector4f ambientLight;
+        public ObjectRenderContext withScene(final SceneView scene) {
+            lights.addAll(scene.getLights());
+            ambientLight.set(scene.getAmbientLight());
+            return this;
+        }
 
         @Override
         public void close() {
-            //TODO: Possible optimization. Create render context just once and then just set the buffers
+            projectionMatrixBuffer.clear();
+            viewMatrixBuffer.clear();
+            ambientLight.set(0.f);
+            lights.clear();
+        }
+
+        @Override
+        public void destroy() {
             MemoryUtil.memFree(projectionMatrixBuffer);
             MemoryUtil.memFree(viewMatrixBuffer);
         }

@@ -5,12 +5,17 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.experimental.SuperBuilder;
 
 public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity, V extends AbstractRenderer.AbstractView<E>,
-        C extends AbstractRenderer.AbstractRenderContext> {
-    @Getter(AccessLevel.PROTECTED)
-    private C context;
+        C extends AbstractRenderer.AbstractRenderContext> implements AutoCloseable {
+    @Getter
+    private final C context;
+
+    public AbstractRenderer() {
+        context = createContext();
+    }
+
+    protected abstract C createContext();
 
     abstract void render(final V view);
 
@@ -24,18 +29,13 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
         protected final E entity;
     }
 
-    @SuperBuilder
     @Getter(AccessLevel.PACKAGE)
     abstract static class AbstractRenderContext implements AutoCloseable {
-
+        public abstract void destroy();
     }
 
-    final AutoCloseable withContext(@NonNull final C context) {
-        this.context = context;
-
-        return () -> {
-            context.close();
-            this.context = null;
-        };
+    @Override
+    public final void close() {
+        context.destroy();
     }
 }

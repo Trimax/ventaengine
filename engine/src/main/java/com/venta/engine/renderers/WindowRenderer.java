@@ -7,13 +7,17 @@ import com.venta.engine.managers.WindowManager;
 import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 @Component
 public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowEntity, WindowView, WindowRenderer.WindowRenderContext> {
     private long lastTime = System.nanoTime();
     private int frames = 0;
     private double fpsTimer = 0.0;
+
+    @Override
+    protected WindowRenderContext createContext() {
+        return new WindowRenderContext();
+    }
 
     @Override
     public void render(final WindowView window) {
@@ -43,11 +47,15 @@ public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowE
         return glfwWindowShouldClose(window.entity.getId());
     }
 
-    @SuperBuilder
     @Getter(AccessLevel.PACKAGE)
-    static final class WindowRenderContext extends AbstractRenderContext {
+    public static final class WindowRenderContext extends AbstractRenderContext {
         @Override
         public void close() {
+        }
+
+        @Override
+        public void destroy() {
+
         }
     }
 }

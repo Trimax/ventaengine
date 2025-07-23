@@ -12,12 +12,15 @@ import com.venta.engine.managers.MaterialManager;
 import com.venta.engine.model.view.MaterialView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEntity, MaterialView, MaterialRenderer.MaterialRenderContext> {
+    @Override
+    protected MaterialRenderContext createContext() {
+        return new MaterialRenderContext();
+    }
+
     @Override
     public void render(final MaterialView material) {
         if (material == null)
@@ -28,35 +31,49 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
             throw new MaterialRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
         final var textureDiffuse = material.getTexture(TextureType.DIFFUSE);
-        glUniform1i(context.useTextureDiffuse, textureDiffuse == null ? 0 : 1);
+        glUniform1i(context.useTextureDiffuseUniformID, textureDiffuse == null ? 0 : 1);
         if (textureDiffuse != null) {
             glActiveTexture(GL_TEXTURE0);
 
             glBindTexture(GL_TEXTURE_2D, textureDiffuse.entity.getIdAsInteger());
-            glUniform1i(context.getTextureDiffuse(), 0);
+            glUniform1i(context.textureDiffuseUniformID, 0);
         }
 
         final var textureHeight = material.getTexture(TextureType.HEIGHT);
-        glUniform1i(context.useTextureHeight, textureHeight == null ? 0 : 1);
+        glUniform1i(context.useTextureHeightUniformID, textureHeight == null ? 0 : 1);
         if (textureHeight != null) {
             glActiveTexture(GL_TEXTURE1);
 
             glBindTexture(GL_TEXTURE_2D, textureHeight.entity.getIdAsInteger());
-            glUniform1i(context.getTextureHeight(), 0);
+            glUniform1i(context.textureHeightUniformID, 0);
         }
     }
 
-    @SuperBuilder
-    @Getter(AccessLevel.PACKAGE)
     static final class MaterialRenderContext extends AbstractRenderContext {
-        private final int useTextureDiffuse;
-        private final int useTextureHeight;
+        private int useTextureDiffuseUniformID;
+        private int useTextureHeightUniformID;
 
-        private final int textureDiffuse;
-        private final int textureHeight;
+        private int textureDiffuseUniformID;
+        private int textureHeightUniformID;
+
+        public MaterialRenderContext withTextureDiffuse(final int textureDiffuseUniformID, final int useTextureDiffuseUniformID) {
+            this.textureDiffuseUniformID = textureDiffuseUniformID;
+            this.useTextureDiffuseUniformID = useTextureDiffuseUniformID;
+            return this;
+        }
+
+        public MaterialRenderContext withTextureHeight(final int useTextureHeightUniformID, final int textureHeightUniformID) {
+            this.useTextureHeightUniformID = useTextureHeightUniformID;
+            this.textureHeightUniformID = textureHeightUniformID;
+            return this;
+        }
 
         @Override
         public void close() {
+        }
+
+        @Override
+        public void destroy() {
         }
     }
 }
