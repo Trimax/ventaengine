@@ -48,8 +48,7 @@ public final class Engine implements Runnable {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             try (final var _ = sceneRenderer.getContext()
-                    .withWindow(context.getWindowManager().getCurrent())
-                    .withCamera(context.getCameraManager().getCurrent())) {
+                    .with(context.getWindowManager().getCurrent(), context.getCameraManager().getCurrent())) {
                 sceneRenderer.render(context.getSceneManager().getCurrent());
             }
 

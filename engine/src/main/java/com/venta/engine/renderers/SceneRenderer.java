@@ -9,6 +9,7 @@ import com.venta.engine.managers.SceneManager;
 import com.venta.engine.model.view.CameraView;
 import com.venta.engine.model.view.SceneView;
 import com.venta.engine.model.view.WindowView;
+import com.venta.engine.utils.MatrixUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,8 +32,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEnti
             return;
 
         try (final var _ = objectRenderer.getContext()
-                .withProjectionMatrix(getContext().projectionMatrixBuffer)
-                .withViewMatrix(getContext().viewMatrixBuffer)
+                .withViewProjectionMatrix(getContext().viewProjectionMatrixBuffer)
                 .withScene(scene)) {
             scene.getObjects().forEach(objectRenderer::render);
         }
@@ -40,29 +40,22 @@ public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEnti
 
     @Getter(AccessLevel.PACKAGE)
     public static final class SceneRenderContext extends AbstractRenderContext {
-        private final FloatBuffer projectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
-        private final FloatBuffer viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final FloatBuffer viewProjectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
 
-        public SceneRenderContext withWindow(final WindowView window) {
-            window.entity.getProjectionMatrix().get(projectionMatrixBuffer);
-            return this;
-        }
-
-        public SceneRenderContext withCamera(final CameraView camera) {
-            camera.entity.getViewMatrix().get(viewMatrixBuffer);
+        public SceneRenderContext with(final WindowView window, final CameraView camera) {
+            MatrixUtil.createViewProjectionMatrix(window.entity.getProjectionMatrix(), camera.entity.getViewMatrix())
+                    .get(viewProjectionMatrixBuffer);
             return this;
         }
 
         @Override
         public void close() {
-            projectionMatrixBuffer.clear();
-            viewMatrixBuffer.clear();
+            viewProjectionMatrixBuffer.clear();
         }
 
         @Override
         public void destroy() {
-            MemoryUtil.memFree(projectionMatrixBuffer);
-            MemoryUtil.memFree(viewMatrixBuffer);
+            MemoryUtil.memFree(viewProjectionMatrixBuffer);
         }
     }
 }
