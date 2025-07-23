@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
+import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.LightView;
@@ -37,18 +38,26 @@ public final class RotatingCube implements Venta {
 
         cube = context.getObjectManager().load("cube.json");
         cube.setMaterial(context.getMaterialManager().load("fabric.json"));
-        cube.setScale(new Vector3f(2, 2, 2));
 
         final var program = createShader(context);
         cube.setProgram(program);
 
         light = context.getLightManager().load("basic.json");
-        light.setPosition(new Vector3f(0.f, 3.f, 3.f));
+        light.setPosition(new Vector3f(2.f, 2.f, 2.f));
 
         final var scene = context.getSceneManager().create("Sample scene");
         context.getSceneManager().setCurrent(scene);
         scene.add(light);
         scene.add(cube);
+
+        final var origin = context.getObjectManager().load("origin.json");
+        origin.setProgram(program);
+        origin.setDrawMode(DrawMode.Edge);
+        scene.add(origin);
+
+        final var camera = context.getCameraManager().getCurrent();
+        camera.setPosition(new Vector3f(-1.f, 2.f, 3.f));
+        camera.lookAt(new Vector3f(0.f));
     }
 
     @Override

@@ -84,6 +84,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             }
         }
 
+        glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
         glBindVertexArray(object.entity.getVertexArrayObjectID());
         glDrawElements(GL_TRIANGLES, object.entity.getFacets().length, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
