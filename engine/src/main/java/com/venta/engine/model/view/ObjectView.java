@@ -1,5 +1,6 @@
 package com.venta.engine.model.view;
 
+import com.venta.engine.enums.DrawMode;
 import com.venta.engine.managers.ObjectManager;
 import com.venta.engine.renderers.AbstractRenderer;
 import lombok.Getter;
@@ -11,6 +12,9 @@ public final class ObjectView extends AbstractRenderer.AbstractView<ObjectManage
     private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
     private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
     private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
+
+    @Setter
+    private DrawMode drawMode = DrawMode.Polygon;
 
     @Setter
     private MaterialView material;
