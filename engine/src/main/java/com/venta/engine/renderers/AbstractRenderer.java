@@ -3,6 +3,7 @@ package com.venta.engine.renderers;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 
 import com.venta.engine.managers.AbstractManager;
@@ -35,14 +36,16 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
         private final FloatBuffer projectionMatrixBuffer;
         private final FloatBuffer viewMatrixBuffer;
         private final List<LightView> lights;
+        private final Vector4f ambientLight;
 
-        public RenderContext(final CameraView camera, final WindowView window, final List<LightView> lights) {
+        public RenderContext(final CameraView camera, final WindowView window, final List<LightView> lights, final Vector4f ambientLight) {
             this.viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
             camera.entity.getViewMatrix().get(viewMatrixBuffer);
 
             this.projectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
             window.entity.getProjectionMatrix().get(projectionMatrixBuffer);
 
+            this.ambientLight = ambientLight;
             this.lights = lights;
         }
 

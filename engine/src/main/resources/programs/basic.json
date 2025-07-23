@@ -15,6 +15,10 @@
     "textureDiffuse",
     "textureHeight",
 
+    "useTextureDiffuse",
+    "useTextureHeight",
+
+    "ambientLight",
     "lightCount",
     "lights"
   ]

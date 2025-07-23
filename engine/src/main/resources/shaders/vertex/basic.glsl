@@ -80,7 +80,6 @@ void main() {
 
     vec4 worldPos = model * vec4(position, 1.0);
     vertexPosition = worldPos.xyz;
-
     vertexNormal = normalize(normalMatrix * normal);
 
     gl_Position = projection * view * worldPos;

@@ -17,24 +17,32 @@ struct Light {
     vec3 direction;
     vec3 color;
     float intensity;
-
     Attenuation attenuation;
-
     bool castShadows;
     bool enabled;
 };
 
+/* Vertex shader output */
 in vec4 vertexColor;
 in vec2 vertexTextureCoordinates;
 in vec3 vertexPosition;
 in vec3 vertexNormal;
 
+/* Textures */
 uniform sampler2D textureDiffuse;
-uniform sampler2D heightTexture;
+uniform sampler2D textureHeight;
 
+/* Feature flags */
+uniform bool useTextureDiffuse;
+uniform bool useTextureHeight;
+uniform bool useVertexColor;
+
+/* Lighting */
 uniform Light lights[MAX_LIGHTS];
+uniform vec4 ambientLight;
 uniform int lightCount;
 
+/* Output color */
 out vec4 FragColor;
 
 vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
@@ -70,19 +78,25 @@ vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
     return light.color * light.intensity * diff * attenuation;
 }
 
+vec4 getDiffuseColor() {
+    return useTextureDiffuse ? texture(textureDiffuse, vertexTextureCoordinates) : vec4(1.0);
+}
+
+float getHeight() {
+    return useTextureHeight ? texture(textureHeight, vertexTextureCoordinates).r : 1.0;
+}
+
 void main() {
-    vec4 diffuseColor = texture(textureDiffuse, vertexTextureCoordinates);
-    float heightValue = texture(heightTexture, vertexTextureCoordinates).r;
+    vec4 diffuseColor = getDiffuseColor();
+    float heightValue = getHeight();
 
-    vec3 normal = normalize(vertexNormal);
-    vec3 lighting = vec3(0.1); // Temporary ambient lighting
-
-    for (int i = 0; i < lightCount; i++) {
-        lighting += calculateLight(lights[i], normal, vertexPosition);
-    }
+    vec3 lighting = ambientLight.xyz * ambientLight.w;
+    for (int i = 0; i < lightCount; i++)
+        lighting += calculateLight(lights[i], vertexNormal, vertexPosition);
 
     vec3 modulatedColor = diffuseColor.rgb * (0.8 + 0.2 * heightValue);
     vec3 finalColor = modulatedColor * lighting;
 
-    FragColor = vertexColor * vec4(clamp(finalColor, 0.0, 1.0), diffuseColor.a);
+    vec4 baseColor = vec4(clamp(finalColor, 0.0, 1.0), diffuseColor.a);
+    FragColor = useVertexColor ? vertexColor * baseColor : baseColor;
 }
