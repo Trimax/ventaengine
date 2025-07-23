@@ -5,7 +5,7 @@
     "basic_fragment"
   ],
   "uniforms": [
-    "viewProjectionMatrix",
+    "matrixViewProjection",
 
     "translation",
     "rotation",
