@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity, V extends AbstractRenderer.AbstractView<E>,
         C extends AbstractRenderer.AbstractRenderContext> implements AutoCloseable {
@@ -29,6 +30,7 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
         protected final E entity;
     }
 
+    @Slf4j
     @Getter(AccessLevel.PACKAGE)
     abstract static class AbstractRenderContext implements AutoCloseable {
         public abstract void destroy();
@@ -36,6 +38,7 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
 
     @Override
     public final void close() {
+        AbstractRenderContext.log.debug("{} destroyed", getClass().getSimpleName());
         context.destroy();
     }
 }

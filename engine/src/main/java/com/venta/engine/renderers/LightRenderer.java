@@ -9,6 +9,7 @@ import com.venta.engine.model.view.LightView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
@@ -41,6 +42,7 @@ final class LightRenderer extends AbstractRenderer<LightManager.LightEntity, Lig
         glUniform1f(context.attenuationQuadraticUniformID, light.getAttenuation().quadratic());
     }
 
+    @Slf4j
     @Getter(AccessLevel.PACKAGE)
     static final class LightRenderContext extends AbstractRenderContext {
         private int typeUniformID;
