@@ -8,6 +8,7 @@ import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.interfaces.VentaInputHandler;
+import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.ObjectView;
 import com.venta.engine.model.view.ProgramView;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 public final class RotatingCube implements Venta {
     private final Vector3f angles = new Vector3f(0.f, 0.f, 0.f);
     private final InputHandler inputHandler = new InputHandler();
+
     private ObjectView cube;
+    private LightView light;
 
     @Override
     public WindowConfiguration createWindowConfiguration() {
@@ -39,7 +42,7 @@ public final class RotatingCube implements Venta {
         final var program = createShader(context);
         cube.setProgram(program);
 
-        final var light = context.getLightManager().load("basic.json");
+        light = context.getLightManager().load("basic.json");
         light.setPosition(new Vector3f(0.f, 3.f, 3.f));
 
         final var scene = context.getSceneManager().create("Sample scene");

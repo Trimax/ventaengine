@@ -25,6 +25,12 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
 
             glUseProgram(programView.entity.getIdAsInteger());
 
+            glUniform4f(programView.entity.getUniformID("ambientLight"),
+                    context.getAmbientLight().x(),
+                    context.getAmbientLight().y(),
+                    context.getAmbientLight().z(),
+                    context.getAmbientLight().w());
+
             final var position = object.getPosition();
             glUniform3f(programView.entity.getUniformID("translation"), position.x(), position.y(), position.z());
 
@@ -40,6 +46,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             final var material = object.getMaterial();
             if (material != null) {
                 final var textureDiffuse = material.getTexture(TextureType.DIFFUSE);
+                glUniform1i(programView.entity.getUniformID("useTextureDiffuse"), textureDiffuse == null ? 0 : 1);
                 if (textureDiffuse != null) {
                     glActiveTexture(GL_TEXTURE0);
 
@@ -48,7 +55,8 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
                 }
 
                 final var textureHeight = material.getTexture(TextureType.HEIGHT);
-                if (textureDiffuse != null) {
+                glUniform1i(programView.entity.getUniformID("useTextureHeight"), textureHeight == null ? 0 : 1);
+                if (textureHeight != null) {
                     glActiveTexture(GL_TEXTURE1);
 
                     glBindTexture(GL_TEXTURE_2D, textureHeight.entity.getIdAsInteger());
@@ -63,15 +71,15 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
                 final var light = lights.get(i);
 
                 final var prefix = "lights[" + i + "]";
-                glUniform1i(programView.entity.getUniformID(prefix + ".type"), 0); // пока только точечные
+                glUniform1i(programView.entity.getUniformID(prefix + ".type"), 0); //TODO: Only point light supported so far
                 glUniform3f(programView.entity.getUniformID(prefix + ".position"),
                         light.getPosition().x(), light.getPosition().y(), light.getPosition().z());
                 glUniform3f(programView.entity.getUniformID(prefix + ".direction"),
                         light.getDirection().x(), light.getDirection().y(), light.getDirection().z());
                 glUniform3f(programView.entity.getUniformID(prefix + ".color"),
                         light.getColor().x(), light.getColor().y(), light.getColor().z());
-                glUniform1f(programView.entity.getUniformID(prefix + ".intensity"), 1.0f); // временно
-                glUniform1i(programView.entity.getUniformID(prefix + ".castShadows"), 0); // временно
+                glUniform1f(programView.entity.getUniformID(prefix + ".intensity"), 1.0f); //TODO: Pass from view
+                glUniform1i(programView.entity.getUniformID(prefix + ".castShadows"), 0); //TODO: Pass from view
                 glUniform1i(programView.entity.getUniformID(prefix + ".enabled"), 1);
 
                 final var attenuation = light.getAttenuation();
