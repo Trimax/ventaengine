@@ -44,12 +44,12 @@ public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEnti
         private final FloatBuffer viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
 
         public SceneRenderContext withWindow(final WindowView window) {
-            window.entity.getProjectionMatrix().get(projectionMatrixBuffer).flip();
+            window.entity.getProjectionMatrix().get(projectionMatrixBuffer);
             return this;
         }
 
-        public SceneRenderContext withCamera(final CameraView window) {
-            window.entity.getViewMatrix().get(viewMatrixBuffer).flip();
+        public SceneRenderContext withCamera(final CameraView camera) {
+            camera.entity.getViewMatrix().get(viewMatrixBuffer);
             return this;
         }
 
