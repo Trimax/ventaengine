@@ -2,7 +2,10 @@ package com.venta.examples.cube;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.util.Random;
+
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
@@ -18,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class RotatingCube implements Venta {
     private final Vector3f angles = new Vector3f(0.f, 0.f, 0.f);
     private final InputHandler inputHandler = new InputHandler();
+    private final Random random = new Random();
 
     private ObjectView cube;
     private LightView light;
@@ -89,9 +93,16 @@ public final class RotatingCube implements Venta {
                 1.5f,
                 2.f * (float) Math.cos(elapsedTime)
         ));
+
+        if (inputHandler.isButtonPushed(GLFW_KEY_SPACE))
+            light.setColor(createRandomVector4());
     }
 
     private ProgramView createShader(final Context context) {
         return context.getProgramManager().load("basic");
+    }
+
+    public Vector4f createRandomVector4() {
+        return new Vector4f(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1.f);
     }
 }
