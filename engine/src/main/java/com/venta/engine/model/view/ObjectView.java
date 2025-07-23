@@ -17,6 +17,9 @@ public final class ObjectView extends AbstractRenderer.AbstractView<ObjectManage
     private DrawMode drawMode = DrawMode.Polygon;
 
     @Setter
+    private boolean applyLighting = true;
+
+    @Setter
     private MaterialView material;
 
     @Setter

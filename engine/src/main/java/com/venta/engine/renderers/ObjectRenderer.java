@@ -65,6 +65,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
 
             final var lights = context.getLights();
             glUniform1i(programView.entity.getUniformID("lightCount"), lights.size());
+            glUniform1i(programView.entity.getUniformID("useLighting"), object.isApplyLighting() ? 1 : 0);
 
             for (int lightID = 0; lightID < lights.size(); lightID++) {
                 final var prefix = "lights[" + lightID + "]";
