@@ -101,13 +101,13 @@ public final class VentaEngine {
     }
 
     private void shutdownEngine() {
-        StreamEx.of((components.values()))
-                .filterBy(Object::getClass, AutoCloseable.class)
-                .map(AutoCloseable.class::cast)
-                .forEach(x -> System.out.println(x));
-    }
-
-    private boolean isComponentAutoCloseable(final Object component) {
-        return AutoCloseable.class.isAssignableFrom(component.getClass());
+        for (final Object component : components.values()) {
+            if (component instanceof AutoCloseable)
+                try {
+                    ((AutoCloseable) component).close();
+                } catch (final Exception e) {
+                    log.warn("Can't shutdown component {}", component.getClass().getSimpleName(), e);
+                }
+        }
     }
 }

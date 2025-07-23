@@ -1,21 +1,18 @@
 # Venta Engine
 ## TODO list
-1. Calculate faces' normals
-2. Console
-3. Light manager (extend the scene with a list of lights)
-4. Texture manager
+1. Console
+2. Texture manager
    1. AMBIENT_OCCLUSION, 
    2. ANISOTROPY, 
-   3. BASECOLOR, 
-   4. HEIGHT, 
+   3. ~~DIFFUSE~~, 
+   4. ~~HEIGHT~~, 
    5. METALLIC, 
    6. NORMAL, 
    7. ROUGHNESS;
-5. Normal mapping
-6. Environment: box/sphere (add box to the scene)
-7. Emitters (extend the scene with a list of emitters)
-8. Resource archive manager and also, pack & browse tool (!)
-
+3. Normal mapping
+4. Environment: box/sphere (add box to the scene)
+5. Emitters (extend the scene with a list of emitters)
+6. Resource archive manager and also, pack & browse tool (!)
 
 ## Important
 On macOS start with VM argument: `-XstartOnFirstThread`
