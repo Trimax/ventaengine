@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.joml.Vector4f;
 
+import com.venta.engine.definitions.Definitions;
 import com.venta.engine.managers.SceneManager;
 import com.venta.engine.renderers.AbstractRenderer;
 import lombok.Getter;
@@ -24,6 +25,9 @@ public final class SceneView extends AbstractRenderer.AbstractView<SceneManager.
     }
 
     public void add(final ObjectView object) {
+        if (this.objects.size() >= Definitions.LIGHT_MAX)
+            throw new RuntimeException("Too many lights");
+
         this.objects.add(object);
     }
 

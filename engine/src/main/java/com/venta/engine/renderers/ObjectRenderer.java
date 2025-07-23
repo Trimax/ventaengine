@@ -26,6 +26,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, ObjectView, ObjectRenderer.ObjectRenderContext> {
     private final MaterialRenderer materialRenderer;
+    private final LightRenderer lightRenderer;
 
     @Override
     @SneakyThrows
@@ -68,25 +69,10 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             final var lights = context.getLights();
             glUniform1i(programView.entity.getUniformID("lightCount"), lights.size());
 
-            for (int i = 0; i < lights.size(); i++) {
-                final var light = lights.get(i);
-
-                final var prefix = "lights[" + i + "]";
-                glUniform1i(programView.entity.getUniformID(prefix + ".type"), 0); //TODO: Only point light supported so far
-                glUniform3f(programView.entity.getUniformID(prefix + ".position"),
-                        light.getPosition().x(), light.getPosition().y(), light.getPosition().z());
-                glUniform3f(programView.entity.getUniformID(prefix + ".direction"),
-                        light.getDirection().x(), light.getDirection().y(), light.getDirection().z());
-                glUniform3f(programView.entity.getUniformID(prefix + ".color"),
-                        light.getColor().x(), light.getColor().y(), light.getColor().z());
-                glUniform1f(programView.entity.getUniformID(prefix + ".intensity"), 1.0f); //TODO: Pass from view
-                glUniform1i(programView.entity.getUniformID(prefix + ".castShadows"), 0); //TODO: Pass from view
-                glUniform1i(programView.entity.getUniformID(prefix + ".enabled"), 1);
-
-                final var attenuation = light.getAttenuation();
-                glUniform1f(programView.entity.getUniformID(prefix + ".attenuation.constant"), attenuation.constant());
-                glUniform1f(programView.entity.getUniformID(prefix + ".attenuation.linear"), attenuation.linear());
-                glUniform1f(programView.entity.getUniformID(prefix + ".attenuation.quadratic"), attenuation.quadratic());
+            try (final var _ = lightRenderer.withContext(LightRenderer.LightRenderContext.builder()
+                    .program(programView)
+                    .build())) {
+                lights.forEach(lightRenderer::render);
             }
         }
 
