@@ -24,7 +24,7 @@ public final class InputHandler implements VentaInputHandler {
 
     @Override
     public void onMouseMove(final double x, final double y) {
-        log.info("Mouse: {} x {}", x, y);
+
     }
 
     @Override
