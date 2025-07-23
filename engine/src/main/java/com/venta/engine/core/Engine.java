@@ -47,9 +47,13 @@ public final class Engine implements Runnable {
         while (!windowRenderer.shouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            sceneRenderer.render(context.getSceneManager().getCurrent());
-            windowRenderer.render(window);
+            try (final var _ = sceneRenderer.getContext()
+                    .withWindow(context.getWindowManager().getCurrent())
+                    .withCamera(context.getCameraManager().getCurrent())) {
+                sceneRenderer.render(context.getSceneManager().getCurrent());
+            }
 
+            windowRenderer.render(window);
             glfwPollEvents();
 
             venta.onUpdate(windowRenderer.getDelta(), context);
