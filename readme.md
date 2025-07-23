@@ -13,6 +13,7 @@
 4. Environment: box/sphere (add box to the scene)
 5. Emitters (extend the scene with a list of emitters)
 6. Resource archive manager and also, pack & browse tool (!)
+7. Load gizmo by default. Set visibility to false
 
 ## Important
 On macOS start with VM argument: `-XstartOnFirstThread`
