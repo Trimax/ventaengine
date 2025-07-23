@@ -32,15 +32,15 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         final var objectDTO = resourceManager.load(String.format("/objects/%s", name), ObjectDTO.class);
 
         final var vertices = objectDTO.getVerticesArray();
-        final var facets = objectDTO.getFacesArray();
 
         final int vertexArrayObjectID = glGenVertexArrays();
         final int vertexBufferID = glGenBuffers();
-        final int indexBufferID = glGenBuffers();
+        final int facetsBufferID = glGenBuffers();
+        final int edgesBufferID = glGenBuffers();
 
         glBindVertexArray(vertexArrayObjectID);
 
-        // VBO
+        // Vertices
         final FloatBuffer vertexBuffer = memAllocFloat(vertices.length);
         vertexBuffer.put(vertices).flip();
 
@@ -48,13 +48,27 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
         memFree(vertexBuffer);
 
-        // EBO
-        final IntBuffer indexBuffer = memAllocInt(facets.length);
-        indexBuffer.put(facets).flip();
+        // Facets
+        if (objectDTO.hasFacets()) {
+            final var facets = objectDTO.getFacesArray();
+            final IntBuffer indexBuffer = memAllocInt(facets.length);
+            indexBuffer.put(facets).flip();
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
-        memFree(indexBuffer);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
+            memFree(indexBuffer);
+        }
+
+        // Edges
+        if (objectDTO.hasEdges()) {
+            final var edges = objectDTO.getEdgesArray();
+            final IntBuffer indexBuffer = memAllocInt(edges.length);
+            indexBuffer.put(edges).flip();
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgesBufferID);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
+            memFree(indexBuffer);
+        }
 
         final int stride = 12 * Float.BYTES;
 
@@ -76,7 +90,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         glBindVertexArray(0);
 
-        return store(new ObjectEntity(name, vertices, facets, vertexArrayObjectID, vertexBufferID, indexBufferID));
+        return store(new ObjectEntity(name, vertices.length, objectDTO.getFacetsArrayLength(), objectDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID));
     }
 
     @Override
@@ -97,24 +111,27 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final String name;
 
         // Potentially, we don't need to keep this in memory (or maybe use MeshCache)
-        private final float[] vertices;
-        private final int[] facets;
+        private final int verticesCount;
+        private final int facetsCount;
+        private final int edgesCount;
 
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
         private final int facetsBufferID;
 
         ObjectEntity(@NonNull final String name,
-                     @NonNull final float[] vertices,
-                     @NonNull final int[] facets,
+                     final int verticesCount,
+                     final int facetsCount,
+                     final int edgesCount,
                      final int vertexArrayObjectID,
                      final int verticesBufferID,
                      final int facetsBufferID) {
             super(0L);
 
             this.name = name;
-            this.vertices = vertices;
-            this.facets = facets;
+            this.verticesCount = verticesCount;
+            this.facetsCount = facetsCount;
+            this.edgesCount = edgesCount;
 
             this.vertexArrayObjectID = vertexArrayObjectID;
             this.verticesBufferID = verticesBufferID;

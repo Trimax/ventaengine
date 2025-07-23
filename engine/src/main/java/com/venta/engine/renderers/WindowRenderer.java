@@ -13,6 +13,7 @@ public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowE
     private long lastTime = System.nanoTime();
     private int frames = 0;
     private double fpsTimer = 0.0;
+    private double lastDelta;
 
     @Override
     protected WindowRenderContext createContext() {
@@ -24,10 +25,10 @@ public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowE
         glfwSwapBuffers(window.entity.getId());
 
         final long now = System.nanoTime();
-        final double delta = (now - lastTime) / 1_000_000_000.0;
+        lastDelta = (now - lastTime) / 1_000_000_000.0;
 
         lastTime = now;
-        fpsTimer += delta;
+        fpsTimer += lastDelta;
         frames++;
 
         if (fpsTimer >= 1.0) {
@@ -40,7 +41,7 @@ public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowE
     }
 
     public double getDelta() {
-        return (System.nanoTime() - lastTime) / 1_000_000_000.0;
+        return lastDelta;
     }
 
     public boolean shouldClose(final WindowView window) {

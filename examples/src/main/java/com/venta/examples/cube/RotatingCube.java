@@ -54,12 +54,15 @@ public final class RotatingCube implements Venta {
         origin.setProgram(program);
         origin.setDrawMode(DrawMode.Edge);
         origin.setApplyLighting(false);
+        origin.setScale(new Vector3f(100000f));
         scene.add(origin);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(-1.f, 2.f, 3.f));
+        camera.setPosition(new Vector3f(3.f, 3.f, 3.f));
         camera.lookAt(new Vector3f(0.f));
     }
+
+    private double elapsedTime = 0.0;
 
     @Override
     public void onUpdate(final double delta, final Context context) {
@@ -79,6 +82,14 @@ public final class RotatingCube implements Venta {
             angles.x = +0.05f;
 
         cube.rotate(angles);
+
+        elapsedTime += delta;
+        light.setPosition(new Vector3f(
+                2.f * (float) Math.sin(elapsedTime),
+                2.f,
+                2.f * (float) Math.cos(elapsedTime)
+        ));
+        log.info("Light position: {}; Delta: {}; Elapsed time: {}", light.getPosition(), delta, elapsedTime);
     }
 
     private ProgramView createShader(final Context context) {

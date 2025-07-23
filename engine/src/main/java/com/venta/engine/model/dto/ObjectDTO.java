@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -15,7 +16,24 @@ import one.util.streamex.StreamEx;
 public record ObjectDTO(String type,
                         String name,
                         List<Vertex> vertices,
-                        List<Facet> facets) {
+                        List<Facet> facets,
+                        List<Edge> edges) {
+    public boolean hasFacets() {
+        return CollectionUtils.isNotEmpty(facets);
+    }
+
+    public boolean hasEdges() {
+        return CollectionUtils.isNotEmpty(edges);
+    }
+
+    public int getFacetsArrayLength() {
+        return hasFacets() ? 3 * facets.size() : 0;
+    }
+
+    public int getEdgesArrayLength() {
+        return hasEdges() ? 2 * edges.size() : 0;
+    }
+
     public float[] getVerticesArray() {
         final var normals = computeVertexNormals();
 
@@ -31,6 +49,12 @@ public record ObjectDTO(String type,
             }
 
             if (normal != null) {
+                packedArray[12 * vertexID + 3] = normal.x();
+                packedArray[12 * vertexID + 4] = normal.y();
+                packedArray[12 * vertexID + 5] = normal.z();
+            }
+
+            if (vertex.hasNormal()) {
                 packedArray[12 * vertexID + 3] = normal.x();
                 packedArray[12 * vertexID + 4] = normal.y();
                 packedArray[12 * vertexID + 5] = normal.z();
@@ -65,6 +89,18 @@ public record ObjectDTO(String type,
         return packedArray;
     }
 
+    public int[] getEdgesArray() {
+        final var packedArray = new int[edges.size() * 2];
+        for (int edgeID = 0; edgeID < edges.size(); edgeID++) {
+            final var edge = edges.get(edgeID);
+
+            packedArray[2 * edgeID]     = edge.vertex1();
+            packedArray[2 * edgeID + 1] = edge.vertex2();
+        }
+
+        return packedArray;
+    }
+
     public float[] getFaceNormals() {
         final var faceNormalsMap = computeFaceNormals();
 
@@ -81,6 +117,9 @@ public record ObjectDTO(String type,
     }
 
     private Map<Integer, Vector3f> computeFaceNormals() {
+        if (!hasFacets())
+            return new HashMap<>();
+
         final var faceNormals = new HashMap<Integer, Vector3f>();
         for (int i = 0; i < facets.size(); i++) {
             final var facet = facets.get(i);
@@ -99,7 +138,10 @@ public record ObjectDTO(String type,
         return faceNormals;
     }
 
-    public Map<Integer, Vector3f> computeVertexNormals() {
+    private Map<Integer, Vector3f> computeVertexNormals() {
+        if (!hasFacets())
+            return new HashMap<>();
+
         final var faceNormals = computeFaceNormals();
 
         final var vertexNormals = new HashMap<Integer, List<Vector3f>>();
@@ -156,6 +198,8 @@ public record ObjectDTO(String type,
 
     public record Facet(int vertex1,
                         int vertex2,
-                        int vertex3) {
-    }
+                        int vertex3) {}
+
+    public record Edge(int vertex1,
+                       int vertex2) {}
 }
