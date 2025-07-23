@@ -1,13 +1,16 @@
 package com.venta.engine.renderers;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.managers.WindowManager;
 import com.venta.engine.model.view.WindowView;
-
-import static org.lwjgl.glfw.GLFW.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 @Component
-public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowEntity, WindowView> {
+public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowEntity, WindowView, WindowRenderer.WindowRenderContext> {
     private long lastTime = System.nanoTime();
     private int frames = 0;
     private double fpsTimer = 0.0;
@@ -38,5 +41,13 @@ public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowE
 
     public boolean shouldClose(final WindowView window) {
         return glfwWindowShouldClose(window.entity.getId());
+    }
+
+    @SuperBuilder
+    @Getter(AccessLevel.PACKAGE)
+    static final class WindowRenderContext extends AbstractRenderContext {
+        @Override
+        public void close() {
+        }
     }
 }

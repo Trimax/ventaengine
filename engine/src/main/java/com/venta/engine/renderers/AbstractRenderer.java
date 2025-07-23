@@ -1,23 +1,16 @@
 package com.venta.engine.renderers;
 
-import java.nio.FloatBuffer;
-import java.util.List;
-
-import org.joml.Vector4f;
-import org.lwjgl.system.MemoryUtil;
-
 import com.venta.engine.managers.AbstractManager;
-import com.venta.engine.model.view.CameraView;
-import com.venta.engine.model.view.LightView;
-import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.experimental.SuperBuilder;
 
-public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity, V extends AbstractRenderer.AbstractView<E>> {
+public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity, V extends AbstractRenderer.AbstractView<E>,
+        C extends AbstractRenderer.AbstractRenderContext> {
     @Getter(AccessLevel.PROTECTED)
-    private RenderContext context;
+    private C context;
 
     abstract void render(final V view);
 
@@ -31,36 +24,18 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
         protected final E entity;
     }
 
+    @SuperBuilder
     @Getter(AccessLevel.PACKAGE)
-    static final class RenderContext implements AutoCloseable {
-        private final FloatBuffer projectionMatrixBuffer;
-        private final FloatBuffer viewMatrixBuffer;
-        private final List<LightView> lights;
-        private final Vector4f ambientLight;
+    abstract static class AbstractRenderContext implements AutoCloseable {
 
-        public RenderContext(final CameraView camera, final WindowView window, final List<LightView> lights, final Vector4f ambientLight) {
-            this.viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
-            camera.entity.getViewMatrix().get(viewMatrixBuffer);
-
-            this.projectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
-            window.entity.getProjectionMatrix().get(projectionMatrixBuffer);
-
-            this.ambientLight = ambientLight;
-            this.lights = lights;
-        }
-
-        @Override
-        public void close() {
-            MemoryUtil.memFree(projectionMatrixBuffer);
-            MemoryUtil.memFree(viewMatrixBuffer);
-        }
     }
 
-    final AutoCloseable withContext(@NonNull final RenderContext context) {
+    final AutoCloseable withContext(@NonNull final C context) {
         this.context = context;
+
         return () -> {
-            this.context = null;
             context.close();
+            this.context = null;
         };
     }
 }
