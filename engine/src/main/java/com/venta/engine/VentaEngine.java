@@ -32,6 +32,7 @@ public final class VentaEngine {
         venta.onStartup(args, getComponent(Context.class));
 
         engine.run();
+        MeasurementUtil.measure("VentaEngine shutdown", VentaEngine::shutdownEngine);
     }
 
     private static Engine createEngine(final Venta venta) {
@@ -97,5 +98,16 @@ public final class VentaEngine {
                 .filter(constructor -> constructor.isAnnotationPresent(Inject.class))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private void shutdownEngine() {
+        StreamEx.of((components.values()))
+                .filterBy(Object::getClass, AutoCloseable.class)
+                .map(AutoCloseable.class::cast)
+                .forEach(x -> System.out.println(x));
+    }
+
+    private boolean isComponentAutoCloseable(final Object component) {
+        return AutoCloseable.class.isAssignableFrom(component.getClass());
     }
 }
