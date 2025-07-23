@@ -30,9 +30,11 @@ public record ObjectDTO(String type,
                 packedArray[12 * vertexID + 2] = vertex.position().z();
             }
 
-            packedArray[12 * vertexID + 3] = normal.x();
-            packedArray[12 * vertexID + 4] = normal.y();
-            packedArray[12 * vertexID + 5] = normal.z();
+            if (normal != null) {
+                packedArray[12 * vertexID + 3] = normal.x();
+                packedArray[12 * vertexID + 4] = normal.y();
+                packedArray[12 * vertexID + 5] = normal.z();
+            }
 
             if (vertex.hasTextureCoordinates()) {
                 packedArray[12 * vertexID + 6] = vertex.textureCoordinates().x();

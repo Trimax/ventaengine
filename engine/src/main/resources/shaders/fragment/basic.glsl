@@ -35,7 +35,7 @@ uniform sampler2D textureHeight;
 /* Feature flags */
 uniform bool useTextureDiffuse;
 uniform bool useTextureHeight;
-uniform bool useVertexColor;
+uniform bool useLighting;
 
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
@@ -86,17 +86,26 @@ float getHeight() {
     return useTextureHeight ? texture(textureHeight, vertexTextureCoordinates).r : 1.0;
 }
 
-void main() {
-    vec4 diffuseColor = getDiffuseColor();
-    float heightValue = getHeight();
+vec3 calculateLight() {
+    if (!useLighting)
+        return vec3(1.0);
 
     vec3 lighting = ambientLight.xyz * ambientLight.w;
     for (int i = 0; i < lightCount; i++)
         lighting += calculateLight(lights[i], vertexNormal, vertexPosition);
 
+    return lighting;
+}
+
+void main() {
+    vec4 diffuseColor = getDiffuseColor();
+    float heightValue = getHeight();
+
+    vec3 lighting = calculateLight();
+
     vec3 modulatedColor = diffuseColor.rgb * (0.8 + 0.2 * heightValue);
     vec3 finalColor = modulatedColor * lighting;
 
     vec4 baseColor = vec4(clamp(finalColor, 0.0, 1.0), diffuseColor.a);
-    FragColor = useVertexColor ? vertexColor * baseColor : baseColor;
+    FragColor = vertexColor * baseColor;
 }
