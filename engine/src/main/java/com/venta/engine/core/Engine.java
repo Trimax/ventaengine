@@ -43,6 +43,7 @@ public final class Engine implements Runnable {
     public void run() {
         glEnable(GL_DEPTH_TEST);
 
+        final var fpsCounter = new FPSCounter();
         final var window = context.getWindowManager().getCurrent();
         while (!windowRenderer.shouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -52,10 +53,14 @@ public final class Engine implements Runnable {
                 sceneRenderer.render(context.getSceneManager().getCurrent());
             }
 
-            windowRenderer.render(window);
+            try (final var _ = windowRenderer.getContext()
+                    .withFrameRate((int) fpsCounter.getCurrentFps())) {
+                windowRenderer.render(window);
+            }
+
             glfwPollEvents();
 
-            venta.onUpdate(windowRenderer.getDelta(), context);
+            venta.onUpdate(fpsCounter.tick(), context);
         }
 
         context.cleanup();

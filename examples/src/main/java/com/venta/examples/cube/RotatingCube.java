@@ -79,17 +79,16 @@ public final class RotatingCube implements Venta {
             angles.x = -0.05f;
 
         if (inputHandler.isButtonPushed(GLFW_KEY_DOWN))
-            angles.x = +0.05f;
+            angles.x = 0.05f;
 
         cube.rotate(angles);
 
         elapsedTime += delta;
         light.setPosition(new Vector3f(
                 2.f * (float) Math.sin(elapsedTime),
-                2.f,
+                1.5f,
                 2.f * (float) Math.cos(elapsedTime)
         ));
-        log.info("Light position: {}; Delta: {}; Elapsed time: {}", light.getPosition(), delta, elapsedTime);
     }
 
     private ProgramView createShader(final Context context) {
