@@ -12,7 +12,7 @@ uniform vec3 rotation;    // Object's orientation, Euler angles (radians): pitch
 uniform vec3 scale;       // Object's scale
 
 /* Camera attributes */
-uniform mat4 viewProjectionMatrix;  // Multiplied View & Projections matrices (built based on the window & camera parameters)
+uniform mat4 matrixViewProjection;  // Multiplied View & Projections matrices (built based on the window & camera parameters)
 
 out vec4 vertexColor;
 out vec2 vertexTextureCoordinates;
@@ -81,7 +81,7 @@ void main() {
     vertexPosition = worldPos.xyz;
     vertexNormal = normalize(normalMatrix * normal);
 
-    gl_Position = viewProjectionMatrix * worldPos;
+    gl_Position = matrixViewProjection * worldPos;
 
     vertexColor = color;
     vertexTextureCoordinates = textureCoordinates;

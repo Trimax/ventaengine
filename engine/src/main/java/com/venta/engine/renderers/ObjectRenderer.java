@@ -59,7 +59,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             final var scale = object.getScale();
             glUniform3f(programView.entity.getUniformID("scale"), scale.x(), scale.y(), scale.z());
 
-            glUniformMatrix4fv(programView.entity.getUniformID("viewProjectionMatrix"), false, context.getViewProjectionMatrixBuffer());
+            glUniformMatrix4fv(programView.entity.getUniformID("matrixViewProjection"), false, context.getViewProjectionMatrixBuffer());
 
             try (final var _ = materialRenderer.getContext()
                     .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"), programView.entity.getUniformID("useTextureDiffuse"))
