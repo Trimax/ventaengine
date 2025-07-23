@@ -59,8 +59,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             final var scale = object.getScale();
             glUniform3f(programView.entity.getUniformID("scale"), scale.x(), scale.y(), scale.z());
 
-            glUniformMatrix4fv(programView.entity.getUniformID("view"), false, context.getViewMatrixBuffer());
-            glUniformMatrix4fv(programView.entity.getUniformID("projection"), false, context.getProjectionMatrixBuffer());
+            glUniformMatrix4fv(programView.entity.getUniformID("viewProjectionMatrix"), false, context.getViewProjectionMatrixBuffer());
 
             try (final var _ = materialRenderer.getContext()
                     .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"), programView.entity.getUniformID("useTextureDiffuse"))
@@ -96,19 +95,12 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
 
     @Getter(AccessLevel.PACKAGE)
     static final class ObjectRenderContext extends AbstractRenderContext {
-        //TODO: Replace with the multiplied matrix
-        private final FloatBuffer projectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
-        private final FloatBuffer viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final FloatBuffer viewProjectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final List<LightView> lights = new ArrayList<>();
         private final Vector4f ambientLight = new Vector4f();
 
-        public ObjectRenderContext withProjectionMatrix(final FloatBuffer buffer) {
-            projectionMatrixBuffer.put(buffer).flip();
-            return this;
-        }
-
-        public ObjectRenderContext withViewMatrix(final FloatBuffer buffer) {
-            viewMatrixBuffer.put(buffer).flip();
+        public ObjectRenderContext withViewProjectionMatrix(final FloatBuffer buffer) {
+            this.viewProjectionMatrixBuffer.put(buffer).flip();
             return this;
         }
 
@@ -120,16 +112,14 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
 
         @Override
         public void close() {
-            projectionMatrixBuffer.clear();
-            viewMatrixBuffer.clear();
+            viewProjectionMatrixBuffer.clear();
             ambientLight.set(0.f);
             lights.clear();
         }
 
         @Override
         public void destroy() {
-            MemoryUtil.memFree(projectionMatrixBuffer);
-            MemoryUtil.memFree(viewMatrixBuffer);
+            MemoryUtil.memFree(viewProjectionMatrixBuffer);
         }
     }
 }
