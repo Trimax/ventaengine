@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.definitions.Definitions;
 import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.exceptions.ShaderArgumentException;
 import com.venta.engine.model.core.Couple;
@@ -40,13 +41,13 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         for (final String uniform : programDTO.uniforms())
             program.uniforms.put(uniform, glGetUniformLocation(program.getIdAsInteger(), uniform));
 
-        registerLightUniforms(program, 64);
+        registerLightUniforms(program);
 
         return store(program);
     }
 
     //TODO: Rewrite it in more clean style
-    private static void registerLightUniforms(final ProgramEntity program, final int maxLights) {
+    private static void registerLightUniforms(final ProgramEntity program) {
         final String[] lightFields = {
                 "type",
                 "position",
@@ -60,7 +61,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
                 "castShadows"
         };
 
-        for (int i = 0; i < maxLights; i++) {
+        for (int i = 0; i < Definitions.LIGHT_MAX; i++) {
             for (final var field : lightFields) {
                 final var uniformName = String.format("lights[%d].%s", i, field);
 
