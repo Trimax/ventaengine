@@ -57,16 +57,16 @@ public final class RotatingCube implements Venta {
         angles.y = 0.f;
 
         if (inputHandler.isButtonPushed(GLFW_KEY_LEFT))
-            angles.y = 0.05f;
-
-        if (inputHandler.isButtonPushed(GLFW_KEY_RIGHT))
             angles.y = -0.05f;
 
+        if (inputHandler.isButtonPushed(GLFW_KEY_RIGHT))
+            angles.y = 0.05f;
+
         if (inputHandler.isButtonPushed(GLFW_KEY_UP))
-            angles.x = 0.05f;
+            angles.x = -0.05f;
 
         if (inputHandler.isButtonPushed(GLFW_KEY_DOWN))
-            angles.x = -0.05f;
+            angles.x = +0.05f;
 
         cube.rotate(angles);
     }
