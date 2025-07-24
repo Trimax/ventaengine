@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
 import java.util.List;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
@@ -15,9 +16,9 @@ public final class ObjectDTOTest {
 
     static {
         final var vertices = List.of(
-                new ObjectDTO.Vertex(new Vector3f(0, 0, 0), null, null, null), // A
-                new ObjectDTO.Vertex(new Vector3f(1, 0, 0), null, null, null), // B
-                new ObjectDTO.Vertex(new Vector3f(0, 1, 0), null, null, null)  // C
+                new ObjectDTO.Vertex(new Vector3f(0, 0, 0), null, new Vector2f(0.f, 0.f), null), // A
+                new ObjectDTO.Vertex(new Vector3f(1, 0, 0), null, new Vector2f(0.f, 1.f), null), // B
+                new ObjectDTO.Vertex(new Vector3f(0, 1, 0), null, new Vector2f(1.f, 0.f), null)  // C
         );
 
         triangle = new ObjectDTO("test", "triangle", vertices, List.of(new ObjectDTO.Facet(0, 1, 2)),
@@ -28,7 +29,7 @@ public final class ObjectDTOTest {
     public void testBaking() {
         final var vertices = triangle.getVerticesArray();
         assertNotNull(vertices, "Vertices array should not be null");
-        assertEquals(12 * triangle.vertices().size(), vertices.length, "The number of vertices must be correct");
+        assertEquals(18 * triangle.vertices().size(), vertices.length, "The number of vertices must be correct");
 
         final var facets = triangle.getFacesArray();
         assertNotNull(facets, "Faces array should not be null");

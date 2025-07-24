@@ -70,7 +70,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             memFree(indexBuffer);
         }
 
-        final int stride = 12 * Float.BYTES;
+        final int stride = 18 * Float.BYTES;
 
         // layout(location = 0) -> position
         glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
@@ -87,6 +87,14 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         // layout(location = 3) -> color
         glVertexAttribPointer(3, 4, GL_FLOAT, false, stride, 8 * Float.BYTES);
         glEnableVertexAttribArray(3);
+
+        // layout(location = 4) -> tangent
+        glVertexAttribPointer(4, 3, GL_FLOAT, false, stride, 12 * Float.BYTES);
+        glEnableVertexAttribArray(4);
+
+        // layout(location = 5) -> bitangent
+        glVertexAttribPointer(5, 3, GL_FLOAT, false, stride, 15 * Float.BYTES);
+        glEnableVertexAttribArray(5);
 
         glBindVertexArray(0);
 

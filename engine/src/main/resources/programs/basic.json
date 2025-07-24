@@ -11,9 +11,11 @@
 
     "textureDiffuse",
     "textureHeight",
+    "textureNormal",
 
     "useTextureDiffuse",
     "useTextureHeight",
+    "useTextureNormal",
     "useLighting",
 
     "ambientLight",

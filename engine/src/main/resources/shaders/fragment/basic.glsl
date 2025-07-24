@@ -26,15 +26,18 @@ struct Light {
 in vec4 vertexColor;
 in vec2 vertexTextureCoordinates;
 in vec3 vertexPosition;
-in vec3 vertexNormal;
+
+in mat3 vertexTBN;
 
 /* Textures */
 uniform sampler2D textureDiffuse;
 uniform sampler2D textureHeight;
+uniform sampler2D textureNormal;
 
 /* Feature flags */
 uniform bool useTextureDiffuse;
 uniform bool useTextureHeight;
+uniform bool useTextureNormal;
 uniform bool useLighting;
 
 /* Lighting */
@@ -86,26 +89,36 @@ float getHeight() {
     return useTextureHeight ? texture(textureHeight, vertexTextureCoordinates).r : 1.0;
 }
 
-vec3 calculateLight() {
+vec3 getHeightVec() {
+    return useTextureHeight ? texture(textureHeight, vertexTextureCoordinates).rgb : vec3(1.0);
+}
+
+vec3 calculateLight(vec3 normal) {
     if (!useLighting)
         return vec3(1.0);
 
+    vec3 height = getHeightVec();
+    vec3 bumpedNormal = vec3(normal.x * height.x, normal.y * height.y, normal.z * height.z);
+
     vec3 lighting = ambientLight.xyz * ambientLight.w;
     for (int i = 0; i < lightCount; i++)
-        lighting += calculateLight(lights[i], vertexNormal, vertexPosition);
+        lighting += calculateLight(lights[i], bumpedNormal, vertexPosition);
 
     return lighting;
 }
 
+vec3 getNormal() {
+    if (!useTextureNormal)
+        return vertexTBN[2];
+
+    /* Normal mapping */
+    return normalize(vertexTBN * (texture(textureNormal, vertexTextureCoordinates).rgb * 2.0 - 1.0));
+}
+
 void main() {
     vec4 diffuseColor = getDiffuseColor();
-    float heightValue = getHeight();
+    vec3 lighting = calculateLight(getNormal());
+    vec3 modulatedColor = diffuseColor.rgb; // * (0.3 + 0.7 * getHeight());
 
-    vec3 lighting = calculateLight();
-
-    vec3 modulatedColor = diffuseColor.rgb * (0.8 + 0.2 * heightValue);
-    vec3 finalColor = modulatedColor * lighting;
-
-    vec4 baseColor = vec4(clamp(finalColor, 0.0, 1.0), diffuseColor.a);
-    FragColor = vertexColor * baseColor;
+    FragColor = vertexColor * vec4(clamp(modulatedColor * lighting, 0.0, 1.0), diffuseColor.a);
 }
