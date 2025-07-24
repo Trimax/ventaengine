@@ -39,6 +39,9 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
     @Override
     @SneakyThrows
     public void render(final ObjectView object) {
+        if (!object.isVisible())
+            return;
+
         final var programView = object.getProgram();
         if (programView == null)
             return;

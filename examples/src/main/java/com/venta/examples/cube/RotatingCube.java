@@ -32,7 +32,7 @@ public final class RotatingCube implements Venta {
 
     @Override
     public RenderConfiguration createRenderConfiguration() {
-        return new RenderConfiguration(false, true);
+        return new RenderConfiguration(false, false);
     }
 
     @Override

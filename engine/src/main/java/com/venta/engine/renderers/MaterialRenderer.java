@@ -32,11 +32,12 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
 
         setTexture(TextureType.Diffuse, material, context.useTextureDiffuseUniformID, context.textureDiffuseUniformID);
         setTexture(TextureType.Height, material, context.useTextureHeightUniformID, context.textureHeightUniformID);
-        setTexture(TextureType.Normal, material, context.useTextureHeightUniformID, context.textureHeightUniformID);
+        setTexture(TextureType.Normal, material, context.useTextureNormalUniformID, context.textureNormalUniformID);
     }
 
     private void setTexture(final TextureType type, final MaterialView material, final int useTextureUniformID, final int textureUniformID) {
         final var texture = material.getTexture(type);
+
         glActiveTexture(type.getLocationID());
         if (texture == null) {
             glBindTexture(GL_TEXTURE_2D, 0);
@@ -64,13 +65,13 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
             return this;
         }
 
-        public MaterialRenderContext withTextureHeight(final int useTextureHeightUniformID, final int textureHeightUniformID) {
+        public MaterialRenderContext withTextureHeight(final int textureHeightUniformID, final int useTextureHeightUniformID) {
             this.useTextureHeightUniformID = useTextureHeightUniformID;
             this.textureHeightUniformID = textureHeightUniformID;
             return this;
         }
 
-        public MaterialRenderContext withTextureNormal(final int useTextureNormalUniformID, final int textureNormalUniformID) {
+        public MaterialRenderContext withTextureNormal(final int textureNormalUniformID, final int useTextureNormalUniformID) {
             this.useTextureNormalUniformID = useTextureNormalUniformID;
             this.textureNormalUniformID = textureNormalUniformID;
             return this;

@@ -14,8 +14,8 @@ public final class MaterialView extends AbstractRenderer.AbstractView<MaterialMa
         super(id, entity);
     }
     
-    public void setTexture(final TextureType texture, final TextureView textureView) {
-        textures.put(texture, textureView);
+    public void setTexture(final TextureType type, final TextureView texture) {
+        textures.put(type, texture);
     }
 
     public TextureView getTexture(final TextureType texture) {

@@ -109,5 +109,6 @@ void main() {
     vec3 finalColor = modulatedColor * lighting;
 
     vec4 baseColor = vec4(clamp(finalColor, 0.0, 1.0), diffuseColor.a);
+
     FragColor = vertexColor * baseColor;
 }
