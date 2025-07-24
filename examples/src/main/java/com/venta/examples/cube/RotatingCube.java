@@ -7,9 +7,9 @@ import java.util.Random;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import com.venta.engine.configurations.RenderConfiguration;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
-import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.LightView;
@@ -31,6 +31,11 @@ public final class RotatingCube implements Venta {
     }
 
     @Override
+    public RenderConfiguration createRenderConfiguration() {
+        return new RenderConfiguration(false, true);
+    }
+
+    @Override
     public VentaInputHandler createInputHandler() {
         return inputHandler;
     }
@@ -39,29 +44,16 @@ public final class RotatingCube implements Venta {
     public void onStartup(final String[] args, final Context context) {
         log.info("Rotating cube started");
 
+        final var scene = context.getSceneManager().getCurrent();
+
         cube = context.getObjectManager().load("cube.json");
+        cube.setProgram(context.getProgramManager().load("basic"));
         cube.setMaterial(context.getMaterialManager().load("fabric.json"));
+        scene.add(cube);
 
         light = context.getLightManager().load("basic.json");
         light.setPosition(new Vector3f(2.f, 2.f, 2.f));
-
-        final var scene = context.getSceneManager().getCurrent();
         scene.add(light);
-
-        final var origin = context.getObjectManager().load("origin.json");
-
-        origin.setDrawMode(DrawMode.Edge);
-        origin.setApplyLighting(false);
-        origin.setScale(new Vector3f(100000f));
-
-        final var program1 = context.getProgramManager().load("simple");
-        final var program2 = context.getProgramManager().load("basic");
-
-        origin.setProgram(program1);
-        cube.setProgram(program2);
-
-        scene.add(origin);
-        scene.add(cube);
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(3.f, 3.f, 3.f));

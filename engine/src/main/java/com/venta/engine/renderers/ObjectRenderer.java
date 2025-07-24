@@ -113,8 +113,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         private final Vector4f ambientLight = new Vector4f();
 
         public ObjectRenderContext withViewProjectionMatrix(final FloatBuffer buffer) {
-            buffer.rewind();
-            this.viewProjectionMatrixBuffer.put(buffer).flip();
+            this.viewProjectionMatrixBuffer.put(buffer.rewind()).flip();
             return this;
         }
 
