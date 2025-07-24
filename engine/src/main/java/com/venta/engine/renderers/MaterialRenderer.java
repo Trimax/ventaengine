@@ -32,6 +32,7 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
 
         setTexture(TextureType.Diffuse, material, context.useTextureDiffuseUniformID, context.textureDiffuseUniformID);
         setTexture(TextureType.Height, material, context.useTextureHeightUniformID, context.textureHeightUniformID);
+        setTexture(TextureType.Normal, material, context.useTextureHeightUniformID, context.textureHeightUniformID);
     }
 
     private void setTexture(final TextureType type, final MaterialView material, final int useTextureUniformID, final int textureUniformID) {
@@ -51,9 +52,11 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
     static final class MaterialRenderContext extends AbstractRenderContext {
         private int useTextureDiffuseUniformID;
         private int useTextureHeightUniformID;
+        private int useTextureNormalUniformID;
 
         private int textureDiffuseUniformID;
         private int textureHeightUniformID;
+        private int textureNormalUniformID;
 
         public MaterialRenderContext withTextureDiffuse(final int textureDiffuseUniformID, final int useTextureDiffuseUniformID) {
             this.textureDiffuseUniformID = textureDiffuseUniformID;
@@ -64,6 +67,12 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
         public MaterialRenderContext withTextureHeight(final int useTextureHeightUniformID, final int textureHeightUniformID) {
             this.useTextureHeightUniformID = useTextureHeightUniformID;
             this.textureHeightUniformID = textureHeightUniformID;
+            return this;
+        }
+
+        public MaterialRenderContext withTextureNormal(final int useTextureNormalUniformID, final int textureNormalUniformID) {
+            this.useTextureNormalUniformID = useTextureNormalUniformID;
+            this.textureNormalUniformID = textureNormalUniformID;
             return this;
         }
 

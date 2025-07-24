@@ -63,7 +63,9 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
                 .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"),
                         programView.entity.getUniformID("useTextureDiffuse"))
                 .withTextureHeight(programView.entity.getUniformID("textureHeight"),
-                        programView.entity.getUniformID("useTextureHeight"))) {
+                        programView.entity.getUniformID("useTextureHeight"))
+                .withTextureNormal(programView.entity.getUniformID("textureNormal"),
+                        programView.entity.getUniformID("useTextureNormal"))) {
             materialRenderer.render(object.getMaterial());
         }
 

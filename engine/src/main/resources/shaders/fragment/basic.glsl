@@ -31,10 +31,12 @@ in vec3 vertexNormal;
 /* Textures */
 uniform sampler2D textureDiffuse;
 uniform sampler2D textureHeight;
+uniform sampler2D textureNormal;
 
 /* Feature flags */
 uniform bool useTextureDiffuse;
 uniform bool useTextureHeight;
+uniform bool useTextureNormal;
 uniform bool useLighting;
 
 /* Lighting */
