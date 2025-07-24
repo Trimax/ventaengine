@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import org.joml.Vector2i;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -24,8 +24,8 @@ public final class Generator {
         return new Vector3f(random.nextFloat(), random.nextFloat(), random.nextFloat());
     }
 
-    public Vector2i createRandomVector2() {
-        return new Vector2i(random.nextInt(), random.nextInt());
+    public Vector2f createRandomVector2() {
+        return new Vector2f(random.nextFloat(), random.nextFloat());
     }
 
     public ObjectDTO.Vertex createRandomVertex() {

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.joml.Vector2i;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -36,40 +36,57 @@ public record ObjectDTO(String type,
 
     public float[] getVerticesArray() {
         final var normals = computeVertexNormals();
+        final var tangents = computeVertexTangents();
+        final var bitangents = computeVertexBitangents();
 
-        final var packedArray = new float[vertices.size() * 12];
+        final var packedArray = new float[vertices.size() * 18];
         for (int vertexID = 0; vertexID < vertices.size(); vertexID++) {
             final var vertex = vertices.get(vertexID);
+
             final var normal = normals.get(vertexID);
+            final var tangent = tangents.get(vertexID);
+            final var bitangent = bitangents.get(vertexID);
 
             if (vertex.hasPosition()) {
-                packedArray[12 * vertexID] = vertex.position().x();
-                packedArray[12 * vertexID + 1] = vertex.position().y();
-                packedArray[12 * vertexID + 2] = vertex.position().z();
+                packedArray[18 * vertexID] = vertex.position().x();
+                packedArray[18 * vertexID + 1] = vertex.position().y();
+                packedArray[18 * vertexID + 2] = vertex.position().z();
             }
 
             if (normal != null) {
-                packedArray[12 * vertexID + 3] = normal.x();
-                packedArray[12 * vertexID + 4] = normal.y();
-                packedArray[12 * vertexID + 5] = normal.z();
+                packedArray[18 * vertexID + 3] = normal.x();
+                packedArray[18 * vertexID + 4] = normal.y();
+                packedArray[18 * vertexID + 5] = normal.z();
             }
 
             if (vertex.hasNormal()) {
-                packedArray[12 * vertexID + 3] = normal.x();
-                packedArray[12 * vertexID + 4] = normal.y();
-                packedArray[12 * vertexID + 5] = normal.z();
+                packedArray[18 * vertexID + 3] = vertex.normal.x();
+                packedArray[18 * vertexID + 4] = vertex.normal.y();
+                packedArray[18 * vertexID + 5] = vertex.normal.z();
             }
 
             if (vertex.hasTextureCoordinates()) {
-                packedArray[12 * vertexID + 6] = vertex.textureCoordinates().x();
-                packedArray[12 * vertexID + 7] = vertex.textureCoordinates().y();
+                packedArray[18 * vertexID + 6] = vertex.textureCoordinates().x();
+                packedArray[18 * vertexID + 7] = vertex.textureCoordinates().y();
             }
 
             if (vertex.hasColor()) {
-                packedArray[12 * vertexID + 8] = vertex.color().x();
-                packedArray[12 * vertexID + 9] = vertex.color().y();
-                packedArray[12 * vertexID + 10] = vertex.color().z();
-                packedArray[12 * vertexID + 11] = vertex.color().w();
+                packedArray[18 * vertexID + 8] = vertex.color().x();
+                packedArray[18 * vertexID + 9] = vertex.color().y();
+                packedArray[18 * vertexID + 10] = vertex.color().z();
+                packedArray[18 * vertexID + 11] = vertex.color().w();
+            }
+
+            if (tangent != null) {
+                packedArray[18 * vertexID + 12] = tangent.x();
+                packedArray[18 * vertexID + 13] = tangent.y();
+                packedArray[18 * vertexID + 14] = tangent.z();
+            }
+
+            if (bitangent != null) {
+                packedArray[18 * vertexID + 15] = bitangent.x();
+                packedArray[18 * vertexID + 16] = bitangent.y();
+                packedArray[18 * vertexID + 17] = bitangent.z();
             }
         }
 
@@ -149,16 +166,102 @@ public record ObjectDTO(String type,
             final var facet = facets.get(facetIndex);
             final var faceNormal = faceNormals.get(facetIndex);
 
-            if (!vertexNormals.containsKey(facet.vertex1()))
-                vertexNormals.put(facet.vertex1, new ArrayList<>());
-            vertexNormals.get(facet.vertex1).add(faceNormal);
-
             add(vertexNormals, faceNormal, facet.vertex1);
             add(vertexNormals, faceNormal, facet.vertex2);
             add(vertexNormals, faceNormal, facet.vertex3);
         }
 
         return EntryStream.of(vertexNormals).mapValues(this::merge).toMap();
+    }
+
+    private Map<Integer, Vector3f> computeVertexTangents() {
+        if (!hasFacets())
+            return new HashMap<>();
+
+        final Map<Integer, List<Vector3f>> vertexTangents = new HashMap<>();
+        for (final Facet facet : facets) {
+            final Vertex v0 = vertices.get(facet.vertex1());
+            final Vertex v1 = vertices.get(facet.vertex2());
+            final Vertex v2 = vertices.get(facet.vertex3());
+
+            final Vector3f pos1 = v0.position();
+            final Vector3f pos2 = v1.position();
+            final Vector3f pos3 = v2.position();
+
+            final var uv1 = new Vector2f(v0.textureCoordinates().x(), v0.textureCoordinates().y());
+            final var uv2 = new Vector2f(v1.textureCoordinates().x(), v1.textureCoordinates().y());
+            final var uv3 = new Vector2f(v2.textureCoordinates().x(), v2.textureCoordinates().y());
+
+            final var edge1 = pos2.sub(pos1, new Vector3f());
+            final var edge2 = pos3.sub(pos1, new Vector3f());
+
+            final float deltaU1 = uv2.x - uv1.x;
+            final float deltaV1 = uv2.y - uv1.y;
+            final float deltaU2 = uv3.x - uv1.x;
+            final float deltaV2 = uv3.y - uv1.y;
+
+            float f = deltaU1 * deltaV2 - deltaU2 * deltaV1;
+            if (f == 0.0f)
+                f = 1.0f;
+            else
+                f = 1.0f / f;
+
+            var tangent = new Vector3f(
+                    f * (deltaV2 * edge1.x() - deltaV1 * edge2.x()),
+                    f * (deltaV2 * edge1.y() - deltaV1 * edge2.y()),
+                    f * (deltaV2 * edge1.z() - deltaV1 * edge2.z())
+            );
+
+            add(vertexTangents, tangent, facet.vertex1);
+            add(vertexTangents, tangent, facet.vertex2);
+            add(vertexTangents, tangent, facet.vertex3);
+        }
+
+        return EntryStream.of(vertexTangents).mapValues(this::merge).toMap();
+    }
+
+    private Map<Integer, Vector3f> computeVertexBitangents() {
+        if (!hasFacets())
+            return new HashMap<>();
+
+        final Map<Integer, List<Vector3f>> vertexBitangents = new HashMap<>();
+        for (final Facet facet : facets) {
+            Vertex v0 = vertices.get(facet.vertex1());
+            Vertex v1 = vertices.get(facet.vertex2());
+            Vertex v2 = vertices.get(facet.vertex3());
+
+            Vector3f pos1 = v0.position();
+            Vector3f pos2 = v1.position();
+            Vector3f pos3 = v2.position();
+
+            Vector2f uv1 = new Vector2f(v0.textureCoordinates().x(), v0.textureCoordinates().y());
+            Vector2f uv2 = new Vector2f(v1.textureCoordinates().x(), v1.textureCoordinates().y());
+            Vector2f uv3 = new Vector2f(v2.textureCoordinates().x(), v2.textureCoordinates().y());
+
+            Vector3f edge1 = pos2.sub(pos1, new Vector3f());
+            Vector3f edge2 = pos3.sub(pos1, new Vector3f());
+
+            float deltaU1 = uv2.x - uv1.x;
+            float deltaV1 = uv2.y - uv1.y;
+            float deltaU2 = uv3.x - uv1.x;
+            float deltaV2 = uv3.y - uv1.y;
+
+            float f = deltaU1 * deltaV2 - deltaU2 * deltaV1;
+            if (f == 0.0f) f = 1.0f;
+            else f = 1.0f / f;
+
+            Vector3f bitangent = new Vector3f(
+                    f * (-deltaU2 * edge1.x() + deltaU1 * edge2.x()),
+                    f * (-deltaU2 * edge1.y() + deltaU1 * edge2.y()),
+                    f * (-deltaU2 * edge1.z() + deltaU1 * edge2.z())
+            );
+
+            add(vertexBitangents, bitangent, facet.vertex1());
+            add(vertexBitangents, bitangent, facet.vertex2());
+            add(vertexBitangents, bitangent, facet.vertex3());
+        }
+
+        return EntryStream.of(vertexBitangents).mapValues(this::merge).toMap();
     }
 
     private Vector3f merge(final List<Vector3f> normals) {
@@ -175,9 +278,23 @@ public record ObjectDTO(String type,
         vertexNormals.get(vertexID).add(normal);
     }
 
+    private void addWeighted(Map<Integer, List<Vector3f>> map, Vector3f normal, int vertexID, float weight) {
+        if (!map.containsKey(vertexID))
+            map.put(vertexID, new ArrayList<>());
+
+        map.get(vertexID).add(new Vector3f(normal).mul(weight));
+    }
+
+    private float computeAngleAtVertex(Vector3f v0, Vector3f v1, Vector3f v2) {
+        Vector3f edge1 = v1.sub(v0, new Vector3f()).normalize();
+        Vector3f edge2 = v2.sub(v0, new Vector3f()).normalize();
+        float dot = edge1.dot(edge2);
+        return (float) Math.acos(Math.max(-1.0f, Math.min(1.0f, dot)));
+    }
+
     public record Vertex(Vector3f position,
                          Vector3f normal,
-                         Vector2i textureCoordinates,
+                         Vector2f textureCoordinates,
                          Vector4f color) {
         public boolean hasPosition() {
             return position != null;

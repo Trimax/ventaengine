@@ -39,6 +39,9 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
     @Override
     @SneakyThrows
     public void render(final ObjectView object) {
+        if (!object.isVisible())
+            return;
+
         final var programView = object.getProgram();
         if (programView == null)
             return;
@@ -63,7 +66,9 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
                 .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"),
                         programView.entity.getUniformID("useTextureDiffuse"))
                 .withTextureHeight(programView.entity.getUniformID("textureHeight"),
-                        programView.entity.getUniformID("useTextureHeight"))) {
+                        programView.entity.getUniformID("useTextureHeight"))
+                .withTextureNormal(programView.entity.getUniformID("textureNormal"),
+                        programView.entity.getUniformID("useTextureNormal"))) {
             materialRenderer.render(object.getMaterial());
         }
 
