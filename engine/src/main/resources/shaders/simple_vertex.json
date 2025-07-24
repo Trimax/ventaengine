@@ -1,0 +1,8 @@
+{
+  "type": "vertex",
+  "path": "vertex/simple.glsl",
+  "attributes": {
+    "position": 0,
+    "color": 3
+  }
+}

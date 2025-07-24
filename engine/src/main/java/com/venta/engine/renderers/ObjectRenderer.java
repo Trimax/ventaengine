@@ -48,14 +48,19 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
         glUseProgram(programView.entity.getIdAsInteger());
+        glBindVertexArray(object.entity.getVertexArrayObjectID());
+        glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
+
+        glValidateProgram(programView.entity.getIdAsInteger());
+        int status = glGetProgrami(programView.entity.getIdAsInteger(), GL_VALIDATE_STATUS);
+        if (status != GL_TRUE)
+            System.out.println("Program " + programView.entity.getName() + " validation failed: " + glGetProgramInfoLog(programView.entity.getIdAsInteger()));
+
         System.out.printf("Object: %s. VAO: %d; VB id: %d; FB id: %d; EB id: %d; Using shader %d; Vertices: %d; Faces: %d; Edges: %d%n",
                 object.getId(), object.entity.getVertexArrayObjectID(),
                 object.entity.getVerticesBufferID(), object.entity.getFacetsBufferID(), object.entity.getEdgesBufferID(),
                 programView.entity.getIdAsInteger(),
                 object.entity.getVerticesCount(), object.entity.getFacetsCount(), object.entity.getEdgesCount());
-
-        glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
-        glBindVertexArray(object.entity.getVertexArrayObjectID());
 
         glUniform4f(programView.entity.getUniformID("ambientLight"), context.getAmbientLight().x(),
                 context.getAmbientLight().y(), context.getAmbientLight().z(), context.getAmbientLight().w());
@@ -94,13 +99,19 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         }
 
         if (object.entity.getFacetsCount() > 0) {
-            glBindBuffer(GL_ARRAY_BUFFER, object.entity.getFacetsBufferID());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.entity.getFacetsBufferID());
             glDrawElements(GL_TRIANGLES, object.entity.getFacetsCount(), GL_UNSIGNED_INT, 0);
+            int err = glGetError();
+            if (err != GL_NO_ERROR)
+                System.err.println("GL ERROR: " + err);
         }
 
         if (object.entity.getEdgesCount() > 0) {
-            glBindBuffer(GL_ARRAY_BUFFER, object.entity.getEdgesBufferID());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.entity.getEdgesBufferID());
             glDrawElements(GL_LINES, object.entity.getEdgesCount(), GL_UNSIGNED_INT, 0);
+            int err = glGetError();
+            if (err != GL_NO_ERROR)
+                System.err.println("GL ERROR: " + err);
         }
 
         glBindVertexArray(0);
