@@ -24,13 +24,15 @@ out vec3 vertexBitangent;
 void main() {
     vec4 worldPos = matrixModel * vec4(position, 1.0);
     vertexPosition = worldPos.xyz;
-    vertexNormal = normalize(matrixNormal * normal);
 
-    gl_Position = matrixViewProjection * worldPos;
+    mat3 temp = transpose(inverse(mat3(matrixModel)));
 
     vertexColor = color;
+    vertexNormal = normalize(temp * normal);
+    vertexTangent = normalize(temp * tangent);
+    vertexBitangent = normalize(temp * bitangent);
+
     vertexTextureCoordinates = textureCoordinates;
 
-    vertexTangent = tangent;
-    vertexBitangent = bitangent;
+    gl_Position = matrixViewProjection * worldPos;
 }

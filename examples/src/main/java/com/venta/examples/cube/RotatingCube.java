@@ -32,7 +32,7 @@ public final class RotatingCube implements Venta {
 
     @Override
     public RenderConfiguration createRenderConfiguration() {
-        return new RenderConfiguration(false, false);
+        return new RenderConfiguration(false, true);
     }
 
     @Override
@@ -47,6 +47,7 @@ public final class RotatingCube implements Venta {
         final var scene = context.getSceneManager().getCurrent();
 
         cube = context.getObjectManager().load("cube.json");
+        cube.setScale(new Vector3f(2.5f));
         cube.setProgram(context.getProgramManager().load("basic"));
         cube.setMaterial(context.getMaterialManager().load("fabric.json"));
         scene.add(cube);
@@ -83,9 +84,9 @@ public final class RotatingCube implements Venta {
 
         elapsedTime += delta;
         light.setPosition(new Vector3f(
-                2.f * (float) Math.sin(elapsedTime),
-                1.5f,
-                2.f * (float) Math.cos(elapsedTime)
+                2.5f * (float) Math.sin(elapsedTime),
+                2.5f,
+                2.5f * (float) Math.cos(elapsedTime)
         ));
 
         if (inputHandler.isButtonPushed(GLFW_KEY_SPACE))
