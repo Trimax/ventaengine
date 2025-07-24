@@ -54,6 +54,9 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         glBindVertexArray(object.entity.getVertexArrayObjectID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 
+        glUniform3f(programView.entity.getUniformID("cameraPosition"), context.getCameraPosition().x(),
+                context.getCameraPosition().y(), context.getCameraPosition().z());
+
         glUniform4f(programView.entity.getUniformID("ambientLight"), context.getAmbientLight().x(),
                 context.getAmbientLight().y(), context.getAmbientLight().z(), context.getAmbientLight().w());
 
@@ -117,6 +120,8 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         private final List<LightView> lights = new ArrayList<>();
         private final Vector4f ambientLight = new Vector4f();
 
+        private final Vector3f cameraPosition = new Vector3f();
+
         public ObjectRenderContext withViewProjectionMatrix(final FloatBuffer buffer) {
             this.viewProjectionMatrixBuffer.put(buffer.rewind()).flip();
             return this;
@@ -139,6 +144,11 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         public ObjectRenderContext withScene(final SceneView scene) {
             lights.addAll(scene.getLights());
             ambientLight.set(scene.getAmbientLight());
+            return this;
+        }
+
+        public ObjectRenderContext withCameraPosition(final Vector3f cameraPosition) {
+            this.cameraPosition.set(cameraPosition);
             return this;
         }
 

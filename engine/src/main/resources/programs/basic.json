@@ -5,6 +5,8 @@
     "basic_fragment"
   ],
   "uniforms": [
+    "cameraPosition",
+
     "matrixViewProjection",
     "matrixNormal",
     "matrixModel",

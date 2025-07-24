@@ -24,6 +24,7 @@ struct Light {
 
 /* Vertex shader output */
 in vec4 vertexColor;
+in vec3 vertexViewDirection;
 in vec2 vertexTextureCoordinates;
 in vec3 vertexPosition;
 
@@ -81,27 +82,23 @@ vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
     return light.color * light.intensity * diff * attenuation;
 }
 
-vec4 getDiffuseColor() {
-    return useTextureDiffuse ? texture(textureDiffuse, vertexTextureCoordinates) : vec4(1.0);
+vec4 getDiffuseColor(vec2 textureCoordinates) {
+    return useTextureDiffuse ? texture(textureDiffuse, textureCoordinates) : vec4(1.0);
 }
 
-float getHeight() {
-    return useTextureHeight ? texture(textureHeight, vertexTextureCoordinates).r : 1.0;
-}
-
-vec3 getNormal() {
+vec3 getNormal(vec2 textureCoordinates) {
     if (!useTextureNormal)
         return vertexTBN[2];
 
     /* Normal mapping */
-    return normalize(vertexTBN * (texture(textureNormal, vertexTextureCoordinates).rgb * 2.0 - 1.0));
+    return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0));
 }
 
-vec3 calculateLighting() {
+vec3 calculateLighting(vec2 textureCoordinates) {
     if (!useLighting)
         return vec3(1.0);
 
-    vec3 normal = getNormal();
+    vec3 normal = getNormal(textureCoordinates);
 
     vec3 lighting = ambientLight.xyz * ambientLight.w;
     for (int i = 0; i < lightCount; i++)
@@ -110,10 +107,17 @@ vec3 calculateLighting() {
     return lighting;
 }
 
-void main() {
-    vec4 diffuseColor = getDiffuseColor();
-    vec3 modulatedColor = diffuseColor.rgb; // * (0.3 + 0.7 * getHeight());
-    vec3 lighting = calculateLighting();
+vec2 parallaxMapping(vec2 uv) {
+    float heightScale = 0.03;
+    float height = texture(textureHeight, uv).r;
+    return uv + normalize(vertexViewDirection).xy * (height * heightScale);
+}
 
-    FragColor = vertexColor * vec4(clamp(modulatedColor * lighting, 0.0, 1.0), diffuseColor.a);
+void main() {
+    vec2 textureCoordinates = useTextureHeight ? parallaxMapping(vertexTextureCoordinates) : vertexTextureCoordinates;
+
+    vec4 diffuseColor = getDiffuseColor(textureCoordinates);
+    vec3 lighting = calculateLighting(textureCoordinates);
+
+    FragColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
 }
