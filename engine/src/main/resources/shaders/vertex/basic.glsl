@@ -13,26 +13,18 @@ uniform mat4 matrixViewProjection;  // Multiplied View & Projections matrices (b
 uniform mat3 matrixNormal;          // Multiplied P * R * S
 uniform mat4 matrixModel;           // Normal matrix computed by model matrix
 
+out mat3 vertexTBN;
 out vec4 vertexColor;
-out vec2 vertexTextureCoordinates;
 out vec3 vertexPosition;
-out vec3 vertexNormal;
-
-out vec3 vertexTangent;
-out vec3 vertexBitangent;
+out vec2 vertexTextureCoordinates;
 
 void main() {
     vec4 worldPos = matrixModel * vec4(position, 1.0);
-    vertexPosition = worldPos.xyz;
 
-    mat3 normalMatrix = transpose(inverse(mat3(matrixModel)));
-
-    vertexColor = color;
-    vertexNormal = normalize(normalMatrix * normal);
-    vertexTangent = normalize(normalMatrix * tangent);
-    vertexBitangent = normalize(normalMatrix * bitangent);
-
+    vertexTBN = mat3(normalize(matrixNormal * tangent), normalize(matrixNormal * bitangent), normalize(matrixNormal * normal));
     vertexTextureCoordinates = textureCoordinates;
+    vertexPosition = worldPos.xyz;
+    vertexColor = color;
 
     gl_Position = matrixViewProjection * worldPos;
 }
