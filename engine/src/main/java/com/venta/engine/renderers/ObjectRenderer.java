@@ -48,6 +48,11 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
         glUseProgram(programView.entity.getIdAsInteger());
+        System.out.printf("Object: %s. VAO: %d; VB id: %d; FB id: %d; EB id: %d; Using shader %d; Vertices: %d; Faces: %d; Edges: %d%n",
+                object.getId(), object.entity.getVertexArrayObjectID(),
+                object.entity.getVerticesBufferID(), object.entity.getFacetsBufferID(), object.entity.getEdgesBufferID(),
+                programView.entity.getIdAsInteger(),
+                object.entity.getVerticesCount(), object.entity.getFacetsCount(), object.entity.getEdgesCount());
 
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
         glBindVertexArray(object.entity.getVertexArrayObjectID());
@@ -88,11 +93,15 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             }
         }
 
-        if (object.entity.getFacetsCount() > 0)
+        if (object.entity.getFacetsCount() > 0) {
+            glBindBuffer(GL_ARRAY_BUFFER, object.entity.getFacetsBufferID());
             glDrawElements(GL_TRIANGLES, object.entity.getFacetsCount(), GL_UNSIGNED_INT, 0);
+        }
 
-        if (object.entity.getEdgesCount() > 0)
+        if (object.entity.getEdgesCount() > 0) {
+            glBindBuffer(GL_ARRAY_BUFFER, object.entity.getEdgesBufferID());
             glDrawElements(GL_LINES, object.entity.getEdgesCount(), GL_UNSIGNED_INT, 0);
+        }
 
         glBindVertexArray(0);
         glUseProgram(0);
