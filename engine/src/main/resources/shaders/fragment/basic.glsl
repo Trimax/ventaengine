@@ -107,8 +107,7 @@ vec3 getNormal() {
         return vertexNormal;
 
     /* Normal mapping */
-    vec3 normalMap = texture(textureNormal, vertexTextureCoordinates).rgb;
-    normalMap = normalMap * 2.0 - 1.0;
+    vec3 normalMap = texture(textureNormal, vertexTextureCoordinates).rgb * 2.0 - 1.0;
     mat3 TBN = mat3(normalize(vertexTangent), normalize(vertexBitangent), normalize(vertexNormal));
 
     return normalize(TBN * normalMap);

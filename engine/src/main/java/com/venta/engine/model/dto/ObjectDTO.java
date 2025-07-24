@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -167,10 +166,6 @@ public record ObjectDTO(String type,
             final var facet = facets.get(facetIndex);
             final var faceNormal = faceNormals.get(facetIndex);
 
-            if (!vertexNormals.containsKey(facet.vertex1()))
-                vertexNormals.put(facet.vertex1, new ArrayList<>());
-            vertexNormals.get(facet.vertex1).add(faceNormal);
-
             add(vertexNormals, faceNormal, facet.vertex1);
             add(vertexNormals, faceNormal, facet.vertex2);
             add(vertexNormals, faceNormal, facet.vertex3);
@@ -211,7 +206,7 @@ public record ObjectDTO(String type,
             else
                 f = 1.0f / f;
 
-            final var tangent = new Vector3f(
+            var tangent = new Vector3f(
                     f * (deltaV2 * edge1.x() - deltaV1 * edge2.x()),
                     f * (deltaV2 * edge1.y() - deltaV1 * edge2.y()),
                     f * (deltaV2 * edge1.z() - deltaV1 * edge2.z())
@@ -283,9 +278,23 @@ public record ObjectDTO(String type,
         vertexNormals.get(vertexID).add(normal);
     }
 
+    private void addWeighted(Map<Integer, List<Vector3f>> map, Vector3f normal, int vertexID, float weight) {
+        if (!map.containsKey(vertexID))
+            map.put(vertexID, new ArrayList<>());
+
+        map.get(vertexID).add(new Vector3f(normal).mul(weight));
+    }
+
+    private float computeAngleAtVertex(Vector3f v0, Vector3f v1, Vector3f v2) {
+        Vector3f edge1 = v1.sub(v0, new Vector3f()).normalize();
+        Vector3f edge2 = v2.sub(v0, new Vector3f()).normalize();
+        float dot = edge1.dot(edge2);
+        return (float) Math.acos(Math.max(-1.0f, Math.min(1.0f, dot)));
+    }
+
     public record Vertex(Vector3f position,
                          Vector3f normal,
-                         Vector2i textureCoordinates,
+                         Vector2f textureCoordinates,
                          Vector4f color) {
         public boolean hasPosition() {
             return position != null;

@@ -25,12 +25,12 @@ void main() {
     vec4 worldPos = matrixModel * vec4(position, 1.0);
     vertexPosition = worldPos.xyz;
 
-    mat3 temp = transpose(inverse(mat3(matrixModel)));
+    mat3 normalMatrix = transpose(inverse(mat3(matrixModel)));
 
     vertexColor = color;
-    vertexNormal = normalize(temp * normal);
-    vertexTangent = normalize(temp * tangent);
-    vertexBitangent = normalize(temp * bitangent);
+    vertexNormal = normalize(normalMatrix * normal);
+    vertexTangent = normalize(normalMatrix * tangent);
+    vertexBitangent = normalize(normalMatrix * bitangent);
 
     vertexTextureCoordinates = textureCoordinates;
 
