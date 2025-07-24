@@ -2,7 +2,7 @@ package com.venta.engine.renderers;
 
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL13C.*;
+import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL20C.glUniform1i;
 
 import com.venta.engine.annotations.Component;
@@ -30,23 +30,22 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
         if (context == null)
             throw new MaterialRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
-        final var textureDiffuse = material.getTexture(TextureType.DIFFUSE);
-        glUniform1i(context.useTextureDiffuseUniformID, textureDiffuse == null ? 0 : 1);
-        if (textureDiffuse != null) {
-            glActiveTexture(GL_TEXTURE0);
+        setTexture(TextureType.Diffuse, material, context.useTextureDiffuseUniformID, context.textureDiffuseUniformID);
+        setTexture(TextureType.Height, material, context.useTextureHeightUniformID, context.textureHeightUniformID);
+    }
 
-            glBindTexture(GL_TEXTURE_2D, textureDiffuse.entity.getIdAsInteger());
-            glUniform1i(context.textureDiffuseUniformID, 0);
+    private void setTexture(final TextureType type, final MaterialView material, final int useTextureUniformID, final int textureUniformID) {
+        final var texture = material.getTexture(type);
+        glActiveTexture(type.getLocationID());
+        if (texture == null) {
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glUniform1i(useTextureUniformID, 0);
+            return;
         }
 
-        final var textureHeight = material.getTexture(TextureType.HEIGHT);
-        glUniform1i(context.useTextureHeightUniformID, textureHeight == null ? 0 : 1);
-        if (textureHeight != null) {
-            glActiveTexture(GL_TEXTURE1);
-
-            glBindTexture(GL_TEXTURE_2D, textureHeight.entity.getIdAsInteger());
-            glUniform1i(context.textureHeightUniformID, 0);
-        }
+        glBindTexture(GL_TEXTURE_2D, texture.entity.getIdAsInteger());
+        glUniform1i(textureUniformID, type.getUnitID());
+        glUniform1i(useTextureUniformID, 1);
     }
 
     static final class MaterialRenderContext extends AbstractRenderContext {

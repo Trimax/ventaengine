@@ -40,59 +40,62 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
     @SneakyThrows
     public void render(final ObjectView object) {
         final var programView = object.getProgram();
-        if (programView != null) {
-            final var context = getContext();
-            if (context == null)
-                throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
+        if (programView == null)
+            return;
 
-            glUseProgram(programView.entity.getIdAsInteger());
+        final var context = getContext();
+        if (context == null)
+            throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
-            glUniform4f(programView.entity.getUniformID("ambientLight"),
-                    context.getAmbientLight().x(),
-                    context.getAmbientLight().y(),
-                    context.getAmbientLight().z(),
-                    context.getAmbientLight().w());
-
-            glUniformMatrix4fv(programView.entity.getUniformID("matrixViewProjection"), false, context.getViewProjectionMatrixBuffer());
-            glUniformMatrix3fv(programView.entity.getUniformID("matrixNormal"), false, context.getNormalMatrixBuffer());
-            glUniformMatrix4fv(programView.entity.getUniformID("matrixModel"), false, context.getModelMatrixBuffer());
-
-            try (final var _ = materialRenderer.getContext()
-                    .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"), programView.entity.getUniformID("useTextureDiffuse"))
-                    .withTextureHeight(programView.entity.getUniformID("textureHeight"), programView.entity.getUniformID("useTextureHeight"))) {
-                materialRenderer.render(object.getMaterial());
-            }
-
-            final var lights = context.getLights();
-            glUniform1i(programView.entity.getUniformID("lightCount"), lights.size());
-            glUniform1i(programView.entity.getUniformID("useLighting"), object.isApplyLighting() ? 1 : 0);
-
-            for (int lightID = 0; lightID < lights.size(); lightID++) {
-                final var prefix = "lights[" + lightID + "]";
-                try (final var _ = lightRenderer.getContext()
-                        .withType(programView.entity.getUniformID(prefix + ".type"))
-                        .withColor(programView.entity.getUniformID(prefix + ".color"))
-                        .withEnabled(programView.entity.getUniformID(prefix + ".enabled"))
-                        .withPosition(programView.entity.getUniformID(prefix + ".position"))
-                        .withDirection(programView.entity.getUniformID(prefix + ".direction"))
-                        .withIntensity(programView.entity.getUniformID(prefix + ".intensity"))
-                        .withCastShadows(programView.entity.getUniformID(prefix + ".castShadows"))
-                        .withAttenuationLinear(programView.entity.getUniformID(prefix + ".attenuation.linear"))
-                        .withAttenuationConstant(programView.entity.getUniformID(prefix + ".attenuation.constant"))
-                        .withAttenuationQuadratic(programView.entity.getUniformID(prefix + ".attenuation.quadratic"))) {
-                    lightRenderer.render(lights.get(lightID));
-                }
-            }
-        }
+        glUseProgram(programView.entity.getIdAsInteger());
 
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
         glBindVertexArray(object.entity.getVertexArrayObjectID());
+
+        glUniform4f(programView.entity.getUniformID("ambientLight"), context.getAmbientLight().x(),
+                context.getAmbientLight().y(), context.getAmbientLight().z(), context.getAmbientLight().w());
+
+        glUniformMatrix4fv(programView.entity.getUniformID("matrixViewProjection"), false,
+                context.getViewProjectionMatrixBuffer());
+        glUniformMatrix3fv(programView.entity.getUniformID("matrixNormal"), false, context.getNormalMatrixBuffer());
+        glUniformMatrix4fv(programView.entity.getUniformID("matrixModel"), false, context.getModelMatrixBuffer());
+
+        try (final var _ = materialRenderer.getContext()
+                .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"),
+                        programView.entity.getUniformID("useTextureDiffuse"))
+                .withTextureHeight(programView.entity.getUniformID("textureHeight"),
+                        programView.entity.getUniformID("useTextureHeight"))) {
+            materialRenderer.render(object.getMaterial());
+        }
+
+        final var lights = context.getLights();
+        glUniform1i(programView.entity.getUniformID("lightCount"), lights.size());
+        glUniform1i(programView.entity.getUniformID("useLighting"), object.isApplyLighting() ? 1 : 0);
+
+        for (int lightID = 0; lightID < lights.size(); lightID++) {
+            final var prefix = "lights[" + lightID + "]";
+            try (final var _ = lightRenderer.getContext().withType(programView.entity.getUniformID(prefix + ".type"))
+                    .withColor(programView.entity.getUniformID(prefix + ".color"))
+                    .withEnabled(programView.entity.getUniformID(prefix + ".enabled"))
+                    .withPosition(programView.entity.getUniformID(prefix + ".position"))
+                    .withDirection(programView.entity.getUniformID(prefix + ".direction"))
+                    .withIntensity(programView.entity.getUniformID(prefix + ".intensity"))
+                    .withCastShadows(programView.entity.getUniformID(prefix + ".castShadows"))
+                    .withAttenuationLinear(programView.entity.getUniformID(prefix + ".attenuation.linear"))
+                    .withAttenuationConstant(programView.entity.getUniformID(prefix + ".attenuation.constant"))
+                    .withAttenuationQuadratic(programView.entity.getUniformID(prefix + ".attenuation.quadratic"))) {
+                lightRenderer.render(lights.get(lightID));
+            }
+        }
+
         if (object.entity.getFacetsCount() > 0)
             glDrawElements(GL_TRIANGLES, object.entity.getFacetsCount(), GL_UNSIGNED_INT, 0);
 
         if (object.entity.getEdgesCount() > 0)
             glDrawElements(GL_LINES, object.entity.getEdgesCount(), GL_UNSIGNED_INT, 0);
+
         glBindVertexArray(0);
+        glUseProgram(0);
     }
 
     @Getter(AccessLevel.PACKAGE)
