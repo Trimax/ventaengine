@@ -108,7 +108,7 @@ vec3 calculateLighting(vec2 textureCoordinates) {
 }
 
 vec2 parallaxMapping(vec2 uv) {
-    float heightScale = 0.03;
+    float heightScale = 0.01;
     float height = texture(textureHeight, uv).r;
     return uv + normalize(vertexViewDirection).xy * (height * heightScale);
 }
