@@ -1,5 +1,7 @@
 package com.venta.engine.enums;
 
+import static org.lwjgl.opengl.GL13C.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,14 +9,16 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum TextureType {
-    AMBIENT_OCCLUSION("ambientOcclusion"),
-    ANISOTROPY("anisotropy"),
-    DIFFUSE("diffuse"),
-    HEIGHT("height"),
-    METALLIC("metallic"),
-    NORMAL("normal"),
-    ROUGHNESS("roughness");
+    AmbientOcclusion("ambientOcclusion", GL_TEXTURE5, 5),
+    Anisotropy("anisotropy", GL_TEXTURE6, 6),
+    Diffuse("diffuse", GL_TEXTURE0, 0),
+    Height("height", GL_TEXTURE1, 1),
+    Metallic("metallic", GL_TEXTURE3, 3),
+    Normal("normal", GL_TEXTURE2, 2),
+    Roughness("roughness", GL_TEXTURE4, 4);
 
     private final String fieldName;
+    private final int locationID;
+    private final int unitID;
 }
 
