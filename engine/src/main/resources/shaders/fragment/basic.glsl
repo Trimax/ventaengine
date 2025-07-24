@@ -89,24 +89,6 @@ float getHeight() {
     return useTextureHeight ? texture(textureHeight, vertexTextureCoordinates).r : 1.0;
 }
 
-vec3 getHeightVec() {
-    return useTextureHeight ? texture(textureHeight, vertexTextureCoordinates).rgb : vec3(1.0);
-}
-
-vec3 calculateLight(vec3 normal) {
-    if (!useLighting)
-        return vec3(1.0);
-
-    vec3 height = getHeightVec();
-    vec3 bumpedNormal = vec3(normal.x * height.x, normal.y * height.y, normal.z * height.z);
-
-    vec3 lighting = ambientLight.xyz * ambientLight.w;
-    for (int i = 0; i < lightCount; i++)
-        lighting += calculateLight(lights[i], bumpedNormal, vertexPosition);
-
-    return lighting;
-}
-
 vec3 getNormal() {
     if (!useTextureNormal)
         return vertexTBN[2];
@@ -115,10 +97,23 @@ vec3 getNormal() {
     return normalize(vertexTBN * (texture(textureNormal, vertexTextureCoordinates).rgb * 2.0 - 1.0));
 }
 
+vec3 calculateLighting() {
+    if (!useLighting)
+        return vec3(1.0);
+
+    vec3 normal = getNormal();
+
+    vec3 lighting = ambientLight.xyz * ambientLight.w;
+    for (int i = 0; i < lightCount; i++)
+        lighting += calculateLight(lights[i], normal, vertexPosition);
+
+    return lighting;
+}
+
 void main() {
     vec4 diffuseColor = getDiffuseColor();
-    vec3 lighting = calculateLight(getNormal());
     vec3 modulatedColor = diffuseColor.rgb; // * (0.3 + 0.7 * getHeight());
+    vec3 lighting = calculateLighting();
 
     FragColor = vertexColor * vec4(clamp(modulatedColor * lighting, 0.0, 1.0), diffuseColor.a);
 }
