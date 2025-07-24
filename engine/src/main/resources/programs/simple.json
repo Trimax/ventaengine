@@ -1,0 +1,11 @@
+{
+  "name": "Simple",
+  "shaders": [
+    "simple_vertex",
+    "simple_fragment"
+  ],
+  "uniforms": [
+    "matrixViewProjection",
+    "matrixModel"
+  ]
+}

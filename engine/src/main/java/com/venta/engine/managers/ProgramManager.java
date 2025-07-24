@@ -12,7 +12,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.definitions.Definitions;
 import com.venta.engine.exceptions.ProgramLinkException;
-import com.venta.engine.exceptions.ShaderArgumentException;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ProgramDTO;
 import com.venta.engine.model.view.ProgramView;
@@ -38,8 +37,14 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         final var programDTO = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
 
         final ProgramEntity program = create(programDTO.name(), StreamEx.of(programDTO.shaders()).map(shaderManager::load).toList());
-        for (final String uniform : programDTO.uniforms())
-            program.uniforms.put(uniform, glGetUniformLocation(program.getIdAsInteger(), uniform));
+
+        glUseProgram(program.getIdAsInteger());
+        for (final String uniform : programDTO.uniforms()) {
+            final var uniformLocationID = glGetUniformLocation(program.getIdAsInteger(), uniform);
+            program.uniforms.put(uniform, uniformLocationID);
+            if (uniformLocationID == -1)
+                log.warn("Uniform '{}' not found in program {}", uniform, program.getName());
+        }
 
         registerLightUniforms(program);
 
@@ -64,12 +69,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         for (int i = 0; i < Definitions.LIGHT_MAX; i++) {
             for (final var field : lightFields) {
                 final var uniformName = String.format("lights[%d].%s", i, field);
-
-                final int location = glGetUniformLocation(program.getIdAsInteger(), uniformName);
-                if (location >= 0)
-                    program.uniforms.put(uniformName, location);
-                else
-                    log.warn("Uniform {} not found in program {}", uniformName, program.getIdAsInteger());
+                program.uniforms.put(uniformName, glGetUniformLocation(program.getIdAsInteger(), uniformName));
             }
         }
 
@@ -134,11 +134,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         }
 
         public int getUniformID(final String name) {
-            final var uniformID = uniforms.get(name);
-            if (uniformID == null)
-                throw new ShaderArgumentException(String.format("%s (shader: %s)", name, this.name));
-
-            return uniformID;
+            return uniforms.getOrDefault(name, -1);
         }
     }
 }

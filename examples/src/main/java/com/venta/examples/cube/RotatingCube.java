@@ -14,7 +14,6 @@ import com.venta.engine.interfaces.Venta;
 import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.ObjectView;
-import com.venta.engine.model.view.ProgramView;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -55,10 +54,10 @@ public final class RotatingCube implements Venta {
         origin.setApplyLighting(false);
         origin.setScale(new Vector3f(100000f));
 
-        final var program1 = createShader(context);
-        final var program2 = createShader(context);
+        final var program1 = context.getProgramManager().load("simple");
+        final var program2 = context.getProgramManager().load("basic");
 
-        origin.setProgram(program2);
+        origin.setProgram(program1);
         cube.setProgram(program2);
 
         scene.add(origin);
@@ -99,10 +98,6 @@ public final class RotatingCube implements Venta {
 
         if (inputHandler.isButtonPushed(GLFW_KEY_SPACE))
             light.setColor(createRandomVector4());
-    }
-
-    private ProgramView createShader(final Context context) {
-        return context.getProgramManager().load("basic");
     }
 
     public Vector4f createRandomVector4() {
