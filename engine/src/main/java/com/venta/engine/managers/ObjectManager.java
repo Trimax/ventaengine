@@ -90,7 +90,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         glBindVertexArray(0);
 
-        return store(new ObjectEntity(name, vertices.length, objectDTO.getFacetsArrayLength(), objectDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID));
+        return store(new ObjectEntity(name, vertices.length, objectDTO.getFacetsArrayLength(), objectDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID));
     }
 
     @Override
@@ -104,13 +104,13 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         glDeleteVertexArrays(object.entity().vertexArrayObjectID);
         glDeleteBuffers(object.entity().verticesBufferID);
         glDeleteBuffers(object.entity().facetsBufferID);
+        glDeleteBuffers(object.entity().edgesBufferID);
     }
 
     @Getter
     public static final class ObjectEntity extends AbstractEntity {
         private final String name;
 
-        // Potentially, we don't need to keep this in memory (or maybe use MeshCache)
         private final int verticesCount;
         private final int facetsCount;
         private final int edgesCount;
@@ -118,6 +118,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
         private final int facetsBufferID;
+        private final int edgesBufferID;
 
         ObjectEntity(@NonNull final String name,
                      final int verticesCount,
@@ -125,7 +126,8 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
                      final int edgesCount,
                      final int vertexArrayObjectID,
                      final int verticesBufferID,
-                     final int facetsBufferID) {
+                     final int facetsBufferID,
+                     final int edgesBufferID) {
             super(0L);
 
             this.name = name;
@@ -136,6 +138,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             this.vertexArrayObjectID = vertexArrayObjectID;
             this.verticesBufferID = verticesBufferID;
             this.facetsBufferID = facetsBufferID;
+            this.edgesBufferID = edgesBufferID;
         }
     }
 }

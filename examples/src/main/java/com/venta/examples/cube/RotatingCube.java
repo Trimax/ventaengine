@@ -61,8 +61,8 @@ public final class RotatingCube implements Venta {
         origin.setProgram(program2);
         cube.setProgram(program2);
 
-        scene.add(cube);
         scene.add(origin);
+        scene.add(cube);
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(3.f, 3.f, 3.f));
