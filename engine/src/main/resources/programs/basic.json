@@ -17,7 +17,6 @@
     "useLighting",
 
     "ambientLight",
-    "lightCount",
-    "lights"
+    "lightCount"
   ]
 }

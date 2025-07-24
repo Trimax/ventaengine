@@ -35,6 +35,7 @@ public final class Engine implements Runnable {
 
         context.getWindowManager().setCurrent(context.getWindowManager().create(venta.createWindowConfiguration(), venta.createInputHandler()));
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
+        context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
 
         GL.createCapabilities();
     }

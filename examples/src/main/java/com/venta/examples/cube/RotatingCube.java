@@ -49,8 +49,7 @@ public final class RotatingCube implements Venta {
         light = context.getLightManager().load("basic.json");
         light.setPosition(new Vector3f(2.f, 2.f, 2.f));
 
-        final var scene = context.getSceneManager().create("Sample scene");
-        context.getSceneManager().setCurrent(scene);
+        final var scene = context.getSceneManager().getCurrent();
         scene.add(light);
         scene.add(cube);
 
