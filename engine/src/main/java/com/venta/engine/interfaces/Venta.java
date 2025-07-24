@@ -1,10 +1,13 @@
 package com.venta.engine.interfaces;
 
+import com.venta.engine.configurations.RenderConfiguration;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 
 public interface Venta {
     WindowConfiguration createWindowConfiguration();
+
+    RenderConfiguration createRenderConfiguration();
 
     VentaInputHandler createInputHandler();
 

@@ -3,10 +3,12 @@ package com.venta.engine.core;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33C.*;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.renderers.SceneRenderer;
 import com.venta.engine.renderers.WindowRenderer;
@@ -38,6 +40,15 @@ public final class Engine implements Runnable {
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
 
         GL.createCapabilities();
+
+        final var origin = context.getObjectManager().load("origin.json");
+
+        origin.setScale(new Vector3f(100000f));
+        origin.setDrawMode(DrawMode.Edge);
+        origin.setApplyLighting(false);
+        origin.setProgram(context.getProgramManager().load("simple"));
+        origin.setVisible(venta.createRenderConfiguration().isOriginVisible());
+        context.getSceneManager().getCurrent().add(origin);
     }
 
     @Override

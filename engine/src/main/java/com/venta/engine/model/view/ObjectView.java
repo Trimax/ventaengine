@@ -20,6 +20,9 @@ public final class ObjectView extends AbstractRenderer.AbstractView<ObjectManage
     private boolean applyLighting = true;
 
     @Setter
+    private boolean isVisible = true;
+
+    @Setter
     private MaterialView material;
 
     @Setter
