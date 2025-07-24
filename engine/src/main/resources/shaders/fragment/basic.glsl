@@ -28,6 +28,9 @@ in vec2 vertexTextureCoordinates;
 in vec3 vertexPosition;
 in vec3 vertexNormal;
 
+in vec3 vertexTangent;
+in vec3 vertexBitangent;
+
 /* Textures */
 uniform sampler2D textureDiffuse;
 uniform sampler2D textureHeight;
