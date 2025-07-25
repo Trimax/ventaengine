@@ -39,7 +39,7 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     }
 
     @Getter
-    public static final class CameraEntity extends AbstractEntity {
+    public static final class CameraEntity extends AbstractEntity implements com.venta.engine.model.views.CameraView {
         private static final Vector3f worldUp = new Vector3f(0, 1, 0);
 
         private final String name;

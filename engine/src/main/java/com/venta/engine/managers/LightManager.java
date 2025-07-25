@@ -41,7 +41,7 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
     }
 
     @Getter
-    public static final class LightEntity extends AbstractEntity {
+    public static final class LightEntity extends AbstractEntity implements com.venta.engine.model.views.LightView {
         private final String name;
 
         LightEntity(@NonNull final String name) {

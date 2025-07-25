@@ -118,7 +118,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     }
 
     @Getter
-    public static final class ObjectEntity extends AbstractEntity {
+    public static final class ObjectEntity extends AbstractEntity implements com.venta.engine.model.views.ObjectView {
         private final String name;
 
         private final int verticesCount;

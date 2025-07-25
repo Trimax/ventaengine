@@ -130,8 +130,8 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Getter
-    public static final class WindowEntity extends AbstractEntity {
-        private long internalID;
+    public static final class WindowEntity extends AbstractEntity implements com.venta.engine.model.views.WindowView {
+        private final long internalID;
         private int width;
         private int height;
         private final String title;

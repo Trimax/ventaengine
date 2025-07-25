@@ -62,7 +62,7 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     }
 
     @Getter
-    public static final class ShaderEntity extends AbstractEntity {
+    public static final class ShaderEntity extends AbstractEntity implements com.venta.engine.model.views.ShaderView {
         private final int internalID;
         private final Type type;
         private final String name;

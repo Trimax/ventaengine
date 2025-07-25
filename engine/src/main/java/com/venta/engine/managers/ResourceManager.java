@@ -64,12 +64,13 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
 
     @Override
     protected void destroy(final Couple<ResourceEntity, ResourceView> resource) {
-        log.debug("Deleting resource: {}", resource.entity().getId());
+        log.debug("Deleting resource: {}", resource.entity().getID());
     }
 
     @Getter
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class ResourceEntity extends AbstractEntity {}
+    public static final class ResourceEntity extends AbstractEntity implements
+            com.venta.engine.model.views.ResourceView {}
 
     @Component
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -123,7 +123,8 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Getter
-    public static final class ProgramEntity extends AbstractManager.AbstractEntity {
+    public static final class ProgramEntity extends AbstractManager.AbstractEntity implements
+            com.venta.engine.model.views.ProgramView {
         private final int internalID;
         private final String name;
 

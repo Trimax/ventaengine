@@ -42,7 +42,8 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
     }
 
     @Getter
-    public static final class MaterialEntity extends AbstractEntity {
+    public static final class MaterialEntity extends AbstractEntity implements
+            com.venta.engine.model.views.MaterialView {
         private final String name;
         private final Float shininess;
         private final Float opacity;

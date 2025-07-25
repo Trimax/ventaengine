@@ -5,10 +5,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.venta.engine.model.core.Couple;
+import com.venta.engine.model.views.AbstractView;
 import com.venta.engine.renderers.AbstractRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -21,8 +21,8 @@ public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, 
 
     protected final V store(final E entity) {
         final var view = createView(entity);
-        values.put(entity.getId(), new Couple<>(entity, view));
-        log.debug("{} {} created", view.getClass().getSimpleName(), entity.getId());
+        values.put(entity.getID(), new Couple<>(entity, view));
+        log.debug("{} {} created", view.getClass().getSimpleName(), entity.getID());
 
         return view;
     }
@@ -38,10 +38,14 @@ public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, 
 
     protected abstract V createView(final E entity);
 
-    @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public abstract static class AbstractEntity {
+    public abstract static class AbstractEntity implements AbstractView {
         private final String id = UUID.randomUUID().toString();
+
+        @Override
+        public final String getID() {
+            return id;
+        }
     }
 
     abstract class AbstractAccessor {

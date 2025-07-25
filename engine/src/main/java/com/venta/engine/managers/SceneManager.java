@@ -35,7 +35,7 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     }
 
     @Getter
-    public static final class SceneEntity extends AbstractEntity {
+    public static final class SceneEntity extends AbstractEntity implements com.venta.engine.model.views.SceneView {
         private final String name;
 
         SceneEntity(@NonNull final String name) {

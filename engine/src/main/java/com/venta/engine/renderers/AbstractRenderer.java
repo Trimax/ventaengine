@@ -33,7 +33,7 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
         protected final E entity;
 
         public final String getID() {
-            return entity.getId();
+            return entity.getID();
         }
     }
 
