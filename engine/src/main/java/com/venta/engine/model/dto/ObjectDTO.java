@@ -118,21 +118,6 @@ public record ObjectDTO(String type,
         return packedArray;
     }
 
-    public float[] getFaceNormals() {
-        final var faceNormalsMap = computeFaceNormals();
-
-        final var faceNormals = new float[facets().size() * 3];
-        for (int i = 0; i < faceNormalsMap.size(); i++) {
-            final var normal = faceNormalsMap.get(i);
-
-            faceNormals[i * 3]     = normal.x();
-            faceNormals[i * 3 + 1] = normal.y();
-            faceNormals[i * 3 + 2] = normal.z();
-        }
-
-        return faceNormals;
-    }
-
     private Map<Integer, Vector3f> computeFaceNormals() {
         if (!hasFacets())
             return new HashMap<>();
