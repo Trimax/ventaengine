@@ -11,6 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.definitions.Definitions;
+import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ProgramDTO;
@@ -135,6 +136,10 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
 
         public int getUniformID(final String name) {
             return uniforms.getOrDefault(name, -1);
+        }
+
+        public int getUniformID(final ShaderUniform uniform) {
+            return getUniformID(uniform.getUniformName());
         }
     }
 }

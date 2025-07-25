@@ -15,6 +15,8 @@ import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.enums.ShaderLightUniform;
+import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ObjectRenderingException;
 import com.venta.engine.managers.ObjectManager;
 import com.venta.engine.model.view.LightView;
@@ -54,47 +56,47 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         glBindVertexArray(object.entity.getVertexArrayObjectID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 
-        glUniform3f(programView.entity.getUniformID("cameraPosition"), context.getCameraPosition().x(),
+        glUniform3f(programView.entity.getUniformID(ShaderUniform.CameraPosition), context.getCameraPosition().x(),
                 context.getCameraPosition().y(), context.getCameraPosition().z());
 
-        glUniform4f(programView.entity.getUniformID("ambientLight"), context.getAmbientLight().x(),
+        glUniform4f(programView.entity.getUniformID(ShaderUniform.AmbientLight), context.getAmbientLight().x(),
                 context.getAmbientLight().y(), context.getAmbientLight().z(), context.getAmbientLight().w());
 
-        glUniformMatrix4fv(programView.entity.getUniformID("matrixViewProjection"), false,
+        glUniformMatrix4fv(programView.entity.getUniformID(ShaderUniform.MatrixViewProjection), false,
                 context.getViewProjectionMatrixBuffer());
-        glUniformMatrix3fv(programView.entity.getUniformID("matrixNormal"), false, context.getNormalMatrixBuffer());
-        glUniformMatrix4fv(programView.entity.getUniformID("matrixModel"), false, context.getModelMatrixBuffer());
+        glUniformMatrix3fv(programView.entity.getUniformID(ShaderUniform.MatrixNormal), false, context.getNormalMatrixBuffer());
+        glUniformMatrix4fv(programView.entity.getUniformID(ShaderUniform.MatrixModel), false, context.getModelMatrixBuffer());
 
         try (final var _ = materialRenderer.getContext()
-                .withTextureDiffuse(programView.entity.getUniformID("textureDiffuse"),
-                        programView.entity.getUniformID("useTextureDiffuse"))
-                .withTextureHeight(programView.entity.getUniformID("textureHeight"),
-                        programView.entity.getUniformID("useTextureHeight"))
-                .withTextureNormal(programView.entity.getUniformID("textureNormal"),
-                        programView.entity.getUniformID("useTextureNormal"))
-                .withTextureAmbientOcclusion(programView.entity.getUniformID("textureAmbientOcclusion"),
-                        programView.entity.getUniformID("useTextureAmbientOcclusion"))
-                .withRoughness(programView.entity.getUniformID("textureRoughness"),
-                        programView.entity.getUniformID("useTextureRoughness"))) {
+                .withTextureDiffuse(programView.entity.getUniformID(ShaderUniform.TextureDiffuse),
+                        programView.entity.getUniformID(ShaderUniform.UseTextureDiffuseFlag))
+                .withTextureHeight(programView.entity.getUniformID(ShaderUniform.TextureHeight),
+                        programView.entity.getUniformID(ShaderUniform.UseTextureHeight))
+                .withTextureNormal(programView.entity.getUniformID(ShaderUniform.TextureNormal),
+                        programView.entity.getUniformID(ShaderUniform.UseTextureNormal))
+                .withTextureAmbientOcclusion(programView.entity.getUniformID(ShaderUniform.TextureAmbientOcclusion),
+                        programView.entity.getUniformID(ShaderUniform.UseTextureAmbientOcclusion))
+                .withRoughness(programView.entity.getUniformID(ShaderUniform.TextureRoughness),
+                        programView.entity.getUniformID(ShaderUniform.UseTextureRoughness))) {
             materialRenderer.render(object.getMaterial());
         }
 
         final var lights = context.getLights();
-        glUniform1i(programView.entity.getUniformID("lightCount"), lights.size());
-        glUniform1i(programView.entity.getUniformID("useLighting"), object.isApplyLighting() ? 1 : 0);
+        glUniform1i(programView.entity.getUniformID(ShaderUniform.LightCount), lights.size());
+        glUniform1i(programView.entity.getUniformID(ShaderUniform.UseLighting), object.isApplyLighting() ? 1 : 0);
 
         for (int lightID = 0; lightID < lights.size(); lightID++) {
-            final var prefix = "lights[" + lightID + "]";
-            try (final var _ = lightRenderer.getContext().withType(programView.entity.getUniformID(prefix + ".type"))
-                    .withColor(programView.entity.getUniformID(prefix + ".color"))
-                    .withEnabled(programView.entity.getUniformID(prefix + ".enabled"))
-                    .withPosition(programView.entity.getUniformID(prefix + ".position"))
-                    .withDirection(programView.entity.getUniformID(prefix + ".direction"))
-                    .withIntensity(programView.entity.getUniformID(prefix + ".intensity"))
-                    .withCastShadows(programView.entity.getUniformID(prefix + ".castShadows"))
-                    .withAttenuationLinear(programView.entity.getUniformID(prefix + ".attenuation.linear"))
-                    .withAttenuationConstant(programView.entity.getUniformID(prefix + ".attenuation.constant"))
-                    .withAttenuationQuadratic(programView.entity.getUniformID(prefix + ".attenuation.quadratic"))) {
+            try (final var _ = lightRenderer.getContext()
+                    .withType(programView.entity.getUniformID(ShaderLightUniform.Type.getUniformName(lightID)))
+                    .withColor(programView.entity.getUniformID(ShaderLightUniform.Color.getUniformName(lightID)))
+                    .withEnabled(programView.entity.getUniformID(ShaderLightUniform.Enabled.getUniformName(lightID)))
+                    .withPosition(programView.entity.getUniformID(ShaderLightUniform.Position.getUniformName(lightID)))
+                    .withDirection(programView.entity.getUniformID(ShaderLightUniform.Direction.getUniformName(lightID)))
+                    .withIntensity(programView.entity.getUniformID(ShaderLightUniform.Intensity.getUniformName(lightID)))
+                    .withCastShadows(programView.entity.getUniformID(ShaderLightUniform.CastShadows.getUniformName(lightID)))
+                    .withAttenuationLinear(programView.entity.getUniformID(ShaderLightUniform.AttenuationLinear.getUniformName(lightID)))
+                    .withAttenuationConstant(programView.entity.getUniformID(ShaderLightUniform.AttenuationConstant.getUniformName(lightID)))
+                    .withAttenuationQuadratic(programView.entity.getUniformID(ShaderLightUniform.AttenuationQuadratic.getUniformName(lightID)))) {
                 lightRenderer.render(lights.get(lightID));
             }
         }
