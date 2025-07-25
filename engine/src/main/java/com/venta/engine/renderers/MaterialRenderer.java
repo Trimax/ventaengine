@@ -34,6 +34,7 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
         setTexture(TextureType.Height, material, context.useTextureHeightUniformID, context.textureHeightUniformID);
         setTexture(TextureType.Normal, material, context.useTextureNormalUniformID, context.textureNormalUniformID);
         setTexture(TextureType.AmbientOcclusion, material, context.useTextureAmbientOcclusionUniformID, context.textureAmbientOcclusionUniformID);
+        setTexture(TextureType.Roughness, material, context.useTextureRoughnessUniformID, context.textureRoughnessUniformID);
     }
 
     private void setTexture(final TextureType type, final MaterialView material, final int useTextureUniformID, final int textureUniformID) {
@@ -53,11 +54,13 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
 
     static final class MaterialRenderContext extends AbstractRenderContext {
         private int useTextureAmbientOcclusionUniformID;
+        private int useTextureRoughnessUniformID;
         private int useTextureDiffuseUniformID;
         private int useTextureHeightUniformID;
         private int useTextureNormalUniformID;
 
         private int textureAmbientOcclusionUniformID;
+        private int textureRoughnessUniformID;
         private int textureDiffuseUniformID;
         private int textureHeightUniformID;
         private int textureNormalUniformID;
@@ -83,6 +86,12 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
         public MaterialRenderContext withTextureAmbientOcclusion(final int textureUniformID, final int useTextureUniformID) {
             this.useTextureAmbientOcclusionUniformID = useTextureUniformID;
             this.textureAmbientOcclusionUniformID = textureUniformID;
+            return this;
+        }
+
+        public MaterialRenderContext withRoughness(final int textureUniformID, final int useTextureUniformID) {
+            this.useTextureRoughnessUniformID = useTextureUniformID;
+            this.textureRoughnessUniformID = textureUniformID;
             return this;
         }
 
