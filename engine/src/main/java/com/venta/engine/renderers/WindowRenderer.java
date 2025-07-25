@@ -4,12 +4,15 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.managers.WindowManager;
-import com.venta.engine.model.view.WindowView;
+import com.venta.engine.model.views.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Component
-public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowEntity, WindowView, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public final class WindowRenderer extends AbstractRenderer<WindowView, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
+    private final WindowManager.WindowAccessor windowAccessor;
     private long lastUpdated = 0;
 
     @Override
@@ -19,17 +22,17 @@ public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowE
 
     @Override
     public void render(final WindowView window) {
-        glfwSwapBuffers(window.entity.getInternalID());
+        render(windowAccessor.get(window.getID()));
+    }
+
+    private void render(final WindowManager.WindowEntity window) {
+        glfwSwapBuffers(window.getInternalID());
 
         final var now = System.currentTimeMillis();
         if (now - lastUpdated >= 1000) {
             lastUpdated = now;
-            glfwSetWindowTitle(window.entity.getInternalID(), window.entity.getTitle() + ": " + getContext().getFrameRate());
+            glfwSetWindowTitle(window.getInternalID(), window.getTitle() + ": " + getContext().getFrameRate());
         }
-    }
-
-    public boolean shouldClose(final WindowView window) {
-        return glfwWindowShouldClose(window.entity.getInternalID());
     }
 
     @Getter(AccessLevel.PACKAGE)

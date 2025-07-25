@@ -11,10 +11,14 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.joml.Vector3f;
+
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.core.Couple;
+import com.venta.engine.enums.DrawMode;
 import com.venta.engine.model.dto.ObjectDTO;
-import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.views.MaterialView;
+import com.venta.engine.model.views.ObjectView;
+import com.venta.engine.model.views.ProgramView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -104,17 +108,12 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     }
 
     @Override
-    protected ObjectView createView(final ObjectEntity entity) {
-        return new ObjectView(entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<ObjectEntity, ObjectView> object) {
-        log.info("Deleting object {}", object.entity().getName());
-        glDeleteVertexArrays(object.entity().vertexArrayObjectID);
-        glDeleteBuffers(object.entity().verticesBufferID);
-        glDeleteBuffers(object.entity().facetsBufferID);
-        glDeleteBuffers(object.entity().edgesBufferID);
+    protected void destroy(final ObjectEntity object) {
+        log.info("Deleting object {}", object.getName());
+        glDeleteVertexArrays(object.vertexArrayObjectID);
+        glDeleteBuffers(object.verticesBufferID);
+        glDeleteBuffers(object.facetsBufferID);
+        glDeleteBuffers(object.edgesBufferID);
     }
 
     @Getter
@@ -129,6 +128,20 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final int verticesBufferID;
         private final int facetsBufferID;
         private final int edgesBufferID;
+
+        private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
+        private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
+        private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
+
+        private DrawMode drawMode = DrawMode.Polygon;
+
+        private boolean applyLighting = true;
+
+        private boolean isVisible = true;
+
+        private MaterialManager.MaterialEntity material;
+
+        private ProgramManager.ProgramEntity program;
 
         ObjectEntity(@NonNull final String name,
                      final int verticesCount,
@@ -147,6 +160,63 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             this.verticesBufferID = verticesBufferID;
             this.facetsBufferID = facetsBufferID;
             this.edgesBufferID = edgesBufferID;
+        }
+
+        @Override
+        public void setPosition(final Vector3f position) {
+            this.position.set(position);
+        }
+
+        @Override
+        public void setRotation(final Vector3f rotation) {
+            this.rotation.set(rotation);
+        }
+
+        @Override
+        public void setScale(final Vector3f scale) {
+            this.scale.set(scale);
+        }
+
+        @Override
+        public void move(final Vector3f offset) {
+            this.position.add(offset, this.position);
+        }
+
+        @Override
+        public void rotate(final Vector3f angles) {
+            this.rotation.add(angles, this.rotation);
+        }
+
+        @Override
+        public void scale(final Vector3f factor) {
+            this.scale.add(factor, this.scale);
+        }
+
+        @Override
+        public void setDrawMode(final DrawMode drawMode) {
+            this.drawMode = drawMode;
+        }
+
+        @Override
+        public void setLighting(final boolean lighting) {
+            this.applyLighting = lighting;
+        }
+
+        @Override
+        public void setVisible(final boolean visible) {
+            this.isVisible = visible;
+        }
+
+        @Override
+        public void setMaterial(final MaterialView material) {
+            if (material instanceof MaterialManager.MaterialEntity entity)
+                this.material = entity;
+        }
+
+        @Override
+        public void setProgram(final ProgramView program) {
+            if (program instanceof ProgramManager.ProgramEntity entity)
+                this.program = entity;
         }
     }
 

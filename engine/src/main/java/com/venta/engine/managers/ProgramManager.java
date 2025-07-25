@@ -13,11 +13,10 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.definitions.Definitions;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ProgramLinkException;
-import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ProgramDTO;
-import com.venta.engine.model.view.ProgramView;
-import com.venta.engine.model.view.ShaderView;
-import com.venta.engine.renderers.AbstractRenderer;
+import com.venta.engine.model.views.AbstractView;
+import com.venta.engine.model.views.ProgramView;
+import com.venta.engine.model.views.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -95,9 +94,8 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         final var id = glCreateProgram();
 
         StreamEx.of(shaders)
-                .map(AbstractRenderer.AbstractView::getID)
+                .map(AbstractView::getID)
                 .map(shaderManager::get)
-                .map(Couple::entity)
                 .map(ShaderManager.ShaderEntity::getInternalID)
                 .forEach(shaderID -> glAttachShader(id, shaderID));
         glLinkProgram(id);
@@ -112,14 +110,9 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Override
-    protected ProgramView createView(final ProgramEntity entity) {
-        return new ProgramView(entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<ProgramEntity, ProgramView> program) {
-        log.info("Deleting program {}", program.entity().getName());
-        glDeleteProgram(program.entity().getInternalID());
+    protected void destroy(final ProgramEntity program) {
+        log.info("Deleting program {}", program.getName());
+        glDeleteProgram(program.getInternalID());
     }
 
     @Getter

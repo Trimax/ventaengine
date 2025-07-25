@@ -8,8 +8,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.core.Couple;
-import com.venta.engine.model.view.TextureView;
+import com.venta.engine.model.views.TextureView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -63,14 +62,9 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     }
 
     @Override
-    protected TextureView createView(final TextureEntity entity) {
-        return new TextureView(entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<TextureEntity, TextureView> object) {
-        log.info("Deleting texture {}", object.entity().getName());
-        glDeleteTextures(object.entity().getInternalID());
+    protected void destroy(final TextureEntity texture) {
+        log.info("Deleting texture {}", texture.getName());
+        glDeleteTextures(texture.getInternalID());
     }
 
     @Getter

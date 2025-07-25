@@ -4,8 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.core.Couple;
-import com.venta.engine.model.view.CameraView;
+import com.venta.engine.model.views.CameraView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,13 +28,8 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     }
 
     @Override
-    protected CameraView createView(final CameraEntity entity) {
-        return new CameraView(entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<CameraEntity, CameraView> camera) {
-        log.info("Deleting camera {}", camera.entity().getName());
+    protected void destroy(final CameraEntity camera) {
+        log.info("Deleting camera {}", camera.getName());
     }
 
     @Getter
@@ -122,6 +116,7 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
             return new Vector3f(front);
         }
 
+        @Override
         public void setPosition(final Vector3f newPosition) {
             this.position.set(newPosition);
         }
@@ -133,6 +128,7 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
             updateVectors();
         }
 
+        @Override
         public void lookAt(final Vector3f target) {
             final var direction = new Vector3f(target).sub(position).normalize();
 

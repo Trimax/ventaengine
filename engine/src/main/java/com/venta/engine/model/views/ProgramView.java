@@ -1,4 +1,4 @@
 package com.venta.engine.model.views;
 
-public interface ProgramView {
+public interface ProgramView extends AbstractView {
 }

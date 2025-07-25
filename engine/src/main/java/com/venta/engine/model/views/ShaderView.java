@@ -1,4 +1,4 @@
 package com.venta.engine.model.views;
 
-public interface ShaderView {
+public interface ShaderView extends AbstractView {
 }

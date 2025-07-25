@@ -10,9 +10,8 @@ import org.lwjgl.opengl.GL20C;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ShaderCompileException;
 import com.venta.engine.exceptions.UnknownShaderTypeException;
-import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ShaderDTO;
-import com.venta.engine.model.view.ShaderView;
+import com.venta.engine.model.views.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,14 +50,9 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     }
 
     @Override
-    protected ShaderView createView(final ShaderEntity entity) {
-        return new ShaderView(entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<ShaderEntity, ShaderView> shader) {
-        log.info("Deleting shader {}", shader.entity().getName());
-        glDeleteShader(shader.entity().getInternalID());
+    protected void destroy(final ShaderEntity shader) {
+        log.info("Deleting shader {}", shader.getName());
+        glDeleteShader(shader.getInternalID());
     }
 
     @Getter

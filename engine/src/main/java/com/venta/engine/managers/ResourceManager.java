@@ -12,8 +12,7 @@ import com.venta.engine.adapters.TextureTypeAdapter;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.exceptions.ResourceNotFoundException;
-import com.venta.engine.model.core.Couple;
-import com.venta.engine.model.view.ResourceView;
+import com.venta.engine.model.views.ResourceView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -58,13 +57,8 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     }
 
     @Override
-    protected ResourceView createView(final ResourceEntity entity) {
-        return new ResourceView(entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<ResourceEntity, ResourceView> resource) {
-        log.debug("Deleting resource: {}", resource.entity().getID());
+    protected void destroy(final ResourceEntity resource) {
+        log.debug("Deleting resource: {}", resource.getID());
     }
 
     @Getter

@@ -4,8 +4,7 @@ import static org.lwjgl.opengl.GL20C.*;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.LightRenderingException;
-import com.venta.engine.managers.LightManager;
-import com.venta.engine.model.view.LightView;
+import com.venta.engine.model.views.LightView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-final class LightRenderer extends AbstractRenderer<LightManager.LightEntity, LightView, LightRenderer.LightRenderContext, ObjectRenderer.ObjectRenderContext> {
+final class LightRenderer extends AbstractRenderer<LightView, LightRenderer.LightRenderContext, ObjectRenderer.ObjectRenderContext> {
 
     @Override
     protected LightRenderContext createContext() {

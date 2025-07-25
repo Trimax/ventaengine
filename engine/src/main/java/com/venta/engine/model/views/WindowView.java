@@ -1,4 +1,4 @@
 package com.venta.engine.model.views;
 
-public interface WindowView {
+public interface WindowView extends AbstractView {
 }

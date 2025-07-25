@@ -1,4 +1,4 @@
 package com.venta.engine.model.views;
 
-public interface ResourceView {
+public interface ResourceView extends AbstractView {
 }

@@ -21,8 +21,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.interfaces.VentaInputHandler;
-import com.venta.engine.model.core.Couple;
-import com.venta.engine.model.view.WindowView;
+import com.venta.engine.model.views.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -78,7 +77,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     public void setCurrent(@NonNull final WindowView window) {
         this.current = window;
-        glfwMakeContextCurrent(get(window.getID()).entity().getInternalID());
+        glfwMakeContextCurrent(get(window.getID()).getInternalID());
     }
 
     //TODO: Reimplement it more clean (using ResourceManager)
@@ -117,16 +116,11 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Override
-    protected WindowView createView(final WindowEntity entity) {
-        return new WindowView(entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<WindowEntity, WindowView> window) {
-        log.info("Deleting window {}", window.entity().getTitle());
-        window.entity().sizeCallback.close();
-        window.entity().keyCallback.close();
-        glfwDestroyWindow(window.entity().getInternalID());
+    protected void destroy(final WindowEntity window) {
+        log.info("Deleting window {}", window.getTitle());
+        window.sizeCallback.close();
+        window.keyCallback.close();
+        glfwDestroyWindow(window.getInternalID());
     }
 
     @Getter

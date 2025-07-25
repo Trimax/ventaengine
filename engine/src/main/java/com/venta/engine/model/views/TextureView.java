@@ -1,4 +1,4 @@
 package com.venta.engine.model.views;
 
-public interface TextureView {
+public interface TextureView extends AbstractView {
 }
