@@ -15,30 +15,36 @@ public final class Definitions {
     /*** Vertex buffer ***/
 
     /* Position components offset */
+    public static final int VERTEX_ATTRIBUTE_INDEX_POSITION = 0;
     public static final int VERTEX_OFFSET_POSITION_X = 0;
     public static final int VERTEX_OFFSET_POSITION_Y = 1;
     public static final int VERTEX_OFFSET_POSITION_Z = 2;
 
     /* Normal components offset */
+    public static final int VERTEX_ATTRIBUTE_INDEX_NORMAL = 1;
     public static final int VERTEX_OFFSET_NORMAL_X = 3;
     public static final int VERTEX_OFFSET_NORMAL_Y = 4;
     public static final int VERTEX_OFFSET_NORMAL_Z = 5;
 
     /* Tangent components offset */
+    public static final int VERTEX_ATTRIBUTE_INDEX_TANGENT = 2;
     public static final int VERTEX_OFFSET_TANGENT_X = 6;
     public static final int VERTEX_OFFSET_TANGENT_Y = 7;
     public static final int VERTEX_OFFSET_TANGENT_Z = 8;
 
     /* Bitangent components offset */
+    public static final int VERTEX_ATTRIBUTE_INDEX_BITANGENT = 3;
     public static final int VERTEX_OFFSET_BITANGENT_X = 9;
     public static final int VERTEX_OFFSET_BITANGENT_Y = 10;
     public static final int VERTEX_OFFSET_BITANGENT_Z = 11;
 
     /* Texture coordinates components offset */
+    public static final int VERTEX_ATTRIBUTE_INDEX_TEXTURE_COORDINATES = 4;
     public static final int VERTEX_OFFSET_TEXTURE_COORDINATES_U = 12;
     public static final int VERTEX_OFFSET_TEXTURE_COORDINATES_V = 13;
 
     /* Color components offset */
+    public static final int VERTEX_ATTRIBUTE_INDEX_COLOR = 5;
     public static final int VERTEX_OFFSET_COLOR_R = 14;
     public static final int VERTEX_OFFSET_COLOR_G = 15;
     public static final int VERTEX_OFFSET_COLOR_B = 16;
