@@ -1,5 +1,7 @@
 package com.venta.engine.model.dto;
 
+import static com.venta.engine.definitions.Definitions.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,11 +31,11 @@ public record ObjectDTO(String type,
     }
 
     public int getFacetsArrayLength() {
-        return hasFacets() ? 3 * facets.size() : 0;
+        return hasFacets() ? COUNT_VERTICES_PER_FACET * facets.size() : 0;
     }
 
     public int getEdgesArrayLength() {
-        return hasEdges() ? 2 * edges.size() : 0;
+        return hasEdges() ? COUNT_VERTICES_PER_EDGE * edges.size() : 0;
     }
 
     public float[] getVerticesArray() {
@@ -48,45 +50,45 @@ public record ObjectDTO(String type,
             final var bitangent = Optional.ofNullable(tbnVectors.get(vertexID)).map(Triple::getRight).orElse(null);
 
             if (vertex.hasPosition()) {
-                packedArray[18 * vertexID] = vertex.position().x();
-                packedArray[18 * vertexID + 1] = vertex.position().y();
-                packedArray[18 * vertexID + 2] = vertex.position().z();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_POSITION_X] = vertex.position().x();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_POSITION_Y] = vertex.position().y();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_POSITION_Z] = vertex.position().z();
             }
 
             if (vertex.hasNormal()) {
-                packedArray[18 * vertexID + 3] = vertex.normal.x();
-                packedArray[18 * vertexID + 4] = vertex.normal.y();
-                packedArray[18 * vertexID + 5] = vertex.normal.z();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_X] = vertex.normal.x();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_Y] = vertex.normal.y();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_Z] = vertex.normal.z();
             }
 
             if (normal != null) {
-                packedArray[18 * vertexID + 3] = normal.x();
-                packedArray[18 * vertexID + 4] = normal.y();
-                packedArray[18 * vertexID + 5] = normal.z();
-            }
-
-            if (vertex.hasTextureCoordinates()) {
-                packedArray[18 * vertexID + 6] = vertex.textureCoordinates().x();
-                packedArray[18 * vertexID + 7] = vertex.textureCoordinates().y();
-            }
-
-            if (vertex.hasColor()) {
-                packedArray[18 * vertexID + 8] = vertex.color().x();
-                packedArray[18 * vertexID + 9] = vertex.color().y();
-                packedArray[18 * vertexID + 10] = vertex.color().z();
-                packedArray[18 * vertexID + 11] = vertex.color().w();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_X] = normal.x();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_Y] = normal.y();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_Z] = normal.z();
             }
 
             if (tangent != null) {
-                packedArray[18 * vertexID + 12] = tangent.x();
-                packedArray[18 * vertexID + 13] = tangent.y();
-                packedArray[18 * vertexID + 14] = tangent.z();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TANGENT_X] = tangent.x();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TANGENT_Y] = tangent.y();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TANGENT_Z] = tangent.z();
             }
 
             if (bitangent != null) {
-                packedArray[18 * vertexID + 15] = bitangent.x();
-                packedArray[18 * vertexID + 16] = bitangent.y();
-                packedArray[18 * vertexID + 17] = bitangent.z();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_BITANGENT_X] = bitangent.x();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_BITANGENT_Y] = bitangent.y();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_BITANGENT_Z] = bitangent.z();
+            }
+
+            if (vertex.hasTextureCoordinates()) {
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_U] = vertex.textureCoordinates().x();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_V] = vertex.textureCoordinates().y();
+            }
+
+            if (vertex.hasColor()) {
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_R] = vertex.color().x();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_G] = vertex.color().y();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_B] = vertex.color().z();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_A] = vertex.color().w();
             }
         }
 
@@ -94,25 +96,25 @@ public record ObjectDTO(String type,
     }
 
     public int[] getFacesArray() {
-        final var packedArray = new int[facets.size() * 3];
+        final var packedArray = new int[facets.size() * COUNT_VERTICES_PER_FACET];
         for (int facetID = 0; facetID < facets.size(); facetID++) {
             final var facet = facets.get(facetID);
 
-            packedArray[3 * facetID]     = facet.vertex1();
-            packedArray[3 * facetID + 1] = facet.vertex2();
-            packedArray[3 * facetID + 2] = facet.vertex3();
+            packedArray[COUNT_VERTICES_PER_FACET * facetID + FACET_OFFSET_VERTEX_1] = facet.vertex1();
+            packedArray[COUNT_VERTICES_PER_FACET * facetID + FACET_OFFSET_VERTEX_2] = facet.vertex2();
+            packedArray[COUNT_VERTICES_PER_FACET * facetID + FACET_OFFSET_VERTEX_3] = facet.vertex3();
         }
 
         return packedArray;
     }
 
     public int[] getEdgesArray() {
-        final var packedArray = new int[edges.size() * 2];
+        final var packedArray = new int[edges.size() * COUNT_VERTICES_PER_EDGE];
         for (int edgeID = 0; edgeID < edges.size(); edgeID++) {
             final var edge = edges.get(edgeID);
 
-            packedArray[2 * edgeID]     = edge.vertex1();
-            packedArray[2 * edgeID + 1] = edge.vertex2();
+            packedArray[COUNT_VERTICES_PER_EDGE * edgeID + EDGE_OFFSET_VERTEX_1]     = edge.vertex1();
+            packedArray[COUNT_VERTICES_PER_EDGE * edgeID + EDGE_OFFSET_VERTEX_2] = edge.vertex2();
         }
 
         return packedArray;
