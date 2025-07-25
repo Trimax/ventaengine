@@ -1,5 +1,6 @@
 package com.venta.engine.managers;
 
+import static com.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
@@ -70,31 +71,31 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             memFree(indexBuffer);
         }
 
-        final int stride = 18 * Float.BYTES;
+        final int stride = COUNT_FLOATS_PER_VERTEX * Float.BYTES;
 
         // layout(location = 0) -> position
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
-        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_POSITION, 3, GL_FLOAT, false, stride, 0);
+        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_POSITION);
 
         // layout(location = 1) -> normal
-        glVertexAttribPointer(1, 3, GL_FLOAT, false, stride, 3 * Float.BYTES);
-        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_NORMAL, 3, GL_FLOAT, false, stride, 3 * Float.BYTES);
+        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_NORMAL);
 
-        // layout(location = 2) -> texture coordinates
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, stride, 6 * Float.BYTES);
-        glEnableVertexAttribArray(2);
+        // layout(location = 2) -> tangent
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_TANGENT, 3, GL_FLOAT, false, stride, 6 * Float.BYTES);
+        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_TANGENT);
 
-        // layout(location = 3) -> color
-        glVertexAttribPointer(3, 4, GL_FLOAT, false, stride, 8 * Float.BYTES);
-        glEnableVertexAttribArray(3);
+        // layout(location = 3) -> bitangent
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_BITANGENT, 3, GL_FLOAT, false, stride, 9 * Float.BYTES);
+        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_BITANGENT);
 
-        // layout(location = 4) -> tangent
-        glVertexAttribPointer(4, 3, GL_FLOAT, false, stride, 12 * Float.BYTES);
-        glEnableVertexAttribArray(4);
+        // layout(location = 4) -> texture coordinates
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_TEXTURE_COORDINATES, 2, GL_FLOAT, false, stride, 12 * Float.BYTES);
+        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_TEXTURE_COORDINATES);
 
-        // layout(location = 5) -> bitangent
-        glVertexAttribPointer(5, 3, GL_FLOAT, false, stride, 15 * Float.BYTES);
-        glEnableVertexAttribArray(5);
+        // layout(location = 5) -> color
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_COLOR, 4, GL_FLOAT, false, stride, 14 * Float.BYTES);
+        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_COLOR);
 
         glBindVertexArray(0);
 
