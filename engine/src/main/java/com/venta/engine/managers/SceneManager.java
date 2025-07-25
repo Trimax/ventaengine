@@ -25,8 +25,8 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     }
 
     @Override
-    protected SceneView createView(final String id, final SceneEntity entity) {
-        return new SceneView(id, entity);
+    protected SceneView createView(final SceneEntity entity) {
+        return new SceneView(entity);
     }
 
     @Override

@@ -78,7 +78,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     public void setCurrent(@NonNull final WindowView window) {
         this.current = window;
-        glfwMakeContextCurrent(get(window.getId()).entity().getInternalID());
+        glfwMakeContextCurrent(get(window.getID()).entity().getInternalID());
     }
 
     //TODO: Reimplement it more clean (using ResourceManager)
@@ -117,8 +117,8 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Override
-    protected WindowView createView(final String id, final WindowEntity entity) {
-        return new WindowView(id, entity);
+    protected WindowView createView(final WindowEntity entity) {
+        return new WindowView(entity);
     }
 
     @Override

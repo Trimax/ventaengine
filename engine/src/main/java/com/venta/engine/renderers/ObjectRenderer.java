@@ -32,7 +32,6 @@ import lombok.SneakyThrows;
 final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, ObjectView, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
     private final MaterialRenderer materialRenderer;
     private final LightRenderer lightRenderer;
-    private final ObjectManager.ObjectAccessor objectAccessor;
 
     @Override
     protected ObjectRenderContext createContext() {
@@ -44,8 +43,6 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
     public void render(final ObjectView object) {
         if (!object.isVisible())
             return;
-
-        ObjectManager.ObjectEntity entity = objectAccessor.getByID(object.getId());
 
         final var programView = object.getProgram();
         if (programView == null)

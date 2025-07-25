@@ -51,8 +51,8 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     }
 
     @Override
-    protected ShaderView createView(final String id, final ShaderEntity entity) {
-        return new ShaderView(id, entity);
+    protected ShaderView createView(final ShaderEntity entity) {
+        return new ShaderView(entity);
     }
 
     @Override

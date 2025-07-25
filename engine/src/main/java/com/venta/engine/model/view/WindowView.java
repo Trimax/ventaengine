@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public final class WindowView extends AbstractRenderer.AbstractView<WindowManager.WindowEntity> {
-    public WindowView(final String id, final WindowManager.WindowEntity entity) {
-        super(id, entity);
+    public WindowView(final WindowManager.WindowEntity entity) {
+        super(entity);
     }
 }

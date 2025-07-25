@@ -8,8 +8,8 @@ import lombok.Getter;
 
 @Getter
 public final class CameraView extends AbstractRenderer.AbstractView<CameraManager.CameraEntity> {
-    public CameraView(final String id, final CameraManager.CameraEntity entity) {
-        super(id, entity);
+    public CameraView(final CameraManager.CameraEntity entity) {
+        super(entity);
     }
 
     public void setPosition(final Vector3f position) {

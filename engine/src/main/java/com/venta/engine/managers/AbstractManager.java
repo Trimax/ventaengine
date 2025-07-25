@@ -19,14 +19,10 @@ public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, 
         return values.get(id);
     }
 
-    protected final String generateID() {
-        return UUID.randomUUID().toString();
-    }
-
     protected final V store(final E entity) {
-        final var view = createView(generateID(), entity);
-        values.put(view.getId(), new Couple<>(entity, view));
-        log.debug("{} {} created", view.getClass().getSimpleName(), view.getId());
+        final var view = createView(entity);
+        values.put(entity.getId(), new Couple<>(entity, view));
+        log.debug("{} {} created", view.getClass().getSimpleName(), entity.getId());
 
         return view;
     }
@@ -40,7 +36,7 @@ public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, 
 
     protected abstract void destroy(final Couple<E, V> couple);
 
-    protected abstract V createView(final String id, final E entity);
+    protected abstract V createView(final E entity);
 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)

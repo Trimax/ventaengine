@@ -95,7 +95,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         final var id = glCreateProgram();
 
         StreamEx.of(shaders)
-                .map(AbstractRenderer.AbstractView::getId)
+                .map(AbstractRenderer.AbstractView::getID)
                 .map(shaderManager::get)
                 .map(Couple::entity)
                 .map(ShaderManager.ShaderEntity::getInternalID)
@@ -112,8 +112,8 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Override
-    protected ProgramView createView(final String id, final ProgramEntity entity) {
-        return new ProgramView(id, entity);
+    protected ProgramView createView(final ProgramEntity entity) {
+        return new ProgramView(entity);
     }
 
     @Override

@@ -20,8 +20,8 @@ public final class LightView extends AbstractRenderer.AbstractView<LightManager.
     @Getter
     private final Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
 
-    public LightView(final String id, final LightManager.LightEntity entity) {
-        super(id, entity);
+    public LightView(final LightManager.LightEntity entity) {
+        super(entity);
     }
 
     public void setPosition(final Vector3f position) {

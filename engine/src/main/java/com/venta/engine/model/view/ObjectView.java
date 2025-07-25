@@ -1,11 +1,12 @@
 package com.venta.engine.model.view;
 
+import org.joml.Vector3f;
+
 import com.venta.engine.enums.DrawMode;
 import com.venta.engine.managers.ObjectManager;
 import com.venta.engine.renderers.AbstractRenderer;
 import lombok.Getter;
 import lombok.Setter;
-import org.joml.Vector3f;
 
 @Getter
 public final class ObjectView extends AbstractRenderer.AbstractView<ObjectManager.ObjectEntity> {
@@ -28,8 +29,8 @@ public final class ObjectView extends AbstractRenderer.AbstractView<ObjectManage
     @Setter
     private ProgramView program;
 
-    public ObjectView(final String id, final ObjectManager.ObjectEntity entity) {
-        super(id, entity);
+    public ObjectView(final ObjectManager.ObjectEntity entity) {
+        super(entity);
     }
 
     public void setPosition(final Vector3f position) {

@@ -31,8 +31,8 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
     }
 
     @Override
-    protected LightView createView(final String id, final LightEntity entity) {
-        return new LightView(id, entity);
+    protected LightView createView(final LightEntity entity) {
+        return new LightView(entity);
     }
 
     @Override

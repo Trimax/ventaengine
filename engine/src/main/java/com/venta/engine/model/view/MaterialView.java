@@ -10,8 +10,8 @@ import com.venta.engine.renderers.AbstractRenderer;
 public final class MaterialView extends AbstractRenderer.AbstractView<MaterialManager.MaterialEntity> {
     private final Map<TextureType, TextureView> textures = new HashMap<>();
     
-    public MaterialView(final String id, final MaterialManager.MaterialEntity entity) {
-        super(id, entity);
+    public MaterialView(final MaterialManager.MaterialEntity entity) {
+        super(entity);
     }
     
     public void setTexture(final TextureType type, final TextureView texture) {

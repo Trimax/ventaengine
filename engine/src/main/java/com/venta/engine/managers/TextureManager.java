@@ -63,8 +63,8 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     }
 
     @Override
-    protected TextureView createView(final String id, final TextureEntity entity) {
-        return new TextureView(id, entity);
+    protected TextureView createView(final TextureEntity entity) {
+        return new TextureView(entity);
     }
 
     @Override

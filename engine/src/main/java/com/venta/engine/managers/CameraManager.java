@@ -29,8 +29,8 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     }
 
     @Override
-    protected CameraView createView(final String id, final CameraEntity entity) {
-        return new CameraView(id, entity);
+    protected CameraView createView(final CameraEntity entity) {
+        return new CameraView(entity);
     }
 
     @Override

@@ -32,8 +32,8 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
     }
 
     @Override
-    protected MaterialView createView(final String id, final MaterialEntity entity) {
-        return new MaterialView(id, entity);
+    protected MaterialView createView(final MaterialEntity entity) {
+        return new MaterialView(entity);
     }
 
     @Override

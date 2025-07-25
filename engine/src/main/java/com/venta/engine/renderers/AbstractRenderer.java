@@ -29,12 +29,12 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
 
     @AllArgsConstructor
     public abstract static class AbstractView<E extends AbstractManager.AbstractEntity> {
-        @Getter
-        @NonNull
-        private final String id;
-
         @NonNull
         protected final E entity;
+
+        public final String getID() {
+            return entity.getId();
+        }
     }
 
     @Slf4j

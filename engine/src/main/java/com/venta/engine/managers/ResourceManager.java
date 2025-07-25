@@ -58,8 +58,8 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     }
 
     @Override
-    protected ResourceView createView(final String id, final ResourceEntity entity) {
-        return new ResourceView(id, entity);
+    protected ResourceView createView(final ResourceEntity entity) {
+        return new ResourceView(entity);
     }
 
     @Override

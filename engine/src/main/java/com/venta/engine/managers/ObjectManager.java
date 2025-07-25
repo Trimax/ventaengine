@@ -104,8 +104,8 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     }
 
     @Override
-    protected ObjectView createView(final String id, final ObjectEntity entity) {
-        return new ObjectView(id, entity);
+    protected ObjectView createView(final ObjectEntity entity) {
+        return new ObjectView(entity);
     }
 
     @Override

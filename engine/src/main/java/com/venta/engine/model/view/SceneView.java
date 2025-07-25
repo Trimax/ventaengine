@@ -16,8 +16,8 @@ public final class SceneView extends AbstractRenderer.AbstractView<SceneManager.
     private final List<ObjectView> objects = new ArrayList<>();
     private final List<LightView> lights = new ArrayList<>();
 
-    public SceneView(final String id, final SceneManager.SceneEntity entity) {
-        super(id, entity);
+    public SceneView(final SceneManager.SceneEntity entity) {
+        super(entity);
     }
 
     public void setAmbientLight(final Vector4f ambientLight) {

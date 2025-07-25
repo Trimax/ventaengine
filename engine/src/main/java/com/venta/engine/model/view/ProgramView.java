@@ -4,7 +4,7 @@ import com.venta.engine.managers.ProgramManager;
 import com.venta.engine.renderers.AbstractRenderer;
 
 public final class ProgramView extends AbstractRenderer.AbstractView<ProgramManager.ProgramEntity> {
-    public ProgramView(final String id, final ProgramManager.ProgramEntity entity) {
-        super(id, entity);
+    public ProgramView(final ProgramManager.ProgramEntity entity) {
+        super(entity);
     }
 }
