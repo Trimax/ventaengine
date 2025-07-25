@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class LightRenderer extends AbstractRenderer<LightView, LightRenderer.LightRenderContext, ObjectRenderer.ObjectRenderContext> {
 
     @Override

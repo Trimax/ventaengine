@@ -17,9 +17,8 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
-    private final WindowManager.WindowAccessor windowAccessor;
     private final ObjectRenderer objectRenderer;
 
     @Override

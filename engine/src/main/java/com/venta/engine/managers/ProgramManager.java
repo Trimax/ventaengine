@@ -27,7 +27,7 @@ import one.util.streamex.StreamEx;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity, ProgramView> {
     private final ResourceManager resourceManager;
     private final ShaderManager shaderManager;

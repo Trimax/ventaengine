@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CameraManager extends AbstractManager<CameraManager.CameraEntity, CameraView> {
     @Getter
     @Setter(onParam_ = @__(@NonNull))

@@ -1,6 +1,6 @@
 package com.venta.engine.exceptions;
 
-public final class WindowCreationException extends VentaException {
+public final class WindowCreationException extends AbstractVentaException {
     public WindowCreationException(final String message) {
         super(String.format("Can't create window: %s", message));
     }

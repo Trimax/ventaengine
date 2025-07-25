@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity, ObjectView> {
     private final ResourceManager resourceManager;
 

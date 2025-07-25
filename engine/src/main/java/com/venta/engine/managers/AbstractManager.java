@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractManager<E extends V, V extends AbstractView> {
+abstract class AbstractManager<E extends V, V extends AbstractView> {
     private final Map<String, E> values = new ConcurrentHashMap<>();
 
     protected final E get(final String id) {

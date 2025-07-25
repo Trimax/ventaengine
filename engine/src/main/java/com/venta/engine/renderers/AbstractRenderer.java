@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-public abstract class AbstractRenderer<V extends AbstractView, C extends AbstractRenderer.AbstractRenderContext<P>,
+abstract class AbstractRenderer<V extends AbstractView, C extends AbstractRenderer.AbstractRenderContext<P>,
         P extends AbstractRenderer.AbstractRenderContext<?>> implements AutoCloseable {
     @Getter(AccessLevel.PROTECTED)
     private final C context;

@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureManager extends AbstractManager<TextureManager.TextureEntity, TextureView> {
     private final ResourceManager resourceManager;
 

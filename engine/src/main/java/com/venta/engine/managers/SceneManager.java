@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneManager extends AbstractManager<SceneManager.SceneEntity, SceneView> {
     @Getter
     @Setter

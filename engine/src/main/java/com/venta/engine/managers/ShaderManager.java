@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity, ShaderView> {
     private final ResourceManager resourceManager;
 
@@ -74,6 +74,7 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
             this.code = code;
         }
 
+        //TODO: Possibly remove (together with attributes section in shader definition). And maybe shader defs also not needed
         public int getAttribute(final String name) {
             return attributes.get(name);
         }

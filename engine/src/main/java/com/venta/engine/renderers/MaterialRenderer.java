@@ -14,7 +14,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class MaterialRenderer extends AbstractRenderer<MaterialView, MaterialRenderer.MaterialRenderContext, ObjectRenderer.ObjectRenderContext> {
     private final TextureManager.TextureAccessor textureAccessor;
 
