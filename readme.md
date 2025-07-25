@@ -2,16 +2,17 @@
 ## TODO list
 1. Console
 2. Texture manager
-   1. AMBIENT_OCCLUSION, 
+   1. ~~AMBIENT_OCCLUSION~~, 
    2. ANISOTROPY, 
    3. ~~DIFFUSE~~, 
    4. ~~HEIGHT~~, 
    5. METALLIC, 
    6. ~~NORMAL~~, 
-   7. ROUGHNESS;
+   7. ~~ROUGHNESS~~;
 3. Environment: box/sphere (add box to the scene)
 4. Emitters (extend the scene with a list of emitters)
 5. Resource archive manager and also, pack & browse tool (!)
+6. Render gizmo for light and pyramid for camera in debug mode
 
 ## Important
 On macOS start with VM argument: `-XstartOnFirstThread`

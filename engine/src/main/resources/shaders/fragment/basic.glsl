@@ -53,9 +53,42 @@ uniform int lightCount;
 /* Output color */
 out vec4 FragColor;
 
+/* Gets base color from the texture */
+vec4 getDiffuseColor(vec2 textureCoordinates) {
+    return useTextureDiffuse ? texture(textureDiffuse, textureCoordinates) : vec4(1.0);
+}
+
+/* Gets ambient occlusion */
+float getAmbientOcclusion(vec2 textureCoordinates) {
+    return useTextureAmbientOcclusion ? texture(textureAmbientOcclusion, textureCoordinates).r : 1.0;
+}
+
+/* Gets height */
+float getHeight(vec2 textureCoordinates) {
+    return useTextureHeight ? texture(textureHeight, textureCoordinates).r : 1.0;
+}
+
+/* Translates texture coordinates according to parallax effect */
+vec2 parallaxMapping(vec2 textureCoordinates) {
+    if (!useTextureHeight)
+        return textureCoordinates;
+
+    return textureCoordinates + normalize(vertexViewDirection).xy * (getHeight(textureCoordinates) * 0.01);
+}
+
+/* Gets normal (either face or from normal map) */
+vec3 getNormal(vec2 textureCoordinates) {
+    if (!useTextureNormal)
+        return vertexTBN[2];
+
+    /* Normal mapping */
+    return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0));
+}
+
+/* Calculates effect of one light source */
 vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
     if (!light.enabled)
-        return vec3(0.0);
+    return vec3(0.0);
 
     vec3 lightDir = vec3(0.0);
     float distance = 1.0;
@@ -86,18 +119,6 @@ vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
     return light.color * light.intensity * diff * attenuation;
 }
 
-vec4 getDiffuseColor(vec2 textureCoordinates) {
-    return useTextureDiffuse ? texture(textureDiffuse, textureCoordinates) : vec4(1.0);
-}
-
-vec3 getNormal(vec2 textureCoordinates) {
-    if (!useTextureNormal)
-        return vertexTBN[2];
-
-    /* Normal mapping */
-    return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0));
-}
-
 vec3 calculateLighting(vec2 textureCoordinates) {
     if (!useLighting)
         return vec3(1.0);
@@ -109,19 +130,6 @@ vec3 calculateLighting(vec2 textureCoordinates) {
         lighting += calculateLight(lights[i], normal, vertexPosition);
 
     return lighting;
-}
-
-float getAmbientOcclusion(vec2 textureCoordinates) {
-    if (!useTextureAmbientOcclusion)
-        return 1.0;
-
-    return texture(textureAmbientOcclusion, textureCoordinates).r;
-}
-
-vec2 parallaxMapping(vec2 uv) {
-    float heightScale = 0.01;
-    float height = texture(textureHeight, uv).r;
-    return uv + normalize(vertexViewDirection).xy * (height * heightScale);
 }
 
 void main() {
