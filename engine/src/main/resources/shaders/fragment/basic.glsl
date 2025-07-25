@@ -34,11 +34,15 @@ in mat3 vertexTBN;
 uniform sampler2D textureDiffuse;
 uniform sampler2D textureHeight;
 uniform sampler2D textureNormal;
+uniform sampler2D textureRoughness;
+uniform sampler2D textureAmbientOcclusion;
 
 /* Feature flags */
 uniform bool useTextureDiffuse;
 uniform bool useTextureHeight;
 uniform bool useTextureNormal;
+uniform bool useTextureRoughness;
+uniform bool useTextureAmbientOcclusion;
 uniform bool useLighting;
 
 /* Lighting */
@@ -107,6 +111,13 @@ vec3 calculateLighting(vec2 textureCoordinates) {
     return lighting;
 }
 
+float getAmbientOcclusion(vec2 textureCoordinates) {
+    if (!useTextureAmbientOcclusion)
+        return 1.0;
+
+    return texture(textureAmbientOcclusion, textureCoordinates).r;
+}
+
 vec2 parallaxMapping(vec2 uv) {
     float heightScale = 0.01;
     float height = texture(textureHeight, uv).r;
@@ -117,7 +128,7 @@ void main() {
     vec2 textureCoordinates = useTextureHeight ? parallaxMapping(vertexTextureCoordinates) : vertexTextureCoordinates;
 
     vec4 diffuseColor = getDiffuseColor(textureCoordinates);
-    vec3 lighting = calculateLighting(textureCoordinates);
+    vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates);
 
     FragColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
 }
