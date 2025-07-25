@@ -68,6 +68,11 @@ float getHeight(vec2 textureCoordinates) {
     return useTextureHeight ? texture(textureHeight, textureCoordinates).r : 1.0;
 }
 
+/* Gets roughness */
+float getRoughness(vec2 textureCoordinates) {
+    return useTextureRoughness ? texture(textureRoughness, textureCoordinates).r : 1.0;
+}
+
 /* Translates texture coordinates according to parallax effect */
 vec2 parallaxMapping(vec2 textureCoordinates) {
     if (!useTextureHeight)
@@ -136,7 +141,7 @@ void main() {
     vec2 textureCoordinates = useTextureHeight ? parallaxMapping(vertexTextureCoordinates) : vertexTextureCoordinates;
 
     vec4 diffuseColor = getDiffuseColor(textureCoordinates);
-    vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates);
+    vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
 
     FragColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
 }
