@@ -167,24 +167,26 @@ public record ObjectDTO(String type,
         for (int facetIndex = 0; facetIndex < facets.size(); facetIndex++) {
             final var facet = facets.get(facetIndex);
 
-            final Vertex vertex0 = vertices.get(facet.vertex1());
-            final Vertex vertex1 = vertices.get(facet.vertex2());
-            final Vertex vertex2 = vertices.get(facet.vertex3());
+            final Vertex vertex1 = vertices.get(facet.vertex1());
+            final Vertex vertex2 = vertices.get(facet.vertex2());
+            final Vertex vertex3 = vertices.get(facet.vertex3());
 
             final var normal = faceNormals.get(facetIndex);
             add(vertexNormals, normal, facet.vertex1);
             add(vertexNormals, normal, facet.vertex2);
             add(vertexNormals, normal, facet.vertex3);
 
-            if (!hasTextureCoordinates(vertex0, vertex1, vertex2))
+            if (!hasTextureCoordinates(vertex1, vertex2, vertex3))
                 continue;
 
-            final var tangent = computeTangent(vertex0, vertex1, vertex2);
+            final var tangentBitangentData = prepareTangentBitangentData(vertex1, vertex2, vertex3);
+
+            final var tangent = computeTangent(tangentBitangentData);
             add(vertexTangents, tangent, facet.vertex1);
             add(vertexTangents, tangent, facet.vertex2);
             add(vertexTangents, tangent, facet.vertex3);
 
-            final var bitangent = computeBitangent(vertex0, vertex1, vertex2);
+            final var bitangent = computeBitangent(tangentBitangentData);
             add(vertexBitangents, bitangent, facet.vertex1);
             add(vertexBitangents, bitangent, facet.vertex2);
             add(vertexBitangents, bitangent, facet.vertex3);
@@ -201,10 +203,26 @@ public record ObjectDTO(String type,
         return tbnVectors;
     }
 
-    private Vector3f computeTangent(final Vertex vertex0, final Vertex vertex1, final Vertex vertex2) {
-        final Vector3f pos1 = vertex0.position();
-        final Vector3f pos2 = vertex1.position();
-        final Vector3f pos3 = vertex2.position();
+    private Vector3f computeTangent(final TBData data) {
+        return new Vector3f(
+                data.f * (data.deltaV2 * data.edge1.x() - data.deltaV1 * data.edge2.x()),
+                data.f * (data.deltaV2 * data.edge1.y() - data.deltaV1 * data.edge2.y()),
+                data.f * (data.deltaV2 * data.edge1.z() - data.deltaV1 * data.edge2.z())
+        );
+    }
+
+    private Vector3f computeBitangent(final TBData data) {
+        return new Vector3f(
+                data.f * (-data.deltaU2 * data.edge1.x() + data.deltaU1 * data.edge2.x()),
+                data.f * (-data.deltaU2 * data.edge1.y() + data.deltaU1 * data.edge2.y()),
+                data.f * (-data.deltaU2 * data.edge1.z() + data.deltaU1 * data.edge2.z())
+        );
+    }
+
+    private TBData prepareTangentBitangentData(final Vertex vertex0, final Vertex vertex1, final Vertex vertex2) {
+        final var pos1 = vertex0.position();
+        final var pos2 = vertex1.position();
+        final var pos3 = vertex2.position();
 
         final var uv1 = new Vector2f(vertex0.textureCoordinates().x(), vertex0.textureCoordinates().y());
         final var uv2 = new Vector2f(vertex1.textureCoordinates().x(), vertex1.textureCoordinates().y());
@@ -213,42 +231,13 @@ public record ObjectDTO(String type,
         final var edge1 = pos2.sub(pos1, new Vector3f());
         final var edge2 = pos3.sub(pos1, new Vector3f());
 
-        final float deltaU1 = uv2.x - uv1.x;
-        final float deltaV1 = uv2.y - uv1.y;
-        final float deltaU2 = uv3.x - uv1.x;
-        final float deltaV2 = uv3.y - uv1.y;
+        final var deltaU1 = uv2.x - uv1.x;
+        final var deltaV1 = uv2.y - uv1.y;
+        final var deltaU2 = uv3.x - uv1.x;
+        final var deltaV2 = uv3.y - uv1.y;
 
-        float f = safeInverse(deltaU1 * deltaV2 - deltaU2 * deltaV1);
-        return new Vector3f(
-                f * (deltaV2 * edge1.x() - deltaV1 * edge2.x()),
-                f * (deltaV2 * edge1.y() - deltaV1 * edge2.y()),
-                f * (deltaV2 * edge1.z() - deltaV1 * edge2.z())
-        );
-    }
-
-    private Vector3f computeBitangent(final Vertex vertex0, final Vertex vertex1, final Vertex vertex2) {
-        final Vector3f pos1 = vertex0.position();
-        final Vector3f pos2 = vertex1.position();
-        final Vector3f pos3 = vertex2.position();
-
-        final Vector2f uv1 = new Vector2f(vertex0.textureCoordinates().x(), vertex0.textureCoordinates().y());
-        final Vector2f uv2 = new Vector2f(vertex1.textureCoordinates().x(), vertex1.textureCoordinates().y());
-        final Vector2f uv3 = new Vector2f(vertex2.textureCoordinates().x(), vertex2.textureCoordinates().y());
-
-        final Vector3f edge1 = pos2.sub(pos1, new Vector3f());
-        final Vector3f edge2 = pos3.sub(pos1, new Vector3f());
-
-        final float deltaU1 = uv2.x - uv1.x;
-        final float deltaV1 = uv2.y - uv1.y;
-        final float deltaU2 = uv3.x - uv1.x;
-        final float deltaV2 = uv3.y - uv1.y;
-
-        float f = safeInverse(deltaU1 * deltaV2 - deltaU2 * deltaV1);
-        return new Vector3f(
-                f * (-deltaU2 * edge1.x() + deltaU1 * edge2.x()),
-                f * (-deltaU2 * edge1.y() + deltaU1 * edge2.y()),
-                f * (-deltaU2 * edge1.z() + deltaU1 * edge2.z())
-        );
+        final var f = safeInverse(deltaU1 * deltaV2 - deltaU2 * deltaV1);
+        return new TBData(edge1, edge2, deltaU1, deltaV1, deltaU2, deltaV2, f);
     }
 
     private boolean hasTextureCoordinates(final Vertex... vertices) {
@@ -272,6 +261,16 @@ public record ObjectDTO(String type,
 
         vertexNormals.get(vertexID).add(normal);
     }
+
+    private record TBData(
+            Vector3f edge1,
+            Vector3f edge2,
+            float deltaU1,
+            float deltaV1,
+            float deltaU2,
+            float deltaV2,
+            float f
+    ) {}
 
     public record Vertex(Vector3f position,
                          Vector3f normal,
