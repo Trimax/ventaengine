@@ -8,6 +8,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
+import com.venta.engine.definitions.Definitions;
 import com.venta.engine.model.dto.ObjectDTO;
 
 public final class ObjectDTOTest {
@@ -17,7 +18,7 @@ public final class ObjectDTOTest {
 
         final var verticesArray = triangle.getVerticesArray();
         assertNotNull(verticesArray, "Vertices array should not be null");
-        assertEquals(18 * triangle.vertices().size(), verticesArray.length, "The number of vertices must be correct");
+        assertEquals(Definitions.VERTEX_FLOATS_COUNT * triangle.vertices().size(), verticesArray.length, "The number of vertices must be correct");
 
         /* Checking backed vertices positions */
         assertEquals(0f, verticesArray[0], 1e-6, "Vertex 1 position x must be correct");

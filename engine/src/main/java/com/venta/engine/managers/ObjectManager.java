@@ -11,6 +11,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.definitions.Definitions;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ObjectDTO;
 import com.venta.engine.model.view.ObjectView;
@@ -70,7 +71,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             memFree(indexBuffer);
         }
 
-        final int stride = 18 * Float.BYTES;
+        final int stride = Definitions.VERTEX_FLOATS_COUNT * Float.BYTES;
 
         // layout(location = 0) -> position
         glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
