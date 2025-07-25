@@ -5,7 +5,7 @@ import org.joml.Vector4f;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.model.dto.LightDTO;
-import com.venta.engine.model.views.LightView;
+import com.venta.engine.model.view.LightView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
     }
 
     @Getter
-    public static final class LightEntity extends AbstractEntity implements com.venta.engine.model.views.LightView {
+    public static final class LightEntity extends AbstractEntity implements com.venta.engine.model.view.LightView {
         private final String name;
 
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);

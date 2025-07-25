@@ -8,7 +8,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.views.TextureView;
+import com.venta.engine.model.view.TextureView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -68,7 +68,7 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     }
 
     @Getter
-    public static final class TextureEntity extends AbstractEntity implements com.venta.engine.model.views.TextureView {
+    public static final class TextureEntity extends AbstractEntity implements com.venta.engine.model.view.TextureView {
         private final int internalID;
         private final String name;
         private final int width;

@@ -1,4 +1,4 @@
-package com.venta.engine.model.views;
+package com.venta.engine.model.view;
 
 import com.venta.engine.enums.TextureType;
 

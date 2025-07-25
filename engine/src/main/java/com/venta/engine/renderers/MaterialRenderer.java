@@ -9,7 +9,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.exceptions.MaterialRenderingException;
 import com.venta.engine.managers.TextureManager;
-import com.venta.engine.model.views.MaterialView;
+import com.venta.engine.model.view.MaterialView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 

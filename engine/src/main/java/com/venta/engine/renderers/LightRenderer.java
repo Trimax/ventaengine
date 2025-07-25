@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL20C.*;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.LightRenderingException;
-import com.venta.engine.model.views.LightView;
+import com.venta.engine.model.view.LightView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

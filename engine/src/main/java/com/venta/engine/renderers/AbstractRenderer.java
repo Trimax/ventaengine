@@ -1,6 +1,6 @@
 package com.venta.engine.renderers;
 
-import com.venta.engine.model.views.AbstractView;
+import com.venta.engine.model.view.AbstractView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

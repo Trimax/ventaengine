@@ -4,7 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.managers.WindowManager;
-import com.venta.engine.model.views.WindowView;
+import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

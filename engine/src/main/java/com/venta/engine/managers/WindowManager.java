@@ -21,7 +21,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.interfaces.VentaInputHandler;
-import com.venta.engine.model.views.WindowView;
+import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -124,7 +124,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Getter
-    public static final class WindowEntity extends AbstractEntity implements com.venta.engine.model.views.WindowView {
+    public static final class WindowEntity extends AbstractEntity implements com.venta.engine.model.view.WindowView {
         private final long internalID;
         private int width;
         private int height;

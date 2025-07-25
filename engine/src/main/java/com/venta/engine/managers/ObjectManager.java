@@ -16,9 +16,9 @@ import org.joml.Vector3f;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.DrawMode;
 import com.venta.engine.model.dto.ObjectDTO;
-import com.venta.engine.model.views.MaterialView;
-import com.venta.engine.model.views.ObjectView;
-import com.venta.engine.model.views.ProgramView;
+import com.venta.engine.model.view.MaterialView;
+import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.ProgramView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -117,7 +117,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     }
 
     @Getter
-    public static final class ObjectEntity extends AbstractEntity implements com.venta.engine.model.views.ObjectView {
+    public static final class ObjectEntity extends AbstractEntity implements com.venta.engine.model.view.ObjectView {
         private final String name;
 
         private final int verticesCount;

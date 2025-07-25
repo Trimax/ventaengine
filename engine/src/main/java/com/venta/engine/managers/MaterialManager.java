@@ -8,8 +8,8 @@ import org.joml.Vector2f;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.model.dto.MaterialDTO;
-import com.venta.engine.model.views.MaterialView;
-import com.venta.engine.model.views.TextureView;
+import com.venta.engine.model.view.MaterialView;
+import com.venta.engine.model.view.TextureView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,7 +42,7 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
 
     @Getter
     public static final class MaterialEntity extends AbstractEntity implements
-            com.venta.engine.model.views.MaterialView {
+            com.venta.engine.model.view.MaterialView {
         private final Map<TextureType, TextureView> textures = new HashMap<>();
         private final String name;
         private final Float shininess;

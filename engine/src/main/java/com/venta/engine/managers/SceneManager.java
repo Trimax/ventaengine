@@ -7,9 +7,9 @@ import org.joml.Vector4f;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.definitions.Definitions;
-import com.venta.engine.model.views.LightView;
-import com.venta.engine.model.views.ObjectView;
-import com.venta.engine.model.views.SceneView;
+import com.venta.engine.model.view.LightView;
+import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +37,7 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     }
 
     @Getter
-    public static final class SceneEntity extends AbstractEntity implements com.venta.engine.model.views.SceneView {
+    public static final class SceneEntity extends AbstractEntity implements com.venta.engine.model.view.SceneView {
         private final String name;
         private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
         private final List<ObjectManager.ObjectEntity> objects = new ArrayList<>();

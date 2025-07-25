@@ -11,7 +11,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ShaderCompileException;
 import com.venta.engine.exceptions.UnknownShaderTypeException;
 import com.venta.engine.model.dto.ShaderDTO;
-import com.venta.engine.model.views.ShaderView;
+import com.venta.engine.model.view.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -56,7 +56,7 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     }
 
     @Getter
-    public static final class ShaderEntity extends AbstractEntity implements com.venta.engine.model.views.ShaderView {
+    public static final class ShaderEntity extends AbstractEntity implements com.venta.engine.model.view.ShaderView {
         private final int internalID;
         private final Type type;
         private final String name;

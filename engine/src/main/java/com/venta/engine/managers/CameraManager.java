@@ -4,7 +4,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.views.CameraView;
+import com.venta.engine.model.view.CameraView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +33,7 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     }
 
     @Getter
-    public static final class CameraEntity extends AbstractEntity implements com.venta.engine.model.views.CameraView {
+    public static final class CameraEntity extends AbstractEntity implements com.venta.engine.model.view.CameraView {
         private static final Vector3f worldUp = new Vector3f(0, 1, 0);
 
         private final String name;

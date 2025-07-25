@@ -12,8 +12,8 @@ import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.interfaces.VentaInputHandler;
-import com.venta.engine.model.views.LightView;
-import com.venta.engine.model.views.ObjectView;
+import com.venta.engine.model.view.LightView;
+import com.venta.engine.model.view.ObjectView;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

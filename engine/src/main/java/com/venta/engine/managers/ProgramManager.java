@@ -14,9 +14,9 @@ import com.venta.engine.definitions.Definitions;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.model.dto.ProgramDTO;
-import com.venta.engine.model.views.AbstractView;
-import com.venta.engine.model.views.ProgramView;
-import com.venta.engine.model.views.ShaderView;
+import com.venta.engine.model.view.AbstractView;
+import com.venta.engine.model.view.ProgramView;
+import com.venta.engine.model.view.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -117,7 +117,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
 
     @Getter
     public static final class ProgramEntity extends AbstractManager.AbstractEntity implements
-            com.venta.engine.model.views.ProgramView {
+            com.venta.engine.model.view.ProgramView {
         private final int internalID;
         private final String name;
 

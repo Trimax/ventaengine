@@ -12,7 +12,7 @@ import com.venta.engine.adapters.TextureTypeAdapter;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.exceptions.ResourceNotFoundException;
-import com.venta.engine.model.views.ResourceView;
+import com.venta.engine.model.view.ResourceView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -64,7 +64,7 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     @Getter
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class ResourceEntity extends AbstractEntity implements
-            com.venta.engine.model.views.ResourceView {}
+            com.venta.engine.model.view.ResourceView {}
 
     @Component
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
