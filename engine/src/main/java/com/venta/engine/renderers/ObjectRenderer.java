@@ -29,7 +29,7 @@ import lombok.SneakyThrows;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, ObjectView, ObjectRenderer.ObjectRenderContext> {
+final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, ObjectView, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
     private final MaterialRenderer materialRenderer;
     private final LightRenderer lightRenderer;
 
@@ -56,18 +56,18 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         glBindVertexArray(object.entity.getVertexArrayObjectID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 
-        glUniform3f(programView.entity.getUniformID(ShaderUniform.CameraPosition), context.getCameraPosition().x(),
-                context.getCameraPosition().y(), context.getCameraPosition().z());
+        glUniform3f(programView.entity.getUniformID(ShaderUniform.CameraPosition), context.getParent().getCameraPosition().x(),
+                context.getParent().getCameraPosition().y(), context.getParent().getCameraPosition().z());
 
         glUniform4f(programView.entity.getUniformID(ShaderUniform.AmbientLight), context.getAmbientLight().x(),
                 context.getAmbientLight().y(), context.getAmbientLight().z(), context.getAmbientLight().w());
 
         glUniformMatrix4fv(programView.entity.getUniformID(ShaderUniform.MatrixViewProjection), false,
-                context.getViewProjectionMatrixBuffer());
+                context.getParent().getViewProjectionMatrixBuffer());
         glUniformMatrix3fv(programView.entity.getUniformID(ShaderUniform.MatrixNormal), false, context.getNormalMatrixBuffer());
         glUniformMatrix4fv(programView.entity.getUniformID(ShaderUniform.MatrixModel), false, context.getModelMatrixBuffer());
 
-        try (final var _ = materialRenderer.getContext()
+        try (final var _ = materialRenderer.withContext(getContext())
                 .withTextureDiffuse(programView.entity.getUniformID(ShaderUniform.TextureDiffuse),
                         programView.entity.getUniformID(ShaderUniform.UseTextureDiffuseFlag))
                 .withTextureHeight(programView.entity.getUniformID(ShaderUniform.TextureHeight),
@@ -86,7 +86,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         glUniform1i(programView.entity.getUniformID(ShaderUniform.UseLighting), object.isApplyLighting() ? 1 : 0);
 
         for (int lightID = 0; lightID < lights.size(); lightID++) {
-            try (final var _ = lightRenderer.getContext()
+            try (final var _ = lightRenderer.withContext(getContext())
                     .withType(programView.entity.getUniformID(ShaderLightUniform.Type.getUniformName(lightID)))
                     .withColor(programView.entity.getUniformID(ShaderLightUniform.Color.getUniformName(lightID)))
                     .withEnabled(programView.entity.getUniformID(ShaderLightUniform.Enabled.getUniformName(lightID)))
@@ -116,8 +116,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
     }
 
     @Getter(AccessLevel.PACKAGE)
-    static final class ObjectRenderContext extends AbstractRenderContext {
-        private final FloatBuffer viewProjectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
+    static final class ObjectRenderContext extends AbstractRenderContext<SceneRenderer.SceneRenderContext> {
         private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final FloatBuffer normalMatrixBuffer = MemoryUtil.memAllocFloat(9);
         private final Matrix3f normalMatrix = new Matrix3f();
@@ -125,13 +124,6 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
 
         private final List<LightView> lights = new ArrayList<>();
         private final Vector4f ambientLight = new Vector4f();
-
-        private final Vector3f cameraPosition = new Vector3f();
-
-        public ObjectRenderContext withViewProjectionMatrix(final FloatBuffer buffer) {
-            this.viewProjectionMatrixBuffer.put(buffer.rewind()).flip();
-            return this;
-        }
 
         public ObjectRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
             modelMatrix.identity()
@@ -153,14 +145,8 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
             return this;
         }
 
-        public ObjectRenderContext withCameraPosition(final Vector3f cameraPosition) {
-            this.cameraPosition.set(cameraPosition);
-            return this;
-        }
-
         @Override
         public void close() {
-            viewProjectionMatrixBuffer.clear();
             normalMatrixBuffer.clear();
             modelMatrixBuffer.clear();
             ambientLight.set(0.f);
@@ -169,7 +155,6 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
 
         @Override
         public void destroy() {
-            MemoryUtil.memFree(viewProjectionMatrixBuffer);
             MemoryUtil.memFree(normalMatrixBuffer);
             MemoryUtil.memFree(modelMatrixBuffer);
         }

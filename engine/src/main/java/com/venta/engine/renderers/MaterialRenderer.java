@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEntity, MaterialView, MaterialRenderer.MaterialRenderContext> {
+final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEntity, MaterialView, MaterialRenderer.MaterialRenderContext, ObjectRenderer.ObjectRenderContext> {
     @Override
     protected MaterialRenderContext createContext() {
         return new MaterialRenderContext();
@@ -52,7 +52,7 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
         glUniform1i(useTextureUniformID, 1);
     }
 
-    static final class MaterialRenderContext extends AbstractRenderContext {
+    static final class MaterialRenderContext extends AbstractRenderContext<ObjectRenderer.ObjectRenderContext> {
         private int useTextureAmbientOcclusionUniformID;
         private int useTextureRoughnessUniformID;
         private int useTextureDiffuseUniformID;
