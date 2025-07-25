@@ -1,16 +1,21 @@
 package com.venta.engine.managers;
 
-import com.venta.engine.annotations.Component;
-import com.venta.engine.model.core.Couple;
-import com.venta.engine.model.view.CameraView;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import com.venta.engine.annotations.Component;
+import com.venta.engine.model.view.CameraView;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CameraManager extends AbstractManager<CameraManager.CameraEntity, CameraView> {
     @Getter
     @Setter(onParam_ = @__(@NonNull))
@@ -23,17 +28,12 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     }
 
     @Override
-    protected CameraView createView(final String id, final CameraEntity entity) {
-        return new CameraView(id, entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<CameraEntity, CameraView> camera) {
-        log.info("Deleting camera {}", camera.entity().getName());
+    protected void destroy(final CameraEntity camera) {
+        log.info("Deleting camera {}", camera.getName());
     }
 
     @Getter
-    public static final class CameraEntity extends AbstractEntity {
+    public static final class CameraEntity extends AbstractEntity implements com.venta.engine.model.view.CameraView {
         private static final Vector3f worldUp = new Vector3f(0, 1, 0);
 
         private final String name;
@@ -52,8 +52,6 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
         private float roll;  // around Z
 
         CameraEntity(@NonNull final String name, final Vector3f position, final Vector3f target) {
-            super(0L);
-
             this.name = name;
             this.position = new Vector3f(position);
             this.front = new Vector3f(target).sub(position).normalize();
@@ -118,6 +116,7 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
             return new Vector3f(front);
         }
 
+        @Override
         public void setPosition(final Vector3f newPosition) {
             this.position.set(newPosition);
         }
@@ -129,6 +128,7 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
             updateVectors();
         }
 
+        @Override
         public void lookAt(final Vector3f target) {
             final var direction = new Vector3f(target).sub(position).normalize();
 
@@ -138,4 +138,8 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
             updateVectors();
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class CameraAccessor extends AbstractAccessor {}
 }

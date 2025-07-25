@@ -21,10 +21,10 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.interfaces.VentaInputHandler;
-import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WindowManager extends AbstractManager<WindowManager.WindowEntity, WindowView> {
     @Getter
     private WindowView current;
@@ -77,7 +77,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     public void setCurrent(@NonNull final WindowView window) {
         this.current = window;
-        glfwMakeContextCurrent(get(window.getId()).entity().getId());
+        glfwMakeContextCurrent(get(window.getID()).getInternalID());
     }
 
     //TODO: Reimplement it more clean (using ResourceManager)
@@ -116,20 +116,16 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Override
-    protected WindowView createView(final String id, final WindowEntity entity) {
-        return new WindowView(id, entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<WindowEntity, WindowView> window) {
-        log.info("Deleting window {}", window.entity().getTitle());
-        window.entity().sizeCallback.close();
-        window.entity().keyCallback.close();
-        glfwDestroyWindow(window.entity().getId());
+    protected void destroy(final WindowEntity window) {
+        log.info("Deleting window {}", window.getTitle());
+        window.sizeCallback.close();
+        window.keyCallback.close();
+        glfwDestroyWindow(window.getInternalID());
     }
 
     @Getter
-    public static final class WindowEntity extends AbstractEntity {
+    public static final class WindowEntity extends AbstractEntity implements com.venta.engine.model.view.WindowView {
+        private final long internalID;
         private int width;
         private int height;
         private final String title;
@@ -178,9 +174,8 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             }
         };
 
-        WindowEntity(final long id, final int width, final int height, @NonNull final String title, final VentaInputHandler inputHandler) {
-            super(id);
-
+        WindowEntity(final long internalID, final int width, final int height, @NonNull final String title, final VentaInputHandler inputHandler) {
+            this.internalID = internalID;
             this.width = width;
             this.height = height;
             this.title = title;
@@ -190,4 +185,8 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f);
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class WindowAccessor extends AbstractAccessor {}
 }

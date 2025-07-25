@@ -3,38 +3,22 @@ package com.venta.engine.model.view;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import com.venta.engine.managers.LightManager;
-import com.venta.engine.renderers.AbstractRenderer;
-import lombok.Getter;
+public interface LightView extends AbstractView {
+    Vector3f getPosition();
 
-public final class LightView extends AbstractRenderer.AbstractView<LightManager.LightEntity> {
-    @Getter
-    private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
+    Vector3f getDirection();
 
-    @Getter
-    private final Vector3f direction = new Vector3f(0.f, 0.f, 0.f);
+    Vector4f getColor();
 
-    @Getter
-    private final Vector4f color = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+    Attenuation getAttenuation();
 
-    @Getter
-    private final Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
+    void setPosition(final Vector3f position);
 
-    public LightView(final String id, final LightManager.LightEntity entity) {
-        super(id, entity);
-    }
+    void setDirection(final Vector3f position);
 
-    public void setPosition(final Vector3f position) {
-        this.position.set(position);
-    }
+    void setColor(final Vector4f color);
 
-    public void setDirection(final Vector3f position) {
-        this.direction.set(position);
-    }
+    void setAttenuation(final Attenuation attenuation);
 
-    public void setColor(final Vector4f color) {
-        this.color.set(color);
-    }
-
-    public record Attenuation(float constant, float linear, float quadratic) {}
+    record Attenuation(float constant, float linear, float quadratic) {}
 }

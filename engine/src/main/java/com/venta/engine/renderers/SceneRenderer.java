@@ -7,19 +7,18 @@ import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.managers.SceneManager;
-import com.venta.engine.model.view.CameraView;
+import com.venta.engine.managers.CameraManager;
+import com.venta.engine.managers.WindowManager;
 import com.venta.engine.model.view.ObjectView;
 import com.venta.engine.model.view.SceneView;
-import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEntity, SceneView, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
     private final ObjectRenderer objectRenderer;
 
     @Override
@@ -47,10 +46,10 @@ public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEnti
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
         private final Vector3f cameraPosition = new Vector3f();
 
-        public SceneRenderContext with(final WindowView window, final CameraView camera) {
-            window.entity.getProjectionMatrix().mul(camera.entity.getViewMatrix(), viewProjectionMatrix);
+        public SceneRenderContext with(final WindowManager.WindowEntity window, final CameraManager.CameraEntity camera) {
+            window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
-            this.cameraPosition.set(camera.entity.getPosition());
+            this.cameraPosition.set(camera.getPosition());
             return this;
         }
 

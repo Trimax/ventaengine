@@ -2,21 +2,8 @@ package com.venta.engine.model.view;
 
 import org.joml.Vector3f;
 
-import com.venta.engine.managers.CameraManager;
-import com.venta.engine.renderers.AbstractRenderer;
-import lombok.Getter;
+public interface CameraView extends AbstractView {
+    void setPosition(final Vector3f position);
 
-@Getter
-public final class CameraView extends AbstractRenderer.AbstractView<CameraManager.CameraEntity> {
-    public CameraView(final String id, final CameraManager.CameraEntity entity) {
-        super(id, entity);
-    }
-
-    public void setPosition(final Vector3f position) {
-        this.entity.setPosition(position);
-    }
-
-    public void lookAt(final Vector3f lookAt) {
-        this.entity.lookAt(lookAt);
-    }
+    void lookAt(final Vector3f position);
 }

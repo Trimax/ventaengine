@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.Venta;
+import com.venta.engine.managers.CameraManager;
+import com.venta.engine.managers.WindowManager;
 import com.venta.engine.renderers.SceneRenderer;
 import com.venta.engine.renderers.WindowRenderer;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public final class Engine implements Runnable {
+    private final WindowManager.WindowAccessor windowAccessor;
+    private final CameraManager.CameraAccessor cameraAccessor;
     private final WindowRenderer windowRenderer;
     private final SceneRenderer sceneRenderer;
     private final Context context;
@@ -45,7 +49,7 @@ public final class Engine implements Runnable {
 
         origin.setScale(new Vector3f(100000f));
         origin.setDrawMode(DrawMode.Edge);
-        origin.setApplyLighting(false);
+        origin.setLighting(false);
         origin.setProgram(context.getProgramManager().load("simple"));
         origin.setVisible(venta.createRenderConfiguration().isOriginVisible());
         context.getSceneManager().getCurrent().add(origin);
@@ -56,12 +60,17 @@ public final class Engine implements Runnable {
         glEnable(GL_DEPTH_TEST);
 
         final var fpsCounter = new FPSCounter();
-        final var window = context.getWindowManager().getCurrent();
-        while (!windowRenderer.shouldClose(window)) {
+
+        boolean windowClosed = false;
+        while (!windowClosed) {
+            final var window = windowAccessor.get(context.getWindowManager().getCurrent());
+            windowClosed = glfwWindowShouldClose(window.getInternalID());
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            final var camera = cameraAccessor.get(context.getCameraManager().getCurrent());
             try (final var _ = sceneRenderer.withContext(null)
-                    .with(context.getWindowManager().getCurrent(), context.getCameraManager().getCurrent())) {
+                    .with(window, camera)) {
                 sceneRenderer.render(context.getSceneManager().getCurrent());
             }
 

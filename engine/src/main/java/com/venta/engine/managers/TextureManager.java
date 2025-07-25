@@ -8,17 +8,17 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.TextureView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureManager extends AbstractManager<TextureManager.TextureEntity, TextureView> {
     private final ResourceManager resourceManager;
 
@@ -62,31 +62,31 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     }
 
     @Override
-    protected TextureView createView(final String id, final TextureEntity entity) {
-        return new TextureView(id, entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<TextureEntity, TextureView> object) {
-        log.info("Deleting texture {}", object.entity().getName());
-        glDeleteTextures(object.entity().getIdAsInteger());
+    protected void destroy(final TextureEntity texture) {
+        log.info("Deleting texture {}", texture.getName());
+        glDeleteTextures(texture.getInternalID());
     }
 
     @Getter
-    public static final class TextureEntity extends AbstractEntity {
+    public static final class TextureEntity extends AbstractEntity implements com.venta.engine.model.view.TextureView {
+        private final int internalID;
         private final String name;
         private final int width;
         private final int height;
 
-        TextureEntity(final long id,
+        TextureEntity(final int internalID,
                 @NonNull final String name,
                 final int width,
                 final int height) {
-            super(id);
 
+            this.internalID = internalID;
             this.name = name;
             this.width = width;
             this.height = height;
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class TextureAccessor extends AbstractAccessor {}
 }
