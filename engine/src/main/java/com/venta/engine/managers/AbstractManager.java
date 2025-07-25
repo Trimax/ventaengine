@@ -51,7 +51,7 @@ public abstract class AbstractManager<E extends V, V extends AbstractView> {
             return get(view.getID());
         }
 
-        public void cleanup() {
+        public final void cleanup() {
             AbstractManager.this.cleanup();
         }
     }
