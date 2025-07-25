@@ -18,6 +18,7 @@ import com.venta.engine.model.view.ObjectView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -150,4 +151,8 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             this.edgesBufferID = edgesBufferID;
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class ObjectAccessor extends AbstractAccessor {}
 }

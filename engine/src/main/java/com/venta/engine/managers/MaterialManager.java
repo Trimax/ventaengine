@@ -9,6 +9,7 @@ import com.venta.engine.model.view.MaterialView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,4 +63,8 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
             this(dto.name(), dto.shininess(), dto.opacity(), dto.tiling(), dto.offset());
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class MaterialAccessor extends AbstractAccessor {}
 }

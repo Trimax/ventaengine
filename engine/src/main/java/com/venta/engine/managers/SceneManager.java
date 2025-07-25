@@ -44,4 +44,8 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
             this.name = name;
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class SceneAccessor extends AbstractAccessor {}
 }

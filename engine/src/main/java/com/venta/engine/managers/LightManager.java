@@ -7,6 +7,7 @@ import com.venta.engine.model.view.LightView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,4 +54,8 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
             this(dto.name());
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class LightAccessor extends AbstractAccessor {}
 }

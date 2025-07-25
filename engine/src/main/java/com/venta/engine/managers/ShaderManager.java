@@ -9,6 +9,7 @@ import com.venta.engine.model.view.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.opengl.GL20C;
@@ -99,4 +100,8 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
             }
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class ShaderAccessor extends AbstractAccessor {}
 }

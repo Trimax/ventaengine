@@ -25,6 +25,7 @@ import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -190,4 +191,8 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f);
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class WindowAccessor extends AbstractAccessor {}
 }

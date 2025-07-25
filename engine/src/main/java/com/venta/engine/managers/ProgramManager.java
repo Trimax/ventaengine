@@ -21,6 +21,7 @@ import com.venta.engine.renderers.AbstractRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
@@ -142,4 +143,8 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
             return getUniformID(uniform.getUniformName());
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class ProgramAccessor extends AbstractAccessor {}
 }

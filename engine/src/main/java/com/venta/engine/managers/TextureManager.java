@@ -13,6 +13,7 @@ import com.venta.engine.model.view.TextureView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,4 +90,8 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
             this.height = height;
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class TextureAccessor extends AbstractAccessor {}
 }

@@ -17,6 +17,7 @@ import com.venta.engine.model.view.ResourceView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -72,4 +73,8 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
             super(id);
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class ResourceAccessor extends AbstractAccessor {}
 }

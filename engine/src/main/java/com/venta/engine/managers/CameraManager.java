@@ -138,4 +138,8 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
             updateVectors();
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class CameraAccessor extends AbstractAccessor {}
 }

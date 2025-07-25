@@ -53,4 +53,10 @@ public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, 
             return id.intValue();
         }
     }
+
+    abstract class AbstractAccessor {
+        public final E getByID(final String id) {
+            return values.get(id).entity();
+        }
+    }
 }
