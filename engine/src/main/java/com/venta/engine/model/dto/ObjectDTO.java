@@ -206,7 +206,7 @@ public record ObjectDTO(String type,
             else
                 f = 1.0f / f;
 
-            var tangent = new Vector3f(
+            final var tangent = new Vector3f(
                     f * (deltaV2 * edge1.x() - deltaV1 * edge2.x()),
                     f * (deltaV2 * edge1.y() - deltaV1 * edge2.y()),
                     f * (deltaV2 * edge1.z() - deltaV1 * edge2.z())
@@ -226,31 +226,33 @@ public record ObjectDTO(String type,
 
         final Map<Integer, List<Vector3f>> vertexBitangents = new HashMap<>();
         for (final Facet facet : facets) {
-            Vertex v0 = vertices.get(facet.vertex1());
-            Vertex v1 = vertices.get(facet.vertex2());
-            Vertex v2 = vertices.get(facet.vertex3());
+            final Vertex v0 = vertices.get(facet.vertex1());
+            final Vertex v1 = vertices.get(facet.vertex2());
+            final Vertex v2 = vertices.get(facet.vertex3());
 
-            Vector3f pos1 = v0.position();
-            Vector3f pos2 = v1.position();
-            Vector3f pos3 = v2.position();
+            final Vector3f pos1 = v0.position();
+            final Vector3f pos2 = v1.position();
+            final Vector3f pos3 = v2.position();
 
-            Vector2f uv1 = new Vector2f(v0.textureCoordinates().x(), v0.textureCoordinates().y());
-            Vector2f uv2 = new Vector2f(v1.textureCoordinates().x(), v1.textureCoordinates().y());
-            Vector2f uv3 = new Vector2f(v2.textureCoordinates().x(), v2.textureCoordinates().y());
+            final Vector2f uv1 = new Vector2f(v0.textureCoordinates().x(), v0.textureCoordinates().y());
+            final Vector2f uv2 = new Vector2f(v1.textureCoordinates().x(), v1.textureCoordinates().y());
+            final Vector2f uv3 = new Vector2f(v2.textureCoordinates().x(), v2.textureCoordinates().y());
 
-            Vector3f edge1 = pos2.sub(pos1, new Vector3f());
-            Vector3f edge2 = pos3.sub(pos1, new Vector3f());
+            final Vector3f edge1 = pos2.sub(pos1, new Vector3f());
+            final Vector3f edge2 = pos3.sub(pos1, new Vector3f());
 
-            float deltaU1 = uv2.x - uv1.x;
-            float deltaV1 = uv2.y - uv1.y;
-            float deltaU2 = uv3.x - uv1.x;
-            float deltaV2 = uv3.y - uv1.y;
+            final float deltaU1 = uv2.x - uv1.x;
+            final float deltaV1 = uv2.y - uv1.y;
+            final float deltaU2 = uv3.x - uv1.x;
+            final float deltaV2 = uv3.y - uv1.y;
 
             float f = deltaU1 * deltaV2 - deltaU2 * deltaV1;
-            if (f == 0.0f) f = 1.0f;
-            else f = 1.0f / f;
+            if (f == 0.0f)
+                f = 1.0f;
+            else
+                f = 1.0f / f;
 
-            Vector3f bitangent = new Vector3f(
+            final Vector3f bitangent = new Vector3f(
                     f * (-deltaU2 * edge1.x() + deltaU1 * edge2.x()),
                     f * (-deltaU2 * edge1.y() + deltaU1 * edge2.y()),
                     f * (-deltaU2 * edge1.z() + deltaU1 * edge2.z())
@@ -276,20 +278,6 @@ public record ObjectDTO(String type,
             vertexNormals.put(vertexID, new ArrayList<>());
 
         vertexNormals.get(vertexID).add(normal);
-    }
-
-    private void addWeighted(Map<Integer, List<Vector3f>> map, Vector3f normal, int vertexID, float weight) {
-        if (!map.containsKey(vertexID))
-            map.put(vertexID, new ArrayList<>());
-
-        map.get(vertexID).add(new Vector3f(normal).mul(weight));
-    }
-
-    private float computeAngleAtVertex(Vector3f v0, Vector3f v1, Vector3f v2) {
-        Vector3f edge1 = v1.sub(v0, new Vector3f()).normalize();
-        Vector3f edge2 = v2.sub(v0, new Vector3f()).normalize();
-        float dot = edge1.dot(edge2);
-        return (float) Math.acos(Math.max(-1.0f, Math.min(1.0f, dot)));
     }
 
     public record Vertex(Vector3f position,
