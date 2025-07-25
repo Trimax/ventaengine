@@ -19,7 +19,7 @@ import lombok.SneakyThrows;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEntity, SceneView, SceneRenderer.SceneRenderContext> {
+public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEntity, SceneView, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
     private final ObjectRenderer objectRenderer;
 
     @Override
@@ -34,17 +34,15 @@ public final class SceneRenderer extends AbstractRenderer<SceneManager.SceneEnti
             return;
 
         for (final ObjectView object : scene.getObjects())
-            try (final var _ = objectRenderer.getContext()
-                    .withViewProjectionMatrix(getContext().viewProjectionMatrixBuffer)
+            try (final var _ = objectRenderer.withContext(getContext())
                     .withModelMatrix(object.getPosition(), object.getRotation(), object.getScale())
-                    .withCameraPosition(getContext().getCameraPosition())
                     .withScene(scene)) {
                 objectRenderer.render(object);
             }
     }
 
     @Getter(AccessLevel.PACKAGE)
-    public static final class SceneRenderContext extends AbstractRenderContext {
+    public static final class SceneRenderContext extends AbstractRenderContext<SceneRenderContext> {
         private final FloatBuffer viewProjectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
         private final Vector3f cameraPosition = new Vector3f();

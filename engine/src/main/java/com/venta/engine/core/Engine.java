@@ -60,12 +60,12 @@ public final class Engine implements Runnable {
         while (!windowRenderer.shouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            try (final var _ = sceneRenderer.getContext()
+            try (final var _ = sceneRenderer.withContext(null)
                     .with(context.getWindowManager().getCurrent(), context.getCameraManager().getCurrent())) {
                 sceneRenderer.render(context.getSceneManager().getCurrent());
             }
 
-            try (final var _ = windowRenderer.getContext()
+            try (final var _ = windowRenderer.withContext(null)
                     .withFrameRate((int) fpsCounter.getCurrentFps())) {
                 windowRenderer.render(window);
             }

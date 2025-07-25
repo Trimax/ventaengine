@@ -9,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 @Component
-public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowEntity, WindowView, WindowRenderer.WindowRenderContext> {
+public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowEntity, WindowView, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
     private long lastUpdated = 0;
 
     @Override
@@ -33,7 +33,7 @@ public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowE
     }
 
     @Getter(AccessLevel.PACKAGE)
-    public static final class WindowRenderContext extends AbstractRenderContext {
+    public static final class WindowRenderContext extends AbstractRenderContext<WindowRenderContext> {
         private int frameRate;
 
         public WindowRenderContext withFrameRate(final int frameRate) {

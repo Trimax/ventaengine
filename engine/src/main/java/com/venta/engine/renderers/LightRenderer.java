@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-final class LightRenderer extends AbstractRenderer<LightManager.LightEntity, LightView, LightRenderer.LightRenderContext> {
+final class LightRenderer extends AbstractRenderer<LightManager.LightEntity, LightView, LightRenderer.LightRenderContext, ObjectRenderer.ObjectRenderContext> {
 
     @Override
     protected LightRenderContext createContext() {
@@ -44,7 +44,7 @@ final class LightRenderer extends AbstractRenderer<LightManager.LightEntity, Lig
 
     @Slf4j
     @Getter(AccessLevel.PACKAGE)
-    static final class LightRenderContext extends AbstractRenderContext {
+    static final class LightRenderContext extends AbstractRenderContext<ObjectRenderer.ObjectRenderContext> {
         private int typeUniformID;
         private int enabledUniformID;
         private int positionUniformID;
