@@ -71,7 +71,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             memFree(indexBuffer);
         }
 
-        final int stride = Definitions.VERTEX_FLOATS_COUNT * Float.BYTES;
+        final int stride = Definitions.COUNT_FLOATS_PER_VERTEX * Float.BYTES;
 
         // layout(location = 0) -> position
         glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
@@ -81,20 +81,20 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         glVertexAttribPointer(1, 3, GL_FLOAT, false, stride, 3 * Float.BYTES);
         glEnableVertexAttribArray(1);
 
-        // layout(location = 2) -> texture coordinates
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, stride, 6 * Float.BYTES);
+        // layout(location = 2) -> tangent
+        glVertexAttribPointer(2, 3, GL_FLOAT, false, stride, 6 * Float.BYTES);
         glEnableVertexAttribArray(2);
 
-        // layout(location = 3) -> color
-        glVertexAttribPointer(3, 4, GL_FLOAT, false, stride, 8 * Float.BYTES);
+        // layout(location = 3) -> bitangent
+        glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 9 * Float.BYTES);
         glEnableVertexAttribArray(3);
 
-        // layout(location = 4) -> tangent
-        glVertexAttribPointer(4, 3, GL_FLOAT, false, stride, 12 * Float.BYTES);
+        // layout(location = 4) -> texture coordinates
+        glVertexAttribPointer(4, 2, GL_FLOAT, false, stride, 12 * Float.BYTES);
         glEnableVertexAttribArray(4);
 
-        // layout(location = 5) -> bitangent
-        glVertexAttribPointer(5, 3, GL_FLOAT, false, stride, 15 * Float.BYTES);
+        // layout(location = 5) -> color
+        glVertexAttribPointer(5, 4, GL_FLOAT, false, stride, 14 * Float.BYTES);
         glEnableVertexAttribArray(5);
 
         glBindVertexArray(0);
