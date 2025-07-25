@@ -7,12 +7,11 @@
    3. ~~DIFFUSE~~, 
    4. ~~HEIGHT~~, 
    5. METALLIC, 
-   6. NORMAL, 
+   6. ~~NORMAL~~, 
    7. ROUGHNESS;
-3. Normal mapping
-4. Environment: box/sphere (add box to the scene)
-5. Emitters (extend the scene with a list of emitters)
-6. Resource archive manager and also, pack & browse tool (!)
+3. Environment: box/sphere (add box to the scene)
+4. Emitters (extend the scene with a list of emitters)
+5. Resource archive manager and also, pack & browse tool (!)
 
 ## Important
 On macOS start with VM argument: `-XstartOnFirstThread`

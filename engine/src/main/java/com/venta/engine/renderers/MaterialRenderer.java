@@ -33,6 +33,7 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
         setTexture(TextureType.Diffuse, material, context.useTextureDiffuseUniformID, context.textureDiffuseUniformID);
         setTexture(TextureType.Height, material, context.useTextureHeightUniformID, context.textureHeightUniformID);
         setTexture(TextureType.Normal, material, context.useTextureNormalUniformID, context.textureNormalUniformID);
+        setTexture(TextureType.AmbientOcclusion, material, context.useTextureAmbientOcclusionUniformID, context.textureAmbientOcclusionUniformID);
     }
 
     private void setTexture(final TextureType type, final MaterialView material, final int useTextureUniformID, final int textureUniformID) {
@@ -51,29 +52,37 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
     }
 
     static final class MaterialRenderContext extends AbstractRenderContext {
+        private int useTextureAmbientOcclusionUniformID;
         private int useTextureDiffuseUniformID;
         private int useTextureHeightUniformID;
         private int useTextureNormalUniformID;
 
+        private int textureAmbientOcclusionUniformID;
         private int textureDiffuseUniformID;
         private int textureHeightUniformID;
         private int textureNormalUniformID;
 
-        public MaterialRenderContext withTextureDiffuse(final int textureDiffuseUniformID, final int useTextureDiffuseUniformID) {
-            this.textureDiffuseUniformID = textureDiffuseUniformID;
-            this.useTextureDiffuseUniformID = useTextureDiffuseUniformID;
+        public MaterialRenderContext withTextureDiffuse(final int textureUniformID, final int useTextureUniformID) {
+            this.useTextureDiffuseUniformID = useTextureUniformID;
+            this.textureDiffuseUniformID = textureUniformID;
             return this;
         }
 
-        public MaterialRenderContext withTextureHeight(final int textureHeightUniformID, final int useTextureHeightUniformID) {
+        public MaterialRenderContext withTextureHeight(final int textureUniformID, final int useTextureHeightUniformID) {
             this.useTextureHeightUniformID = useTextureHeightUniformID;
-            this.textureHeightUniformID = textureHeightUniformID;
+            this.textureHeightUniformID = textureUniformID;
             return this;
         }
 
-        public MaterialRenderContext withTextureNormal(final int textureNormalUniformID, final int useTextureNormalUniformID) {
-            this.useTextureNormalUniformID = useTextureNormalUniformID;
-            this.textureNormalUniformID = textureNormalUniformID;
+        public MaterialRenderContext withTextureNormal(final int textureUniformID, final int useTextureUniformID) {
+            this.useTextureNormalUniformID = useTextureUniformID;
+            this.textureNormalUniformID = textureUniformID;
+            return this;
+        }
+
+        public MaterialRenderContext withTextureAmbientOcclusion(final int textureUniformID, final int useTextureUniformID) {
+            this.useTextureAmbientOcclusionUniformID = useTextureUniformID;
+            this.textureAmbientOcclusionUniformID = textureUniformID;
             return this;
         }
 
