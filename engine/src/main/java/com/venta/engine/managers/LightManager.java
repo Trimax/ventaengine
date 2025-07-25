@@ -45,8 +45,6 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
         private final String name;
 
         LightEntity(@NonNull final String name) {
-            super(0L);
-
             this.name = name;
         }
 

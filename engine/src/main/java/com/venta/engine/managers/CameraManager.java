@@ -1,12 +1,18 @@
 package com.venta.engine.managers;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.CameraView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 @Slf4j
 @Component
@@ -52,8 +58,6 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
         private float roll;  // around Z
 
         CameraEntity(@NonNull final String name, final Vector3f position, final Vector3f target) {
-            super(0L);
-
             this.name = name;
             this.position = new Vector3f(position);
             this.front = new Vector3f(target).sub(position).normalize();

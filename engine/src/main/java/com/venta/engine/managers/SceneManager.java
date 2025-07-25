@@ -39,8 +39,6 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
         private final String name;
 
         SceneEntity(@NonNull final String name) {
-            super(0L);
-
             this.name = name;
         }
     }

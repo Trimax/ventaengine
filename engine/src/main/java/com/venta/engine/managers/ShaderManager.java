@@ -1,5 +1,12 @@
 package com.venta.engine.managers;
 
+import static org.lwjgl.opengl.GL20C.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.lwjgl.opengl.GL20C;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ShaderCompileException;
 import com.venta.engine.exceptions.UnknownShaderTypeException;
@@ -12,12 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.opengl.GL20C;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
@@ -57,11 +58,12 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     @Override
     protected void destroy(final Couple<ShaderEntity, ShaderView> shader) {
         log.info("Deleting shader {}", shader.entity().getName());
-        glDeleteShader(shader.entity().getIdAsInteger());
+        glDeleteShader(shader.entity().getInternalID());
     }
 
     @Getter
     public static final class ShaderEntity extends AbstractEntity {
+        private final int internalID;
         private final Type type;
         private final String name;
 
@@ -71,9 +73,8 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
         @Getter(AccessLevel.NONE)
         private final Map<String, Integer> attributes = new HashMap<>();
 
-        ShaderEntity(final long id, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
-            super(id);
-
+        ShaderEntity(final int internalID, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
+            this.internalID = internalID;
             this.type = type;
             this.name = name;
             this.code = code;

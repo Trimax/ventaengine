@@ -68,11 +68,8 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     }
 
     @Getter
-    public static final class ResourceEntity extends AbstractEntity {
-        ResourceEntity(final long id) {
-            super(id);
-        }
-    }
+    @NoArgsConstructor(access = AccessLevel.PACKAGE)
+    public static final class ResourceEntity extends AbstractEntity {}
 
     @Component
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -47,7 +47,7 @@ final class MaterialRenderer extends AbstractRenderer<MaterialManager.MaterialEn
             return;
         }
 
-        glBindTexture(GL_TEXTURE_2D, texture.entity.getIdAsInteger());
+        glBindTexture(GL_TEXTURE_2D, texture.entity.getInternalID());
         glUniform1i(textureUniformID, type.getUnitID());
         glUniform1i(useTextureUniformID, 1);
     }

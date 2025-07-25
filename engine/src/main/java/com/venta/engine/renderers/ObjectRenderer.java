@@ -55,7 +55,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectManager.ObjectEntity, 
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
-        glUseProgram(programView.entity.getIdAsInteger());
+        glUseProgram(programView.entity.getInternalID());
         glBindVertexArray(object.entity.getVertexArrayObjectID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 

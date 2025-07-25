@@ -19,17 +19,17 @@ public final class WindowRenderer extends AbstractRenderer<WindowManager.WindowE
 
     @Override
     public void render(final WindowView window) {
-        glfwSwapBuffers(window.entity.getId());
+        glfwSwapBuffers(window.entity.getInternalID());
 
         final var now = System.currentTimeMillis();
         if (now - lastUpdated >= 1000) {
             lastUpdated = now;
-            glfwSetWindowTitle(window.entity.getId(), window.entity.getTitle() + ": " + getContext().getFrameRate());
+            glfwSetWindowTitle(window.entity.getInternalID(), window.entity.getTitle() + ": " + getContext().getFrameRate());
         }
     }
 
     public boolean shouldClose(final WindowView window) {
-        return glfwWindowShouldClose(window.entity.getId());
+        return glfwWindowShouldClose(window.entity.getInternalID());
     }
 
     @Getter(AccessLevel.PACKAGE)

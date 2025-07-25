@@ -70,21 +70,22 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     @Override
     protected void destroy(final Couple<TextureEntity, TextureView> object) {
         log.info("Deleting texture {}", object.entity().getName());
-        glDeleteTextures(object.entity().getIdAsInteger());
+        glDeleteTextures(object.entity().getInternalID());
     }
 
     @Getter
     public static final class TextureEntity extends AbstractEntity {
+        private final int internalID;
         private final String name;
         private final int width;
         private final int height;
 
-        TextureEntity(final long id,
+        TextureEntity(final int internalID,
                 @NonNull final String name,
                 final int width,
                 final int height) {
-            super(id);
 
+            this.internalID = internalID;
             this.name = name;
             this.width = width;
             this.height = height;

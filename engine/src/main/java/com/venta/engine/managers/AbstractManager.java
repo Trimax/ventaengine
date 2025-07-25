@@ -1,16 +1,15 @@
 package com.venta.engine.managers;
 
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.venta.engine.model.core.Couple;
 import com.venta.engine.renderers.AbstractRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, V extends AbstractRenderer.AbstractView<E>> {
@@ -46,12 +45,7 @@ public abstract class AbstractManager<E extends AbstractManager.AbstractEntity, 
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public abstract static class AbstractEntity {
-        @NonNull
-        private final Long id;
-
-        public final int getIdAsInteger() {
-            return id.intValue();
-        }
+        private final String id = UUID.randomUUID().toString();
     }
 
     abstract class AbstractAccessor {

@@ -78,7 +78,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     public void setCurrent(@NonNull final WindowView window) {
         this.current = window;
-        glfwMakeContextCurrent(get(window.getId()).entity().getId());
+        glfwMakeContextCurrent(get(window.getId()).entity().getInternalID());
     }
 
     //TODO: Reimplement it more clean (using ResourceManager)
@@ -126,11 +126,12 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         log.info("Deleting window {}", window.entity().getTitle());
         window.entity().sizeCallback.close();
         window.entity().keyCallback.close();
-        glfwDestroyWindow(window.entity().getId());
+        glfwDestroyWindow(window.entity().getInternalID());
     }
 
     @Getter
     public static final class WindowEntity extends AbstractEntity {
+        private long internalID;
         private int width;
         private int height;
         private final String title;
@@ -179,9 +180,8 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             }
         };
 
-        WindowEntity(final long id, final int width, final int height, @NonNull final String title, final VentaInputHandler inputHandler) {
-            super(id);
-
+        WindowEntity(final long internalID, final int width, final int height, @NonNull final String title, final VentaInputHandler inputHandler) {
+            this.internalID = internalID;
             this.width = width;
             this.height = height;
             this.title = title;

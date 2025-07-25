@@ -50,8 +50,6 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
         private final Vector2f offset;
 
         MaterialEntity(@NonNull final String name, final Float shininess, final Float opacity, final Vector2f tiling, final Vector2f offset) {
-            super(0L);
-
             this.name = name;
             this.shininess = shininess;
             this.opacity = opacity;

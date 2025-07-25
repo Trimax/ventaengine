@@ -138,8 +138,6 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
                      final int verticesBufferID,
                      final int facetsBufferID,
                      final int edgesBufferID) {
-            super(0L);
-
             this.name = name;
             this.verticesCount = verticesCount;
             this.facetsCount = facetsCount;
