@@ -1,58 +1,43 @@
 package com.venta.engine.model.view;
 
-import com.venta.engine.enums.DrawMode;
-import com.venta.engine.managers.ObjectManager;
-import com.venta.engine.renderers.AbstractRenderer;
-import lombok.Getter;
-import lombok.Setter;
 import org.joml.Vector3f;
 
-@Getter
-public final class ObjectView extends AbstractRenderer.AbstractView<ObjectManager.ObjectEntity> {
-    private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
-    private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
-    private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
+import com.venta.engine.enums.DrawMode;
 
-    @Setter
-    private DrawMode drawMode = DrawMode.Polygon;
+public interface ObjectView extends AbstractView {
+    Vector3f getPosition();
 
-    @Setter
-    private boolean applyLighting = true;
+    Vector3f getRotation();
 
-    @Setter
-    private boolean isVisible = true;
+    Vector3f getScale();
 
-    @Setter
-    private MaterialView material;
+    boolean isVisible();
 
-    @Setter
-    private ProgramView program;
+    DrawMode getDrawMode();
 
-    public ObjectView(final String id, final ObjectManager.ObjectEntity entity) {
-        super(id, entity);
-    }
+    MaterialView getMaterial();
 
-    public void setPosition(final Vector3f position) {
-        this.position.set(position);
-    }
+    ProgramView getProgram();
 
-    public void move(final Vector3f offset) {
-        this.position.add(offset, this.position);
-    }
+    void setPosition(final Vector3f position);
 
-    public void setRotation(final Vector3f rotation) {
-        this.rotation.set(rotation);
-    }
+    void setRotation(final Vector3f rotation);
 
-    public void rotate(final Vector3f angles) {
-        this.rotation.add(angles, this.rotation);
-    }
+    void setScale(final Vector3f scale);
 
-    public void setScale(final Vector3f scale) {
-        this.scale.set(scale);
-    }
+    void move(final Vector3f offset);
 
-    public void scale(final Vector3f factor) {
-        this.scale.add(factor, this.scale);
-    }
+    void rotate(final Vector3f angles);
+
+    void scale(final Vector3f factor);
+
+    void setDrawMode(final DrawMode drawMode);
+
+    void setLighting(final boolean lighting);
+
+    void setVisible(final boolean visible);
+
+    void setMaterial(final MaterialView material);
+
+    void setProgram(final ProgramView program);
 }

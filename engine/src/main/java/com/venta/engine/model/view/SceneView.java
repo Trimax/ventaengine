@@ -1,37 +1,19 @@
 package com.venta.engine.model.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector4f;
 
-import com.venta.engine.definitions.Definitions;
-import com.venta.engine.managers.SceneManager;
-import com.venta.engine.renderers.AbstractRenderer;
-import lombok.Getter;
+public interface SceneView extends AbstractView {
+    Vector4f getAmbientLight();
 
-@Getter
-public final class SceneView extends AbstractRenderer.AbstractView<SceneManager.SceneEntity> {
-    private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
-    private final List<ObjectView> objects = new ArrayList<>();
-    private final List<LightView> lights = new ArrayList<>();
+    void setAmbientLight(final Vector4f ambientLight);
 
-    public SceneView(final String id, final SceneManager.SceneEntity entity) {
-        super(id, entity);
-    }
+    void add(final ObjectView object);
 
-    public void setAmbientLight(final Vector4f ambientLight) {
-        this.ambientLight.set(ambientLight);
-    }
+    void add(final LightView light);
 
-    public void add(final ObjectView object) {
-        if (this.objects.size() >= Definitions.LIGHT_MAX)
-            throw new RuntimeException("Too many lights");
+    List<? extends ObjectView> getObjects();
 
-        this.objects.add(object);
-    }
-
-    public void add(final LightView light) {
-        this.lights.add(light);
-    }
+    List<? extends LightView> getLights();
 }

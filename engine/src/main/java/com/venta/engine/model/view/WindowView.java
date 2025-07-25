@@ -1,12 +1,4 @@
 package com.venta.engine.model.view;
 
-import com.venta.engine.managers.WindowManager;
-import com.venta.engine.renderers.AbstractRenderer;
-import lombok.Getter;
-
-@Getter
-public final class WindowView extends AbstractRenderer.AbstractView<WindowManager.WindowEntity> {
-    public WindowView(final String id, final WindowManager.WindowEntity entity) {
-        super(id, entity);
-    }
+public interface WindowView extends AbstractView {
 }

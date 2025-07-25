@@ -13,21 +13,21 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.definitions.Definitions;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ProgramLinkException;
-import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ProgramDTO;
+import com.venta.engine.model.view.AbstractView;
 import com.venta.engine.model.view.ProgramView;
 import com.venta.engine.model.view.ShaderView;
-import com.venta.engine.renderers.AbstractRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity, ProgramView> {
     private final ResourceManager resourceManager;
     private final ShaderManager shaderManager;
@@ -39,9 +39,9 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
 
         final ProgramEntity program = create(programDTO.name(), StreamEx.of(programDTO.shaders()).map(shaderManager::load).toList());
 
-        glUseProgram(program.getIdAsInteger());
+        glUseProgram(program.getInternalID());
         for (final String uniform : programDTO.uniforms()) {
-            final var uniformLocationID = glGetUniformLocation(program.getIdAsInteger(), uniform);
+            final var uniformLocationID = glGetUniformLocation(program.getInternalID(), uniform);
             program.uniforms.put(uniform, uniformLocationID);
             if (uniformLocationID == -1)
                 log.warn("Uniform '{}' not found in program {}", uniform, program.getName());
@@ -70,11 +70,11 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         for (int i = 0; i < Definitions.LIGHT_MAX; i++) {
             for (final var field : lightFields) {
                 final var uniformName = String.format("lights[%d].%s", i, field);
-                program.uniforms.put(uniformName, glGetUniformLocation(program.getIdAsInteger(), uniformName));
+                program.uniforms.put(uniformName, glGetUniformLocation(program.getInternalID(), uniformName));
             }
         }
 
-        final var lightCountLoc = glGetUniformLocation(program.getIdAsInteger(), "lightCount");
+        final var lightCountLoc = glGetUniformLocation(program.getInternalID(), "lightCount");
         if (lightCountLoc >= 0)
             program.uniforms.put("lightCount", lightCountLoc);
     }
@@ -94,10 +94,9 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         final var id = glCreateProgram();
 
         StreamEx.of(shaders)
-                .map(AbstractRenderer.AbstractView::getId)
+                .map(AbstractView::getID)
                 .map(shaderManager::get)
-                .map(Couple::entity)
-                .map(AbstractEntity::getIdAsInteger)
+                .map(ShaderManager.ShaderEntity::getInternalID)
                 .forEach(shaderID -> glAttachShader(id, shaderID));
         glLinkProgram(id);
         if (glGetProgrami(id, GL_LINK_STATUS) == GL_FALSE) {
@@ -111,26 +110,22 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Override
-    protected ProgramView createView(final String id, final ProgramEntity entity) {
-        return new ProgramView(id, entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<ProgramEntity, ProgramView> program) {
-        log.info("Deleting program {}", program.entity().getName());
-        glDeleteProgram(program.entity().getIdAsInteger());
+    protected void destroy(final ProgramEntity program) {
+        log.info("Deleting program {}", program.getName());
+        glDeleteProgram(program.getInternalID());
     }
 
     @Getter
-    public static final class ProgramEntity extends AbstractManager.AbstractEntity {
+    public static final class ProgramEntity extends AbstractManager.AbstractEntity implements
+            com.venta.engine.model.view.ProgramView {
+        private final int internalID;
         private final String name;
 
         @Getter(AccessLevel.NONE)
         private final Map<String, Integer> uniforms = new HashMap<>();
 
-        ProgramEntity(final long id, @NonNull final String name) {
-            super(id);
-
+        ProgramEntity(final int internalID, @NonNull final String name) {
+            this.internalID = internalID;
             this.name = name;
         }
 
@@ -142,4 +137,8 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
             return getUniformID(uniform.getUniformName());
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class ProgramAccessor extends AbstractAccessor {}
 }

@@ -1,26 +1,27 @@
 package com.venta.engine.managers;
 
+import static org.lwjgl.opengl.GL20C.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.lwjgl.opengl.GL20C;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ShaderCompileException;
 import com.venta.engine.exceptions.UnknownShaderTypeException;
-import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.dto.ShaderDTO;
 import com.venta.engine.model.view.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.opengl.GL20C;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity, ShaderView> {
     private final ResourceManager resourceManager;
 
@@ -49,18 +50,14 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     }
 
     @Override
-    protected ShaderView createView(final String id, final ShaderEntity entity) {
-        return new ShaderView(id, entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<ShaderEntity, ShaderView> shader) {
-        log.info("Deleting shader {}", shader.entity().getName());
-        glDeleteShader(shader.entity().getIdAsInteger());
+    protected void destroy(final ShaderEntity shader) {
+        log.info("Deleting shader {}", shader.getName());
+        glDeleteShader(shader.getInternalID());
     }
 
     @Getter
-    public static final class ShaderEntity extends AbstractEntity {
+    public static final class ShaderEntity extends AbstractEntity implements com.venta.engine.model.view.ShaderView {
+        private final int internalID;
         private final Type type;
         private final String name;
 
@@ -70,14 +67,14 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
         @Getter(AccessLevel.NONE)
         private final Map<String, Integer> attributes = new HashMap<>();
 
-        ShaderEntity(final long id, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
-            super(id);
-
+        ShaderEntity(final int internalID, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
+            this.internalID = internalID;
             this.type = type;
             this.name = name;
             this.code = code;
         }
 
+        //TODO: Possibly remove (together with attributes section in shader definition). And maybe shader defs also not needed
         public int getAttribute(final String name) {
             return attributes.get(name);
         }
@@ -99,4 +96,8 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
             }
         }
     }
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class ShaderAccessor extends AbstractAccessor {}
 }

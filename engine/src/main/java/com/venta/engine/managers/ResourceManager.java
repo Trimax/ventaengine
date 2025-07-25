@@ -12,16 +12,16 @@ import com.venta.engine.adapters.TextureTypeAdapter;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.exceptions.ResourceNotFoundException;
-import com.venta.engine.model.core.Couple;
 import com.venta.engine.model.view.ResourceView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity, ResourceView> {
     private static final Gson parser = new GsonBuilder()
             .registerTypeAdapter(TextureType.class, new TextureTypeAdapter())
@@ -57,19 +57,16 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     }
 
     @Override
-    protected ResourceView createView(final String id, final ResourceEntity entity) {
-        return new ResourceView(id, entity);
-    }
-
-    @Override
-    protected void destroy(final Couple<ResourceEntity, ResourceView> resource) {
-        log.debug("Deleting resource: {}", resource.entity().getId());
+    protected void destroy(final ResourceEntity resource) {
+        log.debug("Deleting resource: {}", resource.getID());
     }
 
     @Getter
-    public static final class ResourceEntity extends AbstractEntity {
-        ResourceEntity(final long id) {
-            super(id);
-        }
-    }
+    @NoArgsConstructor(access = AccessLevel.PACKAGE)
+    public static final class ResourceEntity extends AbstractEntity implements
+            com.venta.engine.model.view.ResourceView {}
+
+    @Component
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public final class ResourceAccessor extends AbstractAccessor {}
 }

@@ -1,16 +1,14 @@
 package com.venta.engine.renderers;
 
-import com.venta.engine.managers.AbstractManager;
+import com.venta.engine.model.view.AbstractView;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity, V extends AbstractRenderer.AbstractView<E>,
-        C extends AbstractRenderer.AbstractRenderContext<P>, P extends AbstractRenderer.AbstractRenderContext<?>> implements AutoCloseable {
+abstract class AbstractRenderer<V extends AbstractView, C extends AbstractRenderer.AbstractRenderContext<P>,
+        P extends AbstractRenderer.AbstractRenderContext<?>> implements AutoCloseable {
     @Getter(AccessLevel.PROTECTED)
     private final C context;
 
@@ -26,16 +24,6 @@ public abstract class AbstractRenderer<E extends AbstractManager.AbstractEntity,
     protected abstract C createContext();
 
     abstract void render(final V view);
-
-    @AllArgsConstructor
-    public abstract static class AbstractView<E extends AbstractManager.AbstractEntity> {
-        @Getter
-        @NonNull
-        private final String id;
-
-        @NonNull
-        protected final E entity;
-    }
 
     @Slf4j
     @NoArgsConstructor
