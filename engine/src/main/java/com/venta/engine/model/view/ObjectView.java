@@ -13,7 +13,7 @@ public interface ObjectView extends AbstractView {
 
     boolean isVisible();
 
-    boolean isApplyLighting();
+    boolean isLit();
 
     boolean hasProgram();
 
