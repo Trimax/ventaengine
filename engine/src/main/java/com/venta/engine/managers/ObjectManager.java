@@ -134,13 +134,10 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
 
         private DrawMode drawMode = DrawMode.Polygon;
-
-        private boolean applyLighting = true;
-
         private boolean isVisible = true;
+        private boolean isLit = true;
 
         private MaterialManager.MaterialEntity material;
-
         private ProgramManager.ProgramEntity program;
 
         ObjectEntity(@NonNull final String name,
@@ -204,7 +201,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         @Override
         public void setLighting(final boolean lighting) {
-            this.applyLighting = lighting;
+            this.isLit = lighting;
         }
 
         @Override

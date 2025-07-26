@@ -16,6 +16,6 @@ public final class ObjectBinder extends AbstractBinder {
         if (object == null)
             return;
 
-        bind(program.getUniformID(ShaderUniform.UseLighting), object.isApplyLighting() ? 1 : 0);
+        bind(program.getUniformID(ShaderUniform.UseLighting), object.isLit() ? 1 : 0);
     }
 }

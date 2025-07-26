@@ -1,9 +1,7 @@
 package com.venta.engine.model.dto;
 
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-
 import com.venta.engine.enums.LightType;
+import org.joml.Vector3f;
 
 public record LightDTO(String name,
                        LightType type,

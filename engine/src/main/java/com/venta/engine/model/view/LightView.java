@@ -1,7 +1,6 @@
 package com.venta.engine.model.view;
 
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 public interface LightView extends AbstractView {
     Vector3f getPosition();
