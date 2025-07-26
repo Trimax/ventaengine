@@ -195,8 +195,8 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         }
 
         @Override
-        public void setLighting(final boolean lighting) {
-            this.isLit = lighting;
+        public void setLit(final boolean lit) {
+            this.isLit = lit;
         }
 
         @Override

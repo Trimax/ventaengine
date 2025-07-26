@@ -1,0 +1,27 @@
+{
+  "name": "Gizmo",
+  "vertices": [
+    {"position": {"x": -0.5, "y": 0, "z": -0.5}, "color": {"x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0}},
+    {"position": {"x": 0.5, "y": 0, "z": -0.5}, "color": {"x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0}},
+    {"position": {"x": 0.5, "y": 0, "z": 0.5}, "color": {"x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0}},
+    {"position": {"x": -0.5, "y": 0, "z": 0.5}, "color": {"x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0}},
+    {"position": {"x": 0, "y": 1, "z": 0}, "color": {"x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0}},
+    {"position": {"x": 0, "y": -1, "z": 0}, "color": {"x": 1.0, "y": 1.0, "z": 1.0, "w": 1.0}}
+  ],
+  "edges": [
+    {"vertex1": 0, "vertex2": 1},
+    {"vertex1": 1, "vertex2": 2},
+    {"vertex1": 2, "vertex2": 3},
+    {"vertex1": 3, "vertex2": 0},
+
+    {"vertex1": 0, "vertex2": 4},
+    {"vertex1": 1, "vertex2": 4},
+    {"vertex1": 2, "vertex2": 4},
+    {"vertex1": 3, "vertex2": 4},
+
+    {"vertex1": 0, "vertex2": 5},
+    {"vertex1": 1, "vertex2": 5},
+    {"vertex1": 2, "vertex2": 5},
+    {"vertex1": 3, "vertex2": 5}
+  ]
+}

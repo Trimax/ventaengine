@@ -23,6 +23,8 @@ public final class RotatingCube implements Venta {
     private ObjectView cube;
     private LightView light;
 
+    private ObjectView gizmo;
+
     @Override
     public WindowConfiguration createWindowConfiguration() {
         return new WindowConfiguration("Rotating cube", 1024, 768, false);
@@ -48,7 +50,6 @@ public final class RotatingCube implements Venta {
         cube.setScale(new Vector3f(2.f));
         cube.setProgram(context.getProgramManager().load("basic"));
         cube.setMaterial(context.getMaterialManager().load("stone.json"));
-        cube.setLighting(true);
         scene.add(cube);
 
         light = context.getLightManager().load("basic.json");
@@ -56,8 +57,15 @@ public final class RotatingCube implements Venta {
         scene.add(light);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(3.f, 3.f, 3.f));
+        camera.setPosition(new Vector3f(4.f, 4.f, 4.f));
         camera.lookAt(new Vector3f(0.f));
+
+        gizmo = context.getObjectManager().load("gizmo.json");
+        gizmo.setLit(false);
+        gizmo.setPosition(new Vector3f(2.f));
+        gizmo.setProgram(context.getProgramManager().load("simple"));
+        gizmo.setScale(new Vector3f(0.1f));
+        scene.add(gizmo);
     }
 
     private double elapsedTime = 0.0;
@@ -90,6 +98,8 @@ public final class RotatingCube implements Venta {
 
         if (inputHandler.isButtonPushed(GLFW_KEY_SPACE))
             light.setColor(createRandomVector3());
+
+        gizmo.setPosition(light.getPosition());
     }
 
     public Vector3f createRandomVector3() {
