@@ -1,8 +1,10 @@
 package com.venta.engine.renderers;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.binders.CameraBinder;
 import com.venta.engine.binders.LightBinder;
 import com.venta.engine.binders.MaterialBinder;
+import com.venta.engine.binders.MatrixBinder;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ObjectRenderingException;
 import com.venta.engine.managers.ObjectManager;
@@ -34,6 +36,8 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
     private final ObjectManager.ObjectAccessor objectAccessor;
 
     private final MaterialBinder materialBinder;
+    private final MatrixBinder matrixBinder;
+    private final CameraBinder cameraBinder;
     private final LightBinder lightBinder;
 
     @Override
@@ -64,25 +68,15 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
         glBindVertexArray(object.getVertexArrayObjectID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 
-        glUniform3f(program.getUniformID(ShaderUniform.CameraPosition), context.getParent().getCameraPosition().x(),
-                context.getParent().getCameraPosition().y(), context.getParent().getCameraPosition().z());
+        cameraBinder.bind(program, getContext().getParent().getCamera());
 
-        glUniform4f(program.getUniformID(ShaderUniform.AmbientLight), context.getAmbientLight().x(),
-                context.getAmbientLight().y(), context.getAmbientLight().z(), context.getAmbientLight().w());
-
-        glUniformMatrix4fv(programView.getUniformID(ShaderUniform.MatrixViewProjection), false,
-                context.getParent().getViewProjectionMatrixBuffer());
-        glUniformMatrix3fv(program.getUniformID(ShaderUniform.MatrixNormal), false, context.getNormalMatrixBuffer());
-        glUniformMatrix4fv(programView.getUniformID(ShaderUniform.MatrixModel), false, context.getModelMatrixBuffer());
+        glUniform1i(program.getUniformID(ShaderUniform.UseLighting), object.isApplyLighting() ? 1 : 0);
+        matrixBinder.bind(program, context.getParent().getViewProjectionMatrixBuffer(), context.getModelMatrixBuffer(), context.getNormalMatrixBuffer());
 
         materialBinder.bind(program, object.getMaterial());
 
-        final var lights = context.getLights();
-        glUniform1i(program.getUniformID(ShaderUniform.LightCount), lights.size());
-        glUniform1i(program.getUniformID(ShaderUniform.UseLighting), object.isApplyLighting() ? 1 : 0);
-
-        for (int lightID = 0; lightID < lights.size(); lightID++)
-            lightBinder.bind(program, lights.get(lightID), lightID);
+        lightBinder.bind(program, context.getAmbientLight());
+        lightBinder.bind(program, context.getLights());
 
         if (object.getFacetsCount() > 0) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getFacetsBufferID());
