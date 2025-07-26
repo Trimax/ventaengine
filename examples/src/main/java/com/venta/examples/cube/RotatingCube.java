@@ -50,6 +50,7 @@ public final class RotatingCube implements Venta {
         cube.setScale(new Vector3f(2.f));
         cube.setProgram(context.getProgramManager().load("basic"));
         cube.setMaterial(context.getMaterialManager().load("stone.json"));
+        cube.setLighting(true);
         scene.add(cube);
 
         light = context.getLightManager().load("basic.json");
