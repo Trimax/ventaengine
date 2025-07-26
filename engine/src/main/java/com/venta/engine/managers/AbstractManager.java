@@ -48,7 +48,7 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
         }
 
         public final E get(final V view) {
-            return get(view.getID());
+            return view == null ? null : get(view.getID());
         }
 
         public final void cleanup() {

@@ -20,7 +20,7 @@ public final class LightBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.AmbientLight), ambientLight);
     }
 
-    public void bind(final ProgramManager.ProgramEntity program, final List<LightView> lights) {
+    public void bind(final ProgramManager.ProgramEntity program, final List<? extends LightView> lights) {
         bind(program.getUniformID(ShaderUniform.LightCount), lights.size());
         for (int lightID = 0; lightID < lights.size(); lightID++)
             bind(program, lights.get(lightID), lightID);
