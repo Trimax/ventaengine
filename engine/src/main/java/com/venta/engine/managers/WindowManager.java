@@ -117,7 +117,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     @Override
     protected void destroy(final WindowEntity window) {
-        log.info("Deleting window {}", window.getTitle());
+        log.info("Destroying window {} ({})", window.getID(), window.getTitle());
         window.sizeCallback.close();
         window.keyCallback.close();
         glfwDestroyWindow(window.getInternalID());

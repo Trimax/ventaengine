@@ -58,7 +58,7 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
 
     @Override
     protected void destroy(final ResourceEntity resource) {
-        log.debug("Deleting resource: {}", resource.getID());
+        log.debug("Destroying resource {}", resource.getID());
     }
 
     @Getter

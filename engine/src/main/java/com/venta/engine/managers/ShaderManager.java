@@ -51,7 +51,7 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
 
     @Override
     protected void destroy(final ShaderEntity shader) {
-        log.info("Deleting shader {}", shader.getName());
+        log.info("Destroying shader {} ({})", shader.getID(), shader.getName());
         glDeleteShader(shader.getInternalID());
     }
 

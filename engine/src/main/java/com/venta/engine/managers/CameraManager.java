@@ -29,7 +29,7 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
 
     @Override
     protected void destroy(final CameraEntity camera) {
-        log.info("Deleting camera {}", camera.getName());
+        log.info("Destroying camera {} ({})", camera.getID(), camera.getName());
     }
 
     @Getter
