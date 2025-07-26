@@ -1,21 +1,7 @@
 package com.venta.engine.renderers;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL20C.*;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import org.lwjgl.system.MemoryUtil;
-
 import com.venta.engine.annotations.Component;
-import com.venta.engine.enums.ShaderLightUniform;
+import com.venta.engine.binders.LightBinder;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ObjectRenderingException;
 import com.venta.engine.managers.ObjectManager;
@@ -26,6 +12,19 @@ import com.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL20C.*;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -33,7 +32,8 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
     private final ProgramManager.ProgramAccessor programAccessor;
     private final ObjectManager.ObjectAccessor objectAccessor;
     private final MaterialRenderer materialRenderer;
-    private final LightRenderer lightRenderer;
+
+    private final LightBinder lightBinder;
 
     @Override
     protected ObjectRenderContext createContext() {
@@ -92,21 +92,8 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
         glUniform1i(program.getUniformID(ShaderUniform.LightCount), lights.size());
         glUniform1i(program.getUniformID(ShaderUniform.UseLighting), object.isApplyLighting() ? 1 : 0);
 
-        for (int lightID = 0; lightID < lights.size(); lightID++) {
-            try (final var _ = lightRenderer.withContext(getContext())
-                    .withType(program.getUniformID(ShaderLightUniform.Type.getUniformName(lightID)))
-                    .withColor(program.getUniformID(ShaderLightUniform.Color.getUniformName(lightID)))
-                    .withEnabled(program.getUniformID(ShaderLightUniform.Enabled.getUniformName(lightID)))
-                    .withPosition(program.getUniformID(ShaderLightUniform.Position.getUniformName(lightID)))
-                    .withDirection(program.getUniformID(ShaderLightUniform.Direction.getUniformName(lightID)))
-                    .withIntensity(program.getUniformID(ShaderLightUniform.Intensity.getUniformName(lightID)))
-                    .withCastShadows(program.getUniformID(ShaderLightUniform.CastShadows.getUniformName(lightID)))
-                    .withAttenuationLinear(program.getUniformID(ShaderLightUniform.AttenuationLinear.getUniformName(lightID)))
-                    .withAttenuationConstant(program.getUniformID(ShaderLightUniform.AttenuationConstant.getUniformName(lightID)))
-                    .withAttenuationQuadratic(program.getUniformID(ShaderLightUniform.AttenuationQuadratic.getUniformName(lightID)))) {
-                lightRenderer.render(lights.get(lightID));
-            }
-        }
+        for (int lightID = 0; lightID < lights.size(); lightID++)
+            lightBinder.bind(program, lights.get(lightID), lightID);
 
         if (object.getFacetsCount() > 0) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getFacetsBufferID());
