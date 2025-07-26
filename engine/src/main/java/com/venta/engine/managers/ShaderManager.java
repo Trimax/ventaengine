@@ -1,23 +1,13 @@
 package com.venta.engine.managers;
 
-import static org.lwjgl.opengl.GL20C.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.lwjgl.opengl.GL20C;
-
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.ShaderCompileException;
-import com.venta.engine.exceptions.UnknownShaderTypeException;
-import com.venta.engine.model.dto.ShaderDTO;
 import com.venta.engine.model.view.ShaderView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.opengl.GL20C;
+
+import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
@@ -25,28 +15,18 @@ import lombok.extern.slf4j.Slf4j;
 public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity, ShaderView> {
     private final ResourceManager resourceManager;
 
-    public ShaderView load(final String name) {
+    public ShaderView load(final String name, final ShaderManager.ShaderEntity.Type type) {
         log.info("Loading shader {}", name);
 
-        return load(name, resourceManager.load(String.format("/shaders/%s.json", name), ShaderDTO.class));
-    }
-
-    private ShaderView load(final String name, final ShaderDTO parsedShader) {
-        final var shaderType = ShaderEntity.Type.parse(parsedShader.type());
-
-        final var code = resourceManager.load(String.format("/shaders/%s", parsedShader.path()));
-        final var id = glCreateShader(shaderType.getValue());
+        final var code = resourceManager.load(String.format("/shaders/%s", name));
+        final var id = glCreateShader(type.getValue());
 
         glShaderSource(id, code);
         glCompileShader(id);
         if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE)
             throw new ShaderCompileException(glGetShaderInfoLog(id));
 
-        final var shader = new ShaderEntity(id, shaderType, name, code);
-        if (parsedShader.attributes() != null)
-            shader.attributes.putAll(parsedShader.attributes());
-
-        return store(shader);
+        return store(new ShaderEntity(id, type, name, code));
     }
 
     @Override
@@ -64,19 +44,11 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
         @Getter(AccessLevel.NONE)
         private final String code;
 
-        @Getter(AccessLevel.NONE)
-        private final Map<String, Integer> attributes = new HashMap<>();
-
         ShaderEntity(final int internalID, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
             this.internalID = internalID;
             this.type = type;
             this.name = name;
             this.code = code;
-        }
-
-        //TODO: Possibly remove (together with attributes section in shader definition). And maybe shader defs also not needed
-        public int getAttribute(final String name) {
-            return attributes.get(name);
         }
 
         @Getter
@@ -86,14 +58,6 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
             Fragment(GL20C.GL_FRAGMENT_SHADER);
 
             private final int value;
-
-            public static Type parse(final String value) {
-                for (final Type type : Type.values())
-                    if (type.name().equalsIgnoreCase(value))
-                        return type;
-
-                throw new UnknownShaderTypeException(value);
-            }
         }
     }
 

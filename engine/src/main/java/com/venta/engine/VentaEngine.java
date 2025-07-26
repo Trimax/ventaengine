@@ -14,6 +14,7 @@ import com.venta.engine.exceptions.EngineInitializationException;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.utils.ComponentUtil;
 import com.venta.engine.utils.MeasurementUtil;
+import com.venta.engine.utils.ResourceUtil;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public final class VentaEngine {
     private static final Deque<Class<?>> creationStack = new ArrayDeque<>();
 
     public static void run(final String[] args, final Venta venta) {
-        log.info("Starting VentaEngine");
+        log.info("Starting VentaEngine {}", ResourceUtil.load("/banner.txt"));
 
         final var engine = MeasurementUtil.measure("VentaEngine startup", () -> createEngine(venta));
         venta.onStartup(args, getComponent(Context.class));
