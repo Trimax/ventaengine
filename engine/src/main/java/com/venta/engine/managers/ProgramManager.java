@@ -6,17 +6,12 @@ import com.venta.engine.enums.ShaderLightUniform;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ProgramLinkException;
 import com.venta.engine.model.dto.ProgramDTO;
-import com.venta.engine.model.view.AbstractView;
 import com.venta.engine.model.view.ProgramView;
 import com.venta.engine.model.view.ShaderView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import one.util.streamex.StreamEx;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL20C.*;
@@ -25,6 +20,7 @@ import static org.lwjgl.opengl.GL20C.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity, ProgramView> {
+    private final ShaderManager.ShaderAccessor shaderAccessor;
     private final ResourceManager resourceManager;
     private final ShaderManager shaderManager;
 
@@ -32,50 +28,30 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         log.info("Loading program {}", name);
 
         final var programDTO = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
-        final ProgramEntity program = create(programDTO.name(), StreamEx.of(programDTO.shaders()).map(shaderManager::load).toList());
 
-        glUseProgram(program.getInternalID());
-        for (final String uniform : programDTO.uniforms()) {
-            final var uniformLocationID = glGetUniformLocation(program.getInternalID(), uniform);
-            program.uniforms.put(uniform, uniformLocationID);
-            if (uniformLocationID == -1)
-                log.warn("Uniform '{}' not found in program {}", uniform, program.getName());
-        }
-
-        registerLightUniforms(program);
-
-        return store(program);
+        return store(create(programDTO.name(),
+                shaderManager.load(programDTO.shaderVertex(), ShaderManager.ShaderEntity.Type.Vertex),
+                shaderManager.load(programDTO.shaderFragment(), ShaderManager.ShaderEntity.Type.Fragment)));
     }
 
-    private static void registerLightUniforms(final ProgramEntity program) {
+    private void registerUniforms(final ProgramEntity program) {
+        for (final var field : ShaderUniform.values())
+            program.uniforms.put(field.getUniformName(), glGetUniformLocation(program.getInternalID(), field.getUniformName()));
+
         for (int i = 0; i < Definitions.LIGHT_MAX; i++)
             for (final var field : ShaderLightUniform.values())
                 program.uniforms.put(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 
-        final var lightCountUniformID = glGetUniformLocation(program.getInternalID(), ShaderUniform.LightCount.getUniformName());
-        if (lightCountUniformID >= 0)
-            program.uniforms.put(ShaderUniform.LightCount.getUniformName(), lightCountUniformID);
+        log.debug("{} uniforms found and registered for program {}", program.uniforms.size(), program.getID());
     }
 
-    public ProgramView create(final String name, final ShaderView... shaders) {
-        if (ArrayUtils.isEmpty(shaders))
-            throw new ProgramLinkException(name);
-
-        return store(create(name, List.of(shaders)));
-    }
-
-    private ProgramEntity create(final String name, final List<ShaderView> shaders) {
-        if (CollectionUtils.isEmpty(shaders))
-            throw new ProgramLinkException(name);
-
+    private ProgramEntity create(final String name, @NonNull final ShaderView shaderVertex, @NonNull final ShaderView shaderFragment) {
         log.info("Creating program {}", name);
         final var id = glCreateProgram();
 
-        StreamEx.of(shaders)
-                .map(AbstractView::getID)
-                .map(shaderManager::get)
-                .map(ShaderManager.ShaderEntity::getInternalID)
-                .forEach(shaderID -> glAttachShader(id, shaderID));
+        glAttachShader(id, shaderAccessor.get(shaderVertex).getInternalID());
+        glAttachShader(id, shaderAccessor.get(shaderFragment).getInternalID());
+
         glLinkProgram(id);
         if (glGetProgrami(id, GL_LINK_STATUS) == GL_FALSE) {
             final var message = glGetProgramInfoLog(id);
@@ -84,7 +60,12 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
             throw new ProgramLinkException(message);
         }
 
-        return new ProgramEntity(id, name);
+        glUseProgram(id);
+
+        final var program = new ProgramEntity(id, name);
+        registerUniforms(program);
+
+        return program;
     }
 
     @Override

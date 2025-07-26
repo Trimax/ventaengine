@@ -1,11 +1,5 @@
 {
   "name": "Simple",
-  "shaders": [
-    "simple_vertex",
-    "simple_fragment"
-  ],
-  "uniforms": [
-    "matrixViewProjection",
-    "matrixModel"
-  ]
+  "shaderVertex": "vertex/simple.glsl",
+  "shaderFragment": "fragment/simple.glsl"
 }

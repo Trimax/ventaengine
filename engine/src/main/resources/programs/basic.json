@@ -1,28 +1,5 @@
 {
   "name": "Basic",
-  "shaders": [
-    "basic_vertex",
-    "basic_fragment"
-  ],
-  "uniforms": [
-    "cameraPosition",
-
-    "matrixViewProjection",
-    "matrixNormal",
-    "matrixModel",
-
-    "textureDiffuse",
-    "textureHeight",
-    "textureNormal",
-    "textureAmbientOcclusion",
-    "textureRoughness",
-
-    "useTextureDiffuse",
-    "useTextureHeight",
-    "useTextureNormal",
-    "useLighting",
-
-    "ambientLight",
-    "lightCount"
-  ]
+  "shaderVertex": "vertex/basic.glsl",
+  "shaderFragment": "fragment/basic.glsl"
 }
