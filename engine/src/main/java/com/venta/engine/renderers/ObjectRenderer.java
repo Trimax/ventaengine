@@ -2,6 +2,7 @@ package com.venta.engine.renderers;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.binders.LightBinder;
+import com.venta.engine.binders.MaterialBinder;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.exceptions.ObjectRenderingException;
 import com.venta.engine.managers.ObjectManager;
@@ -31,8 +32,8 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
     private final ProgramManager.ProgramAccessor programAccessor;
     private final ObjectManager.ObjectAccessor objectAccessor;
-    private final MaterialRenderer materialRenderer;
 
+    private final MaterialBinder materialBinder;
     private final LightBinder lightBinder;
 
     @Override
@@ -74,19 +75,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
         glUniformMatrix3fv(program.getUniformID(ShaderUniform.MatrixNormal), false, context.getNormalMatrixBuffer());
         glUniformMatrix4fv(programView.getUniformID(ShaderUniform.MatrixModel), false, context.getModelMatrixBuffer());
 
-        try (final var _ = materialRenderer.withContext(getContext())
-                .withTextureDiffuse(program.getUniformID(ShaderUniform.TextureDiffuse),
-                        program.getUniformID(ShaderUniform.UseTextureDiffuseFlag))
-                .withTextureHeight(program.getUniformID(ShaderUniform.TextureHeight),
-                        program.getUniformID(ShaderUniform.UseTextureHeight))
-                .withTextureNormal(program.getUniformID(ShaderUniform.TextureNormal),
-                        program.getUniformID(ShaderUniform.UseTextureNormal))
-                .withTextureAmbientOcclusion(program.getUniformID(ShaderUniform.TextureAmbientOcclusion),
-                        program.getUniformID(ShaderUniform.UseTextureAmbientOcclusion))
-                .withRoughness(program.getUniformID(ShaderUniform.TextureRoughness),
-                        program.getUniformID(ShaderUniform.UseTextureRoughness))) {
-            materialRenderer.render(object.getMaterial());
-        }
+        materialBinder.bind(program, object.getMaterial());
 
         final var lights = context.getLights();
         glUniform1i(program.getUniformID(ShaderUniform.LightCount), lights.size());
