@@ -48,9 +48,9 @@ public final class Engine implements Runnable {
 
         final var origin = context.getObjectManager().load("origin.json");
 
+        origin.setLit(false);
         origin.setScale(new Vector3f(100000f));
         origin.setDrawMode(DrawMode.Edge);
-        origin.setLighting(false);
         origin.setProgram(context.getProgramManager().load("simple"));
         origin.setVisible(venta.createRenderConfiguration().isOriginVisible());
         context.getSceneManager().getCurrent().add(origin);

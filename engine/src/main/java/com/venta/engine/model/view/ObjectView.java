@@ -37,7 +37,7 @@ public interface ObjectView extends AbstractView {
 
     void setDrawMode(final DrawMode drawMode);
 
-    void setLighting(final boolean lighting);
+    void setLit(final boolean lit);
 
     void setVisible(final boolean visible);
 
