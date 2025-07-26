@@ -3,6 +3,7 @@ package com.venta.engine.core;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33C.*;
 
+import lombok.AccessLevel;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Engine implements Runnable {
     private final WindowManager.WindowAccessor windowAccessor;
     private final CameraManager.CameraAccessor cameraAccessor;

@@ -13,6 +13,10 @@ public interface ObjectView extends AbstractView {
 
     boolean isVisible();
 
+    boolean isApplyLighting();
+
+    boolean hasProgram();
+
     DrawMode getDrawMode();
 
     MaterialView getMaterial();

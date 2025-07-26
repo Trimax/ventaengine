@@ -163,6 +163,11 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         }
 
         @Override
+        public boolean hasProgram() {
+            return program != null;
+        }
+
+        @Override
         public void setPosition(final Vector3f position) {
             this.position.set(position);
         }
