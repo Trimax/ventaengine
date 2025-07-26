@@ -1,11 +1,11 @@
 package com.venta.engine.enums;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.venta.engine.definitions.Definitions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ShaderLightUniform {

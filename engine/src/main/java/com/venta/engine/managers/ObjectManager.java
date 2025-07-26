@@ -1,5 +1,18 @@
 package com.venta.engine.managers;
 
+import com.venta.engine.annotations.Component;
+import com.venta.engine.enums.DrawMode;
+import com.venta.engine.model.dto.ObjectDTO;
+import com.venta.engine.model.view.MaterialView;
+import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.ProgramView;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 import static com.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
@@ -7,24 +20,6 @@ import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.system.MemoryUtil.*;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import org.joml.Vector3f;
-
-import com.venta.engine.annotations.Component;
-import com.venta.engine.enums.DrawMode;
-import com.venta.engine.model.dto.ObjectDTO;
-import com.venta.engine.model.view.MaterialView;
-import com.venta.engine.model.view.ObjectView;
-import com.venta.engine.model.view.ProgramView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -109,7 +104,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
     @Override
     protected void destroy(final ObjectEntity object) {
-        log.info("Deleting object {}", object.getName());
+        log.info("Destroying object {} ({})", object.getID(), object.getName());
         glDeleteVertexArrays(object.vertexArrayObjectID);
         glDeleteBuffers(object.verticesBufferID);
         glDeleteBuffers(object.facetsBufferID);

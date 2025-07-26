@@ -63,7 +63,7 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
 
     @Override
     protected void destroy(final TextureEntity texture) {
-        log.info("Deleting texture {}", texture.getName());
+        log.info("Deleting texture {} ({})", texture.getID(), texture.getName());
         glDeleteTextures(texture.getInternalID());
     }
 

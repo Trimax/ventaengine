@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneManager extends AbstractManager<SceneManager.SceneEntity, SceneView> {
     @Getter
-    @Setter
+    @Setter(onParam_ = @__(@NonNull))
     private SceneView current;
 
     public SceneView create(final String name) {
@@ -33,7 +33,7 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
 
     @Override
     protected void destroy(final SceneEntity scene) {
-        log.info("Deleting scene {}", scene.getName());
+        log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
     }
 
     @Getter

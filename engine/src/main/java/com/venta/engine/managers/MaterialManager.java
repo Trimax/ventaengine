@@ -37,7 +37,7 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
 
     @Override
     protected void destroy(final MaterialEntity material) {
-        log.info("Deleting material {}", material.getName());
+        log.info("Destroying material {} ({})", material.getID(), material.getName());
     }
 
     @Getter

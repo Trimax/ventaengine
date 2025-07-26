@@ -21,7 +21,7 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
 
     @Override
     protected void destroy(final LightEntity light) {
-        log.info("Unloading light {}", light.name);
+        log.info("Destroying light {} ({})", light.getID(), light.name);
     }
 
     @Getter
