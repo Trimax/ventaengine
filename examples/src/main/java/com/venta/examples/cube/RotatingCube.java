@@ -64,7 +64,6 @@ public final class RotatingCube implements Venta {
         gizmo.setLit(false);
         gizmo.setPosition(new Vector3f(2.f));
         gizmo.setProgram(context.getProgramManager().load("simple"));
-        gizmo.setScale(new Vector3f(0.1f));
         scene.add(gizmo);
     }
 
