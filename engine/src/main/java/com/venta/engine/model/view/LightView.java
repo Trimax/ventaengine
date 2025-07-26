@@ -8,7 +8,9 @@ public interface LightView extends AbstractView {
 
     Vector3f getDirection();
 
-    Vector4f getColor();
+    float getIntensity();
+
+    Vector3f getColor();
 
     Attenuation getAttenuation();
 
@@ -16,7 +18,9 @@ public interface LightView extends AbstractView {
 
     void setDirection(final Vector3f position);
 
-    void setColor(final Vector4f color);
+    void setIntensity(float intensity);
+
+    void setColor(final Vector3f color);
 
     void setAttenuation(final Attenuation attenuation);
 

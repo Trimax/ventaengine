@@ -36,9 +36,10 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
 
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f direction = new Vector3f(0.f, 0.f, 0.f);
-        private final Vector4f color = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+        private final Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
 
         private Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
+        private float intensity = 1.f;
 
         LightEntity(@NonNull final String name) {
             this.name = name;
@@ -64,13 +65,18 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
         }
 
         @Override
-        public void setColor(final Vector4f color) {
+        public void setColor(final Vector3f color) {
             this.color.set(color);
         }
 
         @Override
         public void setAttenuation(final Attenuation attenuation) {
             this.attenuation = attenuation;
+        }
+
+        @Override
+        public void setIntensity(final float intensity) {
+            this.intensity = intensity;
         }
     }
 
