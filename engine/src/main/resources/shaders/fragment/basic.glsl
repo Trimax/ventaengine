@@ -18,8 +18,8 @@ struct Light {
     vec3 color;
     float intensity;
     Attenuation attenuation;
-    bool castShadows;
-    bool enabled;
+    int castShadows;
+    int enabled;
 };
 
 /* Vertex shader output */
@@ -38,12 +38,12 @@ uniform sampler2D textureRoughness;
 uniform sampler2D textureAmbientOcclusion;
 
 /* Feature flags */
-uniform bool useTextureDiffuse;
-uniform bool useTextureHeight;
-uniform bool useTextureNormal;
-uniform bool useTextureRoughness;
-uniform bool useTextureAmbientOcclusion;
-uniform bool useLighting;
+uniform int useTextureDiffuse;
+uniform int useTextureHeight;
+uniform int useTextureNormal;
+uniform int useTextureRoughness;
+uniform int useTextureAmbientOcclusion;
+uniform int useLighting;
 
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
@@ -53,29 +53,34 @@ uniform int lightCount;
 /* Output color */
 out vec4 FragColor;
 
+/* Checks if flag is set (bools are not supported by macOS Radeon cards */
+bool isSet(int value) {
+    return value != 0;
+}
+
 /* Gets base color from the texture */
 vec4 getDiffuseColor(vec2 textureCoordinates) {
-    return useTextureDiffuse ? texture(textureDiffuse, textureCoordinates) : vec4(1.0);
+    return isSet(useTextureDiffuse) ? texture(textureDiffuse, textureCoordinates) : vec4(1.0);
 }
 
 /* Gets ambient occlusion */
 float getAmbientOcclusion(vec2 textureCoordinates) {
-    return useTextureAmbientOcclusion ? texture(textureAmbientOcclusion, textureCoordinates).r : 1.0;
+    return isSet(useTextureAmbientOcclusion) ? texture(textureAmbientOcclusion, textureCoordinates).r : 1.0;
 }
 
 /* Gets height */
 float getHeight(vec2 textureCoordinates) {
-    return useTextureHeight ? texture(textureHeight, textureCoordinates).r : 1.0;
+    return isSet(useTextureHeight) ? texture(textureHeight, textureCoordinates).r : 1.0;
 }
 
 /* Gets roughness */
 float getRoughness(vec2 textureCoordinates) {
-    return useTextureRoughness ? texture(textureRoughness, textureCoordinates).r : 1.0;
+    return isSet(useTextureRoughness) ? texture(textureRoughness, textureCoordinates).r : 1.0;
 }
 
 /* Translates texture coordinates according to parallax effect */
 vec2 parallaxMapping(vec2 textureCoordinates) {
-    if (!useTextureHeight)
+    if (!isSet(useTextureHeight))
         return textureCoordinates;
 
     return textureCoordinates + normalize(vertexViewDirection).xy * (getHeight(textureCoordinates) * 0.01);
@@ -83,7 +88,7 @@ vec2 parallaxMapping(vec2 textureCoordinates) {
 
 /* Gets normal (either face or from normal map) */
 vec3 getNormal(vec2 textureCoordinates) {
-    if (!useTextureNormal)
+    if (!isSet(useTextureNormal))
         return vertexTBN[2];
 
     /* Normal mapping */
@@ -92,8 +97,8 @@ vec3 getNormal(vec2 textureCoordinates) {
 
 /* Calculates effect of one light source */
 vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
-    if (!light.enabled)
-    return vec3(0.0);
+    if (!isSet(light.enabled))
+        return vec3(0.0);
 
     vec3 lightDir = vec3(0.0);
     float distance = 1.0;
@@ -125,7 +130,7 @@ vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
 }
 
 vec3 calculateLighting(vec2 textureCoordinates) {
-    if (!useLighting)
+    if (!isSet(useLighting))
         return vec3(1.0);
 
     vec3 normal = getNormal(textureCoordinates);
@@ -138,7 +143,7 @@ vec3 calculateLighting(vec2 textureCoordinates) {
 }
 
 void main() {
-    vec2 textureCoordinates = useTextureHeight ? parallaxMapping(vertexTextureCoordinates) : vertexTextureCoordinates;
+    vec2 textureCoordinates = isSet(useTextureHeight) ? parallaxMapping(vertexTextureCoordinates) : vertexTextureCoordinates;
 
     vec4 diffuseColor = getDiffuseColor(textureCoordinates);
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
