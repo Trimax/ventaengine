@@ -2,12 +2,13 @@ package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.DrawMode;
-import com.venta.engine.interfaces.Venta;
+import com.venta.engine.interfaces.VentaEngineApplication;
 import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.WindowManager;
 import com.venta.engine.renderers.SceneRenderer;
 import com.venta.engine.renderers.WindowRenderer;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -27,10 +28,10 @@ public final class Engine implements Runnable {
     private final SceneRenderer sceneRenderer;
     private final Context context;
 
-    private Venta venta;
+    private VentaEngineApplication application;
 
-    public void initialize(final Venta venta) {
-        this.venta = venta;
+    public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
+        this.application = ventaEngineApplication;
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit())
             throw new IllegalStateException("GLFW init failed");
@@ -39,7 +40,7 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        context.getWindowManager().setCurrent(context.getWindowManager().create(venta.createWindowConfiguration(), venta.createInputHandler()));
+        context.getWindowManager().setCurrent(context.getWindowManager().create(ventaEngineApplication.createWindowConfiguration(), ventaEngineApplication.createInputHandler()));
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
 
@@ -49,7 +50,7 @@ public final class Engine implements Runnable {
 
         origin.setScale(new Vector3f(100000f));
         origin.setDrawMode(DrawMode.Edge);
-        origin.setVisible(venta.createRenderConfiguration().isOriginVisible());
+        origin.setVisible(ventaEngineApplication.createRenderConfiguration().isOriginVisible());
         context.getSceneManager().getCurrent().add(origin);
     }
 
@@ -79,7 +80,7 @@ public final class Engine implements Runnable {
 
             glfwPollEvents();
 
-            venta.onUpdate(fpsCounter.tick(), context);
+            application.onUpdate(fpsCounter.tick(), context);
         }
 
         context.cleanup();
