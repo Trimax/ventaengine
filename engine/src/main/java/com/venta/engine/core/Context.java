@@ -62,7 +62,7 @@ public final class Context {
     void cleanup() {
         sceneAccessor.cleanup();
         lightAccessor.cleanup();
-        meshAccessor.cleanup();
+        objectAccessor.cleanup();
         meshAccessor.cleanup();
         programAccessor.cleanup();
         shaderAccessor.cleanup();
