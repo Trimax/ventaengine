@@ -4,7 +4,7 @@ import com.venta.engine.configurations.RenderConfiguration;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 import com.venta.engine.enums.DrawMode;
-import com.venta.engine.interfaces.Venta;
+import com.venta.engine.interfaces.VentaEngineApplication;
 import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.ObjectView;
@@ -16,7 +16,7 @@ import java.util.Random;
 import static org.lwjgl.glfw.GLFW.*;
 
 @Slf4j
-public final class RotatingCube implements Venta {
+public final class RotatingCube implements VentaEngineApplication {
     private final Vector3f angles = new Vector3f(0.f, 0.f, 0.f);
     private final InputHandler inputHandler = new InputHandler();
     private final Random random = new Random();

@@ -4,7 +4,7 @@ import com.venta.engine.configurations.RenderConfiguration;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 
-public interface Venta {
+public interface VentaEngineApplication {
     WindowConfiguration createWindowConfiguration();
 
     RenderConfiguration createRenderConfiguration();

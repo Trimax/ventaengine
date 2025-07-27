@@ -1,24 +1,21 @@
 package com.venta.engine;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.venta.engine.annotations.Inject;
 import com.venta.engine.core.Context;
 import com.venta.engine.core.Engine;
 import com.venta.engine.exceptions.EngineInitializationException;
-import com.venta.engine.interfaces.Venta;
+import com.venta.engine.interfaces.VentaEngineApplication;
 import com.venta.engine.utils.ComponentUtil;
 import com.venta.engine.utils.MeasurementUtil;
 import com.venta.engine.utils.ResourceUtil;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
+
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 @Slf4j
 @UtilityClass
@@ -26,21 +23,21 @@ public final class VentaEngine {
     private static final Map<Class<?>, Object> components = new HashMap<>();
     private static final Deque<Class<?>> creationStack = new ArrayDeque<>();
 
-    public static void run(final String[] args, final Venta venta) {
+    public static void run(final String[] args, @NonNull final VentaEngineApplication ventaEngineApplication) {
         log.info("Starting VentaEngine {}", ResourceUtil.load("/banner.txt"));
 
-        final var engine = MeasurementUtil.measure("VentaEngine startup", () -> createEngine(venta));
-        venta.onStartup(args, getComponent(Context.class));
+        final var engine = MeasurementUtil.measure("VentaEngine startup", () -> createEngine(ventaEngineApplication));
+        ventaEngineApplication.onStartup(args, getComponent(Context.class));
 
         engine.run();
         MeasurementUtil.measure("VentaEngine shutdown", VentaEngine::shutdownEngine);
     }
 
-    private static Engine createEngine(final Venta venta) {
+    private static Engine createEngine(@NonNull final VentaEngineApplication ventaEngineApplication) {
         createContext();
 
         final var engine = getComponent(Engine.class);
-        engine.initialize(venta);
+        engine.initialize(ventaEngineApplication);
 
         return engine;
     }
