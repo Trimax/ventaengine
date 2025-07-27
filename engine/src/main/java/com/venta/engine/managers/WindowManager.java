@@ -1,9 +1,9 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.exceptions.WindowCreationException;
-import com.venta.engine.interfaces.VentaInputHandler;
+import com.venta.engine.interfaces.VentaEngineConfiguration;
+import com.venta.engine.interfaces.VentaEngineInputHandler;
 import com.venta.engine.model.view.WindowView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     @Getter
     private WindowView current;
 
-    public WindowView create(final WindowConfiguration configuration, final VentaInputHandler inputHandler) {
+    public WindowView create(final VentaEngineConfiguration.WindowConfiguration configuration, final VentaEngineInputHandler inputHandler) {
         if (!configuration.isFullscreen())
             return create(configuration.title(), NULL, configuration.width(), configuration.height(), inputHandler);
 
@@ -42,7 +42,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         return create(configuration.title(), monitorID, videoMode.width(), videoMode.height(), inputHandler);
     }
 
-    private WindowView create(final String title, final long monitorID, final int width, final int height, final VentaInputHandler inputHandler) {
+    private WindowView create(final String title, final long monitorID, final int width, final int height, final VentaEngineInputHandler inputHandler) {
         log.info("Creating window: {}", title);
         final var id = glfwCreateWindow(width, height, title, monitorID, NULL);
         if (id == NULL)
@@ -119,7 +119,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private int width;
         private int height;
         private final String title;
-        private final VentaInputHandler inputHandler;
+        private final VentaEngineInputHandler inputHandler;
         private final Matrix4f projectionMatrix;
 
         @Getter(AccessLevel.PRIVATE)
@@ -164,7 +164,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             }
         };
 
-        WindowEntity(final long internalID, final int width, final int height, @NonNull final String title, final VentaInputHandler inputHandler) {
+        WindowEntity(final long internalID, final int width, final int height, @NonNull final String title, final VentaEngineInputHandler inputHandler) {
             this.internalID = internalID;
             this.width = width;
             this.height = height;

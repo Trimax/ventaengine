@@ -1,11 +1,10 @@
 package com.venta.examples.cube;
 
-import com.venta.engine.configurations.RenderConfiguration;
-import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
 import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.VentaEngineApplication;
-import com.venta.engine.interfaces.VentaInputHandler;
+import com.venta.engine.interfaces.VentaEngineConfiguration;
+import com.venta.engine.interfaces.VentaEngineInputHandler;
 import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.ObjectView;
 import lombok.extern.slf4j.Slf4j;
@@ -26,17 +25,17 @@ public final class RotatingCube implements VentaEngineApplication {
     private LightView light;
 
     @Override
-    public WindowConfiguration createWindowConfiguration() {
-        return new WindowConfiguration("Rotating cube", 1024, 768, false);
+    public VentaEngineConfiguration getConfiguration() {
+        return new VentaEngineConfiguration() {
+            @Override
+            public RenderConfiguration getRenderConfiguration() {
+                return new RenderConfiguration(false, true);
+            }
+        };
     }
 
     @Override
-    public RenderConfiguration createRenderConfiguration() {
-        return new RenderConfiguration(false, true);
-    }
-
-    @Override
-    public VentaInputHandler createInputHandler() {
+    public VentaEngineInputHandler getInputHandler() {
         return inputHandler;
     }
 

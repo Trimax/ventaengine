@@ -40,7 +40,8 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        context.getWindowManager().setCurrent(context.getWindowManager().create(ventaEngineApplication.createWindowConfiguration(), ventaEngineApplication.createInputHandler()));
+        final var configuration = ventaEngineApplication.getConfiguration();
+        context.getWindowManager().setCurrent(context.getWindowManager().create(configuration.getWindowConfiguration(), ventaEngineApplication.getInputHandler()));
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
 
@@ -50,7 +51,7 @@ public final class Engine implements Runnable {
 
         origin.setScale(new Vector3f(100000f));
         origin.setDrawMode(DrawMode.Edge);
-        origin.setVisible(ventaEngineApplication.createRenderConfiguration().isOriginVisible());
+        origin.setVisible(configuration.getRenderConfiguration().isOriginVisible());
         context.getSceneManager().getCurrent().add(origin);
     }
 

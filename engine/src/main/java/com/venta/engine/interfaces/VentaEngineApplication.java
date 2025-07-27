@@ -1,15 +1,16 @@
 package com.venta.engine.interfaces;
 
-import com.venta.engine.configurations.RenderConfiguration;
-import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
+import lombok.NonNull;
 
 public interface VentaEngineApplication {
-    WindowConfiguration createWindowConfiguration();
+    default @NonNull VentaEngineConfiguration getConfiguration() {
+        return VentaEngineConfiguration.DEFAULT;
+    }
 
-    RenderConfiguration createRenderConfiguration();
-
-    VentaInputHandler createInputHandler();
+    default @NonNull VentaEngineInputHandler getInputHandler() {
+        return VentaEngineInputHandler.DEFAULT;
+    }
 
     void onStartup(final String[] args, final Context context);
 
