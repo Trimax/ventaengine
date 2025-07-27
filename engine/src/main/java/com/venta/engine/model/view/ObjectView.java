@@ -4,6 +4,8 @@ import com.venta.engine.enums.DrawMode;
 import org.joml.Vector3f;
 
 public interface ObjectView extends AbstractView {
+    MeshView getMesh();
+
     Vector3f getPosition();
 
     Vector3f getRotation();
@@ -39,4 +41,6 @@ public interface ObjectView extends AbstractView {
     void setVisible(final boolean visible);
 
     void setProgram(final ProgramView program);
+
+    void setMesh(final MeshView mesh);
 }

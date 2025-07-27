@@ -2,7 +2,7 @@ package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.DrawMode;
-import com.venta.engine.model.dto.ObjectDTO;
+import com.venta.engine.model.dto.MeshDTO;
 import com.venta.engine.model.view.MaterialView;
 import com.venta.engine.model.view.MeshView;
 import com.venta.engine.model.view.ProgramView;
@@ -30,7 +30,7 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
     public MeshView load(final String name) {
         log.info("Loading mesh {}", name);
 
-        final var objectDTO = resourceManager.load(String.format("/meshes/%s", name), ObjectDTO.class);
+        final var objectDTO = resourceManager.load(String.format("/meshes/%s.json", name), MeshDTO.class);
 
         final var vertices = objectDTO.getVerticesArray();
 

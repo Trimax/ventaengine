@@ -4,6 +4,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.definitions.Definitions;
 import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.MeshView;
+import com.venta.engine.model.view.ObjectView;
 import com.venta.engine.model.view.SceneView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,9 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     public static final class SceneEntity extends AbstractEntity implements SceneView {
         private final String name;
         private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
-        private final List<MeshManager.MeshEntity> objects = new ArrayList<>();
+        private final List<ObjectManager.ObjectEntity> objects = new ArrayList<>();
         private final List<LightManager.LightEntity> lights = new ArrayList<>();
+        private final List<MeshManager.MeshEntity> meshes = new ArrayList<>();
 
         SceneEntity(@NonNull final String name) {
             this.name = name;
@@ -48,9 +50,15 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
         }
 
         @Override
+        public void add(final ObjectView object) {
+            if (object instanceof ObjectManager.ObjectEntity entity)
+                objects.add(entity);
+        }
+
+        @Override
         public void add(final MeshView object) {
             if (object instanceof MeshManager.MeshEntity entity)
-                objects.add(entity);
+                meshes.add(entity);
         }
 
         @Override

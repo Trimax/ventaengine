@@ -31,7 +31,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRender
         if (scene == null)
             return;
 
-        for (final MeshView object : scene.getObjects())
+        for (final MeshView object : scene.getMeshes())
             try (final var _ = meshRenderer.withContext(getContext())
                     .withModelMatrix(object.getPosition(), object.getRotation(), object.getScale())
                     .withScene(scene)) {

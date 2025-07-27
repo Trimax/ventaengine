@@ -44,15 +44,19 @@ public final class RotatingCube implements Venta {
     public void onStartup(final String[] args, final Context context) {
         log.info("Rotating cube started");
 
+
+        //final var temp = context.getObjectManager().load("cube.json");
+
+
         final var scene = context.getSceneManager().getCurrent();
 
-        cube = context.getMeshManager().load("cube.json");
+        cube = context.getMeshManager().load("cube");
         cube.setScale(new Vector3f(2.f));
         cube.setProgram(context.getProgramManager().load("basic"));
-        cube.setMaterial(context.getMaterialManager().load("stone.json"));
+        cube.setMaterial(context.getMaterialManager().load("stone"));
         scene.add(cube);
 
-        light = context.getLightManager().load("basic.json");
+        light = context.getLightManager().load("basic");
         light.setPosition(new Vector3f(2.f, 2.f, 2.f));
         scene.add(light);
 
@@ -60,7 +64,7 @@ public final class RotatingCube implements Venta {
         camera.setPosition(new Vector3f(4.f, 4.f, 4.f));
         camera.lookAt(new Vector3f(0.f));
 
-        gizmo = context.getMeshManager().load("gizmo.json");
+        gizmo = context.getMeshManager().load("gizmo");
         gizmo.setLit(false);
         gizmo.setPosition(new Vector3f(2.f));
         gizmo.setProgram(context.getProgramManager().load("simple"));

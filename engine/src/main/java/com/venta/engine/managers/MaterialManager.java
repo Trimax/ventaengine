@@ -1,21 +1,16 @@
 package com.venta.engine.managers;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.joml.Vector2f;
-
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.model.dto.MaterialDTO;
 import com.venta.engine.model.view.MaterialView;
 import com.venta.engine.model.view.TextureView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector2f;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -27,7 +22,7 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
     public MaterialView load(final String name) {
         log.info("Loading material {}", name);
 
-        final var materialDTO = resourceManager.load(String.format("/materials/%s", name), MaterialDTO.class);
+        final var materialDTO = resourceManager.load(String.format("/materials/%s.json", name), MaterialDTO.class);
 
         final var material = store(new MaterialEntity(materialDTO));
         materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureManager.load(path)));

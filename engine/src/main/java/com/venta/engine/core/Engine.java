@@ -45,7 +45,7 @@ public final class Engine implements Runnable {
 
         GL.createCapabilities();
 
-        final var origin = context.getMeshManager().load("origin.json");
+        final var origin = context.getMeshManager().load("origin");
 
         origin.setLit(false);
         origin.setScale(new Vector3f(100000f));

@@ -1,17 +1,16 @@
 package com.venta.engine.model;
 
-import static com.venta.engine.definitions.Definitions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
-
+import com.venta.engine.model.dto.MeshDTO;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
-import com.venta.engine.model.dto.ObjectDTO;
+import java.util.List;
 
-public final class ObjectDTOTest {
+import static com.venta.engine.definitions.Definitions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+public final class MeshDTOTest {
     @Test
     void testGetVerticesArray_simpleTriangle() {
         final var triangle = createTriangleDTO();
@@ -62,22 +61,22 @@ public final class ObjectDTOTest {
         assertEquals(expected, actual, 1e-6, "Vertex " + vertexID + " position z must be correct");
     }
 
-    private static ObjectDTO createTriangleDTO() {
+    private static MeshDTO createTriangleDTO() {
         final var vertex0 = createVertex(new Vector3f(0, 0, 0), new Vector2f(0, 0));
         final var vertex1 = createVertex(new Vector3f(1, 0, 0), new Vector2f(1, 0));
         final var vertex2 = createVertex(new Vector3f(0, 1, 0), new Vector2f(0, 1));
 
-        return new ObjectDTO(
+        return new MeshDTO(
                 "triangle",
                 "test",
                 List.of(vertex0, vertex1, vertex2),
-                List.of(new ObjectDTO.Facet(0, 1, 2)),
+                List.of(new MeshDTO.Facet(0, 1, 2)),
                 List.of()
         );
     }
 
-    private static ObjectDTO.Vertex createVertex(final Vector3f position, final Vector2f textureCoordinates) {
-        return new ObjectDTO.Vertex(position, null, textureCoordinates, null);
+    private static MeshDTO.Vertex createVertex(final Vector3f position, final Vector2f textureCoordinates) {
+        return new MeshDTO.Vertex(position, null, textureCoordinates, null);
     }
 }
 
