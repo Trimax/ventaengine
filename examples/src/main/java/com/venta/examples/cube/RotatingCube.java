@@ -62,6 +62,16 @@ public final class RotatingCube implements Venta {
         gizmo = context.getObjectManager().load("gizmo");
         gizmo.setDrawMode(DrawMode.Edge);
         scene.add(gizmo);
+
+        final int cubeCount = 10;
+        for (int cubeID = 0; cubeID < cubeCount; cubeID++) {
+            final var miniCube = context.getObjectManager().create("cube" + cubeID, cube.getMesh(), cube.getProgram());
+            miniCube.setPosition(new Vector3f(
+                    3.f * (float) Math.sin(cubeID * (2 * Math.PI / cubeCount)),
+                    0.f,
+                    3.f * (float) Math.cos(cubeID * (2 * Math.PI / cubeCount))));
+            scene.add(miniCube);
+        }
     }
 
     private double elapsedTime = 0.0;

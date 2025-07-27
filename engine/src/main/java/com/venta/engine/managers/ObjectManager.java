@@ -21,6 +21,17 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     private final ProgramManager programManager;
     private final MeshManager meshManager;
 
+    public ObjectView create(final String name, final MeshView mesh, final ProgramView program) {
+        log.info("Creating object {}", name);
+
+        return store(new ObjectManager.ObjectEntity(name,
+                programManager.get(program.getID()),
+                meshManager.get(mesh.getID()),
+                new Vector3f(0.f, 0.f, 0.f),
+                new Vector3f(0.f, 0.f, 0.f),
+                new Vector3f(1.f, 1.f, 1.f)));
+    }
+
     public ObjectView load(final String name) {
         log.info("Loading object {}", name);
 
