@@ -11,13 +11,9 @@ public interface SceneView extends AbstractView {
 
     void add(final ObjectView object);
 
-    void add(final MeshView object);
-
     void add(final LightView light);
 
     List<? extends ObjectView> getObjects();
-
-    List<? extends MeshView> getMeshes();
 
     List<? extends LightView> getLights();
 }
