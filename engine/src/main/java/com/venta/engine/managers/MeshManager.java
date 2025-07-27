@@ -1,14 +1,11 @@
 package com.venta.engine.managers;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.enums.DrawMode;
 import com.venta.engine.model.dto.MeshDTO;
 import com.venta.engine.model.view.MaterialView;
 import com.venta.engine.model.view.MeshView;
-import com.venta.engine.model.view.ProgramView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -124,16 +121,7 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
         private final int facetsBufferID;
         private final int edgesBufferID;
 
-        private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
-        private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
-        private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
-
-        private DrawMode drawMode = DrawMode.Polygon;
-        private boolean isVisible = true;
-        private boolean isLit = true;
-
         private MaterialManager.MaterialEntity material;
-        private ProgramManager.ProgramEntity program;
 
         MeshEntity(@NonNull final String name,
                    final int verticesCount,
@@ -155,65 +143,9 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
         }
 
         @Override
-        public boolean hasProgram() {
-            return program != null;
-        }
-
-        @Override
-        public void setPosition(final Vector3f position) {
-            this.position.set(position);
-        }
-
-        @Override
-        public void setRotation(final Vector3f rotation) {
-            this.rotation.set(rotation);
-        }
-
-        @Override
-        public void setScale(final Vector3f scale) {
-            this.scale.set(scale);
-        }
-
-        @Override
-        public void move(final Vector3f offset) {
-            this.position.add(offset, this.position);
-        }
-
-        @Override
-        public void rotate(final Vector3f angles) {
-            this.rotation.add(angles, this.rotation);
-        }
-
-        @Override
-        public void scale(final Vector3f factor) {
-            this.scale.add(factor, this.scale);
-        }
-
-        @Override
-        public void setDrawMode(final DrawMode drawMode) {
-            this.drawMode = drawMode;
-        }
-
-        @Override
-        public void setLit(final boolean lit) {
-            this.isLit = lit;
-        }
-
-        @Override
-        public void setVisible(final boolean visible) {
-            this.isVisible = visible;
-        }
-
-        @Override
         public void setMaterial(final MaterialView material) {
             if (material instanceof MaterialManager.MaterialEntity entity)
                 this.material = entity;
-        }
-
-        @Override
-        public void setProgram(final ProgramView program) {
-            if (program instanceof ProgramManager.ProgramEntity entity)
-                this.program = entity;
         }
     }
 

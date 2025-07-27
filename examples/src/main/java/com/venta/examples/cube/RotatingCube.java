@@ -3,10 +3,11 @@ package com.venta.examples.cube;
 import com.venta.engine.configurations.RenderConfiguration;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
+import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.LightView;
-import com.venta.engine.model.view.MeshView;
+import com.venta.engine.model.view.ObjectView;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
@@ -20,10 +21,9 @@ public final class RotatingCube implements Venta {
     private final InputHandler inputHandler = new InputHandler();
     private final Random random = new Random();
 
-    private MeshView cube;
+    private ObjectView gizmo;
+    private ObjectView cube;
     private LightView light;
-
-    private MeshView gizmo;
 
     @Override
     public WindowConfiguration createWindowConfiguration() {
@@ -44,16 +44,11 @@ public final class RotatingCube implements Venta {
     public void onStartup(final String[] args, final Context context) {
         log.info("Rotating cube started");
 
-
-        //final var temp = context.getObjectManager().load("cube.json");
-
-
         final var scene = context.getSceneManager().getCurrent();
 
-        cube = context.getMeshManager().load("cube");
+        cube = context.getObjectManager().load("cube");
+        cube.getMesh().setMaterial(context.getMaterialManager().load("stone"));
         cube.setScale(new Vector3f(2.f));
-        cube.setProgram(context.getProgramManager().load("basic"));
-        cube.setMaterial(context.getMaterialManager().load("stone"));
         scene.add(cube);
 
         light = context.getLightManager().load("basic");
@@ -61,14 +56,17 @@ public final class RotatingCube implements Venta {
         scene.add(light);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(4.f, 4.f, 4.f));
+        camera.setPosition(new Vector3f(5.f, 5.f, 5.f));
         camera.lookAt(new Vector3f(0.f));
 
-        gizmo = context.getMeshManager().load("gizmo");
-        gizmo.setLit(false);
-        gizmo.setPosition(new Vector3f(2.f));
-        gizmo.setProgram(context.getProgramManager().load("simple"));
+        gizmo = context.getObjectManager().load("gizmo");
+        gizmo.setDrawMode(DrawMode.Edge);
         scene.add(gizmo);
+
+        final var cube2 = context.getObjectManager().load("cube");
+        cube2.getMesh().setMaterial(context.getMaterialManager().load("stone"));
+        cube2.setPosition(new Vector3f(2.f, 0.f, 2.f));
+        scene.add(cube2);
     }
 
     private double elapsedTime = 0.0;

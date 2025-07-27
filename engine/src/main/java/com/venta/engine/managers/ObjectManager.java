@@ -24,7 +24,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     public ObjectView load(final String name) {
         log.info("Loading object {}", name);
 
-        final var objectDTO = resourceManager.load(String.format("/objects/%s", name), ObjectDTO.class);
+        final var objectDTO = resourceManager.load(String.format("/objects/%s.json", name), ObjectDTO.class);
         return store(new ObjectManager.ObjectEntity(name,
                 programManager.get(programManager.load(objectDTO.program()).getID()),
                 meshManager.get(meshManager.load(objectDTO.mesh()).getID()),

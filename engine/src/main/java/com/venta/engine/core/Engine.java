@@ -45,12 +45,10 @@ public final class Engine implements Runnable {
 
         GL.createCapabilities();
 
-        final var origin = context.getMeshManager().load("origin");
+        final var origin = context.getObjectManager().load("origin");
 
-        origin.setLit(false);
         origin.setScale(new Vector3f(100000f));
         origin.setDrawMode(DrawMode.Edge);
-        origin.setProgram(context.getProgramManager().load("simple"));
         origin.setVisible(venta.createRenderConfiguration().isOriginVisible());
         context.getSceneManager().getCurrent().add(origin);
     }
