@@ -30,7 +30,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     public ObjectView load(final String name) {
         log.info("Loading object {}", name);
 
-        final var objectDTO = resourceManager.load(String.format("/objects/%s", name), ObjectDTO.class);
+        final var objectDTO = resourceManager.load(String.format("/meshes/%s", name), ObjectDTO.class);
 
         final var vertices = objectDTO.getVerticesArray();
 
