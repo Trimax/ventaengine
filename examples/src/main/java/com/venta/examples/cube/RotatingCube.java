@@ -3,6 +3,7 @@ package com.venta.examples.cube;
 import com.venta.engine.configurations.RenderConfiguration;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.core.Context;
+import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.LightView;
@@ -20,10 +21,9 @@ public final class RotatingCube implements Venta {
     private final InputHandler inputHandler = new InputHandler();
     private final Random random = new Random();
 
+    private ObjectView gizmo;
     private ObjectView cube;
     private LightView light;
-
-    private ObjectView gizmo;
 
     @Override
     public WindowConfiguration createWindowConfiguration() {
@@ -46,25 +46,32 @@ public final class RotatingCube implements Venta {
 
         final var scene = context.getSceneManager().getCurrent();
 
-        cube = context.getObjectManager().load("cube.json");
+        cube = context.getObjectManager().load("cube");
+        cube.getMesh().setMaterial(context.getMaterialManager().load("stone"));
         cube.setScale(new Vector3f(2.f));
-        cube.setProgram(context.getProgramManager().load("basic"));
-        cube.setMaterial(context.getMaterialManager().load("stone.json"));
         scene.add(cube);
 
-        light = context.getLightManager().load("basic.json");
+        light = context.getLightManager().load("basic");
         light.setPosition(new Vector3f(2.f, 2.f, 2.f));
         scene.add(light);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(4.f, 4.f, 4.f));
+        camera.setPosition(new Vector3f(5.f, 5.f, 5.f));
         camera.lookAt(new Vector3f(0.f));
 
-        gizmo = context.getObjectManager().load("gizmo.json");
-        gizmo.setLit(false);
-        gizmo.setPosition(new Vector3f(2.f));
-        gizmo.setProgram(context.getProgramManager().load("simple"));
+        gizmo = context.getObjectManager().load("gizmo");
+        gizmo.setDrawMode(DrawMode.Edge);
         scene.add(gizmo);
+
+        final int cubeCount = 10;
+        for (int cubeID = 0; cubeID < cubeCount; cubeID++) {
+            final var miniCube = context.getObjectManager().create("cube" + cubeID, cube.getMesh(), cube.getProgram());
+            miniCube.setPosition(new Vector3f(
+                    3.f * (float) Math.sin(cubeID * (2 * Math.PI / cubeCount)),
+                    0.f,
+                    3.f * (float) Math.cos(cubeID * (2 * Math.PI / cubeCount))));
+            scene.add(miniCube);
+        }
     }
 
     private double elapsedTime = 0.0;

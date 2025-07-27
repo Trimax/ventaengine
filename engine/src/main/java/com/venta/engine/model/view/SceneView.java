@@ -1,8 +1,8 @@
 package com.venta.engine.model.view;
 
-import java.util.List;
-
 import org.joml.Vector4f;
+
+import java.util.List;
 
 public interface SceneView extends AbstractView {
     Vector4f getAmbientLight();

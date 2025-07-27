@@ -16,7 +16,7 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
     public LightView load(final String name) {
         log.info("Loading light {}", name);
 
-        return store(new LightEntity(resourceManager.load("/lights/" + name, LightDTO.class)));
+        return store(new LightEntity(resourceManager.load(String.format("/lights/%s.json", name), LightDTO.class)));
     }
 
     @Override
@@ -25,7 +25,7 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
     }
 
     @Getter
-    public static final class LightEntity extends AbstractEntity implements com.venta.engine.model.view.LightView {
+    public static final class LightEntity extends AbstractEntity implements LightView {
         private final String name;
 
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);

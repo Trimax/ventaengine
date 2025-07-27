@@ -1,13 +1,5 @@
 package com.venta.engine.core;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL33C.*;
-
-import lombok.AccessLevel;
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.GL;
-
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.Venta;
@@ -15,8 +7,15 @@ import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.WindowManager;
 import com.venta.engine.renderers.SceneRenderer;
 import com.venta.engine.renderers.WindowRenderer;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 @Component
@@ -46,12 +45,10 @@ public final class Engine implements Runnable {
 
         GL.createCapabilities();
 
-        final var origin = context.getObjectManager().load("origin.json");
+        final var origin = context.getObjectManager().load("origin");
 
-        origin.setLit(false);
         origin.setScale(new Vector3f(100000f));
         origin.setDrawMode(DrawMode.Edge);
-        origin.setProgram(context.getProgramManager().load("simple"));
         origin.setVisible(venta.createRenderConfiguration().isOriginVisible());
         context.getSceneManager().getCurrent().add(origin);
     }

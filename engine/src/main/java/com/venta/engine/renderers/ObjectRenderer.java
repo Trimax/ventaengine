@@ -17,15 +17,16 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL20C.*;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
     private final ProgramManager.ProgramAccessor programAccessor;
     private final ObjectManager.ObjectAccessor objectAccessor;
+    private final MeshRenderer meshRenderer;
 
     private final MaterialBinder materialBinder;
     private final ObjectBinder objectBinder;
@@ -52,29 +53,20 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
         glUseProgram(program.getInternalID());
-        glBindVertexArray(object.getVertexArrayObjectID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 
         cameraBinder.bind(program, getContext().getParent().getCamera());
-
         objectBinder.bind(program, object);
         matrixBinder.bind(program, context.getParent().getViewProjectionMatrixBuffer(), context.getModelMatrixBuffer(), context.getNormalMatrixBuffer());
-        materialBinder.bind(program, object.getMaterial());
 
         lightBinder.bind(program, context.getScene().getAmbientLight());
         lightBinder.bind(program, context.getScene().getLights());
 
-        if (object.getFacetsCount() > 0) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getFacetsBufferID());
-            glDrawElements(GL_TRIANGLES, object.getFacetsCount(), GL_UNSIGNED_INT, 0);
+        try (var _ = meshRenderer.withContext(getContext())
+                        .withProgram(program)) {
+            meshRenderer.render(object.getMesh());
         }
 
-        if (object.getEdgesCount() > 0) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getEdgesBufferID());
-            glDrawElements(GL_LINES, object.getEdgesCount(), GL_UNSIGNED_INT, 0);
-        }
-
-        glBindVertexArray(0);
         glUseProgram(0);
     }
 
