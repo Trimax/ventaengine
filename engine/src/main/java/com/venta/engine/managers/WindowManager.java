@@ -1,34 +1,24 @@
 package com.venta.engine.managers;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.glViewport;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
-import org.joml.Matrix4f;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
-
 import com.venta.engine.annotations.Component;
 import com.venta.engine.configurations.WindowConfiguration;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.WindowView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Matrix4f;
+import org.lwjgl.glfw.*;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11C.glViewport;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
@@ -124,7 +114,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Getter
-    public static final class WindowEntity extends AbstractEntity implements com.venta.engine.model.view.WindowView {
+    public static final class WindowEntity extends AbstractEntity implements WindowView {
         private final long internalID;
         private int width;
         private int height;

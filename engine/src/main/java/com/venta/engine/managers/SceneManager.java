@@ -1,21 +1,16 @@
 package com.venta.engine.managers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joml.Vector4f;
-
 import com.venta.engine.annotations.Component;
 import com.venta.engine.definitions.Definitions;
 import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.ObjectView;
 import com.venta.engine.model.view.SceneView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector4f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -37,7 +32,7 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     }
 
     @Getter
-    public static final class SceneEntity extends AbstractEntity implements com.venta.engine.model.view.SceneView {
+    public static final class SceneEntity extends AbstractEntity implements SceneView {
         private final String name;
         private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
         private final List<ObjectManager.ObjectEntity> objects = new ArrayList<>();
