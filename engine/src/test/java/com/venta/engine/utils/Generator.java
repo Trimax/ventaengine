@@ -1,16 +1,15 @@
 package com.venta.engine.utils;
 
-import java.util.List;
-import java.util.Random;
-import java.util.function.Supplier;
-
+import com.venta.engine.model.dto.MeshDTO;
+import lombok.experimental.UtilityClass;
+import one.util.streamex.IntStreamEx;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import com.venta.engine.model.dto.ObjectDTO;
-import lombok.experimental.UtilityClass;
-import one.util.streamex.IntStreamEx;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
 
 @UtilityClass
 public final class Generator {
@@ -28,19 +27,19 @@ public final class Generator {
         return new Vector2f(random.nextFloat(), random.nextFloat());
     }
 
-    public ObjectDTO.Vertex createRandomVertex() {
-        return new ObjectDTO.Vertex(createRandomVector3(), createRandomVector3(), createRandomVector2(), createRandomVector4());
+    public MeshDTO.Vertex createRandomVertex() {
+        return new MeshDTO.Vertex(createRandomVector3(), createRandomVector3(), createRandomVector2(), createRandomVector4());
     }
 
-    public ObjectDTO.Facet createRandomFacet() {
-        return new ObjectDTO.Facet(random.nextInt(), random.nextInt(), random.nextInt());
+    public MeshDTO.Facet createRandomFacet() {
+        return new MeshDTO.Facet(random.nextInt(), random.nextInt(), random.nextInt());
     }
 
-    public List<ObjectDTO.Vertex> createRandomVertexList(final int size) {
+    public List<MeshDTO.Vertex> createRandomVertexList(final int size) {
         return createRandomList(size, Generator::createRandomVertex);
     }
 
-    public List<ObjectDTO.Facet> createRandomFacetList(final int size) {
+    public List<MeshDTO.Facet> createRandomFacetList(final int size) {
         return createRandomList(size, Generator::createRandomFacet);
     }
 

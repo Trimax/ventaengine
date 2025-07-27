@@ -1,20 +1,15 @@
 package com.venta.engine.managers;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
-import static org.lwjgl.system.MemoryStack.stackPush;
-
+import com.venta.engine.annotations.Component;
+import com.venta.engine.model.view.TextureView;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
-import com.venta.engine.annotations.Component;
-import com.venta.engine.model.view.TextureView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
+import static org.lwjgl.system.MemoryStack.stackPush;
 
 @Slf4j
 @Component
@@ -68,7 +63,7 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     }
 
     @Getter
-    public static final class TextureEntity extends AbstractEntity implements com.venta.engine.model.view.TextureView {
+    public static final class TextureEntity extends AbstractEntity implements TextureView {
         private final int internalID;
         private final String name;
         private final int width;

@@ -54,8 +54,7 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
 
     @Getter
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class ResourceEntity extends AbstractEntity implements
-            com.venta.engine.model.view.ResourceView {}
+    public static final class ResourceEntity extends AbstractEntity implements ResourceView {}
 
     @Component
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

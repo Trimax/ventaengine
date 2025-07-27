@@ -36,11 +36,11 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
 
     private void registerUniforms(final ProgramEntity program) {
         for (final var field : ShaderUniform.values())
-            program.uniforms.put(field.getUniformName(), glGetUniformLocation(program.getInternalID(), field.getUniformName()));
+            program.addUniformID(field.getUniformName(), glGetUniformLocation(program.getInternalID(), field.getUniformName()));
 
         for (int i = 0; i < Definitions.LIGHT_MAX; i++)
             for (final var field : ShaderLightUniform.values())
-                program.uniforms.put(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
+                program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 
         log.debug("{} uniforms found and registered for program {}", program.uniforms.size(), program.getID());
     }
@@ -75,8 +75,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Getter
-    public static final class ProgramEntity extends AbstractManager.AbstractEntity implements
-            com.venta.engine.model.view.ProgramView {
+    public static final class ProgramEntity extends AbstractManager.AbstractEntity implements ProgramView {
         private final int internalID;
         private final String name;
 
@@ -86,6 +85,11 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         ProgramEntity(final int internalID, @NonNull final String name) {
             this.internalID = internalID;
             this.name = name;
+        }
+
+        private void addUniformID(final String name, Integer uniformID) {
+            if (uniformID >= 0)
+                this.uniforms.put(name, uniformID);
         }
 
         public int getUniformID(final String name) {

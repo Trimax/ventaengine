@@ -1,16 +1,7 @@
 package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.managers.CameraManager;
-import com.venta.engine.managers.LightManager;
-import com.venta.engine.managers.MaterialManager;
-import com.venta.engine.managers.ObjectManager;
-import com.venta.engine.managers.ProgramManager;
-import com.venta.engine.managers.ResourceManager;
-import com.venta.engine.managers.SceneManager;
-import com.venta.engine.managers.ShaderManager;
-import com.venta.engine.managers.TextureManager;
-import com.venta.engine.managers.WindowManager;
+import com.venta.engine.managers.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,6 +33,10 @@ public final class Context {
     private final ObjectManager objectManager;
 
     @Getter(AccessLevel.NONE)
+    private final MeshManager.MeshAccessor meshAccessor;
+    private final MeshManager meshManager;
+
+    @Getter(AccessLevel.NONE)
     private final ShaderManager.ShaderAccessor shaderAccessor;
     private final ShaderManager shaderManager;
 
@@ -68,6 +63,7 @@ public final class Context {
         sceneAccessor.cleanup();
         lightAccessor.cleanup();
         objectAccessor.cleanup();
+        meshAccessor.cleanup();
         programAccessor.cleanup();
         shaderAccessor.cleanup();
         cameraAccessor.cleanup();

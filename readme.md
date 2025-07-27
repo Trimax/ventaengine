@@ -60,7 +60,7 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 The roadmap is reflected on the GitHub issues section. Long story short:
 
 1. Introduce mesh manager etc
-   1. Save meshes separately from objects. Object uses mesh hierarchy
+   1. ~~Save meshes separately from objects. Object uses mesh hierarchy~~
    2. Introduce debug visuals. Like objects, but for debug purposes
    3. Render gizmo for light and pyramid for camera in debug mode
    4. Bounding boxes

@@ -1,10 +1,11 @@
 package com.venta.engine.model.view;
 
+import com.venta.engine.enums.DrawMode;
 import org.joml.Vector3f;
 
-import com.venta.engine.enums.DrawMode;
-
 public interface ObjectView extends AbstractView {
+    MeshView getMesh();
+
     Vector3f getPosition();
 
     Vector3f getRotation();
@@ -18,8 +19,6 @@ public interface ObjectView extends AbstractView {
     boolean hasProgram();
 
     DrawMode getDrawMode();
-
-    MaterialView getMaterial();
 
     ProgramView getProgram();
 
@@ -41,7 +40,7 @@ public interface ObjectView extends AbstractView {
 
     void setVisible(final boolean visible);
 
-    void setMaterial(final MaterialView material);
-
     void setProgram(final ProgramView program);
+
+    void setMesh(final MeshView mesh);
 }
