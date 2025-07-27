@@ -4,7 +4,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.WindowManager;
 import com.venta.engine.model.view.CameraView;
-import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.MeshView;
 import com.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.nio.FloatBuffer;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
-    private final ObjectRenderer objectRenderer;
+    private final MeshRenderer meshRenderer;
 
     @Override
     protected SceneRenderContext createContext() {
@@ -31,11 +31,11 @@ public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRender
         if (scene == null)
             return;
 
-        for (final ObjectView object : scene.getObjects())
-            try (final var _ = objectRenderer.withContext(getContext())
+        for (final MeshView object : scene.getObjects())
+            try (final var _ = meshRenderer.withContext(getContext())
                     .withModelMatrix(object.getPosition(), object.getRotation(), object.getScale())
                     .withScene(scene)) {
-                objectRenderer.render(object);
+                meshRenderer.render(object);
             }
     }
 

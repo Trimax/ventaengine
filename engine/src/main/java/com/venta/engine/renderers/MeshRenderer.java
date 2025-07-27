@@ -3,9 +3,9 @@ package com.venta.engine.renderers;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.binders.*;
 import com.venta.engine.exceptions.ObjectRenderingException;
-import com.venta.engine.managers.ObjectManager;
+import com.venta.engine.managers.MeshManager;
 import com.venta.engine.managers.ProgramManager;
-import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.MeshView;
 import com.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,9 +23,9 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
+final class MeshRenderer extends AbstractRenderer<MeshView, MeshRenderer.MeshRenderContext, SceneRenderer.SceneRenderContext> {
     private final ProgramManager.ProgramAccessor programAccessor;
-    private final ObjectManager.ObjectAccessor objectAccessor;
+    private final MeshManager.MeshAccessor meshAccessor;
 
     private final MaterialBinder materialBinder;
     private final ObjectBinder objectBinder;
@@ -34,19 +34,19 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
     private final LightBinder lightBinder;
 
     @Override
-    protected ObjectRenderContext createContext() {
-        return new ObjectRenderContext();
+    protected MeshRenderContext createContext() {
+        return new MeshRenderContext();
     }
 
     @Override
-    public void render(final ObjectView object) {
+    public void render(final MeshView object) {
         if (!object.isVisible() || !object.hasProgram())
             return;
 
-        render(objectAccessor.get(object.getID()), programAccessor.get(object.getProgram()));
+        render(meshAccessor.get(object.getID()), programAccessor.get(object.getProgram()));
     }
 
-    private void render(final ObjectManager.ObjectEntity object, final ProgramManager.ProgramEntity program) {
+    private void render(final MeshManager.MeshEntity object, final ProgramManager.ProgramEntity program) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
@@ -79,7 +79,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
     }
 
     @Getter(AccessLevel.PACKAGE)
-    static final class ObjectRenderContext extends AbstractRenderContext<SceneRenderer.SceneRenderContext> {
+    static final class MeshRenderContext extends AbstractRenderContext<SceneRenderer.SceneRenderContext> {
         private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final FloatBuffer normalMatrixBuffer = MemoryUtil.memAllocFloat(9);
         private final Matrix3f normalMatrix = new Matrix3f();
@@ -87,7 +87,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
 
         private SceneView scene;
 
-        public ObjectRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
+        public MeshRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
             modelMatrix.identity()
                     .translate(position)
                     .rotateX(rotation.x)
@@ -101,7 +101,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
             return this;
         }
 
-        public ObjectRenderContext withScene(final SceneView scene) {
+        public MeshRenderContext withScene(final SceneView scene) {
             this.scene = scene;
             return this;
         }

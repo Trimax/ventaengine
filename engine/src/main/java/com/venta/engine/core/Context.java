@@ -29,12 +29,12 @@ public final class Context {
     private final ProgramManager programManager;
 
     @Getter(AccessLevel.NONE)
-    private final NewObjectManager.NewObjectAccessor newObjectAccessor;
-    private final NewObjectManager newObjectManager;
-
-    @Getter(AccessLevel.NONE)
     private final ObjectManager.ObjectAccessor objectAccessor;
     private final ObjectManager objectManager;
+
+    @Getter(AccessLevel.NONE)
+    private final MeshManager.MeshAccessor meshAccessor;
+    private final MeshManager meshManager;
 
     @Getter(AccessLevel.NONE)
     private final ShaderManager.ShaderAccessor shaderAccessor;
@@ -62,8 +62,8 @@ public final class Context {
     void cleanup() {
         sceneAccessor.cleanup();
         lightAccessor.cleanup();
-        newObjectAccessor.cleanup();
-        objectAccessor.cleanup();
+        meshAccessor.cleanup();
+        meshAccessor.cleanup();
         programAccessor.cleanup();
         shaderAccessor.cleanup();
         cameraAccessor.cleanup();

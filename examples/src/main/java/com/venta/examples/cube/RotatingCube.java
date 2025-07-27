@@ -6,7 +6,7 @@ import com.venta.engine.core.Context;
 import com.venta.engine.interfaces.Venta;
 import com.venta.engine.interfaces.VentaInputHandler;
 import com.venta.engine.model.view.LightView;
-import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.MeshView;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
@@ -20,10 +20,10 @@ public final class RotatingCube implements Venta {
     private final InputHandler inputHandler = new InputHandler();
     private final Random random = new Random();
 
-    private ObjectView cube;
+    private MeshView cube;
     private LightView light;
 
-    private ObjectView gizmo;
+    private MeshView gizmo;
 
     @Override
     public WindowConfiguration createWindowConfiguration() {
@@ -46,7 +46,7 @@ public final class RotatingCube implements Venta {
 
         final var scene = context.getSceneManager().getCurrent();
 
-        cube = context.getObjectManager().load("cube.json");
+        cube = context.getMeshManager().load("cube.json");
         cube.setScale(new Vector3f(2.f));
         cube.setProgram(context.getProgramManager().load("basic"));
         cube.setMaterial(context.getMaterialManager().load("stone.json"));
@@ -60,7 +60,7 @@ public final class RotatingCube implements Venta {
         camera.setPosition(new Vector3f(4.f, 4.f, 4.f));
         camera.lookAt(new Vector3f(0.f));
 
-        gizmo = context.getObjectManager().load("gizmo.json");
+        gizmo = context.getMeshManager().load("gizmo.json");
         gizmo.setLit(false);
         gizmo.setPosition(new Vector3f(2.f));
         gizmo.setProgram(context.getProgramManager().load("simple"));

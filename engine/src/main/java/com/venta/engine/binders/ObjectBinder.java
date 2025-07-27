@@ -3,7 +3,7 @@ package com.venta.engine.binders;
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.managers.ProgramManager;
-import com.venta.engine.model.view.ObjectView;
+import com.venta.engine.model.view.MeshView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ObjectBinder extends AbstractBinder {
-    public void bind(final ProgramManager.ProgramEntity program, final ObjectView object) {
+    public void bind(final ProgramManager.ProgramEntity program, final MeshView object) {
         if (object == null)
             return;
 
