@@ -87,7 +87,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
             this.name = name;
         }
 
-        private void addUniformID(final String name, Integer uniformID) {
+        private void addUniformID(final String name, final Integer uniformID) {
             if (uniformID >= 0)
                 this.uniforms.put(name, uniformID);
         }

@@ -1,16 +1,16 @@
 package com.venta.examples.cube;
 
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import com.venta.engine.interfaces.VentaEngineInputHandler;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import com.venta.engine.interfaces.VentaInputHandler;
-import lombok.extern.slf4j.Slf4j;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 @Slf4j
-public final class InputHandler implements VentaInputHandler {
+public final class InputHandler implements VentaEngineInputHandler {
     private final Set<Integer> pushedButtons = new HashSet<>();
 
     @Override
