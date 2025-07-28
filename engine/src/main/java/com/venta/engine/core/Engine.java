@@ -1,5 +1,12 @@
 package com.venta.engine.core;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL33C.*;
+
+import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.VentaEngineApplication;
@@ -8,15 +15,10 @@ import com.venta.engine.managers.WindowManager;
 import com.venta.engine.renderers.SceneRenderer;
 import com.venta.engine.renderers.WindowRenderer;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.GL;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 @Component
@@ -26,7 +28,7 @@ public final class Engine implements Runnable {
     private final CameraManager.CameraAccessor cameraAccessor;
     private final WindowRenderer windowRenderer;
     private final SceneRenderer sceneRenderer;
-    private final Context context;
+    private final VentaContext context;
 
     private VentaEngineApplication application;
 
@@ -59,8 +61,9 @@ public final class Engine implements Runnable {
     public void run() {
         glEnable(GL_DEPTH_TEST);
 
-        final var fpsCounter = new FPSCounter();
         final var updateHandler = application.getUpdateHandler();
+        final var fpsCounter = new FPSCounter();
+        final var time = new VentaTime();
 
         boolean windowClosed = false;
         while (!windowClosed) {
@@ -82,11 +85,23 @@ public final class Engine implements Runnable {
 
             glfwPollEvents();
 
-            updateHandler.onUpdate(fpsCounter.tick(), context);
+            time.setDelta(fpsCounter.tick());
+            updateHandler.onUpdate(time, context);
         }
 
         context.cleanup();
         glfwTerminate();
+    }
+
+    @Getter
+    public static final class VentaTime {
+        private double timeElapsed = 0.0;
+        private double delta;
+
+        private void setDelta(final double delta) {
+            this.timeElapsed += delta;
+            this.delta = delta;
+        }
     }
 }
 
