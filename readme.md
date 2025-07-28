@@ -57,13 +57,12 @@ On macOS start with VM argument: `-XstartOnFirstThread`
 Contributions, issues, and feature requests are welcome! Feel free to fork the repository and submit pull requests.
 
 ## Roadmap
-The roadmap is reflected on the GitHub issues section. Long story short:
+The roadmap is reflected in the GitHub issues section. Long story short:
 
 1. Introduce mesh manager etc
-   1. ~~Save meshes separately from objects. Object uses mesh hierarchy~~
-   2. Introduce debug visuals. Like objects, but for debug purposes
-   3. Render gizmo for light and pyramid for camera in debug mode
-   4. Bounding boxes
+   1. Make the camera a part of scene (Scene should contain a list of cameras)
+   2. Render pyramid for camera in debug mode
+   3. Render bounding boxes for objects
 2. Console
 3. Environment: box/sphere (add box to the scene)
 4. Emitters (extend the scene with a list of emitters)

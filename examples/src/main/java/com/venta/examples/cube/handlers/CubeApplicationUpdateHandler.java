@@ -4,8 +4,8 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import org.joml.Vector3f;
 
-import com.venta.engine.core.VentaContext;
 import com.venta.engine.core.Engine;
+import com.venta.engine.core.VentaContext;
 import com.venta.engine.interfaces.VentaEngineUpdateHandler;
 import com.venta.examples.cube.state.CubeApplicationState;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,6 @@ public final class CubeApplicationUpdateHandler implements VentaEngineUpdateHand
 
         state.getLight().setPosition(
                 new Vector3f(2.5f * (float) Math.sin(time.getTimeElapsed()), 2.5f, 2.5f * (float) Math.cos(time.getTimeElapsed())));
-
-        state.getGizmo().setPosition(state.getLight().getPosition());
     }
 
     private void handleCubeRotation() {

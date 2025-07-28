@@ -3,7 +3,6 @@ package com.venta.examples.cube.handlers;
 import org.joml.Vector3f;
 
 import com.venta.engine.core.VentaContext;
-import com.venta.engine.enums.DrawMode;
 import com.venta.engine.interfaces.VentaEngineStartupHandler;
 import com.venta.examples.cube.state.CubeApplicationState;
 import lombok.AllArgsConstructor;
@@ -33,11 +32,6 @@ public final class CubeApplicationStartupHandler implements VentaEngineStartupHa
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(5.f, 5.f, 5.f));
         camera.lookAt(new Vector3f(0.f));
-
-        final var gizmo = context.getObjectManager().load("gizmo");
-        gizmo.setDrawMode(DrawMode.Edge);
-        state.setGizmo(gizmo);
-        scene.add(gizmo);
 
         final int cubeCount = 10;
         for (int cubeID = 0; cubeID < cubeCount; cubeID++) {

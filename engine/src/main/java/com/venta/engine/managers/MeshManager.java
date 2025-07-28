@@ -110,8 +110,6 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
 
     @Getter
     public static final class MeshEntity extends AbstractEntity implements MeshView {
-        private final String name;
-
         private final int verticesCount;
         private final int facetsCount;
         private final int edgesCount;
@@ -131,7 +129,8 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
                    final int verticesBufferID,
                    final int facetsBufferID,
                    final int edgesBufferID) {
-            this.name = name;
+            super(name);
+
             this.verticesCount = verticesCount;
             this.facetsCount = facetsCount;
             this.edgesCount = edgesCount;

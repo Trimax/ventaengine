@@ -51,8 +51,6 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
     @Getter
     public static final class ObjectEntity extends AbstractEntity implements ObjectView {
-        private final String name;
-
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
@@ -70,7 +68,8 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
                      final Vector3f position,
                      final Vector3f rotation,
                      final Vector3f scale) {
-            this.name = name;
+            super(name);
+
             this.mesh = mesh;
             this.program = program;
 

@@ -1,24 +1,34 @@
 package com.venta.engine.managers;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11C.glViewport;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.interfaces.VentaEngineConfiguration;
 import com.venta.engine.interfaces.VentaEngineInputHandler;
 import com.venta.engine.model.view.WindowView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Matrix4f;
-import org.lwjgl.glfw.*;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.glViewport;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
@@ -107,7 +117,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     @Override
     protected void destroy(final WindowEntity window) {
-        log.info("Destroying window {} ({})", window.getID(), window.getTitle());
+        log.info("Destroying window {} ({})", window.getID(), window.getName());
         window.sizeCallback.close();
         window.keyCallback.close();
         glfwDestroyWindow(window.getInternalID());
@@ -118,7 +128,6 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private final long internalID;
         private int width;
         private int height;
-        private final String title;
         private final VentaEngineInputHandler inputHandler;
         private final Matrix4f projectionMatrix;
 
@@ -165,10 +174,11 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         };
 
         WindowEntity(final long internalID, final int width, final int height, @NonNull final String title, final VentaEngineInputHandler inputHandler) {
+            super(title);
+
             this.internalID = internalID;
             this.width = width;
             this.height = height;
-            this.title = title;
             this.inputHandler = inputHandler;
 
             final float aspectRatio = (float) width / height;

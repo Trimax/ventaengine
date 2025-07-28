@@ -31,7 +31,7 @@ public final class WindowRenderer extends AbstractRenderer<WindowView, WindowRen
         final var now = System.currentTimeMillis();
         if (now - lastUpdated >= 1000) {
             lastUpdated = now;
-            glfwSetWindowTitle(window.getInternalID(), window.getTitle() + ": " + getContext().getFrameRate());
+            glfwSetWindowTitle(window.getInternalID(), window.getName() + ": " + getContext().getFrameRate());
         }
     }
 
