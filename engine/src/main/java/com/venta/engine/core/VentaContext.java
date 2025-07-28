@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Component
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class Context {
+public final class VentaContext {
     @Getter(AccessLevel.NONE)
     private final ResourceManager.ResourceAccessor resourceAccessor;
     private final ResourceManager resourceManager;

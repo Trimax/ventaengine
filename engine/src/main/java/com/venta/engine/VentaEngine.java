@@ -1,7 +1,7 @@
 package com.venta.engine;
 
 import com.venta.engine.annotations.Inject;
-import com.venta.engine.core.Context;
+import com.venta.engine.core.VentaContext;
 import com.venta.engine.core.Engine;
 import com.venta.engine.exceptions.EngineInitializationException;
 import com.venta.engine.interfaces.VentaEngineApplication;
@@ -27,7 +27,7 @@ public final class VentaEngine {
         log.info("Starting VentaEngine {}", ResourceUtil.load("/banner.txt"));
 
         final var engine = MeasurementUtil.measure("VentaEngine startup", () -> createEngine(ventaEngineApplication));
-        ventaEngineApplication.getStartupHandler().onStartup(args, getComponent(Context.class));
+        ventaEngineApplication.getStartupHandler().onStartup(args, getComponent(VentaContext.class));
 
         engine.run();
         MeasurementUtil.measure("VentaEngine shutdown", VentaEngine::shutdownEngine);
