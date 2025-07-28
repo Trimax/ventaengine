@@ -60,6 +60,7 @@ public final class Engine implements Runnable {
         glEnable(GL_DEPTH_TEST);
 
         final var fpsCounter = new FPSCounter();
+        final var updateHandler = application.getUpdateHandler();
 
         boolean windowClosed = false;
         while (!windowClosed) {
@@ -81,7 +82,7 @@ public final class Engine implements Runnable {
 
             glfwPollEvents();
 
-            application.onUpdate(fpsCounter.tick(), context);
+            updateHandler.onUpdate(fpsCounter.tick(), context);
         }
 
         context.cleanup();

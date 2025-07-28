@@ -4,13 +4,14 @@ import org.joml.Vector3f;
 
 import com.venta.engine.core.Context;
 import com.venta.engine.enums.DrawMode;
+import com.venta.engine.interfaces.VentaEngineStartupHandler;
 import com.venta.examples.cube.state.CubeApplicationState;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
-public final class CubeApplicationStartupHandler {
+public final class CubeApplicationStartupHandler implements VentaEngineStartupHandler {
     private final CubeApplicationState state;
 
     public void onStartup(final String[] args, final Context context) {

@@ -1,25 +1,24 @@
 package com.venta.examples.cube;
 
 import com.venta.engine.VentaEngine;
-import com.venta.engine.core.Context;
 import com.venta.engine.interfaces.VentaEngineApplication;
 import com.venta.engine.interfaces.VentaEngineConfiguration;
+import com.venta.engine.interfaces.VentaEngineStartupHandler;
 import com.venta.engine.interfaces.VentaEngineInputHandler;
-import com.venta.examples.cube.handlers.CubeApplicationInputHandler;
+import com.venta.engine.interfaces.VentaEngineUpdateHandler;
 import com.venta.examples.cube.handlers.CubeApplicationStartupHandler;
+import com.venta.examples.cube.handlers.CubeApplicationInputHandler;
 import com.venta.examples.cube.handlers.CubeApplicationUpdateHandler;
 import com.venta.examples.cube.state.CubeApplicationState;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class CubeApplication implements VentaEngineApplication {
     private final CubeApplicationState state = new CubeApplicationState();
 
-    private final CubeApplicationStartupHandler cubeApplicationStartupHandler = new CubeApplicationStartupHandler(state);
-    private final CubeApplicationUpdateHandler cubeApplicationUpdateHandler = new CubeApplicationUpdateHandler(state);
-
     @Override
-    public VentaEngineConfiguration getConfiguration() {
+    public @NonNull VentaEngineConfiguration getConfiguration() {
         return new VentaEngineConfiguration() {
             @Override
             public RenderConfiguration getRenderConfiguration() {
@@ -29,18 +28,18 @@ public final class CubeApplication implements VentaEngineApplication {
     }
 
     @Override
-    public VentaEngineInputHandler getInputHandler() {
+    public @NonNull VentaEngineInputHandler getInputHandler() {
         return new CubeApplicationInputHandler(state);
     }
 
     @Override
-    public void onStartup(final String[] args, final Context context) {
-        cubeApplicationStartupHandler.onStartup(args, context);
+    public @NonNull VentaEngineStartupHandler getStartupHandler() {
+        return new CubeApplicationStartupHandler(state);
     }
 
     @Override
-    public void onUpdate(final double delta, final Context context) {
-        cubeApplicationUpdateHandler.onUpdate(delta, context);
+    public @NonNull VentaEngineUpdateHandler getUpdateHandler() {
+        return new CubeApplicationUpdateHandler(state);
     }
 
     public static void main(final String[] args) {

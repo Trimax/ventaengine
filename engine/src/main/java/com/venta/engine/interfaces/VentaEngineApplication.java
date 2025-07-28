@@ -1,6 +1,5 @@
 package com.venta.engine.interfaces;
 
-import com.venta.engine.core.Context;
 import lombok.NonNull;
 
 public interface VentaEngineApplication {
@@ -8,11 +7,15 @@ public interface VentaEngineApplication {
         return VentaEngineConfiguration.DEFAULT;
     }
 
+    default @NonNull VentaEngineStartupHandler getStartupHandler() {
+        return VentaEngineStartupHandler.DEFAULT;
+    }
+
+    default @NonNull VentaEngineUpdateHandler getUpdateHandler() {
+        return VentaEngineUpdateHandler.DEFAULT;
+    }
+
     default @NonNull VentaEngineInputHandler getInputHandler() {
         return VentaEngineInputHandler.DEFAULT;
     }
-
-    void onStartup(final String[] args, final Context context);
-
-    void onUpdate(final double delta, final Context context);
 }

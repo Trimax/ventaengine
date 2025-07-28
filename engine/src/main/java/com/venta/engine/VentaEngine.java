@@ -27,7 +27,7 @@ public final class VentaEngine {
         log.info("Starting VentaEngine {}", ResourceUtil.load("/banner.txt"));
 
         final var engine = MeasurementUtil.measure("VentaEngine startup", () -> createEngine(ventaEngineApplication));
-        ventaEngineApplication.onStartup(args, getComponent(Context.class));
+        ventaEngineApplication.getStartupHandler().onStartup(args, getComponent(Context.class));
 
         engine.run();
         MeasurementUtil.measure("VentaEngine shutdown", VentaEngine::shutdownEngine);

@@ -1,18 +1,18 @@
 package com.venta.examples.cube.handlers;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
 import org.joml.Vector3f;
 
 import com.venta.engine.core.Context;
+import com.venta.engine.interfaces.VentaEngineUpdateHandler;
 import com.venta.examples.cube.state.CubeApplicationState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public final class CubeApplicationUpdateHandler {
+public final class CubeApplicationUpdateHandler implements VentaEngineUpdateHandler {
     private final CubeApplicationState state;
 
     private double elapsedTime = 0.f;
