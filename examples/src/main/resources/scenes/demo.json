@@ -2,11 +2,18 @@
   "name": "Demo scene",
   "objects": [
     {
-      "name": "Colored cube",
+      "name": "Cube",
       "file": "cube.json",
       "position": {"x": 0.0, "y": 0.0, "z": 0.0},
       "angles": {"x": 0.0, "y": 0.0, "z": 0.0},
-      "scale": {"x": 0.0, "y": 0.0, "z": 0.0}
+      "scale": {"x": 1.0, "y": 1.0, "z": 1.0}
+    }
+  ],
+  "lights": [
+    {
+      "name": "Light",
+      "file": "light.json",
+      "position": {"x": 2.0, "y": 2.0, "z": 2.0}
     }
   ]
 }

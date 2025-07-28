@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -49,12 +50,15 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
 
     @Override
     protected void destroy(final ResourceEntity resource) {
-        log.debug("Destroying resource {}", resource.getID());
+        log.debug("Destroying resource {} ({})", resource.getID(), resource.getName());
     }
 
     @Getter
-    @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class ResourceEntity extends AbstractEntity implements ResourceView {}
+    public static final class ResourceEntity extends AbstractEntity implements ResourceView {
+        ResourceEntity() {
+            super(UUID.randomUUID().toString());
+        }
+    }
 
     @Component
     @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -1,7 +1,21 @@
 package com.venta.engine.renderers;
 
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.system.MemoryUtil;
+
 import com.venta.engine.annotations.Component;
-import com.venta.engine.binders.*;
+import com.venta.engine.binders.CameraBinder;
+import com.venta.engine.binders.LightBinder;
+import com.venta.engine.binders.MatrixBinder;
+import com.venta.engine.binders.ObjectBinder;
 import com.venta.engine.exceptions.ObjectRenderingException;
 import com.venta.engine.managers.ObjectManager;
 import com.venta.engine.managers.ProgramManager;
@@ -10,16 +24,6 @@ import com.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,7 +32,6 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
     private final ObjectManager.ObjectAccessor objectAccessor;
     private final MeshRenderer meshRenderer;
 
-    private final MaterialBinder materialBinder;
     private final ObjectBinder objectBinder;
     private final MatrixBinder matrixBinder;
     private final CameraBinder cameraBinder;

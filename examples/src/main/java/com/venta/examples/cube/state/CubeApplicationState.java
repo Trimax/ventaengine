@@ -14,6 +14,5 @@ public final class CubeApplicationState {
     private final Vector3f cubeRotationVelocity = new Vector3f(0, 0, 0);
     private final Set<Integer> pushedButtons = new HashSet<>();
     private ObjectView cube;
-    private ObjectView gizmo;
     private LightView light;
 }

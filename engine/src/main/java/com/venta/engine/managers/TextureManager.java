@@ -65,7 +65,6 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     @Getter
     public static final class TextureEntity extends AbstractEntity implements TextureView {
         private final int internalID;
-        private final String name;
         private final int width;
         private final int height;
 
@@ -73,9 +72,9 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
                 @NonNull final String name,
                 final int width,
                 final int height) {
+            super(name);
 
             this.internalID = internalID;
-            this.name = name;
             this.width = width;
             this.height = height;
         }

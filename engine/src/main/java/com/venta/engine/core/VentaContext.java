@@ -1,17 +1,33 @@
 package com.venta.engine.core;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.managers.*;
+import com.venta.engine.interfaces.VentaEngineConfiguration;
+import com.venta.engine.managers.CameraManager;
+import com.venta.engine.managers.LightManager;
+import com.venta.engine.managers.MaterialManager;
+import com.venta.engine.managers.MeshManager;
+import com.venta.engine.managers.ObjectManager;
+import com.venta.engine.managers.ProgramManager;
+import com.venta.engine.managers.ResourceManager;
+import com.venta.engine.managers.SceneManager;
+import com.venta.engine.managers.ShaderManager;
+import com.venta.engine.managers.TextureManager;
+import com.venta.engine.managers.WindowManager;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
 @Component
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class VentaContext {
+    @Setter(value = AccessLevel.PACKAGE, onParam_ = @__(@NonNull))
+    private VentaEngineConfiguration.RenderConfiguration renderConfiguration;
+
     @Getter(AccessLevel.NONE)
     private final ResourceManager.ResourceAccessor resourceAccessor;
     private final ResourceManager resourceManager;

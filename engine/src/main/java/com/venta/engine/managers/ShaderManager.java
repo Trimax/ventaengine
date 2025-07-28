@@ -39,15 +39,15 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     public static final class ShaderEntity extends AbstractEntity implements ShaderView {
         private final int internalID;
         private final Type type;
-        private final String name;
 
         @Getter(AccessLevel.NONE)
         private final String code;
 
         ShaderEntity(final int internalID, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
+            super(name);
+
             this.internalID = internalID;
             this.type = type;
-            this.name = name;
             this.code = code;
         }
 

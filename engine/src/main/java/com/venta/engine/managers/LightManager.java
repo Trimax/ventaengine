@@ -1,11 +1,16 @@
 package com.venta.engine.managers;
 
+import org.joml.Vector3f;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.model.dto.LightDTO;
 import com.venta.engine.model.view.LightView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 @Slf4j
 @Component
@@ -21,13 +26,11 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
 
     @Override
     protected void destroy(final LightEntity light) {
-        log.info("Destroying light {} ({})", light.getID(), light.name);
+        log.info("Destroying light {} ({})", light.getID(), light.getName());
     }
 
     @Getter
     public static final class LightEntity extends AbstractEntity implements LightView {
-        private final String name;
-
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f direction = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
@@ -36,7 +39,7 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
         private float intensity = 1.f;
 
         LightEntity(@NonNull final String name) {
-            this.name = name;
+            super(name);
         }
 
         LightEntity(@NonNull final LightDTO dto) {

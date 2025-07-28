@@ -77,14 +77,14 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     @Getter
     public static final class ProgramEntity extends AbstractManager.AbstractEntity implements ProgramView {
         private final int internalID;
-        private final String name;
 
         @Getter(AccessLevel.NONE)
         private final Map<String, Integer> uniforms = new HashMap<>();
 
         ProgramEntity(final int internalID, @NonNull final String name) {
+            super(name);
+
             this.internalID = internalID;
-            this.name = name;
         }
 
         private void addUniformID(final String name, final Integer uniformID) {

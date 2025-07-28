@@ -30,7 +30,6 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     public static final class CameraEntity extends AbstractEntity implements CameraView {
         private static final Vector3f worldUp = new Vector3f(0, 1, 0);
 
-        private final String name;
         private final Vector3f position;
         private final Vector3f front;
         private final Vector3f right;
@@ -46,7 +45,8 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
         private float roll;  // around Z
 
         CameraEntity(@NonNull final String name, final Vector3f position, final Vector3f target) {
-            this.name = name;
+            super(name);
+
             this.position = new Vector3f(position);
             this.front = new Vector3f(target).sub(position).normalize();
             this.right = new Vector3f();

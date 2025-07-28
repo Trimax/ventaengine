@@ -13,7 +13,7 @@ public interface VentaEngineConfiguration {
         return WindowConfiguration.DEFAULT;
     }
 
-    record RenderConfiguration(boolean isConsoleEnabled, boolean isOriginVisible) {
+    record RenderConfiguration(boolean isConsoleEnabled, boolean isDebugEnabled) {
         public static final RenderConfiguration DEFAULT = new RenderConfiguration(false, false);
     }
 

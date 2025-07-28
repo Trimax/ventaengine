@@ -28,13 +28,13 @@ public final class CubeApplication implements VentaEngineApplication {
     }
 
     @Override
-    public @NonNull VentaEngineInputHandler getInputHandler() {
-        return new CubeApplicationInputHandler(state);
+    public @NonNull VentaEngineStartupHandler getStartupHandler() {
+        return new CubeApplicationStartupHandler(state);
     }
 
     @Override
-    public @NonNull VentaEngineStartupHandler getStartupHandler() {
-        return new CubeApplicationStartupHandler(state);
+    public @NonNull VentaEngineInputHandler getInputHandler() {
+        return new CubeApplicationInputHandler(state);
     }
 
     @Override
