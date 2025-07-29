@@ -25,6 +25,9 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     private final ShaderManager shaderManager;
 
     public ProgramView load(final String name) {
+        if (isCached(name))
+            return getCached(name);
+
         log.info("Loading program {}", name);
 
         final var programDTO = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
