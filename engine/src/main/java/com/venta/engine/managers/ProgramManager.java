@@ -32,7 +32,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
 
         final var programDTO = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
 
-        return store(create(programDTO.name(),
+        return store(create(name,
                 shaderManager.load(programDTO.shaderVertex(), ShaderManager.ShaderEntity.Type.Vertex),
                 shaderManager.load(programDTO.shaderFragment(), ShaderManager.ShaderEntity.Type.Fragment)));
     }

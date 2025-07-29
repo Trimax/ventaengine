@@ -1,7 +1,10 @@
 package com.venta.engine.managers;
 
+import org.joml.Vector3f;
+
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.DrawMode;
+import com.venta.engine.enums.GizmoType;
 import com.venta.engine.model.dto.ObjectDTO;
 import com.venta.engine.model.view.MeshView;
 import com.venta.engine.model.view.ObjectView;
@@ -11,14 +14,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity, ObjectView> {
+    private final GizmoManager.GizmoAccessor gizmoAccessor;
     private final ResourceManager resourceManager;
     private final ProgramManager programManager;
+    private final GizmoManager gizmoManager;
     private final MeshManager meshManager;
 
     public ObjectView create(final String name, final MeshView mesh, final ProgramView program) {
@@ -29,7 +33,8 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
                 meshManager.get(mesh.getID()),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(0.f, 0.f, 0.f),
-                new Vector3f(1.f, 1.f, 1.f)));
+                new Vector3f(1.f, 1.f, 1.f),
+                gizmoAccessor.get(gizmoManager.create("Bounding box", GizmoType.Object))));
     }
 
     public ObjectView load(final String name) {
@@ -41,7 +46,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
                 meshManager.get(meshManager.load(objectDTO.mesh()).getID()),
                 objectDTO.position(),
                 objectDTO.angles(),
-                objectDTO.scale()));
+                objectDTO.scale(), gizmoAccessor.get(gizmoManager.create("Bounding box", GizmoType.Object))));
     }
 
     @Override
@@ -54,6 +59,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
+        private final GizmoManager.GizmoEntity gizmo;
 
         private DrawMode drawMode = DrawMode.Polygon;
         private boolean isVisible = true;
@@ -67,11 +73,13 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
                      final MeshManager.MeshEntity mesh,
                      final Vector3f position,
                      final Vector3f rotation,
-                     final Vector3f scale) {
+                     final Vector3f scale,
+                     final GizmoManager.GizmoEntity gizmo) {
             super(name);
 
             this.mesh = mesh;
             this.program = program;
+            this.gizmo = gizmo;
 
             this.position.set(position);
             this.rotation.set(rotation);

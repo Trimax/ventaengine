@@ -12,15 +12,12 @@ import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import com.venta.engine.annotations.Component;
-import com.venta.engine.binders.CameraBinder;
-import com.venta.engine.binders.LightBinder;
 import com.venta.engine.binders.MatrixBinder;
-import com.venta.engine.binders.ObjectBinder;
+import com.venta.engine.enums.DrawMode;
 import com.venta.engine.exceptions.ObjectRenderingException;
-import com.venta.engine.managers.ObjectManager;
+import com.venta.engine.managers.GizmoManager;
 import com.venta.engine.managers.ProgramManager;
-import com.venta.engine.model.view.ObjectView;
-import com.venta.engine.model.view.SceneView;
+import com.venta.engine.model.view.GizmoView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,47 +25,36 @@ import lombok.NoArgsConstructor;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
+public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRenderer.GizmoRenderContext, SceneRenderer.SceneRenderContext> {
     private final ProgramManager.ProgramAccessor programAccessor;
-    private final ObjectManager.ObjectAccessor objectAccessor;
+    private final GizmoManager.GizmoAccessor gizmoAccessor;
+    private final ProgramManager programManager;
     private final MeshRenderer meshRenderer;
-
-    private final ObjectBinder objectBinder;
     private final MatrixBinder matrixBinder;
-    private final CameraBinder cameraBinder;
-    private final LightBinder lightBinder;
 
     @Override
-    protected ObjectRenderContext createContext() {
-        return new ObjectRenderContext();
+    protected GizmoRenderContext createContext() {
+        return new GizmoRenderContext();
     }
 
     @Override
-    public void render(final ObjectView object) {
-        if (!object.isVisible() || !object.hasProgram())
-            return;
-
-        render(objectAccessor.get(object.getID()), programAccessor.get(object.getProgram()));
+    void render(final GizmoView gizmo) {
+        render(gizmoAccessor.get(gizmo), programAccessor.get(programManager.load("simple")));
     }
 
-    private void render(final ObjectManager.ObjectEntity object, final ProgramManager.ProgramEntity program) {
+    private void render(final GizmoManager.GizmoEntity gizmo, final ProgramManager.ProgramEntity program) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
         glUseProgram(program.getInternalID());
-        glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
+        glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Edge.getMode());
 
-        cameraBinder.bind(program, getContext().getParent().getCamera());
-        objectBinder.bind(program, object);
         matrixBinder.bind(program, context.getParent().getViewProjectionMatrixBuffer(), context.getModelMatrixBuffer(), context.getNormalMatrixBuffer());
 
-        lightBinder.bind(program, context.getScene().getAmbientLight());
-        lightBinder.bind(program, context.getScene().getLights());
-
-        try (var _ = meshRenderer.withContext(getContext())
-                        .withProgram(program)) {
-            meshRenderer.render(object.getMesh());
+        try (var _ = meshRenderer.withContext(null)
+                .withProgram(program)) {
+            meshRenderer.render(gizmo.getMesh());
         }
 
         glUseProgram(0);
@@ -76,15 +62,13 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    static final class ObjectRenderContext extends AbstractRenderContext<SceneRenderer.SceneRenderContext> {
+    public static final class GizmoRenderContext extends AbstractRenderContext<SceneRenderer.SceneRenderContext> {
         private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final FloatBuffer normalMatrixBuffer = MemoryUtil.memAllocFloat(9);
         private final Matrix3f normalMatrix = new Matrix3f();
         private final Matrix4f modelMatrix = new Matrix4f();
 
-        private SceneView scene;
-
-        public ObjectRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
+        public GizmoRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
             modelMatrix.identity()
                     .translate(position)
                     .rotateX(rotation.x)
@@ -98,16 +82,10 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
             return this;
         }
 
-        public ObjectRenderContext withScene(final SceneView scene) {
-            this.scene = scene;
-            return this;
-        }
-
         @Override
         public void close() {
             normalMatrixBuffer.clear();
             modelMatrixBuffer.clear();
-            scene = null;
         }
 
         @Override

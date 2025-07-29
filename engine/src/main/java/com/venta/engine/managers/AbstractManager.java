@@ -1,6 +1,7 @@
 package com.venta.engine.managers;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -66,6 +67,10 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
 
         public final E get(final V view) {
             return view == null ? null : get(view.getID());
+        }
+
+        public final Iterator<E> iterator() {
+            return values.values().iterator();
         }
 
         public final void cleanup() {
