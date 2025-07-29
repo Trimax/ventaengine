@@ -15,8 +15,8 @@
     <dependencies>
         <dependency>
             <groupId>com.venta</groupId>
-            <artifactId>core</artifactId>
-            <version>0.4.15</version>
+            <artifactId>container</artifactId>
+            <version>0.4.18</version>
         </dependency>
 
         <!-- Logging -->
