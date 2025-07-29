@@ -1,5 +1,6 @@
 package com.venta.engine.managers;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,21 +12,24 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 abstract class AbstractManager<E extends V, V extends AbstractView> {
-    private final Map<String, E> entitiesByID = new ConcurrentHashMap<>();
-    private final Map<String, String> idsByName = new ConcurrentHashMap<>();
+    private final Map<String, E> values = new ConcurrentHashMap<>();
+    private final Map<String, String> cache = new HashMap<>();
+
+    protected final boolean isCached(final String name) {
+        return cache.containsKey(name);
+    }
+
+    protected final E getCached(final String name) {
+        return values.get(cache.get(name));
+    }
 
     protected final E get(final String id) {
-        return entitiesByID.get(id);
+        return values.get(id);
     }
 
     protected final V store(final E entity) {
-        if (idsByName.containsKey(entity.getName())) {
-            log.warn("Entity already exists with name {}", entity.getName());
-            return entitiesByID.get(idsByName.get(entity.getName()));
-        }
-
-        entitiesByID.put(entity.getID(), entity);
-        idsByName.put(entity.getName(), entity.getID());
+        values.put(entity.getID(), entity);
+        cache.put(entity.getName(), entity.getID());
         log.debug("{} {} created", entity.getClass().getSimpleName(), entity.getID());
 
         return entity;
@@ -33,8 +37,8 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
 
     private void cleanup() {
         log.info("Cleaning up {}", getClass().getSimpleName());
-        entitiesByID.values().forEach(this::destroy);
-        entitiesByID.clear();
+        values.values().forEach(this::destroy);
+        values.clear();
     }
 
     protected abstract void destroy(final E entity);
@@ -57,7 +61,7 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
 
     abstract class AbstractAccessor {
         public final E get(final String id) {
-            return entitiesByID.get(id);
+            return values.get(id);
         }
 
         public final E get(final V view) {

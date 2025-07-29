@@ -20,8 +20,14 @@ public final class CubeApplicationUpdateHandler implements VentaEngineUpdateHand
         state.getCube().rotate(state.getCubeRotationVelocity());
         handleCubeRotation();
 
-        state.getLight().setPosition(
+        state.getLightXZ().setPosition(
                 new Vector3f(2.5f * (float) Math.sin(time.getTimeElapsed()), 2.5f, 2.5f * (float) Math.cos(time.getTimeElapsed())));
+
+        state.getLightXY().setPosition(
+                new Vector3f(2.5f * (float) Math.cos(time.getTimeElapsed()), 2.5f * (float) Math.sin(time.getTimeElapsed()), 2.5f));
+
+        state.getLightYZ().setPosition(
+                new Vector3f(2.5f, 2.5f * (float) Math.cos(time.getTimeElapsed()), 2.5f * (float) Math.sin(time.getTimeElapsed())));
     }
 
     private void handleCubeRotation() {
