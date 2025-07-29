@@ -18,6 +18,16 @@ public final class CubeApplication implements VentaEngineApplication {
     private final CubeApplicationState state = new CubeApplicationState();
 
     @Override
+    public @NonNull VentaEngineConfiguration getConfiguration() {
+        return new VentaEngineConfiguration() {
+            @Override
+            public RenderConfiguration getRenderConfiguration() {
+                return new RenderConfiguration(false, true);
+            }
+        };
+    }
+
+    @Override
     public @NonNull VentaEngineStartupHandler getStartupHandler() {
         return new CubeApplicationStartupHandler(state);
     }
