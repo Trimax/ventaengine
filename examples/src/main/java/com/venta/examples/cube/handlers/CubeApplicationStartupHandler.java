@@ -24,10 +24,20 @@ public final class CubeApplicationStartupHandler implements VentaEngineStartupHa
         state.setCube(cube);
         scene.add(cube);
 
-        final var light = context.getLightManager().load("basic");
-        light.setPosition(new Vector3f(2.f, 2.f, 2.f));
-        state.setLight(light);
-        scene.add(light);
+        final var lightXZ = context.getLightManager().load("basic");
+        lightXZ.setPosition(new Vector3f(2.f, 2.f, 2.f));
+        state.setLightXZ(lightXZ);
+        scene.add(lightXZ);
+
+        final var lightXY = context.getLightManager().load("basic");
+        lightXY.setPosition(new Vector3f(-2.f, -2.f, 2.f));
+        state.setLightXY(lightXY);
+        scene.add(lightXY);
+
+        final var lightYZ = context.getLightManager().load("basic");
+        lightXY.setPosition(new Vector3f(2.f, -2.f, -2.f));
+        state.setLightYZ(lightYZ);
+        scene.add(lightYZ);
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(5.f, 5.f, 5.f));

@@ -24,8 +24,11 @@ public final class CubeApplicationInputHandler implements VentaEngineInputHandle
         if (action == GLFW_RELEASE)
             state.getPushedButtons().remove(key);
 
-        if (action == GLFW_PRESS && key == GLFW_KEY_SPACE)
-            state.getLight().setColor(createRandomVector3());
+        if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+            state.getLightXZ().setColor(createRandomVector3());
+            state.getLightXY().setColor(createRandomVector3());
+            state.getLightYZ().setColor(createRandomVector3());
+        }
     }
 
     @Override
@@ -35,6 +38,7 @@ public final class CubeApplicationInputHandler implements VentaEngineInputHandle
 
     public Vector3f createRandomVector3() {
         final Random random = new Random();
+        random.setSeed(System.nanoTime());
         return new Vector3f(random.nextFloat(), random.nextFloat(), random.nextFloat());
     }
 }

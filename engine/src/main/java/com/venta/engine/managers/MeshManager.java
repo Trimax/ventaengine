@@ -1,15 +1,5 @@
 package com.venta.engine.managers;
 
-import com.venta.engine.annotations.Component;
-import com.venta.engine.model.dto.MeshDTO;
-import com.venta.engine.model.view.MaterialView;
-import com.venta.engine.model.view.MeshView;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import static com.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
@@ -18,6 +8,20 @@ import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import com.venta.engine.annotations.Component;
+import com.venta.engine.model.dto.MeshDTO;
+import com.venta.engine.model.view.MaterialView;
+import com.venta.engine.model.view.MeshView;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,6 +29,9 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
     private final ResourceManager resourceManager;
 
     public MeshView load(final String name) {
+        if (isCached(name))
+            return getCached(name);
+
         log.info("Loading mesh {}", name);
 
         final var objectDTO = resourceManager.load(String.format("/meshes/%s.json", name), MeshDTO.class);
@@ -96,7 +103,8 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
 
         glBindVertexArray(0);
 
-        return store(new MeshEntity(name, vertices.length, objectDTO.getFacetsArrayLength(), objectDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID));
+        return store(new MeshEntity(name, vertices.length, objectDTO.getFacetsArrayLength(),
+                objectDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID));
     }
 
     @Override
