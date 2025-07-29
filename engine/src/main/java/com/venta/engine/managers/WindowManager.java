@@ -18,6 +18,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import com.venta.engine.annotations.Component;
+import com.venta.engine.exceptions.UnknownTextureFormatException;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.interfaces.VentaEngineConfiguration;
 import com.venta.engine.interfaces.VentaEngineInputHandler;
@@ -98,7 +99,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             final ByteBuffer iconPixels = STBImage.stbi_load_from_memory(imageBuffer, w, h, comp, 4);
             if (iconPixels == null) {
                 MemoryUtil.memFree(imageBuffer);
-                throw new RuntimeException("Failed to load icon from memory: " + STBImage.stbi_failure_reason());
+                throw new UnknownTextureFormatException(String.format("%s (%s)", resourcePath, STBImage.stbi_failure_reason()));
             }
 
             final GLFWImage icon = GLFWImage.malloc(stack);

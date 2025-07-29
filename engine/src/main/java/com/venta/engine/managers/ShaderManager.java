@@ -16,6 +16,9 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     private final ResourceManager resourceManager;
 
     public ShaderView load(final String name, final ShaderManager.ShaderEntity.Type type) {
+        if (isCached(name))
+            return getCached(name);
+
         log.info("Loading shader {}", name);
 
         final var code = resourceManager.load(String.format("/shaders/%s", name));

@@ -1,15 +1,22 @@
 package com.venta.engine.managers;
 
-import com.venta.engine.annotations.Component;
-import com.venta.engine.model.view.TextureView;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImage;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
+
+import com.venta.engine.annotations.Component;
+import com.venta.engine.exceptions.UnknownTextureFormatException;
+import com.venta.engine.model.view.TextureView;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -18,6 +25,9 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     private final ResourceManager resourceManager;
 
     public TextureView load(final String name) {
+        if (isCached(name))
+            return getCached(name);
+
         log.info("Loading texture {}", name);
 
         final byte[] imageData = resourceManager.loadAsBytes(String.format("/textures/%s", name));
@@ -31,8 +41,10 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
             imageBuffer.flip();
 
             final var pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 4);
-            if (pixels == null)
-                throw new RuntimeException("Failed to load image " + name + ": " + STBImage.stbi_failure_reason());
+            if (pixels == null) {
+                MemoryUtil.memFree(imageBuffer);
+                throw new UnknownTextureFormatException(String.format("%s (%s)", name, STBImage.stbi_failure_reason()));
+            }
 
             final var width = widthBuffer.get(0);
             final var height = heightBuffer.get(0);
@@ -58,7 +70,7 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
 
     @Override
     protected void destroy(final TextureEntity texture) {
-        log.info("Deleting texture {} ({})", texture.getID(), texture.getName());
+        log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
         glDeleteTextures(texture.getInternalID());
     }
 

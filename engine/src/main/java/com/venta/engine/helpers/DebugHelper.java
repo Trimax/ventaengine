@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.enums.DebugVisualType;
+import com.venta.engine.exceptions.DebugVisualNotSupportedException;
 import com.venta.engine.managers.LightManager;
 import com.venta.engine.managers.MeshManager;
 import com.venta.engine.managers.ObjectManager;
@@ -35,7 +36,7 @@ public final class DebugHelper {
             return origin;
         }
 
-        throw new RuntimeException("Debug visual is not supported for " + view.getClass().getSimpleName());
+        throw new DebugVisualNotSupportedException(view);
     }
 
     private ObjectManager.ObjectEntity create(final String id, final DebugVisualType debugVisualType) {
