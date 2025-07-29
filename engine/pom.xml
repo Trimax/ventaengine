@@ -13,6 +13,12 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>com.venta</groupId>
+            <artifactId>core</artifactId>
+            <version>0.4.15</version>
+        </dependency>
+
         <!-- Logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -23,14 +29,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j2-impl</artifactId>
             <version>2.25.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- StreamEx -->
-        <dependency>
-            <groupId>one.util</groupId>
-            <artifactId>streamex</artifactId>
-            <version>0.8.3</version>
             <scope>compile</scope>
         </dependency>
 

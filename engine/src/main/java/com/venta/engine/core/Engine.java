@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.interfaces.VentaEngineApplication;
 import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.WindowManager;
@@ -72,10 +72,11 @@ public final class Engine implements Runnable {
                 sceneRenderer.render(context.getSceneManager().getCurrent());
             }
 
-            try (final var _ = debugRenderer.withContext(null)
-                    .with(window, camera)) {
-                debugRenderer.render(context.getSceneManager().getCurrent());
-            }
+            if (application.getConfiguration().getRenderConfiguration().isDebugEnabled())
+                try (final var _ = debugRenderer.withContext(null)
+                        .with(window, camera)) {
+                    debugRenderer.render(context.getSceneManager().getCurrent());
+                }
 
             try (final var _ = windowRenderer.withContext(null)
                     .withFrameRate((int) fpsCounter.getCurrentFps())) {

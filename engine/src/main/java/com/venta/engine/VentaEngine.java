@@ -1,11 +1,11 @@
 package com.venta.engine;
 
-import com.venta.engine.annotations.Inject;
+import com.venta.container.annotations.Inject;
 import com.venta.engine.core.VentaContext;
 import com.venta.engine.core.Engine;
 import com.venta.engine.exceptions.EngineInitializationException;
 import com.venta.engine.interfaces.VentaEngineApplication;
-import com.venta.engine.utils.ComponentUtil;
+import com.venta.container.utils.ComponentUtil;
 import com.venta.engine.utils.MeasurementUtil;
 import com.venta.engine.utils.ResourceUtil;
 import lombok.NonNull;

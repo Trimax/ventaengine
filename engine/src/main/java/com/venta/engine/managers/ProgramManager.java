@@ -1,6 +1,6 @@
 package com.venta.engine.managers;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.definitions.Definitions;
 import com.venta.engine.enums.ShaderLightUniform;
 import com.venta.engine.enums.ShaderUniform;

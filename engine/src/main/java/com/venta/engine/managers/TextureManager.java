@@ -8,7 +8,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.exceptions.UnknownTextureFormatException;
 import com.venta.engine.model.view.TextureView;
 import lombok.AccessLevel;

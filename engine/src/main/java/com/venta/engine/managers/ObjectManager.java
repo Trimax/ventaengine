@@ -2,7 +2,7 @@ package com.venta.engine.managers;
 
 import org.joml.Vector3f;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.enums.DrawMode;
 import com.venta.engine.enums.GizmoType;
 import com.venta.engine.model.dto.ObjectDTO;

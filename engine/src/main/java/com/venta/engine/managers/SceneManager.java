@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.joml.Vector4f;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.definitions.Definitions;
 import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.ObjectView;

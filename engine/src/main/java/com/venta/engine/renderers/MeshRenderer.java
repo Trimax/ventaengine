@@ -1,6 +1,6 @@
 package com.venta.engine.renderers;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.binders.MaterialBinder;
 import com.venta.engine.exceptions.ObjectRenderingException;
 import com.venta.engine.managers.MeshManager;
