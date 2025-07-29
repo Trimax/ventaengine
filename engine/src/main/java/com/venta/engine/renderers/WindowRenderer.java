@@ -2,7 +2,7 @@ package com.venta.engine.renderers;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.managers.WindowManager;
 import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;

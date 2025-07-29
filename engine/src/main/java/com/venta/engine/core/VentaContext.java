@@ -1,6 +1,6 @@
 package com.venta.engine.core;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.interfaces.VentaEngineConfiguration;
 import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.LightManager;
