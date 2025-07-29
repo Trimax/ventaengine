@@ -7,6 +7,7 @@ import com.venta.engine.managers.WindowManager;
 import com.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -36,6 +37,7 @@ public final class WindowRenderer extends AbstractRenderer<WindowView, WindowRen
     }
 
     @Getter(AccessLevel.PACKAGE)
+    @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class WindowRenderContext extends AbstractRenderContext<WindowRenderContext> {
         private int frameRate;
 

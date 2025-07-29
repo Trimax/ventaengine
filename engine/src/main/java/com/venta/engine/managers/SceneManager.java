@@ -3,12 +3,10 @@ package com.venta.engine.managers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import com.venta.engine.annotations.Component;
 import com.venta.engine.definitions.Definitions;
-import com.venta.engine.helpers.DebugHelper;
 import com.venta.engine.model.view.LightView;
 import com.venta.engine.model.view.ObjectView;
 import com.venta.engine.model.view.SceneView;
@@ -42,13 +40,10 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     public static final class SceneEntity extends AbstractEntity implements SceneView {
         private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
         private final List<ObjectManager.ObjectEntity> objects = new ArrayList<>();
-        private final List<DebugHelper.DebugVisual> debugVisuals = new ArrayList<>();
         private final List<LightManager.LightEntity> lights = new ArrayList<>();
 
         SceneEntity(@NonNull final String name) {
             super(name);
-
-            debugVisuals.add(new DebugHelper.DebugVisual(this, new Vector3f(0.f), new Vector3f(0.f), new Vector3f(100000f)));
         }
 
         @Override
@@ -69,10 +64,8 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
                 return;
             }
 
-            if (light instanceof LightManager.LightEntity entity) {
-                debugVisuals.add(new DebugHelper.DebugVisual(light, light.getPosition(), new Vector3f(0.f), new Vector3f(1.f)));
+            if (light instanceof LightManager.LightEntity entity)
                 lights.add(entity);
-            }
         }
     }
 

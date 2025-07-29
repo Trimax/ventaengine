@@ -10,6 +10,7 @@ import com.venta.engine.model.view.ProgramView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL20C.GL_ELEMENT_ARRAY_BUFFER;
@@ -55,6 +56,7 @@ final class MeshRenderer extends AbstractRenderer<MeshView, MeshRenderer.MeshRen
     }
 
     @Getter(AccessLevel.PACKAGE)
+    @NoArgsConstructor(access = AccessLevel.PACKAGE)
     static final class MeshRenderContext extends AbstractRenderContext<ObjectRenderer.ObjectRenderContext> {
         private ProgramView program;
 

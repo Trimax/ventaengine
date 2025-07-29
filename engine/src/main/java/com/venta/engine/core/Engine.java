@@ -10,6 +10,7 @@ import com.venta.engine.annotations.Component;
 import com.venta.engine.interfaces.VentaEngineApplication;
 import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.WindowManager;
+import com.venta.engine.renderers.DebugRenderer;
 import com.venta.engine.renderers.SceneRenderer;
 import com.venta.engine.renderers.WindowRenderer;
 import lombok.AccessLevel;
@@ -26,6 +27,7 @@ public final class Engine implements Runnable {
     private final CameraManager.CameraAccessor cameraAccessor;
     private final WindowRenderer windowRenderer;
     private final SceneRenderer sceneRenderer;
+    private final DebugRenderer debugRenderer;
     private final VentaContext context;
 
     private VentaEngineApplication application;
@@ -68,6 +70,11 @@ public final class Engine implements Runnable {
             try (final var _ = sceneRenderer.withContext(null)
                     .with(window, camera)) {
                 sceneRenderer.render(context.getSceneManager().getCurrent());
+            }
+
+            try (final var _ = debugRenderer.withContext(null)
+                    .with(window, camera)) {
+                debugRenderer.render(context.getSceneManager().getCurrent());
             }
 
             try (final var _ = windowRenderer.withContext(null)

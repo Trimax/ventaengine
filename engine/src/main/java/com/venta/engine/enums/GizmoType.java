@@ -6,9 +6,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum DebugVisualType {
-    Origin("simple"),
-    Gizmo("simple");
+public enum GizmoType {
+    Origin("origin"),
+    Object("box"),
+    Camera("frustum"),
+    Light("gizmo");
 
-    private final String program;
+    private final String value;
 }
