@@ -1,7 +1,7 @@
 package io.github.trimax.venta.container.exceptions;
 
-public final class ContextInitializationException extends RuntimeException {
-    public ContextInitializationException(final String message) {
-        super(String.format("Can't initialize context: %s", message));
+public final class ContextInitializationException extends AbstractVentaException {
+    public ContextInitializationException(final String message, final Throwable cause) {
+        super(String.format("Can't initialize context: %s", message), cause);
     }
 }

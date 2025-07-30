@@ -9,6 +9,8 @@ import java.util.Map;
 
 import io.github.trimax.venta.container.annotations.Inject;
 import io.github.trimax.venta.container.exceptions.ContextInitializationException;
+import io.github.trimax.venta.container.exceptions.CyclicDependencyException;
+import io.github.trimax.venta.container.exceptions.InjectionConstructorNotFoundException;
 import io.github.trimax.venta.container.utils.ComponentUtil;
 import io.github.trimax.venta.container.utils.MeasurementUtil;
 import lombok.NonNull;
@@ -25,10 +27,12 @@ public final class VentaApplication {
         MeasurementUtil.measure("VentaApplication startup", () -> VentaApplication.createContext(appClass));
 
         final var component = getComponent(appClass);
+        if (component == null)
+            log.warn("The component {} wasn't found", appClass.getSimpleName());
+
         if (component != null)
             component.start(args, argument);
-        else
-            log.warn("The component wasn't found: {}", appClass.getSimpleName());
+
         MeasurementUtil.measure("VentaApplication shutdown", VentaApplication::shutdown);
     }
 
@@ -42,7 +46,7 @@ public final class VentaApplication {
             log.debug("Found components: {}", StreamEx.of(components.keySet()).map(Class::getSimpleName).joining(","));
             log.info("{} components found and loaded", components.size());
         } catch (final Exception e) {
-            throw new ContextInitializationException(e.getMessage());
+            throw new ContextInitializationException(e.getMessage(), e);
         }
     }
 
@@ -56,8 +60,7 @@ public final class VentaApplication {
             return components.get(clazz);
 
         if (creationStack.contains(clazz))
-            throw new ContextInitializationException(
-                    "Cyclic dependency: " + StreamEx.of(creationStack).append(clazz).joining(" -> "));
+            throw new CyclicDependencyException(StreamEx.of(creationStack).append(clazz).joining(" -> "));
 
         creationStack.add(clazz);
 
@@ -83,8 +86,7 @@ public final class VentaApplication {
         if (constructors.length == 1)
             return constructors[0];
 
-        throw new ContextInitializationException("Cannot determine which constructor to use for " + clazz.getName()
-                + ". Use @" + Inject.class.getSimpleName() + " to mark the constructor explicitly.");
+        throw new InjectionConstructorNotFoundException(clazz);
     }
 
     private static Constructor<?> findInjectConstructor(final Class<?> clazz) {
