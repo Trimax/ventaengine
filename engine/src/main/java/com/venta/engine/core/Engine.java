@@ -72,10 +72,11 @@ public final class Engine implements Runnable {
                 sceneRenderer.render(context.getSceneManager().getCurrent());
             }
 
-            try (final var _ = debugRenderer.withContext(null)
-                    .with(window, camera)) {
-                debugRenderer.render(context.getSceneManager().getCurrent());
-            }
+            if (application.getConfiguration().getRenderConfiguration().isDebugEnabled())
+                try (final var _ = debugRenderer.withContext(null)
+                        .with(window, camera)) {
+                    debugRenderer.render(context.getSceneManager().getCurrent());
+                }
 
             try (final var _ = windowRenderer.withContext(null)
                     .withFrameRate((int) fpsCounter.getCurrentFps())) {
