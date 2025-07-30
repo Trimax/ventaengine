@@ -108,6 +108,11 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
     }
 
     @Override
+    protected boolean shouldCache() {
+        return true;
+    }
+
+    @Override
     protected void destroy(final MeshEntity object) {
         log.info("Destroying mesh {} ({})", object.getID(), object.getName());
         glDeleteVertexArrays(object.vertexArrayObjectID);

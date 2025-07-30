@@ -36,6 +36,11 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
     }
 
     @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
     protected void destroy(final MaterialEntity material) {
         log.info("Destroying material {} ({})", material.getID(), material.getName());
     }

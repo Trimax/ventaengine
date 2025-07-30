@@ -32,6 +32,11 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     }
 
     @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
     protected void destroy(final SceneEntity scene) {
         log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
     }

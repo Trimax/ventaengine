@@ -60,7 +60,7 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 The roadmap is reflected in the GitHub issues section. Long story short:
 
 1. Introduce mesh manager etc
-   1. Make the camera a part of scene (Scene should contain a list of cameras)
+   1. ~~Make the camera a part of scene (Scene should contain a list of cameras)~~
    2. Render pyramid for camera in debug mode
    3. Render bounding boxes for objects
 2. Console
