@@ -16,7 +16,7 @@
         <dependency>
             <groupId>com.venta</groupId>
             <artifactId>container</artifactId>
-            <version>0.4.18</version>
+            <version>0.4.22</version>
         </dependency>
 
         <!-- Apache commons -->

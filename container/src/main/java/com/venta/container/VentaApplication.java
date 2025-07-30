@@ -47,7 +47,7 @@ public final class VentaApplication {
         }
     }
 
-    private static <C> C getComponent(final Class<C> componentClass) {
+    public static <C> C getComponent(final Class<C> componentClass) {
         return componentClass.cast(components.get(componentClass));
     }
 
