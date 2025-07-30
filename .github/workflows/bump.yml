@@ -1,0 +1,47 @@
+name: Version Bump
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+
+jobs:
+  bump:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
+    runs-on: self-hosted
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current version from parent POM with Maven
+        id: get_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Calculate next patch version
+        id: bump
+        run: |
+          OLD=${{ steps.get_version.outputs.version }}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD"
+          NEW="$MAJOR.$MINOR.$((PATCH + 1))"
+          echo "new_version=$NEW" >> $GITHUB_OUTPUT
+
+      - name: Replace versions in all pom.xml files
+        run: |
+          OLD=${{ steps.get_version.outputs.version }}
+          NEW=${{ steps.bump.outputs.new_version }}
+          find . -name pom.xml -exec sed -i "s/<version>$OLD<\/version>/<version>$NEW<\/version>/g" {} \;
+
+      - name: Commit and push updated versions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "Bump version to ${{ steps.bump.outputs.new_version }}" || echo "No changes to commit"
+          git push

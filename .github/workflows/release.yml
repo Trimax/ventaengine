@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 22
+          cache: maven
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          server-id: central
+          server-username: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          server-password: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+
+      - name: Build & publish
+        run: mvn --batch-mode -P release -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}" clean deploy
