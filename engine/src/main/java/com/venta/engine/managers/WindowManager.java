@@ -117,6 +117,11 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
     protected void destroy(final WindowEntity window) {
         log.info("Destroying window {} ({})", window.getID(), window.getName());
         window.sizeCallback.close();

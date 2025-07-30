@@ -24,8 +24,13 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
     public LightView load(final String name) {
         log.info("Loading light {}", name);
 
-        return store(new LightEntity(resourceManager.load(String.format("/lights/%s.json", name), LightDTO.class),
+        return store(new LightEntity(name, resourceManager.load(String.format("/lights/%s.json", name), LightDTO.class),
                 gizmoAccessor.get(gizmoManager.create("light", GizmoType.Light))));
+    }
+
+    @Override
+    protected boolean shouldCache() {
+        return false;
     }
 
     @Override
@@ -49,8 +54,8 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
             this.gizmo = gizmo;
         }
 
-        LightEntity(@NonNull final LightDTO dto, @NonNull final GizmoManager.GizmoEntity gizmo) {
-            this(dto.name(), gizmo);
+        LightEntity(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoManager.GizmoEntity gizmo) {
+            this(name, gizmo);
 
             setPosition(dto.position());
             setDirection(dto.direction());

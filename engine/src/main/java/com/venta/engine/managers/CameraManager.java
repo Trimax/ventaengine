@@ -22,6 +22,11 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     }
 
     @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
     protected void destroy(final CameraEntity camera) {
         log.info("Destroying camera {} ({})", camera.getID(), camera.getName());
     }
