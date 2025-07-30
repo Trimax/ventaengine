@@ -2,7 +2,7 @@ package com.venta.engine.renderers;
 
 import org.joml.Vector3f;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.GizmoManager;
 import com.venta.engine.managers.LightManager;

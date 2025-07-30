@@ -11,7 +11,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.binders.CameraBinder;
 import com.venta.engine.binders.LightBinder;
 import com.venta.engine.binders.MatrixBinder;

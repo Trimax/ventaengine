@@ -1,4 +1,4 @@
-package com.venta.engine.annotations;
+package com.venta.container.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

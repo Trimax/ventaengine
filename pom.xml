@@ -17,6 +17,7 @@
     </properties>
 
     <modules>
+        <module>container</module>
         <module>engine</module>
         <module>examples</module>
     </modules>

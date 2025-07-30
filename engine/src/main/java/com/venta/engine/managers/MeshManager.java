@@ -11,7 +11,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.model.dto.MeshDTO;
 import com.venta.engine.model.view.MaterialView;
 import com.venta.engine.model.view.MeshView;

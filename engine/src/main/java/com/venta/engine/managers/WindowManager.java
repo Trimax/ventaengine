@@ -17,7 +17,7 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.exceptions.UnknownTextureFormatException;
 import com.venta.engine.exceptions.WindowCreationException;
 import com.venta.engine.interfaces.VentaEngineConfiguration;

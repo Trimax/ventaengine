@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.interfaces.VentaEngineApplication;
 import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.WindowManager;
