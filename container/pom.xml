@@ -11,6 +11,10 @@
         <version>0.5.11</version>
     </parent>
 
+    <name>${project.artifactId}</name>
+    <description>${project.artifactId} module</description>
+    <url>${project.parent.url}</url>
+
     <dependencies>
         <!-- StreamEx -->
         <dependency>
