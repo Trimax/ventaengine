@@ -6,6 +6,8 @@ permissions:
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ "main" ]
 
@@ -75,3 +77,27 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "Bump version to ${{ steps.bump.outputs.new_version }}" || echo "No changes to commit"
           git push
+
+  publish:
+    name: Release to Maven Central
+    runs-on: ubuntu-latest
+    needs: version-bump
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 22
+          cache: maven
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          server-id: central
+          server-username: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          server-password: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+
+      - name: Build & publish
+        run: mvn --batch-mode -P release -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}" clean deploy
