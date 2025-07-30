@@ -5,7 +5,7 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.managers.CameraManager;
 import com.venta.engine.managers.WindowManager;
 import com.venta.engine.model.view.CameraView;

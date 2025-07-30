@@ -3,7 +3,7 @@ package com.venta.engine.managers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.venta.engine.adapters.TextureTypeAdapter;
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.exceptions.ResourceNotFoundException;
 import com.venta.engine.model.view.ResourceView;

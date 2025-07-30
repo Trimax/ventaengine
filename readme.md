@@ -61,7 +61,7 @@ The roadmap is reflected in the GitHub issues section. Long story short:
 
 1. Introduce mesh manager etc
    1. Render pyramid for camera in debug mode
-   2. Render bounding boxes for objects
+   2. Calculate bounding boxes for objects (now we render simple bounding boxes)
    3. Generify manager load method (try to move V load(name) to abstract class)
 2. Console
 3. Environment: box/sphere (add box to the scene)

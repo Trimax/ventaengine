@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.joml.Vector2f;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.model.dto.MaterialDTO;
 import com.venta.engine.model.view.MaterialView;

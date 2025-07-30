@@ -1,6 +1,6 @@
 package com.venta.engine.managers;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.exceptions.ShaderCompileException;
 import com.venta.engine.model.view.ShaderView;
 import lombok.*;

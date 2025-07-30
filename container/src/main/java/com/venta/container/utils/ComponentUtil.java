@@ -1,6 +1,6 @@
-package com.venta.engine.utils;
+package com.venta.container.utils;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import one.util.streamex.StreamEx;

@@ -1,6 +1,6 @@
 package com.venta.engine.binders;
 
-import com.venta.engine.annotations.Component;
+import com.venta.container.annotations.Component;
 import com.venta.engine.enums.ShaderUniform;
 import com.venta.engine.enums.TextureType;
 import com.venta.engine.managers.ProgramManager;
