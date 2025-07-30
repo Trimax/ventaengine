@@ -7,14 +7,14 @@
     <artifactId>engine</artifactId>
 
     <parent>
-        <groupId>com.venta</groupId>
+        <groupId>io.github.trimax</groupId>
         <artifactId>ventaengine</artifactId>
-        <version>0.4.26</version>
+        <version>0.5.0</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.venta</groupId>
+            <groupId>io.github.trimax</groupId>
             <artifactId>container</artifactId>
             <version>${project.version}</version>
         </dependency>
