@@ -16,7 +16,7 @@
         <dependency>
             <groupId>com.venta</groupId>
             <artifactId>engine</artifactId>
-            <version>0.4.25</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
