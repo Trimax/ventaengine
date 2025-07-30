@@ -60,9 +60,9 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 The roadmap is reflected in the GitHub issues section. Long story short:
 
 1. Introduce mesh manager etc
-   1. ~~Make the camera a part of scene (Scene should contain a list of cameras)~~
-   2. Render pyramid for camera in debug mode
-   3. Render bounding boxes for objects
+   1. Render pyramid for camera in debug mode
+   2. Render bounding boxes for objects
+   3. Generify manager load method (try to move V load(name) to abstract class)
 2. Console
 3. Environment: box/sphere (add box to the scene)
 4. Emitters (extend the scene with a list of emitters)

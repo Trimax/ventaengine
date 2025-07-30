@@ -67,8 +67,6 @@ public final class MeshDTOTest {
         final var vertex2 = createVertex(new Vector3f(0, 1, 0), new Vector2f(0, 1));
 
         return new MeshDTO(
-                "triangle",
-                "test",
                 List.of(vertex0, vertex1, vertex2),
                 List.of(new MeshDTO.Facet(0, 1, 2)),
                 List.of()
