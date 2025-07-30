@@ -2,8 +2,7 @@ package com.venta.engine.model.dto;
 
 import org.joml.Vector3f;
 
-public record ObjectDTO(String name,
-                        Vector3f position,
+public record ObjectDTO(Vector3f position,
                         Vector3f angles,
                         Vector3f scale,
                         String program,

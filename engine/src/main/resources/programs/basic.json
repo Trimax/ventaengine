@@ -1,5 +1,4 @@
 {
-  "name": "Basic",
   "shaderVertex": "vertex/basic.glsl",
   "shaderFragment": "fragment/basic.glsl"
 }

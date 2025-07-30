@@ -29,7 +29,7 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
 
         final var materialDTO = resourceManager.load(String.format("/materials/%s.json", name), MaterialDTO.class);
 
-        final var material = store(new MaterialEntity(materialDTO));
+        final var material = store(new MaterialEntity(name, materialDTO));
         materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureManager.load(path)));
 
         return material;
@@ -64,8 +64,8 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
             this.offset = offset;
         }
 
-        MaterialEntity(@NonNull final MaterialDTO dto) {
-            this(dto.name(), dto.shininess(), dto.opacity(), dto.tiling(), dto.offset());
+        MaterialEntity(@NonNull final String name, @NonNull final MaterialDTO dto) {
+            this(name, dto.shininess(), dto.opacity(), dto.tiling(), dto.offset());
         }
 
         @Override
