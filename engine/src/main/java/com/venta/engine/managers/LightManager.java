@@ -29,6 +29,11 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
     }
 
     @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
     protected void destroy(final LightEntity light) {
         log.info("Destroying light {} ({})", light.getID(), light.getName());
     }

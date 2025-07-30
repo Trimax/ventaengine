@@ -72,6 +72,11 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Override
+    protected boolean shouldCache() {
+        return true;
+    }
+
+    @Override
     protected void destroy(final ProgramEntity program) {
         log.info("Destroying program {} ({})", program.getID(), program.getName());
         glDeleteProgram(program.getInternalID());

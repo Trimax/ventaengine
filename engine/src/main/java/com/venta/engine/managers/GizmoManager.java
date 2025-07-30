@@ -41,6 +41,11 @@ public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity
     }
 
     @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
     protected void destroy(final GizmoEntity object) {
         log.info("Destroying gizmo {} ({})", object.getID(), object.getName());
     }

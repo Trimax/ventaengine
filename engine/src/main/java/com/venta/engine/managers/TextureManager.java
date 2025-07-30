@@ -69,6 +69,11 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     }
 
     @Override
+    protected boolean shouldCache() {
+        return true;
+    }
+
+    @Override
     protected void destroy(final TextureEntity texture) {
         log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
         glDeleteTextures(texture.getInternalID());

@@ -17,7 +17,7 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
     private final Map<String, String> cache = new HashMap<>();
 
     protected final boolean isCached(final String name) {
-        return cache.containsKey(name);
+        return shouldCache() && cache.containsKey(name);
     }
 
     protected final E getCached(final String name) {
@@ -29,8 +29,10 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
     }
 
     protected final V store(final E entity) {
+        if (shouldCache())
+            cache.put(entity.getName(), entity.getID());
+
         values.put(entity.getID(), entity);
-        cache.put(entity.getName(), entity.getID());
         log.debug("{} {} created", entity.getClass().getSimpleName(), entity.getID());
 
         return entity;
@@ -43,6 +45,8 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
     }
 
     protected abstract void destroy(final E entity);
+
+    protected abstract boolean shouldCache();
 
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public abstract static class AbstractEntity implements AbstractView {

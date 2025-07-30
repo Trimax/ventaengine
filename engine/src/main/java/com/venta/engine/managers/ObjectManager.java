@@ -50,6 +50,11 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
     }
 
     @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
     protected void destroy(final ObjectEntity object) {
         log.info("Destroying object {} ({})", object.getID(), object.getName());
     }

@@ -49,6 +49,11 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     }
 
     @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
     protected void destroy(final ResourceEntity resource) {
         log.debug("Destroying resource {} ({})", resource.getID(), resource.getName());
     }
