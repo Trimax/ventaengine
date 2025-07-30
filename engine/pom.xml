@@ -12,6 +12,10 @@
         <version>0.5.12</version>
     </parent>
 
+    <name>${project.artifactId}</name>
+    <description>${project.artifactId} module</description>
+    <url>${project.parent.url}</url>
+
     <dependencies>
         <dependency>
             <groupId>io.github.trimax</groupId>
@@ -106,4 +110,27 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>trimax</id>
+            <name>Dmitrii Eliseev</name>
+            <email>trimax@users.noreply.github.com</email>
+            <url>https://github.com/trimax</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/trimax/ventaengine.git</connection>
+        <developerConnection>scm:git:ssh://github.com/trimax/ventaengine.git</developerConnection>
+        <url>https://github.com/trimax/ventaengine</url>
+    </scm>
 </project>
