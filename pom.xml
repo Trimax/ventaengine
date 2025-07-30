@@ -10,6 +10,10 @@
     <version>0.5.11</version>
     <packaging>pom</packaging>
 
+    <name>Venta Engine</name>
+    <description>VentaEngine is a lightweight, modular 3D engine written in Java using OpenGL bindings.</description>
+    <url>https://github.com/trimax/ventaengine</url>
+
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
