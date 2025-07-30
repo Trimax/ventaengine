@@ -7,25 +7,28 @@ import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.core.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaEngine implements AbstractVentaApplication<VentaEngineApplication> {
+    private final VentaContext context;
     private final Engine engine;
 
     public static void run(final String[] args, @NonNull final VentaEngineApplication application) {
-        log.info("Starting VentaEngine {}", ResourceUtil.load("/banner.txt"));
+        log.info("Starting {}", ResourceUtil.load("/banner.txt"));
         VentaApplication.run(args, VentaEngine.class, application);
     }
 
     @Override
     public void start(final String[] args, @NonNull final VentaEngineApplication venta) {
         engine.initialize(venta);
-        venta.getStartupHandler().onStartup(args, VentaApplication.getComponent(VentaContext.class));
+        venta.getStartupHandler().onStartup(args, context);
+
         engine.run();
     }
 }
