@@ -189,7 +189,6 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-                            <tokenAuth>true</tokenAuth>
                             <autoPublish>true</autoPublish>
                             <waitUntil>published</waitUntil>
                         </configuration>
@@ -224,7 +223,6 @@
                         </executions>
                         <configuration>
                             <failOnError>false</failOnError>
-                            <stylesheet>java</stylesheet>
                             <doclint>none</doclint>
                         </configuration>
                     </plugin>
