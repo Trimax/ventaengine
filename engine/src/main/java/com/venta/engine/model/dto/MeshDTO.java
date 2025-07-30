@@ -13,7 +13,6 @@ import java.util.*;
 import static com.venta.engine.definitions.Definitions.*;
 
 public record MeshDTO(String type,
-                      String name,
                       List<Vertex> vertices,
                       List<Facet> facets,
                       List<Edge> edges) {
