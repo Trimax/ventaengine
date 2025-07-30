@@ -29,7 +29,7 @@ public final class VentaApplication {
         if (component != null)
             component.start(args, argument);
         else
-            log.warn("The component wasn't found:", appClass.getSimpleName());
+            log.warn("The component wasn't found: {}", appClass.getSimpleName());
         MeasurementUtil.measure("VentaApplication shutdown", VentaApplication::shutdown);
     }
 
