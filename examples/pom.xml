@@ -9,7 +9,7 @@
     <parent>
         <groupId>io.github.trimax</groupId>
         <artifactId>ventaengine</artifactId>
-        <version>0.5.20</version>
+        <version>0.5.21</version>
     </parent>
 
     <dependencies>
