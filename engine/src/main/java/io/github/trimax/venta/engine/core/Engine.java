@@ -61,6 +61,7 @@ public final class Engine implements Runnable {
         final var time = new VentaTime();
 
         final var tempConsole = new TempConsole();
+        TextRenderer textRenderer = new TextRenderer("/fonts/DejaVuSansMono.ttf");
 
         boolean windowClosed = false;
         while (!windowClosed) {
@@ -81,18 +82,26 @@ public final class Engine implements Runnable {
                     debugRenderer.render(context.getSceneManager().getCurrent());
                 }
 
+            tempConsole.render();
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            textRenderer.renderText("Hello, STB Truetype! Привет", 0.f, 0.f, 0.002f);
+            glDisable(GL_BLEND);
+
+
+
             try (final var _ = windowRenderer.withContext(null)
                     .withFrameRate((int) fpsCounter.getCurrentFps())) {
                 windowRenderer.render(window);
             }
-
-            tempConsole.render();
 
             glfwPollEvents();
 
             time.setDelta(fpsCounter.tick());
             updateHandler.onUpdate(time, context);
         }
+        textRenderer.cleanup();
 
         context.cleanup();
         glfwTerminate();

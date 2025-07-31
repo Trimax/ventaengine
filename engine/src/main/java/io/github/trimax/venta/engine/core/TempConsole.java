@@ -7,22 +7,26 @@ import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 
 public class TempConsole {
     private final int vao;
-    private final int vbo;
     private final int shader;
-    private final float[] vertices = {
-            // x, y
-            -1.0f,  1.0f,   // top-left
-            1.0f,  1.0f,   // top-right
-            1.0f,  0.6f,   // bottom-right
-            -1.0f,  0.6f    // bottom-left
-    };
 
     public TempConsole() {
         vao = glGenVertexArrays();
-        vbo = glGenBuffers();
+        int vbo = glGenBuffers();
 
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        // x, y
+        // top-left
+        // top-right
+        // bottom-right
+        // bottom-left
+        final float[] vertices = {
+                // x, y
+                -1.0f, 1.0f,   // top-left
+                1.0f, 1.0f,   // top-right
+                1.0f, 0.0f,   // bottom-right
+                -1.0f, 0.0f    // bottom-left
+        };
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
@@ -73,7 +77,7 @@ public class TempConsole {
             #version 330 core
             out vec4 FragColor;
             void main() {
-                FragColor = vec4(1.0, 1.0, 1.0, 0.85); // translucent dark background
+                FragColor = vec4(1.0, 1.0, 1.0, 0.45); // translucent dark background
             }
         """);
         glCompileShader(fs);
