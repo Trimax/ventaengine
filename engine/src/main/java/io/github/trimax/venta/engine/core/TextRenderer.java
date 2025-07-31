@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL33C.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -58,7 +57,7 @@ public class TextRenderer {
     }
 
     @SneakyThrows
-    public TextRenderer(String fontResourceName) {
+    public TextRenderer(final String fontResourceName) {
         final var fontFile = Path.of(getClass().getResource(fontResourceName).toURI());
         ByteBuffer fontBuffer = ioResourceToByteBuffer(fontFile);
 
@@ -118,31 +117,31 @@ public class TextRenderer {
 
         // Iterate through each character in the text
         for (int i = 0; i < text.length(); i++) {
-            int codepoint = text.codePointAt(i);
+            final var codepoint = text.codePointAt(i);
 
             if (Character.isHighSurrogate(text.charAt(i)) && i + 1 < text.length() && Character.isLowSurrogate(text.charAt(i + 1)))
                 i++;
 
-            int atlasIndex = codepoint / CHARS_PER_ATLAS;
-            int charIndex = codepoint % CHARS_PER_ATLAS;
+            final var atlasIndex = codepoint / CHARS_PER_ATLAS;
+            final var charIndex = codepoint % CHARS_PER_ATLAS;
 
             if (atlasIndex < 0 || atlasIndex >= atlasesCount)
                 continue;
 
-            STBTTBakedChar g = charBuffers[atlasIndex].get(charIndex);
+            final var backedCharacter = charBuffers[atlasIndex].get(charIndex);
 
-            float x0 = penX + g.xoff() * scale;
-            float x1 = x0 + (g.x1() - g.x0()) * scale;
+            final var x0 = penX + backedCharacter.xoff() * scale;
+            final var x1 = x0 + (backedCharacter.x1() - backedCharacter.x0()) * scale;
 
-            float y0 = penY - (g.y1() - g.y0()) * scale - g.yoff() * scale;
-            float y1 = y0 + (g.y1() - g.y0()) * scale;
+            final var y0 = penY - (backedCharacter.y1() - backedCharacter.y0()) * scale - backedCharacter.yoff() * scale;
+            final var y1 = y0 + (backedCharacter.y1() - backedCharacter.y0()) * scale;
 
-            float s0 = g.x0() / (float) BITMAP_W;
-            float t0 = g.y0() / (float) BITMAP_H;
-            float s1 = g.x1() / (float) BITMAP_W;
-            float t1 = g.y1() / (float) BITMAP_H;
+            final var s0 = backedCharacter.x0() / (float) BITMAP_W;
+            final var t0 = backedCharacter.y0() / (float) BITMAP_H;
+            final var s1 = backedCharacter.x1() / (float) BITMAP_W;
+            final var t1 = backedCharacter.y1() / (float) BITMAP_H;
 
-            FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4);
+            final var vertices = BufferUtils.createFloatBuffer(6 * 4);
 
             vertices.put(new float[]{
                     x0, y0, s0, t1,
@@ -162,17 +161,17 @@ public class TextRenderer {
             glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
 
             // Position
-            int posLoc = glGetUniformLocation(shaderProgram, "uPos");
+            final var posLoc = glGetUniformLocation(shaderProgram, "position");
             glUniform2f(posLoc, 0f, 0f);
 
 
             // Scale
-            int scaleLoc = glGetUniformLocation(shaderProgram, "uScale");
+            final var scaleLoc = glGetUniformLocation(shaderProgram, "scale");
             glUniform1f(scaleLoc, 1f);
 
             glDrawArrays(GL_TRIANGLES, 0, 6);
 
-            penX += g.xadvance() * scale;
+            penX += backedCharacter.xadvance() * scale;
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -185,17 +184,17 @@ public class TextRenderer {
         int vs = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vs, """
                 #version 330 core
-                layout(location = 0) in vec2 aPos;
+                layout(location = 0) in vec2 vertexPosition;
                 layout(location = 1) in vec2 textureCoordinates;
 
                 out vec2 vertexTextureCoordinates;
 
-                uniform vec2 uPos;
-                uniform float uScale;
+                uniform vec2 position;
+                uniform float scale;
 
                 void main() {
                     // Coordinates in [-1;1]
-                    vec2 pos = aPos * uScale + uPos;
+                    vec2 pos = vertexPosition * scale + position;
                     gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);
                     vertexTextureCoordinates = textureCoordinates;
                 }
