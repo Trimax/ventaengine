@@ -64,7 +64,6 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
-        private final GizmoManager.GizmoEntity gizmo;
 
         private DrawMode drawMode = DrawMode.Polygon;
         private boolean isVisible = true;
@@ -80,11 +79,10 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
                      final Vector3f rotation,
                      final Vector3f scale,
                      final GizmoManager.GizmoEntity gizmo) {
-            super(name);
+            super(gizmo, name);
 
             this.mesh = mesh;
             this.program = program;
-            this.gizmo = gizmo;
 
             this.position.set(position);
             this.rotation.set(rotation);
