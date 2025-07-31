@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
+import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.model.view.GizmoView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,8 +34,8 @@ public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity
         log.info("Creating gizmo {}", name);
 
         return store(new GizmoManager.GizmoEntity(name,
-                programAccessor.get(programManager.load("simple")),
-                meshAccessor.get(meshManager.load(type.getValue())),
+                programAccessor.get(programManager.load(ProgramType.Simple.name())),
+                meshAccessor.get(meshManager.load(type.getMesh())),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(1.f, 1.f, 1.f)));
