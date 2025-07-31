@@ -82,7 +82,7 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
 
-        private boolean visible;
+        private boolean isVisible;
 
         ConsoleEntity(final String name,
                 @NonNull final ConsoleItemManager.ConsoleItemEntity consoleItem,
@@ -99,25 +99,23 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         }
 
         public void toggle() {
-            visible = !visible;
+            isVisible = !isVisible;
         }
 
         public void accept(final char c) {
             inputBuffer.append(c);
         }
 
-        public boolean handle(final int key) {
-            return switch (key) {
-                case GLFW_KEY_ENTER -> {
+        public void handle(final int key) {
+            switch (key) {
+                case GLFW_KEY_ENTER:
                     submit();
-                    yield true;
-                }
-                case GLFW_KEY_BACKSPACE -> {
+                    return;
+                case GLFW_KEY_BACKSPACE:
                     backspace();
-                    yield true;
-                }
-                default -> false;
-            };
+                    return;
+                default:
+            }
         }
 
         private void backspace() {

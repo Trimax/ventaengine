@@ -35,7 +35,9 @@ public final class WindowRenderer extends AbstractRenderer<WindowView, WindowRen
         try (final var _ = consoleRenderer.withContext(getContext())) {
             if (window.getConsole() == null)
                 window.setConsole(consoleAccessor.get(consoleManager.create(window.getName())));
-            consoleRenderer.render(window.getConsole());
+
+            if (window.getConsole().isVisible())
+                consoleRenderer.render(window.getConsole());
         }
 
         glfwSwapBuffers(window.getInternalID());

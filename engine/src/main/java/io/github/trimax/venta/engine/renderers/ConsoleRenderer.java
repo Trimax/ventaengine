@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.ConsoleManager;
-import io.github.trimax.venta.engine.managers.ProgramManager;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,8 +14,7 @@ import lombok.Getter;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, ConsoleRenderer.ConsoleRenderContext, WindowRenderer.WindowRenderContext> {
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final ProgramManager programManager;
+    private final ConsoleItemRenderer consoleItemRenderer;
 
     @Override
     protected ConsoleRenderContext createContext() {
@@ -48,6 +46,26 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
 
         glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        for (int line = 0; line < Math.min(19, console.getHistory().size()); line++)
+            try (final var _ = consoleItemRenderer.withContext(getContext())
+                    .withText(console.getHistory().get(line))
+                    .withPosition(-0.98f, 0.98f - (line * 0.05f))
+                    .withScale(0.001f)) {
+                consoleItemRenderer.render(console.getConsoleItem());
+            }
+
+        try (final var _ = consoleItemRenderer.withContext(getContext())
+                .withText(console.getInputBuffer().toString())
+                .withPosition(-0.98f, -0.02f)
+                .withScale(0.001f)) {
+            consoleItemRenderer.render(console.getConsoleItem());
+        }
+
+        glDisable(GL_BLEND);
     }
 
     @Getter(AccessLevel.PACKAGE)

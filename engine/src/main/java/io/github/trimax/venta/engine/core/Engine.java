@@ -7,11 +7,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.console.TextRenderer;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.FontManager;
-import io.github.trimax.venta.engine.managers.ProgramManager;
 import io.github.trimax.venta.engine.managers.WindowManager;
 import io.github.trimax.venta.engine.renderers.DebugRenderer;
 import io.github.trimax.venta.engine.renderers.SceneRenderer;
@@ -34,13 +31,6 @@ public final class Engine implements Runnable {
     private final VentaContext context;
 
     private VentaEngineApplication application;
-
-    //TODO: Temp
-    private final FontManager fontManager;
-    private final FontManager.FontAccessor fontAccessor;
-
-    private final ProgramManager programManager;
-    private final ProgramManager.ProgramAccessor programAccessor;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         this.application = ventaEngineApplication;
@@ -70,15 +60,12 @@ public final class Engine implements Runnable {
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
 
-        //TODO: Temp. Should be a part of console class
-        final var font = fontManager.create("DejaVuSansMono");
-        final var program = programManager.load("text");
-
-
         //TODO: TEMP HACK: This should be done in the console renderer
-        windowRenderer.render(context.getWindowManager().getCurrent());
-        final var textRenderer = new TextRenderer(fontAccessor.get(font), programAccessor.get(program),
-                windowAccessor.get(context.getWindowManager().getCurrent()).getConsole());
+        final var w = context.getWindowManager().getCurrent();
+        windowRenderer.render(w);
+        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala");
+        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala 2");
+        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala 3");
 
         boolean windowClosed = false;
         while (!windowClosed) {
@@ -99,13 +86,6 @@ public final class Engine implements Runnable {
                     debugRenderer.render(context.getSceneManager().getCurrent());
                 }
 
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            for (int line = 0; line < 19; line++)
-                textRenderer.renderText("Hello world! Česko! Это строчка №" + line, -0.98f, 0.98f - (line * 0.05f), 0.001f);
-
-            glDisable(GL_BLEND);
-
             try (final var _ = windowRenderer.withContext(null)
                     .withFrameRate((int) fpsCounter.getCurrentFps())) {
                 windowRenderer.render(window);
@@ -116,7 +96,6 @@ public final class Engine implements Runnable {
             time.setDelta(fpsCounter.tick());
             updateHandler.onUpdate(time, context);
         }
-        textRenderer.cleanup();
 
         context.cleanup();
         glfwTerminate();

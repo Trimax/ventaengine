@@ -159,27 +159,35 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             }
         };
 
+        @Getter(AccessLevel.PRIVATE)
         private final GLFWCharCallback charCallback = new GLFWCharCallback() {
             @Override
-            public void invoke(final long window, final int codepoint) {
+            public void invoke(final long window, final int code) {
                 if (!console.isVisible())
                     return;
 
-                console.accept((char)  codepoint);
+                if (((char) code == '`' || (char) code == '['))
+                    return;
+
+                log.error("Char callback. Key: {}", (char) code);
+                console.accept((char) code);
             }
         };
 
-        @Getter
+        @Getter(AccessLevel.PRIVATE)
         private final GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
-                if ((key == GLFW_KEY_GRAVE_ACCENT) && (action == GLFW_PRESS)) { // тильда
+                if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS) {
                     console.toggle();
                     return;
                 }
-                
-                if (console.isVisible() && (action == GLFW_PRESS) && console.handle(key))
+
+                if (console.isVisible()) {
+                    if (action == GLFW_PRESS || action == GLFW_REPEAT)
+                        console.handle(key);
                     return;
+                }
 
                 if (inputHandler != null)
                     inputHandler.onKey(key, scancode, action, mods);
