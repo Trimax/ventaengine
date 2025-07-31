@@ -62,4 +62,10 @@ public final class Definitions {
     /* Position components offset */
     public static final int EDGE_OFFSET_VERTEX_1 = 0;
     public static final int EDGE_OFFSET_VERTEX_2 = 1;
+
+    /*** Font atlas ***/
+
+    /* The size of the font atlas */
+    public static final int FONT_ATLAS_WIDTH = 2048;
+    public static final int FONT_ATLAS_HEIGHT = 1024;
 }

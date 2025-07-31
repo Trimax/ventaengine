@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.core;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
 import static org.lwjgl.opengl.GL33C.*;
 
 import java.io.IOException;
@@ -20,8 +22,6 @@ public class TextRenderer {
 
     private static final int CHARS_PER_ATLAS = 4096;
     private static final int FONT_HEIGHT = 32;
-    private static final int BITMAP_W = 2048;
-    private static final int BITMAP_H = 1024;
 
     private final int atlasesCount;
     private final int[] textureIds;
@@ -51,8 +51,8 @@ public class TextRenderer {
             }
 
             log.info("Atlas #{}: used chars = {}, maxX = {}, maxY = {} (atlas size: {} x {}). Used: {}%",
-                    atlasIndex, usedChars, maxX, maxY, BITMAP_W, BITMAP_H,
-                    String.format("%2.2f", 100.f * (float) (maxX * maxY) / (float) (BITMAP_H * BITMAP_W)));
+                    atlasIndex, usedChars, maxX, maxY, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT,
+                    String.format("%2.2f", 100.f * (float) (maxX * maxY) / (float) (FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT)));
         }
     }
 
@@ -69,19 +69,19 @@ public class TextRenderer {
         charBuffers = new STBTTBakedChar.Buffer[atlasesCount];
 
         for (int i = 0; i < atlasesCount; i++) {
-            ByteBuffer bitmap = BufferUtils.createByteBuffer(BITMAP_W * BITMAP_H);
+            ByteBuffer bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
             charBuffers[i] = STBTTBakedChar.malloc(CHARS_PER_ATLAS);
 
             int firstChar = i * CHARS_PER_ATLAS;
 
-            int result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, FONT_HEIGHT, bitmap, BITMAP_W, BITMAP_H, firstChar, charBuffers[i]);
+            int result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, FONT_HEIGHT, bitmap, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, firstChar, charBuffers[i]);
             if (result <= 0)
                 throw new RuntimeException("Failed to bake font bitmap atlas " + i);
 
             textureIds[i] = glGenTextures();
             glBindTexture(GL_TEXTURE_2D, textureIds[i]);
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, BITMAP_W, BITMAP_H, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -136,10 +136,10 @@ public class TextRenderer {
             final var y0 = penY - (backedCharacter.y1() - backedCharacter.y0()) * scale - backedCharacter.yoff() * scale;
             final var y1 = y0 + (backedCharacter.y1() - backedCharacter.y0()) * scale;
 
-            final var s0 = backedCharacter.x0() / (float) BITMAP_W;
-            final var t0 = backedCharacter.y0() / (float) BITMAP_H;
-            final var s1 = backedCharacter.x1() / (float) BITMAP_W;
-            final var t1 = backedCharacter.y1() / (float) BITMAP_H;
+            final var s0 = backedCharacter.x0() / (float) FONT_ATLAS_WIDTH;
+            final var t0 = backedCharacter.y0() / (float) FONT_ATLAS_HEIGHT;
+            final var s1 = backedCharacter.x1() / (float) FONT_ATLAS_WIDTH;
+            final var t1 = backedCharacter.y1() / (float) FONT_ATLAS_HEIGHT;
 
             final var vertices = BufferUtils.createFloatBuffer(6 * 4);
 
