@@ -1,8 +1,33 @@
 package io.github.trimax.venta.engine.managers;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_RGBA8;
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL11C.GL_LINEAR;
+import static org.lwjgl.opengl.GL11C.GL_RED;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11C.GL_UNPACK_ALIGNMENT;
+import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11C.glBindTexture;
+import static org.lwjgl.opengl.GL11C.glGenTextures;
+import static org.lwjgl.opengl.GL11C.glPixelStorei;
+import static org.lwjgl.opengl.GL11C.glTexImage2D;
+import static org.lwjgl.opengl.GL11C.glTexParameteri;
+import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
+
+import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
@@ -24,7 +49,22 @@ import lombok.extern.slf4j.Slf4j;
 public final class TextureManager extends AbstractManager<TextureManager.TextureEntity, TextureView> {
     private final ResourceManager resourceManager;
 
-    public TextureView load(final String name) {
+    public TextureView create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
+        final var textureID = glGenTextures();
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        return store(new TextureEntity(textureID, name, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
+    }
+
+    public TextureView load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);
 

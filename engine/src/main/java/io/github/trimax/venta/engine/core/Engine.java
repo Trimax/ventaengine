@@ -60,6 +60,13 @@ public final class Engine implements Runnable {
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
 
+        //TODO: TEMP HACK: This should be done in the console renderer
+        final var w = context.getWindowManager().getCurrent();
+        windowRenderer.render(w);
+        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala");
+        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala 2");
+        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala 3");
+
         boolean windowClosed = false;
         while (!windowClosed) {
             final var window = windowAccessor.get(context.getWindowManager().getCurrent());
