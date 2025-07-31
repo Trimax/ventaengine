@@ -78,8 +78,8 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRender
                     .rotateX(rotation.x)
                     .rotateY(rotation.y)
                     .rotateZ(rotation.z)
-                    .scale(scale);
-            modelMatrix.get(modelMatrixBuffer);
+                    .scale(scale)
+                    .get(modelMatrixBuffer);
 
             modelMatrix.normal(normalMatrix);
             normalMatrix.get(normalMatrixBuffer);
@@ -87,9 +87,6 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRender
         }
 
         public GizmoRenderContext withModelMatrix(final CameraManager.CameraEntity camera) {
-            log.info("{}: position={}, front={}, up={}, right={}",
-                    camera.getName(), camera.getPosition(), camera.getFront(), camera.getUp(), camera.getRight());
-
             modelMatrix.set(camera.getViewMatrix()).invert();
 
             modelMatrix.get(modelMatrixBuffer);
