@@ -10,58 +10,24 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBTTBakedChar;
-import org.lwjgl.stb.STBTruetype;
 
+import io.github.trimax.venta.engine.managers.FontManager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TextRenderer {
 
+    private final FontManager.FontEntity font;
 
-    private final int atlasesCount;
-    private final int[] textureIds;
-    private final STBTTBakedChar.Buffer[] charBuffers;
 
     private final int vao;
     private final int vbo;
     private final int shaderProgram;
 
-
-
     @SneakyThrows
-    public TextRenderer(final String fontResourceName) {
-        final var fontFile = Path.of(getClass().getResource(fontResourceName).toURI());
-        ByteBuffer fontBuffer = ioResourceToByteBuffer(fontFile);
-
-        // Support BMP Unicode (0..0xFFFF)
-        atlasesCount = (65536 + FONT_ATLAS_CHARACTERS_COUNT - 1) / FONT_ATLAS_CHARACTERS_COUNT;
-
-        textureIds = new int[atlasesCount];
-        charBuffers = new STBTTBakedChar.Buffer[atlasesCount];
-
-        for (int i = 0; i < atlasesCount; i++) {
-            ByteBuffer bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
-            charBuffers[i] = STBTTBakedChar.malloc(FONT_ATLAS_CHARACTERS_COUNT);
-
-            int firstChar = i * FONT_ATLAS_CHARACTERS_COUNT;
-
-            int result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, FONT_HEIGHT, bitmap, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, firstChar, charBuffers[i]);
-            if (result <= 0)
-                throw new RuntimeException("Failed to bake font bitmap atlas " + i);
-
-            textureIds[i] = glGenTextures();
-            glBindTexture(GL_TEXTURE_2D, textureIds[i]);
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
-
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        }
-
+    public TextRenderer(final FontManager.FontEntity font) {
+        this.font = font;
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
 
@@ -98,10 +64,11 @@ public class TextRenderer {
             final var atlasIndex = codepoint / FONT_ATLAS_CHARACTERS_COUNT;
             final var charIndex = codepoint % FONT_ATLAS_CHARACTERS_COUNT;
 
-            if (atlasIndex < 0 || atlasIndex >= atlasesCount)
+            if (atlasIndex < 0 || atlasIndex >= font.getAtlases().size())
                 continue;
 
-            final var backedCharacter = charBuffers[atlasIndex].get(charIndex);
+
+            final var backedCharacter = font.getAtlases().get(atlasIndex).getBuffer().get(charIndex);
 
             final var x0 = penX + backedCharacter.xoff() * scale;
             final var x1 = x0 + (backedCharacter.x1() - backedCharacter.x0()) * scale;
@@ -128,7 +95,7 @@ public class TextRenderer {
             vertices.flip();
 
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, textureIds[atlasIndex]);
+            glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternalID());
 
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
             glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
@@ -222,14 +189,8 @@ public class TextRenderer {
     }
 
     public void cleanup() {
-        for (int texId : textureIds)
-            glDeleteTextures(texId);
-
         glDeleteBuffers(vbo);
         glDeleteVertexArrays(vao);
         glDeleteProgram(shaderProgram);
-
-        for (STBTTBakedChar.Buffer buf : charBuffers)
-            buf.free();
     }
 }
