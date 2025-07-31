@@ -1,0 +1,26 @@
+{
+  "vertices": [
+    { "position": {"x":  0.5, "y":  0.5, "z":  0.5}, "color": {"x": 0.3, "y": 0.0, "z": 0.0, "w": 1}, "textureCoordinates": {"x": 0.0, "y": 0.0} },
+    { "position": {"x": -0.5, "y": -0.5, "z":  0.5}, "color": {"x": 0.3, "y": 0.0, "z": 0.0, "w": 1}, "textureCoordinates": {"x": 1.0, "y": 0.0} },
+    { "position": {"x": -0.5, "y":  0.5, "z": -0.5}, "color": {"x": 0.3, "y": 0.0, "z": 0.0, "w": 1}, "textureCoordinates": {"x": 1.0, "y": 1.0} },
+
+    { "position": {"x":  0.5, "y":  0.5, "z":  0.5}, "color": {"x": 0.0, "y": 0.3, "z": 0.0, "w": 1}, "textureCoordinates": {"x": 0.0, "y": 0.0} },
+    { "position": {"x": -0.5, "y": -0.5, "z":  0.5}, "color": {"x": 0.0, "y": 0.3, "z": 0.0, "w": 1}, "textureCoordinates": {"x": 1.0, "y": 0.0} },
+    { "position": {"x":  0.5, "y": -0.5, "z": -0.5}, "color": {"x": 0.0, "y": 0.3, "z": 0.0, "w": 1}, "textureCoordinates": {"x": 0.0, "y": 1.0} },
+
+    { "position": {"x":  0.5, "y":  0.5, "z":  0.5}, "color": {"x": 0.0, "y": 0.0, "z": 0.3, "w": 1}, "textureCoordinates": {"x": 0.0, "y": 0.0} },
+    { "position": {"x": -0.5, "y":  0.5, "z": -0.5}, "color": {"x": 0.0, "y": 0.0, "z": 0.3, "w": 1}, "textureCoordinates": {"x": 1.0, "y": 1.0} },
+    { "position": {"x":  0.5, "y": -0.5, "z": -0.5}, "color": {"x": 0.0, "y": 0.0, "z": 0.3, "w": 1}, "textureCoordinates": {"x": 0.0, "y": 1.0} },
+
+    { "position": {"x": -0.5, "y": -0.5, "z":  0.5}, "color": {"x": 1, "y": 1, "z": 1, "w": 1}, "textureCoordinates": {"x": 1.0, "y": 0.0} },
+    { "position": {"x": -0.5, "y":  0.5, "z": -0.5}, "color": {"x": 1, "y": 1, "z": 1, "w": 1}, "textureCoordinates": {"x": 1.0, "y": 1.0} },
+    { "position": {"x":  0.5, "y": -0.5, "z": -0.5}, "color": {"x": 1, "y": 1, "z": 1, "w": 1}, "textureCoordinates": {"x": 0.0, "y": 1.0} }
+  ],
+  "facets": [
+    {"vertex1": 2, "vertex2": 1, "vertex3": 0},
+    {"vertex1": 3, "vertex2": 4, "vertex3": 5},
+    {"vertex1": 6, "vertex2": 8, "vertex3": 7},
+
+    {"vertex1": 9, "vertex2": 10, "vertex3": 11}
+  ]
+}

@@ -1,0 +1,20 @@
+package io.github.trimax.examples.debug.handlers;
+
+import org.joml.Vector3f;
+
+import io.github.trimax.examples.debug.state.DebugApplicationState;
+import io.github.trimax.venta.engine.core.Engine;
+import io.github.trimax.venta.engine.core.VentaContext;
+import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RequiredArgsConstructor
+public final class DebugApplicationUpdateHandler implements VentaEngineUpdateHandler {
+    private final DebugApplicationState state;
+
+    public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
+        state.getTetrahedron().rotate(new Vector3f(0.1f * (float) time.getDelta(), 0.2f * (float) time.getDelta(), 0.3f * (float)  time.getDelta()));
+    }
+}

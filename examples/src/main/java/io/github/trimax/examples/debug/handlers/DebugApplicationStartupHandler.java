@@ -1,0 +1,35 @@
+package io.github.trimax.examples.debug.handlers;
+
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import io.github.trimax.examples.debug.state.DebugApplicationState;
+import io.github.trimax.venta.engine.core.VentaContext;
+import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@AllArgsConstructor
+public final class DebugApplicationStartupHandler implements VentaEngineStartupHandler {
+    private final DebugApplicationState state;
+
+    public void onStartup(final String[] args, final VentaContext context) {
+        log.info("Debug demo application started");
+
+        final var scene = context.getSceneManager().getCurrent();
+        scene.setAmbientLight(new Vector4f(0.6f, 0.6f, 0.6f, 1.f));
+
+        state.setTetrahedron(context.getObjectManager().load("tetrahedron"));
+        scene.add(state.getTetrahedron());
+
+        context.getCameraManager().getCurrent().setPosition(new Vector3f(3.f, 3.f, 3.f));
+        context.getCameraManager().getCurrent().lookAt(new Vector3f(0.f));
+
+        final var light = context.getLightManager().load("basic");
+        light.setPosition(new Vector3f(0.f, 2.f, 0.f));
+        light.setColor(new Vector3f(1.f, 1.f, 1.f));
+        light.setIntensity(2.f);
+        scene.add(light);
+    }
+}
