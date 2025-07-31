@@ -99,7 +99,6 @@ public class TextRenderer {
             final var posLoc = program.getUniformID("position");
             glUniform2f(posLoc, 0f, 0f);
 
-
             // Scale
             final var scaleLoc = program.getUniformID("scale");
             glUniform1f(scaleLoc, 1f);

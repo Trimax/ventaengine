@@ -101,9 +101,10 @@ public final class Engine implements Runnable {
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            textRenderer.renderText("Ничего себе! čř! Привет 123", -0.1f, 0.1f, 0.001f);
-            glDisable(GL_BLEND);
+            for (int line = 0; line < 19; line++)
+                textRenderer.renderText("Hello world! Česko! Это строчка №" + line, -0.98f, 0.98f - (line * 0.05f), 0.001f);
 
+            glDisable(GL_BLEND);
 
 
             try (final var _ = windowRenderer.withContext(null)
