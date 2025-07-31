@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.CameraManager;
+import io.github.trimax.venta.engine.managers.FontManager;
 import io.github.trimax.venta.engine.managers.WindowManager;
 import io.github.trimax.venta.engine.renderers.DebugRenderer;
 import io.github.trimax.venta.engine.renderers.SceneRenderer;
@@ -31,6 +32,11 @@ public final class Engine implements Runnable {
     private final VentaContext context;
 
     private VentaEngineApplication application;
+
+
+
+    //TODO: Temp
+    private final FontManager fontManager;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         this.application = ventaEngineApplication;
@@ -61,8 +67,11 @@ public final class Engine implements Runnable {
         final var time = new VentaTime();
 
         final var tempConsole = new TempConsole();
+
+        final var font = fontManager.create("DejaVuSansMono");
         TextRenderer textRenderer = new TextRenderer("/fonts/DejaVuSansMono.ttf");
-        textRenderer.printAtlasUsageSummary();
+
+
 
         boolean windowClosed = false;
         while (!windowClosed) {

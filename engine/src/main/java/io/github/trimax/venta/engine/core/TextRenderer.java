@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.core;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
+import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL33C.*;
 
 import java.io.IOException;
@@ -20,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TextRenderer {
 
-    private static final int CHARS_PER_ATLAS = 4096;
-    private static final int FONT_HEIGHT = 32;
 
     private final int atlasesCount;
     private final int[] textureIds;
@@ -31,30 +28,7 @@ public class TextRenderer {
     private final int vbo;
     private final int shaderProgram;
 
-    public void printAtlasUsageSummary() {
-        for (int atlasIndex = 0; atlasIndex < atlasesCount; atlasIndex++) {
-            STBTTBakedChar.Buffer buffer = charBuffers[atlasIndex];
 
-            int maxX = 0;
-            int maxY = 0;
-            int usedChars = 0;
-
-            for (int i = 0; i < CHARS_PER_ATLAS; i++) {
-                STBTTBakedChar g = buffer.get(i);
-                int width = g.x1() - g.x0();
-                int height = g.y1() - g.y0();
-                if (width > 0 && height > 0) {
-                    usedChars++;
-                    if (g.x1() > maxX) maxX = g.x1();
-                    if (g.y1() > maxY) maxY = g.y1();
-                }
-            }
-
-            log.info("Atlas #{}: used chars = {}, maxX = {}, maxY = {} (atlas size: {} x {}). Used: {}%",
-                    atlasIndex, usedChars, maxX, maxY, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT,
-                    String.format("%2.2f", 100.f * (float) (maxX * maxY) / (float) (FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT)));
-        }
-    }
 
     @SneakyThrows
     public TextRenderer(final String fontResourceName) {
@@ -62,17 +36,16 @@ public class TextRenderer {
         ByteBuffer fontBuffer = ioResourceToByteBuffer(fontFile);
 
         // Support BMP Unicode (0..0xFFFF)
-        int totalChars = 0x10000; // 65536
-        atlasesCount = (totalChars + CHARS_PER_ATLAS - 1) / CHARS_PER_ATLAS;
+        atlasesCount = (65536 + FONT_ATLAS_CHARACTERS_COUNT - 1) / FONT_ATLAS_CHARACTERS_COUNT;
 
         textureIds = new int[atlasesCount];
         charBuffers = new STBTTBakedChar.Buffer[atlasesCount];
 
         for (int i = 0; i < atlasesCount; i++) {
             ByteBuffer bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
-            charBuffers[i] = STBTTBakedChar.malloc(CHARS_PER_ATLAS);
+            charBuffers[i] = STBTTBakedChar.malloc(FONT_ATLAS_CHARACTERS_COUNT);
 
-            int firstChar = i * CHARS_PER_ATLAS;
+            int firstChar = i * FONT_ATLAS_CHARACTERS_COUNT;
 
             int result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, FONT_HEIGHT, bitmap, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, firstChar, charBuffers[i]);
             if (result <= 0)
@@ -122,8 +95,8 @@ public class TextRenderer {
             if (Character.isHighSurrogate(text.charAt(i)) && i + 1 < text.length() && Character.isLowSurrogate(text.charAt(i + 1)))
                 i++;
 
-            final var atlasIndex = codepoint / CHARS_PER_ATLAS;
-            final var charIndex = codepoint % CHARS_PER_ATLAS;
+            final var atlasIndex = codepoint / FONT_ATLAS_CHARACTERS_COUNT;
+            final var charIndex = codepoint % FONT_ATLAS_CHARACTERS_COUNT;
 
             if (atlasIndex < 0 || atlasIndex >= atlasesCount)
                 continue;

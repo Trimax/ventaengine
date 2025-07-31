@@ -1,6 +1,12 @@
 package io.github.trimax.venta.engine.managers;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.*;
+
+import java.nio.ByteBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTBakedChar;
+import org.lwjgl.stb.STBTruetype;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.view.AtlasView;
@@ -15,10 +21,26 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity, AtlasView> {
+    private final TextureManager textureManager;
+    private final TextureManager.TextureAccessor textureAccessor;
+
+    public AtlasView create(final String name, int i, ByteBuffer fontBuffer) {
+        final var bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
+        final var charBuffer = STBTTBakedChar.malloc(FONT_ATLAS_CHARACTERS_COUNT);
+
+        final var firstChar = i * FONT_ATLAS_CHARACTERS_COUNT;
+
+        final var result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, FONT_HEIGHT, bitmap, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, firstChar, charBuffer);
+        if (result <= 0)
+            throw new RuntimeException("Failed to bake font bitmap atlas " + i);
+
+        return store(new AtlasEntity(name, textureAccessor.get(textureManager.create(name, bitmap)), charBuffer));
+    }
 
     @Override
     protected void destroy(final AtlasEntity font) {
         log.info("Destroying atlas {} ({})", font.getID(), font.getName());
+        font.buffer.free();
     }
 
     @Override
@@ -38,6 +60,32 @@ public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity
 
             this.texture = texture;
             this.buffer = buffer;
+
+            printUsageSummary();
+        }
+
+        private void printUsageSummary() {
+            int maxX = 0;
+            int maxY = 0;
+            int usedChars = 0;
+
+            for (int i = 0; i < FONT_ATLAS_CHARACTERS_COUNT; i++) {
+                final var backedCharacter = buffer.get(i);
+                final var width = backedCharacter.x1() - backedCharacter.x0();
+                final var height = backedCharacter.y1() - backedCharacter.y0();
+                if (width > 0 && height > 0) {
+                    usedChars++;
+                    if (backedCharacter.x1() > maxX)
+                        maxX = backedCharacter.x1();
+
+                    if (backedCharacter.y1() > maxY)
+                        maxY = backedCharacter.y1();
+                }
+            }
+
+            log.info("Atlas {}: used chars = {}, maxX = {}, maxY = {} (atlas size: {} x {}). Used: {}%",
+                    getName(), usedChars, maxX, maxY, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT,
+                    String.format("%2.2f", 100.f * (float) (maxX * maxY) / (float) (FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT)));
         }
     }
 

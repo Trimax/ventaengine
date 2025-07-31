@@ -1,5 +1,12 @@
 package io.github.trimax.venta.engine.managers;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_CHARACTERS_COUNT;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.BufferUtils;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.view.FontView;
 import lombok.AccessLevel;
@@ -13,6 +20,27 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FontManager extends AbstractManager<FontManager.FontEntity, FontView> {
+    private final ResourceManager resourceManager;
+    private final AtlasManager atlasManager;
+
+    private final AtlasManager.AtlasAccessor atlasAccessor;
+
+    public FontView create(final String name) {
+        final var bytes = resourceManager.loadAsBytes(String.format("/fonts/%s.ttf", name));
+
+        final var fontBuffer = BufferUtils.createByteBuffer(bytes.length);
+        fontBuffer.put(bytes);
+        fontBuffer.flip();
+
+        // Support BMP Unicode (0..0xFFFF)
+        final var atlasesCount = (65536 + FONT_ATLAS_CHARACTERS_COUNT - 1) / FONT_ATLAS_CHARACTERS_COUNT;
+
+        final var atlases = new ArrayList<AtlasManager.AtlasEntity>();
+        for (int i = 0; i < atlasesCount; i++)
+            atlases.add(atlasAccessor.get(atlasManager.create(String.format("%s-%d", name, i), i, fontBuffer)));
+
+        return store(new FontEntity(name, atlases));
+    }
 
     @Override
     protected void destroy(final FontEntity font) {
@@ -26,23 +54,16 @@ public final class FontManager extends AbstractManager<FontManager.FontEntity, F
 
     @Getter
     public static final class FontEntity extends AbstractManager.AbstractEntity implements FontView {
-        private final int internalID;
-        private final int width;
-        private final int height;
+        private final List<AtlasManager.AtlasEntity> atlases;
 
-        FontEntity(final int internalID,
-                @NonNull final String name,
-                final int width,
-                final int height) {
+        FontEntity(@NonNull final String name, @NonNull final List<AtlasManager.AtlasEntity> atlases) {
             super(name);
 
-            this.internalID = internalID;
-            this.width = width;
-            this.height = height;
+            this.atlases = atlases;
         }
     }
 
     @Component
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class FontAccessor extends AbstractManager.AbstractAccessor {}
+    public final class FontAccessor extends AbstractAccessor {}
 }
