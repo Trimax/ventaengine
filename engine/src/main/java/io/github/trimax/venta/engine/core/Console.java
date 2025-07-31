@@ -3,19 +3,24 @@ package io.github.trimax.venta.engine.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.trimax.venta.container.annotations.Component;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Console {
     private final List<String> history = new ArrayList<>();
-    private final List<String> output = new ArrayList<>();
-    private StringBuilder inputBuffer = new StringBuilder();
-
-    private int historyIndex = -1;
-    private boolean visible = false;
+    private final StringBuilder inputBuffer = new StringBuilder();
+    private boolean visible;
 
     public void toggle() {
         visible = !visible;
     }
 
-    public void inputChar(char c) {
+    public void accept(final char c) {
         inputBuffer.append(c);
     }
 
@@ -25,33 +30,21 @@ public final class Console {
     }
 
     public void submit() {
-        String command = inputBuffer.toString();
+        final var command = inputBuffer.toString();
         history.add(command);
-        output.add("> " + command);
+
         execute(command);
         inputBuffer.setLength(0);
-        historyIndex = history.size();
     }
 
-    public void scrollHistory(int delta) {
-        historyIndex = Math.max(0, Math.min(history.size() - 1, historyIndex + delta));
-        inputBuffer.setLength(0);
-        inputBuffer.append(history.get(historyIndex));
+    private void execute(final String command) {
+        log.info("Command for execution: {}", command);
     }
 
-    private void execute(String command) {
-        // Простейший парсер
-        if (command.equals("clear")) {
-            output.clear();
-        } else if (command.equals("help")) {
-            output.add("Available commands: help, clear");
-        } else {
-            output.add("Unknown command: " + command);
-        }
-    }
+    public void render(final int screenWidth, final int screenHeight) {
+        if (!visible)
+            return;
 
-    public void render(int screenWidth, int screenHeight) {
-        if (!visible) return;
-
+        history.size();
     }
 }
