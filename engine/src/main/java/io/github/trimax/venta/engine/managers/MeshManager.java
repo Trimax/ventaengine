@@ -13,6 +13,7 @@ import java.nio.IntBuffer;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import lombok.AccessLevel;
@@ -104,7 +105,7 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
         glBindVertexArray(0);
 
         return store(new MeshEntity(name, vertices.length, meshDTO.getFacetsArrayLength(),
-                meshDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID));
+                meshDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO)));
     }
 
     @Override
@@ -132,6 +133,8 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
         private final int facetsBufferID;
         private final int edgesBufferID;
 
+        private final BoundingBox boundingBox;
+
         private MaterialManager.MaterialEntity material;
 
         MeshEntity(@NonNull final String name,
@@ -141,7 +144,8 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
                    final int vertexArrayObjectID,
                    final int verticesBufferID,
                    final int facetsBufferID,
-                   final int edgesBufferID) {
+                   final int edgesBufferID,
+                   final BoundingBox boundingBox) {
             super(name);
 
             this.verticesCount = verticesCount;
@@ -152,6 +156,8 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
             this.verticesBufferID = verticesBufferID;
             this.facetsBufferID = facetsBufferID;
             this.edgesBufferID = edgesBufferID;
+
+            this.boundingBox = boundingBox;
         }
 
         @Override

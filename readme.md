@@ -59,9 +59,7 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 ## Roadmap
 The roadmap is reflected in the GitHub issues section. Long story short:
 
-1. Introduce mesh manager etc
-   1. Calculate bounding boxes for objects (now we render simple bounding boxes)
-   2. Generify manager load method (try to move V load(name) to abstract class)
+1. Generify manager load method (try to move V load(name) to abstract class)
 2. Console
 3. Environment: box/sphere (add box to the scene)
 4. Emitters (extend the scene with a list of emitters)
