@@ -16,6 +16,7 @@ import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
+import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.GizmoManager;
 import io.github.trimax.venta.engine.managers.ProgramManager;
 import io.github.trimax.venta.engine.model.view.GizmoView;
@@ -23,7 +24,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRenderer.GizmoRenderContext, SceneRenderer.SceneRenderContext> {
@@ -80,6 +83,19 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRender
 
             modelMatrix.normal(normalMatrix);
             normalMatrix.get(normalMatrixBuffer);
+            return this;
+        }
+
+        public GizmoRenderContext withModelMatrix(final CameraManager.CameraEntity camera) {
+            log.info("{}: position={}, front={}, up={}, right={}",
+                    camera.getName(), camera.getPosition(), camera.getFront(), camera.getUp(), camera.getRight());
+
+            modelMatrix.set(camera.getViewMatrix()).invert();
+
+            modelMatrix.get(modelMatrixBuffer);
+            modelMatrix.normal(normalMatrix);
+            normalMatrix.get(normalMatrixBuffer);
+
             return this;
         }
 

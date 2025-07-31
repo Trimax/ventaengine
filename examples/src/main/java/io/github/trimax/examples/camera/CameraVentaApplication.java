@@ -1,0 +1,48 @@
+package io.github.trimax.examples.camera;
+
+import io.github.trimax.examples.camera.handlers.CameraApplicationInputHandler;
+import io.github.trimax.examples.camera.handlers.CameraApplicationStartupHandler;
+import io.github.trimax.examples.camera.handlers.CameraApplicationUpdateHandler;
+import io.github.trimax.examples.camera.state.CameraApplicationState;
+import io.github.trimax.venta.engine.VentaEngine;
+import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
+import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
+import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
+import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
+import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public final class CameraVentaApplication implements VentaEngineApplication {
+    private final CameraApplicationState state = new CameraApplicationState();
+
+    @Override
+    public @NonNull VentaEngineConfiguration getConfiguration() {
+        return new VentaEngineConfiguration() {
+            @Override
+            public @NonNull RenderConfiguration getRenderConfiguration() {
+                return new RenderConfiguration(false, true);
+            }
+        };
+    }
+
+    @Override
+    public @NonNull VentaEngineStartupHandler getStartupHandler() {
+        return new CameraApplicationStartupHandler(state);
+    }
+
+    @Override
+    public @NonNull VentaEngineInputHandler getInputHandler() {
+        return new CameraApplicationInputHandler(state);
+    }
+
+    @Override
+    public @NonNull VentaEngineUpdateHandler getUpdateHandler() {
+        return new CameraApplicationUpdateHandler(state);
+    }
+
+    public static void main(final String[] args) {
+        VentaEngine.run(args, new CameraVentaApplication());
+    }
+}

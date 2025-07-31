@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.managers;
 
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -47,18 +48,11 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
         private static final Vector3f worldUp = new Vector3f(0, 1, 0);
 
         private final Vector3f position = new Vector3f(0.f);
-        private final Vector3f front = new Vector3f();
-        private final Vector3f right = new Vector3f();
-        private final Vector3f up = new Vector3f();
+        private final Vector3f rotation = new Vector3f(0.f); // pitch (X), yaw (Y), roll (Z)
 
-        @Getter
-        private float yaw;   // around Y
-
-        @Getter
-        private float pitch; // around X
-
-        @Getter
-        private float roll;  // around Z
+        private final Vector3f front = new Vector3f(0, 0, -1);
+        private final Vector3f up = new Vector3f(0, 1, 0);
+        private final Vector3f right = new Vector3f(1, 0, 0);
 
         CameraEntity(@NonNull final String name,
                 final Vector3f position,
@@ -67,24 +61,15 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
             super(gizmo, name);
 
             setPosition(position);
-            this.front.set(new Vector3f(target).sub(position).normalize());
-
-            // Compute angles
-            this.yaw = (float) Math.atan2(front.z, front.x);
-            this.pitch = (float) Math.asin(front.y);
-            this.roll = 0;
-
-            updateVectors();
+            lookAt(target);
         }
 
-        private void updateVectors() {
-            front.x = (float) (Math.cos(pitch) * Math.cos(yaw));
-            front.y = (float) Math.sin(pitch);
-            front.z = (float) (Math.cos(pitch) * Math.sin(yaw));
-            front.normalize();
+        private void rotateAround(final Vector3f axis, final float angleRadians) {
+            final var rotationMatrix = new Matrix3f().rotate(angleRadians, axis);
 
-            right.set(front).cross(worldUp).normalize();
-            up.set(right).cross(front).normalize();
+            front.mul(rotationMatrix).normalize();
+            up.mul(rotationMatrix).normalize();
+            right.mul(rotationMatrix).normalize();
         }
 
         public Matrix4f getViewMatrix() {
@@ -108,21 +93,17 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
 
         @Override
         public void rotateYaw(final float radians) {
-            this.yaw += radians;
-
-            updateVectors();
+            rotateAround(up, radians);
         }
 
         @Override
         public void rotatePitch(final float radians) {
-            this.pitch = Math.clamp(this.pitch + radians, (float) Math.toRadians(-89.0f), (float) Math.toRadians(89.0f));
-
-            updateVectors();
+            rotateAround(right, radians);
         }
 
         @Override
         public void rotateRoll(final float radians) {
-            this.roll += radians;
+            rotateAround(front, radians);
         }
 
         @Override
@@ -137,12 +118,14 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
 
         @Override
         public void lookAt(final Vector3f target) {
-            final var direction = new Vector3f(target).sub(position).normalize();
+            front.set(new Vector3f(target).sub(position).normalize());
 
-            this.yaw = (float) Math.atan2(direction.z, direction.x);
-            this.pitch = (float) Math.asin(direction.y);
+            final var tempUp = new Vector3f(0, 1, 0);
+            if (Math.abs(front.dot(tempUp)) > 0.999f)
+                tempUp.set(0, 0, 1);
 
-            updateVectors();
+            right.set(new Vector3f(front).cross(tempUp).normalize());
+            up.set(new Vector3f(right).cross(front).normalize());
         }
     }
 

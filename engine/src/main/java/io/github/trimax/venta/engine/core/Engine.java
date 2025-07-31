@@ -55,6 +55,7 @@ public final class Engine implements Runnable {
     public void run() {
         glEnable(GL_DEPTH_TEST);
 
+        final var renderConfiguration = application.getConfiguration().getRenderConfiguration();
         final var updateHandler = application.getUpdateHandler();
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
@@ -72,7 +73,7 @@ public final class Engine implements Runnable {
                 sceneRenderer.render(context.getSceneManager().getCurrent());
             }
 
-            if (application.getConfiguration().getRenderConfiguration().isDebugEnabled())
+            if (renderConfiguration.isDebugEnabled())
                 try (final var _ = debugRenderer.withContext(null)
                         .with(window, camera)) {
                     debugRenderer.render(context.getSceneManager().getCurrent());
