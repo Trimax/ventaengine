@@ -1,15 +1,19 @@
-package io.github.trimax.venta.engine.core;
+package io.github.trimax.venta.engine.console;
 
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 
-public class TempConsole {
-    private final int vao;
-    private final int shader;
+import io.github.trimax.venta.engine.managers.ProgramManager;
 
-    public TempConsole() {
+public class TempConsole {
+    private final ProgramManager.ProgramEntity program;
+    private final int vao;
+
+    public TempConsole(final ProgramManager.ProgramEntity program) {
+        this.program = program;
+
         vao = glGenVertexArrays();
         int vbo = glGenBuffers();
 
@@ -34,8 +38,6 @@ public class TempConsole {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
-
-        shader = createShader();
     }
 
     public void render() {
@@ -43,7 +45,7 @@ public class TempConsole {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glUseProgram(shader);
+        glUseProgram(program.getInternalID());
         glBindVertexArray(vao);
 
         glEnable(GL_BLEND);
@@ -58,42 +60,4 @@ public class TempConsole {
         glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
     }
-
-    private int createShader() {
-        int vs = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vs, """
-            #version 330 core
-            layout(location = 0) in vec2 aPos;
-            void main() {
-                gl_Position = vec4(aPos, 0.0, 1.0);
-            }
-        """);
-        glCompileShader(vs);
-        if (glGetShaderi(vs, GL_COMPILE_STATUS) == GL_FALSE)
-            throw new RuntimeException(glGetShaderInfoLog(vs));
-
-        int fs = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fs, """
-            #version 330 core
-            out vec4 FragColor;
-            void main() {
-                FragColor = vec4(0.2, 0.2, 0.2, 0.9); 
-            }
-        """);
-        glCompileShader(fs);
-        if (glGetShaderi(fs, GL_COMPILE_STATUS) == GL_FALSE)
-            throw new RuntimeException(glGetShaderInfoLog(fs));
-
-        int program = glCreateProgram();
-        glAttachShader(program, vs);
-        glAttachShader(program, fs);
-        glLinkProgram(program);
-        if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE)
-            throw new RuntimeException(glGetProgramInfoLog(program));
-
-        glDeleteShader(vs);
-        glDeleteShader(fs);
-        return program;
-    }
 }
-

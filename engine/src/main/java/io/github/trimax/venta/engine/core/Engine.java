@@ -7,6 +7,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.console.TempConsole;
+import io.github.trimax.venta.engine.console.TextRenderer;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.FontManager;
@@ -70,7 +72,7 @@ public final class Engine implements Runnable {
         final var time = new VentaTime();
 
         //TODO: Temp. Should be a part of console class
-        final var tempConsole = new TempConsole();
+        final var tempConsole = new TempConsole(programAccessor.get(programManager.load("console")));
         final var font = fontManager.create("DejaVuSansMono");
         final var program = programManager.load("text");
         final var textRenderer = new TextRenderer(fontAccessor.get(font), programAccessor.get(program));

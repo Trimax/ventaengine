@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WindowRenderer extends AbstractRenderer<WindowView, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
     private final WindowManager.WindowAccessor windowAccessor;
+    private final ConsoleRenderer consoleRenderer;
     private long lastUpdated = 0;
 
     @Override
@@ -28,6 +29,10 @@ public final class WindowRenderer extends AbstractRenderer<WindowView, WindowRen
     }
 
     private void render(final WindowManager.WindowEntity window) {
+        try (final var _ = consoleRenderer.withContext(getContext())) {
+            consoleRenderer.render(window.getConsole());
+        }
+
         glfwSwapBuffers(window.getInternalID());
 
         final var now = System.currentTimeMillis();

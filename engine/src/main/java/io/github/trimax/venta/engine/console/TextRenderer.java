@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.core;
+package io.github.trimax.venta.engine.console;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -96,12 +96,10 @@ public class TextRenderer {
             glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
 
             // Position
-            final var posLoc = program.getUniformID("position");
-            glUniform2f(posLoc, 0f, 0f);
+            glUniform2f(program.getUniformID("position"), 0f, 0f);
 
             // Scale
-            final var scaleLoc = program.getUniformID("scale");
-            glUniform1f(scaleLoc, 1f);
+            glUniform1f(program.getUniformID("scale"), 1f);
 
             glDrawArrays(GL_TRIANGLES, 0, 6);
 

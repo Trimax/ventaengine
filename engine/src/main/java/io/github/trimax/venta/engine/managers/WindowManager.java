@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -18,6 +19,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.console.Console;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
@@ -68,6 +70,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         final var window = new WindowEntity(id, width, height, title, inputHandler);
         glfwSetFramebufferSizeCallback(id, window.getSizeCallback());
         glfwSetKeyCallback(id, window.getKeyCallback());
+        glfwSetCharCallback(id, window.getCharCallback());
         glfwSetMouseButtonCallback(id, window.getMouseButtonCallback());
         glfwSetCursorPosCallback(id, window.getMousePositionCallback());
 
@@ -131,12 +134,14 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     @Getter
     public static final class WindowEntity extends AbstractEntity implements WindowView {
+        private final Console console = new Console();
+
         private final long internalID;
-        private int width;
-        private int height;
         private final VentaEngineInputHandler inputHandler;
         private final Matrix4f projectionMatrix;
-        private boolean isConsoleVisible;
+
+        private int width;
+        private int height;
 
         @Getter(AccessLevel.PRIVATE)
         private final GLFWFramebufferSizeCallback sizeCallback = new GLFWFramebufferSizeCallback() {
@@ -153,14 +158,27 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             }
         };
 
+        private final GLFWCharCallback charCallback = new GLFWCharCallback() {
+            @Override
+            public void invoke(final long window, final int codepoint) {
+                if (!console.isVisible())
+                    return;
+
+                console.accept((char)  codepoint);
+            }
+        };
+
         @Getter
         private final GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
-                if (key == GLFW_KEY_GRAVE_ACCENT) { // тильда
-                    isConsoleVisible = !isConsoleVisible;
+                if ((key == GLFW_KEY_GRAVE_ACCENT) && (action == GLFW_PRESS)) { // тильда
+                    console.toggle();
                     return;
                 }
+                
+                if (console.isVisible() && (action == GLFW_PRESS) && console.handle(key))
+                    return;
 
                 if (inputHandler != null)
                     inputHandler.onKey(key, scancode, action, mods);
