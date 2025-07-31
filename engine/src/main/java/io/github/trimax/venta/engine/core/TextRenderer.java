@@ -60,7 +60,7 @@ public class TextRenderer {
     @SneakyThrows
     public TextRenderer(String fontResourceName) {
         final var fontFile = Path.of(getClass().getResource(fontResourceName).toURI());
-        ByteBuffer fontBuffer = ioResourceToByteBuffer(fontFile, 160 * 1024);
+        ByteBuffer fontBuffer = ioResourceToByteBuffer(fontFile);
 
         // Support BMP Unicode (0..0xFFFF)
         int totalChars = 0x10000; // 65536
@@ -98,7 +98,7 @@ public class TextRenderer {
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        // layout(location=0): vec2 aPos; layout(location=1): vec2 aTexCoord;
+        // layout(location=0): vec2 aPos; layout(location=1): vec2 textureCoordinates;
         glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
         glEnableVertexAttribArray(0);
 
@@ -142,7 +142,7 @@ public class TextRenderer {
             float s1 = g.x1() / (float) BITMAP_W;
             float t1 = g.y1() / (float) BITMAP_H;
 
-            FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4); // 6 вершин по 4 атрибута
+            FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4);
 
             vertices.put(new float[]{
                     x0, y0, s0, t1,
@@ -161,10 +161,12 @@ public class TextRenderer {
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
             glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
 
-            // Передаем позицию и масштаб в шейдер
+            // Position
             int posLoc = glGetUniformLocation(shaderProgram, "uPos");
             glUniform2f(posLoc, 0f, 0f);
 
+
+            // Scale
             int scaleLoc = glGetUniformLocation(shaderProgram, "uScale");
             glUniform1f(scaleLoc, 1f);
 
@@ -184,18 +186,18 @@ public class TextRenderer {
         glShaderSource(vs, """
                 #version 330 core
                 layout(location = 0) in vec2 aPos;
-                layout(location = 1) in vec2 aTexCoord;
+                layout(location = 1) in vec2 textureCoordinates;
 
-                out vec2 TexCoord;
+                out vec2 vertexTextureCoordinates;
 
                 uniform vec2 uPos;
                 uniform float uScale;
 
                 void main() {
-                    // Координаты в [-1;1], масштабируем и сдвигаем
+                    // Coordinates in [-1;1]
                     vec2 pos = aPos * uScale + uPos;
                     gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);
-                    TexCoord = aTexCoord;
+                    vertexTextureCoordinates = textureCoordinates;
                 }
                 """);
         glCompileShader(vs);
@@ -205,14 +207,13 @@ public class TextRenderer {
         int fs = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fs, """
                 #version 330 core
-                in vec2 TexCoord;
+                in vec2 vertexTextureCoordinates;
                 out vec4 FragColor;
 
-                uniform sampler2D fontTexture;
+                uniform sampler2D textureDiffuse;
 
                 void main() {
-                    float alpha = texture(fontTexture, TexCoord).r;
-                    FragColor = vec4(0.2, 0.8, 0.2, alpha);
+                    FragColor = vec4(0.2, 0.8, 0.2, texture(textureDiffuse, vertexTextureCoordinates).r);
                 }
                 """);
         glCompileShader(fs);
@@ -231,14 +232,14 @@ public class TextRenderer {
         glDeleteShader(fs);
 
         glUseProgram(program);
-        int fontTexLoc = glGetUniformLocation(program, "fontTexture");
+        int fontTexLoc = glGetUniformLocation(program, "textureDiffuse");
         glUniform1i(fontTexLoc, 0);
         glUseProgram(0);
 
         return program;
     }
 
-    private static ByteBuffer ioResourceToByteBuffer(Path path, int bufferSize) throws IOException {
+    private static ByteBuffer ioResourceToByteBuffer(Path path) throws IOException {
         ByteBuffer buffer;
         try (FileChannel fc = FileChannel.open(path, StandardOpenOption.READ)) {
             buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
@@ -251,9 +252,11 @@ public class TextRenderer {
     public void cleanup() {
         for (int texId : textureIds)
             glDeleteTextures(texId);
+
         glDeleteBuffers(vbo);
         glDeleteVertexArrays(vao);
         glDeleteProgram(shaderProgram);
+
         for (STBTTBakedChar.Buffer buf : charBuffers)
             buf.free();
     }
