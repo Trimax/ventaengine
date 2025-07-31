@@ -34,9 +34,9 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
 
         log.info("Loading mesh {}", name);
 
-        final var objectDTO = resourceManager.load(String.format("/meshes/%s.json", name), MeshDTO.class);
+        final var meshDTO = resourceManager.load(String.format("/meshes/%s.json", name), MeshDTO.class);
 
-        final var vertices = objectDTO.getVerticesArray();
+        final var vertices = meshDTO.getVerticesArray();
 
         final int vertexArrayObjectID = glGenVertexArrays();
         final int vertexBufferID = glGenBuffers();
@@ -54,8 +54,8 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
         memFree(vertexBuffer);
 
         // Facets
-        if (objectDTO.hasFacets()) {
-            final var facets = objectDTO.getFacesArray();
+        if (meshDTO.hasFacets()) {
+            final var facets = meshDTO.getFacesArray();
             final IntBuffer indexBuffer = memAllocInt(facets.length);
             indexBuffer.put(facets).flip();
 
@@ -65,8 +65,8 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
         }
 
         // Edges
-        if (objectDTO.hasEdges()) {
-            final var edges = objectDTO.getEdgesArray();
+        if (meshDTO.hasEdges()) {
+            final var edges = meshDTO.getEdgesArray();
             final IntBuffer indexBuffer = memAllocInt(edges.length);
             indexBuffer.put(edges).flip();
 
@@ -103,8 +103,8 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
 
         glBindVertexArray(0);
 
-        return store(new MeshEntity(name, vertices.length, objectDTO.getFacetsArrayLength(),
-                objectDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID));
+        return store(new MeshEntity(name, vertices.length, meshDTO.getFacetsArrayLength(),
+                meshDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID));
     }
 
     @Override
