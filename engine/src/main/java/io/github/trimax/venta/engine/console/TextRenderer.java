@@ -7,6 +7,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import io.github.trimax.venta.engine.managers.ConsoleManager;
 import io.github.trimax.venta.engine.managers.FontManager;
 import io.github.trimax.venta.engine.managers.ProgramManager;
 import lombok.SneakyThrows;
@@ -15,38 +16,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TextRenderer {
     private final ProgramManager.ProgramEntity program;
+    private final ConsoleManager.ConsoleEntity console;
     private final FontManager.FontEntity font;
 
     private final FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4);
 
-    private final int vao;
-    private final int vbo;
-
     @SneakyThrows
-    public TextRenderer(final FontManager.FontEntity font, final ProgramManager.ProgramEntity program) {
+    public TextRenderer(final FontManager.FontEntity font, final ProgramManager.ProgramEntity program, final ConsoleManager.ConsoleEntity console) {
+        this.console = console;
         this.program = program;
         this.font = font;
-
-        vao = glGenVertexArrays();
-        vbo = glGenBuffers();
-
-        glBindVertexArray(vao);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-        // layout(location=0): vec2 aPos; layout(location=1): vec2 textureCoordinates;
-        glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
-        glEnableVertexAttribArray(1);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
     }
 
     public void renderText(final String text, final float x, final float y, final float scale) {
         glUseProgram(program.getInternalID());
-        glBindVertexArray(vao);
+        glBindVertexArray(console.getCharacterVertexArrayObjectID());
 
         float penX = x;
         final float penY = y - FONT_HEIGHT * scale;
@@ -92,7 +76,7 @@ public class TextRenderer {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternalID());
 
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, console.getCharacterVerticesBufferID());
             glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
 
             // Position
@@ -113,8 +97,6 @@ public class TextRenderer {
     }
 
     public void cleanup() {
-        glDeleteBuffers(vbo);
-        glDeleteVertexArrays(vao);
         vertices.clear();
     }
 }

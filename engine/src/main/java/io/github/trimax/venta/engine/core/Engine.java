@@ -73,7 +73,12 @@ public final class Engine implements Runnable {
         //TODO: Temp. Should be a part of console class
         final var font = fontManager.create("DejaVuSansMono");
         final var program = programManager.load("text");
-        final var textRenderer = new TextRenderer(fontAccessor.get(font), programAccessor.get(program));
+
+
+        //TODO: TEMP HACK: This should be done in the console renderer
+        windowRenderer.render(context.getWindowManager().getCurrent());
+        final var textRenderer = new TextRenderer(fontAccessor.get(font), programAccessor.get(program),
+                windowAccessor.get(context.getWindowManager().getCurrent()).getConsole());
 
         boolean windowClosed = false;
         while (!windowClosed) {

@@ -26,16 +26,16 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
     @Override
     void render(final ConsoleView console) {
         if (console instanceof ConsoleManager.ConsoleEntity entity)
-            render(entity, programAccessor.get(programManager.load("console")));
+            render(entity);
     }
 
-    private void render(final ConsoleManager.ConsoleEntity console, final ProgramManager.ProgramEntity program) {
+    private void render(final ConsoleManager.ConsoleEntity console) {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glUseProgram(program.getInternalID());
-        glBindVertexArray(console.getVertexArrayObjectID());
+        glUseProgram(console.getProgram().getInternalID());
+        glBindVertexArray(console.getConsoleVertexArrayObjectID());
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
