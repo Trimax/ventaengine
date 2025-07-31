@@ -88,6 +88,8 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
             glBindBuffer(GL_ARRAY_BUFFER, consoleItem.getVerticesBufferID());
             glBufferData(GL_ARRAY_BUFFER, getContext().vertices, GL_DYNAMIC_DRAW);
 
+
+            // TODO: Move to binder
             // Position
             glUniform2f(consoleItem.getProgram().getUniformID("position"), 0f, 0f);
 
