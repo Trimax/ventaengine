@@ -7,7 +7,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.console.TempConsole;
 import io.github.trimax.venta.engine.console.TextRenderer;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.CameraManager;
@@ -72,7 +71,6 @@ public final class Engine implements Runnable {
         final var time = new VentaTime();
 
         //TODO: Temp. Should be a part of console class
-        final var tempConsole = new TempConsole(programAccessor.get(programManager.load("console")));
         final var font = fontManager.create("DejaVuSansMono");
         final var program = programManager.load("text");
         final var textRenderer = new TextRenderer(fontAccessor.get(font), programAccessor.get(program));
@@ -99,15 +97,12 @@ public final class Engine implements Runnable {
                     debugRenderer.render(context.getSceneManager().getCurrent());
                 }
 
-            tempConsole.render();
-
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             for (int line = 0; line < 19; line++)
                 textRenderer.renderText("Hello world! Česko! Это строчка №" + line, -0.98f, 0.98f - (line * 0.05f), 0.001f);
 
             glDisable(GL_BLEND);
-
 
             try (final var _ = windowRenderer.withContext(null)
                     .withFrameRate((int) fpsCounter.getCurrentFps())) {

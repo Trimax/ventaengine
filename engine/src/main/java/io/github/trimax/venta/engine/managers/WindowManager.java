@@ -30,6 +30,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -95,18 +96,18 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             final ByteBuffer imageBuffer = MemoryUtil.memAlloc(bytes.length);
             imageBuffer.put(bytes).flip();
 
-            final IntBuffer w = stack.mallocInt(1);
-            final IntBuffer h = stack.mallocInt(1);
+            final IntBuffer width = stack.mallocInt(1);
+            final IntBuffer height = stack.mallocInt(1);
             final IntBuffer comp = stack.mallocInt(1);
 
-            final ByteBuffer iconPixels = STBImage.stbi_load_from_memory(imageBuffer, w, h, comp, 4);
+            final ByteBuffer iconPixels = STBImage.stbi_load_from_memory(imageBuffer, width, height, comp, 4);
             if (iconPixels == null) {
                 MemoryUtil.memFree(imageBuffer);
                 throw new UnknownTextureFormatException(String.format("%s (%s)", resourcePath, STBImage.stbi_failure_reason()));
             }
 
             final GLFWImage icon = GLFWImage.malloc(stack);
-            icon.set(w.get(0), h.get(0), iconPixels);
+            icon.set(width.get(0), height.get(0), iconPixels);
 
             final GLFWImage.Buffer icons = GLFWImage.malloc(1, stack);
             icons.put(0, icon);
@@ -139,6 +140,9 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private final long internalID;
         private final VentaEngineInputHandler inputHandler;
         private final Matrix4f projectionMatrix;
+
+        @Setter
+        private ConsoleManager.ConsoleEntity consoleEntity;
 
         private int width;
         private int height;

@@ -8,13 +8,17 @@ import java.util.List;
 
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
 public final class Console implements ConsoleView {
-    private final List<String> history = new ArrayList<>();
     private final StringBuilder inputBuffer = new StringBuilder();
+    private final List<String> history = new ArrayList<>();
+
+    @Setter
+    private int vertexBufferID;
     private boolean visible;
 
     public void toggle() {
