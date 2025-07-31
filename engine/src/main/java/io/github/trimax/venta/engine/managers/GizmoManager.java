@@ -31,7 +31,7 @@ public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity
     }
 
     public GizmoView create(final String name, final GizmoType type) {
-        log.info("Creating gizmo {}", name);
+        log.debug("Creating gizmo {}", name);
 
         return store(new GizmoManager.GizmoEntity(name,
                 programAccessor.get(programManager.load(ProgramType.Simple.name())),

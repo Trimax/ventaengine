@@ -10,6 +10,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.FontManager;
+import io.github.trimax.venta.engine.managers.ProgramManager;
 import io.github.trimax.venta.engine.managers.WindowManager;
 import io.github.trimax.venta.engine.renderers.DebugRenderer;
 import io.github.trimax.venta.engine.renderers.SceneRenderer;
@@ -33,11 +34,12 @@ public final class Engine implements Runnable {
 
     private VentaEngineApplication application;
 
-
-
     //TODO: Temp
     private final FontManager fontManager;
     private final FontManager.FontAccessor fontAccessor;
+
+    private final ProgramManager programManager;
+    private final ProgramManager.ProgramAccessor programAccessor;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         this.application = ventaEngineApplication;
@@ -67,10 +69,13 @@ public final class Engine implements Runnable {
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
 
+        //TODO: Temp. Should be a part of console class
         final var tempConsole = new TempConsole();
-
         final var font = fontManager.create("DejaVuSansMono");
-        final var textRenderer = new TextRenderer(fontAccessor.get(font));
+        final var program = programManager.load("text");
+        final var textRenderer = new TextRenderer(fontAccessor.get(font), programAccessor.get(program));
+
+
 
 
         boolean windowClosed = false;
@@ -96,7 +101,7 @@ public final class Engine implements Runnable {
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            textRenderer.renderText("Ничего себе! čř! Привет", -0.1f, 0.1f, 0.001f);
+            textRenderer.renderText("Ничего себе! čř! Привет 123", -0.1f, 0.1f, 0.001f);
             glDisable(GL_BLEND);
 
 
