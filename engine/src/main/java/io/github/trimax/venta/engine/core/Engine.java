@@ -86,7 +86,7 @@ public final class Engine implements Runnable {
 
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            textRenderer.renderText("Hello, STB Truetype! Привет", 0.f, 0.f, 0.002f);
+            textRenderer.renderText("Ничего себе! čř! Привет", -0.1f, 0.1f, 0.001f);
             glDisable(GL_BLEND);
 
 

@@ -35,7 +35,7 @@ public class TextRenderer {
         final var fontFile = Path.of(getClass().getResource(fontResourceName).toURI());
         ByteBuffer fontBuffer = ioResourceToByteBuffer(fontFile, 160 * 1024);
 
-        // Поддержка BMP Unicode (0..0xFFFF)
+        // Support BMP Unicode (0..0xFFFF)
         int totalChars = 0x10000; // 65536
         atlasesCount = (totalChars + CHARS_PER_ATLAS - 1) / CHARS_PER_ATLAS;
 
@@ -63,7 +63,7 @@ public class TextRenderer {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
-        // Создаем VAO, VBO и шейдеры
+
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
 
@@ -88,29 +88,27 @@ public class TextRenderer {
         glBindVertexArray(vao);
 
         float penX = x;
-        float penY = y;
+        float penY = y - FONT_HEIGHT * scale;
 
-        // Проходим по символам и рисуем пачками по атласам
-        // Для оптимизации можно группировать по атласам, но для простоты — один за другим
+        // Iterate through each character in the text
         for (int i = 0; i < text.length(); i++) {
             int codepoint = text.codePointAt(i);
 
-            // Если суррогатный пара — пропускаем второй char (т.к. код по UTF-16 занимает 2 char)
-            if (Character.isHighSurrogate(text.charAt(i)) && i + 1 < text.length() && Character.isLowSurrogate(text.charAt(i + 1))) {
+            if (Character.isHighSurrogate(text.charAt(i)) && i + 1 < text.length() && Character.isLowSurrogate(text.charAt(i + 1)))
                 i++;
-            }
 
             int atlasIndex = codepoint / CHARS_PER_ATLAS;
             int charIndex = codepoint % CHARS_PER_ATLAS;
 
             if (atlasIndex < 0 || atlasIndex >= atlasesCount)
-                continue; // Символ вне диапазона
+                continue;
 
             STBTTBakedChar g = charBuffers[atlasIndex].get(charIndex);
 
             float x0 = penX + g.xoff() * scale;
-            float y0 = penY + g.yoff() * scale;
             float x1 = x0 + (g.x1() - g.x0()) * scale;
+
+            float y0 = penY - (g.y1() - g.y0()) * scale - g.yoff() * scale;
             float y1 = y0 + (g.y1() - g.y0()) * scale;
 
             float s0 = g.x0() / (float) BITMAP_W;
@@ -121,13 +119,13 @@ public class TextRenderer {
             FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4); // 6 вершин по 4 атрибута
 
             vertices.put(new float[]{
-                    x0, y0, s0, t0,
-                    x1, y0, s1, t0,
-                    x1, y1, s1, t1,
+                    x0, y0, s0, t1,
+                    x1, y0, s1, t1,
+                    x1, y1, s1, t0,
 
-                    x0, y0, s0, t0,
-                    x1, y1, s1, t1,
-                    x0, y1, s0, t1
+                    x0, y0, s0, t1,
+                    x1, y1, s1, t0,
+                    x0, y1, s0, t0
             });
             vertices.flip();
 
@@ -188,7 +186,7 @@ public class TextRenderer {
 
                 void main() {
                     float alpha = texture(fontTexture, TexCoord).r;
-                    FragColor = vec4(1.0, 0.0, 0.0, alpha);
+                    FragColor = vec4(0.2, 0.8, 0.2, alpha);
                 }
                 """);
         glCompileShader(fs);

@@ -77,7 +77,7 @@ public class TempConsole {
             #version 330 core
             out vec4 FragColor;
             void main() {
-                FragColor = vec4(1.0, 1.0, 1.0, 0.45); // translucent dark background
+                FragColor = vec4(0.2, 0.2, 0.2, 0.9); 
             }
         """);
         glCompileShader(fs);
