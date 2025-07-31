@@ -6,6 +6,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.model.dto.ObjectDTO;
+import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.ProgramView;
@@ -64,6 +65,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
+        private final BoundingBox box;
 
         private DrawMode drawMode = DrawMode.Polygon;
         private boolean isVisible = true;
@@ -87,6 +89,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
             this.position.set(position);
             this.rotation.set(rotation);
             this.scale.set(scale);
+            this.box = BoundingBox.of(mesh.getBoundingBox());
         }
 
         @Override

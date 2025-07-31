@@ -31,5 +31,13 @@ public final class DebugApplicationStartupHandler implements VentaEngineStartupH
         light.setColor(new Vector3f(1.f, 1.f, 1.f));
         light.setIntensity(2.f);
         scene.add(light);
+
+        final var xCamera = context.getCameraManager().create("X Camera");
+        xCamera.setPosition(new Vector3f(2.f, 2.f, 0.f));
+        xCamera.lookAt(new Vector3f(0.f));
+
+        final var zCamera = context.getCameraManager().create("Z Camera");
+        zCamera.setPosition(new Vector3f(0.f, 2.f, 2.f));
+        zCamera.lookAt(new Vector3f(0.f));
     }
 }
