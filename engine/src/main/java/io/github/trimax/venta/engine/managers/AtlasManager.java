@@ -24,7 +24,7 @@ public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity
     private final TextureManager textureManager;
     private final TextureManager.TextureAccessor textureAccessor;
 
-    public AtlasView create(final String name, int i, ByteBuffer fontBuffer) {
+    private AtlasView create(final String name, final int i, final ByteBuffer fontBuffer) {
         final var bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
         final var charBuffer = STBTTBakedChar.malloc(FONT_ATLAS_CHARACTERS_COUNT);
 
@@ -91,5 +91,9 @@ public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity
 
     @Component
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class AtlasAccessor extends AbstractAccessor {}
+    public final class AtlasAccessor extends AbstractAccessor {
+        public AtlasEntity create(final String name, final int i, final ByteBuffer fontBuffer) {
+            return get(AtlasManager.this.create(name, i, fontBuffer));
+        }
+    }
 }

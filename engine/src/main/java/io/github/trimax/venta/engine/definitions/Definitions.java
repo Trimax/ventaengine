@@ -74,4 +74,7 @@ public final class Definitions {
 
     /* Baked font height */
     public static final int FONT_HEIGHT = 32;
+
+    /* The number of atlases */
+    public static final int FONT_ATLAS_COUNT = (65536 + FONT_ATLAS_CHARACTERS_COUNT - 1) / FONT_ATLAS_CHARACTERS_COUNT;
 }

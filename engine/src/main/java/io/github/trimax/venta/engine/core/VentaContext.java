@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.core;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.managers.CameraManager;
+import io.github.trimax.venta.engine.managers.FontManager;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.managers.MaterialManager;
 import io.github.trimax.venta.engine.managers.MeshManager;
@@ -39,6 +40,10 @@ public final class VentaContext {
     @Getter(AccessLevel.NONE)
     private final TextureManager.TextureAccessor textureAccessor;
     private final TextureManager textureManager;
+
+    @Getter(AccessLevel.NONE)
+    private final FontManager.FontAccessor fontAccessor;
+    private final FontManager fontManager;
 
     @Getter(AccessLevel.NONE)
     private final ProgramManager.ProgramAccessor programAccessor;
@@ -85,6 +90,7 @@ public final class VentaContext {
         cameraAccessor.cleanup();
         windowAccessor.cleanup();
         materialAccessor.cleanup();
+        fontAccessor.cleanup();
         textureAccessor.cleanup();
         resourceAccessor.cleanup();
     }

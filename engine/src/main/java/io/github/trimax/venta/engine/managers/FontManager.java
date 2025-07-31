@@ -1,11 +1,9 @@
 package io.github.trimax.venta.engine.managers;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_CHARACTERS_COUNT;
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_COUNT;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.lwjgl.BufferUtils;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.view.FontView;
@@ -20,26 +18,17 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FontManager extends AbstractManager<FontManager.FontEntity, FontView> {
-    private final ResourceManager resourceManager;
-    private final AtlasManager atlasManager;
-
     private final AtlasManager.AtlasAccessor atlasAccessor;
+    private final ResourceManager resourceManager;
 
     public FontView create(final String name) {
-        final var bytes = resourceManager.loadAsBytes(String.format("/fonts/%s.ttf", name));
+        final var fontBuffer = resourceManager.loadAsBuffer(String.format("/fonts/%s.ttf", name));
 
-        final var fontBuffer = BufferUtils.createByteBuffer(bytes.length);
-        fontBuffer.put(bytes);
-        fontBuffer.flip();
+        final var font = new FontEntity(name);
+        for (int i = 0; i < FONT_ATLAS_COUNT; i++)
+            font.add(atlasAccessor.create(String.format("%s-%d", name, i), i, fontBuffer));
 
-        // Support BMP Unicode (0..0xFFFF)
-        final var atlasesCount = (65536 + FONT_ATLAS_CHARACTERS_COUNT - 1) / FONT_ATLAS_CHARACTERS_COUNT;
-
-        final var atlases = new ArrayList<AtlasManager.AtlasEntity>();
-        for (int i = 0; i < atlasesCount; i++)
-            atlases.add(atlasAccessor.get(atlasManager.create(String.format("%s-%d", name, i), i, fontBuffer)));
-
-        return store(new FontEntity(name, atlases));
+        return store(font);
     }
 
     @Override
@@ -54,12 +43,14 @@ public final class FontManager extends AbstractManager<FontManager.FontEntity, F
 
     @Getter
     public static final class FontEntity extends AbstractManager.AbstractEntity implements FontView {
-        private final List<AtlasManager.AtlasEntity> atlases;
+        private final List<AtlasManager.AtlasEntity> atlases = new ArrayList<>();
 
-        FontEntity(@NonNull final String name, @NonNull final List<AtlasManager.AtlasEntity> atlases) {
+        FontEntity(@NonNull final String name) {
             super(name);
+        }
 
-            this.atlases = atlases;
+        public void add(final AtlasManager.AtlasEntity atlas) {
+            this.atlases.add(atlas);
         }
     }
 
