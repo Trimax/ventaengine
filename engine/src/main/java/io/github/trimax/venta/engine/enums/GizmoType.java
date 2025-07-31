@@ -10,7 +10,7 @@ public enum GizmoType {
     Origin("origin"),
     Object("box"),
     Camera("frustum"),
-    Light("gizmo");
+    Light("bipyramid");
 
     private final String value;
 }

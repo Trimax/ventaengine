@@ -51,7 +51,12 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public abstract static class AbstractEntity implements AbstractView {
         private final String id = UUID.randomUUID().toString();
+        private final GizmoManager.GizmoEntity gizmo;
         private final String name;
+
+        protected AbstractEntity(final String name) {
+            this(null, name);
+        }
 
         @Override
         public final String getID() {
@@ -61,6 +66,10 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
         @Override
         public final String getName() {
             return name;
+        }
+
+        public final GizmoManager.GizmoEntity getGizmo() {
+            return gizmo;
         }
     }
 

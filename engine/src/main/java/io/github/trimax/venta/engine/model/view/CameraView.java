@@ -8,4 +8,16 @@ public interface CameraView extends AbstractView {
     void setPosition(final Vector3f position);
 
     void lookAt(final Vector3f position);
+
+    void moveForward(final float distance);
+
+    void moveRight(final float distance);
+
+    void moveUp(final float distance);
+
+    void rotateYaw(final float radians);
+
+    void rotatePitch(final float radians);
+
+    void rotateRoll(final float radians);
 }

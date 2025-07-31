@@ -43,15 +43,12 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f direction = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
-        private final GizmoManager.GizmoEntity gizmo;
 
         private Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
         private float intensity = 1.f;
 
         LightEntity(@NonNull final String name, @NonNull final GizmoManager.GizmoEntity gizmo) {
-            super(name);
-
-            this.gizmo = gizmo;
+            super(gizmo, name);
         }
 
         LightEntity(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoManager.GizmoEntity gizmo) {
