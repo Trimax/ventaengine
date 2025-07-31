@@ -62,6 +62,7 @@ public final class Engine implements Runnable {
 
         final var tempConsole = new TempConsole();
         TextRenderer textRenderer = new TextRenderer("/fonts/DejaVuSansMono.ttf");
+        textRenderer.printAtlasUsageSummary();
 
         boolean windowClosed = false;
         while (!windowClosed) {

@@ -14,13 +14,15 @@ import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTruetype;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TextRenderer {
 
-    private static final int CHARS_PER_ATLAS = 256;
+    private static final int CHARS_PER_ATLAS = 4096;
     private static final int FONT_HEIGHT = 32;
     private static final int BITMAP_W = 2048;
-    private static final int BITMAP_H = 2048;
+    private static final int BITMAP_H = 1024;
 
     private final int atlasesCount;
     private final int[] textureIds;
@@ -29,6 +31,31 @@ public class TextRenderer {
     private final int vao;
     private final int vbo;
     private final int shaderProgram;
+
+    public void printAtlasUsageSummary() {
+        for (int atlasIndex = 0; atlasIndex < atlasesCount; atlasIndex++) {
+            STBTTBakedChar.Buffer buffer = charBuffers[atlasIndex];
+
+            int maxX = 0;
+            int maxY = 0;
+            int usedChars = 0;
+
+            for (int i = 0; i < CHARS_PER_ATLAS; i++) {
+                STBTTBakedChar g = buffer.get(i);
+                int width = g.x1() - g.x0();
+                int height = g.y1() - g.y0();
+                if (width > 0 && height > 0) {
+                    usedChars++;
+                    if (g.x1() > maxX) maxX = g.x1();
+                    if (g.y1() > maxY) maxY = g.y1();
+                }
+            }
+
+            log.info("Atlas #{}: used chars = {}, maxX = {}, maxY = {} (atlas size: {} x {}). Used: {}%",
+                    atlasIndex, usedChars, maxX, maxY, BITMAP_W, BITMAP_H,
+                    String.format("%2.2f", 100.f * (float) (maxX * maxY) / (float) (BITMAP_H * BITMAP_W)));
+        }
+    }
 
     @SneakyThrows
     public TextRenderer(String fontResourceName) {
@@ -62,7 +89,6 @@ public class TextRenderer {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
-
 
         vao = glGenVertexArrays();
         vbo = glGenBuffers();
