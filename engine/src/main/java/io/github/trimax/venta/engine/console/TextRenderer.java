@@ -30,7 +30,7 @@ public class TextRenderer {
 
     public void renderText(final String text, final float x, final float y, final float scale) {
         glUseProgram(program.getInternalID());
-        glBindVertexArray(console.getCharacterVertexArrayObjectID());
+        glBindVertexArray(console.getConsoleItem().getVertexArrayObjectID());
 
         float penX = x;
         final float penY = y - FONT_HEIGHT * scale;
@@ -76,7 +76,7 @@ public class TextRenderer {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternalID());
 
-            glBindBuffer(GL_ARRAY_BUFFER, console.getCharacterVerticesBufferID());
+            glBindBuffer(GL_ARRAY_BUFFER, console.getConsoleItem().getVerticesBufferID());
             glBufferData(GL_ARRAY_BUFFER, vertices, GL_DYNAMIC_DRAW);
 
             // Position

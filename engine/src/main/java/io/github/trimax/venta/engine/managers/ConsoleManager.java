@@ -24,7 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleManager extends AbstractManager<ConsoleManager.ConsoleEntity, ConsoleView> {
+    private final ConsoleItemManager.ConsoleItemAccessor consoleItemAccessor;
     private final ProgramManager.ProgramAccessor programAccessor;
+    private final ConsoleItemManager consoleItemManager;
     private final ProgramManager programManager;
 
     public ConsoleView create(final String name) {
@@ -50,25 +52,10 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        final int characterVertexArrayObjectID = glGenVertexArrays();
-        final int characterVerticesBufferID = glGenBuffers();
-
-        glBindVertexArray(characterVertexArrayObjectID);
-        glBindBuffer(GL_ARRAY_BUFFER, characterVerticesBufferID);
-
-        // layout(location=0): vec2 aPos; layout(location=1): vec2 textureCoordinates;
-        glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
-        glEnableVertexAttribArray(1);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-
-        return store(new ConsoleManager.ConsoleEntity(name, programAccessor.get(programManager.load("console")),
-                consoleVertexArrayObjectID, consoleVerticesBufferID,
-                characterVertexArrayObjectID, characterVerticesBufferID));
+        return store(new ConsoleManager.ConsoleEntity(name,
+                consoleItemAccessor.get(consoleItemManager.create()),
+                programAccessor.get(programManager.load("console")),
+                consoleVertexArrayObjectID, consoleVerticesBufferID));
     }
 
     @Override
@@ -79,11 +66,9 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
     @Override
     protected void destroy(final ConsoleEntity console) {
         log.debug("Destroying console {} ({})", console.getID(), console.getName());
-        glDeleteVertexArrays(console.characterVertexArrayObjectID);
-        glDeleteBuffers(console.characterVerticesBufferID);
 
-        glDeleteVertexArrays(console.consoleVertexArrayObjectID);
-        glDeleteBuffers(console.consoleVerticesBufferID);
+        glDeleteVertexArrays(console.vertexArrayObjectID);
+        glDeleteBuffers(console.verticesBufferID);
     }
 
     @Getter
@@ -91,29 +76,25 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         private final StringBuilder inputBuffer = new StringBuilder();
         private final List<String> history = new ArrayList<>();
 
+        private final ConsoleItemManager.ConsoleItemEntity consoleItem;
         private final ProgramManager.ProgramEntity program;
 
-        private final int consoleVertexArrayObjectID;
-        private final int consoleVerticesBufferID;
-
-        private final int characterVertexArrayObjectID;
-        private final int characterVerticesBufferID;
+        private final int vertexArrayObjectID;
+        private final int verticesBufferID;
 
         private boolean visible;
 
         ConsoleEntity(final String name,
+                @NonNull final ConsoleItemManager.ConsoleItemEntity consoleItem,
                 @NonNull final ProgramManager.ProgramEntity program,
-                final int consoleVertexArrayObjectID,
-                final int consoleVerticesBufferID,
-                final int characterVertexArrayObjectID,
-                final int characterVerticesBufferID) {
+                final int vertexArrayObjectID,
+                final int verticesBufferID) {
             super(name);
 
-            this.consoleVertexArrayObjectID = consoleVertexArrayObjectID;
-            this.consoleVerticesBufferID = consoleVerticesBufferID;
-            this.characterVertexArrayObjectID = characterVertexArrayObjectID;
-            this.characterVerticesBufferID = characterVerticesBufferID;
+            this.vertexArrayObjectID = vertexArrayObjectID;
+            this.verticesBufferID = verticesBufferID;
 
+            this.consoleItem = consoleItem;
             this.program = program;
         }
 
