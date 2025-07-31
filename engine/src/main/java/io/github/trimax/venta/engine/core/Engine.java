@@ -60,6 +60,8 @@ public final class Engine implements Runnable {
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
 
+        final var tempConsole = new TempConsole();
+
         boolean windowClosed = false;
         while (!windowClosed) {
             final var window = windowAccessor.get(context.getWindowManager().getCurrent());
@@ -83,6 +85,8 @@ public final class Engine implements Runnable {
                     .withFrameRate((int) fpsCounter.getCurrentFps())) {
                 windowRenderer.render(window);
             }
+
+            tempConsole.render();
 
             glfwPollEvents();
 

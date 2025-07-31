@@ -136,6 +136,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private int height;
         private final VentaEngineInputHandler inputHandler;
         private final Matrix4f projectionMatrix;
+        private boolean isConsoleVisible;
 
         @Getter(AccessLevel.PRIVATE)
         private final GLFWFramebufferSizeCallback sizeCallback = new GLFWFramebufferSizeCallback() {
@@ -156,6 +157,11 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private final GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
+                if (key == GLFW_KEY_GRAVE_ACCENT) { // тильда
+                    isConsoleVisible = !isConsoleVisible;
+                    return;
+                }
+
                 if (inputHandler != null)
                     inputHandler.onKey(key, scancode, action, mods);
             }
