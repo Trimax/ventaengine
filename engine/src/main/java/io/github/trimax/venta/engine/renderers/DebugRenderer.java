@@ -64,7 +64,13 @@ public final class DebugRenderer extends AbstractRenderer<SceneView, SceneRender
     }
 
     private void render(final CameraView camera) {
+        if (camera == getContext().getCamera())
+            return;
 
+        try (final var _ = gizmoRenderer.withContext(getContext())
+                .withModelMatrix(cameraAccessor.get(camera))) {
+            gizmoRenderer.render(cameraAccessor.get(camera).getGizmo());
+        }
     }
 
     private void renderOrigin() {
