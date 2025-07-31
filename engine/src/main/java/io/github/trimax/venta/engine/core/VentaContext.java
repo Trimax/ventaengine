@@ -3,6 +3,8 @@ package io.github.trimax.venta.engine.core;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.managers.CameraManager;
+import io.github.trimax.venta.engine.managers.ConsoleItemManager;
+import io.github.trimax.venta.engine.managers.ConsoleManager;
 import io.github.trimax.venta.engine.managers.FontManager;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.managers.MaterialManager;
@@ -42,20 +44,12 @@ public final class VentaContext {
     private final TextureManager textureManager;
 
     @Getter(AccessLevel.NONE)
-    private final FontManager.FontAccessor fontAccessor;
-    private final FontManager fontManager;
-
-    @Getter(AccessLevel.NONE)
     private final ProgramManager.ProgramAccessor programAccessor;
     private final ProgramManager programManager;
 
     @Getter(AccessLevel.NONE)
     private final ObjectManager.ObjectAccessor objectAccessor;
     private final ObjectManager objectManager;
-
-    @Getter(AccessLevel.NONE)
-    private final MeshManager.MeshAccessor meshAccessor;
-    private final MeshManager meshManager;
 
     @Getter(AccessLevel.NONE)
     private final ShaderManager.ShaderAccessor shaderAccessor;
@@ -72,6 +66,20 @@ public final class VentaContext {
     @Getter(AccessLevel.NONE)
     private final LightManager.LightAccessor lightAccessor;
     private final LightManager lightManager;
+
+    @Getter(AccessLevel.NONE)
+    private final MeshManager.MeshAccessor meshAccessor;
+    private final MeshManager meshManager;
+
+    @Getter(AccessLevel.NONE)
+    private final FontManager.FontAccessor fontAccessor;
+    private final FontManager fontManager;
+
+    @Getter(AccessLevel.NONE)
+    private final ConsoleItemManager.ConsoleItemAccessor consoleItemAccessor;
+
+    @Getter(AccessLevel.NONE)
+    private final ConsoleManager.ConsoleAccessor consoleAccessor;
 
     @Getter(AccessLevel.NONE)
     private final WindowManager.WindowAccessor windowAccessor;
@@ -91,6 +99,8 @@ public final class VentaContext {
         windowAccessor.cleanup();
         materialAccessor.cleanup();
         fontAccessor.cleanup();
+        consoleAccessor.cleanup();
+        consoleItemAccessor.cleanup();
         textureAccessor.cleanup();
         resourceAccessor.cleanup();
     }

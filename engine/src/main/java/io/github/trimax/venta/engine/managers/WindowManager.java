@@ -169,7 +169,6 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
                 if (((char) code == '`' || (char) code == '['))
                     return;
 
-                log.error("Char callback. Key: {}", (char) code);
                 console.accept((char) code);
             }
         };
