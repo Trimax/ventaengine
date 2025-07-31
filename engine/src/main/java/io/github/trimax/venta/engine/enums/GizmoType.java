@@ -12,5 +12,5 @@ public enum GizmoType {
     Camera("frustum"),
     Light("bipyramid");
 
-    private final String value;
+    private final String mesh;
 }

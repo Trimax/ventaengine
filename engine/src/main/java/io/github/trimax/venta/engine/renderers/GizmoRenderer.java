@@ -14,6 +14,7 @@ import org.lwjgl.system.MemoryUtil;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.managers.GizmoManager;
 import io.github.trimax.venta.engine.managers.ProgramManager;
@@ -39,7 +40,7 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRender
 
     @Override
     void render(final GizmoView gizmo) {
-        render(gizmoAccessor.get(gizmo), programAccessor.get(programManager.load("simple")));
+        render(gizmoAccessor.get(gizmo), programAccessor.get(programManager.load(ProgramType.Simple.name())));
     }
 
     private void render(final GizmoManager.GizmoEntity gizmo, final ProgramManager.ProgramEntity program) {
