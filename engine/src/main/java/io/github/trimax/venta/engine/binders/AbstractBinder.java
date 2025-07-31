@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL20C.*;
 
 import java.nio.FloatBuffer;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -26,6 +27,11 @@ abstract class AbstractBinder {
     protected final void bind(final int uniformID, final Vector3f vector) {
         if (uniformID >= 0)
             glUniform3f(uniformID, vector.x, vector.y, vector.z);
+    }
+
+    protected final void bind(final int uniformID, final Vector2f vector) {
+        if (uniformID >= 0)
+            glUniform2f(uniformID, vector.x, vector.y);
     }
 
     protected final void bindMatrix3(final int uniformID, final FloatBuffer buffer) {

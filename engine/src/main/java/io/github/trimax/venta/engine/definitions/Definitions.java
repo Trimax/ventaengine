@@ -62,4 +62,19 @@ public final class Definitions {
     /* Position components offset */
     public static final int EDGE_OFFSET_VERTEX_1 = 0;
     public static final int EDGE_OFFSET_VERTEX_2 = 1;
+
+    /*** Font atlas ***/
+
+    /* The size of the font atlas */
+    public static final int FONT_ATLAS_WIDTH = 2048;
+    public static final int FONT_ATLAS_HEIGHT = 1024;
+
+    /* The number of characters to bake into atlas */
+    public static final int FONT_ATLAS_CHARACTERS_COUNT = 4096;
+
+    /* Baked font height */
+    public static final int FONT_HEIGHT = 32;
+
+    /* The number of atlases */
+    public static final int FONT_ATLAS_COUNT = (65536 + FONT_ATLAS_CHARACTERS_COUNT - 1) / FONT_ATLAS_CHARACTERS_COUNT;
 }

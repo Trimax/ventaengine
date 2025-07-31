@@ -31,7 +31,7 @@ public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity
     }
 
     public GizmoView create(final String name, final GizmoType type) {
-        log.info("Creating gizmo {}", name);
+        log.debug("Creating gizmo {}", name);
 
         return store(new GizmoManager.GizmoEntity(name,
                 programAccessor.get(programManager.load(ProgramType.Simple.name())),
@@ -48,7 +48,7 @@ public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity
 
     @Override
     protected void destroy(final GizmoEntity object) {
-        log.info("Destroying gizmo {} ({})", object.getID(), object.getName());
+        log.debug("Destroying gizmo {} ({})", object.getID(), object.getName());
     }
 
     @Getter

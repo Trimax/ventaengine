@@ -2,7 +2,10 @@ package io.github.trimax.venta.engine.managers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.UUID;
+
+import org.lwjgl.BufferUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,6 +28,17 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     private static final Gson parser = new GsonBuilder()
             .registerTypeAdapter(TextureType.class, new TextureTypeAdapter())
             .create();
+
+    public ByteBuffer loadAsBuffer(final String path) {
+        log.debug("Loading resource buffer: {}", path);
+        final var bytes = loadAsBytes(path);
+
+        final var buffer = BufferUtils.createByteBuffer(bytes.length);
+        buffer.put(bytes);
+        buffer.flip();
+
+        return buffer;
+    }
 
     public byte[] loadAsBytes(final String path) {
         log.debug("Loading resource bytes: {}", path);
