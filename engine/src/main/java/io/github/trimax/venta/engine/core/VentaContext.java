@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaContext {
     @Setter(value = AccessLevel.PACKAGE, onParam_ = @__(@NonNull))
     private VentaEngineConfiguration.RenderConfiguration renderConfiguration;

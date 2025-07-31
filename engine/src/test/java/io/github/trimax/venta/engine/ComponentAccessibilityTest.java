@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -14,17 +14,19 @@ import one.util.streamex.StreamEx;
 
 public final class ComponentAccessibilityTest {
     @Test
-    public void test() {
+    public void testAllComponentsHavePrivateConstructors() {
         StreamEx.of(getAllVentaComponents()).forEach(this::verifyComponent);
     }
 
     private void verifyComponent(final Class<?> component) {
+        if (Modifier.isAbstract(component.getModifiers()))
+            return;
+
         StreamEx.of(component.getDeclaredConstructors()).forEach(this::verifyConstructor);
     }
 
     private void verifyConstructor(final Constructor<?> constructor) {
-        assertFalse(Modifier.isProtected(constructor.getModifiers()), "Constructor must be private: " + constructor);
-        assertFalse(Modifier.isPublic(constructor.getModifiers()), "Constructor must be private: " + constructor);
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()), "Constructor must be private: " + constructor);
     }
 
     @SneakyThrows
