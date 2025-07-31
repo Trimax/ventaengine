@@ -3,6 +3,8 @@ package io.github.trimax.venta.engine.core;
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL33C.*;
 
+import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferUtils;
 
 import io.github.trimax.venta.engine.managers.FontManager;
@@ -15,6 +17,7 @@ public class TextRenderer {
     private final ProgramManager.ProgramEntity program;
     private final FontManager.FontEntity font;
 
+    private final FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4);
 
     private final int vao;
     private final int vbo;
@@ -74,8 +77,7 @@ public class TextRenderer {
             final var s1 = backedCharacter.x1() / (float) FONT_ATLAS_WIDTH;
             final var t1 = backedCharacter.y1() / (float) FONT_ATLAS_HEIGHT;
 
-            final var vertices = BufferUtils.createFloatBuffer(6 * 4);
-
+            vertices.rewind();
             vertices.put(new float[]{
                     x0, y0, s0, t1,
                     x1, y0, s1, t1,
@@ -116,5 +118,6 @@ public class TextRenderer {
     public void cleanup() {
         glDeleteBuffers(vbo);
         glDeleteVertexArrays(vao);
+        vertices.clear();
     }
 }
