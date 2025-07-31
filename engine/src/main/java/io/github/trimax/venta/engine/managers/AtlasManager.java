@@ -26,15 +26,15 @@ public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity
 
     private AtlasView create(final String name, final int i, final ByteBuffer fontBuffer) {
         final var bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
-        final var charBuffer = STBTTBakedChar.malloc(FONT_ATLAS_CHARACTERS_COUNT);
+        final var characterBuffer = STBTTBakedChar.malloc(FONT_ATLAS_CHARACTERS_COUNT);
 
         final var firstChar = i * FONT_ATLAS_CHARACTERS_COUNT;
 
-        final var result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, FONT_HEIGHT, bitmap, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, firstChar, charBuffer);
+        final var result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, FONT_HEIGHT, bitmap, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, firstChar, characterBuffer);
         if (result <= 0)
             throw new RuntimeException("Failed to bake font bitmap atlas " + i);
 
-        return store(new AtlasEntity(name, textureAccessor.get(textureManager.create(name, bitmap)), charBuffer));
+        return store(new AtlasEntity(name, textureAccessor.get(textureManager.create(name, bitmap)), characterBuffer));
     }
 
     @Override

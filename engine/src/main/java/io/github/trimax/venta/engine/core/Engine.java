@@ -70,7 +70,7 @@ public final class Engine implements Runnable {
         final var tempConsole = new TempConsole();
 
         final var font = fontManager.create("DejaVuSansMono");
-        TextRenderer textRenderer = new TextRenderer(fontAccessor.get(font));
+        final var textRenderer = new TextRenderer(fontAccessor.get(font));
 
 
         boolean windowClosed = false;

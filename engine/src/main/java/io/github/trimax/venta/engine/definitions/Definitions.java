@@ -70,7 +70,7 @@ public final class Definitions {
     public static final int FONT_ATLAS_HEIGHT = 1024;
 
     /* The number of characters to bake into atlas */
-    public static final int FONT_ATLAS_CHARACTERS_COUNT= 4096;
+    public static final int FONT_ATLAS_CHARACTERS_COUNT = 4096;
 
     /* Baked font height */
     public static final int FONT_HEIGHT = 32;

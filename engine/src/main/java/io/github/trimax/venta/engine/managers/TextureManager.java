@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class TextureManager extends AbstractManager<TextureManager.TextureEntity, TextureView> {
     private final ResourceManager resourceManager;
 
-    public TextureView create(final String name, @NonNull final ByteBuffer bitmap) {
+    public TextureView create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
         final var textureID = glGenTextures();
 
         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -64,7 +64,7 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
         return store(new TextureEntity(textureID, name, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
     }
 
-    public TextureView load(final String name) {
+    public TextureView load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);
 
