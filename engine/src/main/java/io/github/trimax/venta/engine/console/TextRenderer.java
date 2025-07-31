@@ -49,7 +49,7 @@ public class TextRenderer {
         glBindVertexArray(vao);
 
         float penX = x;
-        float penY = y - FONT_HEIGHT * scale;
+        final float penY = y - FONT_HEIGHT * scale;
 
         // Iterate through each character in the text
         for (int i = 0; i < text.length(); i++) {

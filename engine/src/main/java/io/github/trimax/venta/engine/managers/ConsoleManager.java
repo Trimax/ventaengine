@@ -71,8 +71,9 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
 
         private boolean visible;
 
-        ConsoleEntity(final String name, int vertexArrayObjectID, int verticesBufferID) {
+        ConsoleEntity(final String name, final int vertexArrayObjectID, final int verticesBufferID) {
             super(name);
+
             this.vertexArrayObjectID = vertexArrayObjectID;
             this.verticesBufferID = verticesBufferID;
         }

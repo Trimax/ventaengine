@@ -75,9 +75,6 @@ public final class Engine implements Runnable {
         final var program = programManager.load("text");
         final var textRenderer = new TextRenderer(fontAccessor.get(font), programAccessor.get(program));
 
-
-
-
         boolean windowClosed = false;
         while (!windowClosed) {
             final var window = windowAccessor.get(context.getWindowManager().getCurrent());
