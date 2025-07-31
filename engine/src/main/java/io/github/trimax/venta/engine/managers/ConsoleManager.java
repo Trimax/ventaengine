@@ -1,10 +1,15 @@
 package io.github.trimax.venta.engine.managers;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
@@ -58,13 +63,57 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
 
     @Getter
     public static final class ConsoleEntity extends AbstractEntity implements ConsoleView {
+        private final StringBuilder inputBuffer = new StringBuilder();
+        private final List<String> history = new ArrayList<>();
+
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
+
+        private boolean visible;
 
         ConsoleEntity(final String name, int vertexArrayObjectID, int verticesBufferID) {
             super(name);
             this.vertexArrayObjectID = vertexArrayObjectID;
             this.verticesBufferID = verticesBufferID;
+        }
+
+        public void toggle() {
+            visible = !visible;
+        }
+
+        public void accept(final char c) {
+            inputBuffer.append(c);
+        }
+
+        public boolean handle(final int key) {
+            return switch (key) {
+                case GLFW_KEY_ENTER -> {
+                    submit();
+                    yield true;
+                }
+                case GLFW_KEY_BACKSPACE -> {
+                    backspace();
+                    yield true;
+                }
+                default -> false;
+            };
+        }
+
+        private void backspace() {
+            if (!inputBuffer.isEmpty())
+                inputBuffer.setLength(inputBuffer.length() - 1);
+        }
+
+        private void submit() {
+            final var command = inputBuffer.toString();
+            history.add(command);
+
+            execute(command);
+            inputBuffer.setLength(0);
+        }
+
+        private void execute(final String command) {
+            log.info("Command for execution: {}", command);
         }
     }
 

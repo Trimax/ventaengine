@@ -19,7 +19,6 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.console.Console;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
@@ -135,14 +134,12 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
     @Getter
     public static final class WindowEntity extends AbstractEntity implements WindowView {
-        private final Console console = new Console();
-
         private final long internalID;
         private final VentaEngineInputHandler inputHandler;
         private final Matrix4f projectionMatrix;
 
         @Setter
-        private ConsoleManager.ConsoleEntity consoleEntity;
+        private ConsoleManager.ConsoleEntity console;
 
         private int width;
         private int height;
