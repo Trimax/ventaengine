@@ -14,6 +14,7 @@ import org.lwjgl.BufferUtils;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.ConsoleItemManager;
+import io.github.trimax.venta.engine.managers.ConsoleManager;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -42,7 +43,9 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
         final float penY = getContext().y - FONT_HEIGHT * getContext().scale;
 
         // Iterate through each character in the text
-        final var text = getContext().text;
+        final var message = getContext().message;
+        final var color = message.type().getColor();
+        final var text = message.text();
         final var font = consoleItem.getFont();
 
         for (int i = 0; i < text.length(); i++) {
@@ -96,6 +99,8 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
             // Scale
             glUniform1f(consoleItem.getProgram().getUniformID("scale"), 1f);
 
+            glUniform3f(consoleItem.getProgram().getUniformID("color"), color.x, color.y, color.z);
+
             glDrawArrays(GL_TRIANGLES, 0, 6);
 
             penX += backedCharacter.xadvance() * getContext().scale;
@@ -115,7 +120,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
         private float x;
         private float y;
         private float scale;
-        private String text;
+        private ConsoleManager.ConsoleMessage message;
 
         public ConsoleItemRenderContext withPosition(final float x, final float y) {
             this.x = x;
@@ -128,16 +133,16 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
             return this;
         }
 
-        public ConsoleItemRenderContext withText(final String text) {
-            this.text = text;
+        public ConsoleItemRenderContext withText(final ConsoleManager.ConsoleMessage message) {
+            this.message = message;
             return this;
         }
 
         @Override
         public void close() {
             vertices.rewind();
+            this.message = null;
             this.scale = 0.f;
-            this.text = null;
             this.x = 0.f;
             this.y = 0.f;
         }

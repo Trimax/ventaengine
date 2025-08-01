@@ -3,6 +3,8 @@ package io.github.trimax.venta.engine.executors;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.core.InternalVentaContext;
 import io.github.trimax.venta.engine.core.VentaContext;
@@ -39,6 +41,10 @@ public abstract class AbstractExecutor {
         return internalContext.getContext();
     }
 
+    protected final ConsoleManager.ConsoleEntity getConsole() {
+        return internalContext.getConsole();
+    }
+
     protected final VentaState getState() {
         return internalContext.getState();
     }
@@ -48,6 +54,11 @@ public abstract class AbstractExecutor {
     }
 
     protected final void delegateExecution(final ConsoleQueue.Command command) {
+        if (StringUtils.isBlank(command.getCommand())) {
+            getConsole().warning(String.format("The command is missing. Type '%s help' to see the options", getCommand()));
+            return;
+        }
+
         if ("help".equalsIgnoreCase(command.getCommand())) {
             printHelp(internalContext.getConsole());
             return;

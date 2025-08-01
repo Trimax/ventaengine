@@ -18,7 +18,6 @@ public final class EngineExecutor extends AbstractCoreExecutor {
 
     @Override
     public void execute(final ConsoleQueue.Command command) {
-        if (!command.isBlank())
-            delegateExecution(command);
+        delegateExecution(command);
     }
 }

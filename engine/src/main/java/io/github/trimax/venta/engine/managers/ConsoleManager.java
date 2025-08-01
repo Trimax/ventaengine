@@ -10,12 +10,12 @@ import static org.lwjgl.opengl.GL30C.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -78,7 +78,7 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
     @Getter
     public static final class ConsoleEntity extends AbstractEntity implements ConsoleView {
         private final StringBuilder inputBuffer = new StringBuilder(Definitions.CONSOLE_WELCOME_SYMBOL);
-        private final List<String> history = new ArrayList<>();
+        private final List<ConsoleMessage> history = new ArrayList<>();
 
         private final ConsoleItemManager.ConsoleItemEntity consoleItem;
         private final ProgramManager.ProgramEntity program;
@@ -138,23 +138,28 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
             if (command.isBlank() || command.isComment())
                 return;
 
-            Optional.of(command).map(ConsoleQueue.Command::getTrimmed).ifPresent(history::add);
+            //Optional.of(command).map(ConsoleQueue.Command::getTrimmed).ifPresent(history::add);
             commandConsumer.accept(command);
         }
 
-        //TODO: Change shader text color
         public void info(final String message) {
-            this.history.add(String.format("INFO: %s", message));
+            print(ConsoleMessageType.Info, message);
         }
 
         public void warning(final String message) {
-            this.history.add(String.format("WARNING: %s", message));
+            print(ConsoleMessageType.Warning, message);
         }
 
         public void error(final String message) {
-            this.history.add(String.format("ERROR: %s", message));
+            print(ConsoleMessageType.Error, message);
+        }
+
+        private void print(final ConsoleMessageType type, final String message) {
+            this.history.add(new ConsoleMessage(type, message));
         }
     }
+
+    public record ConsoleMessage(ConsoleMessageType type, String text) {}
 
     @Component
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
