@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.console;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -34,7 +35,21 @@ public final class ConsoleQueue {
     }
 
     public record Command(String value) {
+        public boolean isComment() {
+            return StringUtils.trimToEmpty(value).startsWith("#");
+        }
 
+        public boolean isBlank() {
+            return StringUtils.isBlank(value);
+        }
+
+        public String getCommand() {
+            return StringUtils.substringBefore(StringUtils.trim(value), " ");
+        }
+
+        public String getArguments() {
+            return StringUtils.substringAfter(StringUtils.trim(value), " ");
+        }
     }
 
     public record CommandArgument(String raw) {

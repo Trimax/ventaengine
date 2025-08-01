@@ -19,6 +19,6 @@ public final class ConsoleExecutor {
     }
 
     private void execute(final ConsoleQueue.Command command) {
-        log.info("Executing command: {}", command.value());
+        log.info("Executing command: {}. Comment: {}. Blank: {}", command.value(), command.isComment(), command.isBlank());
     }
 }
