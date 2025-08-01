@@ -10,8 +10,10 @@ import static org.lwjgl.opengl.GL30C.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -106,10 +108,10 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
             inputBuffer.append(c);
         }
 
-        public void handle(final int key) {
+        public void handle(final int key, final Consumer<ConsoleQueue.Command> commandConsumer) {
             switch (key) {
                 case GLFW_KEY_ENTER:
-                    submit();
+                    submit(commandConsumer);
                     return;
                 case GLFW_KEY_BACKSPACE:
                     backspace();
@@ -123,16 +125,12 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
                 inputBuffer.setLength(inputBuffer.length() - 1);
         }
 
-        private void submit() {
+        private void submit(final Consumer<ConsoleQueue.Command> commandConsumer) {
             final var command = inputBuffer.toString();
+            inputBuffer.setLength(0);
             history.add(command);
 
-            execute(command);
-            inputBuffer.setLength(0);
-        }
-
-        private void execute(final String command) {
-            log.info("Command for execution: {}", command);
+            commandConsumer.accept(new ConsoleQueue.Command(command));
         }
     }
 

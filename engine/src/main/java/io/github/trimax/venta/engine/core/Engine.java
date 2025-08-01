@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.console.ConsoleExecutor;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.WindowManager;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class Engine implements Runnable {
     private final WindowManager.WindowAccessor windowAccessor;
     private final CameraManager.CameraAccessor cameraAccessor;
+    private final ConsoleExecutor consoleExecutor;
     private final WindowRenderer windowRenderer;
     private final SceneRenderer sceneRenderer;
     private final DebugRenderer debugRenderer;
@@ -95,6 +97,8 @@ public final class Engine implements Runnable {
 
             time.setDelta(fpsCounter.tick());
             updateHandler.onUpdate(time, context);
+
+            consoleExecutor.execute();
         }
 
         context.cleanup();
