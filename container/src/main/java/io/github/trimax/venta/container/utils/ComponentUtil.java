@@ -1,7 +1,7 @@
 package io.github.trimax.venta.container.utils;
 
 import java.io.File;
-import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.WildcardType;
 import java.net.URL;
@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.container.annotations.Inject;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -20,6 +21,13 @@ import one.util.streamex.StreamEx;
 
 @UtilityClass
 public final class ComponentUtil {
+    public Constructor<?> findInjectConstructor(@NonNull final Class<?> clazz) {
+        return StreamEx.of(clazz.getDeclaredConstructors())
+                .filter(constructor -> constructor.isAnnotationPresent(Inject.class))
+                .findFirst()
+                .orElse(null);
+    }
+
     public Class<?> getRawClass(@NonNull final ParameterizedType parameterizedType) {
         if (ArrayUtils.isEmpty(parameterizedType.getActualTypeArguments()))
             return null;
@@ -41,7 +49,8 @@ public final class ComponentUtil {
         };
     }
 
-    public Set<Class<?>> scan(final String basePackage) throws IOException {
+    @SneakyThrows
+    public Set<Class<?>> scan(final String basePackage) {
         final Set<Class<?>> classes = new HashSet<>();
         final String path = basePackage.replace('.', '/');
 

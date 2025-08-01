@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.github.trimax.venta.container.annotations.Inject;
-import io.github.trimax.venta.container.exceptions.ContextInitializationException;
 import io.github.trimax.venta.container.exceptions.CyclicDependencyException;
 import io.github.trimax.venta.container.exceptions.InjectionConstructorNotFoundException;
 import io.github.trimax.venta.container.utils.ComponentUtil;
@@ -47,15 +45,11 @@ public final class VentaApplication {
     }
 
     private static void createContext(@NonNull final Class<?> appClass) {
-        try {
-            knownComponents.addAll(ComponentUtil.scan(appClass.getPackageName()));
+        knownComponents.addAll(ComponentUtil.scan(appClass.getPackageName()));
 
-            StreamEx.of(knownComponents).forEach(VentaApplication::createComponent);
-            log.debug("Found components: {}", StreamEx.of(components.keySet()).map(Class::getSimpleName).joining(","));
-            log.info("{} components found and loaded", components.size());
-        } catch (final Exception e) {
-            throw new ContextInitializationException(e.getMessage(), e);
-        }
+        StreamEx.of(knownComponents).forEach(VentaApplication::createComponent);
+        log.debug("Found components: {}", StreamEx.of(components.keySet()).map(Class::getSimpleName).joining(","));
+        log.info("{} components found and loaded", components.size());
     }
 
     private static <C> C getComponent(final Class<C> componentClass) {
@@ -75,11 +69,8 @@ public final class VentaApplication {
         final var constructor = findConstructor(clazz);
         constructor.setAccessible(true);
 
-        //final var instance = constructor.newInstance(Arrays.stream(constructor.getParameterTypes()).map(VentaApplication::createComponent).toArray());
         final var instance = constructor.newInstance(resolveParameters(constructor));
-
         components.put(clazz, instance);
-
         creationStack.remove(clazz);
 
         log.debug("Component {} was created successfully", clazz.getSimpleName());
@@ -87,7 +78,7 @@ public final class VentaApplication {
     }
 
     private static Constructor<?> findConstructor(final Class<?> clazz) {
-        final var constructor = findInjectConstructor(clazz);
+        final var constructor = ComponentUtil.findInjectConstructor(clazz);
         if (constructor != null)
             return constructor;
 
@@ -96,13 +87,6 @@ public final class VentaApplication {
             return constructors[0];
 
         throw new InjectionConstructorNotFoundException(clazz);
-    }
-
-    private static Constructor<?> findInjectConstructor(final Class<?> clazz) {
-        return StreamEx.of(clazz.getDeclaredConstructors())
-                .filter(constructor -> constructor.isAnnotationPresent(Inject.class))
-                .findFirst()
-                .orElse(null);
     }
 
     private static Object[] resolveParameters(final Constructor<?> constructor) {
@@ -133,7 +117,6 @@ public final class VentaApplication {
                 .map(VentaApplication::createComponent)
                 .toList();
     }
-
 
     private static void shutdown() {
         StreamEx.of(components.values()).forEach(VentaApplication::shutdownComponent);
