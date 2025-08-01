@@ -5,18 +5,27 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.executors.AbstractExecutor;
 import io.github.trimax.venta.engine.executors.core.AbstractCoreExecutor;
+import io.github.trimax.venta.engine.managers.ConsoleManager;
+import io.github.trimax.venta.engine.managers.WindowManager;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
 
 @Slf4j
 @Component
 public final class ConsoleExecutor {
     private final Map<String, AbstractCoreExecutor> executors;
+    private final WindowManager.WindowAccessor windowAccessor;
+    private final WindowManager windowManager;
     private final ConsoleQueue queue;
 
-    private ConsoleExecutor(final List<AbstractCoreExecutor> executors, final ConsoleQueue queue) {
+    private ConsoleExecutor(final List<AbstractCoreExecutor> executors, final ConsoleQueue queue,
+            final WindowManager windowManager, final WindowManager.WindowAccessor windowAccessor) {
         this.executors = TransformationUtil.toMap(executors);
+        this.windowAccessor = windowAccessor;
+        this.windowManager = windowManager;
         this.queue = queue;
     }
 
@@ -26,13 +35,28 @@ public final class ConsoleExecutor {
     }
 
     private void execute(final ConsoleQueue.Command command) {
+        if ("help".equalsIgnoreCase(command.getCommand())) {
+            printHelp(windowAccessor.get(windowManager.getCurrent()).getConsole());
+            return;
+        }
+
         final var executor = executors.get(command.getCommand());
         if (executor == null) {
+            windowAccessor.get(windowManager.getCurrent()).getConsole()
+                    .error(String.format("Unknown command '%s'. Type help", command.getCommand()));
             log.warn("Executor is not registered for command: {}", command.getCommand());
             return;
         }
 
         executor.execute(command.getSubcommand());
         log.info("{} executed", command);
+    }
+
+    private void printHelp(final ConsoleManager.ConsoleEntity console) {
+        console.info("Available commands:");
+        StreamEx.of(executors.values())
+                .map(AbstractExecutor::getPublicDescription)
+                .map(x -> "  " + x)
+                .forEach(console::info);
     }
 }

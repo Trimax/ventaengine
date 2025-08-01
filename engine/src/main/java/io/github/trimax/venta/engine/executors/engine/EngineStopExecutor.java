@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public final class EngineStopExecutor extends AbstractEngineExecutor {
     private EngineStopExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "stop");
+        super(context, "stop", "stops the application");
     }
 
     @Override

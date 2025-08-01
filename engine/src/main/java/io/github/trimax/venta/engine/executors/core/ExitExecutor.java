@@ -11,14 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public final class EngineExecutor extends AbstractCoreExecutor {
-    private EngineExecutor(@NonNull final InternalVentaContext context, @NonNull final List<AbstractEngineExecutor> executors) {
-        super(context, "engine", "the set of commands to control engine", executors);
+public final class ExitExecutor extends AbstractCoreExecutor {
+    private ExitExecutor(@NonNull final InternalVentaContext context, @NonNull final List<AbstractEngineExecutor> executors) {
+        super(context, "exit", "stops the application", executors);
     }
 
     @Override
     public void execute(final ConsoleQueue.Command command) {
-        if (!command.isBlank())
-            delegateExecution(command);
+        getState().setApplicationRunning(false);
     }
 }
