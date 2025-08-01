@@ -141,6 +141,19 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
             Optional.of(command).map(ConsoleQueue.Command::getTrimmed).ifPresent(history::add);
             commandConsumer.accept(command);
         }
+
+        //TODO: Change shader text color
+        public void info(final String message) {
+            this.history.add(String.format("INFO: %s", message));
+        }
+
+        public void warning(final String message) {
+            this.history.add(String.format("WARNING: %s", message));
+        }
+
+        public void error(final String message) {
+            this.history.add(String.format("ERROR: %s", message));
+        }
     }
 
     @Component
