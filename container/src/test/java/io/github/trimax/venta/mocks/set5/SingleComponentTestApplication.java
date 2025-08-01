@@ -1,23 +1,20 @@
-package com.venta.container.general;
+package io.github.trimax.venta.mocks.set5;
 
 
 import io.github.trimax.venta.container.AbstractVentaApplication;
 import io.github.trimax.venta.container.annotations.Component;
-import lombok.AllArgsConstructor;
 import lombok.AccessLevel;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ComponentC implements AbstractVentaApplication<Void> {
-    private ComponentD componentD;
+public final class SingleComponentTestApplication implements AbstractVentaApplication<Void> {
+    private TestComponent testComponent;
 
     @Override
     public void start(final String[] args, final Void argument) {
-        log.info("Starting ComponentC");
-        assertNotNull(componentD, "ComponentD should be injected into ComponentC");
+        assertNotNull(testComponent, "TestComponent should be injected into MultipleComponentsTestApplication");
     }
 }
