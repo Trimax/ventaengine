@@ -163,10 +163,8 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private final GLFWCharCallback charCallback = new GLFWCharCallback() {
             @Override
             public void invoke(final long window, final int code) {
+                log.error("CHAR: {} ({}). Console visibility: {}", code, (char) code, console.isVisible());
                 if (!console.isVisible())
-                    return;
-
-                if (((char) code == '`' || (char) code == '['))
                     return;
 
                 console.accept((char) code);
@@ -177,7 +175,9 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private final GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
-                if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS) {
+                log.error("KEY: {} CHAR CODE: {} ({}). Console visibility: {}", key, scancode, (char) scancode, console.isVisible());
+
+                if (key == GLFW_KEY_F12 && action == GLFW_PRESS) {
                     console.toggle();
                     return;
                 }
@@ -193,7 +193,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             }
         };
 
-        @Getter
+        @Getter(AccessLevel.PRIVATE)
         private final GLFWMouseButtonCallback mouseButtonCallback = new GLFWMouseButtonCallback() {
             @Override
             public void invoke(final long window, final int button, final int action, final int mods) {
@@ -202,7 +202,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
             }
         };
 
-        @Getter
+        @Getter(AccessLevel.PRIVATE)
         private final GLFWCursorPosCallback mousePositionCallback = new GLFWCursorPosCallback() {
             @Override
             public void invoke(final long window, final double x, final double y) {

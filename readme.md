@@ -59,8 +59,11 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 ## Roadmap
 The roadmap is reflected in the GitHub issues section. Long story short:
 
-1. Generify manager load method (try to move V load(name) to abstract class)
-2. Console
+1. Console
+   1. Render console history and current command
+   2. Implement commands queue, listener and executors
+2. Managers refactoring
+   1. Try to refactor managers in the same way as Views/Entities. To avoid accessor.get(manager.get()) calls.
 3. Environment: box/sphere (add box to the scene)
 4. Emitters (extend the scene with a list of emitters)
 5. Resource archive manager and also, pack & browse tool (!)
