@@ -1,11 +1,16 @@
 package io.github.trimax.venta.container;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayDeque;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.github.trimax.venta.container.annotations.Inject;
 import io.github.trimax.venta.container.exceptions.ContextInitializationException;
@@ -22,6 +27,7 @@ import one.util.streamex.StreamEx;
 public final class VentaApplication {
     private static final Map<Class<?>, Object> components = new HashMap<>();
     private static final Deque<Class<?>> creationStack = new ArrayDeque<>();
+    private static final Set<Class<?>> knownComponents = new HashSet<>();
 
     public static <T, A extends AbstractVentaApplication<T>> void run(final String[] args, @NonNull final Class<A> appClass, final T argument) {
         MeasurementUtil.measure("VentaApplication startup", () -> VentaApplication.createContext(appClass));
@@ -42,7 +48,9 @@ public final class VentaApplication {
 
     private static void createContext(@NonNull final Class<?> appClass) {
         try {
-            StreamEx.of(ComponentUtil.scan(appClass.getPackageName())).forEach(VentaApplication::createComponent);
+            knownComponents.addAll(ComponentUtil.scan(appClass.getPackageName()));
+
+            StreamEx.of(knownComponents).forEach(VentaApplication::createComponent);
             log.debug("Found components: {}", StreamEx.of(components.keySet()).map(Class::getSimpleName).joining(","));
             log.info("{} components found and loaded", components.size());
         } catch (final Exception e) {
@@ -67,8 +75,9 @@ public final class VentaApplication {
         final var constructor = findConstructor(clazz);
         constructor.setAccessible(true);
 
-        final var instance = constructor.newInstance(
-                Arrays.stream(constructor.getParameterTypes()).map(VentaApplication::createComponent).toArray());
+        //final var instance = constructor.newInstance(Arrays.stream(constructor.getParameterTypes()).map(VentaApplication::createComponent).toArray());
+        final var instance = constructor.newInstance(resolveParameters(constructor));
+
         components.put(clazz, instance);
 
         creationStack.remove(clazz);
@@ -95,6 +104,36 @@ public final class VentaApplication {
                 .findFirst()
                 .orElse(null);
     }
+
+    private static Object[] resolveParameters(final Constructor<?> constructor) {
+        final var genericTypes = constructor.getGenericParameterTypes();
+        final var rawTypes = constructor.getParameterTypes();
+
+        final var params = new Object[genericTypes.length];
+        for (int i = 0; i < genericTypes.length; i++)
+            params[i] = resolveParameter(rawTypes[i], genericTypes[i]);
+
+        return params;
+    }
+
+    private static Object resolveParameter(final Class<?> rawType, final Type genericType) {
+        if (rawType == List.class && genericType instanceof ParameterizedType parameterizedType)
+            return createComponentsList(parameterizedType);
+
+        return createComponent(rawType);
+    }
+
+    private static List<Object> createComponentsList(final ParameterizedType parameterizedType) {
+        final var rawClass = ComponentUtil.getRawClass(parameterizedType);
+        if (rawClass == null)
+            return Collections.emptyList();
+
+        return StreamEx.of(knownComponents)
+                .filter(rawClass::isAssignableFrom)
+                .map(VentaApplication::createComponent)
+                .toList();
+    }
+
 
     private static void shutdown() {
         StreamEx.of(components.values()).forEach(VentaApplication::shutdownComponent);

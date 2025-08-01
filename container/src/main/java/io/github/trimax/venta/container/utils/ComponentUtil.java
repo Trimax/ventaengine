@@ -2,19 +2,45 @@ package io.github.trimax.venta.container.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.WildcardType;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import io.github.trimax.venta.container.annotations.Component;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import one.util.streamex.StreamEx;
 
 @UtilityClass
 public final class ComponentUtil {
+    public Class<?> getRawClass(@NonNull final ParameterizedType parameterizedType) {
+        if (ArrayUtils.isEmpty(parameterizedType.getActualTypeArguments()))
+            return null;
+
+        return switch (parameterizedType.getActualTypeArguments()[0]) {
+            case Class<?> aClass -> aClass;
+
+            case ParameterizedType type -> (Class<?>) type.getRawType();
+
+            case WildcardType wildcardType -> {
+                final var upperBounds = wildcardType.getUpperBounds();
+                if (upperBounds.length == 1 && upperBounds[0] instanceof Class<?> upperClass)
+                    yield upperClass;
+
+                yield null;
+            }
+
+            default -> null;
+        };
+    }
+
     public Set<Class<?>> scan(final String basePackage) throws IOException {
         final Set<Class<?>> classes = new HashSet<>();
         final String path = basePackage.replace('.', '/');
