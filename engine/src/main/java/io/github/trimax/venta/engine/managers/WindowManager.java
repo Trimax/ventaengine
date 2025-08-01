@@ -19,6 +19,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
@@ -37,6 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WindowManager extends AbstractManager<WindowManager.WindowEntity, WindowView> {
+    private final ConsoleQueue consoleQueue;
+
     @Getter
     private WindowView current;
 
@@ -133,7 +136,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Getter
-    public static final class WindowEntity extends AbstractEntity implements WindowView {
+    public  final class WindowEntity extends AbstractEntity implements WindowView {
         private final long internalID;
         private final VentaEngineInputHandler inputHandler;
         private final Matrix4f projectionMatrix;
@@ -163,7 +166,6 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private final GLFWCharCallback charCallback = new GLFWCharCallback() {
             @Override
             public void invoke(final long window, final int code) {
-                log.error("CHAR: {} ({}). Console visibility: {}", code, (char) code, console.isVisible());
                 if (!console.isVisible())
                     return;
 
@@ -175,8 +177,6 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private final GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
-                log.error("KEY: {} CHAR CODE: {} ({}). Console visibility: {}", key, scancode, (char) scancode, console.isVisible());
-
                 if (key == GLFW_KEY_F12 && action == GLFW_PRESS) {
                     console.toggle();
                     return;
@@ -184,7 +184,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
 
                 if (console.isVisible()) {
                     if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                        console.handle(key);
+                        console.handle(key, consoleQueue::add);
                     return;
                 }
 
