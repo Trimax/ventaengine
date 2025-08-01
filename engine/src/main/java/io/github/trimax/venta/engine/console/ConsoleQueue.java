@@ -43,12 +43,20 @@ public final class ConsoleQueue {
             return StringUtils.isBlank(value);
         }
 
+        public boolean hasSubcommand() {
+            return StringUtils.isNotBlank(getArguments());
+        }
+
         public String getTrimmed() {
             return StringUtils.trimToNull(value);
         }
 
         public String getCommand() {
             return StringUtils.substringBefore(StringUtils.trim(value), " ");
+        }
+
+        public Command getSubcommand() {
+            return new Command(getArguments());
         }
 
         public String getArguments() {
