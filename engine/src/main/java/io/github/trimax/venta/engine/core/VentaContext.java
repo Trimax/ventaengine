@@ -87,6 +87,9 @@ public final class VentaContext {
     @Getter(AccessLevel.PACKAGE)
     private final WindowManager windowManager;
 
+    @Getter(AccessLevel.PACKAGE)
+    private final VentaState state = new VentaState();
+
     /* The cleanup order is important */
     void cleanup() {
         sceneAccessor.cleanup();

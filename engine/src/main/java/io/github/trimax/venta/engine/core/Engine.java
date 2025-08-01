@@ -32,11 +32,15 @@ public final class Engine implements Runnable {
     private final DebugRenderer debugRenderer;
     private final VentaContext context;
 
-    private VentaEngineApplication application;
-
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
-        this.application = ventaEngineApplication;
-        GLFWErrorCallback.createPrint(System.err).set();
+        context.getState().setApplication(ventaEngineApplication);
+        org.lwjgl.glfw.GLFW.glfwSetErrorCallback(new GLFWErrorCallback() {
+            @Override
+            public void invoke(final int error, final long description) {
+                log.error("GLFW Error [{}]: {}", error, GLFWErrorCallback.getDescription(description));
+            }
+        });
+
         if (!glfwInit())
             throw new IllegalStateException("GLFW init failed");
 
@@ -57,22 +61,15 @@ public final class Engine implements Runnable {
     public void run() {
         glEnable(GL_DEPTH_TEST);
 
-        final var renderConfiguration = application.getConfiguration().getRenderConfiguration();
-        final var updateHandler = application.getUpdateHandler();
+        final var renderConfiguration = context.getState().getApplication().getConfiguration().getRenderConfiguration();
+        final var updateHandler = context.getState().getApplication().getUpdateHandler();
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
 
-        //TODO: TEMP HACK: This should be done in the console renderer
-        final var w = context.getWindowManager().getCurrent();
-        windowRenderer.render(w);
-        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala");
-        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala 2");
-        ((WindowManager.WindowEntity) w).getConsole().getHistory().add("lalala 3");
-
-        boolean windowClosed = false;
-        while (!windowClosed) {
+        while (context.getState().isApplicationRunning()) {
             final var window = windowAccessor.get(context.getWindowManager().getCurrent());
-            windowClosed = glfwWindowShouldClose(window.getInternalID());
+            if (glfwWindowShouldClose(window.getInternalID()))
+                context.getState().setApplicationRunning(false);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
