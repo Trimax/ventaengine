@@ -77,4 +77,15 @@ public final class Definitions {
 
     /* The number of atlases */
     public static final int FONT_ATLAS_COUNT = (65536 + FONT_ATLAS_CHARACTERS_COUNT - 1) / FONT_ATLAS_CHARACTERS_COUNT;
+
+    /*** Console ***/
+
+    /* The number of lines visible in history */
+    public static final int CONSOLE_HISTORY_LINES_COUNT = 19;
+
+    /* The height of the line */
+    public static final float CONSOLE_LINE_HEIGHT = 0.05f;
+
+    /* Command line prefix */
+    public static final String CONSOLE_WELCOME_SYMBOL = "> ";
 }
