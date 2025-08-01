@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.managers.ConsoleManager;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
@@ -64,7 +65,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
             renderItem(console, line);
 
         try (final var _ = consoleItemRenderer.withContext(getContext())
-                .withText(console.getInputBuffer().toString())
+                .withText(new ConsoleManager.ConsoleMessage(ConsoleMessageType.Command, console.getInputBuffer().toString()))
                 .withPosition(-0.98f, 0.05f)
                 .withScale(0.001f)) {
             consoleItemRenderer.render(console.getConsoleItem());
@@ -76,12 +77,12 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
 
     private void renderItem(final ConsoleManager.ConsoleEntity console, final int line) {
         final var index = console.getHistory().size() - line - 1;
-        final var text = (index >= 0 && index < console.getHistory().size()) ? console.getHistory().get(index) : null;
-        if (StringUtils.isBlank(text))
+        final var message = (index >= 0 && index < console.getHistory().size()) ? console.getHistory().get(index) : null;
+        if (message == null || StringUtils.isBlank(message.text()))
             return;
 
         try (final var _ = consoleItemRenderer.withContext(getContext())
-                .withText(text)
+                .withText(message)
                 .withPosition(-0.98f, 0.1f + Definitions.CONSOLE_LINE_HEIGHT * line)
                 .withScale(0.001f)) {
             consoleItemRenderer.render(console.getConsoleItem());

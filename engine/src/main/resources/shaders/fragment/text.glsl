@@ -6,9 +6,12 @@ in vec2 vertexTextureCoordinates;
 /* Texture */
 uniform sampler2D textureDiffuse;
 
+/* Text color */
+uniform vec3 color;
+
 /* Output color */
 out vec4 FragColor;
 
 void main() {
-    FragColor = vec4(0.2, 0.8, 0.2, texture(textureDiffuse, vertexTextureCoordinates).r);
+    FragColor = vec4(color, texture(textureDiffuse, vertexTextureCoordinates).r);
 }

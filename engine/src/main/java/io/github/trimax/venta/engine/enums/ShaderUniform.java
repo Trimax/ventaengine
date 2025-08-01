@@ -34,9 +34,10 @@ public enum ShaderUniform {
     UseLighting("useLighting"),
     LightCount("lightCount"),
 
-    /* Common transformation*/
+    /* Common model parameters transformation*/
     Position("position"),
-    Scale("scale");
+    Scale("scale"),
+    Color("color");
 
     private final String uniformName;
 }
