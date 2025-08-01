@@ -4,8 +4,8 @@ import lombok.Getter;
 
 public final class FPSCounter {
     private long lastTimeNs = System.nanoTime();
-    private int frames = 0;
     private double elapsedSeconds = 0.0;
+    private int frames = 0;
 
     @Getter
     private double currentFps = 0.0;

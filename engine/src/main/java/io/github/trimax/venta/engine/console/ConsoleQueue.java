@@ -3,7 +3,11 @@ package io.github.trimax.venta.engine.console;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.utils.ParsingUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -29,5 +33,29 @@ public final class ConsoleQueue {
         return !queue.isEmpty();
     }
 
-    public record Command(String value) {}
+    public record Command(String value) {
+
+    }
+
+    public record CommandArgument(String raw) {
+        public boolean asBoolean() {
+            return ParsingUtil.asBoolean(raw);
+        }
+
+        public int asInteger() {
+            return ParsingUtil.asInteger(raw);
+        }
+
+        public float asFloat() {
+            return ParsingUtil.asFloat(raw);
+        }
+
+        public Vector2f asVector2f() {
+            return ParsingUtil.asVector2f(raw);
+        }
+
+        public Vector3f asVector3f() {
+            return ParsingUtil.asVector3f(raw);
+        }
+    }
 }
