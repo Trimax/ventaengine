@@ -43,6 +43,10 @@ public final class ConsoleQueue {
             return StringUtils.isBlank(value);
         }
 
+        public String getTrimmed() {
+            return StringUtils.trimToNull(value);
+        }
+
         public String getCommand() {
             return StringUtils.substringBefore(StringUtils.trim(value), " ");
         }

@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL30C.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -126,11 +127,14 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         }
 
         private void submit(final Consumer<ConsoleQueue.Command> commandConsumer) {
-            final var command = inputBuffer.toString();
+            final var command = new ConsoleQueue.Command(inputBuffer.toString());
             inputBuffer.setLength(0);
-            history.add(command);
 
-            commandConsumer.accept(new ConsoleQueue.Command(command));
+            if (command.isBlank() || command.isComment())
+                return;
+
+            Optional.of(command).map(ConsoleQueue.Command::getTrimmed).ifPresent(history::add);
+            commandConsumer.accept(command);
         }
     }
 
