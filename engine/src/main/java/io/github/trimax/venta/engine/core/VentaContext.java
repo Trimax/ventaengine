@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.core;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.ConsoleItemManager;
 import io.github.trimax.venta.engine.managers.ConsoleManager;
@@ -18,9 +17,7 @@ import io.github.trimax.venta.engine.managers.TextureManager;
 import io.github.trimax.venta.engine.managers.WindowManager;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,9 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaContext {
-    @Setter(value = AccessLevel.PACKAGE, onParam_ = @__(@NonNull))
-    private VentaEngineConfiguration.RenderConfiguration renderConfiguration;
-
     @Getter(AccessLevel.NONE)
     private final ResourceManager.ResourceAccessor resourceAccessor;
     private final ResourceManager resourceManager;
