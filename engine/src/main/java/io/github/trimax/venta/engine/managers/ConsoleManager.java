@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -42,11 +43,11 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         glBindBuffer(GL_ARRAY_BUFFER, consoleVerticesBufferID);
 
         final float[] vertices = {
-                -1.0f, 1.0f,   // top-left
-                1.0f, 1.0f,   // top-right
-                1.0f, 0.0f,   // bottom-right
-                -1.0f, 0.0f    // bottom-left
-        };
+                /* Top-left */    -1.0f, 1.0f,
+                /* Top-right */    1.0f, 1.0f,
+                /* Bottom-right */ 1.0f, 0.0f,
+                /* Bottom-left */ -1.0f, 0.0f};
+
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
@@ -76,7 +77,7 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
 
     @Getter
     public static final class ConsoleEntity extends AbstractEntity implements ConsoleView {
-        private final StringBuilder inputBuffer = new StringBuilder();
+        private final StringBuilder inputBuffer = new StringBuilder(Definitions.CONSOLE_WELCOME_SYMBOL);
         private final List<String> history = new ArrayList<>();
 
         private final ConsoleItemManager.ConsoleItemEntity consoleItem;
@@ -121,14 +122,18 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
             }
         }
 
+        private String getInput() {
+            return inputBuffer.substring(Definitions.CONSOLE_WELCOME_SYMBOL.length());
+        }
+
         private void backspace() {
-            if (!inputBuffer.isEmpty())
+            if (inputBuffer.length() > Definitions.CONSOLE_WELCOME_SYMBOL.length())
                 inputBuffer.setLength(inputBuffer.length() - 1);
         }
 
         private void submit(final Consumer<ConsoleQueue.Command> commandConsumer) {
-            final var command = new ConsoleQueue.Command(inputBuffer.toString());
-            inputBuffer.setLength(0);
+            final var command = new ConsoleQueue.Command(getInput());
+            inputBuffer.setLength(Definitions.CONSOLE_WELCOME_SYMBOL.length());
 
             if (command.isBlank() || command.isComment())
                 return;

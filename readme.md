@@ -59,20 +59,17 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 ## Roadmap
 The roadmap is reflected in the GitHub issues section. Long story short:
 
-1. Console
-   1. Render console history and current command
-   2. Implement commands queue, listener and executors
-2. Managers refactoring
+1. Managers refactoring
    1. Try to refactor managers in the same way as Views/Entities. To avoid accessor.get(manager.get()) calls.
-3. Environment: box/sphere (add box to the scene)
-4. Emitters (extend the scene with a list of emitters)
-5. Resource archive manager and also, pack & browse tool (!)
+2. Environment: box/sphere (add box to the scene)
+3. Emitters (extend the scene with a list of emitters)
+4. Resource archive manager and also, pack & browse tool (!)
    1. Separate module with UI. Works with archive definition, packs data
    2. Add archive support reader (to manager)
    3. Probably should use chunks and index
-6. Create more example apps
-7. Audio
-8. Physics
+5. Create more example apps
+6. Audio
+7. Physics
 
 ## Other (notes)
 ### MacOS executable

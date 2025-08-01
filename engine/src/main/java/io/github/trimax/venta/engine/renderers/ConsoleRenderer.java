@@ -4,7 +4,10 @@ import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.managers.ConsoleManager;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
@@ -28,6 +31,11 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
     }
 
     private void render(final ConsoleManager.ConsoleEntity console) {
+        renderBackground(console);
+        renderHistory(console);
+    }
+
+    private void renderBackground(final ConsoleManager.ConsoleEntity console) {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -40,32 +48,44 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
 
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-        glDisable(GL_BLEND);
         glBindVertexArray(0);
         glUseProgram(0);
 
         glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
+    }
 
+    private void renderHistory(final ConsoleManager.ConsoleEntity console) {
+        glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (int line = 0; line < Math.min(19, console.getHistory().size()); line++)
-            try (final var _ = consoleItemRenderer.withContext(getContext())
-                    .withText(console.getHistory().get(line))
-                    .withPosition(-0.98f, 0.98f - (line * 0.05f))
-                    .withScale(0.001f)) {
-                consoleItemRenderer.render(console.getConsoleItem());
-            }
+        for (int line = 0; line < Math.min(Definitions.CONSOLE_HISTORY_LINES_COUNT, console.getHistory().size()); line++)
+            renderItem(console, line);
 
         try (final var _ = consoleItemRenderer.withContext(getContext())
                 .withText(console.getInputBuffer().toString())
-                .withPosition(-0.98f, -0.02f)
+                .withPosition(-0.98f, 0.05f)
                 .withScale(0.001f)) {
             consoleItemRenderer.render(console.getConsoleItem());
         }
 
         glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    private void renderItem(final ConsoleManager.ConsoleEntity console, final int line) {
+        final var index = console.getHistory().size() - line - 1;
+        final var text = (index >= 0 && index < console.getHistory().size()) ? console.getHistory().get(index) : null;
+        if (StringUtils.isBlank(text))
+            return;
+
+        try (final var _ = consoleItemRenderer.withContext(getContext())
+                .withText(text)
+                .withPosition(-0.98f, 0.1f + Definitions.CONSOLE_LINE_HEIGHT * line)
+                .withScale(0.001f)) {
+            consoleItemRenderer.render(console.getConsoleItem());
+        }
     }
 
     @Getter(AccessLevel.PACKAGE)
