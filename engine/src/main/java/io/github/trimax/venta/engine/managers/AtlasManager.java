@@ -9,6 +9,7 @@ import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTruetype;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.exceptions.TextureBakeException;
 import io.github.trimax.venta.engine.model.view.AtlasView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity
 
         final var result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, FONT_HEIGHT, bitmap, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, firstChar, characterBuffer);
         if (result <= 0)
-            throw new RuntimeException("Failed to bake font bitmap atlas " + i);
+            throw new TextureBakeException("Failed to bake font bitmap atlas " + i);
 
         return store(new AtlasEntity(name, textureAccessor.get(textureManager.create(name, bitmap)), characterBuffer));
     }

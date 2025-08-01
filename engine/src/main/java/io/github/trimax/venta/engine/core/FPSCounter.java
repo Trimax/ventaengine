@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.core;
 
 import lombok.Getter;
 
-final class FPSCounter {
+public final class FPSCounter {
     private long lastTimeNs = System.nanoTime();
     private int frames = 0;
     private double elapsedSeconds = 0.0;
