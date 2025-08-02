@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
+import io.github.trimax.venta.engine.managers.TextureManager;
 import io.github.trimax.venta.engine.model.view.TextureView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,9 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TextureManagerImplementation extends AbstractManagerImplementation<TextureManagerImplementation.TextureEntity, TextureView> {
+public final class TextureManagerImplementation
+        extends AbstractManagerImplementation<TextureManagerImplementation.TextureEntity, TextureView>
+        implements TextureManager {
     private final ResourceManagerImplementation resourceManager;
 
     public TextureView create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
@@ -60,6 +63,7 @@ public final class TextureManagerImplementation extends AbstractManagerImplement
         return store(new TextureEntity(textureID, name, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
     }
 
+    @Override
     public TextureView load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);

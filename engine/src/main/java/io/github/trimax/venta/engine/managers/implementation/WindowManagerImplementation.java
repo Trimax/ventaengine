@@ -7,6 +7,7 @@ import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
+import io.github.trimax.venta.engine.managers.WindowManager;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,9 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class WindowManagerImplementation extends AbstractManagerImplementation<WindowManagerImplementation.WindowEntity, WindowView> {
+public final class WindowManagerImplementation
+        extends AbstractManagerImplementation<WindowManagerImplementation.WindowEntity, WindowView>
+        implements WindowManager {
     private final ConsoleQueue consoleQueue;
 
     @Getter

@@ -4,29 +4,32 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.GizmoType;
+import io.github.trimax.venta.engine.managers.ObjectManager;
 import io.github.trimax.venta.engine.model.dto.ObjectDTO;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.ProgramView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ObjectManagerImplementation extends AbstractManagerImplementation<ObjectManagerImplementation.ObjectEntity, ObjectView> {
+public final class ObjectManagerImplementation
+        extends AbstractManagerImplementation<ObjectManagerImplementation.ObjectEntity, ObjectView>
+        implements ObjectManager {
     private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
     private final ResourceManagerImplementation resourceManager;
     private final ProgramManagerImplementation programManager;
     private final GizmoManagerImplementation gizmoManager;
     private final MeshManagerImplementation meshManager;
 
-    public ObjectView create(final String name, final MeshView mesh, final ProgramView program) {
+    @Override
+    public ObjectView create(@NonNull final String name,
+                             @NonNull final MeshView mesh,
+                             @NonNull final ProgramView program) {
         log.info("Creating object {}", name);
 
         return store(new ObjectManagerImplementation.ObjectEntity(name,
@@ -38,7 +41,8 @@ public final class ObjectManagerImplementation extends AbstractManagerImplementa
                 gizmoAccessor.get(gizmoManager.create("Bounding box", GizmoType.Object))));
     }
 
-    public ObjectView load(final String name) {
+    @Override
+    public ObjectView load(@NonNull final String name) {
         log.info("Loading object {}", name);
 
         final var objectDTO = resourceManager.load(String.format("/objects/%s.json", name), ObjectDTO.class);

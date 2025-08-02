@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.GizmoType;
+import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.model.dto.LightDTO;
 import io.github.trimax.venta.engine.model.view.LightView;
 import lombok.*;
@@ -12,12 +13,15 @@ import org.joml.Vector3f;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class LightManagerImplementation extends AbstractManagerImplementation<LightManagerImplementation.LightEntity, LightView> {
+public final class LightManagerImplementation
+        extends AbstractManagerImplementation<LightManagerImplementation.LightEntity, LightView>
+        implements LightManager {
     private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
     private final ResourceManagerImplementation resourceManager;
     private final GizmoManagerImplementation gizmoManager;
 
-    public LightView load(final String name) {
+    @Override
+    public LightView load(@NonNull final String name) {
         log.info("Loading light {}", name);
 
         return store(new LightEntity(name, resourceManager.load(String.format("/lights/%s.json", name), LightDTO.class),

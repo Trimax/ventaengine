@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.managers.MeshManager;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MaterialView;
@@ -23,9 +24,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MeshManagerImplementation extends AbstractManagerImplementation<MeshManagerImplementation.MeshEntity, MeshView> {
+public final class MeshManagerImplementation
+        extends AbstractManagerImplementation<MeshManagerImplementation.MeshEntity, MeshView>
+        implements MeshManager {
     private final ResourceManagerImplementation resourceManager;
 
+    @Override
     public MeshView load(final String name) {
         if (isCached(name))
             return getCached(name);

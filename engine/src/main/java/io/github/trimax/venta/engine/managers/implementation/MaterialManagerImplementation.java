@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.managers.MaterialManager;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import io.github.trimax.venta.engine.model.view.TextureView;
@@ -16,10 +17,13 @@ import java.util.Map;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MaterialManagerImplementation extends AbstractManagerImplementation<MaterialManagerImplementation.MaterialEntity, MaterialView> {
+public final class MaterialManagerImplementation
+        extends AbstractManagerImplementation<MaterialManagerImplementation.MaterialEntity, MaterialView>
+        implements MaterialManager {
     private final ResourceManagerImplementation resourceManager;
     private final TextureManagerImplementation textureManager;
 
+    @Override
     public MaterialView load(final String name) {
         log.info("Loading material {}", name);
 

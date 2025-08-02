@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
+import io.github.trimax.venta.engine.managers.ShaderManager;
 import io.github.trimax.venta.engine.model.view.ShaderView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +14,14 @@ import static org.lwjgl.opengl.GL20C.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ShaderManagerImplementation extends AbstractManagerImplementation<ShaderManagerImplementation.ShaderEntity, ShaderView> {
+public final class ShaderManagerImplementation
+        extends AbstractManagerImplementation<ShaderManagerImplementation.ShaderEntity, ShaderView>
+        implements ShaderManager {
     private final ResourceManagerImplementation resourceManager;
 
-    public ShaderView load(final String name, final ShaderManagerImplementation.ShaderEntity.Type type) {
+    @Override
+    public ShaderView load(@NonNull final String name,
+                           @NonNull final ShaderManagerImplementation.ShaderEntity.Type type) {
         if (isCached(name))
             return getCached(name);
 

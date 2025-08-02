@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.managers.FontManager;
 import io.github.trimax.venta.engine.model.view.FontView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +15,13 @@ import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_C
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class FontManagerImplementation extends AbstractManagerImplementation<FontManagerImplementation.FontEntity, FontView> {
+public final class FontManagerImplementation
+        extends AbstractManagerImplementation<FontManagerImplementation.FontEntity, FontView>
+        implements FontManager {
     private final AtlasManagerImplementation.AtlasAccessor atlasAccessor;
     private final ResourceManagerImplementation resourceManager;
 
-    public FontView create(final String name) {
+    public FontView load(@NonNull final String name) {
         final var fontBuffer = resourceManager.loadAsBuffer(String.format("/fonts/%s.ttf", name));
 
         final var font = new FontEntity(name);

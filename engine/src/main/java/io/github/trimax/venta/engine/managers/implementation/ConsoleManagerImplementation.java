@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.managers.ConsoleManager;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,9 @@ import static org.lwjgl.opengl.GL30C.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleManagerImplementation extends AbstractManagerImplementation<ConsoleManagerImplementation.ConsoleEntity, ConsoleView> {
+public final class ConsoleManagerImplementation
+        extends AbstractManagerImplementation<ConsoleManagerImplementation.ConsoleEntity, ConsoleView>
+        implements ConsoleManager {
     private final ConsoleItemManagerImplementation.ConsoleItemAccessor consoleItemAccessor;
     private final ProgramManagerImplementation.ProgramAccessor programAccessor;
     private final ConsoleItemManagerImplementation consoleItemManager;

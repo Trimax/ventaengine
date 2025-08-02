@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
+import io.github.trimax.venta.engine.managers.ProgramManager;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
 import io.github.trimax.venta.engine.model.view.ProgramView;
 import io.github.trimax.venta.engine.model.view.ShaderView;
@@ -20,12 +21,15 @@ import static org.lwjgl.opengl.GL20C.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ProgramManagerImplementation extends AbstractManagerImplementation<ProgramManagerImplementation.ProgramEntity, ProgramView> {
+public final class ProgramManagerImplementation
+        extends AbstractManagerImplementation<ProgramManagerImplementation.ProgramEntity, ProgramView>
+        implements ProgramManager {
     private final ShaderManagerImplementation.ShaderAccessor shaderAccessor;
     private final ResourceManagerImplementation resourceManager;
     private final ShaderManagerImplementation shaderManager;
 
-    public ProgramView load(final String name) {
+    @Override
+    public ProgramView load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);
 

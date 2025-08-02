@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.view.LightView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.SceneView;
@@ -16,12 +17,15 @@ import java.util.List;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SceneManagerImplementation extends AbstractManagerImplementation<SceneManagerImplementation.SceneEntity, SceneView> {
-    @Getter
-    @Setter(onParam_ = @__(@NonNull))
+public final class SceneManagerImplementation
+        extends AbstractManagerImplementation<SceneManagerImplementation.SceneEntity, SceneView>
+        implements SceneManager {
+    @Getter(onMethod_ = @__(@Override))
+    @Setter(onMethod_ = @__(@Override), onParam_ = @__(@NonNull))
     private SceneView current;
 
-    public SceneView create(final String name) {
+    @Override
+    public SceneView create(@NonNull final String name) {
         log.info("Creating scene {}", name);
 
         return store(new SceneEntity(name));

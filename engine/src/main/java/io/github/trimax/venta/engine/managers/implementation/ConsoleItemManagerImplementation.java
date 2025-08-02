@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.managers.ConsoleItemManager;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,9 @@ import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleItemManagerImplementation extends AbstractManagerImplementation<ConsoleItemManagerImplementation.ConsoleItemEntity, ConsoleItemView> {
+public final class ConsoleItemManagerImplementation
+        extends AbstractManagerImplementation<ConsoleItemManagerImplementation.ConsoleItemEntity, ConsoleItemView>
+        implements ConsoleItemManager {
     private final ProgramManagerImplementation.ProgramAccessor programAccessor;
     private final FontManagerImplementation.FontAccessor fontAccessor;
     private final ProgramManagerImplementation programManager;
@@ -44,7 +47,7 @@ public final class ConsoleItemManagerImplementation extends AbstractManagerImple
 
         return store(new ConsoleItemManagerImplementation.ConsoleItemEntity("SHARED",
                 programAccessor.get(programManager.load("text")),
-                fontAccessor.get(fontManager.create("DejaVuSansMono")),
+                fontAccessor.get(fontManager.load("DejaVuSansMono")),
                 vertexArrayObjectID, verticesBufferID));
     }
 

@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.enums.ProgramType;
+import io.github.trimax.venta.engine.managers.GizmoManager;
 import io.github.trimax.venta.engine.model.view.GizmoView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,7 +16,9 @@ import org.joml.Vector3f;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GizmoManagerImplementation extends AbstractManagerImplementation<GizmoManagerImplementation.GizmoEntity, GizmoView> {
+public final class GizmoManagerImplementation
+        extends AbstractManagerImplementation<GizmoManagerImplementation.GizmoEntity, GizmoView>
+        implements GizmoManager {
     private final ProgramManagerImplementation.ProgramAccessor programAccessor;
     private final MeshManagerImplementation.MeshAccessor meshAccessor;
     private final ProgramManagerImplementation programManager;

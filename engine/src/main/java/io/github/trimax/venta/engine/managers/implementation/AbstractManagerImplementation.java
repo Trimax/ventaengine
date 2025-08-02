@@ -1,9 +1,11 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.managers.AbstractManager;
 import io.github.trimax.venta.engine.model.view.AbstractView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -13,9 +15,14 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public abstract class AbstractManagerImplementation<E extends V, V extends AbstractView> {
+public abstract class AbstractManagerImplementation<E extends V, V extends AbstractView> implements AbstractManager<V> {
     private final Map<String, E> values = new ConcurrentHashMap<>();
     private final Map<String, String> cache = new HashMap<>();
+
+    @Override
+    public final V get(@NonNull final String id) {
+        return getEntity(id);
+    }
 
     protected final boolean isCached(final String name) {
         return shouldCache() && cache.containsKey(name);
@@ -25,7 +32,7 @@ public abstract class AbstractManagerImplementation<E extends V, V extends Abstr
         return values.get(cache.get(name));
     }
 
-    protected final E getEntity(final String id) {
+    public final E getEntity(final String id) {
         return values.get(id);
     }
 
