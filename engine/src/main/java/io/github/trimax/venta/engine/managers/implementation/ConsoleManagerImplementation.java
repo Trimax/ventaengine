@@ -24,11 +24,11 @@ import static org.lwjgl.opengl.GL30C.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleManager extends AbstractManager<ConsoleManager.ConsoleEntity, ConsoleView> {
-    private final ConsoleItemManager.ConsoleItemAccessor consoleItemAccessor;
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final ConsoleItemManager consoleItemManager;
-    private final ProgramManager programManager;
+public final class ConsoleManagerImplementation extends AbstractManagerImplementation<ConsoleManagerImplementation.ConsoleEntity, ConsoleView> {
+    private final ConsoleItemManagerImplementation.ConsoleItemAccessor consoleItemAccessor;
+    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
+    private final ConsoleItemManagerImplementation consoleItemManager;
+    private final ProgramManagerImplementation programManager;
 
     public ConsoleView create(final String name) {
         log.debug("Creating console {}", name);
@@ -53,7 +53,7 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return store(new ConsoleManager.ConsoleEntity(name,
+        return store(new ConsoleManagerImplementation.ConsoleEntity(name,
                 consoleItemAccessor.get(consoleItemManager.create()),
                 programAccessor.get(programManager.load("console")),
                 consoleVertexArrayObjectID, consoleVerticesBufferID));
@@ -82,8 +82,8 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         private final StringBuilder inputBuffer = new StringBuilder(Definitions.CONSOLE_WELCOME_SYMBOL);
         private final List<ConsoleMessage> history = new ArrayList<>();
 
-        private final ConsoleItemManager.ConsoleItemEntity consoleItem;
-        private final ProgramManager.ProgramEntity program;
+        private final ConsoleItemManagerImplementation.ConsoleItemEntity consoleItem;
+        private final ProgramManagerImplementation.ProgramEntity program;
 
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
@@ -91,8 +91,8 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
         private boolean isVisible;
 
         ConsoleEntity(final String name,
-                @NonNull final ConsoleItemManager.ConsoleItemEntity consoleItem,
-                @NonNull final ProgramManager.ProgramEntity program,
+                @NonNull final ConsoleItemManagerImplementation.ConsoleItemEntity consoleItem,
+                @NonNull final ProgramManagerImplementation.ProgramEntity program,
                 final int vertexArrayObjectID,
                 final int verticesBufferID) {
             super(name);

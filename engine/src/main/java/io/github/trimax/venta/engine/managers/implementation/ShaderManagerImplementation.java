@@ -13,10 +13,10 @@ import static org.lwjgl.opengl.GL20C.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEntity, ShaderView> {
-    private final ResourceManager resourceManager;
+public final class ShaderManagerImplementation extends AbstractManagerImplementation<ShaderManagerImplementation.ShaderEntity, ShaderView> {
+    private final ResourceManagerImplementation resourceManager;
 
-    public ShaderView load(final String name, final ShaderManager.ShaderEntity.Type type) {
+    public ShaderView load(final String name, final ShaderManagerImplementation.ShaderEntity.Type type) {
         if (isCached(name))
             return getCached(name);
 

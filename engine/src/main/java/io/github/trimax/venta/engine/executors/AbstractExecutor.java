@@ -4,7 +4,7 @@ import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.core.InternalVentaContext;
 import io.github.trimax.venta.engine.core.VentaContext;
 import io.github.trimax.venta.engine.core.VentaState;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManager;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.Getter;
 import lombok.NonNull;
@@ -46,7 +46,7 @@ public abstract class AbstractExecutor {
         return internalContext.getContext();
     }
 
-    protected final ConsoleManager.ConsoleEntity getConsole() {
+    protected final ConsoleManagerImplementation.ConsoleEntity getConsole() {
         return internalContext.getConsole();
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractExecutor {
         return String.format("  %-20s - %s", command, description);
     }
 
-    private void printHelp(final ConsoleManager.ConsoleEntity console) {
+    private void printHelp(final ConsoleManagerImplementation.ConsoleEntity console) {
         console.info("Available commands:");
         StreamEx.of(executors.values())
                 .map(AbstractExecutor::getPublicDescription)

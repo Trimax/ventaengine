@@ -13,60 +13,60 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaContext {
     @Getter(AccessLevel.NONE)
-    private final ResourceManager.ResourceAccessor resourceAccessor;
-    private final ResourceManager resourceManager;
+    private final ResourceManagerImplementation.ResourceAccessor resourceAccessor;
+    private final ResourceManagerImplementation resourceManager;
 
     @Getter(AccessLevel.NONE)
-    private final MaterialManager.MaterialAccessor materialAccessor;
-    private final MaterialManager materialManager;
+    private final MaterialManagerImplementation.MaterialAccessor materialAccessor;
+    private final MaterialManagerImplementation materialManager;
 
     @Getter(AccessLevel.NONE)
-    private final TextureManager.TextureAccessor textureAccessor;
-    private final TextureManager textureManager;
+    private final TextureManagerImplementation.TextureAccessor textureAccessor;
+    private final TextureManagerImplementation textureManager;
 
     @Getter(AccessLevel.NONE)
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final ProgramManager programManager;
+    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
+    private final ProgramManagerImplementation programManager;
 
     @Getter(AccessLevel.NONE)
-    private final ObjectManager.ObjectAccessor objectAccessor;
-    private final ObjectManager objectManager;
+    private final ObjectManagerImplementation.ObjectAccessor objectAccessor;
+    private final ObjectManagerImplementation objectManager;
 
     @Getter(AccessLevel.NONE)
-    private final ShaderManager.ShaderAccessor shaderAccessor;
-    private final ShaderManager shaderManager;
+    private final ShaderManagerImplementation.ShaderAccessor shaderAccessor;
+    private final ShaderManagerImplementation shaderManager;
 
     @Getter(AccessLevel.NONE)
-    private final CameraManager.CameraAccessor cameraAccessor;
-    private final CameraManager cameraManager;
+    private final CameraManagerImplementation.CameraAccessor cameraAccessor;
+    private final CameraManagerImplementation cameraManager;
 
     @Getter(AccessLevel.NONE)
-    private final SceneManager.SceneAccessor sceneAccessor;
-    private final SceneManager sceneManager;
+    private final SceneManagerImplementation.SceneAccessor sceneAccessor;
+    private final SceneManagerImplementation sceneManager;
 
     @Getter(AccessLevel.NONE)
-    private final LightManager.LightAccessor lightAccessor;
-    private final LightManager lightManager;
+    private final LightManagerImplementation.LightAccessor lightAccessor;
+    private final LightManagerImplementation lightManager;
 
     @Getter(AccessLevel.NONE)
-    private final MeshManager.MeshAccessor meshAccessor;
-    private final MeshManager meshManager;
+    private final MeshManagerImplementation.MeshAccessor meshAccessor;
+    private final MeshManagerImplementation meshManager;
 
     @Getter(AccessLevel.NONE)
-    private final FontManager.FontAccessor fontAccessor;
-    private final FontManager fontManager;
+    private final FontManagerImplementation.FontAccessor fontAccessor;
+    private final FontManagerImplementation fontManager;
 
     @Getter(AccessLevel.NONE)
-    private final ConsoleItemManager.ConsoleItemAccessor consoleItemAccessor;
+    private final ConsoleItemManagerImplementation.ConsoleItemAccessor consoleItemAccessor;
 
     @Getter(AccessLevel.NONE)
-    private final ConsoleManager.ConsoleAccessor consoleAccessor;
+    private final ConsoleManagerImplementation.ConsoleAccessor consoleAccessor;
 
     @Getter(AccessLevel.NONE)
-    private final WindowManager.WindowAccessor windowAccessor;
+    private final WindowManagerImplementation.WindowAccessor windowAccessor;
 
     @Getter(AccessLevel.PACKAGE)
-    private final WindowManager windowManager;
+    private final WindowManagerImplementation windowManager;
 
     @Getter(AccessLevel.PACKAGE)
     private final VentaState state = new VentaState();

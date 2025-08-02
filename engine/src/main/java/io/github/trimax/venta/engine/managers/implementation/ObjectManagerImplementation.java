@@ -19,17 +19,17 @@ import org.joml.Vector3f;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEntity, ObjectView> {
-    private final GizmoManager.GizmoAccessor gizmoAccessor;
-    private final ResourceManager resourceManager;
-    private final ProgramManager programManager;
-    private final GizmoManager gizmoManager;
-    private final MeshManager meshManager;
+public final class ObjectManagerImplementation extends AbstractManagerImplementation<ObjectManagerImplementation.ObjectEntity, ObjectView> {
+    private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
+    private final ResourceManagerImplementation resourceManager;
+    private final ProgramManagerImplementation programManager;
+    private final GizmoManagerImplementation gizmoManager;
+    private final MeshManagerImplementation meshManager;
 
     public ObjectView create(final String name, final MeshView mesh, final ProgramView program) {
         log.info("Creating object {}", name);
 
-        return store(new ObjectManager.ObjectEntity(name,
+        return store(new ObjectManagerImplementation.ObjectEntity(name,
                 programManager.get(program.getID()),
                 meshManager.get(mesh.getID()),
                 new Vector3f(0.f, 0.f, 0.f),
@@ -42,7 +42,7 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         log.info("Loading object {}", name);
 
         final var objectDTO = resourceManager.load(String.format("/objects/%s.json", name), ObjectDTO.class);
-        return store(new ObjectManager.ObjectEntity(name,
+        return store(new ObjectManagerImplementation.ObjectEntity(name,
                 programManager.get(programManager.load(objectDTO.program()).getID()),
                 meshManager.get(meshManager.load(objectDTO.mesh()).getID()),
                 objectDTO.position(),
@@ -76,16 +76,16 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
         private boolean isVisible = true;
         private boolean isLit = true;
 
-        private ProgramManager.ProgramEntity program;
-        private MeshManager.MeshEntity mesh;
+        private ProgramManagerImplementation.ProgramEntity program;
+        private MeshManagerImplementation.MeshEntity mesh;
 
         ObjectEntity(final String name,
-                     final ProgramManager.ProgramEntity program,
-                     final MeshManager.MeshEntity mesh,
+                     final ProgramManagerImplementation.ProgramEntity program,
+                     final MeshManagerImplementation.MeshEntity mesh,
                      final Vector3f position,
                      final Vector3f rotation,
                      final Vector3f scale,
-                     final GizmoManager.GizmoEntity gizmo) {
+                     final GizmoManagerImplementation.GizmoEntity gizmo) {
             super(gizmo, name);
 
             this.mesh = mesh;
@@ -149,13 +149,13 @@ public final class ObjectManager extends AbstractManager<ObjectManager.ObjectEnt
 
         @Override
         public void setProgram(final ProgramView program) {
-            if (program instanceof ProgramManager.ProgramEntity entity)
+            if (program instanceof ProgramManagerImplementation.ProgramEntity entity)
                 this.program = entity;
         }
 
         @Override
         public void setMesh(final MeshView mesh) {
-            if (mesh instanceof MeshManager.MeshEntity entity)
+            if (mesh instanceof MeshManagerImplementation.MeshEntity entity)
                 this.mesh = entity;
         }
     }

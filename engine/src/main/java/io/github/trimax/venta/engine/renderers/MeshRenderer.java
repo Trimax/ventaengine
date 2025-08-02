@@ -3,8 +3,8 @@ package io.github.trimax.venta.engine.renderers;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.managers.implementation.MeshManager;
-import io.github.trimax.venta.engine.managers.implementation.ProgramManager;
+import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.model.view.ProgramView;
 import lombok.AccessLevel;
@@ -20,8 +20,8 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class MeshRenderer extends AbstractRenderer<MeshView, MeshRenderer.MeshRenderContext, ObjectRenderer.ObjectRenderContext> {
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final MeshManager.MeshAccessor meshAccessor;
+    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
+    private final MeshManagerImplementation.MeshAccessor meshAccessor;
     private final MaterialBinder materialBinder;
 
     @Override
@@ -38,7 +38,7 @@ final class MeshRenderer extends AbstractRenderer<MeshView, MeshRenderer.MeshRen
         render(meshAccessor.get(object.getID()), programAccessor.get(context.getProgram()));
     }
 
-    private void render(final MeshManager.MeshEntity object, final ProgramManager.ProgramEntity program) {
+    private void render(final MeshManagerImplementation.MeshEntity object, final ProgramManagerImplementation.ProgramEntity program) {
         glBindVertexArray(object.getVertexArrayObjectID());
         materialBinder.bind(program, object.getMaterial());
 

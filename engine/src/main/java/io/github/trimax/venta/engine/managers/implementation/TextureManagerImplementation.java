@@ -42,8 +42,8 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TextureManager extends AbstractManager<TextureManager.TextureEntity, TextureView> {
-    private final ResourceManager resourceManager;
+public final class TextureManagerImplementation extends AbstractManagerImplementation<TextureManagerImplementation.TextureEntity, TextureView> {
+    private final ResourceManagerImplementation resourceManager;
 
     public TextureView create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
         final var textureID = glGenTextures();

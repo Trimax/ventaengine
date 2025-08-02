@@ -13,9 +13,9 @@ import org.joml.Vector3f;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CameraManager extends AbstractManager<CameraManager.CameraEntity, CameraView> {
-    private final GizmoManager.GizmoAccessor gizmoAccessor;
-    private final GizmoManager gizmoManager;
+public final class CameraManagerImplementation extends AbstractManagerImplementation<CameraManagerImplementation.CameraEntity, CameraView> {
+    private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
+    private final GizmoManagerImplementation gizmoManager;
 
     @Getter
     @Setter(onParam_ = @__(@NonNull))
@@ -57,7 +57,7 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
         CameraEntity(@NonNull final String name,
                 final Vector3f position,
                 final Vector3f target,
-                @NonNull final GizmoManager.GizmoEntity gizmo) {
+                @NonNull final GizmoManagerImplementation.GizmoEntity gizmo) {
             super(gizmo, name);
 
             setPosition(position);

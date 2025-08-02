@@ -16,9 +16,9 @@ import java.util.Map;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MaterialManager extends AbstractManager<MaterialManager.MaterialEntity, MaterialView> {
-    private final ResourceManager resourceManager;
-    private final TextureManager textureManager;
+public final class MaterialManagerImplementation extends AbstractManagerImplementation<MaterialManagerImplementation.MaterialEntity, MaterialView> {
+    private final ResourceManagerImplementation resourceManager;
+    private final TextureManagerImplementation textureManager;
 
     public MaterialView load(final String name) {
         log.info("Loading material {}", name);

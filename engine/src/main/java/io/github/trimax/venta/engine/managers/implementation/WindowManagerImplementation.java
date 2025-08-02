@@ -26,7 +26,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class WindowManager extends AbstractManager<WindowManager.WindowEntity, WindowView> {
+public final class WindowManagerImplementation extends AbstractManagerImplementation<WindowManagerImplementation.WindowEntity, WindowView> {
     private final ConsoleQueue consoleQueue;
 
     @Getter
@@ -136,7 +136,7 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
         private final Matrix4f projectionMatrix;
 
         @Setter
-        private ConsoleManager.ConsoleEntity console;
+        private ConsoleManagerImplementation.ConsoleEntity console;
 
         private int width;
         private int height;

@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.implementation.CameraManager;
-import io.github.trimax.venta.engine.managers.implementation.WindowManager;
+import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
 import io.github.trimax.venta.engine.model.view.CameraView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.SceneView;
@@ -43,7 +43,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRender
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
         private CameraView camera;
 
-        public SceneRenderContext with(final WindowManager.WindowEntity window, final CameraManager.CameraEntity camera) {
+        public SceneRenderContext with(final WindowManagerImplementation.WindowEntity window, final CameraManagerImplementation.CameraEntity camera) {
             window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
             this.camera = camera;

@@ -23,8 +23,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, MeshView> {
-    private final ResourceManager resourceManager;
+public final class MeshManagerImplementation extends AbstractManagerImplementation<MeshManagerImplementation.MeshEntity, MeshView> {
+    private final ResourceManagerImplementation resourceManager;
 
     public MeshView load(final String name) {
         if (isCached(name))
@@ -137,7 +137,7 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
 
         private final BoundingBox boundingBox;
 
-        private MaterialManager.MaterialEntity material;
+        private MaterialManagerImplementation.MaterialEntity material;
 
         MeshEntity(@NonNull final String name,
                    final int verticesCount,
@@ -164,7 +164,7 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
 
         @Override
         public void setMaterial(final MaterialView material) {
-            if (material instanceof MaterialManager.MaterialEntity entity)
+            if (material instanceof MaterialManagerImplementation.MaterialEntity entity)
                 this.material = entity;
         }
     }

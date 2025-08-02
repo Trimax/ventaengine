@@ -24,7 +24,7 @@ import java.util.UUID;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ResourceManager extends AbstractManager<ResourceManager.ResourceEntity, ResourceView> {
+public final class ResourceManagerImplementation extends AbstractManagerImplementation<ResourceManagerImplementation.ResourceEntity, ResourceView> {
     private static final Gson parser = new GsonBuilder()
             .registerTypeAdapter(TextureType.class, new TextureTypeAdapter())
             .create();
@@ -43,7 +43,7 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     public byte[] loadAsBytes(final String path) {
         log.debug("Loading resource bytes: {}", path);
 
-        try (final InputStream stream = ResourceManager.class.getResourceAsStream(path)) {
+        try (final InputStream stream = ResourceManagerImplementation.class.getResourceAsStream(path)) {
             if (stream == null)
                 throw new ResourceNotFoundException(path);
 

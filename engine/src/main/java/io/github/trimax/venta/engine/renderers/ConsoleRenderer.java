@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.renderers;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManager;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,18 +26,18 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
 
     @Override
     void render(final ConsoleView console) {
-        if (console instanceof ConsoleManager.ConsoleEntity entity)
+        if (console instanceof ConsoleManagerImplementation.ConsoleEntity entity)
             render(entity);
     }
 
-    private void render(final ConsoleManager.ConsoleEntity console) {
+    private void render(final ConsoleManagerImplementation.ConsoleEntity console) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         renderBackground(console);
         renderHistory(console);
     }
 
-    private void renderBackground(final ConsoleManager.ConsoleEntity console) {
+    private void renderBackground(final ConsoleManagerImplementation.ConsoleEntity console) {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -57,7 +57,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
         glEnable(GL_DEPTH_TEST);
     }
 
-    private void renderHistory(final ConsoleManager.ConsoleEntity console) {
+    private void renderHistory(final ConsoleManagerImplementation.ConsoleEntity console) {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -66,7 +66,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
             renderItem(console, line);
 
         try (final var _ = consoleItemRenderer.withContext(getContext())
-                .withText(new ConsoleManager.ConsoleMessage(ConsoleMessageType.Command, console.getInputBuffer().toString()))
+                .withText(new ConsoleManagerImplementation.ConsoleMessage(ConsoleMessageType.Command, console.getInputBuffer().toString()))
                 .withPosition(-0.98f, 0.05f)
                 .withScale(0.001f)) {
             consoleItemRenderer.render(console.getConsoleItem());
@@ -76,7 +76,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
         glEnable(GL_DEPTH_TEST);
     }
 
-    private void renderItem(final ConsoleManager.ConsoleEntity console, final int line) {
+    private void renderItem(final ConsoleManagerImplementation.ConsoleEntity console, final int line) {
         final var index = console.getHistory().size() - line - 1;
         final var message = (index >= 0 && index < console.getHistory().size()) ? console.getHistory().get(index) : null;
         if (message == null || StringUtils.isBlank(message.text()))

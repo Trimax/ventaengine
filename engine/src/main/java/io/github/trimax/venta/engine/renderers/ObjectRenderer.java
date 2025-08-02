@@ -6,8 +6,8 @@ import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.ObjectBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.managers.implementation.ObjectManager;
-import io.github.trimax.venta.engine.managers.implementation.ProgramManager;
+import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
@@ -28,8 +28,8 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final ObjectManager.ObjectAccessor objectAccessor;
+    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
+    private final ObjectManagerImplementation.ObjectAccessor objectAccessor;
     private final MeshRenderer meshRenderer;
 
     private final ObjectBinder objectBinder;
@@ -50,7 +50,7 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
         render(objectAccessor.get(object.getID()), programAccessor.get(object.getProgram()));
     }
 
-    private void render(final ObjectManager.ObjectEntity object, final ProgramManager.ProgramEntity program) {
+    private void render(final ObjectManagerImplementation.ObjectEntity object, final ProgramManagerImplementation.ProgramEntity program) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");

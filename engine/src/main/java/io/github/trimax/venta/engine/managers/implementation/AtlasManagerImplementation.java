@@ -17,9 +17,9 @@ import static io.github.trimax.venta.engine.definitions.Definitions.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity, AtlasView> {
-    private final TextureManager textureManager;
-    private final TextureManager.TextureAccessor textureAccessor;
+public final class AtlasManagerImplementation extends AbstractManagerImplementation<AtlasManagerImplementation.AtlasEntity, AtlasView> {
+    private final TextureManagerImplementation textureManager;
+    private final TextureManagerImplementation.TextureAccessor textureAccessor;
 
     private AtlasView create(final String name, final int i, final ByteBuffer fontBuffer) {
         final var bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
@@ -52,11 +52,11 @@ public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity
 
     @Getter
     public static final class AtlasEntity extends AbstractEntity implements AtlasView {
-        private final TextureManager.TextureEntity texture;
+        private final TextureManagerImplementation.TextureEntity texture;
         private final STBTTBakedChar.Buffer buffer;
 
         AtlasEntity(@NonNull final String name,
-                @NonNull final TextureManager.TextureEntity texture,
+                @NonNull final TextureManagerImplementation.TextureEntity texture,
                 @NonNull final STBTTBakedChar.Buffer buffer) {
             super(name);
 
@@ -95,7 +95,7 @@ public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public final class AtlasAccessor extends AbstractAccessor {
         public AtlasEntity create(final String name, final int i, final ByteBuffer fontBuffer) {
-            return get(AtlasManager.this.create(name, i, fontBuffer));
+            return get(AtlasManagerImplementation.this.create(name, i, fontBuffer));
         }
     }
 }

@@ -14,9 +14,9 @@ import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_C
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class FontManager extends AbstractManager<FontManager.FontEntity, FontView> {
-    private final AtlasManager.AtlasAccessor atlasAccessor;
-    private final ResourceManager resourceManager;
+public final class FontManagerImplementation extends AbstractManagerImplementation<FontManagerImplementation.FontEntity, FontView> {
+    private final AtlasManagerImplementation.AtlasAccessor atlasAccessor;
+    private final ResourceManagerImplementation resourceManager;
 
     public FontView create(final String name) {
         final var fontBuffer = resourceManager.loadAsBuffer(String.format("/fonts/%s.ttf", name));
@@ -44,14 +44,14 @@ public final class FontManager extends AbstractManager<FontManager.FontEntity, F
     }
 
     @Getter
-    public static final class FontEntity extends AbstractManager.AbstractEntity implements FontView {
-        private final List<AtlasManager.AtlasEntity> atlases = new ArrayList<>();
+    public static final class FontEntity extends AbstractManagerImplementation.AbstractEntity implements FontView {
+        private final List<AtlasManagerImplementation.AtlasEntity> atlases = new ArrayList<>();
 
         FontEntity(@NonNull final String name) {
             super(name);
         }
 
-        public void add(final AtlasManager.AtlasEntity atlas) {
+        public void add(final AtlasManagerImplementation.AtlasEntity atlas) {
             this.atlases.add(atlas);
         }
     }

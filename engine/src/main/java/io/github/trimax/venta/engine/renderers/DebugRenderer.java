@@ -18,12 +18,12 @@ public final class DebugRenderer extends AbstractRenderer<SceneView, SceneRender
     private static final Vector3f VECTOR_ZERO = new Vector3f(0);
     private static final Vector3f VECTOR_ONE = new Vector3f(1);
 
-    private final CameraManager.CameraAccessor cameraAccessor;
-    private final ObjectManager.ObjectAccessor objectAccessor;
-    private final LightManager.LightAccessor lightAccessor;
-    private final SceneManager.SceneAccessor sceneAccessor;
+    private final CameraManagerImplementation.CameraAccessor cameraAccessor;
+    private final ObjectManagerImplementation.ObjectAccessor objectAccessor;
+    private final LightManagerImplementation.LightAccessor lightAccessor;
+    private final SceneManagerImplementation.SceneAccessor sceneAccessor;
     private final GizmoRenderer gizmoRenderer;
-    private final GizmoManager gizmoManager;
+    private final GizmoManagerImplementation gizmoManager;
 
     @Override
     protected SceneRenderer.SceneRenderContext createContext() {
@@ -35,7 +35,7 @@ public final class DebugRenderer extends AbstractRenderer<SceneView, SceneRender
         render(sceneAccessor.get(scene));
     }
 
-    private void render(final SceneManager.SceneEntity scene) {
+    private void render(final SceneManagerImplementation.SceneEntity scene) {
         renderOrigin();
 
         StreamEx.of(scene.getLights()).forEach(this::render);

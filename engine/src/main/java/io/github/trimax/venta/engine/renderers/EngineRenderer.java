@@ -3,9 +3,9 @@ package io.github.trimax.venta.engine.renderers;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.core.VentaState;
-import io.github.trimax.venta.engine.managers.implementation.CameraManager;
-import io.github.trimax.venta.engine.managers.implementation.SceneManager;
-import io.github.trimax.venta.engine.managers.implementation.WindowManager;
+import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +18,12 @@ import static org.lwjgl.opengl.GL11C.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EngineRenderer {
-    private final WindowManager.WindowAccessor windowAccessor;
-    private final CameraManager.CameraAccessor cameraAccessor;
+    private final WindowManagerImplementation.WindowAccessor windowAccessor;
+    private final CameraManagerImplementation.CameraAccessor cameraAccessor;
 
-    private final CameraManager cameraManager;
-    private final WindowManager windowManager;
-    private final SceneManager sceneManager;
+    private final CameraManagerImplementation cameraManager;
+    private final WindowManagerImplementation windowManager;
+    private final SceneManagerImplementation sceneManager;
 
     private final WindowRenderer windowRenderer;
     private final DebugRenderer debugRenderer;

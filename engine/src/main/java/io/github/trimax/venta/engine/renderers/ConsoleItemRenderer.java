@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleItemManager;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManager;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleItemManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,11 +30,11 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
 
     @Override
     void render(final ConsoleItemView consoleItem) {
-        if (consoleItem instanceof ConsoleItemManager.ConsoleItemEntity entity)
+        if (consoleItem instanceof ConsoleItemManagerImplementation.ConsoleItemEntity entity)
             render(entity);
     }
 
-    private void render(final ConsoleItemManager.ConsoleItemEntity consoleItem) {
+    private void render(final ConsoleItemManagerImplementation.ConsoleItemEntity consoleItem) {
         glUseProgram(consoleItem.getProgram().getInternalID());
         glBindVertexArray(consoleItem.getVertexArrayObjectID());
 
@@ -119,7 +119,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
         private float x;
         private float y;
         private float scale;
-        private ConsoleManager.ConsoleMessage message;
+        private ConsoleManagerImplementation.ConsoleMessage message;
 
         public ConsoleItemRenderContext withPosition(final float x, final float y) {
             this.x = x;
@@ -132,7 +132,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
             return this;
         }
 
-        public ConsoleItemRenderContext withText(final ConsoleManager.ConsoleMessage message) {
+        public ConsoleItemRenderContext withText(final ConsoleManagerImplementation.ConsoleMessage message) {
             this.message = message;
             return this;
         }

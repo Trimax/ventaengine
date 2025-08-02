@@ -3,8 +3,8 @@ package io.github.trimax.venta.engine.console;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.executors.AbstractExecutor;
 import io.github.trimax.venta.engine.executors.core.AbstractCoreExecutor;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManager;
-import io.github.trimax.venta.engine.managers.implementation.WindowManager;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
@@ -17,12 +17,12 @@ import java.util.Optional;
 @Component
 public final class ConsoleExecutor {
     private final Map<String, AbstractCoreExecutor> executors;
-    private final WindowManager.WindowAccessor windowAccessor;
-    private final WindowManager windowManager;
+    private final WindowManagerImplementation.WindowAccessor windowAccessor;
+    private final WindowManagerImplementation windowManager;
     private final ConsoleQueue queue;
 
     private ConsoleExecutor(final List<AbstractCoreExecutor> executors, final ConsoleQueue queue,
-            final WindowManager windowManager, final WindowManager.WindowAccessor windowAccessor) {
+                            final WindowManagerImplementation windowManager, final WindowManagerImplementation.WindowAccessor windowAccessor) {
         this.executors = TransformationUtil.toMap(executors, AbstractExecutor::getCommand);
         this.windowAccessor = windowAccessor;
         this.windowManager = windowManager;
@@ -52,7 +52,7 @@ public final class ConsoleExecutor {
         log.info("{} executed", command);
     }
 
-    private void printHelp(final ConsoleManager.ConsoleEntity console) {
+    private void printHelp(final ConsoleManagerImplementation.ConsoleEntity console) {
         console.info("Available commands:");
         StreamEx.of(executors.values())
                 .map(AbstractExecutor::getPublicDescription)

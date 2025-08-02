@@ -15,11 +15,11 @@ import org.joml.Vector3f;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity, GizmoView> {
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final MeshManager.MeshAccessor meshAccessor;
-    private final ProgramManager programManager;
-    private final MeshManager meshManager;
+public final class GizmoManagerImplementation extends AbstractManagerImplementation<GizmoManagerImplementation.GizmoEntity, GizmoView> {
+    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
+    private final MeshManagerImplementation.MeshAccessor meshAccessor;
+    private final ProgramManagerImplementation programManager;
+    private final MeshManagerImplementation meshManager;
 
     private GizmoView origin;
 
@@ -33,7 +33,7 @@ public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity
     public GizmoView create(final String name, final GizmoType type) {
         log.debug("Creating gizmo {}", name);
 
-        return store(new GizmoManager.GizmoEntity(name,
+        return store(new GizmoManagerImplementation.GizmoEntity(name,
                 programAccessor.get(programManager.load(ProgramType.Simple.name())),
                 meshAccessor.get(meshManager.load(type.getMesh())),
                 new Vector3f(0.f, 0.f, 0.f),
@@ -61,12 +61,12 @@ public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity
         private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
         private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
-        private final ProgramManager.ProgramEntity program;
-        private final MeshManager.MeshEntity mesh;
+        private final ProgramManagerImplementation.ProgramEntity program;
+        private final MeshManagerImplementation.MeshEntity mesh;
 
         GizmoEntity(final String name,
-                    final ProgramManager.ProgramEntity program,
-                    final MeshManager.MeshEntity mesh,
+                    final ProgramManagerImplementation.ProgramEntity program,
+                    final MeshManagerImplementation.MeshEntity mesh,
                     final Vector3f position,
                     final Vector3f rotation,
                     final Vector3f scale) {

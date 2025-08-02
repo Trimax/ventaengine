@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SceneManager extends AbstractManager<SceneManager.SceneEntity, SceneView> {
+public final class SceneManagerImplementation extends AbstractManagerImplementation<SceneManagerImplementation.SceneEntity, SceneView> {
     @Getter
     @Setter(onParam_ = @__(@NonNull))
     private SceneView current;
@@ -45,8 +45,8 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     @Getter
     public static final class SceneEntity extends AbstractEntity implements SceneView {
         private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
-        private final List<ObjectManager.ObjectEntity> objects = new ArrayList<>();
-        private final List<LightManager.LightEntity> lights = new ArrayList<>();
+        private final List<ObjectManagerImplementation.ObjectEntity> objects = new ArrayList<>();
+        private final List<LightManagerImplementation.LightEntity> lights = new ArrayList<>();
 
         SceneEntity(@NonNull final String name) {
             super(name);
@@ -59,7 +59,7 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
 
         @Override
         public void add(final ObjectView object) {
-            if (object instanceof ObjectManager.ObjectEntity entity)
+            if (object instanceof ObjectManagerImplementation.ObjectEntity entity)
                 objects.add(entity);
         }
 
@@ -70,7 +70,7 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
                 return;
             }
 
-            if (light instanceof LightManager.LightEntity entity)
+            if (light instanceof LightManagerImplementation.LightEntity entity)
                 lights.add(entity);
         }
     }

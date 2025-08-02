@@ -12,10 +12,10 @@ import org.joml.Vector3f;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class LightManager extends AbstractManager<LightManager.LightEntity, LightView> {
-    private final GizmoManager.GizmoAccessor gizmoAccessor;
-    private final ResourceManager resourceManager;
-    private final GizmoManager gizmoManager;
+public final class LightManagerImplementation extends AbstractManagerImplementation<LightManagerImplementation.LightEntity, LightView> {
+    private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
+    private final ResourceManagerImplementation resourceManager;
+    private final GizmoManagerImplementation gizmoManager;
 
     public LightView load(final String name) {
         log.info("Loading light {}", name);
@@ -48,11 +48,11 @@ public final class LightManager extends AbstractManager<LightManager.LightEntity
         private Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
         private float intensity = 1.f;
 
-        LightEntity(@NonNull final String name, @NonNull final GizmoManager.GizmoEntity gizmo) {
+        LightEntity(@NonNull final String name, @NonNull final GizmoManagerImplementation.GizmoEntity gizmo) {
             super(gizmo, name);
         }
 
-        LightEntity(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoManager.GizmoEntity gizmo) {
+        LightEntity(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoManagerImplementation.GizmoEntity gizmo) {
             this(name, gizmo);
 
             setPosition(dto.position());

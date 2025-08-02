@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public abstract class AbstractManager<E extends V, V extends AbstractView> {
+public abstract class AbstractManagerImplementation<E extends V, V extends AbstractView> {
     private final Map<String, E> values = new ConcurrentHashMap<>();
     private final Map<String, String> cache = new HashMap<>();
 
@@ -54,7 +54,7 @@ public abstract class AbstractManager<E extends V, V extends AbstractView> {
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public abstract static class AbstractEntity implements AbstractView {
         private final String id = UUID.randomUUID().toString();
-        private final GizmoManager.GizmoEntity gizmo;
+        private final GizmoManagerImplementation.GizmoEntity gizmo;
         private final String name;
 
         protected AbstractEntity(final String name) {
@@ -71,7 +71,7 @@ public abstract class AbstractManager<E extends V, V extends AbstractView> {
             return name;
         }
 
-        public final GizmoManager.GizmoEntity getGizmo() {
+        public final GizmoManagerImplementation.GizmoEntity getGizmo() {
             return gizmo;
         }
     }
@@ -90,7 +90,7 @@ public abstract class AbstractManager<E extends V, V extends AbstractView> {
         }
 
         public final void cleanup() {
-            AbstractManager.this.cleanup();
+            AbstractManagerImplementation.this.cleanup();
         }
     }
 }

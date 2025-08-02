@@ -20,10 +20,10 @@ import static org.lwjgl.opengl.GL20C.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ProgramManager extends AbstractManager<ProgramManager.ProgramEntity, ProgramView> {
-    private final ShaderManager.ShaderAccessor shaderAccessor;
-    private final ResourceManager resourceManager;
-    private final ShaderManager shaderManager;
+public final class ProgramManagerImplementation extends AbstractManagerImplementation<ProgramManagerImplementation.ProgramEntity, ProgramView> {
+    private final ShaderManagerImplementation.ShaderAccessor shaderAccessor;
+    private final ResourceManagerImplementation resourceManager;
+    private final ShaderManagerImplementation shaderManager;
 
     public ProgramView load(final String name) {
         if (isCached(name))
@@ -34,8 +34,8 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
         final var programDTO = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
 
         return store(create(name,
-                shaderManager.load(programDTO.shaderVertex(), ShaderManager.ShaderEntity.Type.Vertex),
-                shaderManager.load(programDTO.shaderFragment(), ShaderManager.ShaderEntity.Type.Fragment)));
+                shaderManager.load(programDTO.shaderVertex(), ShaderManagerImplementation.ShaderEntity.Type.Vertex),
+                shaderManager.load(programDTO.shaderFragment(), ShaderManagerImplementation.ShaderEntity.Type.Fragment)));
     }
 
     private void registerUniforms(final ProgramEntity program) {
@@ -89,7 +89,7 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Getter
-    public static final class ProgramEntity extends AbstractManager.AbstractEntity implements ProgramView {
+    public static final class ProgramEntity extends AbstractManagerImplementation.AbstractEntity implements ProgramView {
         private final int internalID;
 
         @Getter(AccessLevel.NONE)

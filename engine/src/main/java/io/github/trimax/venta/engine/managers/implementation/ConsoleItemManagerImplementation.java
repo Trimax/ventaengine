@@ -17,11 +17,11 @@ import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleItemManager extends AbstractManager<ConsoleItemManager.ConsoleItemEntity, ConsoleItemView> {
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final FontManager.FontAccessor fontAccessor;
-    private final ProgramManager programManager;
-    private final FontManager fontManager;
+public final class ConsoleItemManagerImplementation extends AbstractManagerImplementation<ConsoleItemManagerImplementation.ConsoleItemEntity, ConsoleItemView> {
+    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
+    private final FontManagerImplementation.FontAccessor fontAccessor;
+    private final ProgramManagerImplementation programManager;
+    private final FontManagerImplementation fontManager;
 
     public ConsoleItemView create() {
         log.debug("Creating console item");
@@ -42,7 +42,7 @@ public final class ConsoleItemManager extends AbstractManager<ConsoleItemManager
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return store(new ConsoleItemManager.ConsoleItemEntity("SHARED",
+        return store(new ConsoleItemManagerImplementation.ConsoleItemEntity("SHARED",
                 programAccessor.get(programManager.load("text")),
                 fontAccessor.get(fontManager.create("DejaVuSansMono")),
                 vertexArrayObjectID, verticesBufferID));
@@ -67,15 +67,15 @@ public final class ConsoleItemManager extends AbstractManager<ConsoleItemManager
 
     @Getter
     public static final class ConsoleItemEntity extends AbstractEntity implements ConsoleItemView {
-        private final ProgramManager.ProgramEntity program;
-        private final FontManager.FontEntity font;
+        private final ProgramManagerImplementation.ProgramEntity program;
+        private final FontManagerImplementation.FontEntity font;
 
         private final int vertexArrayObjectID;
         private final int verticesBufferID;
 
         ConsoleItemEntity(final String name,
-                @NonNull final ProgramManager.ProgramEntity program,
-                @NonNull final FontManager.FontEntity font,
+                @NonNull final ProgramManagerImplementation.ProgramEntity program,
+                @NonNull final FontManagerImplementation.FontEntity font,
                 final int vertexArrayObjectID, final int verticesBufferID) {
             super(name);
 

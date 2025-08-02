@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.utils;
 
 import io.github.trimax.venta.engine.exceptions.ResourceNotFoundException;
-import io.github.trimax.venta.engine.managers.implementation.ResourceManager;
+import io.github.trimax.venta.engine.managers.implementation.ResourceManagerImplementation;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.io.IOUtils;
 
@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 @UtilityClass
 public final class ResourceUtil {
     public String load(final String path) {
-        try (final InputStream stream = ResourceManager.class.getResourceAsStream(path)) {
+        try (final InputStream stream = ResourceManagerImplementation.class.getResourceAsStream(path)) {
             if (stream == null)
                 throw new ResourceNotFoundException(path);
 
