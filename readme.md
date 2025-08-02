@@ -60,8 +60,9 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 The roadmap is reflected in the GitHub issues section. Long story short:
 
 1. Refactoring
-   1. Console commands refactoring (must be a bit more useful)
+   1. Console commands extension
    2. MemoryUtil (wrap GL calls and track that memory is freed)
+   3. Separate object names and object files (think about caching in this case)
 2. Environment: box/sphere (add box to the scene)
 3. Emitters (extend the scene with a list of emitters)
 4. Resource archive manager and also, pack & browse tool (!)

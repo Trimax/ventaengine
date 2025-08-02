@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.executors;
 
 import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.context.ManagerContext;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.VentaState;
 import io.github.trimax.venta.engine.model.entities.ConsoleEntity;
@@ -40,6 +41,10 @@ public abstract class AbstractExecutor {
                                @NonNull final String command,
                                @NonNull final String description) {
         this(context, command, description, null);
+    }
+
+    protected final ManagerContext getManagers() {
+        return internalContext.getManagerContext();
     }
 
     protected final VentaContext getContext() {
