@@ -1,4 +1,16 @@
-package io.github.trimax.venta.engine.managers;
+package io.github.trimax.venta.engine.managers.implementation;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import io.github.trimax.venta.engine.model.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.view.MaterialView;
+import io.github.trimax.venta.engine.model.view.MeshView;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
@@ -7,22 +19,6 @@ import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.system.MemoryUtil.*;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.EntityType;
-import io.github.trimax.venta.engine.model.dto.MeshDTO;
-import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.view.MaterialView;
-import io.github.trimax.venta.engine.model.view.MeshView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

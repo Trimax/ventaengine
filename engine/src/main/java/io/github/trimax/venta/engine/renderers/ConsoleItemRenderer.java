@@ -1,5 +1,17 @@
 package io.github.trimax.venta.engine.renderers;
 
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleItemManager;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManager;
+import io.github.trimax.venta.engine.model.view.ConsoleItemView;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.lwjgl.BufferUtils;
+
+import java.nio.FloatBuffer;
+
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
@@ -7,19 +19,6 @@ import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.ConsoleItemManager;
-import io.github.trimax.venta.engine.managers.ConsoleManager;
-import io.github.trimax.venta.engine.model.view.ConsoleItemView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)

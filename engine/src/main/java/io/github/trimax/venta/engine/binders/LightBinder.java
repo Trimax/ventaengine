@@ -1,17 +1,16 @@
 package io.github.trimax.venta.engine.binders;
 
-import java.util.List;
-
-import org.joml.Vector4f;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
-import io.github.trimax.venta.engine.managers.ProgramManager;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManager;
 import io.github.trimax.venta.engine.model.view.LightView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector4f;
+
+import java.util.List;
 
 @Slf4j
 @Component

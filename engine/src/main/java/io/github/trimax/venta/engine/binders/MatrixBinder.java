@@ -1,13 +1,13 @@
 package io.github.trimax.venta.engine.binders;
 
-import java.nio.FloatBuffer;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
-import io.github.trimax.venta.engine.managers.ProgramManager;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.nio.FloatBuffer;
 
 @Slf4j
 @Component

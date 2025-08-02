@@ -1,22 +1,17 @@
-package io.github.trimax.venta.engine.managers;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.github.trimax.venta.engine.enums.EntityType;
-import org.joml.Vector4f;
+package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.model.view.LightView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.SceneView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector4f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component

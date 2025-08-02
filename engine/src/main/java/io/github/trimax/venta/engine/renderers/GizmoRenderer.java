@@ -1,30 +1,29 @@
 package io.github.trimax.venta.engine.renderers;
 
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.GizmoManager;
-import io.github.trimax.venta.engine.managers.ProgramManager;
+import io.github.trimax.venta.engine.managers.implementation.CameraManager;
+import io.github.trimax.venta.engine.managers.implementation.GizmoManager;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManager;
 import io.github.trimax.venta.engine.model.view.GizmoView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Slf4j
 @Component

@@ -1,16 +1,16 @@
-package io.github.trimax.venta.engine.managers;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.model.view.AbstractView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public abstract class AbstractManager<E extends V, V extends AbstractView> {

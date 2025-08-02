@@ -1,19 +1,18 @@
 package io.github.trimax.venta.engine.renderers;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
-import org.apache.commons.lang3.StringUtils;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
-import io.github.trimax.venta.engine.managers.ConsoleManager;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManager;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
+
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

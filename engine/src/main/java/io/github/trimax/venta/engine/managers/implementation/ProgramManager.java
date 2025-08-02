@@ -1,9 +1,4 @@
-package io.github.trimax.venta.engine.managers;
-
-import static org.lwjgl.opengl.GL20C.*;
-
-import java.util.HashMap;
-import java.util.Map;
+package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
@@ -14,12 +9,13 @@ import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
 import io.github.trimax.venta.engine.model.view.ProgramView;
 import io.github.trimax.venta.engine.model.view.ShaderView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component

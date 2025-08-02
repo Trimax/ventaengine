@@ -1,19 +1,14 @@
-package io.github.trimax.venta.engine.managers;
-
-import static org.lwjgl.opengl.GL20C.*;
-
-import io.github.trimax.venta.engine.enums.EntityType;
-import org.lwjgl.opengl.GL20C;
+package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.model.view.ShaderView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.opengl.GL20C;
+
+import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component

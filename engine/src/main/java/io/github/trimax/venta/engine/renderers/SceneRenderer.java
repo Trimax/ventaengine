@@ -1,21 +1,16 @@
 package io.github.trimax.venta.engine.renderers;
 
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.WindowManager;
+import io.github.trimax.venta.engine.managers.implementation.CameraManager;
+import io.github.trimax.venta.engine.managers.implementation.WindowManager;
 import io.github.trimax.venta.engine.model.view.CameraView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.SceneView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

@@ -1,4 +1,16 @@
-package io.github.trimax.venta.engine.managers;
+package io.github.trimax.venta.engine.managers.implementation;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
+import io.github.trimax.venta.engine.model.view.TextureView;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.ByteBuffer;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
@@ -26,23 +38,6 @@ import static org.lwjgl.opengl.GL11C.glTexParameteri;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
-
-import java.nio.ByteBuffer;
-
-import io.github.trimax.venta.engine.enums.EntityType;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryUtil;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
-import io.github.trimax.venta.engine.model.view.TextureView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

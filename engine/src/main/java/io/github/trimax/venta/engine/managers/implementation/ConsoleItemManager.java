@@ -1,4 +1,10 @@
-package io.github.trimax.venta.engine.managers;
+package io.github.trimax.venta.engine.managers.implementation;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.model.view.ConsoleItemView;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import static org.lwjgl.opengl.ARBVertexArrayObject.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
@@ -7,16 +13,6 @@ import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.EntityType;
-import io.github.trimax.venta.engine.model.view.ConsoleItemView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

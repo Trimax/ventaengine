@@ -1,20 +1,7 @@
 package io.github.trimax.venta.engine.core;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.ConsoleItemManager;
-import io.github.trimax.venta.engine.managers.ConsoleManager;
-import io.github.trimax.venta.engine.managers.FontManager;
-import io.github.trimax.venta.engine.managers.LightManager;
-import io.github.trimax.venta.engine.managers.MaterialManager;
-import io.github.trimax.venta.engine.managers.MeshManager;
-import io.github.trimax.venta.engine.managers.ObjectManager;
-import io.github.trimax.venta.engine.managers.ProgramManager;
-import io.github.trimax.venta.engine.managers.ResourceManager;
-import io.github.trimax.venta.engine.managers.SceneManager;
-import io.github.trimax.venta.engine.managers.ShaderManager;
-import io.github.trimax.venta.engine.managers.TextureManager;
-import io.github.trimax.venta.engine.managers.WindowManager;
+import io.github.trimax.venta.engine.managers.implementation.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

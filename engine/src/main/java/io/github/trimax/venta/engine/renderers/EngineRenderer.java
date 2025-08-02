@@ -1,18 +1,18 @@
 package io.github.trimax.venta.engine.renderers;
 
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11C.*;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.core.VentaState;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.SceneManager;
-import io.github.trimax.venta.engine.managers.WindowManager;
+import io.github.trimax.venta.engine.managers.implementation.CameraManager;
+import io.github.trimax.venta.engine.managers.implementation.SceneManager;
+import io.github.trimax.venta.engine.managers.implementation.WindowManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.opengl.GL11C.*;
 
 @Slf4j
 @Component

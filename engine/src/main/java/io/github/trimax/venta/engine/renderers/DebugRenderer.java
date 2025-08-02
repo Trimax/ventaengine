@@ -1,13 +1,7 @@
 package io.github.trimax.venta.engine.renderers;
 
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.GizmoManager;
-import io.github.trimax.venta.engine.managers.LightManager;
-import io.github.trimax.venta.engine.managers.ObjectManager;
-import io.github.trimax.venta.engine.managers.SceneManager;
+import io.github.trimax.venta.engine.managers.implementation.*;
 import io.github.trimax.venta.engine.model.view.CameraView;
 import io.github.trimax.venta.engine.model.view.LightView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
@@ -15,6 +9,7 @@ import io.github.trimax.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import one.util.streamex.StreamEx;
+import org.joml.Vector3f;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

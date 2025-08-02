@@ -1,21 +1,21 @@
 package io.github.trimax.venta.engine.renderers;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL20C.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL20C.glBindBuffer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.managers.MeshManager;
-import io.github.trimax.venta.engine.managers.ProgramManager;
+import io.github.trimax.venta.engine.managers.implementation.MeshManager;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManager;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.model.view.ProgramView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL20C.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL20C.glBindBuffer;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

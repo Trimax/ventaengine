@@ -1,16 +1,16 @@
 package io.github.trimax.venta.engine.renderers;
 
-import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.ConsoleManager;
-import io.github.trimax.venta.engine.managers.WindowManager;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManager;
+import io.github.trimax.venta.engine.managers.implementation.WindowManager;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)

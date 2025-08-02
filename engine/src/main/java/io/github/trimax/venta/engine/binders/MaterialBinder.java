@@ -1,19 +1,19 @@
 package io.github.trimax.venta.engine.binders;
 
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL13C.glActiveTexture;
-import static org.lwjgl.opengl.GL20C.glUniform1i;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
-import io.github.trimax.venta.engine.managers.ProgramManager;
-import io.github.trimax.venta.engine.managers.TextureManager;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManager;
+import io.github.trimax.venta.engine.managers.implementation.TextureManager;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11C.glBindTexture;
+import static org.lwjgl.opengl.GL13C.glActiveTexture;
+import static org.lwjgl.opengl.GL20C.glUniform1i;
 
 @Slf4j
 @Component

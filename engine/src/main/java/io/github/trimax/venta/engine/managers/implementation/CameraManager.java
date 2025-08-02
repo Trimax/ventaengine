@@ -1,20 +1,14 @@
-package io.github.trimax.venta.engine.managers;
+package io.github.trimax.venta.engine.managers.implementation;
 
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.enums.GizmoType;
+import io.github.trimax.venta.engine.model.view.CameraView;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.GizmoType;
-import io.github.trimax.venta.engine.model.view.CameraView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

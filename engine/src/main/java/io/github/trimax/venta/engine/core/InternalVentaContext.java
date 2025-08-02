@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.core;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.ConsoleManager;
-import io.github.trimax.venta.engine.managers.WindowManager;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManager;
+import io.github.trimax.venta.engine.managers.implementation.WindowManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

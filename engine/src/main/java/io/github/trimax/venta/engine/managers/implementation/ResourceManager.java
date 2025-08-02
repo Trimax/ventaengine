@@ -1,17 +1,10 @@
-package io.github.trimax.venta.engine.managers;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.UUID;
-
-import io.github.trimax.venta.engine.enums.EntityType;
-import org.lwjgl.BufferUtils;
+package io.github.trimax.venta.engine.managers.implementation;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.adapters.TextureTypeAdapter;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ResourceNotFoundException;
 import io.github.trimax.venta.engine.model.view.ResourceView;
@@ -21,6 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.BufferUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 @Slf4j
 @Component

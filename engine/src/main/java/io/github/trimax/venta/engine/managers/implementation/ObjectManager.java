@@ -1,10 +1,8 @@
-package io.github.trimax.venta.engine.managers;
-
-import io.github.trimax.venta.engine.enums.EntityType;
-import org.joml.Vector3f;
+package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.model.dto.ObjectDTO;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
@@ -16,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 
 @Slf4j
 @Component

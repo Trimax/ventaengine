@@ -1,39 +1,27 @@
-package io.github.trimax.venta.engine.managers;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.glViewport;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
-import io.github.trimax.venta.engine.enums.EntityType;
-import org.joml.Matrix4f;
-import org.lwjgl.glfw.GLFWCharCallback;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
+package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.model.view.WindowView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.SneakyThrows;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Matrix4f;
+import org.lwjgl.glfw.*;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11C.glViewport;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component

@@ -1,23 +1,18 @@
-package io.github.trimax.venta.engine.managers;
+package io.github.trimax.venta.engine.managers.implementation;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.*;
-
-import java.nio.ByteBuffer;
-
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
+import io.github.trimax.venta.engine.exceptions.TextureBakeException;
+import io.github.trimax.venta.engine.model.view.AtlasView;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTruetype;
 
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.exceptions.TextureBakeException;
-import io.github.trimax.venta.engine.model.view.AtlasView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import java.nio.ByteBuffer;
+
+import static io.github.trimax.venta.engine.definitions.Definitions.*;
 
 @Slf4j
 @Component

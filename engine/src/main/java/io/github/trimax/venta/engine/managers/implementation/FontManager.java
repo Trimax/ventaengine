@@ -1,19 +1,15 @@
-package io.github.trimax.venta.engine.managers;
-
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_COUNT;
-
-import java.util.ArrayList;
-import java.util.List;
+package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.model.view.FontView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_COUNT;
 
 @Slf4j
 @Component

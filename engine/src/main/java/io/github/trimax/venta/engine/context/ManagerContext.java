@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
-import io.github.trimax.venta.engine.managers.AbstractManager;
+import io.github.trimax.venta.engine.managers.implementation.AbstractManager;
 import io.github.trimax.venta.engine.model.view.AbstractView;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 
