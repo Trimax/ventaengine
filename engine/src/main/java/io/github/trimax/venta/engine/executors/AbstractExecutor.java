@@ -75,7 +75,7 @@ public abstract class AbstractExecutor {
     }
 
     public String getPublicDescription() {
-        return String.format("%s - %s", command, description);
+        return String.format("%-15s - %s", command, description);
     }
 
     private void printHelp(final ConsoleManager.ConsoleEntity console) {
