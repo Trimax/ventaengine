@@ -1,7 +1,12 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.implementation.*;
+import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.GizmoManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.CameraEntity;
+import io.github.trimax.venta.engine.model.entities.LightEntity;
+import io.github.trimax.venta.engine.model.entities.ObjectEntity;
+import io.github.trimax.venta.engine.model.entities.SceneEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import one.util.streamex.StreamEx;
@@ -9,7 +14,7 @@ import org.joml.Vector3f;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class DebugRenderer extends AbstractRenderer<SceneManagerImplementation.SceneEntity, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
+public final class DebugRenderer extends AbstractRenderer<SceneEntity, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
     private static final Vector3f VECTOR_INFINITY = new Vector3f(100000);
     private static final Vector3f VECTOR_ZERO = new Vector3f(0);
     private static final Vector3f VECTOR_ONE = new Vector3f(1);
@@ -24,7 +29,7 @@ public final class DebugRenderer extends AbstractRenderer<SceneManagerImplementa
     }
 
     @Override
-    public void render(final SceneManagerImplementation.SceneEntity scene) {
+    public void render(final SceneEntity scene) {
         renderOrigin();
 
         StreamEx.of(scene.getLights()).forEach(this::render);
@@ -33,21 +38,21 @@ public final class DebugRenderer extends AbstractRenderer<SceneManagerImplementa
         StreamEx.of(cameraManager.entityIterator()).forEach(this::render);
     }
 
-    private void render(final ObjectManagerImplementation.ObjectEntity object) {
+    private void render(final ObjectEntity object) {
         try (final var _ = gizmoRenderer.withContext(getContext())
                 .withModelMatrix(object.getPosition(), object.getRotation(), object.getScale())) {
             gizmoRenderer.render(object.getGizmo());
         }
     }
 
-    private void render(final LightManagerImplementation.LightEntity light) {
+    private void render(final LightEntity light) {
         try (final var _ = gizmoRenderer.withContext(getContext())
                 .withModelMatrix(light.getPosition(), VECTOR_ZERO, VECTOR_ONE)) {
             gizmoRenderer.render(light.getGizmo());
         }
     }
 
-    private void render(final CameraManagerImplementation.CameraEntity camera) {
+    private void render(final CameraEntity camera) {
         if (camera == getContext().getCamera())
             return;
 

@@ -7,16 +7,14 @@ import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
 import io.github.trimax.venta.engine.managers.ProgramManager;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
+import io.github.trimax.venta.engine.model.entities.ProgramEntity;
+import io.github.trimax.venta.engine.model.entities.ShaderEntity;
 import io.github.trimax.venta.engine.model.view.ProgramView;
 import io.github.trimax.venta.engine.model.view.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.lwjgl.opengl.GL20C.*;
 
@@ -24,7 +22,7 @@ import static org.lwjgl.opengl.GL20C.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProgramManagerImplementation
-        extends AbstractManagerImplementation<ProgramManagerImplementation.ProgramEntity, ProgramView>
+        extends AbstractManagerImplementation<ProgramEntity, ProgramView>
         implements ProgramManager {
     private final ResourceManagerImplementation resourceManager;
     private final ShaderManagerImplementation shaderManager;
@@ -39,8 +37,8 @@ public final class ProgramManagerImplementation
         final var programDTO = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
 
         return store(create(name,
-                shaderManager.load(programDTO.shaderVertex(), ShaderManagerImplementation.ShaderEntity.Type.Vertex),
-                shaderManager.load(programDTO.shaderFragment(), ShaderManagerImplementation.ShaderEntity.Type.Fragment)));
+                shaderManager.load(programDTO.shaderVertex(), ShaderEntity.Type.Vertex),
+                shaderManager.load(programDTO.shaderFragment(), ShaderEntity.Type.Fragment)));
     }
 
     private void registerUniforms(final ProgramEntity program) {
@@ -51,7 +49,7 @@ public final class ProgramManagerImplementation
             for (final var field : ShaderLightUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 
-        log.debug("{} uniforms found and registered for program {}", program.uniforms.size(), program.getID());
+        log.debug("{} uniforms found and registered for program {}", program.getUniformCount(), program.getID());
     }
 
     private ProgramEntity create(@NonNull final String name,
@@ -88,32 +86,5 @@ public final class ProgramManagerImplementation
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Getter
-    public static final class ProgramEntity extends AbstractManagerImplementation.AbstractEntity implements ProgramView {
-        private final int internalID;
-
-        @Getter(AccessLevel.NONE)
-        private final Map<String, Integer> uniforms = new HashMap<>();
-
-        ProgramEntity(final int internalID, @NonNull final String name) {
-            super(name);
-
-            this.internalID = internalID;
-        }
-
-        private void addUniformID(final String name, final Integer uniformID) {
-            if (uniformID >= 0)
-                this.uniforms.put(name, uniformID);
-        }
-
-        public int getUniformID(final String name) {
-            return uniforms.getOrDefault(name, -1);
-        }
-
-        public int getUniformID(final ShaderUniform uniform) {
-            return getUniformID(uniform.getUniformName());
-        }
     }
 }

@@ -2,10 +2,9 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.ConsoleItemManager;
+import io.github.trimax.venta.engine.model.entities.ConsoleItemEntity;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +20,7 @@ import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleItemManagerImplementation
-        extends AbstractManagerImplementation<ConsoleItemManagerImplementation.ConsoleItemEntity, ConsoleItemView>
+        extends AbstractManagerImplementation<ConsoleItemEntity, ConsoleItemView>
         implements ConsoleItemManager {
     private final ProgramManagerImplementation programManager;
     private final FontManagerImplementation fontManager;
@@ -45,7 +44,7 @@ public final class ConsoleItemManagerImplementation
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return store(new ConsoleItemManagerImplementation.ConsoleItemEntity("SHARED",
+        return store(new ConsoleItemEntity("SHARED",
                 programManager.load("text"),
                 fontManager.load("DejaVuSansMono"),
                 vertexArrayObjectID, verticesBufferID));
@@ -54,34 +53,12 @@ public final class ConsoleItemManagerImplementation
     @Override
     protected void destroy(final ConsoleItemEntity consoleItem) {
         log.debug("Destroying console item {} ({})", consoleItem.getID(), consoleItem.getName());
-        glDeleteVertexArrays(consoleItem.vertexArrayObjectID);
-        glDeleteBuffers(consoleItem.verticesBufferID);
+        glDeleteVertexArrays(consoleItem.getVertexArrayObjectID());
+        glDeleteBuffers(consoleItem.getVerticesBufferID());
     }
 
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Getter
-    public static final class ConsoleItemEntity extends AbstractEntity implements ConsoleItemView {
-        private final ProgramManagerImplementation.ProgramEntity program;
-        private final FontManagerImplementation.FontEntity font;
-
-        private final int vertexArrayObjectID;
-        private final int verticesBufferID;
-
-        ConsoleItemEntity(final String name,
-                @NonNull final ProgramManagerImplementation.ProgramEntity program,
-                @NonNull final FontManagerImplementation.FontEntity font,
-                final int vertexArrayObjectID, final int verticesBufferID) {
-            super(name);
-
-            this.vertexArrayObjectID = vertexArrayObjectID;
-            this.verticesBufferID = verticesBufferID;
-
-            this.program = program;
-            this.font = font;
-        }
     }
 }

@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.ConsoleEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleRenderer extends AbstractRenderer<ConsoleManagerImplementation.ConsoleEntity, ConsoleRenderer.ConsoleRenderContext, WindowRenderer.WindowRenderContext> {
+public final class ConsoleRenderer extends AbstractRenderer<ConsoleEntity, ConsoleRenderer.ConsoleRenderContext, WindowRenderer.WindowRenderContext> {
     private final ConsoleItemRenderer consoleItemRenderer;
 
     @Override
@@ -24,14 +25,14 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleManagerImplem
     }
 
     @Override
-    void render(final ConsoleManagerImplementation.ConsoleEntity console) {
+    void render(final ConsoleEntity console) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         renderBackground(console);
         renderHistory(console);
     }
 
-    private void renderBackground(final ConsoleManagerImplementation.ConsoleEntity console) {
+    private void renderBackground(final ConsoleEntity console) {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -51,7 +52,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleManagerImplem
         glEnable(GL_DEPTH_TEST);
     }
 
-    private void renderHistory(final ConsoleManagerImplementation.ConsoleEntity console) {
+    private void renderHistory(final ConsoleEntity console) {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -70,7 +71,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleManagerImplem
         glEnable(GL_DEPTH_TEST);
     }
 
-    private void renderItem(final ConsoleManagerImplementation.ConsoleEntity console, final int line) {
+    private void renderItem(final ConsoleEntity console, final int line) {
         final var index = console.getHistory().size() - line - 1;
         final var message = (index >= 0 && index < console.getHistory().size()) ? console.getHistory().get(index) : null;
         if (message == null || StringUtils.isBlank(message.text()))

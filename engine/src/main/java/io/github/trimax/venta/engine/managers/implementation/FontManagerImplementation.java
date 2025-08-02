@@ -2,15 +2,12 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.FontManager;
+import io.github.trimax.venta.engine.model.entities.FontEntity;
 import io.github.trimax.venta.engine.model.view.FontView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_COUNT;
 
@@ -18,7 +15,7 @@ import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_C
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FontManagerImplementation
-        extends AbstractManagerImplementation<FontManagerImplementation.FontEntity, FontView>
+        extends AbstractManagerImplementation<FontEntity, FontView>
         implements FontManager {
     private final AtlasManagerImplementation atlasManagerImplementation;
     private final ResourceManagerImplementation resourceManager;
@@ -41,18 +38,5 @@ public final class FontManagerImplementation
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Getter
-    public static final class FontEntity extends AbstractManagerImplementation.AbstractEntity implements FontView {
-        private final List<AtlasManagerImplementation.AtlasEntity> atlases = new ArrayList<>();
-
-        FontEntity(@NonNull final String name) {
-            super(name);
-        }
-
-        public void add(final AtlasManagerImplementation.AtlasEntity atlas) {
-            this.atlases.add(atlas);
-        }
     }
 }

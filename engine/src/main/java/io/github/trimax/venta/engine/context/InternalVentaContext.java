@@ -2,8 +2,8 @@ package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.core.VentaState;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.ConsoleEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public final class InternalVentaContext {
         return managerContext.get(WindowManagerImplementation.class).getCurrent();
     }
 
-    public ConsoleManagerImplementation.ConsoleEntity getConsole() {
+    public ConsoleEntity getConsole() {
         return getWindow().getConsole();
     }
 }

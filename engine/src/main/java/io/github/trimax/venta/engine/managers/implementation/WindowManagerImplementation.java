@@ -7,6 +7,8 @@ import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.managers.WindowManager;
+import io.github.trimax.venta.engine.model.entities.AbstractEntity;
+import io.github.trimax.venta.engine.model.entities.ConsoleEntity;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -118,8 +120,9 @@ public final class WindowManagerImplementation
     @Override
     protected void destroy(final WindowEntity window) {
         log.info("Destroying window {} ({})", window.getID(), window.getName());
-        window.sizeCallback.close();
-        window.keyCallback.close();
+        window.getCharCallback().close();
+        window.getSizeCallback().close();
+        window.getKeyCallback().close();
         glfwDestroyWindow(window.getInternalID());
     }
 
@@ -129,18 +132,17 @@ public final class WindowManagerImplementation
     }
 
     @Getter
-    public  final class WindowEntity extends AbstractEntity implements WindowView {
+    public final class WindowEntity extends AbstractEntity implements WindowView {
         private final long internalID;
         private final VentaEngineInputHandler inputHandler;
         private final Matrix4f projectionMatrix;
 
         @Setter
-        private ConsoleManagerImplementation.ConsoleEntity console;
+        private ConsoleEntity console;
 
         private int width;
         private int height;
 
-        @Getter(AccessLevel.PRIVATE)
         private final GLFWFramebufferSizeCallback sizeCallback = new GLFWFramebufferSizeCallback() {
             @Override
             public void invoke(final long windowID, final int width, final int height) {
@@ -155,7 +157,6 @@ public final class WindowManagerImplementation
             }
         };
 
-        @Getter(AccessLevel.PRIVATE)
         private final GLFWCharCallback charCallback = new GLFWCharCallback() {
             @Override
             public void invoke(final long window, final int code) {
@@ -166,7 +167,6 @@ public final class WindowManagerImplementation
             }
         };
 
-        @Getter(AccessLevel.PRIVATE)
         private final GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
@@ -186,7 +186,6 @@ public final class WindowManagerImplementation
             }
         };
 
-        @Getter(AccessLevel.PRIVATE)
         private final GLFWMouseButtonCallback mouseButtonCallback = new GLFWMouseButtonCallback() {
             @Override
             public void invoke(final long window, final int button, final int action, final int mods) {
@@ -195,7 +194,6 @@ public final class WindowManagerImplementation
             }
         };
 
-        @Getter(AccessLevel.PRIVATE)
         private final GLFWCursorPosCallback mousePositionCallback = new GLFWCursorPosCallback() {
             @Override
             public void invoke(final long window, final double x, final double y) {

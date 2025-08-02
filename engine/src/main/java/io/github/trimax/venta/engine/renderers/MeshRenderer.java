@@ -2,8 +2,8 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
-import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.MeshEntity;
+import io.github.trimax.venta.engine.model.entities.ProgramEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-final class MeshRenderer extends AbstractRenderer<MeshManagerImplementation.MeshEntity, MeshRenderer.MeshRenderContext, ObjectRenderer.ObjectRenderContext> {
+final class MeshRenderer extends AbstractRenderer<MeshEntity, MeshRenderer.MeshRenderContext, ObjectRenderer.ObjectRenderContext> {
     private final MaterialBinder materialBinder;
 
     @Override
@@ -25,7 +25,7 @@ final class MeshRenderer extends AbstractRenderer<MeshManagerImplementation.Mesh
     }
 
     @Override
-    public void render(final MeshManagerImplementation.MeshEntity object) {
+    public void render(final MeshEntity object) {
         glBindVertexArray(object.getVertexArrayObjectID());
         materialBinder.bind(getContext().getProgram(), object.getMaterial());
 
@@ -45,9 +45,9 @@ final class MeshRenderer extends AbstractRenderer<MeshManagerImplementation.Mesh
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     static final class MeshRenderContext extends AbstractRenderContext<ObjectRenderer.ObjectRenderContext> {
-        private ProgramManagerImplementation.ProgramEntity program;
+        private ProgramEntity program;
 
-        public MeshRenderContext withProgram(final ProgramManagerImplementation.ProgramEntity program) {
+        public MeshRenderContext withProgram(final ProgramEntity program) {
             this.program = program;
             return this;
         }

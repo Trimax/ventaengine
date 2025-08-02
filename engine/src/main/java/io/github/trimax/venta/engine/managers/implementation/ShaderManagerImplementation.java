@@ -3,13 +3,12 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.managers.ShaderManager;
+import io.github.trimax.venta.engine.model.entities.ShaderEntity;
 import io.github.trimax.venta.engine.model.view.ShaderView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.opengl.GL20C;
 
 import static org.lwjgl.opengl.GL20C.*;
 
@@ -17,13 +16,13 @@ import static org.lwjgl.opengl.GL20C.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ShaderManagerImplementation
-        extends AbstractManagerImplementation<ShaderManagerImplementation.ShaderEntity, ShaderView>
+        extends AbstractManagerImplementation<ShaderEntity, ShaderView>
         implements ShaderManager {
     private final ResourceManagerImplementation resourceManager;
 
     @Override
     public ShaderEntity load(@NonNull final String name,
-                             @NonNull final ShaderManagerImplementation.ShaderEntity.Type type) {
+                             @NonNull final ShaderEntity.Type type) {
         if (isCached(name))
             return getCached(name);
 
@@ -49,31 +48,5 @@ public final class ShaderManagerImplementation
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Getter
-    public static final class ShaderEntity extends AbstractEntity implements ShaderView {
-        private final int internalID;
-        private final Type type;
-
-        @Getter(AccessLevel.NONE)
-        private final String code;
-
-        ShaderEntity(final int internalID, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
-            super(name);
-
-            this.internalID = internalID;
-            this.type = type;
-            this.code = code;
-        }
-
-        @Getter
-        @AllArgsConstructor(access = AccessLevel.PRIVATE)
-        public enum Type {
-            Vertex(GL20C.GL_VERTEX_SHADER),
-            Fragment(GL20C.GL_FRAGMENT_SHADER);
-
-            private final int value;
-        }
     }
 }

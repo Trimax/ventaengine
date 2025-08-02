@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleItemManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.ConsoleItemEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,14 +21,14 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemManagerImplementation.ConsoleItemEntity, ConsoleItemRenderer.ConsoleItemRenderContext, ConsoleRenderer.ConsoleRenderContext> {
+public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntity, ConsoleItemRenderer.ConsoleItemRenderContext, ConsoleRenderer.ConsoleRenderContext> {
     @Override
     protected ConsoleItemRenderContext createContext() {
         return new ConsoleItemRenderContext();
     }
 
     @Override
-    void render(final ConsoleItemManagerImplementation.ConsoleItemEntity consoleItem) {
+    void render(final ConsoleItemEntity consoleItem) {
         glUseProgram(consoleItem.getProgram().getInternalID());
         glBindVertexArray(consoleItem.getVertexArrayObjectID());
 

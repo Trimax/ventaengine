@@ -7,24 +7,23 @@ import io.github.trimax.venta.engine.adapters.TextureTypeAdapter;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ResourceNotFoundException;
 import io.github.trimax.venta.engine.managers.ResourceManager;
+import io.github.trimax.venta.engine.model.entities.ResourceEntity;
 import io.github.trimax.venta.engine.model.view.ResourceView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.UUID;
 
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ResourceManagerImplementation
-        extends AbstractManagerImplementation<ResourceManagerImplementation.ResourceEntity, ResourceView>
+        extends AbstractManagerImplementation<ResourceEntity, ResourceView>
         implements ResourceManager {
     private static final Gson parser = new GsonBuilder()
             .registerTypeAdapter(TextureType.class, new TextureTypeAdapter())
@@ -71,12 +70,5 @@ public final class ResourceManagerImplementation
     @Override
     protected boolean shouldCache() {
         return false;
-    }
-
-    @Getter
-    public static final class ResourceEntity extends AbstractEntity implements ResourceView {
-        ResourceEntity() {
-            super(UUID.randomUUID().toString());
-        }
     }
 }

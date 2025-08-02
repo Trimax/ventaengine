@@ -3,10 +3,10 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.managers.TextureManager;
+import io.github.trimax.venta.engine.model.entities.TextureEntity;
 import io.github.trimax.venta.engine.model.view.TextureView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
@@ -46,7 +46,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureManagerImplementation
-        extends AbstractManagerImplementation<TextureManagerImplementation.TextureEntity, TextureView>
+        extends AbstractManagerImplementation<TextureEntity, TextureView>
         implements TextureManager {
     private final ResourceManagerImplementation resourceManager;
 
@@ -120,23 +120,5 @@ public final class TextureManagerImplementation
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Getter
-    public static final class TextureEntity extends AbstractEntity implements TextureView {
-        private final int internalID;
-        private final int width;
-        private final int height;
-
-        TextureEntity(final int internalID,
-                @NonNull final String name,
-                final int width,
-                final int height) {
-            super(name);
-
-            this.internalID = internalID;
-            this.width = width;
-            this.height = height;
-        }
     }
 }
