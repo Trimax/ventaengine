@@ -1,9 +1,5 @@
 package io.github.trimax.venta.engine.console;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.executors.AbstractExecutor;
 import io.github.trimax.venta.engine.executors.core.AbstractCoreExecutor;
@@ -12,6 +8,10 @@ import io.github.trimax.venta.engine.managers.WindowManager;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -56,7 +56,6 @@ public final class ConsoleExecutor {
         console.info("Available commands:");
         StreamEx.of(executors.values())
                 .map(AbstractExecutor::getPublicDescription)
-                .map(x -> "  " + x)
                 .forEach(console::info);
     }
 }

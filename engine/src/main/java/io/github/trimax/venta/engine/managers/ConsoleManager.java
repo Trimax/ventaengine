@@ -1,5 +1,17 @@
 package io.github.trimax.venta.engine.managers;
 
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.enums.ConsoleMessageType;
+import io.github.trimax.venta.engine.model.view.ConsoleView;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
@@ -7,22 +19,6 @@ import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.console.ConsoleQueue;
-import io.github.trimax.venta.engine.definitions.Definitions;
-import io.github.trimax.venta.engine.enums.ConsoleMessageType;
-import io.github.trimax.venta.engine.model.view.ConsoleView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -138,24 +134,23 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
             if (command.isBlank() || command.isComment())
                 return;
 
-            //Optional.of(command).map(ConsoleQueue.Command::getTrimmed).ifPresent(history::add);
             commandConsumer.accept(command);
         }
 
-        public void info(final String message) {
-            print(ConsoleMessageType.Info, message);
+        public void info(final String format, final Object... arguments) {
+            print(ConsoleMessageType.Info, format, arguments);
         }
 
-        public void warning(final String message) {
-            print(ConsoleMessageType.Warning, message);
+        public void warning(final String format, final Object... arguments) {
+            print(ConsoleMessageType.Warning, format, arguments);
         }
 
-        public void error(final String message) {
-            print(ConsoleMessageType.Error, message);
+        public void error(final String format, final Object... arguments) {
+            print(ConsoleMessageType.Error, format, arguments);
         }
 
-        private void print(final ConsoleMessageType type, final String message) {
-            this.history.add(new ConsoleMessage(type, message));
+        private void print(final ConsoleMessageType type, final String format, final Object... arguments) {
+            this.history.add(new ConsoleMessage(type, String.format(format, arguments)));
         }
     }
 
