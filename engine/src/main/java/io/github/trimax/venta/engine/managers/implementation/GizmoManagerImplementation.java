@@ -8,7 +8,6 @@ import io.github.trimax.venta.engine.managers.GizmoManager;
 import io.github.trimax.venta.engine.model.view.GizmoView;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -19,26 +18,24 @@ import org.joml.Vector3f;
 public final class GizmoManagerImplementation
         extends AbstractManagerImplementation<GizmoManagerImplementation.GizmoEntity, GizmoView>
         implements GizmoManager {
-    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
-    private final MeshManagerImplementation.MeshAccessor meshAccessor;
     private final ProgramManagerImplementation programManager;
     private final MeshManagerImplementation meshManager;
 
-    private GizmoView origin;
+    private GizmoEntity origin;
 
-    public GizmoView getOrigin() {
+    public GizmoEntity getOrigin() {
         if (origin == null)
             this.origin = create("Origin", GizmoType.Origin);
 
         return origin;
     }
 
-    public GizmoView create(final String name, final GizmoType type) {
+    public GizmoEntity create(final String name, final GizmoType type) {
         log.debug("Creating gizmo {}", name);
 
         return store(new GizmoManagerImplementation.GizmoEntity(name,
-                programAccessor.get(programManager.load(ProgramType.Simple.name())),
-                meshAccessor.get(meshManager.load(type.getMesh())),
+                programManager.load(ProgramType.Simple.name()),
+                meshManager.load(type.getMesh()),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(1.f, 1.f, 1.f)));
@@ -83,8 +80,4 @@ public final class GizmoManagerImplementation
             this.scale.set(scale);
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class GizmoAccessor extends AbstractAccessor {}
 }

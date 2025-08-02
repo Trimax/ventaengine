@@ -18,9 +18,6 @@ import static org.lwjgl.opengl.GL11C.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EngineRenderer {
-    private final WindowManagerImplementation.WindowAccessor windowAccessor;
-    private final CameraManagerImplementation.CameraAccessor cameraAccessor;
-
     private final CameraManagerImplementation cameraManager;
     private final WindowManagerImplementation windowManager;
     private final SceneManagerImplementation sceneManager;
@@ -30,13 +27,13 @@ public final class EngineRenderer {
     private final SceneRenderer sceneRenderer;
 
     public void render(final VentaState state, final FPSCounter fpsCounter) {
-        final var window = windowAccessor.get(windowManager.getCurrent());
+        final var window = windowManager.getEntity(windowManager.getCurrent().getID());
         if (glfwWindowShouldClose(window.getInternalID()))
             state.setApplicationRunning(false);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        final var camera = cameraAccessor.get(cameraManager.getCurrent());
+        final var camera = cameraManager.getEntity(cameraManager.getCurrent().getID());
         try (final var _ = sceneRenderer.withContext(null)
                 .with(window, camera)) {
             sceneRenderer.render(sceneManager.getCurrent());

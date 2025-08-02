@@ -5,7 +5,10 @@ import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.TextureBakeException;
 import io.github.trimax.venta.engine.managers.AtlasManager;
 import io.github.trimax.venta.engine.model.view.AtlasView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTBakedChar;
@@ -22,9 +25,8 @@ public final class AtlasManagerImplementation
         extends AbstractManagerImplementation<AtlasManagerImplementation.AtlasEntity, AtlasView>
         implements AtlasManager {
     private final TextureManagerImplementation textureManager;
-    private final TextureManagerImplementation.TextureAccessor textureAccessor;
 
-    private AtlasView create(final String name, final int i, final ByteBuffer fontBuffer) {
+    public AtlasEntity create(final String name, final int i, final ByteBuffer fontBuffer) {
         final var bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
         final var characterBuffer = STBTTBakedChar.malloc(FONT_ATLAS_CHARACTERS_COUNT);
 
@@ -34,7 +36,7 @@ public final class AtlasManagerImplementation
         if (result <= 0)
             throw new TextureBakeException("Failed to bake font bitmap atlas " + i);
 
-        return store(new AtlasEntity(name, textureAccessor.get(textureManager.create(name, bitmap)), characterBuffer));
+        return store(new AtlasEntity(name, textureManager.create(name, bitmap), characterBuffer));
     }
 
     @Override
@@ -91,14 +93,6 @@ public final class AtlasManagerImplementation
             log.debug("Atlas {}: used chars = {}, maxX = {}, maxY = {} (atlas size: {} x {}). Used: {}%",
                     getName(), usedChars, maxX, maxY, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT,
                     String.format("%2.2f", 100.f * (float) (maxX * maxY) / (float) (FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT)));
-        }
-    }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class AtlasAccessor extends AbstractAccessor {
-        public AtlasEntity create(final String name, final int i, final ByteBuffer fontBuffer) {
-            return get(AtlasManagerImplementation.this.create(name, i, fontBuffer));
         }
     }
 }

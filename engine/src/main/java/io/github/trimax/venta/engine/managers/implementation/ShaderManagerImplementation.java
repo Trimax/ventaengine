@@ -5,7 +5,10 @@ import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.managers.ShaderManager;
 import io.github.trimax.venta.engine.model.view.ShaderView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.opengl.GL20C;
 
@@ -20,8 +23,8 @@ public final class ShaderManagerImplementation
     private final ResourceManagerImplementation resourceManager;
 
     @Override
-    public ShaderView load(@NonNull final String name,
-                           @NonNull final ShaderManagerImplementation.ShaderEntity.Type type) {
+    public ShaderEntity load(@NonNull final String name,
+                             @NonNull final ShaderManagerImplementation.ShaderEntity.Type type) {
         if (isCached(name))
             return getCached(name);
 
@@ -79,8 +82,4 @@ public final class ShaderManagerImplementation
             private final int value;
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class ShaderAccessor extends AbstractAccessor {}
 }

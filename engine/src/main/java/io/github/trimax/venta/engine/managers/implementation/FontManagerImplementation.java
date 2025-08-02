@@ -4,7 +4,10 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.managers.FontManager;
 import io.github.trimax.venta.engine.model.view.FontView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -18,15 +21,15 @@ import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_C
 public final class FontManagerImplementation
         extends AbstractManagerImplementation<FontManagerImplementation.FontEntity, FontView>
         implements FontManager {
-    private final AtlasManagerImplementation.AtlasAccessor atlasAccessor;
+    private final AtlasManagerImplementation atlasManagerImplementation;
     private final ResourceManagerImplementation resourceManager;
 
-    public FontView load(@NonNull final String name) {
+    public FontEntity load(@NonNull final String name) {
         final var fontBuffer = resourceManager.loadAsBuffer(String.format("/fonts/%s.ttf", name));
 
         final var font = new FontEntity(name);
         for (int i = 0; i < FONT_ATLAS_COUNT; i++)
-            font.add(atlasAccessor.create(String.format("%s-%d", name, i), i, fontBuffer));
+            font.add(atlasManagerImplementation.create(String.format("%s-%d", name, i), i, fontBuffer));
 
         return store(font);
     }
@@ -58,8 +61,4 @@ public final class FontManagerImplementation
             this.atlases.add(atlas);
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class FontAccessor extends AbstractAccessor {}
 }

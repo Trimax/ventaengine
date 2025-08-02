@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL20C.glUniform1i;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MaterialBinder extends AbstractBinder {
-    private final TextureManagerImplementation.TextureAccessor textureAccessor;
+    private final TextureManagerImplementation textureManager;
 
     public void bind(final ProgramManagerImplementation.ProgramEntity program, final MaterialView material) {
         if (material == null)
@@ -34,7 +34,7 @@ public final class MaterialBinder extends AbstractBinder {
 
     private void bind(final TextureType type, final ProgramManagerImplementation.ProgramEntity program,
                       final MaterialView material, final ShaderUniform useTextureUniform, final ShaderUniform textureUniform) {
-        bind(type, textureAccessor.get(material.getTexture(type)), program.getUniformID(useTextureUniform), program.getUniformID(textureUniform));
+        bind(type, textureManager.getEntity(material.getTexture(type).getID()), program.getUniformID(useTextureUniform), program.getUniformID(textureUniform));
     }
 
     private void bind(final TextureType type, final TextureManagerImplementation.TextureEntity texture, final int useTextureUniformID, final int textureUniformID) {

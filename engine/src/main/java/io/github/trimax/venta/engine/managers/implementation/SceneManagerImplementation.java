@@ -7,7 +7,10 @@ import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.view.LightView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.SceneView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector4f;
 
@@ -20,15 +23,20 @@ import java.util.List;
 public final class SceneManagerImplementation
         extends AbstractManagerImplementation<SceneManagerImplementation.SceneEntity, SceneView>
         implements SceneManager {
-    @Getter(onMethod_ = @__(@Override))
-    @Setter(onMethod_ = @__(@Override), onParam_ = @__(@NonNull))
-    private SceneView current;
+    @Getter
+    private SceneEntity current;
 
     @Override
-    public SceneView create(@NonNull final String name) {
+    public SceneEntity create(@NonNull final String name) {
         log.info("Creating scene {}", name);
 
         return store(new SceneEntity(name));
+    }
+
+    @Override
+    public void setCurrent(@NonNull final SceneView scene) {
+        if (scene instanceof SceneEntity entity)
+            this.current = entity;
     }
 
     @Override
@@ -78,8 +86,4 @@ public final class SceneManagerImplementation
                 lights.add(entity);
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class SceneAccessor extends AbstractAccessor {}
 }

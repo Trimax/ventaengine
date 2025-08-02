@@ -8,7 +8,6 @@ import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.GizmoManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
-import io.github.trimax.venta.engine.model.view.GizmoView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,9 +27,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRenderer.GizmoRenderContext, SceneRenderer.SceneRenderContext> {
-    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
-    private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
+public final class GizmoRenderer extends AbstractRenderer<GizmoManagerImplementation.GizmoEntity, GizmoRenderer.GizmoRenderContext, SceneRenderer.SceneRenderContext> {
     private final ProgramManagerImplementation programManager;
     private final MeshRenderer meshRenderer;
     private final MatrixBinder matrixBinder;
@@ -41,8 +38,9 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRender
     }
 
     @Override
-    void render(final GizmoView gizmo) {
-        render(gizmoAccessor.get(gizmo), programAccessor.get(programManager.load(ProgramType.Simple.name())));
+    void render(final GizmoManagerImplementation.GizmoEntity gizmo) {
+        //TODO: Why not to create Program on Gizmo creation?
+        render(gizmo, programManager.load(ProgramType.Simple.name()));
     }
 
     private void render(final GizmoManagerImplementation.GizmoEntity gizmo, final ProgramManagerImplementation.ProgramEntity program) {

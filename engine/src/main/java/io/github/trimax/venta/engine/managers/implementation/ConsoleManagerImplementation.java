@@ -7,7 +7,10 @@ import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.managers.ConsoleManager;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -28,12 +31,10 @@ import static org.lwjgl.opengl.GL30C.*;
 public final class ConsoleManagerImplementation
         extends AbstractManagerImplementation<ConsoleManagerImplementation.ConsoleEntity, ConsoleView>
         implements ConsoleManager {
-    private final ConsoleItemManagerImplementation.ConsoleItemAccessor consoleItemAccessor;
-    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
     private final ConsoleItemManagerImplementation consoleItemManager;
     private final ProgramManagerImplementation programManager;
 
-    public ConsoleView create(final String name) {
+    public ConsoleEntity create(final String name) {
         log.debug("Creating console {}", name);
 
         final int consoleVertexArrayObjectID = glGenVertexArrays();
@@ -57,8 +58,8 @@ public final class ConsoleManagerImplementation
         glBindVertexArray(0);
 
         return store(new ConsoleManagerImplementation.ConsoleEntity(name,
-                consoleItemAccessor.get(consoleItemManager.create()),
-                programAccessor.get(programManager.load("console")),
+                consoleItemManager.create(),
+                programManager.load("console"),
                 consoleVertexArrayObjectID, consoleVerticesBufferID));
     }
 
@@ -164,8 +165,4 @@ public final class ConsoleManagerImplementation
     }
 
     public record ConsoleMessage(ConsoleMessageType type, String text) {}
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class ConsoleAccessor extends AbstractAccessor {}
 }

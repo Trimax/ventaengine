@@ -2,11 +2,8 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
-import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
-import io.github.trimax.venta.engine.model.view.MeshView;
-import io.github.trimax.venta.engine.model.view.ProgramView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,9 +16,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-final class MeshRenderer extends AbstractRenderer<MeshView, MeshRenderer.MeshRenderContext, ObjectRenderer.ObjectRenderContext> {
-    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
-    private final MeshManagerImplementation.MeshAccessor meshAccessor;
+final class MeshRenderer extends AbstractRenderer<MeshManagerImplementation.MeshEntity, MeshRenderer.MeshRenderContext, ObjectRenderer.ObjectRenderContext> {
     private final MaterialBinder materialBinder;
 
     @Override
@@ -30,17 +25,9 @@ final class MeshRenderer extends AbstractRenderer<MeshView, MeshRenderer.MeshRen
     }
 
     @Override
-    public void render(final MeshView object) {
-        final var context = getContext();
-        if (context == null)
-            throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
-
-        render(meshAccessor.get(object.getID()), programAccessor.get(context.getProgram()));
-    }
-
-    private void render(final MeshManagerImplementation.MeshEntity object, final ProgramManagerImplementation.ProgramEntity program) {
+    public void render(final MeshManagerImplementation.MeshEntity object) {
         glBindVertexArray(object.getVertexArrayObjectID());
-        materialBinder.bind(program, object.getMaterial());
+        materialBinder.bind(getContext().getProgram(), object.getMaterial());
 
         if (object.getFacetsCount() > 0) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getFacetsBufferID());
@@ -58,9 +45,9 @@ final class MeshRenderer extends AbstractRenderer<MeshView, MeshRenderer.MeshRen
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     static final class MeshRenderContext extends AbstractRenderContext<ObjectRenderer.ObjectRenderContext> {
-        private ProgramView program;
+        private ProgramManagerImplementation.ProgramEntity program;
 
-        public MeshRenderContext withProgram(final ProgramView program) {
+        public MeshRenderContext withProgram(final ProgramManagerImplementation.ProgramEntity program) {
             this.program = program;
             return this;
         }

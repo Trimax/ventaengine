@@ -1,5 +1,13 @@
 package io.github.trimax.venta.container.utils;
 
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.container.annotations.Inject;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+import one.util.streamex.StreamEx;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
@@ -9,15 +17,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.container.annotations.Inject;
-import lombok.NonNull;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
-import one.util.streamex.StreamEx;
 
 @UtilityClass
 public final class ComponentUtil {

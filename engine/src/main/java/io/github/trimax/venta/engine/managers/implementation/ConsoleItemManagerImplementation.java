@@ -4,7 +4,10 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.managers.ConsoleItemManager;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import static org.lwjgl.opengl.ARBVertexArrayObject.glDeleteVertexArrays;
@@ -21,12 +24,10 @@ import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 public final class ConsoleItemManagerImplementation
         extends AbstractManagerImplementation<ConsoleItemManagerImplementation.ConsoleItemEntity, ConsoleItemView>
         implements ConsoleItemManager {
-    private final ProgramManagerImplementation.ProgramAccessor programAccessor;
-    private final FontManagerImplementation.FontAccessor fontAccessor;
     private final ProgramManagerImplementation programManager;
     private final FontManagerImplementation fontManager;
 
-    public ConsoleItemView create() {
+    public ConsoleItemEntity create() {
         log.debug("Creating console item");
 
         final int vertexArrayObjectID = glGenVertexArrays();
@@ -46,8 +47,8 @@ public final class ConsoleItemManagerImplementation
         glBindVertexArray(0);
 
         return store(new ConsoleItemManagerImplementation.ConsoleItemEntity("SHARED",
-                programAccessor.get(programManager.load("text")),
-                fontAccessor.get(fontManager.load("DejaVuSansMono")),
+                programManager.load("text"),
+                fontManager.load("DejaVuSansMono"),
                 vertexArrayObjectID, verticesBufferID));
     }
 
@@ -89,8 +90,4 @@ public final class ConsoleItemManagerImplementation
             this.font = font;
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class ConsoleItemAccessor extends AbstractAccessor {}
 }

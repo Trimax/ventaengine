@@ -10,7 +10,10 @@ import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.ProgramView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
@@ -20,7 +23,6 @@ import org.joml.Vector3f;
 public final class ObjectManagerImplementation
         extends AbstractManagerImplementation<ObjectManagerImplementation.ObjectEntity, ObjectView>
         implements ObjectManager {
-    private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
     private final ResourceManagerImplementation resourceManager;
     private final ProgramManagerImplementation programManager;
     private final GizmoManagerImplementation gizmoManager;
@@ -38,7 +40,7 @@ public final class ObjectManagerImplementation
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(1.f, 1.f, 1.f),
-                gizmoAccessor.get(gizmoManager.create("Bounding box", GizmoType.Object))));
+                gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 
     @Override
@@ -51,7 +53,8 @@ public final class ObjectManagerImplementation
                 meshManager.getEntity(meshManager.load(objectDTO.mesh()).getID()),
                 objectDTO.position(),
                 objectDTO.angles(),
-                objectDTO.scale(), gizmoAccessor.get(gizmoManager.create("Bounding box", GizmoType.Object))));
+                objectDTO.scale(),
+                gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 
     @Override
@@ -163,8 +166,4 @@ public final class ObjectManagerImplementation
                 this.mesh = entity;
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class ObjectAccessor extends AbstractAccessor {}
 }

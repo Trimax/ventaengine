@@ -5,7 +5,10 @@ import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.managers.TextureManager;
 import io.github.trimax.venta.engine.model.view.TextureView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
@@ -48,7 +51,8 @@ public final class TextureManagerImplementation
         implements TextureManager {
     private final ResourceManagerImplementation resourceManager;
 
-    public TextureView create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
+    public TextureEntity create(@NonNull final String name,
+                                @NonNull final ByteBuffer bitmap) {
         final var textureID = glGenTextures();
 
         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -141,8 +145,4 @@ public final class TextureManagerImplementation
             this.height = height;
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class TextureAccessor extends AbstractAccessor {}
 }

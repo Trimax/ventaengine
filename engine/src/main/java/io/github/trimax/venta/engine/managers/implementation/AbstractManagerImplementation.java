@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,6 +25,15 @@ public abstract class AbstractManagerImplementation<E extends V, V extends Abstr
         return getEntity(id);
     }
 
+    @Override
+    public final Iterator<V> iterator() {
+        return StreamEx.ofValues(values).map(this::toView).iterator();
+    }
+
+    public final Iterator<E> entityIterator() {
+        return StreamEx.ofValues(values).iterator();
+    }
+
     protected final boolean isCached(final String name) {
         return shouldCache() && cache.containsKey(name);
     }
@@ -36,7 +46,7 @@ public abstract class AbstractManagerImplementation<E extends V, V extends Abstr
         return values.get(id);
     }
 
-    protected final V store(final E entity) {
+    protected final E store(final E entity) {
         if (shouldCache())
             cache.put(entity.getName(), entity.getID());
 
@@ -46,10 +56,14 @@ public abstract class AbstractManagerImplementation<E extends V, V extends Abstr
         return entity;
     }
 
-    private void cleanup() {
+    public final void cleanup() {
         log.info("Cleaning up {}", getClass().getSimpleName());
         values.values().forEach(this::destroy);
         values.clear();
+    }
+
+    private V toView(final E entity) {
+        return entity;
     }
 
     protected abstract void destroy(final E entity);
@@ -80,24 +94,6 @@ public abstract class AbstractManagerImplementation<E extends V, V extends Abstr
 
         public final GizmoManagerImplementation.GizmoEntity getGizmo() {
             return gizmo;
-        }
-    }
-
-    abstract class AbstractAccessor {
-        public final E get(final String id) {
-            return values.get(id);
-        }
-
-        public final E get(final V view) {
-            return view == null ? null : get(view.getID());
-        }
-
-        public final Iterator<E> iterator() {
-            return values.values().iterator();
-        }
-
-        public final void cleanup() {
-            AbstractManagerImplementation.this.cleanup();
         }
     }
 }

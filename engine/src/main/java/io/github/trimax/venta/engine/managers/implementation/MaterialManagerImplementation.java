@@ -7,7 +7,10 @@ import io.github.trimax.venta.engine.managers.MaterialManager;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import io.github.trimax.venta.engine.model.view.TextureView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector2f;
 
@@ -24,7 +27,7 @@ public final class MaterialManagerImplementation
     private final TextureManagerImplementation textureManager;
 
     @Override
-    public MaterialView load(final String name) {
+    public MaterialEntity load(@NonNull final String name) {
         log.info("Loading material {}", name);
 
         final var materialDTO = resourceManager.load(String.format("/materials/%s.json", name), MaterialDTO.class);
@@ -82,8 +85,4 @@ public final class MaterialManagerImplementation
             return this.textures.get(texture);
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class MaterialAccessor extends AbstractAccessor {}
 }

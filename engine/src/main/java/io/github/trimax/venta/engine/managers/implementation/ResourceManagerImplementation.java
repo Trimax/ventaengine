@@ -13,7 +13,6 @@ import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 
@@ -86,8 +85,4 @@ public final class ResourceManagerImplementation
             super(UUID.randomUUID().toString());
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class ResourceAccessor extends AbstractAccessor {}
 }

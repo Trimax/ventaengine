@@ -7,7 +7,10 @@ import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import io.github.trimax.venta.engine.model.view.MeshView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.FloatBuffer;
@@ -30,7 +33,7 @@ public final class MeshManagerImplementation
     private final ResourceManagerImplementation resourceManager;
 
     @Override
-    public MeshView load(final String name) {
+    public MeshEntity load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);
 
@@ -172,8 +175,4 @@ public final class MeshManagerImplementation
                 this.material = entity;
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class MeshAccessor extends AbstractAccessor {}
 }

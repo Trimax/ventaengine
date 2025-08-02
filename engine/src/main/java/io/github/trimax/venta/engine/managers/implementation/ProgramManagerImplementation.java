@@ -10,7 +10,10 @@ import io.github.trimax.venta.engine.managers.ProgramManager;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
 import io.github.trimax.venta.engine.model.view.ProgramView;
 import io.github.trimax.venta.engine.model.view.ShaderView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -24,12 +27,11 @@ import static org.lwjgl.opengl.GL20C.*;
 public final class ProgramManagerImplementation
         extends AbstractManagerImplementation<ProgramManagerImplementation.ProgramEntity, ProgramView>
         implements ProgramManager {
-    private final ShaderManagerImplementation.ShaderAccessor shaderAccessor;
     private final ResourceManagerImplementation resourceManager;
     private final ShaderManagerImplementation shaderManager;
 
     @Override
-    public ProgramView load(@NonNull final String name) {
+    public ProgramEntity load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);
 
@@ -53,12 +55,14 @@ public final class ProgramManagerImplementation
         log.debug("{} uniforms found and registered for program {}", program.uniforms.size(), program.getID());
     }
 
-    private ProgramEntity create(final String name, @NonNull final ShaderView shaderVertex, @NonNull final ShaderView shaderFragment) {
+    private ProgramEntity create(@NonNull final String name,
+                                 @NonNull final ShaderView shaderVertex,
+                                 @NonNull final ShaderView shaderFragment) {
         log.info("Creating program {}", name);
         final var id = glCreateProgram();
 
-        glAttachShader(id, shaderAccessor.get(shaderVertex).getInternalID());
-        glAttachShader(id, shaderAccessor.get(shaderFragment).getInternalID());
+        glAttachShader(id, shaderManager.getEntity(shaderVertex.getID()).getInternalID());
+        glAttachShader(id, shaderManager.getEntity(shaderFragment.getID()).getInternalID());
 
         glLinkProgram(id);
         if (glGetProgrami(id, GL_LINK_STATUS) == GL_FALSE) {
@@ -118,8 +122,4 @@ public final class ProgramManagerImplementation
             return getUniformID(uniform.getUniformName());
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class ProgramAccessor extends AbstractAccessor {}
 }

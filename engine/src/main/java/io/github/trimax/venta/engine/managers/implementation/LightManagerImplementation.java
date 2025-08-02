@@ -6,7 +6,10 @@ import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.model.dto.LightDTO;
 import io.github.trimax.venta.engine.model.view.LightView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
@@ -16,16 +19,15 @@ import org.joml.Vector3f;
 public final class LightManagerImplementation
         extends AbstractManagerImplementation<LightManagerImplementation.LightEntity, LightView>
         implements LightManager {
-    private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
     private final ResourceManagerImplementation resourceManager;
     private final GizmoManagerImplementation gizmoManager;
 
     @Override
-    public LightView load(@NonNull final String name) {
+    public LightEntity load(@NonNull final String name) {
         log.info("Loading light {}", name);
 
         return store(new LightEntity(name, resourceManager.load(String.format("/lights/%s.json", name), LightDTO.class),
-                gizmoAccessor.get(gizmoManager.create("light", GizmoType.Light))));
+                gizmoManager.create("light", GizmoType.Light)));
     }
 
     @Override
@@ -90,8 +92,4 @@ public final class LightManagerImplementation
             this.intensity = intensity;
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class LightAccessor extends AbstractAccessor {}
 }

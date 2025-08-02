@@ -4,7 +4,6 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
-import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +15,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, ConsoleRenderer.ConsoleRenderContext, WindowRenderer.WindowRenderContext> {
+public final class ConsoleRenderer extends AbstractRenderer<ConsoleManagerImplementation.ConsoleEntity, ConsoleRenderer.ConsoleRenderContext, WindowRenderer.WindowRenderContext> {
     private final ConsoleItemRenderer consoleItemRenderer;
 
     @Override
@@ -25,12 +24,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
     }
 
     @Override
-    void render(final ConsoleView console) {
-        if (console instanceof ConsoleManagerImplementation.ConsoleEntity entity)
-            render(entity);
-    }
-
-    private void render(final ConsoleManagerImplementation.ConsoleEntity console) {
+    void render(final ConsoleManagerImplementation.ConsoleEntity console) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         renderBackground(console);

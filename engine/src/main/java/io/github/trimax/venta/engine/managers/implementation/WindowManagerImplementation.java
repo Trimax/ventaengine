@@ -33,9 +33,9 @@ public final class WindowManagerImplementation
     private final ConsoleQueue consoleQueue;
 
     @Getter
-    private WindowView current;
+    private WindowEntity current;
 
-    public WindowView create(final VentaEngineConfiguration.WindowConfiguration configuration, final VentaEngineInputHandler inputHandler) {
+    public WindowEntity create(final VentaEngineConfiguration.WindowConfiguration configuration, final VentaEngineInputHandler inputHandler) {
         if (!configuration.isFullscreen())
             return create(configuration.title(), NULL, configuration.width(), configuration.height(), inputHandler);
 
@@ -50,7 +50,7 @@ public final class WindowManagerImplementation
         return create(configuration.title(), monitorID, videoMode.width(), videoMode.height(), inputHandler);
     }
 
-    private WindowView create(final String title, final long monitorID, final int width, final int height, final VentaEngineInputHandler inputHandler) {
+    private WindowEntity create(final String title, final long monitorID, final int width, final int height, final VentaEngineInputHandler inputHandler) {
         log.info("Creating window: {}", title);
         final var id = glfwCreateWindow(width, height, title, monitorID, NULL);
         if (id == NULL)
@@ -75,8 +75,10 @@ public final class WindowManagerImplementation
     }
 
     public void setCurrent(@NonNull final WindowView window) {
-        this.current = window;
-        glfwMakeContextCurrent(getEntity(window.getID()).getInternalID());
+        if (window instanceof WindowEntity entity) {
+            this.current = entity;
+            glfwMakeContextCurrent(getEntity(window.getID()).getInternalID());
+        }
     }
 
     //TODO: Reimplement it more clean (using ResourceManager)
@@ -220,8 +222,4 @@ public final class WindowManagerImplementation
             projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f);
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class WindowAccessor extends AbstractAccessor {}
 }

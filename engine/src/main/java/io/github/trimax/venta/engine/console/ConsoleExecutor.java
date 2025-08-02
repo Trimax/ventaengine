@@ -17,14 +17,12 @@ import java.util.Optional;
 @Component
 public final class ConsoleExecutor {
     private final Map<String, AbstractCoreExecutor> executors;
-    private final WindowManagerImplementation.WindowAccessor windowAccessor;
     private final WindowManagerImplementation windowManager;
     private final ConsoleQueue queue;
 
     private ConsoleExecutor(final List<AbstractCoreExecutor> executors, final ConsoleQueue queue,
-                            final WindowManagerImplementation windowManager, final WindowManagerImplementation.WindowAccessor windowAccessor) {
+                            final WindowManagerImplementation windowManager) {
         this.executors = TransformationUtil.toMap(executors, AbstractExecutor::getCommand);
-        this.windowAccessor = windowAccessor;
         this.windowManager = windowManager;
         this.queue = queue;
     }
@@ -36,13 +34,13 @@ public final class ConsoleExecutor {
 
     private void execute(final ConsoleQueue.Command command) {
         if ("help".equalsIgnoreCase(command.getCommand())) {
-            printHelp(windowAccessor.get(windowManager.getCurrent()).getConsole());
+            printHelp(windowManager.getCurrent().getConsole());
             return;
         }
 
         final var executor = executors.get(command.getCommand());
         if (executor == null) {
-            windowAccessor.get(windowManager.getCurrent()).getConsole()
+            windowManager.getCurrent().getConsole()
                     .error(String.format("Unknown command '%s'. Type help", command.getCommand()));
             log.warn("Executor is not registered for command: {}", command.getCommand());
             return;

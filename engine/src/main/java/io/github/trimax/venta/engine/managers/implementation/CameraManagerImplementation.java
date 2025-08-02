@@ -17,7 +17,6 @@ import org.joml.Vector3f;
 public final class CameraManagerImplementation
         extends AbstractManagerImplementation<CameraManagerImplementation.CameraEntity, CameraView>
         implements CameraManager {
-    private final GizmoManagerImplementation.GizmoAccessor gizmoAccessor;
     private final GizmoManagerImplementation gizmoManager;
 
     @Getter(onMethod_ = @__(@Override))
@@ -25,11 +24,11 @@ public final class CameraManagerImplementation
     private CameraView current;
 
     @Override
-    public CameraView create(@NonNull final String name) {
+    public CameraEntity create(@NonNull final String name) {
         log.info("Creating camera {}", name);
 
         return store(new CameraEntity(name, new Vector3f(0, 0, 3), new Vector3f(0, 0, 0),
-                gizmoAccessor.get(gizmoManager.create("camera", GizmoType.Camera))));
+                gizmoManager.create("camera", GizmoType.Camera)));
     }
 
     @Override
@@ -132,8 +131,4 @@ public final class CameraManagerImplementation
             up.set(new Vector3f(right).cross(front).normalize());
         }
     }
-
-    @Component
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public final class CameraAccessor extends AbstractAccessor {}
 }
