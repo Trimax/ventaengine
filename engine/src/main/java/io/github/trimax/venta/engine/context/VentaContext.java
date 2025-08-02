@@ -1,10 +1,9 @@
-package io.github.trimax.venta.engine.core;
+package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.*;
 import io.github.trimax.venta.engine.managers.implementation.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,9 +22,6 @@ public final class VentaContext {
     private final LightManagerImplementation lightManager;
     private final MeshManagerImplementation meshManager;
     private final FontManagerImplementation fontManager;
-
-    @Getter(AccessLevel.PACKAGE)
-    private final VentaState state = new VentaState();
 
     public ResourceManager getResourceManager() {
         return resourceManager;

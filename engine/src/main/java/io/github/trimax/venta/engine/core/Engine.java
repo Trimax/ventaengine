@@ -2,7 +2,9 @@ package io.github.trimax.venta.engine.core;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleExecutor;
+import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
+import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
@@ -24,13 +26,14 @@ import static org.lwjgl.opengl.GL33C.glEnable;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Engine implements Runnable {
+    private final InternalVentaContext internalVentaContext;
     private final ConsoleExecutor consoleExecutor;
     private final EngineRenderer engineRenderer;
     private final ManagerContext managerContext;
     private final VentaContext context;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
-        context.getState().setApplication(ventaEngineApplication);
+        internalVentaContext.getState().setApplication(ventaEngineApplication);
 
         org.lwjgl.glfw.GLFW.glfwSetErrorCallback(new GLFWErrorCallback() {
             @Override
@@ -63,12 +66,12 @@ public final class Engine implements Runnable {
     public void run() {
         glEnable(GL_DEPTH_TEST);
 
-        final var updateHandler = context.getState().getApplication().getUpdateHandler();
+        final var updateHandler = internalVentaContext.getState().getApplication().getUpdateHandler();
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
 
-        while (context.getState().isApplicationRunning()) {
-            engineRenderer.render(context.getState(), fpsCounter);
+        while (internalVentaContext.getState().isApplicationRunning()) {
+            engineRenderer.render(internalVentaContext.getState(), fpsCounter);
 
             time.setDelta(fpsCounter.tick());
             updateHandler.onUpdate(time, context);

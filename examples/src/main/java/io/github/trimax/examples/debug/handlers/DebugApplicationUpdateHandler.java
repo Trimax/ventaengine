@@ -1,13 +1,12 @@
 package io.github.trimax.examples.debug.handlers;
 
-import org.joml.Vector3f;
-
 import io.github.trimax.examples.debug.state.DebugApplicationState;
+import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
-import io.github.trimax.venta.engine.core.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 
 @Slf4j
 @RequiredArgsConstructor
