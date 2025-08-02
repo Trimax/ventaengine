@@ -1,6 +1,6 @@
 package io.github.trimax.examples.plane.ambient.handlers;
 
-import io.github.trimax.venta.engine.core.VentaContext;
+import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
