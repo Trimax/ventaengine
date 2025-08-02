@@ -5,11 +5,9 @@ import io.github.trimax.venta.engine.executors.AbstractExecutor;
 import lombok.NonNull;
 
 public abstract class AbstractSceneExecutor extends AbstractExecutor {
-    protected AbstractSceneExecutor(@NonNull final InternalVentaContext context, @NonNull final String command, @NonNull final String description, final String usage) {
-        super(context, command, description, usage);
-    }
-
-    protected AbstractSceneExecutor(@NonNull final InternalVentaContext context, @NonNull final String command, @NonNull final String description) {
+    protected AbstractSceneExecutor(@NonNull final InternalVentaContext context,
+                                    @NonNull final String command,
+                                    @NonNull final String description) {
         super(context, command, description, null);
     }
 }
