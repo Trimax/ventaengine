@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@SuppressWarnings("unused")
 public final class ExitExecutor extends AbstractCoreExecutor {
     private ExitExecutor(@NonNull final InternalVentaContext context, @NonNull final List<AbstractEngineExecutor> executors) {
         super(context, "exit", "stops the application", executors);
