@@ -1,12 +1,5 @@
 package io.github.trimax.venta.engine.console;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import org.apache.commons.lang3.StringUtils;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.utils.ParsingUtil;
 import lombok.AccessLevel;
@@ -14,6 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 @Component
@@ -43,12 +42,8 @@ public final class ConsoleQueue {
             return StringUtils.isBlank(value);
         }
 
-        public boolean hasArguments() {
-            return StringUtils.isNotBlank(getArguments());
-        }
-
-        public String getTrimmed() {
-            return StringUtils.trimToNull(value);
+        public CommandArgument asArgument() {
+            return new CommandArgument(StringUtils.trimToNull(value));
         }
 
         public String getCommand() {
@@ -56,33 +51,33 @@ public final class ConsoleQueue {
         }
 
         public Command getSubcommand() {
-            return new Command(getArguments());
-        }
-
-        public String getArguments() {
-            return StringUtils.substringAfter(StringUtils.trim(value), " ");
+            return new Command(StringUtils.substringAfter(StringUtils.trim(value), " "));
         }
     }
 
-    public record CommandArgument(String raw) {
+    public record CommandArgument(String value) {
+        public boolean isBlank() {
+            return StringUtils.isBlank(value);
+        }
+
         public boolean asBoolean() {
-            return ParsingUtil.asBoolean(raw);
+            return ParsingUtil.asBoolean(value);
         }
 
         public int asInteger() {
-            return ParsingUtil.asInteger(raw);
+            return ParsingUtil.asInteger(value);
         }
 
         public float asFloat() {
-            return ParsingUtil.asFloat(raw);
+            return ParsingUtil.asFloat(value);
         }
 
         public Vector2f asVector2f() {
-            return ParsingUtil.asVector2f(raw);
+            return ParsingUtil.asVector2f(value);
         }
 
         public Vector3f asVector3f() {
-            return ParsingUtil.asVector3f(raw);
+            return ParsingUtil.asVector3f(value);
         }
     }
 }

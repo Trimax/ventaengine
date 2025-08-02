@@ -32,6 +32,8 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleView, Console
     }
 
     private void render(final ConsoleManager.ConsoleEntity console) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
         renderBackground(console);
         renderHistory(console);
     }

@@ -25,30 +25,21 @@ public abstract class AbstractExecutor {
     @Accessors(makeFinal = true)
     private final String command;
     private final String description;
-    private final String usage;
 
     protected AbstractExecutor(@NonNull final InternalVentaContext context,
                                @NonNull final String command,
                                @NonNull final String description,
-                               final String usage, final List<? extends AbstractExecutor> executors) {
+                               final List<? extends AbstractExecutor> executors) {
         this.executors = TransformationUtil.toMap(executors);
         this.internalContext = context;
         this.description = description;
         this.command = command;
-        this.usage = usage;
-    }
-
-    protected AbstractExecutor(@NonNull final InternalVentaContext context,
-                               @NonNull final String command,
-                               @NonNull final String description,
-                               final String usage) {
-        this(context, command, description, usage, null);
     }
 
     protected AbstractExecutor(@NonNull final InternalVentaContext context,
                                @NonNull final String command,
                                @NonNull final String description) {
-        this(context, command, description, null, null);
+        this(context, command, description, null);
     }
 
     protected final VentaContext getContext() {
@@ -89,15 +80,7 @@ public abstract class AbstractExecutor {
     }
 
     public String getPublicDescription() {
-        String commandPart = command;
-        if (StringUtils.isNotBlank(usage))
-            commandPart += " <args>";
-
-        return String.format("  %-20s - %s", commandPart, description);
-    }
-
-    public String getUsage() {
-        return String.format("%s %s", command, usage);
+        return String.format("  %-20s - %s", command, description);
     }
 
     private void printHelp(final ConsoleManager.ConsoleEntity console) {
