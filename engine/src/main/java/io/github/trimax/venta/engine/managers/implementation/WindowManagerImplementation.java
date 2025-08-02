@@ -73,7 +73,7 @@ public final class WindowManagerImplementation extends AbstractManagerImplementa
 
     public void setCurrent(@NonNull final WindowView window) {
         this.current = window;
-        glfwMakeContextCurrent(get(window.getID()).getInternalID());
+        glfwMakeContextCurrent(getEntity(window.getID()).getInternalID());
     }
 
     //TODO: Reimplement it more clean (using ResourceManager)

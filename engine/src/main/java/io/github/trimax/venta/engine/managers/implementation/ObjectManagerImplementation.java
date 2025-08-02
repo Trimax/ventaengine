@@ -30,8 +30,8 @@ public final class ObjectManagerImplementation extends AbstractManagerImplementa
         log.info("Creating object {}", name);
 
         return store(new ObjectManagerImplementation.ObjectEntity(name,
-                programManager.get(program.getID()),
-                meshManager.get(mesh.getID()),
+                programManager.getEntity(program.getID()),
+                meshManager.getEntity(mesh.getID()),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(1.f, 1.f, 1.f),
@@ -43,8 +43,8 @@ public final class ObjectManagerImplementation extends AbstractManagerImplementa
 
         final var objectDTO = resourceManager.load(String.format("/objects/%s.json", name), ObjectDTO.class);
         return store(new ObjectManagerImplementation.ObjectEntity(name,
-                programManager.get(programManager.load(objectDTO.program()).getID()),
-                meshManager.get(meshManager.load(objectDTO.mesh()).getID()),
+                programManager.getEntity(programManager.load(objectDTO.program()).getID()),
+                meshManager.getEntity(meshManager.load(objectDTO.mesh()).getID()),
                 objectDTO.position(),
                 objectDTO.angles(),
                 objectDTO.scale(), gizmoAccessor.get(gizmoManager.create("Bounding box", GizmoType.Object))));

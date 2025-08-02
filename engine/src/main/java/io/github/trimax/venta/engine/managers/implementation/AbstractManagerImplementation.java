@@ -25,7 +25,7 @@ public abstract class AbstractManagerImplementation<E extends V, V extends Abstr
         return values.get(cache.get(name));
     }
 
-    protected final E get(final String id) {
+    protected final E getEntity(final String id) {
         return values.get(id);
     }
 
