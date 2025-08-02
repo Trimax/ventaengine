@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.adapters.TextureTypeAdapter;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ResourceNotFoundException;
 import io.github.trimax.venta.engine.managers.ResourceManager;
@@ -72,11 +71,6 @@ public final class ResourceManagerImplementation
     @Override
     protected boolean shouldCache() {
         return false;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Resource;
     }
 
     @Getter

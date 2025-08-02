@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.view.LightView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
@@ -47,11 +46,6 @@ public final class SceneManagerImplementation
     @Override
     protected boolean shouldCache() {
         return false;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Scene;
     }
 
     @Getter

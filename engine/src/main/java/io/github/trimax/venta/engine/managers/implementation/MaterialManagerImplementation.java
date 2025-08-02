@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.managers.MaterialManager;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
@@ -46,11 +45,6 @@ public final class MaterialManagerImplementation
     @Override
     protected boolean shouldCache() {
         return false;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Material;
     }
 
     @Getter

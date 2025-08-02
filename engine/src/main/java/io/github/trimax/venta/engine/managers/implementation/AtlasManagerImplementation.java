@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.TextureBakeException;
 import io.github.trimax.venta.engine.managers.AtlasManager;
 import io.github.trimax.venta.engine.model.view.AtlasView;
@@ -48,11 +47,6 @@ public final class AtlasManagerImplementation
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Atlas;
     }
 
     @Getter

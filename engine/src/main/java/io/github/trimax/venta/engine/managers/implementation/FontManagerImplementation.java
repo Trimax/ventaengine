@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.managers.FontManager;
 import io.github.trimax.venta.engine.model.view.FontView;
 import lombok.AccessLevel;
@@ -42,11 +41,6 @@ public final class FontManagerImplementation
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Font;
     }
 
     @Getter

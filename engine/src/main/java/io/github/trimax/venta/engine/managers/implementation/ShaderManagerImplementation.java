@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.managers.ShaderManager;
 import io.github.trimax.venta.engine.model.view.ShaderView;
@@ -50,11 +49,6 @@ public final class ShaderManagerImplementation
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Shader;
     }
 
     @Getter

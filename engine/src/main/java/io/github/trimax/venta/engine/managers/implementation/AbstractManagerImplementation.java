@@ -1,6 +1,5 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.managers.AbstractManager;
 import io.github.trimax.venta.engine.model.view.AbstractView;
 import lombok.AccessLevel;
@@ -69,8 +68,6 @@ public abstract class AbstractManagerImplementation<E extends V, V extends Abstr
     protected abstract void destroy(final E entity);
 
     protected abstract boolean shouldCache();
-
-    public abstract EntityType getEntityType();
 
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public abstract static class AbstractEntity implements AbstractView {

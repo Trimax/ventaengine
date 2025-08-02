@@ -4,7 +4,6 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.managers.ConsoleManager;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.AccessLevel;
@@ -74,11 +73,6 @@ public final class ConsoleManagerImplementation
     @Override
     protected boolean shouldCache() {
         return true;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Console;
     }
 
     @Getter

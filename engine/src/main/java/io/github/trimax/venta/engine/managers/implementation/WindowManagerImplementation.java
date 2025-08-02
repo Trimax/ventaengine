@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
@@ -127,11 +126,6 @@ public final class WindowManagerImplementation
     @Override
     protected boolean shouldCache() {
         return false;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Window;
     }
 
     @Getter

@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.model.dto.LightDTO;
@@ -38,11 +37,6 @@ public final class LightManagerImplementation
     @Override
     protected boolean shouldCache() {
         return false;
-    }
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.Light;
     }
 
     @Getter
