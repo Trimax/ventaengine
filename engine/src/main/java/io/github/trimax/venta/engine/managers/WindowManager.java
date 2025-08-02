@@ -7,6 +7,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -123,16 +124,21 @@ public final class WindowManager extends AbstractManager<WindowManager.WindowEnt
     }
 
     @Override
-    protected boolean shouldCache() {
-        return false;
-    }
-
-    @Override
     protected void destroy(final WindowEntity window) {
         log.info("Destroying window {} ({})", window.getID(), window.getName());
         window.sizeCallback.close();
         window.keyCallback.close();
         glfwDestroyWindow(window.getInternalID());
+    }
+
+    @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.Window;
     }
 
     @Getter

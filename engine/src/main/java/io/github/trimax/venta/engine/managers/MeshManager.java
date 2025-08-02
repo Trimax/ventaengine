@@ -12,6 +12,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MaterialView;
@@ -109,17 +110,22 @@ public final class MeshManager extends AbstractManager<MeshManager.MeshEntity, M
     }
 
     @Override
-    protected boolean shouldCache() {
-        return true;
-    }
-
-    @Override
     protected void destroy(final MeshEntity object) {
         log.info("Destroying mesh {} ({})", object.getID(), object.getName());
         glDeleteVertexArrays(object.vertexArrayObjectID);
         glDeleteBuffers(object.verticesBufferID);
         glDeleteBuffers(object.facetsBufferID);
         glDeleteBuffers(object.edgesBufferID);
+    }
+
+    @Override
+    protected boolean shouldCache() {
+        return true;
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.Mesh;
     }
 
     @Getter

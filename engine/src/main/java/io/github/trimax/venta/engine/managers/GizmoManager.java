@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.managers;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -42,13 +43,18 @@ public final class GizmoManager extends AbstractManager<GizmoManager.GizmoEntity
     }
 
     @Override
+    protected void destroy(final GizmoEntity object) {
+        log.debug("Destroying gizmo {} ({})", object.getID(), object.getName());
+    }
+
+    @Override
     protected boolean shouldCache() {
         return false;
     }
 
     @Override
-    protected void destroy(final GizmoEntity object) {
-        log.debug("Destroying gizmo {} ({})", object.getID(), object.getName());
+    public EntityType getEntityType() {
+        return EntityType.Gizmo;
     }
 
     @Getter

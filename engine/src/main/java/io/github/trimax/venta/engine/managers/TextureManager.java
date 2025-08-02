@@ -29,6 +29,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 
 import java.nio.ByteBuffer;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
@@ -109,14 +110,19 @@ public final class TextureManager extends AbstractManager<TextureManager.Texture
     }
 
     @Override
+    protected void destroy(final TextureEntity texture) {
+        log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
+        glDeleteTextures(texture.getInternalID());
+    }
+
+    @Override
     protected boolean shouldCache() {
         return true;
     }
 
     @Override
-    protected void destroy(final TextureEntity texture) {
-        log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
-        glDeleteTextures(texture.getInternalID());
+    public EntityType getEntityType() {
+        return EntityType.Texture;
     }
 
     @Getter

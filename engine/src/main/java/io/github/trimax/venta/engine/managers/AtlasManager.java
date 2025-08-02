@@ -4,6 +4,7 @@ import static io.github.trimax.venta.engine.definitions.Definitions.*;
 
 import java.nio.ByteBuffer;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTruetype;
@@ -47,6 +48,11 @@ public final class AtlasManager extends AbstractManager<AtlasManager.AtlasEntity
     @Override
     protected boolean shouldCache() {
         return true;
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.Atlas;
     }
 
     @Getter

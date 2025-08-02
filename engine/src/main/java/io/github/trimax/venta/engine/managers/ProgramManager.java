@@ -7,6 +7,7 @@ import java.util.Map;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
@@ -76,14 +77,19 @@ public final class ProgramManager extends AbstractManager<ProgramManager.Program
     }
 
     @Override
+    protected void destroy(final ProgramEntity program) {
+        log.info("Destroying program {} ({})", program.getID(), program.getName());
+        glDeleteProgram(program.getInternalID());
+    }
+
+    @Override
     protected boolean shouldCache() {
         return true;
     }
 
     @Override
-    protected void destroy(final ProgramEntity program) {
-        log.info("Destroying program {} ({})", program.getID(), program.getName());
-        glDeleteProgram(program.getInternalID());
+    public EntityType getEntityType() {
+        return EntityType.Program;
     }
 
     @Getter

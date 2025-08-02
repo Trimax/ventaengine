@@ -23,7 +23,7 @@ public final class ConsoleExecutor {
 
     private ConsoleExecutor(final List<AbstractCoreExecutor> executors, final ConsoleQueue queue,
             final WindowManager windowManager, final WindowManager.WindowAccessor windowAccessor) {
-        this.executors = TransformationUtil.toMap(executors);
+        this.executors = TransformationUtil.toMap(executors, AbstractExecutor::getCommand);
         this.windowAccessor = windowAccessor;
         this.windowManager = windowManager;
         this.queue = queue;

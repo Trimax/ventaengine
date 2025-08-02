@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -52,15 +53,20 @@ public final class ConsoleItemManager extends AbstractManager<ConsoleItemManager
     }
 
     @Override
+    protected void destroy(final ConsoleItemEntity consoleItem) {
+        log.debug("Destroying console item {} ({})", consoleItem.getID(), consoleItem.getName());
+        glDeleteVertexArrays(consoleItem.vertexArrayObjectID);
+        glDeleteBuffers(consoleItem.verticesBufferID);
+    }
+
+    @Override
     protected boolean shouldCache() {
         return true;
     }
 
     @Override
-    protected void destroy(final ConsoleItemEntity consoleItem) {
-        log.debug("Destroying console item {} ({})", consoleItem.getID(), consoleItem.getName());
-        glDeleteVertexArrays(consoleItem.vertexArrayObjectID);
-        glDeleteBuffers(consoleItem.verticesBufferID);
+    public EntityType getEntityType() {
+        return EntityType.ConsoleItem;
     }
 
     @Getter

@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -59,16 +60,21 @@ public final class ConsoleManager extends AbstractManager<ConsoleManager.Console
     }
 
     @Override
-    protected boolean shouldCache() {
-        return true;
-    }
-
-    @Override
     protected void destroy(final ConsoleEntity console) {
         log.debug("Destroying console {} ({})", console.getID(), console.getName());
 
         glDeleteVertexArrays(console.vertexArrayObjectID);
         glDeleteBuffers(console.verticesBufferID);
+    }
+
+    @Override
+    protected boolean shouldCache() {
+        return true;
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.Console;
     }
 
     @Getter

@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.managers;
 
 import static org.lwjgl.opengl.GL20C.*;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.lwjgl.opengl.GL20C;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -38,14 +39,19 @@ public final class ShaderManager extends AbstractManager<ShaderManager.ShaderEnt
     }
 
     @Override
+    protected void destroy(final ShaderEntity shader) {
+        log.info("Destroying shader {} ({})", shader.getID(), shader.getName());
+        glDeleteShader(shader.getInternalID());
+    }
+
+    @Override
     protected boolean shouldCache() {
         return true;
     }
 
     @Override
-    protected void destroy(final ShaderEntity shader) {
-        log.info("Destroying shader {} ({})", shader.getID(), shader.getName());
-        glDeleteShader(shader.getInternalID());
+    public EntityType getEntityType() {
+        return EntityType.Shader;
     }
 
     @Getter

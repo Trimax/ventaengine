@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.model.view.FontView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,11 @@ public final class FontManager extends AbstractManager<FontManager.FontEntity, F
     @Override
     protected boolean shouldCache() {
         return true;
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.Font;
     }
 
     @Getter

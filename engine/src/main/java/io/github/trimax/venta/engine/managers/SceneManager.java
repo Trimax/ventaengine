@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.managers;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.joml.Vector4f;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -32,13 +33,18 @@ public final class SceneManager extends AbstractManager<SceneManager.SceneEntity
     }
 
     @Override
+    protected void destroy(final SceneEntity scene) {
+        log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
+    }
+
+    @Override
     protected boolean shouldCache() {
         return false;
     }
 
     @Override
-    protected void destroy(final SceneEntity scene) {
-        log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
+    public EntityType getEntityType() {
+        return EntityType.Scene;
     }
 
     @Getter

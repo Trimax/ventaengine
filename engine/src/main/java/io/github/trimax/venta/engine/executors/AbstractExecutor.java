@@ -30,7 +30,7 @@ public abstract class AbstractExecutor {
                                @NonNull final String command,
                                @NonNull final String description,
                                final List<? extends AbstractExecutor> executors) {
-        this.executors = TransformationUtil.toMap(executors);
+        this.executors = TransformationUtil.toMap(executors, AbstractExecutor::getCommand);
         this.internalContext = context;
         this.description = description;
         this.command = command;

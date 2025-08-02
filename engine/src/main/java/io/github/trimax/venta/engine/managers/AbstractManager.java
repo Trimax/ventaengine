@@ -6,13 +6,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import io.github.trimax.venta.engine.model.view.AbstractView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-abstract class AbstractManager<E extends V, V extends AbstractView> {
+public abstract class AbstractManager<E extends V, V extends AbstractView> {
     private final Map<String, E> values = new ConcurrentHashMap<>();
     private final Map<String, String> cache = new HashMap<>();
 
@@ -47,6 +48,8 @@ abstract class AbstractManager<E extends V, V extends AbstractView> {
     protected abstract void destroy(final E entity);
 
     protected abstract boolean shouldCache();
+
+    public abstract EntityType getEntityType();
 
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public abstract static class AbstractEntity implements AbstractView {

@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.managers;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -34,13 +35,18 @@ public final class CameraManager extends AbstractManager<CameraManager.CameraEnt
     }
 
     @Override
+    protected void destroy(final CameraEntity camera) {
+        log.info("Destroying camera {} ({})", camera.getID(), camera.getName());
+    }
+
+    @Override
     protected boolean shouldCache() {
         return false;
     }
 
     @Override
-    protected void destroy(final CameraEntity camera) {
-        log.info("Destroying camera {} ({})", camera.getID(), camera.getName());
+    public EntityType getEntityType() {
+        return EntityType.Camera;
     }
 
     @Getter

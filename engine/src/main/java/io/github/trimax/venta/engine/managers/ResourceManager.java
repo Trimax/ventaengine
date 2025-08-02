@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.lwjgl.BufferUtils;
 
 import com.google.gson.Gson;
@@ -63,13 +64,18 @@ public final class ResourceManager extends AbstractManager<ResourceManager.Resou
     }
 
     @Override
+    protected void destroy(final ResourceEntity resource) {
+        log.debug("Destroying resource {} ({})", resource.getID(), resource.getName());
+    }
+
+    @Override
     protected boolean shouldCache() {
         return false;
     }
 
     @Override
-    protected void destroy(final ResourceEntity resource) {
-        log.debug("Destroying resource {} ({})", resource.getID(), resource.getName());
+    public EntityType getEntityType() {
+        return EntityType.Resource;
     }
 
     @Getter

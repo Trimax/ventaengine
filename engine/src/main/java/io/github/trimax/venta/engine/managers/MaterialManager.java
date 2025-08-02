@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.managers;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.trimax.venta.engine.enums.EntityType;
 import org.joml.Vector2f;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -36,13 +37,18 @@ public final class MaterialManager extends AbstractManager<MaterialManager.Mater
     }
 
     @Override
+    protected void destroy(final MaterialEntity material) {
+        log.info("Destroying material {} ({})", material.getID(), material.getName());
+    }
+
+    @Override
     protected boolean shouldCache() {
         return false;
     }
 
     @Override
-    protected void destroy(final MaterialEntity material) {
-        log.info("Destroying material {} ({})", material.getID(), material.getName());
+    public EntityType getEntityType() {
+        return EntityType.Material;
     }
 
     @Getter
