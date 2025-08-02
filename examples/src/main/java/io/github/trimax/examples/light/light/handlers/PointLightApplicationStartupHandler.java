@@ -13,8 +13,8 @@ public final class PointLightApplicationStartupHandler implements VentaEngineSta
     @Override
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
-        final var plane = context.getObjectManager().load("plane");
 
+        final var plane = context.getObjectManager().load("plane");
         plane.getMesh().setMaterial(context.getMaterialManager().load("stone"));;
         plane.setScale(new Vector3f(50f));
         scene.add(plane);
@@ -28,7 +28,6 @@ public final class PointLightApplicationStartupHandler implements VentaEngineSta
         blueLight.setPosition(new Vector3f(0.f, 1.f, 3.f));
         blueLight.setColor(new Vector3f(0f,0f,1f));
         scene.add(blueLight);
-
 
         final var greenLight = context.getLightManager().load("basic");
         greenLight.setPosition(new Vector3f(0.f, 1.f, 0.f));
