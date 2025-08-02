@@ -1,36 +1,31 @@
 package io.github.trimax.venta.engine.renderers;
 
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.ObjectBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.managers.ObjectManager;
-import io.github.trimax.venta.engine.managers.ProgramManager;
-import io.github.trimax.venta.engine.model.view.ObjectView;
+import io.github.trimax.venta.engine.model.entities.ObjectEntity;
 import io.github.trimax.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final ObjectManager.ObjectAccessor objectAccessor;
+final class ObjectRenderer extends AbstractRenderer<ObjectEntity, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
     private final MeshRenderer meshRenderer;
 
     private final ObjectBinder objectBinder;
@@ -44,30 +39,23 @@ final class ObjectRenderer extends AbstractRenderer<ObjectView, ObjectRenderer.O
     }
 
     @Override
-    public void render(final ObjectView object) {
-        if (!object.isVisible() || !object.hasProgram())
-            return;
-
-        render(objectAccessor.get(object.getID()), programAccessor.get(object.getProgram()));
-    }
-
-    private void render(final ObjectManager.ObjectEntity object, final ProgramManager.ProgramEntity program) {
+    public void render(final ObjectEntity object) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
-        glUseProgram(program.getInternalID());
+        glUseProgram(object.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 
-        cameraBinder.bind(program, getContext().getParent().getCamera());
-        objectBinder.bind(program, object);
-        matrixBinder.bind(program, context.getParent().getViewProjectionMatrixBuffer(), context.getModelMatrixBuffer(), context.getNormalMatrixBuffer());
+        cameraBinder.bind(object.getProgram(), getContext().getParent().getCamera());
+        objectBinder.bind(object.getProgram(), object);
+        matrixBinder.bind(object.getProgram(), context.getParent().getViewProjectionMatrixBuffer(), context.getModelMatrixBuffer(), context.getNormalMatrixBuffer());
 
-        lightBinder.bind(program, context.getScene().getAmbientLight());
-        lightBinder.bind(program, context.getScene().getLights());
+        lightBinder.bind(object.getProgram(), context.getScene().getAmbientLight());
+        lightBinder.bind(object.getProgram(), context.getScene().getLights());
 
         try (var _ = meshRenderer.withContext(getContext())
-                        .withProgram(program)) {
+                        .withProgram(object.getProgram())) {
             meshRenderer.render(object.getMesh());
         }
 

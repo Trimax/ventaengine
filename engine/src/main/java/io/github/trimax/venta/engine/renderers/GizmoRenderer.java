@@ -1,38 +1,35 @@
 package io.github.trimax.venta.engine.renderers;
 
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.GizmoManager;
-import io.github.trimax.venta.engine.managers.ProgramManager;
-import io.github.trimax.venta.engine.model.view.GizmoView;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.CameraEntity;
+import io.github.trimax.venta.engine.model.entities.GizmoEntity;
+import io.github.trimax.venta.engine.model.entities.ProgramEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRenderer.GizmoRenderContext, SceneRenderer.SceneRenderContext> {
-    private final ProgramManager.ProgramAccessor programAccessor;
-    private final GizmoManager.GizmoAccessor gizmoAccessor;
-    private final ProgramManager programManager;
+public final class GizmoRenderer extends AbstractRenderer<GizmoEntity, GizmoRenderer.GizmoRenderContext, SceneRenderer.SceneRenderContext> {
+    private final ProgramManagerImplementation programManager;
     private final MeshRenderer meshRenderer;
     private final MatrixBinder matrixBinder;
 
@@ -42,11 +39,12 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRender
     }
 
     @Override
-    void render(final GizmoView gizmo) {
-        render(gizmoAccessor.get(gizmo), programAccessor.get(programManager.load(ProgramType.Simple.name())));
+    void render(final GizmoEntity gizmo) {
+        //TODO: Why not to create Program on Gizmo creation?
+        render(gizmo, programManager.load(ProgramType.Simple.name()));
     }
 
-    private void render(final GizmoManager.GizmoEntity gizmo, final ProgramManager.ProgramEntity program) {
+    private void render(final GizmoEntity gizmo, final ProgramEntity program) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
@@ -86,7 +84,7 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoView, GizmoRender
             return this;
         }
 
-        public GizmoRenderContext withModelMatrix(final CameraManager.CameraEntity camera) {
+        public GizmoRenderContext withModelMatrix(final CameraEntity camera) {
             modelMatrix.set(camera.getViewMatrix()).invert();
 
             modelMatrix.get(modelMatrixBuffer);

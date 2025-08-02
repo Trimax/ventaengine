@@ -1,16 +1,15 @@
 package io.github.trimax.examples.camera.handlers;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-
-import org.joml.Vector3f;
-
 import io.github.trimax.examples.camera.state.CameraApplicationState;
+import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
-import io.github.trimax.venta.engine.core.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 
 @Slf4j
 @RequiredArgsConstructor

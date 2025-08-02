@@ -1,15 +1,14 @@
 package io.github.trimax.examples.cube.handlers;
 
-import static org.lwjgl.glfw.GLFW.*;
-
-import org.joml.Vector3f;
-
 import io.github.trimax.examples.cube.state.CubeApplicationState;
+import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
-import io.github.trimax.venta.engine.core.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 @Slf4j
 @RequiredArgsConstructor

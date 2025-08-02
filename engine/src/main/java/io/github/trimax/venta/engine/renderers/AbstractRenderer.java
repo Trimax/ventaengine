@@ -1,13 +1,13 @@
 package io.github.trimax.venta.engine.renderers;
 
-import io.github.trimax.venta.engine.model.view.AbstractView;
+import io.github.trimax.venta.engine.model.entities.AbstractEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-abstract class AbstractRenderer<V extends AbstractView, C extends AbstractRenderer.AbstractRenderContext<P>,
+abstract class AbstractRenderer<E extends AbstractEntity, C extends AbstractRenderer.AbstractRenderContext<P>,
         P extends AbstractRenderer.AbstractRenderContext<?>> implements AutoCloseable {
     @Getter(AccessLevel.PROTECTED)
     private final C context;
@@ -23,7 +23,7 @@ abstract class AbstractRenderer<V extends AbstractView, C extends AbstractRender
 
     protected abstract C createContext();
 
-    abstract void render(final V view);
+    abstract void render(final E view);
 
     @Slf4j
     @NoArgsConstructor

@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.executors.scene;
 
-import io.github.trimax.venta.engine.core.InternalVentaContext;
+import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.executors.AbstractExecutor;
 import lombok.NonNull;
 
