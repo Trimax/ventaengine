@@ -7,13 +7,11 @@ import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.managers.WindowManager;
-import io.github.trimax.venta.engine.model.entities.AbstractEntity;
-import io.github.trimax.venta.engine.model.entities.ConsoleEntity;
+import io.github.trimax.venta.engine.model.entities.WindowEntity;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Matrix4f;
-import org.lwjgl.glfw.*;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -22,14 +20,13 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WindowManagerImplementation
-        extends AbstractManagerImplementation<WindowManagerImplementation.WindowEntity, WindowView>
+        extends AbstractManagerImplementation<WindowEntity, WindowView>
         implements WindowManager {
     private final ConsoleQueue consoleQueue;
 
@@ -51,7 +48,11 @@ public final class WindowManagerImplementation
         return create(configuration.title(), monitorID, videoMode.width(), videoMode.height(), inputHandler);
     }
 
-    private WindowEntity create(final String title, final long monitorID, final int width, final int height, final VentaEngineInputHandler inputHandler) {
+    private WindowEntity create(@NonNull final String title,
+                                final long monitorID,
+                                final int width,
+                                final int height,
+                                final VentaEngineInputHandler handler) {
         log.info("Creating window: {}", title);
         final var id = glfwCreateWindow(width, height, title, monitorID, NULL);
         if (id == NULL)
@@ -63,12 +64,12 @@ public final class WindowManagerImplementation
         glfwRestoreWindow(id);
         glfwFocusWindow(id);
 
-        final var window = new WindowEntity(id, width, height, title, inputHandler);
-        glfwSetFramebufferSizeCallback(id, window.getSizeCallback());
-        glfwSetKeyCallback(id, window.getKeyCallback());
+        final var window = new WindowEntity(id, width, height, title, handler, consoleQueue);
+        glfwSetFramebufferSizeCallback(id, window.getWindowSizeCallback());
+        glfwSetMouseButtonCallback(id, window.getMouseClickCallback());
+        glfwSetCursorPosCallback(id, window.getMouseCursorCallback());
         glfwSetCharCallback(id, window.getCharCallback());
-        glfwSetMouseButtonCallback(id, window.getMouseButtonCallback());
-        glfwSetCursorPosCallback(id, window.getMousePositionCallback());
+        glfwSetKeyCallback(id, window.getKeyCallback());
 
         setIconFromResources(id, "/icons/venta.png");
 
@@ -121,97 +122,15 @@ public final class WindowManagerImplementation
     protected void destroy(final WindowEntity window) {
         log.info("Destroying window {} ({})", window.getID(), window.getName());
         window.getCharCallback().close();
-        window.getSizeCallback().close();
         window.getKeyCallback().close();
+        window.getWindowSizeCallback().close();
+        window.getMouseClickCallback().close();
+        window.getMouseCursorCallback().close();
         glfwDestroyWindow(window.getInternalID());
     }
 
     @Override
     protected boolean shouldCache() {
         return false;
-    }
-
-    @Getter
-    public final class WindowEntity extends AbstractEntity implements WindowView {
-        private final long internalID;
-        private final VentaEngineInputHandler inputHandler;
-        private final Matrix4f projectionMatrix;
-
-        @Setter
-        private ConsoleEntity console;
-
-        private int width;
-        private int height;
-
-        private final GLFWFramebufferSizeCallback sizeCallback = new GLFWFramebufferSizeCallback() {
-            @Override
-            public void invoke(final long windowID, final int width, final int height) {
-                WindowEntity.this.width = width;
-                WindowEntity.this.height = height;
-
-                glViewport(0, 0, width, height);
-                log.info("Window resized: {}x{}", width, height);
-
-                final float aspectRatio = (float) width / height;
-                projectionMatrix.set(new Matrix4f().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f));
-            }
-        };
-
-        private final GLFWCharCallback charCallback = new GLFWCharCallback() {
-            @Override
-            public void invoke(final long window, final int code) {
-                if (!console.isVisible())
-                    return;
-
-                console.accept((char) code);
-            }
-        };
-
-        private final GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
-            @Override
-            public void invoke(final long window, final int key, final int scancode, final int action, final int mods) {
-                if (key == GLFW_KEY_F12 && action == GLFW_PRESS) {
-                    console.toggle();
-                    return;
-                }
-
-                if (console.isVisible()) {
-                    if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                        console.handle(key, consoleQueue::add);
-                    return;
-                }
-
-                if (inputHandler != null)
-                    inputHandler.onKey(key, scancode, action, mods);
-            }
-        };
-
-        private final GLFWMouseButtonCallback mouseButtonCallback = new GLFWMouseButtonCallback() {
-            @Override
-            public void invoke(final long window, final int button, final int action, final int mods) {
-                if (inputHandler != null)
-                    inputHandler.onMouseButton(button, action, mods);
-            }
-        };
-
-        private final GLFWCursorPosCallback mousePositionCallback = new GLFWCursorPosCallback() {
-            @Override
-            public void invoke(final long window, final double x, final double y) {
-                if (inputHandler != null)
-                    inputHandler.onMouseMove(x, y);
-            }
-        };
-
-        WindowEntity(final long internalID, final int width, final int height, @NonNull final String title, final VentaEngineInputHandler inputHandler) {
-            super(title);
-
-            this.internalID = internalID;
-            this.width = width;
-            this.height = height;
-            this.inputHandler = inputHandler;
-
-            final float aspectRatio = (float) width / height;
-            projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f);
-        }
     }
 }

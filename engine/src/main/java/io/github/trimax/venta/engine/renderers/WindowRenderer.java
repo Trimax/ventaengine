@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.WindowEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class WindowRenderer extends AbstractRenderer<WindowManagerImplementation.WindowEntity, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
+public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
     private final ConsoleManagerImplementation consoleManager;
     private final ConsoleRenderer consoleRenderer;
     private long lastUpdated = 0;
@@ -24,7 +24,7 @@ public final class WindowRenderer extends AbstractRenderer<WindowManagerImplemen
     }
 
     @Override
-    public void render(final WindowManagerImplementation.WindowEntity window) {
+    public void render(final WindowEntity window) {
         try (final var _ = consoleRenderer.withContext(getContext())) {
             if (window.getConsole() == null)
                 window.setConsole(consoleManager.create(window.getName()));

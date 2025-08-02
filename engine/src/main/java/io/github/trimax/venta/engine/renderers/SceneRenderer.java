@@ -2,9 +2,9 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
 import io.github.trimax.venta.engine.model.entities.CameraEntity;
 import io.github.trimax.venta.engine.model.entities.SceneEntity;
+import io.github.trimax.venta.engine.model.entities.WindowEntity;
 import io.github.trimax.venta.engine.model.view.CameraView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import lombok.*;
@@ -45,7 +45,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneEntity, SceneRend
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
         private CameraView camera;
 
-        public SceneRenderContext with(final WindowManagerImplementation.WindowEntity window, final CameraEntity camera) {
+        public SceneRenderContext with(final WindowEntity window, final CameraEntity camera) {
             window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
             this.camera = camera;
