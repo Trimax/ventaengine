@@ -1,0 +1,66 @@
+package io.github.trimax.venta.engine.managers.implementation;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.GizmoType;
+import io.github.trimax.venta.engine.managers.ObjectManager;
+import io.github.trimax.venta.engine.model.dto.ObjectDTO;
+import io.github.trimax.venta.engine.model.entities.ObjectEntity;
+import io.github.trimax.venta.engine.model.view.MeshView;
+import io.github.trimax.venta.engine.model.view.ObjectView;
+import io.github.trimax.venta.engine.model.view.ProgramView;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+
+@Slf4j
+@Component
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ObjectManagerImplementation
+        extends AbstractManagerImplementation<ObjectEntity, ObjectView>
+        implements ObjectManager {
+    private final ResourceManagerImplementation resourceManager;
+    private final ProgramManagerImplementation programManager;
+    private final GizmoManagerImplementation gizmoManager;
+    private final MeshManagerImplementation meshManager;
+
+    @Override
+    public ObjectView create(@NonNull final String name,
+                             @NonNull final MeshView mesh,
+                             @NonNull final ProgramView program) {
+        log.info("Creating object {}", name);
+
+        return store(new ObjectEntity(name,
+                programManager.getEntity(program.getID()),
+                meshManager.getEntity(mesh.getID()),
+                new Vector3f(0.f, 0.f, 0.f),
+                new Vector3f(0.f, 0.f, 0.f),
+                new Vector3f(1.f, 1.f, 1.f),
+                gizmoManager.create("Bounding box", GizmoType.Object)));
+    }
+
+    @Override
+    public ObjectView load(@NonNull final String name) {
+        log.info("Loading object {}", name);
+
+        final var objectDTO = resourceManager.load(String.format("/objects/%s.json", name), ObjectDTO.class);
+        return store(new ObjectEntity(name,
+                programManager.getEntity(programManager.load(objectDTO.program()).getID()),
+                meshManager.getEntity(meshManager.load(objectDTO.mesh()).getID()),
+                objectDTO.position(),
+                objectDTO.angles(),
+                objectDTO.scale(),
+                gizmoManager.create("Bounding box", GizmoType.Object)));
+    }
+
+    @Override
+    protected void destroy(final ObjectEntity object) {
+        log.info("Destroying object {} ({})", object.getID(), object.getName());
+    }
+
+    @Override
+    protected boolean shouldCache() {
+        return false;
+    }
+}

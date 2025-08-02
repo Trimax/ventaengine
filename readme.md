@@ -60,10 +60,8 @@ Contributions, issues, and feature requests are welcome! Feel free to fork the r
 The roadmap is reflected in the GitHub issues section. Long story short:
 
 1. Refactoring
-   1. Try to refactor managers in the same way as Views/Entities. To avoid accessor.get(manager.get()) calls.
-   2. Console commands refactoring (must be a bit more useful)
-   3. MemoryUtil (wrap GL calls and track that memory is freed)
-   4. Context (List<AbstractManager> -> map + getManager(EntityType) + cleanup order)
+   1. Console commands refactoring (must be a bit more useful)
+   2. MemoryUtil (wrap GL calls and track that memory is freed)
 2. Environment: box/sphere (add box to the scene)
 3. Emitters (extend the scene with a list of emitters)
 4. Resource archive manager and also, pack & browse tool (!)

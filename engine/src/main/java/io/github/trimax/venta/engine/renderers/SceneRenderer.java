@@ -1,25 +1,22 @@
 package io.github.trimax.venta.engine.renderers;
 
-import java.nio.FloatBuffer;
-
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.CameraEntity;
+import io.github.trimax.venta.engine.model.entities.SceneEntity;
+import io.github.trimax.venta.engine.model.entities.WindowEntity;
+import io.github.trimax.venta.engine.model.view.CameraView;
+import io.github.trimax.venta.engine.model.view.ObjectView;
+import lombok.*;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
 
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.WindowManager;
-import io.github.trimax.venta.engine.model.view.CameraView;
-import io.github.trimax.venta.engine.model.view.ObjectView;
-import io.github.trimax.venta.engine.model.view.SceneView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import java.nio.FloatBuffer;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
+public final class SceneRenderer extends AbstractRenderer<SceneEntity, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
+    private final ObjectManagerImplementation objectManager;
     private final ObjectRenderer objectRenderer;
 
     @Override
@@ -29,7 +26,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRender
 
     @Override
     @SneakyThrows
-    public void render(final SceneView scene) {
+    public void render(final SceneEntity scene) {
         if (scene == null)
             return;
 
@@ -37,7 +34,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRender
             try (final var _ = objectRenderer.withContext(getContext())
                     .withModelMatrix(object.getPosition(), object.getRotation(), object.getScale())
                     .withScene(scene)) {
-                objectRenderer.render(object);
+                objectRenderer.render(objectManager.getEntity(object.getID()));
             }
     }
 
@@ -48,7 +45,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneView, SceneRender
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
         private CameraView camera;
 
-        public SceneRenderContext with(final WindowManager.WindowEntity window, final CameraManager.CameraEntity camera) {
+        public SceneRenderContext with(final WindowEntity window, final CameraEntity camera) {
             window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
             this.camera = camera;

@@ -1,24 +1,21 @@
 package io.github.trimax.venta.engine.renderers;
 
-import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.ConsoleManager;
-import io.github.trimax.venta.engine.managers.WindowManager;
-import io.github.trimax.venta.engine.model.view.WindowView;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.WindowEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class WindowRenderer extends AbstractRenderer<WindowView, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
-    private final ConsoleManager.ConsoleAccessor consoleAccessor;
-    private final WindowManager.WindowAccessor windowAccessor;
+public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
+    private final ConsoleManagerImplementation consoleManager;
     private final ConsoleRenderer consoleRenderer;
-    private final ConsoleManager consoleManager;
     private long lastUpdated = 0;
 
     @Override
@@ -27,14 +24,10 @@ public final class WindowRenderer extends AbstractRenderer<WindowView, WindowRen
     }
 
     @Override
-    public void render(final WindowView window) {
-        render(windowAccessor.get(window.getID()));
-    }
-
-    private void render(final WindowManager.WindowEntity window) {
+    public void render(final WindowEntity window) {
         try (final var _ = consoleRenderer.withContext(getContext())) {
             if (window.getConsole() == null)
-                window.setConsole(consoleAccessor.get(consoleManager.create(window.getName())));
+                window.setConsole(consoleManager.create(window.getName()));
 
             if (window.getConsole().isVisible())
                 consoleRenderer.render(window.getConsole());

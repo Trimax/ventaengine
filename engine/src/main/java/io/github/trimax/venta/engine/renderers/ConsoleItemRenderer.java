@@ -1,5 +1,16 @@
 package io.github.trimax.venta.engine.renderers;
 
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
+import io.github.trimax.venta.engine.model.entities.ConsoleItemEntity;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.lwjgl.BufferUtils;
+
+import java.nio.FloatBuffer;
+
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
@@ -8,34 +19,16 @@ import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.ConsoleItemManager;
-import io.github.trimax.venta.engine.managers.ConsoleManager;
-import io.github.trimax.venta.engine.model.view.ConsoleItemView;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView, ConsoleItemRenderer.ConsoleItemRenderContext, ConsoleRenderer.ConsoleRenderContext> {
+public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntity, ConsoleItemRenderer.ConsoleItemRenderContext, ConsoleRenderer.ConsoleRenderContext> {
     @Override
     protected ConsoleItemRenderContext createContext() {
         return new ConsoleItemRenderContext();
     }
 
     @Override
-    void render(final ConsoleItemView consoleItem) {
-        if (consoleItem instanceof ConsoleItemManager.ConsoleItemEntity entity)
-            render(entity);
-    }
-
-    private void render(final ConsoleItemManager.ConsoleItemEntity consoleItem) {
+    void render(final ConsoleItemEntity consoleItem) {
         glUseProgram(consoleItem.getProgram().getInternalID());
         glBindVertexArray(consoleItem.getVertexArrayObjectID());
 
@@ -120,7 +113,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
         private float x;
         private float y;
         private float scale;
-        private ConsoleManager.ConsoleMessage message;
+        private ConsoleManagerImplementation.ConsoleMessage message;
 
         public ConsoleItemRenderContext withPosition(final float x, final float y) {
             this.x = x;
@@ -133,7 +126,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemView,
             return this;
         }
 
-        public ConsoleItemRenderContext withText(final ConsoleManager.ConsoleMessage message) {
+        public ConsoleItemRenderContext withText(final ConsoleManagerImplementation.ConsoleMessage message) {
             this.message = message;
             return this;
         }
