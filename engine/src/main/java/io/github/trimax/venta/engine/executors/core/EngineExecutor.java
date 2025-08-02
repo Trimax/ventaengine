@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@SuppressWarnings("unused")
 public final class EngineExecutor extends AbstractCoreExecutor {
     private EngineExecutor(@NonNull final InternalVentaContext context, @NonNull final List<AbstractEngineExecutor> executors) {
         super(context, "engine", "the set of commands to control engine", executors);

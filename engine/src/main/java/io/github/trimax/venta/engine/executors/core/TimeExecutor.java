@@ -13,6 +13,7 @@ import java.util.List;
 
 @Slf4j
 @Component
+@SuppressWarnings("unused")
 public final class TimeExecutor extends AbstractCoreExecutor {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
