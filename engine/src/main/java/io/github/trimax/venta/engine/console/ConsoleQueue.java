@@ -43,7 +43,7 @@ public final class ConsoleQueue {
             return StringUtils.isBlank(value);
         }
 
-        public boolean hasSubcommand() {
+        public boolean hasArguments() {
             return StringUtils.isNotBlank(getArguments());
         }
 

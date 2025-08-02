@@ -18,6 +18,6 @@ public final class EngineTimeExecutor extends AbstractEngineExecutor {
 
     @Override
     public void execute(final ConsoleQueue.Command command) {
-        getConsole().info(String.format("Engine works for %.3fs", (System.nanoTime() - timeStarted) / 1e9));
+        getConsole().info("Engine works for %.3fs", (System.nanoTime() - timeStarted) / 1e9);
     }
 }

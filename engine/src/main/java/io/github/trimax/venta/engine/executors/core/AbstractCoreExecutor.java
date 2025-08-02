@@ -8,6 +8,6 @@ import lombok.NonNull;
 
 public abstract class AbstractCoreExecutor extends AbstractExecutor {
     protected AbstractCoreExecutor(@NonNull final InternalVentaContext context, @NonNull final String command, @NonNull final String description, final List<? extends AbstractExecutor> executors) {
-        super(context, command, description, executors);
+        super(context, command, description, null, executors);
     }
 }
