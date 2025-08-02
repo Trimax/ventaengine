@@ -46,8 +46,8 @@ public final class ObjectManagerImplementation
 
         final var objectDTO = resourceManager.load(String.format("/objects/%s.json", name), ObjectDTO.class);
         return store(new ObjectEntity(name,
-                programManager.getEntity(programManager.load(objectDTO.program()).getID()),
-                meshManager.getEntity(meshManager.load(objectDTO.mesh()).getID()),
+                programManager.load(objectDTO.program()),
+                meshManager.load(objectDTO.mesh()),
                 objectDTO.position(),
                 objectDTO.angles(),
                 objectDTO.scale(),
