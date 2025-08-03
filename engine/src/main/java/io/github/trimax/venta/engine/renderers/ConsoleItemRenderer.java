@@ -30,7 +30,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
     @Override
     void render(final ConsoleItemEntity consoleItem) {
         glUseProgram(consoleItem.getProgram().getInternalID());
-        glBindVertexArray(consoleItem.getVertexArrayObjectID());
+        glBindVertexArray(consoleItem.getVertexArrayObject().getData());
 
         float penX = getContext().x;
         final float penY = getContext().y - FONT_HEIGHT * getContext().scale;
@@ -79,9 +79,9 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
             getContext().vertices.flip();
 
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternalID());
+            glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternal().getData());
 
-            glBindBuffer(GL_ARRAY_BUFFER, consoleItem.getVerticesBufferID());
+            glBindBuffer(GL_ARRAY_BUFFER, consoleItem.getVerticesBuffer().getData());
             glBufferData(GL_ARRAY_BUFFER, getContext().vertices, GL_DYNAMIC_DRAW);
 
 

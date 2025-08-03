@@ -29,11 +29,11 @@ public final class ConsoleItemManagerImplementation
     public ConsoleItemEntity create() {
         log.debug("Creating console item");
 
-        final int vertexArrayObjectID = memory.getVertexArrays().create("Console item VAO");
-        final int verticesBufferID = memory.getBuffers().create("Console item vertex buffer");
+        final var vertexArrayObject = memory.getVertexArrays().create("Console item VAO");
+        final var verticesBuffer = memory.getBuffers().create("Console item vertex buffer");
 
-        glBindVertexArray(vertexArrayObjectID);
-        glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
+        glBindVertexArray(vertexArrayObject.getData());
+        glBindBuffer(GL_ARRAY_BUFFER, verticesBuffer.getData());
 
         // layout(location=0): vec2 aPos; layout(location=1): vec2 textureCoordinates;
         glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
@@ -48,14 +48,14 @@ public final class ConsoleItemManagerImplementation
         return store(new ConsoleItemEntity("SHARED",
                 programManager.load("text"),
                 fontManager.load("DejaVuSansMono"),
-                vertexArrayObjectID, verticesBufferID));
+                vertexArrayObject, verticesBuffer));
     }
 
     @Override
     protected void destroy(final ConsoleItemEntity consoleItem) {
         log.debug("Destroying console item {} ({})", consoleItem.getID(), consoleItem.getName());
-        memory.getVertexArrays().delete(consoleItem.getVertexArrayObjectID());
-        memory.getBuffers().delete(consoleItem.getVerticesBufferID());
+        memory.getVertexArrays().delete(consoleItem.getVertexArrayObject());
+        memory.getBuffers().delete(consoleItem.getVerticesBuffer());
     }
 
     @Override

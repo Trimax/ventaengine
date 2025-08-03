@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.entity;
 
+import io.github.trimax.venta.engine.memory.MemoryBlock;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
 import lombok.Getter;
 import lombok.NonNull;
@@ -9,17 +10,18 @@ public final class ConsoleItemEntity extends AbstractEntity implements ConsoleIt
     private final ProgramEntity program;
     private final FontEntity font;
 
-    private final int vertexArrayObjectID;
-    private final int verticesBufferID;
+    private final MemoryBlock<Integer> vertexArrayObject;
+    private final MemoryBlock<Integer> verticesBuffer;
 
     public ConsoleItemEntity(final String name,
                              @NonNull final ProgramEntity program,
                              @NonNull final FontEntity font,
-                             final int vertexArrayObjectID, final int verticesBufferID) {
+                             @NonNull final MemoryBlock<Integer> vertexArrayObject,
+                             @NonNull final MemoryBlock<Integer> verticesBuffer) {
         super(name);
 
-        this.vertexArrayObjectID = vertexArrayObjectID;
-        this.verticesBufferID = verticesBufferID;
+        this.vertexArrayObject = vertexArrayObject;
+        this.verticesBuffer = verticesBuffer;
 
         this.program = program;
         this.font = font;

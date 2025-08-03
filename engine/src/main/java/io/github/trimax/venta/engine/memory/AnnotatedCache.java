@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 @Slf4j
 @AllArgsConstructor
 public final class AnnotatedCache<T> {
-    private final Map<T, String> resources = new HashMap<>();
+    private final Map<String, MemoryBlock<T>> resources = new HashMap<>();
 
     @NonNull
     private final Supplier<T> creator;
@@ -20,26 +20,26 @@ public final class AnnotatedCache<T> {
     @NonNull
     private final Consumer<T> deleter;
 
-    public T create(@NonNull final String format, final Object... arguments) {
+    public MemoryBlock<T> create(@NonNull final String format, final Object... arguments) {
         return create(this.creator, format, arguments);
     }
 
-    public T create(@NonNull final Supplier<T> creator, @NonNull final String format, final Object... arguments) {
-        final var object = creator.get();
-        this.resources.put(object, String.format(format, arguments));
+    public MemoryBlock<T> create(@NonNull final Supplier<T> creator, @NonNull final String format, final Object... arguments) {
+        final var object = new MemoryBlock<>(creator.get(), String.format(format, arguments));
+        this.resources.put(object.getId(), object);
 
         return object;
     }
 
-    public void delete(@NonNull final T resource) {
-        if (this.resources.remove(resource) != null)
-            this.deleter.accept(resource);
+    public void delete(@NonNull final MemoryBlock<T> resource) {
+        if (this.resources.remove(resource.getId()) != null)
+            this.deleter.accept(resource.getData());
     }
 
     void cleanup() {
         for (final var resource : resources.entrySet()) {
-            deleter.accept(resource.getKey());
             log.warn("Resource {} was not deleted {}", resource.getKey(), resource.getValue());
+            deleter.accept(resource.getValue().getData());
         }
 
         this.resources.clear();

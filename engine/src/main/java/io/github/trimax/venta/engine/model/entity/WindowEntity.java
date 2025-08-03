@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.model.entity;
 import io.github.trimax.venta.engine.callbacks.*;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
+import io.github.trimax.venta.engine.memory.MemoryBlock;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.Getter;
 import lombok.NonNull;
@@ -23,7 +24,7 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
     private final VentaEngineInputHandler handler;
     private final ConsoleQueue consoleQueue;
     private final Matrix4f projectionMatrix;
-    private final long internalID;
+    private final MemoryBlock<Long> internal;
 
     @Setter
     private ConsoleEntity console;
@@ -35,7 +36,7 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
     private int height;
 
 
-    public WindowEntity(final long internalID,
+    public WindowEntity(final MemoryBlock<Long> internal,
                         final int width,
                         final int height,
                         @NonNull final String title,
@@ -52,7 +53,7 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
         this.charCallback = new KeyboardCharCallback(this);
         this.keyCallback = new KeyboardKeyCallback(this);
 
-        this.internalID = internalID;
+        this.internal = internal;
         this.width = width;
         this.height = height;
 

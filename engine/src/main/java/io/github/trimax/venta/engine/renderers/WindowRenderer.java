@@ -33,12 +33,12 @@ public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowR
                 consoleRenderer.render(window.getConsole());
         }
 
-        glfwSwapBuffers(window.getInternalID());
+        glfwSwapBuffers(window.getInternal().getData());
 
         final var now = System.currentTimeMillis();
         if (now - lastUpdated >= 1000) {
             lastUpdated = now;
-            glfwSetWindowTitle(window.getInternalID(), window.getName() + ": " + getContext().getFrameRate());
+            glfwSetWindowTitle(window.getInternal().getData(), window.getName() + ": " + getContext().getFrameRate());
         }
     }
 
