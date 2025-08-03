@@ -7,7 +7,7 @@
 
     <groupId>io.github.trimax</groupId>
     <artifactId>ventaengine</artifactId>
-    <version>0.6.1</version>
+    <version>0.6.2</version>
     <packaging>pom</packaging>
 
     <name>Venta Engine</name>
