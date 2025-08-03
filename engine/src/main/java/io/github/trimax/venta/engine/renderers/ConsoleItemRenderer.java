@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.binders.ConsoleItemBinder;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
 import io.github.trimax.venta.engine.model.entity.ConsoleItemEntity;
 import lombok.AccessLevel;
@@ -17,12 +18,14 @@ import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.*;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntity, ConsoleItemRenderer.ConsoleItemRenderContext, ConsoleRenderer.ConsoleRenderContext> {
+    private final ConsoleItemBinder consoleItemBinder;
+
     @Override
     protected ConsoleItemRenderContext createContext() {
         return new ConsoleItemRenderContext();
@@ -32,13 +35,13 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
     void render(final ConsoleItemEntity consoleItem) {
         glUseProgram(consoleItem.getProgram().getInternalID());
         glBindVertexArray(consoleItem.getVertexArrayObjectID());
+        consoleItemBinder.bind(consoleItem.getProgram(), getContext().getMessage().type().getColor());
 
         float penX = getContext().x;
         final float penY = getContext().y - FONT_HEIGHT * getContext().scale;
 
         // Iterate through each character in the text
         final var message = getContext().message;
-        final var color = message.type().getColor();
         final var text = message.text();
         final var font = consoleItem.getFont();
 
@@ -67,7 +70,6 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
             final var s1 = backedCharacter.x1() / (float) FONT_ATLAS_WIDTH;
             final var t1 = backedCharacter.y1() / (float) FONT_ATLAS_HEIGHT;
 
-            //vertices.rewind();
             getContext().vertices.put(new float[]{
                     x0, y0, s0, t1,
                     x1, y0, s1, t1,
@@ -84,16 +86,6 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
 
             glBindBuffer(GL_ARRAY_BUFFER, consoleItem.getVerticesBufferID());
             glBufferData(GL_ARRAY_BUFFER, getContext().vertices, GL_DYNAMIC_DRAW);
-
-
-            // TODO: Move to binder
-            // Position
-            glUniform2f(consoleItem.getProgram().getUniformID("position"), 0f, 0f);
-
-            // Scale
-            glUniform1f(consoleItem.getProgram().getUniformID("scale"), 1f);
-
-            glUniform3f(consoleItem.getProgram().getUniformID("color"), color.x, color.y, color.z);
 
             glDrawArrays(GL_TRIANGLES, 0, 6);
 

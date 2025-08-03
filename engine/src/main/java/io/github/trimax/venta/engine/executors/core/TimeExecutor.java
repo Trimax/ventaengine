@@ -23,6 +23,6 @@ public final class TimeExecutor extends AbstractCoreExecutor {
 
     @Override
     public void execute(final ConsoleQueue.Command command) {
-        getConsole().info(LocalDateTime.now().format(formatter));
+        getConsole().info("Current time: %s", LocalDateTime.now().format(formatter));
     }
 }
