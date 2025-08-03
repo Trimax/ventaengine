@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
+import static org.lwjgl.glfw.GLFW.*;
 
 @Getter
 public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
     private final StringBuilder inputBuffer = new StringBuilder(Definitions.CONSOLE_WELCOME_SYMBOL);
     private final List<ConsoleManagerImplementation.ConsoleMessage> history = new ArrayList<>();
+    private final List<String> commands = new ArrayList<>();
 
     private final ConsoleItemEntity consoleItem;
     private final ProgramEntity program;
@@ -26,6 +26,7 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
     private final int vertexArrayObjectID;
     private final int verticesBufferID;
 
+    private int historyIndex = -1;
     private boolean isVisible;
 
     public ConsoleEntity(final String name,
@@ -58,6 +59,12 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
             case GLFW_KEY_BACKSPACE:
                 backspace();
                 return;
+            case GLFW_KEY_UP:
+                navigateHistory(-1);
+                return;
+            case GLFW_KEY_DOWN:
+                navigateHistory(1);
+                return;
             default:
         }
     }
@@ -79,6 +86,29 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
             return;
 
         commandConsumer.accept(command);
+
+        commands.add(command.value());
+        historyIndex = commands.size();
+    }
+
+    private void navigateHistory(final int direction) {
+        if (history.isEmpty())
+            return;
+
+        historyIndex += direction;
+
+        if (historyIndex < 0)
+            historyIndex = 0;
+
+        if (historyIndex >= commands.size()) {
+            historyIndex = commands.size();
+            inputBuffer.setLength(Definitions.CONSOLE_WELCOME_SYMBOL.length());
+            return;
+        }
+
+        final var historyCommand = commands.get(historyIndex);
+        inputBuffer.setLength(Definitions.CONSOLE_WELCOME_SYMBOL.length());
+        inputBuffer.append(historyCommand);
     }
 
     public void header(final String format, final Object... arguments) {
