@@ -12,6 +12,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
@@ -78,13 +79,13 @@ public final class TextureManagerImplementation
             final var heightBuffer = stack.mallocInt(1);
             final var channelsBuffer = stack.mallocInt(1);
 
-            final var imageBuffer = memory.getByteBuffers().create(() -> BufferUtils.createByteBuffer(imageData.length), "Byte buffer %s", name);
-            imageBuffer.getData().put(imageData);
-            imageBuffer.getData().flip();
+            final var imageBuffer = BufferUtils.createByteBuffer(imageData.length);
+            imageBuffer.put(imageData);
+            imageBuffer.flip();
 
-            final var pixels = STBImage.stbi_load_from_memory(imageBuffer.getData(), widthBuffer, heightBuffer, channelsBuffer, 4);
+            final var pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 4);
             if (pixels == null) {
-                memory.getByteBuffers().delete(imageBuffer);
+                MemoryUtil.memFree(imageBuffer);
                 throw new UnknownTextureFormatException(String.format("%s (%s)", name, STBImage.stbi_failure_reason()));
             }
 
@@ -105,7 +106,7 @@ public final class TextureManagerImplementation
             glBindTexture(GL_TEXTURE_2D, 0);
 
             STBImage.stbi_image_free(pixels);
-            memory.getByteBuffers().delete(imageBuffer);
+            MemoryUtil.memFree(imageBuffer);
 
             return store(new TextureEntity(name, glTexture, width, height));
         }

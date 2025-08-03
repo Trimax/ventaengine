@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.system.MemoryUtil;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_COUNT;
 
@@ -27,8 +26,6 @@ public final class FontManagerImplementation
         final var font = new FontEntity(name);
         for (int i = 0; i < FONT_ATLAS_COUNT; i++)
             font.add(atlasManagerImplementation.create(String.format("%s-%d", name, i), i, fontBuffer));
-
-        MemoryUtil.memFree(fontBuffer);
 
         return store(font);
     }
