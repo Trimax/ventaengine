@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.renderers;
 
-import io.github.trimax.venta.engine.model.entities.AbstractEntity;
+import io.github.trimax.venta.engine.model.entity.AbstractEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

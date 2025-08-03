@@ -7,7 +7,7 @@ import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.managers.WindowManager;
-import io.github.trimax.venta.engine.model.entities.WindowEntity;
+import io.github.trimax.venta.engine.model.entity.WindowEntity;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

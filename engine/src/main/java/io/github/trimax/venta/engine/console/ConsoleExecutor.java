@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.executors.AbstractExecutor;
 import io.github.trimax.venta.engine.executors.core.AbstractCoreExecutor;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
-import io.github.trimax.venta.engine.model.entities.ConsoleEntity;
+import io.github.trimax.venta.engine.model.entity.ConsoleEntity;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
