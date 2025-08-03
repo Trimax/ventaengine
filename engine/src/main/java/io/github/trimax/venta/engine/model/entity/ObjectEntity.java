@@ -46,6 +46,11 @@ public final class ObjectEntity extends AbstractEntity implements ObjectView {
     }
 
     @Override
+    public boolean hasMesh() {
+        return mesh != null;
+    }
+
+    @Override
     public void setPosition(final Vector3f position) {
         this.position.set(position);
     }

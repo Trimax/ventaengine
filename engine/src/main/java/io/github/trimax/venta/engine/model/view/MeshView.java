@@ -4,4 +4,6 @@ public interface MeshView extends AbstractView {
     MaterialView getMaterial();
 
     void setMaterial(final MaterialView material);
+
+    public boolean hasMaterial();
 }

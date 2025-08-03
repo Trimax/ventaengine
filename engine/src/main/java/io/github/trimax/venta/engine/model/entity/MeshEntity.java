@@ -49,4 +49,9 @@ public final class MeshEntity extends AbstractEntity implements MeshView {
         if (material instanceof MaterialEntity entity)
             this.material = entity;
     }
+
+    @Override
+    public boolean hasMaterial() {
+        return material != null;
+    }
 }

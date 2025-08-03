@@ -1,9 +1,9 @@
-package io.github.trimax.venta.engine.executors.scene;
+package io.github.trimax.venta.engine.executors.mesh;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
-import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
 import io.github.trimax.venta.engine.model.view.AbstractView;
 import io.github.trimax.venta.engine.utils.FormatUtil;
 import lombok.NonNull;
@@ -13,17 +13,17 @@ import one.util.streamex.StreamEx;
 @Slf4j
 @Component
 @SuppressWarnings("unused")
-public final class SceneListExecutor extends AbstractSceneExecutor {
-    private SceneListExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "list", "shows scenes list");
+public final class MeshListExecutor extends AbstractMeshExecutor {
+    private MeshListExecutor(@NonNull final InternalVentaContext context) {
+        super(context, "list", "shows meshes list");
     }
 
     @Override
     public void execute(final ConsoleQueue.Command command) {
-        getConsole().header("Scenes:");
+        getConsole().header("Meshes:");
 
-        final var sceneManager = getManagers().get(SceneManagerImplementation.class);
-        StreamEx.of(sceneManager.iterator())
+        final var meshManager = getManagers().get(MeshManagerImplementation.class);
+        StreamEx.of(meshManager.iterator())
                 .map(AbstractView::getPublicInformation)
                 .map(FormatUtil::indent)
                 .forEach(getConsole()::info);

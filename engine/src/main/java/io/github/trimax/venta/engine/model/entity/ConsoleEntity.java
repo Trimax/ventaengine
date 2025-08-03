@@ -81,6 +81,10 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
         commandConsumer.accept(command);
     }
 
+    public void header(final String format, final Object... arguments) {
+        print(ConsoleMessageType.Header, format, arguments);
+    }
+
     public void info(final String format, final Object... arguments) {
         print(ConsoleMessageType.Info, format, arguments);
     }
@@ -91,6 +95,14 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
 
     public void error(final String format, final Object... arguments) {
         print(ConsoleMessageType.Error, format, arguments);
+    }
+
+    public void debug(final String format, final Object... arguments) {
+        print(ConsoleMessageType.Debug, format, arguments);
+    }
+
+    public void emptyLine() {
+        print(ConsoleMessageType.Command, "");
     }
 
     private void print(final ConsoleMessageType type, final String format, final Object... arguments) {
