@@ -4,4 +4,8 @@ public interface AbstractView {
     String getID();
 
     String getName();
+
+    default String getPublicInformation() {
+        return String.format("%s (%s)", getID(), getName());
+    }
 }

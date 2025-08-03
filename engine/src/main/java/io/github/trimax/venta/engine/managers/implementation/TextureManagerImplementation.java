@@ -18,10 +18,12 @@ import java.nio.ByteBuffer;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_RGBA8;
+import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL11C.GL_LINEAR;
 import static org.lwjgl.opengl.GL11C.GL_RED;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
@@ -62,7 +64,7 @@ public final class TextureManagerImplementation
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        return store(new TextureEntity(textureID, name, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
+        return store(new TextureEntity(name, bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
     }
 
     @Override
@@ -105,9 +107,8 @@ public final class TextureManagerImplementation
             glBindTexture(GL_TEXTURE_2D, 0);
 
             STBImage.stbi_image_free(pixels);
-            //MemoryUtil.memFree(imageBuffer);
 
-            return store(new TextureEntity(textureID, name, width, height));
+            return store(new TextureEntity(name, imageBuffer, textureID, width, height));
         }
     }
 
@@ -115,6 +116,7 @@ public final class TextureManagerImplementation
     protected void destroy(final TextureEntity texture) {
         log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
         memory.getTextures().delete(texture.getInternalID());
+        MemoryUtil.memFree(texture.getBuffer());
     }
 
     @Override
