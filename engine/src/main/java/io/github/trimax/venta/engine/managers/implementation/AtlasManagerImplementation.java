@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTruetype;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
@@ -34,7 +35,10 @@ public final class AtlasManagerImplementation
         if (result <= 0)
             throw new TextureBakeException("Failed to bake font bitmap atlas " + i);
 
-        return store(new AtlasEntity(name, textureManager.create(name, bitmap), characterBuffer));
+        final var atlas = new AtlasEntity(name, textureManager.create(name, bitmap), characterBuffer);
+        MemoryUtil.memFree(bitmap);
+
+        return store(atlas);
     }
 
     @Override
