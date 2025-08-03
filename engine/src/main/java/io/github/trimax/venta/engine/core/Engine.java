@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.core;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.callbacks.ErrorCallback;
 import io.github.trimax.venta.engine.console.ConsoleExecutor;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
@@ -9,6 +9,7 @@ import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import io.github.trimax.venta.engine.renderers.EngineRenderer;
 import lombok.AccessLevel;
@@ -16,7 +17,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -36,14 +36,7 @@ public final class Engine implements Runnable {
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         internalVentaContext.getState().setApplication(ventaEngineApplication);
-
-        org.lwjgl.glfw.GLFW.glfwSetErrorCallback(new GLFWErrorCallback() {
-            @Override
-            public void invoke(final int error, final long description) {
-                log.error("GLFW Error [{}]: {}", error, GLFWErrorCallback.getDescription(description));
-            }
-        });
-
+        glfwSetErrorCallback(new ErrorCallback());
         if (!glfwInit())
             throw new EngineInitializationException("GLFW init failed");
 
@@ -51,6 +44,7 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+        internalVentaContext.getState().setDebugEnabled(ventaEngineApplication.getConfiguration().getRenderConfiguration().isDebugEnabled());
         managerContext.get(WindowManagerImplementation.class).setCurrent(createWindow(ventaEngineApplication));
 
         GL.createCapabilities();
