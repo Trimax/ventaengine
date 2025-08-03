@@ -8,6 +8,6 @@ public abstract class AbstractObjectExecutor extends AbstractExecutor {
     protected AbstractObjectExecutor(@NonNull final InternalVentaContext context,
                                      @NonNull final String command,
                                      @NonNull final String description) {
-        super(context, command, description, null);
+        super(context, command, description);
     }
 }

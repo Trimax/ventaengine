@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.model.entity;
 
 import io.github.trimax.venta.engine.callbacks.*;
-import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
     private final GLFWKeyCallback keyCallback;
 
     private final VentaEngineInputHandler handler;
-    private final ConsoleQueue consoleQueue;
+    private final ConsoleCommandQueue consoleCommandQueue;
     private final Matrix4f projectionMatrix;
     private final long internalID;
 
@@ -40,11 +40,11 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
                         final int height,
                         @NonNull final String title,
                         @NonNull final VentaEngineInputHandler inputHandler,
-                        @NonNull final ConsoleQueue consoleQueue) {
+                        @NonNull final ConsoleCommandQueue consoleCommandQueue) {
         super(title);
 
         this.handler = inputHandler;
-        this.consoleQueue = consoleQueue;
+        this.consoleCommandQueue = consoleCommandQueue;
 
         this.mouseCursorCallback = new MouseCursorCallback(this);
         this.mouseClickCallback = new MouseButtonCallback(this);

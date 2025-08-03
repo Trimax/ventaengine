@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
@@ -29,7 +29,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public final class WindowManagerImplementation
         extends AbstractManagerImplementation<WindowEntity, WindowView>
         implements WindowManager {
-    private final ConsoleQueue consoleQueue;
+    private final ConsoleCommandQueue consoleCommandQueue;
     private final Memory memory;
 
     @Getter
@@ -67,7 +67,7 @@ public final class WindowManagerImplementation
         glfwRestoreWindow(id);
         glfwFocusWindow(id);
 
-        final var window = new WindowEntity(id, width, height, title, handler, consoleQueue);
+        final var window = new WindowEntity(id, width, height, title, handler, consoleCommandQueue);
         glfwSetFramebufferSizeCallback(id, window.getWindowSizeCallback());
         glfwSetMouseButtonCallback(id, window.getMouseClickCallback());
         glfwSetCursorPosCallback(id, window.getMouseCursorCallback());

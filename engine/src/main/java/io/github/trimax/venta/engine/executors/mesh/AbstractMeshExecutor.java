@@ -8,6 +8,6 @@ public abstract class AbstractMeshExecutor extends AbstractExecutor {
     protected AbstractMeshExecutor(@NonNull final InternalVentaContext context,
                                    @NonNull final String command,
                                    @NonNull final String description) {
-        super(context, command, description, null);
+        super(context, command, description);
     }
 }

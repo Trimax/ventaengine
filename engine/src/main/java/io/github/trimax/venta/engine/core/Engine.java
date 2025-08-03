@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.core;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.callbacks.ErrorCallback;
-import io.github.trimax.venta.engine.console.ConsoleExecutor;
+import io.github.trimax.venta.engine.console.ConsoleCommandExecutor;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
 import io.github.trimax.venta.engine.context.VentaContext;
@@ -29,7 +29,7 @@ import static org.lwjgl.opengl.GL33C.glEnable;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Engine implements Runnable {
     private final InternalVentaContext internalVentaContext;
-    private final ConsoleExecutor consoleExecutor;
+    private final ConsoleCommandExecutor consoleCommandExecutor;
     private final EngineRenderer engineRenderer;
     private final ManagerContext managerContext;
     private final VentaContext context;
@@ -76,7 +76,7 @@ public final class Engine implements Runnable {
             time.setDelta(fpsCounter.tick());
             updateHandler.onUpdate(time, context);
 
-            consoleExecutor.execute();
+            consoleCommandExecutor.execute();
         }
 
         managerContext.cleanup();

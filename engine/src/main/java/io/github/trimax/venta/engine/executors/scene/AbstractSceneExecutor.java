@@ -8,6 +8,6 @@ public abstract class AbstractSceneExecutor extends AbstractExecutor {
     protected AbstractSceneExecutor(@NonNull final InternalVentaContext context,
                                     @NonNull final String command,
                                     @NonNull final String description) {
-        super(context, command, description, null);
+        super(context, command, description);
     }
 }

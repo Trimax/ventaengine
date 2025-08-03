@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.model.entity;
 
-import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
@@ -51,7 +51,7 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
         inputBuffer.append(c);
     }
 
-    public void handle(final int key, final Consumer<ConsoleQueue.Command> commandConsumer) {
+    public void handle(final int key, final Consumer<ConsoleCommandQueue.Command> commandConsumer) {
         switch (key) {
             case GLFW_KEY_ENTER:
                 submit(commandConsumer);
@@ -78,8 +78,8 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
             inputBuffer.setLength(inputBuffer.length() - 1);
     }
 
-    private void submit(final Consumer<ConsoleQueue.Command> commandConsumer) {
-        final var command = new ConsoleQueue.Command(getInput());
+    private void submit(final Consumer<ConsoleCommandQueue.Command> commandConsumer) {
+        final var command = new ConsoleCommandQueue.Command(getInput());
         inputBuffer.setLength(Definitions.CONSOLE_WELCOME_SYMBOL.length());
 
         if (command.isBlank() || command.isComment())

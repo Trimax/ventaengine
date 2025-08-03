@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.executors.core;
 
-import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.executors.AbstractExecutor;
 import lombok.NonNull;
@@ -13,7 +13,7 @@ public abstract class AbstractCoreExecutor extends AbstractExecutor {
     }
 
     @Override
-    public void execute(final ConsoleQueue.Command command) {
+    public void execute(final ConsoleCommandQueue.Command command) {
         delegateExecution(command);
     }
 }

@@ -15,13 +15,13 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public final class ConsoleExecutor {
+public final class ConsoleCommandExecutor {
     private final Map<String, AbstractCoreExecutor> executors;
     private final WindowManagerImplementation windowManager;
-    private final ConsoleQueue queue;
+    private final ConsoleCommandQueue queue;
 
-    private ConsoleExecutor(final List<AbstractCoreExecutor> executors, final ConsoleQueue queue,
-                            final WindowManagerImplementation windowManager) {
+    private ConsoleCommandExecutor(final List<AbstractCoreExecutor> executors, final ConsoleCommandQueue queue,
+                                   final WindowManagerImplementation windowManager) {
         this.executors = TransformationUtil.toMap(executors, AbstractExecutor::getCommand);
         this.windowManager = windowManager;
         this.queue = queue;
@@ -32,7 +32,7 @@ public final class ConsoleExecutor {
             Optional.ofNullable(queue.poll()).ifPresent(this::execute);
     }
 
-    private void execute(final ConsoleQueue.Command command) {
+    private void execute(final ConsoleCommandQueue.Command command) {
         windowManager.getCurrent().getConsole().emptyLine();
         windowManager.getCurrent().getConsole().debug("> %s", command.value());
 
