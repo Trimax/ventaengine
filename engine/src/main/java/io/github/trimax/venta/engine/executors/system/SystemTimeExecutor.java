@@ -12,10 +12,10 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Component
 @SuppressWarnings("unused")
-public final class TimeExecutor extends AbstractSystemExecutor {
+public final class SystemTimeExecutor extends AbstractSystemExecutor {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
-    private TimeExecutor(@NonNull final InternalVentaContext context) {
+    private SystemTimeExecutor(@NonNull final InternalVentaContext context) {
         super(context, "time", "prints current date and time");
     }
 
