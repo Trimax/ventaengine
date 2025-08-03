@@ -25,13 +25,11 @@ public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowR
 
     @Override
     public void render(final WindowEntity window) {
-        try (final var _ = consoleRenderer.withContext(getContext())) {
-            if (window.getConsole() == null)
-                window.setConsole(consoleManager.create(window.getName()));
-
-            if (window.getConsole().isVisible())
-                consoleRenderer.render(window.getConsole());
-        }
+        if (window.hasConsole())
+            try (final var _ = consoleRenderer.withContext(getContext())) {
+                if (window.getConsole().isVisible())
+                    consoleRenderer.render(window.getConsole());
+            }
 
         glfwSwapBuffers(window.getInternalID());
 
