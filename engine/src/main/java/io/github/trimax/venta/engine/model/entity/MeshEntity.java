@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.entity;
 
+import io.github.trimax.venta.engine.memory.MemoryBlock;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import io.github.trimax.venta.engine.model.view.MeshView;
@@ -12,10 +13,10 @@ public final class MeshEntity extends AbstractEntity implements MeshView {
     private final int facetsCount;
     private final int edgesCount;
 
-    private final int vertexArrayObjectID;
-    private final int verticesBufferID;
-    private final int facetsBufferID;
-    private final int edgesBufferID;
+    private final MemoryBlock<Integer> vertexArrayObject;
+    private final MemoryBlock<Integer> verticesBuffer;
+    private final MemoryBlock<Integer> facetsBuffer;
+    private final MemoryBlock<Integer> edgesBuffer;
 
     private final BoundingBox boundingBox;
 
@@ -25,10 +26,10 @@ public final class MeshEntity extends AbstractEntity implements MeshView {
                       final int verticesCount,
                       final int facetsCount,
                       final int edgesCount,
-                      final int vertexArrayObjectID,
-                      final int verticesBufferID,
-                      final int facetsBufferID,
-                      final int edgesBufferID,
+                      @NonNull final MemoryBlock<Integer> vertexArrayObject,
+                      @NonNull final MemoryBlock<Integer> verticesBuffer,
+                      @NonNull final MemoryBlock<Integer> facetsBuffer,
+                      @NonNull final MemoryBlock<Integer> edgesBuffer,
                       final BoundingBox boundingBox) {
         super(name);
 
@@ -36,10 +37,10 @@ public final class MeshEntity extends AbstractEntity implements MeshView {
         this.facetsCount = facetsCount;
         this.edgesCount = edgesCount;
 
-        this.vertexArrayObjectID = vertexArrayObjectID;
-        this.verticesBufferID = verticesBufferID;
-        this.facetsBufferID = facetsBufferID;
-        this.edgesBufferID = edgesBufferID;
+        this.vertexArrayObject = vertexArrayObject;
+        this.verticesBuffer = verticesBuffer;
+        this.facetsBuffer = facetsBuffer;
+        this.edgesBuffer = edgesBuffer;
 
         this.boundingBox = boundingBox;
     }

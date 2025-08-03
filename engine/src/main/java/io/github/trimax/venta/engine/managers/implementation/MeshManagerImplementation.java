@@ -43,18 +43,18 @@ public final class MeshManagerImplementation
 
         final var vertices = meshDTO.getVerticesArray();
 
-        final int vertexArrayObjectID = memory.getVertexArrays().create("Mesh %s VAO", name);
-        final int vertexBufferID = memory.getBuffers().create("Mesh %s vertex buffer", name);
-        final int facetsBufferID = memory.getBuffers().create("Mesh %s face buffer", name);
-        final int edgesBufferID = memory.getBuffers().create("Mesh %s edge buffer", name);
+        final var vertexArrayObject = memory.getVertexArrays().create("Mesh %s VAO", name);
+        final var verticesBuffer = memory.getBuffers().create("Mesh %s vertex buffer", name);
+        final var facetsBuffer = memory.getBuffers().create("Mesh %s face buffer", name);
+        final var edgesBuffer = memory.getBuffers().create("Mesh %s edge buffer", name);
 
-        glBindVertexArray(vertexArrayObjectID);
+        glBindVertexArray(vertexArrayObject.getData());
 
         // Vertices
         final FloatBuffer vertexBuffer = memAllocFloat(vertices.length);
         vertexBuffer.put(vertices).flip();
 
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+        glBindBuffer(GL_ARRAY_BUFFER, verticesBuffer.getData());
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
         memFree(vertexBuffer);
 
@@ -64,7 +64,7 @@ public final class MeshManagerImplementation
             final IntBuffer indexBuffer = memAllocInt(facets.length);
             indexBuffer.put(facets).flip();
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBuffer.getData());
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
             memFree(indexBuffer);
         }
@@ -75,7 +75,7 @@ public final class MeshManagerImplementation
             final IntBuffer indexBuffer = memAllocInt(edges.length);
             indexBuffer.put(edges).flip();
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgesBufferID);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgesBuffer.getData());
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
             memFree(indexBuffer);
         }
@@ -109,16 +109,16 @@ public final class MeshManagerImplementation
         glBindVertexArray(0);
 
         return store(new MeshEntity(name, vertices.length, meshDTO.getFacetsArrayLength(),
-                meshDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO)));
+                meshDTO.getEdgesArrayLength(), vertexArrayObject, verticesBuffer, facetsBuffer, edgesBuffer, BoundingBox.of(meshDTO)));
     }
 
     @Override
     protected void destroy(final MeshEntity object) {
         log.info("Destroying mesh {} ({})", object.getID(), object.getName());
-        memory.getVertexArrays().delete(object.getVertexArrayObjectID());
-        memory.getBuffers().delete(object.getVerticesBufferID());
-        memory.getBuffers().delete(object.getFacetsBufferID());
-        memory.getBuffers().delete(object.getEdgesBufferID());
+        memory.getVertexArrays().delete(object.getVertexArrayObject());
+        memory.getBuffers().delete(object.getVerticesBuffer());
+        memory.getBuffers().delete(object.getFacetsBuffer());
+        memory.getBuffers().delete(object.getEdgesBuffer());
     }
 
     @Override

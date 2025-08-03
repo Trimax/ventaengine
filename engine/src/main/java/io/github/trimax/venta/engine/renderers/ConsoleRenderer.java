@@ -38,7 +38,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleEntity, Conso
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glUseProgram(console.getProgram().getInternalID());
-        glBindVertexArray(console.getVertexArrayObjectID());
+        glBindVertexArray(console.getVertexArrayObject().getData());
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

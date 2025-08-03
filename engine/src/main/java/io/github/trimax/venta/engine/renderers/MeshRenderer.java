@@ -26,16 +26,16 @@ final class MeshRenderer extends AbstractRenderer<MeshEntity, MeshRenderer.MeshR
 
     @Override
     public void render(final MeshEntity object) {
-        glBindVertexArray(object.getVertexArrayObjectID());
+        glBindVertexArray(object.getVertexArrayObject().getData());
         materialBinder.bind(getContext().getProgram(), object.getMaterial());
 
         if (object.getFacetsCount() > 0) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getFacetsBufferID());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getFacetsBuffer().getData());
             glDrawElements(GL_TRIANGLES, object.getFacetsCount(), GL_UNSIGNED_INT, 0);
         }
 
         if (object.getEdgesCount() > 0) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getEdgesBufferID());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getEdgesBuffer().getData());
             glDrawElements(GL_LINES, object.getEdgesCount(), GL_UNSIGNED_INT, 0);
         }
 
