@@ -6,21 +6,26 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.stb.STBTTBakedChar;
 
+import java.nio.ByteBuffer;
+
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 
 @Slf4j
 @Getter
 public final class AtlasEntity extends AbstractEntity implements AtlasView {
-    private final TextureEntity texture;
     private final STBTTBakedChar.Buffer buffer;
+    private final TextureEntity texture;
+    private final ByteBuffer bitmap;
 
     public AtlasEntity(@NonNull final String name,
                        @NonNull final TextureEntity texture,
-                       @NonNull final STBTTBakedChar.Buffer buffer) {
+                       @NonNull final STBTTBakedChar.Buffer buffer,
+                       @NonNull final ByteBuffer bitmap) {
         super(name);
 
         this.texture = texture;
         this.buffer = buffer;
+        this.bitmap = bitmap;
 
         printUsageSummary();
     }
