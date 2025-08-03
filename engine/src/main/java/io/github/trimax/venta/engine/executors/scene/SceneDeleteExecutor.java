@@ -25,16 +25,16 @@ public final class SceneDeleteExecutor extends AbstractSceneExecutor {
 
         final var scene = sceneManager.get(command.asArgument().value());
         if (scene == null) {
-            getConsole().error("Scene %s can't be deleted because it does not exist", command.asArgument().value());
+            getConsole().error("Scene <%s> can't be deleted because it does not exist", command.asArgument().value());
             return;
         }
 
         if (scene == sceneManager.getCurrent()) {
-            getConsole().error("Scene %s can't be deleted because it is currently selected", command.asArgument().value());
+            getConsole().error("Scene <%s> can't be deleted because it is currently selected", command.asArgument().value());
             return;
         }
 
         sceneManager.delete(scene);
-        getConsole().info("Scene '%s' deleted", scene.getID());
+        getConsole().info("Scene <%s> deleted", scene.getID());
     }
 }

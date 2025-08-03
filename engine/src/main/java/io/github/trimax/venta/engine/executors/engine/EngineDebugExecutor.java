@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("unused")
 public final class EngineDebugExecutor extends AbstractEngineExecutor {
     private EngineDebugExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "debug", "turn on/off the debug mode");
+        super(context, "debug", "turns on/off the debug mode");
     }
 
     @Override

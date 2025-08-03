@@ -22,6 +22,6 @@ public final class SceneCreateExecutor extends AbstractSceneExecutor {
         }
 
         final var scene = getContext().getSceneManager().create(command.value());
-        getConsole().info("Scene '%s' created: %s", command.value(), scene.getID());
+        getConsole().info("Scene <%s> created", scene.getID());
     }
 }

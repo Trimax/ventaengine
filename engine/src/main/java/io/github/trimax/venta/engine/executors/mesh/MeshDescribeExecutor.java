@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("unused")
 public final class MeshDescribeExecutor extends AbstractMeshExecutor {
     private MeshDescribeExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "describe", "provides information about the mesh");
+        super(context, "describe", "prints information about the mesh");
     }
 
     @Override
@@ -25,7 +25,7 @@ public final class MeshDescribeExecutor extends AbstractMeshExecutor {
 
         final var mesh = meshManager.getEntity(command.asArgument().value());
         if (mesh == null) {
-            getConsole().error("Mesh %s can't be described because it does not exist", command.asArgument().value());
+            getConsole().error("Mesh <%s> can't be described because it does not exist", command.asArgument().value());
             return;
         }
 

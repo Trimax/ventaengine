@@ -14,11 +14,11 @@ import java.util.List;
 @Slf4j
 @Component
 @SuppressWarnings("unused")
-public final class TimeExecutor extends AbstractCoreExecutor {
+public final class UsageExecutor extends AbstractCoreExecutor {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
-    private TimeExecutor(@NonNull final InternalVentaContext context, @NonNull final List<AbstractEngineExecutor> executors) {
-        super(context, "time", "prints current date and time", executors);
+    private UsageExecutor(@NonNull final InternalVentaContext context, @NonNull final List<AbstractEngineExecutor> executors) {
+        super(context, "usage", "prints resources utilization", executors);
     }
 
     @Override

@@ -15,7 +15,7 @@ import one.util.streamex.StreamEx;
 @SuppressWarnings("unused")
 public final class MeshListExecutor extends AbstractMeshExecutor {
     private MeshListExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "list", "shows meshes list");
+        super(context, "list", "prints the list of meshes");
     }
 
     @Override

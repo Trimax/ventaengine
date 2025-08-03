@@ -25,11 +25,11 @@ public final class SceneSelectExecutor extends AbstractSceneExecutor {
 
         final var scene = sceneManager.get(command.asArgument().value());
         if (scene == null) {
-            getConsole().error("Scene %s can't be selected because it does not exist", command.asArgument().value());
+            getConsole().error("Scene <%s> can't be selected because it does not exist", command.asArgument().value());
             return;
         }
 
         sceneManager.setCurrent(scene);
-        getConsole().info("Scene '%s' selected", scene.getID());
+        getConsole().info("Scene <%s> selected", scene.getID());
     }
 }
