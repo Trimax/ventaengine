@@ -15,23 +15,23 @@ public final class PointLightApplicationStartupHandler implements VentaEngineSta
         final var scene = context.getSceneManager().getCurrent();
 
         final var plane = context.getObjectManager().load("plane");
-        plane.getMesh().setMaterial(context.getMaterialManager().load("stone"));;
+        plane.getMesh().setMaterial(context.getMaterialManager().load("stone"));
         plane.setScale(new Vector3f(50f));
         scene.add(plane);
 
         final var redLight = context.getLightManager().load("basic");
         redLight.setPosition(new Vector3f(3.f, 1.f, 0.f));
-        redLight.setColor(new Vector3f(1f,0f,0f));
+        redLight.setColor(new Vector3f(1f, 0f, 0f));
         scene.add(redLight);
 
         final var blueLight = context.getLightManager().load("basic");
         blueLight.setPosition(new Vector3f(0.f, 1.f, 3.f));
-        blueLight.setColor(new Vector3f(0f,0f,1f));
+        blueLight.setColor(new Vector3f(0f, 0f, 1f));
         scene.add(blueLight);
 
         final var greenLight = context.getLightManager().load("basic");
         greenLight.setPosition(new Vector3f(0.f, 1.f, 0.f));
-        greenLight.setColor(new Vector3f(0f,1f,0f));
+        greenLight.setColor(new Vector3f(0f, 1f, 0f));
         scene.add(greenLight);
 
         final var camera = context.getCameraManager().getCurrent();
