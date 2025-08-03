@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.managers.TextureManager;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import io.github.trimax.venta.engine.model.view.TextureView;
 import lombok.AccessLevel;
@@ -21,7 +22,6 @@ import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_RGBA8;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11C.GL_LINEAR;
 import static org.lwjgl.opengl.GL11C.GL_RED;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
@@ -47,10 +47,11 @@ public final class TextureManagerImplementation
         extends AbstractManagerImplementation<TextureEntity, TextureView>
         implements TextureManager {
     private final ResourceManagerImplementation resourceManager;
+    private final Memory memory;
 
     public TextureEntity create(@NonNull final String name,
                                 @NonNull final ByteBuffer bitmap) {
-        final var textureID = glGenTextures();
+        final var textureID = memory.getTextures().create("Texture %s", name);
 
         glBindTexture(GL_TEXTURE_2D, textureID);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -104,6 +105,7 @@ public final class TextureManagerImplementation
             glBindTexture(GL_TEXTURE_2D, 0);
 
             STBImage.stbi_image_free(pixels);
+            //MemoryUtil.memFree(imageBuffer);
 
             return store(new TextureEntity(textureID, name, width, height));
         }
@@ -112,7 +114,7 @@ public final class TextureManagerImplementation
     @Override
     protected void destroy(final TextureEntity texture) {
         log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
-        glDeleteTextures(texture.getInternalID());
+        memory.getTextures().delete(texture.getInternalID());
     }
 
     @Override

@@ -21,15 +21,19 @@ public final class AnnotatedCache<T> {
     private final Consumer<T> deleter;
 
     public T create(@NonNull final String format, final Object... arguments) {
-        final var object = this.creator.get();
-        resources.put(object, String.format(format, arguments));
+        return create(this.creator, format, arguments);
+    }
+
+    public T create(@NonNull final Supplier<T> creator, @NonNull final String format, final Object... arguments) {
+        final var object = creator.get();
+        this.resources.put(object, String.format(format, arguments));
 
         return object;
     }
 
     public void delete(@NonNull final T resource) {
-        this.deleter.accept(resource);
-        resources.remove(resource);
+        if (this.resources.remove(resource) != null)
+            this.deleter.accept(resource);
     }
 
     void cleanup() {
@@ -38,6 +42,6 @@ public final class AnnotatedCache<T> {
             log.warn("Resource {} was not deleted {}", resource.getKey(), resource.getValue());
         }
 
-        resources.clear();
+        this.resources.clear();
     }
 }
