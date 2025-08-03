@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 
@@ -143,7 +142,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
 
         @Override
         public void destroy() {
-            MemoryUtil.memFree(vertices);
+
         }
     }
 }
