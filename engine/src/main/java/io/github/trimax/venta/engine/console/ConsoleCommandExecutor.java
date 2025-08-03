@@ -41,6 +41,11 @@ public final class ConsoleCommandExecutor {
             return;
         }
 
+        if ("exit".equalsIgnoreCase(command.getCommand()) || "quit".equalsIgnoreCase(command.getCommand())) {
+            windowManager.getCurrent().getConsole().warning("You probably meant 'engine stop'");
+            return;
+        }
+
         final var executor = executors.get(command.getCommand());
         if (executor == null) {
             windowManager.getCurrent().getConsole()
