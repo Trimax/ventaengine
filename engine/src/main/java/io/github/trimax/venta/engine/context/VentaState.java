@@ -7,4 +7,5 @@ import lombok.Data;
 public final class VentaState {
     private VentaEngineApplication application;
     private boolean isApplicationRunning = true;
+    private boolean isDebugEnabled = false;
 }

@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.context.VentaState;
+import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
@@ -39,7 +39,7 @@ public final class EngineRenderer {
             sceneRenderer.render(sceneManager.getCurrent());
         }
 
-        if (isDebugEnabled(state))
+        if (state.isDebugEnabled())
             try (final var _ = debugRenderer.withContext(null)
                     .with(window, camera)) {
                 debugRenderer.render(sceneManager.getCurrent());
@@ -51,9 +51,5 @@ public final class EngineRenderer {
         }
 
         glfwPollEvents();
-    }
-
-    private static boolean isDebugEnabled(final VentaState state) {
-        return state.getApplication().getConfiguration().getRenderConfiguration().isDebugEnabled();
     }
 }
