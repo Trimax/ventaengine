@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.MeshManager;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
@@ -19,7 +20,7 @@ import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30C.*;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.system.MemoryUtil.*;
 
 @Slf4j
@@ -29,6 +30,7 @@ public final class MeshManagerImplementation
         extends AbstractManagerImplementation<MeshEntity, MeshView>
         implements MeshManager {
     private final ResourceManagerImplementation resourceManager;
+    private final Memory memory;
 
     @Override
     public MeshEntity load(@NonNull final String name) {
@@ -41,10 +43,10 @@ public final class MeshManagerImplementation
 
         final var vertices = meshDTO.getVerticesArray();
 
-        final int vertexArrayObjectID = glGenVertexArrays();
-        final int vertexBufferID = glGenBuffers();
-        final int facetsBufferID = glGenBuffers();
-        final int edgesBufferID = glGenBuffers();
+        final int vertexArrayObjectID = memory.getVertexArrays().create("Mesh %s VAO", name);
+        final int vertexBufferID = memory.getBuffers().create("Mesh %s vertex buffer", name);
+        final int facetsBufferID = memory.getBuffers().create("Mesh %s face buffer", name);
+        final int edgesBufferID = memory.getBuffers().create("Mesh %s edge buffer", name);
 
         glBindVertexArray(vertexArrayObjectID);
 
@@ -113,10 +115,10 @@ public final class MeshManagerImplementation
     @Override
     protected void destroy(final MeshEntity object) {
         log.info("Destroying mesh {} ({})", object.getID(), object.getName());
-        glDeleteVertexArrays(object.getVertexArrayObjectID());
-        glDeleteBuffers(object.getVerticesBufferID());
-        glDeleteBuffers(object.getFacetsBufferID());
-        glDeleteBuffers(object.getEdgesBufferID());
+        memory.getVertexArrays().delete(object.getVertexArrayObjectID());
+        memory.getBuffers().delete(object.getVerticesBufferID());
+        memory.getBuffers().delete(object.getFacetsBufferID());
+        memory.getBuffers().delete(object.getEdgesBufferID());
     }
 
     @Override

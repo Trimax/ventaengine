@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.core;
+package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import lombok.Data;

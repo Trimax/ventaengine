@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.core.VentaState;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
 import io.github.trimax.venta.engine.model.entity.ConsoleEntity;
 import io.github.trimax.venta.engine.model.entity.WindowEntity;
