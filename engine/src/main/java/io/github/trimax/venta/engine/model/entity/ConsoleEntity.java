@@ -4,7 +4,6 @@ import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
-import io.github.trimax.venta.engine.memory.MemoryBlock;
 import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.Getter;
 import lombok.NonNull;
@@ -24,20 +23,20 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
     private final ConsoleItemEntity consoleItem;
     private final ProgramEntity program;
 
-    private final MemoryBlock<Integer> vertexArrayObject;
-    private final MemoryBlock<Integer> verticesBuffer;
+    private final int vertexArrayObjectID;
+    private final int verticesBufferID;
 
     private boolean isVisible;
 
-    public ConsoleEntity(@NonNull final String name,
+    public ConsoleEntity(final String name,
                          @NonNull final ConsoleItemEntity consoleItem,
                          @NonNull final ProgramEntity program,
-                         @NonNull final MemoryBlock<Integer> vertexArrayObject,
-                         @NonNull final MemoryBlock<Integer> verticesBuffer) {
+                         final int vertexArrayObjectID,
+                         final int verticesBufferID) {
         super(name);
 
-        this.vertexArrayObject = vertexArrayObject;
-        this.verticesBuffer = verticesBuffer;
+        this.vertexArrayObjectID = vertexArrayObjectID;
+        this.verticesBufferID = verticesBufferID;
 
         this.consoleItem = consoleItem;
         this.program = program;

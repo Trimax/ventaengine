@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.context.VentaState;
 import io.github.trimax.venta.engine.core.FPSCounter;
+import io.github.trimax.venta.engine.context.VentaState;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
@@ -28,7 +28,7 @@ public final class EngineRenderer {
 
     public void render(final VentaState state, final FPSCounter fpsCounter) {
         final var window = windowManager.getEntity(windowManager.getCurrent().getID());
-        if (glfwWindowShouldClose(window.getInternal().getData()))
+        if (glfwWindowShouldClose(window.getInternalID()))
             state.setApplicationRunning(false);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

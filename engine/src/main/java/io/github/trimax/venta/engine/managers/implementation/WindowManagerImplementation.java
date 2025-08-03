@@ -57,24 +57,24 @@ public final class WindowManagerImplementation
                                 final VentaEngineInputHandler handler) {
         log.info("Creating window: {}", title);
 
-        final var glWindow = memory.getWindows().create(() -> glfwCreateWindow(width, height, title, monitorID, NULL), "Window %s", title);
-        if (glWindow.getData() == NULL)
+        final var id = memory.getWindows().create(() -> glfwCreateWindow(width, height, title, monitorID, NULL), "Window %s", title);
+        if (id == NULL)
             throw new WindowCreationException(title);
 
-        glfwMakeContextCurrent(glWindow.getData());
+        glfwMakeContextCurrent(id);
         glfwSwapInterval(1); // vertical synchronization (setting to 0 produces 5000 FPS)
-        glfwShowWindow(glWindow.getData());
-        glfwRestoreWindow(glWindow.getData());
-        glfwFocusWindow(glWindow.getData());
+        glfwShowWindow(id);
+        glfwRestoreWindow(id);
+        glfwFocusWindow(id);
 
-        final var window = new WindowEntity(glWindow, width, height, title, handler, consoleQueue);
-        glfwSetFramebufferSizeCallback(glWindow.getData(), window.getWindowSizeCallback());
-        glfwSetMouseButtonCallback(glWindow.getData(), window.getMouseClickCallback());
-        glfwSetCursorPosCallback(glWindow.getData(), window.getMouseCursorCallback());
-        glfwSetCharCallback(glWindow.getData(), window.getCharCallback());
-        glfwSetKeyCallback(glWindow.getData(), window.getKeyCallback());
+        final var window = new WindowEntity(id, width, height, title, handler, consoleQueue);
+        glfwSetFramebufferSizeCallback(id, window.getWindowSizeCallback());
+        glfwSetMouseButtonCallback(id, window.getMouseClickCallback());
+        glfwSetCursorPosCallback(id, window.getMouseCursorCallback());
+        glfwSetCharCallback(id, window.getCharCallback());
+        glfwSetKeyCallback(id, window.getKeyCallback());
 
-        setIconFromResources(glWindow.getData(), "/icons/venta.png");
+        setIconFromResources(id, "/icons/venta.png");
 
         return store(window);
     }
@@ -82,7 +82,7 @@ public final class WindowManagerImplementation
     public void setCurrent(@NonNull final WindowView window) {
         if (window instanceof WindowEntity entity) {
             this.current = entity;
-            glfwMakeContextCurrent(getEntity(window.getID()).getInternal().getData());
+            glfwMakeContextCurrent(getEntity(window.getID()).getInternalID());
         }
     }
 
@@ -129,7 +129,7 @@ public final class WindowManagerImplementation
         window.getWindowSizeCallback().close();
         window.getMouseClickCallback().close();
         window.getMouseCursorCallback().close();
-        memory.getWindows().delete(window.getInternal());
+        memory.getWindows().delete(window.getInternalID());
     }
 
     @Override

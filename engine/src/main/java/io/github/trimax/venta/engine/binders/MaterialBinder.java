@@ -46,7 +46,7 @@ public final class MaterialBinder extends AbstractBinder {
             return;
         }
 
-        glBindTexture(GL_TEXTURE_2D, texture.getInternal().getData());
+        glBindTexture(GL_TEXTURE_2D, texture.getInternalID());
         glUniform1i(textureUniformID, type.getUnitID());
         glUniform1i(useTextureUniformID, 1);
     }
