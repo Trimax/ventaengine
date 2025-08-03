@@ -7,6 +7,7 @@ import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.managers.WindowManager;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.WindowEntity;
 import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.*;
@@ -29,6 +30,7 @@ public final class WindowManagerImplementation
         extends AbstractManagerImplementation<WindowEntity, WindowView>
         implements WindowManager {
     private final ConsoleQueue consoleQueue;
+    private final Memory memory;
 
     @Getter
     private WindowEntity current;
@@ -54,7 +56,8 @@ public final class WindowManagerImplementation
                                 final int height,
                                 final VentaEngineInputHandler handler) {
         log.info("Creating window: {}", title);
-        final var id = glfwCreateWindow(width, height, title, monitorID, NULL);
+
+        final var id = memory.getWindows().create(() -> glfwCreateWindow(width, height, title, monitorID, NULL), "Window %s", title);
         if (id == NULL)
             throw new WindowCreationException(title);
 
@@ -126,7 +129,7 @@ public final class WindowManagerImplementation
         window.getWindowSizeCallback().close();
         window.getMouseClickCallback().close();
         window.getMouseCursorCallback().close();
-        glfwDestroyWindow(window.getInternalID());
+        memory.getWindows().delete(window.getInternalID());
     }
 
     @Override
