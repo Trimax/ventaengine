@@ -72,6 +72,17 @@ public final class SceneManagerImplementation
     }
 
     @Override
+    public void delete(@NonNull final SceneView scene) {
+        if (scene == getCurrent()) {
+            log.error("Scene {} can't be deleted because it is currently selected", scene.getID());
+            return;
+        }
+
+        if (scene instanceof SceneEntity entity)
+            delete(entity);
+    }
+
+    @Override
     protected void destroy(final SceneEntity scene) {
         log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
     }

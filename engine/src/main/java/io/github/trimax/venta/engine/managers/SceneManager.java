@@ -8,6 +8,8 @@ public interface SceneManager extends AbstractManager<SceneView> {
 
     SceneView create(@NonNull final String name);
 
+    void delete(@NonNull final SceneView scene);
+
     SceneView getCurrent();
 
     void setCurrent(@NonNull final SceneView scene);

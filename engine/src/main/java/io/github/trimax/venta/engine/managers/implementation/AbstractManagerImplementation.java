@@ -52,6 +52,13 @@ public abstract class AbstractManagerImplementation<E extends V, V extends Abstr
         return entity;
     }
 
+    protected final void delete(final E entity) {
+        cache.remove(entity.getName());
+        values.remove(entity.getID());
+        destroy(entity);
+        log.debug("{} {} deleted", entity.getClass().getSimpleName(), entity.getID());
+    }
+
     public final void cleanup() {
         log.info("Cleaning up {}", getClass().getSimpleName());
         values.values().forEach(this::destroy);

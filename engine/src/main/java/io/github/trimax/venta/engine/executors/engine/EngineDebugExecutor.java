@@ -17,10 +17,10 @@ public final class EngineDebugExecutor extends AbstractEngineExecutor {
     @Override
     public void execute(final ConsoleQueue.Command command) {
         if (command.asArgument().isBlank()) {
-            getConsole().warning("Argument is missing. Please use %s true/false", getCommand());
+            getConsole().warning("Usage: %s <true/false>", command.getFullPath());
             return;
         }
-        
+
         getState().setDebugEnabled(command.asArgument().asBoolean());
         getConsole().info("Debug mode: %b", getState().isDebugEnabled());
     }

@@ -1,14 +1,13 @@
 package io.github.trimax.venta.engine.model.entity;
 
 import io.github.trimax.venta.engine.model.view.AbstractView;
+import io.github.trimax.venta.engine.utils.IdentifierUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
-import java.util.UUID;
-
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractEntity implements AbstractView {
-    private final String id = UUID.randomUUID().toString();
+    private final String id = IdentifierUtil.generate(6);
     private final GizmoEntity gizmo;
     private final String name;
 

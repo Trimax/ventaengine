@@ -33,7 +33,11 @@ public final class ConsoleQueue {
         return !queue.isEmpty();
     }
 
-    public record Command(String value) {
+    public record Command(String value, Command parent) {
+        public Command(final String value) {
+            this(value, null);
+        }
+
         public boolean isComment() {
             return StringUtils.trimToEmpty(value).startsWith("#");
         }
@@ -51,7 +55,18 @@ public final class ConsoleQueue {
         }
 
         public Command getSubcommand() {
-            return new Command(StringUtils.substringAfter(StringUtils.trim(value), " "));
+            return new Command(StringUtils.substringAfter(StringUtils.trim(value), " "), this);
+        }
+
+        public String getFullPath() {
+            if (parent == null)
+                return getCommand();
+
+            final var command = getCommand();
+            if (StringUtils.isBlank(command))
+                return parent().getFullPath();
+
+            return parent.getFullPath() + " " + command;
         }
     }
 

@@ -8,6 +8,7 @@ import io.github.trimax.venta.engine.context.ManagerContext;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
+import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.view.WindowView;
@@ -50,6 +51,8 @@ public final class Engine implements Runnable {
         GL.createCapabilities();
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
+        managerContext.get(WindowManagerImplementation.class).getCurrent()
+                .setConsole(managerContext.get(ConsoleManagerImplementation.class).create("Default console"));
     }
 
     private WindowView createWindow(final VentaEngineApplication ventaEngineApplication) {
@@ -60,6 +63,8 @@ public final class Engine implements Runnable {
 
     @Override
     public void run() {
+        internalVentaContext.getConsole().info("Venta engine started");
+        internalVentaContext.getConsole().info("");
         glEnable(GL_DEPTH_TEST);
 
         final var updateHandler = internalVentaContext.getState().getApplication().getUpdateHandler();

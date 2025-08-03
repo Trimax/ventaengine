@@ -17,7 +17,7 @@ public final class SceneCreateExecutor extends AbstractSceneExecutor {
     @Override
     public void execute(final ConsoleQueue.Command command) {
         if (command.asArgument().isBlank()) {
-            getConsole().warning("Usage: scene create <name>");
+            getConsole().warning("Usage: %s <name>", command.getFullPath());
             return;
         }
 

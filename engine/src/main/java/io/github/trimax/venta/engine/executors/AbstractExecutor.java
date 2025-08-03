@@ -76,8 +76,9 @@ public abstract class AbstractExecutor {
 
         final var executor = getExecutor(command.getCommand());
         if (executor == null) {
-            internalContext.getConsole().error(String.format("Unknown command: '%s'. Type '%s help'", command.getCommand(), getCommand()));
-            log.warn("Executor is not registered for command: {}", command.getCommand());
+            internalContext.getConsole().error(String.format("Unknown command: '%s'. Type '%s help'",
+                    command.getFullPath(), command.parent().getFullPath()));
+            log.warn("Executor is not registered for command: {}", command.parent().getFullPath());
             return;
         }
 

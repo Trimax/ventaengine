@@ -6,6 +6,6 @@ public interface AbstractView {
     String getName();
 
     default String getPublicInformation() {
-        return String.format("%s (%s)", getID(), getName());
+        return String.format("%s: %s", getID(), getName());
     }
 }
