@@ -1,8 +1,7 @@
 package io.github.trimax.venta.engine.model.view;
 
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.engine.enums.DrawMode;
+import org.joml.Vector3f;
 
 public interface ObjectView extends AbstractView {
     MeshView getMesh();
@@ -18,6 +17,8 @@ public interface ObjectView extends AbstractView {
     boolean isLit();
 
     boolean hasProgram();
+
+    boolean hasMesh();
 
     DrawMode getDrawMode();
 

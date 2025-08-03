@@ -33,6 +33,9 @@ public final class ConsoleExecutor {
     }
 
     private void execute(final ConsoleQueue.Command command) {
+        windowManager.getCurrent().getConsole().emptyLine();
+        windowManager.getCurrent().getConsole().debug(command.value());
+
         if ("help".equalsIgnoreCase(command.getCommand())) {
             printHelp(windowManager.getCurrent().getConsole());
             return;

@@ -64,7 +64,6 @@ public final class Engine implements Runnable {
     @Override
     public void run() {
         internalVentaContext.getConsole().info("Venta engine started");
-        internalVentaContext.getConsole().info("");
         glEnable(GL_DEPTH_TEST);
 
         final var updateHandler = internalVentaContext.getState().getApplication().getUpdateHandler();
