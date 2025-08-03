@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.managers.GizmoManager;
-import io.github.trimax.venta.engine.model.entities.GizmoEntity;
+import io.github.trimax.venta.engine.model.entity.GizmoEntity;
 import io.github.trimax.venta.engine.model.view.GizmoView;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

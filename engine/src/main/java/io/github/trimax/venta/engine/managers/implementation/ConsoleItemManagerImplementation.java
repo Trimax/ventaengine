@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.ConsoleItemManager;
-import io.github.trimax.venta.engine.model.entities.ConsoleItemEntity;
+import io.github.trimax.venta.engine.model.entity.ConsoleItemEntity;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

@@ -9,7 +9,6 @@ import org.joml.Vector3f;
 @Slf4j
 @AllArgsConstructor
 public final class PointLightApplicationStartupHandler implements VentaEngineStartupHandler {
-
     @Override
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();

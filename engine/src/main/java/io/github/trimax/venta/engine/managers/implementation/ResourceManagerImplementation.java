@@ -7,7 +7,7 @@ import io.github.trimax.venta.engine.adapters.TextureTypeAdapter;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ResourceNotFoundException;
 import io.github.trimax.venta.engine.managers.ResourceManager;
-import io.github.trimax.venta.engine.model.entities.ResourceEntity;
+import io.github.trimax.venta.engine.model.entity.ResourceEntity;
 import io.github.trimax.venta.engine.model.view.ResourceView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;

@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.MeshManager;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
-import io.github.trimax.venta.engine.model.entities.MeshEntity;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import lombok.AccessLevel;

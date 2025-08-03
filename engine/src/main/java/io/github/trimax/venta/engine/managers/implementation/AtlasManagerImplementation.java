@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.TextureBakeException;
 import io.github.trimax.venta.engine.managers.AtlasManager;
-import io.github.trimax.venta.engine.model.entities.AtlasEntity;
+import io.github.trimax.venta.engine.model.entity.AtlasEntity;
 import io.github.trimax.venta.engine.model.view.AtlasView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

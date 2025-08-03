@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.callbacks;
 
-import io.github.trimax.venta.engine.model.entities.WindowEntity;
+import io.github.trimax.venta.engine.model.entity.WindowEntity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;

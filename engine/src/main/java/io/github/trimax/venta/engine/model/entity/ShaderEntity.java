@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.entities;
+package io.github.trimax.venta.engine.model.entity;
 
 import io.github.trimax.venta.engine.model.view.ShaderView;
 import lombok.AccessLevel;

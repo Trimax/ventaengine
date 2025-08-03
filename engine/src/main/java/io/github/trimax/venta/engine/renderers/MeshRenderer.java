@@ -2,8 +2,8 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
-import io.github.trimax.venta.engine.model.entities.MeshEntity;
-import io.github.trimax.venta.engine.model.entities.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
+import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.callbacks;
 
-import io.github.trimax.venta.engine.model.entities.WindowEntity;
+import io.github.trimax.venta.engine.model.entity.WindowEntity;
 import lombok.AllArgsConstructor;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 

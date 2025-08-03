@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
-import io.github.trimax.venta.engine.model.entities.ConsoleEntity;
+import io.github.trimax.venta.engine.model.entity.ConsoleEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

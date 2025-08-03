@@ -5,7 +5,7 @@ import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
-import io.github.trimax.venta.engine.model.entities.SceneEntity;
+import io.github.trimax.venta.engine.model.entity.SceneEntity;
 import io.github.trimax.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.Getter;
