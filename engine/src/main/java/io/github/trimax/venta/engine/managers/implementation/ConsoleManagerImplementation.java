@@ -29,11 +29,11 @@ public final class ConsoleManagerImplementation
     public ConsoleEntity create(final String name) {
         log.debug("Creating console {}", name);
 
-        final var consoleVertexArrayObject = memory.getVertexArrays().create("Console %s VAO", name);
-        final var consoleVerticesBuffer = memory.getBuffers().create("Console %s vertex buffer", name);
+        final int consoleVertexArrayObjectID = memory.getVertexArrays().create("Console %s VAO", name);
+        final int consoleVerticesBufferID = memory.getBuffers().create("Console %s vertex buffer", name);
 
-        glBindVertexArray(consoleVertexArrayObject.getData());
-        glBindBuffer(GL_ARRAY_BUFFER, consoleVerticesBuffer.getData());
+        glBindVertexArray(consoleVertexArrayObjectID);
+        glBindBuffer(GL_ARRAY_BUFFER, consoleVerticesBufferID);
 
         final float[] vertices = {
                 /* Top-left */    -1.0f, 1.0f,
@@ -52,15 +52,15 @@ public final class ConsoleManagerImplementation
         return store(new ConsoleEntity(name,
                 consoleItemManager.create(),
                 programManager.load("console"),
-                consoleVertexArrayObject, consoleVerticesBuffer));
+                consoleVertexArrayObjectID, consoleVerticesBufferID));
     }
 
     @Override
     protected void destroy(final ConsoleEntity console) {
         log.debug("Destroying console {} ({})", console.getID(), console.getName());
 
-        memory.getVertexArrays().delete(console.getVertexArrayObject());
-        memory.getBuffers().delete(console.getVerticesBuffer());
+        memory.getVertexArrays().delete(console.getVertexArrayObjectID());
+        memory.getBuffers().delete(console.getVerticesBufferID());
     }
 
     @Override
