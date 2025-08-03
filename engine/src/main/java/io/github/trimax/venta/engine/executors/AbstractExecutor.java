@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.executors;
 
-import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
 import io.github.trimax.venta.engine.context.VentaContext;
@@ -63,7 +63,7 @@ public abstract class AbstractExecutor {
         return executors.get(command);
     }
 
-    protected final void delegateExecution(final ConsoleQueue.Command command) {
+    protected final void delegateExecution(final ConsoleCommandQueue.Command command) {
         if (StringUtils.isBlank(command.getCommand())) {
             getConsole().warning(String.format("The command is missing. Type '%s help' to see the options", getCommand()));
             return;
@@ -96,5 +96,5 @@ public abstract class AbstractExecutor {
                 .forEach(console::info);
     }
 
-    public abstract void execute(final ConsoleQueue.Command command);
+    public abstract void execute(final ConsoleCommandQueue.Command command);
 }

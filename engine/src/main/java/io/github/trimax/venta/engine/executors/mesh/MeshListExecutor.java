@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.executors.mesh;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
 import io.github.trimax.venta.engine.model.view.AbstractView;
@@ -19,7 +19,7 @@ public final class MeshListExecutor extends AbstractMeshExecutor {
     }
 
     @Override
-    public void execute(final ConsoleQueue.Command command) {
+    public void execute(final ConsoleCommandQueue.Command command) {
         getConsole().header("Meshes:");
 
         final var meshManager = getManagers().get(MeshManagerImplementation.class);

@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.executors.scene;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.console.ConsoleQueue;
+import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import lombok.NonNull;
@@ -16,7 +16,7 @@ public final class SceneSelectExecutor extends AbstractSceneExecutor {
     }
 
     @Override
-    public void execute(final ConsoleQueue.Command command) {
+    public void execute(final ConsoleCommandQueue.Command command) {
         final var sceneManager = getManagers().get(SceneManagerImplementation.class);
         if (command.asArgument().isBlank()) {
             getConsole().warning("Usage: %s <id>", command.getFullPath());

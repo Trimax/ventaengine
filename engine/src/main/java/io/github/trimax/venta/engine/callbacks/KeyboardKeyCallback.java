@@ -19,7 +19,7 @@ public final class KeyboardKeyCallback extends GLFWKeyCallback implements Abstra
 
         if (window.hasConsole() && window.getConsole().isVisible()) {
             if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                window.getConsole().handle(key, window.getConsoleQueue()::add);
+                window.getConsole().handle(key, window.getConsoleCommandQueue()::add);
             return;
         }
 

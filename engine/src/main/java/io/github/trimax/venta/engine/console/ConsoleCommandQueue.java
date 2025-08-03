@@ -17,7 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleQueue {
+public final class ConsoleCommandQueue {
     private final BlockingQueue<Command> queue = new LinkedBlockingQueue<>();
 
     @SneakyThrows
