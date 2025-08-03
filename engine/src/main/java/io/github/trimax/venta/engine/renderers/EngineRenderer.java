@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.core.FPSCounter;
-import io.github.trimax.venta.engine.core.VentaState;
+import io.github.trimax.venta.engine.context.VentaState;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;

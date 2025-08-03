@@ -2,19 +2,19 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.ConsoleItemManager;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.ConsoleItemEntity;
 import io.github.trimax.venta.engine.model.view.ConsoleItemView;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.lwjgl.opengl.ARBVertexArrayObject.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
-import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL15C.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 
 @Slf4j
 @Component
@@ -24,12 +24,13 @@ public final class ConsoleItemManagerImplementation
         implements ConsoleItemManager {
     private final ProgramManagerImplementation programManager;
     private final FontManagerImplementation fontManager;
+    private final Memory memory;
 
     public ConsoleItemEntity create() {
         log.debug("Creating console item");
 
-        final int vertexArrayObjectID = glGenVertexArrays();
-        final int verticesBufferID = glGenBuffers();
+        final int vertexArrayObjectID = memory.getVertexArrays().create("Console item VAO");
+        final int verticesBufferID = memory.getBuffers().create("Console item vertex buffer");
 
         glBindVertexArray(vertexArrayObjectID);
         glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
@@ -53,8 +54,8 @@ public final class ConsoleItemManagerImplementation
     @Override
     protected void destroy(final ConsoleItemEntity consoleItem) {
         log.debug("Destroying console item {} ({})", consoleItem.getID(), consoleItem.getName());
-        glDeleteVertexArrays(consoleItem.getVertexArrayObjectID());
-        glDeleteBuffers(consoleItem.getVerticesBufferID());
+        memory.getVertexArrays().delete(consoleItem.getVertexArrayObjectID());
+        memory.getBuffers().delete(consoleItem.getVerticesBufferID());
     }
 
     @Override

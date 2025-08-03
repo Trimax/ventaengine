@@ -4,7 +4,7 @@ import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
 import io.github.trimax.venta.engine.context.VentaContext;
-import io.github.trimax.venta.engine.core.VentaState;
+import io.github.trimax.venta.engine.context.VentaState;
 import io.github.trimax.venta.engine.model.entity.ConsoleEntity;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.Getter;

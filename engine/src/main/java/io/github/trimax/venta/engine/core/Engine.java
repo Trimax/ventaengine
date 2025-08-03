@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.core;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.console.ConsoleExecutor;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
@@ -31,6 +32,7 @@ public final class Engine implements Runnable {
     private final EngineRenderer engineRenderer;
     private final ManagerContext managerContext;
     private final VentaContext context;
+    private final Memory memory;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         internalVentaContext.getState().setApplication(ventaEngineApplication);
@@ -80,6 +82,7 @@ public final class Engine implements Runnable {
         }
 
         managerContext.cleanup();
+        memory.cleanup();
         glfwTerminate();
     }
 
