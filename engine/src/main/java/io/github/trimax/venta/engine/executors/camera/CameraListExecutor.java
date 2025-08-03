@@ -1,9 +1,9 @@
-package io.github.trimax.venta.engine.executors.scene;
+package io.github.trimax.venta.engine.executors.camera;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
-import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.model.view.AbstractView;
 import io.github.trimax.venta.engine.utils.FormatUtil;
 import lombok.NonNull;
@@ -13,17 +13,17 @@ import one.util.streamex.StreamEx;
 @Slf4j
 @Component
 @SuppressWarnings("unused")
-public final class SceneListExecutor extends AbstractSceneExecutor {
-    private SceneListExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "list", "prints the list of scenes");
+public final class CameraListExecutor extends AbstractCameraExecutor {
+    private CameraListExecutor(@NonNull final InternalVentaContext context) {
+        super(context, "list", "prints the list of cameras");
     }
 
     @Override
     public void execute(final ConsoleQueue.Command command) {
-        getConsole().header("Scenes:");
+        getConsole().header("Cameras:");
 
-        final var sceneManager = getManagers().get(SceneManagerImplementation.class);
-        StreamEx.of(sceneManager.iterator())
+        final var cameraManager = getManagers().get(CameraManagerImplementation.class);
+        StreamEx.of(cameraManager.iterator())
                 .map(AbstractView::getPublicInformation)
                 .map(FormatUtil::indent)
                 .forEach(getConsole()::info);

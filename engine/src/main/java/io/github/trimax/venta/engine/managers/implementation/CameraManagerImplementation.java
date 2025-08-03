@@ -5,7 +5,10 @@ import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.model.entity.CameraEntity;
 import io.github.trimax.venta.engine.model.view.CameraView;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
@@ -18,8 +21,7 @@ public final class CameraManagerImplementation
     private final GizmoManagerImplementation gizmoManager;
 
     @Getter(onMethod_ = @__(@Override))
-    @Setter(onMethod_ = @__(@Override), onParam_ = @__(@NonNull))
-    private CameraView current;
+    private CameraEntity current;
 
     @Override
     public CameraEntity create(@NonNull final String name) {
@@ -27,6 +29,12 @@ public final class CameraManagerImplementation
 
         return store(new CameraEntity(name, new Vector3f(0, 0, 3), new Vector3f(0, 0, 0),
                 gizmoManager.create("camera", GizmoType.Camera)));
+    }
+
+    @Override
+    public void setCurrent(@NonNull final CameraView camera) {
+        if (camera instanceof CameraEntity entity)
+            this.current = entity;
     }
 
     @Override

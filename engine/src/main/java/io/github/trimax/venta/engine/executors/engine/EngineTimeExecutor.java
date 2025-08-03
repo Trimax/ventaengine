@@ -13,7 +13,7 @@ public final class EngineTimeExecutor extends AbstractEngineExecutor {
     private final long timeStarted = System.nanoTime();
 
     private EngineTimeExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "time", "shows the number of seconds the engine is running");
+        super(context, "time", "prints the number of seconds the engine is running");
     }
 
     @Override

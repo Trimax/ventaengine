@@ -15,7 +15,7 @@ import one.util.streamex.StreamEx;
 @SuppressWarnings("unused")
 public final class ObjectListExecutor extends AbstractObjectExecutor {
     private ObjectListExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "list", "shows objects list");
+        super(context, "list", "prints the list of objects");
     }
 
     @Override

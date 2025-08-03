@@ -10,22 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @SuppressWarnings("unused")
-public final class SceneDescribeExecutor extends AbstractSceneExecutor {
-    private SceneDescribeExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "describe", "prints information about the scene");
+public final class SceneInfoExecutor extends AbstractSceneExecutor {
+    private SceneInfoExecutor(@NonNull final InternalVentaContext context) {
+        super(context, "info", "prints information about selected scene");
     }
 
     @Override
     public void execute(final ConsoleQueue.Command command) {
-        final var sceneManager = getManagers().get(SceneManagerImplementation.class);
-        if (command.asArgument().isBlank()) {
-            getConsole().warning("Usage: %s <id>", command.getFullPath());
-            return;
-        }
-
-        final var scene = sceneManager.getEntity(command.asArgument().value());
+        final var scene = getManagers().get(SceneManagerImplementation.class).getCurrent();
         if (scene == null) {
-            getConsole().error("Scene <%s> can't be described because it does not exist", command.asArgument().value());
+            getConsole().error("The scene is not selected");
             return;
         }
 

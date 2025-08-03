@@ -25,7 +25,7 @@ public final class SceneManagerImplementation
     private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
 
-    @Getter
+    @Getter(onMethod_ = @__(@Override))
     private SceneEntity current;
 
     @Override

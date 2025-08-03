@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("unused")
 public final class ObjectDescribeExecutor extends AbstractObjectExecutor {
     private ObjectDescribeExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "describe", "provides information about the object");
+        super(context, "describe", "prints information about the object");
     }
 
     @Override
@@ -25,7 +25,7 @@ public final class ObjectDescribeExecutor extends AbstractObjectExecutor {
 
         final var object = objectManager.getEntity(command.asArgument().value());
         if (object == null) {
-            getConsole().error("Object %s can't be described because it does not exist", command.asArgument().value());
+            getConsole().error("Object <%s> can't be described because it does not exist", command.asArgument().value());
             return;
         }
 
