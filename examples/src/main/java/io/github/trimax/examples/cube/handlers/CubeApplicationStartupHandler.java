@@ -14,7 +14,6 @@ public final class CubeApplicationStartupHandler implements VentaEngineStartupHa
         final var scene = context.getSceneManager().getCurrent();
 
         final var cube = context.getObjectManager().load("cube");
-        cube.getMesh().setMaterial(context.getMaterialManager().load("stone"));
         cube.setScale(new Vector3f(2.f));
         state.setCube(cube);
         scene.add(cube);

@@ -6,8 +6,13 @@ import io.github.trimax.venta.engine.model.view.MeshView;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 public final class MeshEntity extends AbstractEntity implements MeshView {
+    private final List<MeshEntity> children = new ArrayList<>();
+
     private final int verticesCount;
     private final int facetsCount;
     private final int edgesCount;
@@ -53,5 +58,9 @@ public final class MeshEntity extends AbstractEntity implements MeshView {
     @Override
     public boolean hasMaterial() {
         return material != null;
+    }
+
+    public void addChild(@NonNull final MeshEntity mesh) {
+        this.children.add(mesh);
     }
 }

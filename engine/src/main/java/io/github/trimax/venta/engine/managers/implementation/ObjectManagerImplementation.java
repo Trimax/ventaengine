@@ -4,6 +4,8 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.managers.ObjectManager;
 import io.github.trimax.venta.engine.model.dto.ObjectDTO;
+import io.github.trimax.venta.engine.model.dto.ObjectMeshDTO;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.ObjectEntity;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
@@ -12,6 +14,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
+import org.apache.commons.collections4.CollectionUtils;
 import org.joml.Vector3f;
 
 @Slf4j
@@ -20,6 +24,7 @@ import org.joml.Vector3f;
 public final class ObjectManagerImplementation
         extends AbstractManagerImplementation<ObjectEntity, ObjectView>
         implements ObjectManager {
+    private final MaterialManagerImplementation materialManager;
     private final ResourceManagerImplementation resourceManager;
     private final ProgramManagerImplementation programManager;
     private final GizmoManagerImplementation gizmoManager;
@@ -47,11 +52,22 @@ public final class ObjectManagerImplementation
         final var objectDTO = resourceManager.load(String.format("/objects/%s.json", name), ObjectDTO.class);
         return store(new ObjectEntity(name,
                 programManager.load(objectDTO.program()),
-                meshManager.load(objectDTO.mesh()),
+                buildMeshHierarchy(objectDTO.mesh()),
                 new Vector3f(),
                 new Vector3f(),
                 new Vector3f(1.f),
                 gizmoManager.create("Bounding box", GizmoType.Object)));
+    }
+
+    private MeshEntity buildMeshHierarchy(@NonNull final ObjectMeshDTO meshDTO) {
+        final var mesh = meshManager.load(meshDTO.name());
+        mesh.setMaterial(materialManager.load(meshDTO.material()));
+
+        //TODO: Set transformation matrix
+        if (CollectionUtils.isNotEmpty(meshDTO.children()))
+            StreamEx.of(meshDTO.children()).map(this::buildMeshHierarchy).forEach(mesh::addChild);
+
+        return mesh;
     }
 
     @Override
