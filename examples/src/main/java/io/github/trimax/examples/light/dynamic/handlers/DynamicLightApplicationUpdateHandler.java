@@ -1,6 +1,6 @@
-package io.github.trimax.examples.cube.movinglights.handlers;
+package io.github.trimax.examples.light.dynamic.handlers;
 
-import io.github.trimax.examples.cube.movinglights.state.CubeApplicationState;
+import io.github.trimax.examples.light.dynamic.state.DynamicLightApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
@@ -10,8 +10,8 @@ import org.joml.Vector3f;
 import static org.lwjgl.glfw.GLFW.*;
 
 @RequiredArgsConstructor
-public final class CubeApplicationUpdateHandler implements VentaEngineUpdateHandler {
-    private final CubeApplicationState state;
+public final class DynamicLightApplicationUpdateHandler implements VentaEngineUpdateHandler {
+    private final DynamicLightApplicationState state;
 
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
         state.getCube().rotate(state.getCubeRotationVelocity());

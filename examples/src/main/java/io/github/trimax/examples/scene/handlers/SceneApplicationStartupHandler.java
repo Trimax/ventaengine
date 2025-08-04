@@ -1,4 +1,4 @@
-package io.github.trimax.examples.scene;
+package io.github.trimax.examples.scene.handlers;
 
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;

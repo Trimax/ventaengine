@@ -1,4 +1,4 @@
-package io.github.trimax.examples.light.light.handlers;
+package io.github.trimax.examples.light.point.handlers;
 
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;

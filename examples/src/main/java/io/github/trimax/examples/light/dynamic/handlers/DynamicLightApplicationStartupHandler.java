@@ -1,14 +1,14 @@
-package io.github.trimax.examples.cube.movinglights.handlers;
+package io.github.trimax.examples.light.dynamic.handlers;
 
-import io.github.trimax.examples.cube.movinglights.state.CubeApplicationState;
+import io.github.trimax.examples.light.dynamic.state.DynamicLightApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
 import org.joml.Vector3f;
 
 @AllArgsConstructor
-public final class CubeApplicationStartupHandler implements VentaEngineStartupHandler {
-    private final CubeApplicationState state;
+public final class DynamicLightApplicationStartupHandler implements VentaEngineStartupHandler {
+    private final DynamicLightApplicationState state;
 
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();

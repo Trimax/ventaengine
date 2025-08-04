@@ -1,4 +1,4 @@
-package io.github.trimax.examples.cube.movinglights.handlers;
+package io.github.trimax.examples.light.dynamic.handlers;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -6,15 +6,15 @@ import java.util.Random;
 
 import org.joml.Vector3f;
 
-import io.github.trimax.examples.cube.movinglights.state.CubeApplicationState;
+import io.github.trimax.examples.light.dynamic.state.DynamicLightApplicationState;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
-public final class CubeApplicationInputHandler implements VentaEngineInputHandler {
-    private final CubeApplicationState state;
+public final class DynamicLightApplicationInputHandler implements VentaEngineInputHandler {
+    private final DynamicLightApplicationState state;
 
     @Override
     public void onKey(final int key, final int scancode, final int action, final int mods) {
