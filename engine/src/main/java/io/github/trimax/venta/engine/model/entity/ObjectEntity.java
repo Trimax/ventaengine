@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.model.entity;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.math.Transform;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.ProgramView;
@@ -10,9 +11,7 @@ import org.joml.Vector3f;
 
 @Getter
 public final class ObjectEntity extends AbstractEntity implements ObjectView {
-    private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
-    private final Vector3f rotation = new Vector3f(0.f, 0.f, 0.f);
-    private final Vector3f scale = new Vector3f(1.f, 1.f, 1.f);
+    private final Transform transform = new Transform();
     private final BoundingBox box;
 
     private DrawMode drawMode = DrawMode.Polygon;
@@ -25,18 +24,11 @@ public final class ObjectEntity extends AbstractEntity implements ObjectView {
     public ObjectEntity(final String name,
                         final ProgramEntity program,
                         final MeshEntity mesh,
-                        final Vector3f position,
-                        final Vector3f rotation,
-                        final Vector3f scale,
                         final GizmoEntity gizmo) {
         super(gizmo, name);
 
         this.mesh = mesh;
         this.program = program;
-
-        this.position.set(position);
-        this.rotation.set(rotation);
-        this.scale.set(scale);
         this.box = BoundingBox.of(mesh.getBoundingBox());
     }
 
@@ -51,33 +43,48 @@ public final class ObjectEntity extends AbstractEntity implements ObjectView {
     }
 
     @Override
-    public void setPosition(final Vector3f position) {
-        this.position.set(position);
+    public Vector3f getPosition() {
+        return transform.getPosition();
     }
 
     @Override
-    public void setRotation(final Vector3f rotation) {
-        this.rotation.set(rotation);
+    public Vector3f getRotation() {
+        return transform.getRotation();
+    }
+
+    @Override
+    public Vector3f getScale() {
+        return transform.getScale();
+    }
+
+    @Override
+    public void setPosition(final Vector3f position) {
+        this.transform.setPosition(position);
+    }
+
+    @Override
+    public void setRotation(final Vector3f angles) {
+        this.transform.setRotation(angles);
     }
 
     @Override
     public void setScale(final Vector3f scale) {
-        this.scale.set(scale);
+        this.transform.setScale(scale);
     }
 
     @Override
     public void move(final Vector3f offset) {
-        this.position.add(offset, this.position);
+        this.transform.getPosition().add(offset, this.transform.getPosition());
     }
 
     @Override
     public void rotate(final Vector3f angles) {
-        this.rotation.add(angles, this.rotation);
+        this.transform.getRotation().add(angles, this.transform.getRotation());
     }
 
     @Override
     public void scale(final Vector3f factor) {
-        this.scale.add(factor, this.scale);
+        this.transform.getScale().add(factor, this.transform.getScale());
     }
 
     @Override
