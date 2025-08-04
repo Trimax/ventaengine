@@ -1,4 +1,4 @@
-package io.github.trimax.examples.cube.state;
+package io.github.trimax.examples.cube.movinglights.state;
 
 import java.util.HashSet;
 import java.util.Set;

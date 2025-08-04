@@ -1,9 +1,9 @@
-package io.github.trimax.examples.cube;
+package io.github.trimax.examples.cube.movinglights;
 
-import io.github.trimax.examples.cube.handlers.CubeApplicationInputHandler;
-import io.github.trimax.examples.cube.handlers.CubeApplicationStartupHandler;
-import io.github.trimax.examples.cube.handlers.CubeApplicationUpdateHandler;
-import io.github.trimax.examples.cube.state.CubeApplicationState;
+import io.github.trimax.examples.cube.movinglights.handlers.CubeApplicationInputHandler;
+import io.github.trimax.examples.cube.movinglights.handlers.CubeApplicationStartupHandler;
+import io.github.trimax.examples.cube.movinglights.handlers.CubeApplicationUpdateHandler;
+import io.github.trimax.examples.cube.movinglights.state.CubeApplicationState;
 import io.github.trimax.venta.engine.VentaEngine;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;

@@ -1,4 +1,4 @@
-package io.github.trimax.examples.cube.handlers;
+package io.github.trimax.examples.cube.movinglights.handlers;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -6,7 +6,7 @@ import java.util.Random;
 
 import org.joml.Vector3f;
 
-import io.github.trimax.examples.cube.state.CubeApplicationState;
+import io.github.trimax.examples.cube.movinglights.state.CubeApplicationState;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
