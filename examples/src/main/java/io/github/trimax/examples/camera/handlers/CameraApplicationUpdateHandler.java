@@ -8,23 +8,29 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.*;
 
 @Slf4j
 @RequiredArgsConstructor
 public final class CameraApplicationUpdateHandler implements VentaEngineUpdateHandler {
     private static final Vector3f ZERO = new Vector3f(0.f);
+    private static final float MINIMAL_CAMERA_DISTANCE = 2.f;
     private final CameraApplicationState state;
 
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
+        if (state.getPushedButtons().contains(GLFW_KEY_DOWN))
+            state.setCameraDistance(state.getCameraDistance() + (float) time.getDelta());
+
+        if (state.getPushedButtons().contains(GLFW_KEY_UP))
+            state.setCameraDistance(Math.max(state.getCameraDistance() - (float) time.getDelta(), MINIMAL_CAMERA_DISTANCE));
+
         if (state.getPushedButtons().contains(GLFW_KEY_LEFT))
             state.setCameraAngle(state.getCameraAngle() + (float) time.getDelta());
 
         if (state.getPushedButtons().contains(GLFW_KEY_RIGHT))
             state.setCameraAngle(state.getCameraAngle() - (float) time.getDelta());
 
-        state.getCamera().setPosition(new Vector3f(2.5f * (float) Math.sin(state.getCameraAngle()), 2.5f, 2.5f * (float) Math.cos(state.getCameraAngle())));
+        state.getCamera().setPosition(new Vector3f((float) Math.sin(state.getCameraAngle()), 1, (float) Math.cos(state.getCameraAngle())).mul(state.getCameraDistance()));
         state.getCamera().lookAt(ZERO);
     }
 }
