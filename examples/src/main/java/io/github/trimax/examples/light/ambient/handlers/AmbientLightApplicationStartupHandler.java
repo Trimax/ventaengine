@@ -14,7 +14,6 @@ public final class AmbientLightApplicationStartupHandler implements VentaEngineS
         scene.setAmbientLight(new Vector4f(0.8f, 0.8f, 0.8f, 1.f));
 
         final var plane = context.getObjectManager().load("plane");
-        plane.getMesh().setMaterial(context.getMaterialManager().load("stone"));;
         scene.add(plane);
 
         final var camera = context.getCameraManager().getCurrent();

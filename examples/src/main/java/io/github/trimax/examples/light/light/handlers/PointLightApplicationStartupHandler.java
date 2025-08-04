@@ -12,7 +12,6 @@ public final class PointLightApplicationStartupHandler implements VentaEngineSta
         final var scene = context.getSceneManager().getCurrent();
 
         final var plane = context.getObjectManager().load("plane");
-        plane.getMesh().setMaterial(context.getMaterialManager().load("stone"));
         plane.setScale(new Vector3f(50f));
         scene.add(plane);
 
