@@ -1,6 +1,6 @@
-package io.github.trimax.examples.cube.handlers;
+package io.github.trimax.examples.cube.movinglights.handlers;
 
-import io.github.trimax.examples.cube.state.CubeApplicationState;
+import io.github.trimax.examples.cube.movinglights.state.CubeApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
