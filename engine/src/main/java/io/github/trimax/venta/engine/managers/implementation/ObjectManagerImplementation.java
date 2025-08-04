@@ -48,9 +48,9 @@ public final class ObjectManagerImplementation
         return store(new ObjectEntity(name,
                 programManager.load(objectDTO.program()),
                 meshManager.load(objectDTO.mesh()),
-                objectDTO.position(),
-                objectDTO.angles(),
-                objectDTO.scale(),
+                new Vector3f(),
+                new Vector3f(),
+                new Vector3f(1.f),
                 gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 

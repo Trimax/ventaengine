@@ -3,16 +3,11 @@ package io.github.trimax.examples.colouredcube.handlers;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
-@Slf4j
 @AllArgsConstructor
 public final class ColouredCubeApplicationStartupHandler implements VentaEngineStartupHandler {
-
     public void onStartup(final String[] args, final VentaContext context) {
-        log.info("Cube drawing started");
-
         final var scene = context.getSceneManager().getCurrent();
 
         final var cube = context.getObjectManager().load("colouredcube");
@@ -21,7 +16,7 @@ public final class ColouredCubeApplicationStartupHandler implements VentaEngineS
         scene.add(cube);
 
         final var lightXZ = context.getLightManager().load("basic");
-        lightXZ.setPosition(new Vector3f(3.f, 3.f, 3.f));
+        lightXZ.setPosition(new Vector3f(3.5f, 3.5f, 3.5f));
         lightXZ.setIntensity(6.0f);
         scene.add(lightXZ);
 

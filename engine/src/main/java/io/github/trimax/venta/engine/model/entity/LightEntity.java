@@ -22,8 +22,6 @@ public final class LightEntity extends AbstractEntity implements LightView {
     public LightEntity(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoEntity gizmo) {
         this(name, gizmo);
 
-        setPosition(dto.position());
-        setDirection(dto.direction());
         setColor(dto.color());
         setAttenuation(attenuation);
     }

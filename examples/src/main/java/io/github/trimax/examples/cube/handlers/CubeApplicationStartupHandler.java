@@ -4,17 +4,13 @@ import io.github.trimax.examples.cube.state.CubeApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
-@Slf4j
 @AllArgsConstructor
 public final class CubeApplicationStartupHandler implements VentaEngineStartupHandler {
     private final CubeApplicationState state;
 
     public void onStartup(final String[] args, final VentaContext context) {
-        log.info("Rotating cube started");
-
         final var scene = context.getSceneManager().getCurrent();
 
         final var cube = context.getObjectManager().load("cube");
