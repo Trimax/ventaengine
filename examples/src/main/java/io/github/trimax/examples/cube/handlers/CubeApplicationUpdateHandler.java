@@ -5,12 +5,10 @@ import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-@Slf4j
 @RequiredArgsConstructor
 public final class CubeApplicationUpdateHandler implements VentaEngineUpdateHandler {
     private final CubeApplicationState state;

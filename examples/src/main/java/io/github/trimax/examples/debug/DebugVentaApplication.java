@@ -9,9 +9,7 @@ import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public final class DebugVentaApplication implements VentaEngineApplication {
     private final DebugApplicationState state = new DebugApplicationState();
 

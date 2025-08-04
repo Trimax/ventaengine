@@ -3,10 +3,8 @@ package io.github.trimax.examples.light.light.handlers;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
-@Slf4j
 @AllArgsConstructor
 public final class PointLightApplicationStartupHandler implements VentaEngineStartupHandler {
     @Override

@@ -4,18 +4,14 @@ import io.github.trimax.examples.debug.state.DebugApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-@Slf4j
 @AllArgsConstructor
 public final class DebugApplicationStartupHandler implements VentaEngineStartupHandler {
     private final DebugApplicationState state;
 
     public void onStartup(final String[] args, final VentaContext context) {
-        log.info("Debug demo application started");
-
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector4f(0.6f, 0.6f, 0.6f, 1.f));
 

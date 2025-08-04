@@ -49,6 +49,7 @@ public final class SceneManagerImplementation
             for (final var sceneLight : sceneDTO.lights()) {
                 final var object = lightManager.load(sceneLight.name());
                 Optional.of(sceneLight).map(SceneLightDTO::position).ifPresent(object::setPosition);
+                Optional.of(sceneLight).map(SceneLightDTO::direction).ifPresent(object::setDirection);
 
                 scene.add(object);
             }
