@@ -1,4 +1,4 @@
-package io.github.trimax.examples.colouredcube.handlers;
+package io.github.trimax.examples.material.color.handlers;
 
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
@@ -6,16 +6,17 @@ import lombok.AllArgsConstructor;
 import org.joml.Vector3f;
 
 @AllArgsConstructor
-public final class ColouredCubeApplicationStartupHandler implements VentaEngineStartupHandler {
+public final class ColoredCubeApplicationStartupHandler implements VentaEngineStartupHandler {
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
 
         final var cube = context.getObjectManager().load("colouredcube");
+        cube.getMesh().setMaterial(context.getMaterialManager().load("stone"));
         cube.setScale(new Vector3f(5.f));
         scene.add(cube);
 
         final var lightXZ = context.getLightManager().load("basic");
-        lightXZ.setPosition(new Vector3f(3.5f, 3.5f, 3.5f));
+        lightXZ.setPosition(new Vector3f(3.f, 3.f, 3.f));
         lightXZ.setIntensity(6.0f);
         scene.add(lightXZ);
 
