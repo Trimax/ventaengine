@@ -16,7 +16,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 import org.apache.commons.collections4.CollectionUtils;
-import org.joml.Vector3f;
 
 @Slf4j
 @Component
@@ -39,9 +38,6 @@ public final class ObjectManagerImplementation
         return store(new ObjectEntity(name,
                 programManager.getEntity(program.getID()),
                 meshManager.getEntity(mesh.getID()),
-                new Vector3f(0.f, 0.f, 0.f),
-                new Vector3f(0.f, 0.f, 0.f),
-                new Vector3f(1.f, 1.f, 1.f),
                 gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 
@@ -53,9 +49,6 @@ public final class ObjectManagerImplementation
         return store(new ObjectEntity(name,
                 programManager.load(objectDTO.program()),
                 buildMeshHierarchy(objectDTO.mesh()),
-                new Vector3f(),
-                new Vector3f(),
-                new Vector3f(1.f),
                 gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 

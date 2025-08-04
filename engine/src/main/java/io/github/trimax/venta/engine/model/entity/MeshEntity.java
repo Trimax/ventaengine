@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.model.entity;
 
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.math.Transform;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.util.List;
 @Getter
 public final class MeshEntity extends AbstractEntity implements MeshView {
     private final List<MeshEntity> children = new ArrayList<>();
+    private final Transform transform = new Transform();
 
     private final int verticesCount;
     private final int facetsCount;
