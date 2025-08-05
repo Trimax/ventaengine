@@ -5,8 +5,10 @@ import io.github.trimax.venta.engine.model.entity.AbstractEntity;
 import io.github.trimax.venta.engine.registries.AbstractRegistry;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -36,6 +38,15 @@ public abstract class AbstractRegistryImplementation<T extends E, E extends Abst
                     () -> entities.put(id, creator.get()));
 
         return entities.get(id);
+    }
+
+    @Override
+    public final Iterator<E> iterator() {
+        return StreamEx.ofValues(entities).map(this::toView).iterator();
+    }
+
+    private E toView(final T entity) {
+        return entity;
     }
 
     public final void cleanup() {

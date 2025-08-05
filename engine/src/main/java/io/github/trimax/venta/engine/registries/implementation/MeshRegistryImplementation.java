@@ -1,12 +1,12 @@
-package io.github.trimax.venta.engine.managers.implementation;
+package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.MeshManager;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.instance.MeshInstance;
-import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
+import io.github.trimax.venta.engine.registries.MeshRegistry;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,26 +27,23 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MeshManagerImplementation
-        extends AbstractManagerImplementation<MeshInstanceImplementation, MeshInstance>
-        implements MeshManager {
+public final class MeshRegistryImplementation
+        extends AbstractRegistryImplementation<MeshEntityImplementation, MeshEntity, Void>
+        implements MeshRegistry {
     private final Memory memory;
 
     @Override
-    public MeshInstanceImplementation load(@NonNull final String name) {
-        if (isCached(name))
-            return getCached(name);
+    protected MeshEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
+        log.info("Loading mesh {}", resourcePath);
 
-        log.info("Loading mesh {}", name);
-
-        final var meshDTO = ResourceUtil.loadAsObject(String.format("/meshes/%s.json", name), MeshDTO.class);
+        final var meshDTO = ResourceUtil.loadAsObject(String.format("/meshes/%s.json", resourcePath), MeshDTO.class);
 
         final var vertices = meshDTO.getVerticesArray();
 
-        final int vertexArrayObjectID = memory.getVertexArrays().create("Mesh %s VAO", name);
-        final int vertexBufferID = memory.getBuffers().create("Mesh %s vertex buffer", name);
-        final int facetsBufferID = memory.getBuffers().create("Mesh %s face buffer", name);
-        final int edgesBufferID = memory.getBuffers().create("Mesh %s edge buffer", name);
+        final int vertexArrayObjectID = memory.getVertexArrays().create("Mesh %s VAO", resourcePath);
+        final int vertexBufferID = memory.getBuffers().create("Mesh %s vertex buffer", resourcePath);
+        final int facetsBufferID = memory.getBuffers().create("Mesh %s face buffer", resourcePath);
+        final int edgesBufferID = memory.getBuffers().create("Mesh %s edge buffer", resourcePath);
 
         glBindVertexArray(vertexArrayObjectID);
 
@@ -108,21 +105,17 @@ public final class MeshManagerImplementation
 
         glBindVertexArray(0);
 
-        return store(new MeshInstanceImplementation(name, vertices.length, meshDTO.getFacetsArrayLength(),
-                meshDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO)));
+        return new MeshEntityImplementation(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
+                vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO));
     }
 
     @Override
-    protected void destroy(final MeshInstanceImplementation object) {
-        log.info("Destroying mesh {} ({})", object.getID(), object.getName());
-        memory.getVertexArrays().delete(object.getVertexArrayObjectID());
-        memory.getBuffers().delete(object.getVerticesBufferID());
-        memory.getBuffers().delete(object.getFacetsBufferID());
-        memory.getBuffers().delete(object.getEdgesBufferID());
-    }
+    protected void unload(@NonNull final MeshEntityImplementation entity) {
+        log.info("Unloading mesh {}", entity.getID());
 
-    @Override
-    protected boolean shouldCache() {
-        return true;
+        memory.getVertexArrays().delete(entity.getVertexArrayObjectID());
+        memory.getBuffers().delete(entity.getVerticesBufferID());
+        memory.getBuffers().delete(entity.getFacetsBufferID());
+        memory.getBuffers().delete(entity.getEdgesBufferID());
     }
 }
