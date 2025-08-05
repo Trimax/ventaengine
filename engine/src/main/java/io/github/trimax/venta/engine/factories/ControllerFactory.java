@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.controllers.AbstractController;
 import io.github.trimax.venta.engine.model.states.AbstractState;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.NonNull;
+import one.util.streamex.StreamEx;
 
 import java.util.List;
 import java.util.Map;
@@ -19,5 +20,9 @@ public final class ControllerFactory {
 
     public <A, S extends AbstractState, C extends AbstractController<S, A>> C get(@NonNull final Class<C> controllerClass) {
         return controllerClass.cast(controllers.get(controllerClass));
+    }
+
+    public void cleanup() {
+        StreamEx.ofValues(controllers).forEach(AbstractController::deinitialize);
     }
 }

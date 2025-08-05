@@ -9,7 +9,9 @@ import io.github.trimax.venta.engine.controllers.EngineController;
 import io.github.trimax.venta.engine.controllers.TextController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.renderers.EngineRenderer;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,14 +28,11 @@ import static org.lwjgl.opengl.GL33C.glEnable;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Engine implements Runnable {
-    private final ConsoleController consoleController;
-    private final EngineController engineController;
-    private final WindowController windowController;
-    private final TextController textController;
-
     private final ConsoleCommandExecutor consoleCommandExecutor;
+    private final ControllerFactory controllerFactory;
     private final EngineRenderer engineRenderer;
     private final VentaContext context;
+    private final Memory memory;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         glfwSetErrorCallback(new ErrorCallback());
@@ -44,12 +43,12 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        engineController.initialize(ventaEngineApplication);
-        windowController.initialize(ventaEngineApplication);
+        controllerFactory.get(EngineController.class).initialize(ventaEngineApplication);
+        controllerFactory.get(WindowController.class).initialize(ventaEngineApplication);
         GL.createCapabilities();
 
-        consoleController.initialize();
-        textController.initialize();
+        controllerFactory.get(ConsoleController.class).initialize();
+        controllerFactory.get(TextController.class).initialize();
 
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
@@ -57,9 +56,10 @@ public final class Engine implements Runnable {
 
     @Override
     public void run() {
-        consoleController.info("Venta engine started");
+        controllerFactory.get(ConsoleController.class).info("Venta engine started");
         glEnable(GL_DEPTH_TEST);
 
+        final var engineController = controllerFactory.get(EngineController.class);
         final var updateHandler = engineController.get().getApplication().getUpdateHandler();
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
@@ -73,10 +73,8 @@ public final class Engine implements Runnable {
             consoleCommandExecutor.execute();
         }
 
-        consoleController.deinitialize();
-        windowController.deinitialize();
-        textController.deinitialize();
-        engineController.deinitialize();
+        controllerFactory.cleanup();
+        memory.cleanup();
 
         glfwTerminate();
     }
