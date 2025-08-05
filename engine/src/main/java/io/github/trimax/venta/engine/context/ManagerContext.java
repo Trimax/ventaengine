@@ -40,7 +40,6 @@ public final class ManagerContext {
             MaterialManagerImplementation.class,
             FontManagerImplementation.class,
             AtlasManagerImplementation.class,
-            ConsoleManagerImplementation.class,
             ConsoleItemManagerImplementation.class,
             TextureManagerImplementation.class);
 }

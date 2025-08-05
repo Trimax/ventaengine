@@ -1,10 +1,9 @@
 package io.github.trimax.venta.engine.model.entity;
 
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
-import io.github.trimax.venta.engine.model.view.ConsoleView;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -15,9 +14,9 @@ import java.util.function.Consumer;
 import static org.lwjgl.glfw.GLFW.*;
 
 @Getter
-public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
+public final class ConsoleEntity extends AbstractEntity {
     private final StringBuilder inputBuffer = new StringBuilder(Definitions.CONSOLE_WELCOME_SYMBOL);
-    private final List<ConsoleManagerImplementation.ConsoleMessage> history = new ArrayList<>();
+    private final List<ConsoleController.ConsoleMessage> history = new ArrayList<>();
     private final List<String> commands = new ArrayList<>();
 
     private final ConsoleItemEntity consoleItem;
@@ -136,6 +135,6 @@ public final class ConsoleEntity extends AbstractEntity implements ConsoleView {
     }
 
     private void print(final ConsoleMessageType type, final String format, final Object... arguments) {
-        this.history.add(new ConsoleManagerImplementation.ConsoleMessage(type, String.format(format, arguments)));
+        this.history.add(new ConsoleController.ConsoleMessage(type, String.format(format, arguments)));
     }
 }

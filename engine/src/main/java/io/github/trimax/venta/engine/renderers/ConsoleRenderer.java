@@ -1,9 +1,9 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
 import io.github.trimax.venta.engine.model.entity.ConsoleEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -61,7 +61,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleEntity, Conso
             renderItem(console, line);
 
         try (final var _ = consoleItemRenderer.withContext(getContext())
-                .withText(new ConsoleManagerImplementation.ConsoleMessage(ConsoleMessageType.Command, console.getInputBuffer().toString()))
+                .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getInputBuffer().toString()))
                 .withPosition(-0.98f, 0.05f)
                 .withScale(0.001f)) {
             consoleItemRenderer.render(console.getConsoleItem());

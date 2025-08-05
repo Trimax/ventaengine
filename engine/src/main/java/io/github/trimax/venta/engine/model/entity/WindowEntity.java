@@ -5,7 +5,6 @@ import io.github.trimax.venta.engine.callbacks.MouseCursorCallback;
 import io.github.trimax.venta.engine.callbacks.WindowSizeCallback;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
-import io.github.trimax.venta.engine.model.view.WindowView;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -17,7 +16,7 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 @Slf4j
 @Getter
-public final class WindowEntity extends AbstractEntity implements WindowView {
+public final class WindowEntity extends AbstractEntity {
     private final GLFWFramebufferSizeCallback windowSizeCallback;
     private final GLFWMouseButtonCallback mouseClickCallback;
     private final GLFWCursorPosCallback mouseCursorCallback;

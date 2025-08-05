@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.controllers;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleItemManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
 import io.github.trimax.venta.engine.memory.Memory;
@@ -61,4 +62,6 @@ public final class ConsoleController extends AbstractController<ConsoleEntity, V
         memory.getVertexArrays().delete(object.getVertexArrayObjectID());
         memory.getBuffers().delete(object.getVerticesBufferID());
     }
+
+    public record ConsoleMessage(ConsoleMessageType type, String text) {}
 }

@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.ConsoleItemBinder;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.model.entity.ConsoleItemEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -106,7 +106,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
         private float x;
         private float y;
         private float scale;
-        private ConsoleManagerImplementation.ConsoleMessage message;
+        private ConsoleController.ConsoleMessage message;
 
         public ConsoleItemRenderContext withPosition(final float x, final float y) {
             this.x = x;
@@ -119,7 +119,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
             return this;
         }
 
-        public ConsoleItemRenderContext withText(final ConsoleManagerImplementation.ConsoleMessage message) {
+        public ConsoleItemRenderContext withText(final ConsoleController.ConsoleMessage message) {
             this.message = message;
             return this;
         }
