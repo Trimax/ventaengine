@@ -3,7 +3,11 @@ package io.github.trimax.venta.engine.context;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.*;
 import io.github.trimax.venta.engine.managers.implementation.*;
+import io.github.trimax.venta.engine.registries.FontRegistry;
+import io.github.trimax.venta.engine.registries.ShaderRegistry;
 import io.github.trimax.venta.engine.registries.TextureRegistry;
+import io.github.trimax.venta.engine.registries.implementation.FontRegistryImplementation;
+import io.github.trimax.venta.engine.registries.implementation.ShaderRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +20,19 @@ public final class VentaContext {
     private final MaterialManagerImplementation materialManager;
     private final ProgramManagerImplementation programManager;
     private final ObjectManagerImplementation objectManager;
-    private final ShaderManagerImplementation shaderManager;
     private final CameraManagerImplementation cameraManager;
     private final SceneManagerImplementation sceneManager;
     private final LightManagerImplementation lightManager;
     private final MeshManagerImplementation meshManager;
-    private final FontManagerImplementation fontManager;
 
     private final TextureRegistryImplementation textureRegistry;
+    private final ShaderRegistryImplementation shaderRegistry;
+    private final FontRegistryImplementation fontRegistry;
+
+    /*** Managers ***/
 
     public MaterialManager getMaterialManager() {
         return materialManager;
-    }
-
-    public TextureRegistry getTextureRegistry() {
-        return textureRegistry;
     }
 
     public ProgramManager getProgramManager() {
@@ -39,10 +41,6 @@ public final class VentaContext {
 
     public ObjectManager getObjectManager() {
         return objectManager;
-    }
-
-    public ShaderManager getShaderManager() {
-        return shaderManager;
     }
 
     public CameraManager getCameraManager() {
@@ -61,7 +59,17 @@ public final class VentaContext {
         return meshManager;
     }
 
-    public FontManager getFontManager() {
-        return fontManager;
+    /*** Registries ***/
+
+    public TextureRegistry getTextureRegistry() {
+        return textureRegistry;
+    }
+
+    public ShaderRegistry getShaderRegistry() {
+        return shaderRegistry;
+    }
+
+    public FontRegistry getFontRegistry() {
+        return fontRegistry;
     }
 }

@@ -3,8 +3,7 @@ package io.github.trimax.venta.engine.context;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.*;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
-import io.github.trimax.venta.engine.registries.implementation.AbstractRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
+import io.github.trimax.venta.engine.registries.implementation.*;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.NonNull;
 import one.util.streamex.StreamEx;
@@ -41,13 +40,14 @@ public final class ManagerContext {
             GizmoManagerImplementation.class,
             MeshManagerImplementation.class,
             ProgramManagerImplementation.class,
-            ShaderManagerImplementation.class,
             CameraManagerImplementation.class,
             MaterialManagerImplementation.class,
-            FontManagerImplementation.class,
             AtlasManagerImplementation.class);
 
     /* The cleanup order of registries */
     private static final List<Class<? extends AbstractRegistryImplementation<?, ?, ?>>> REGISTRY_CLEANUP_ORDER = Arrays.asList(
+            FontRegistryImplementation.class,
+            AtlasRegistryImplementation.class,
+            ShaderRegistryImplementation.class,
             TextureRegistryImplementation.class);
 }

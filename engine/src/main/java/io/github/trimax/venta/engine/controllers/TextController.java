@@ -1,10 +1,10 @@
 package io.github.trimax.venta.engine.controllers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.implementation.FontManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.TextState;
+import io.github.trimax.venta.engine.registries.implementation.FontRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextController extends AbstractController<TextState, Void> {
     private final ProgramManagerImplementation programManager;
-    private final FontManagerImplementation fontManager;
+    private final FontRegistryImplementation fontRegistry;
     private final Memory memory;
 
     @Override
@@ -46,7 +46,7 @@ public final class TextController extends AbstractController<TextState, Void> {
         glBindVertexArray(0);
 
         return new TextState(programManager.load("text"),
-                fontManager.load("DejaVuSansMono"),
+                fontRegistry.get("DejaVuSansMono"),
                 vertexArrayObjectID, verticesBufferID);
     }
 
