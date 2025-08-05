@@ -33,6 +33,6 @@ public final class MaterialRegistryImplementation
 
     @Override
     protected void unload(@NonNull final MaterialEntityImplementation entity) {
-        log.info("Destroying material {}", entity.getID());
+        log.info("Unloading material {}", entity.getID());
     }
 }

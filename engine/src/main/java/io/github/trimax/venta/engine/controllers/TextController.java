@@ -27,7 +27,7 @@ public final class TextController extends AbstractController<TextState, Void> {
 
     @Override
     protected TextState create(final Void argument) {
-        log.debug("Creating text");
+        log.debug("Initializing text");
 
         final int vertexArrayObjectID = memory.getVertexArrays().create("Console text VAO");
         final int verticesBufferID = memory.getBuffers().create("Console text vertex buffer");
@@ -52,7 +52,7 @@ public final class TextController extends AbstractController<TextState, Void> {
 
     @Override
     protected void destroy(@NonNull final TextState text) {
-        log.debug("Destroying text");
+        log.debug("Deinitializing text");
 
         memory.getVertexArrays().delete(text.getVertexArrayObjectID());
         memory.getBuffers().delete(text.getVerticesBufferID());

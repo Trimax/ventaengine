@@ -23,7 +23,7 @@ public final class EngineController extends AbstractController<EngineState, Vent
 
     @Override
     protected EngineState create(final VentaEngineApplication application) {
-        log.debug("Creating engine state");
+        log.debug("Initializing engine state");
 
         final var state = new EngineState(application);
         state.setDebugEnabled(application.getConfiguration().getRenderConfiguration().isDebugEnabled());
@@ -33,7 +33,7 @@ public final class EngineController extends AbstractController<EngineState, Vent
 
     @Override
     protected void destroy(@NonNull final EngineState object) {
-        log.debug("Destroying engine state");
+        log.debug("Deinitializing engine state");
 
         registryFactory.cleanup();
         managerFactory.cleanup();

@@ -69,7 +69,7 @@ public final class ProgramRegistryImplementation
 
     @Override
     protected void unload(@NonNull final ProgramEntityImplementation entity) {
-        log.info("Destroying program {}", entity.getID());
+        log.info("Unloading program {}", entity.getID());
 
         memory.getPrograms().delete(entity.getInternalID());
     }

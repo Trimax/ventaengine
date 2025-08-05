@@ -29,7 +29,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
 
     @Override
     protected ConsoleState create(final Void argument) {
-        log.debug("Creating console");
+        log.debug("Initializing console");
 
         final int consoleVertexArrayObjectID = memory.getVertexArrays().create("Console VAO");
         final int consoleVerticesBufferID = memory.getBuffers().create("Console vertex buffer");
@@ -57,7 +57,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
 
     @Override
     protected void destroy(@NonNull final ConsoleState object) {
-        log.debug("Destroying console");
+        log.debug("Deinitializing console");
 
         memory.getVertexArrays().delete(object.getVertexArrayObjectID());
         memory.getBuffers().delete(object.getVerticesBufferID());
