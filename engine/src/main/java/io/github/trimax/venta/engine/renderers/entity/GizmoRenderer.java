@@ -5,10 +5,10 @@ import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.GizmoInstanceImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.ProgramInstanceImplementation;
+import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.renderers.DebugRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GizmoRenderer extends AbstractEntityRenderer<GizmoInstanceImplementation, GizmoRenderer.GizmoRenderContext, DebugRenderer.DebugRenderContext> {
-    private final ProgramManagerImplementation programManager;
+    private final ProgramRegistryImplementation programRegistry;
     private final MeshRenderer meshRenderer;
     private final MatrixBinder matrixBinder;
 
@@ -42,10 +42,10 @@ public final class GizmoRenderer extends AbstractEntityRenderer<GizmoInstanceImp
     @Override
     public void render(final GizmoInstanceImplementation gizmo) {
         //TODO: Why not to create Program on Gizmo creation?
-        render(gizmo, programManager.load(ProgramType.Simple.name()));
+        render(gizmo, programRegistry.get(ProgramType.Simple.name()));
     }
 
-    private void render(final GizmoInstanceImplementation gizmo, final ProgramInstanceImplementation program) {
+    private void render(final GizmoInstanceImplementation gizmo, final ProgramEntityImplementation program) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");

@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.managers;
 
+import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.instance.MeshInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
-import io.github.trimax.venta.engine.model.instance.ProgramInstance;
 import lombok.NonNull;
 
 public interface ObjectManager extends AbstractManager<ObjectInstance> {
@@ -10,5 +10,5 @@ public interface ObjectManager extends AbstractManager<ObjectInstance> {
 
     ObjectInstance create(@NonNull final String name,
                           @NonNull final MeshInstance mesh,
-                          @NonNull final ProgramInstance program);
+                          @NonNull final ProgramEntity program);
 }

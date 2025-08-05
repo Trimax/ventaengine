@@ -1,26 +1,21 @@
-package io.github.trimax.venta.engine.model.instance.implementation;
+package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.enums.ShaderUniform;
-import io.github.trimax.venta.engine.model.instance.ProgramInstance;
+import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public final class ProgramInstanceImplementation extends AbstractInstanceImplementation implements ProgramInstance {
+@AllArgsConstructor
+public final class ProgramEntityImplementation  extends AbstractEntityImplementation implements ProgramEntity {
     private final int internalID;
 
     @Getter(AccessLevel.NONE)
     private final Map<String, Integer> uniforms = new HashMap<>();
-
-    public ProgramInstanceImplementation(final int internalID, @NonNull final String name) {
-        super(name);
-
-        this.internalID = internalID;
-    }
 
     public void addUniformID(final String name, final Integer uniformID) {
         if (uniformID >= 0)

@@ -3,9 +3,9 @@ package io.github.trimax.venta.engine.binders;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.MaterialInstanceImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.ProgramInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL20C.glUniform1i;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MaterialBinder extends AbstractBinder {
-    public void bind(final ProgramInstanceImplementation program, final MaterialInstanceImplementation material) {
+    public void bind(final ProgramEntityImplementation program, final MaterialInstanceImplementation material) {
         if (material == null)
             return;
 
@@ -30,7 +30,7 @@ public final class MaterialBinder extends AbstractBinder {
         bind(TextureType.Roughness, program, material, ShaderUniform.UseTextureRoughness, ShaderUniform.TextureRoughness);
     }
 
-    private void bind(final TextureType type, final ProgramInstanceImplementation program,
+    private void bind(final TextureType type, final ProgramEntityImplementation program,
                       final MaterialInstanceImplementation material, final ShaderUniform useTextureUniform, final ShaderUniform textureUniform) {
         bind(type, material.getTexture(type), program.getUniformID(useTextureUniform), program.getUniformID(textureUniform));
     }
