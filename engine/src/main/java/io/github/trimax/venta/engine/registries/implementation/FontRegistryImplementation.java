@@ -34,7 +34,7 @@ public final class FontRegistryImplementation
 
     @Override
     protected void unload(@NonNull final FontEntityImplementation entity) {
-        log.info("Unloading font prefab {}", entity.getID());
+        log.info("Unloading font {}", entity.getID());
         MemoryUtil.memFree(entity.getBuffer());
     }
 }

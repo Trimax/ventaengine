@@ -48,7 +48,7 @@ public final class AtlasRegistryImplementation
 
     @Override
     protected void unload(@NonNull final AtlasEntityImplementation entity) {
-        log.info("Unloading atlas prefab {}", entity.getID());
+        log.info("Unloading atlas {}", entity.getID());
         entity.getBuffer().free();
     }
 }
