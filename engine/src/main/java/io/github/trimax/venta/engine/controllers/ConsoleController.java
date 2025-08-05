@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.controllers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.managers.implementation.ConsoleItemManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
@@ -75,71 +74,29 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
     }
 
     public void accept(final char c) {
-        get().getInputBuffer().append(c);
+        get().accept(c);
     }
 
     public void clear() {
-        get().getHistory().clear();
+        get().clear();
     }
 
     public void handle(final int key, final Consumer<ConsoleCommandQueue.Command> commandConsumer) {
         switch (key) {
             case GLFW_KEY_ENTER:
-                submit(commandConsumer);
+                get().submit(commandConsumer);
                 return;
             case GLFW_KEY_BACKSPACE:
-                backspace();
+                get().eraseLast();
                 return;
             case GLFW_KEY_UP:
-                navigateHistory(-1);
+                get().navigateHistory(-1);
                 return;
             case GLFW_KEY_DOWN:
-                navigateHistory(1);
+                get().navigateHistory(1);
                 return;
             default:
         }
-    }
-
-    private String getInput() {
-        return get().getInputBuffer().substring(Definitions.CONSOLE_WELCOME_SYMBOL.length());
-    }
-
-    private void backspace() {
-        if (get().getInputBuffer().length() > Definitions.CONSOLE_WELCOME_SYMBOL.length())
-            get().getInputBuffer().setLength(get().getInputBuffer().length() - 1);
-    }
-
-    private void submit(final Consumer<ConsoleCommandQueue.Command> commandConsumer) {
-        final var command = new ConsoleCommandQueue.Command(getInput());
-        get().getInputBuffer().setLength(Definitions.CONSOLE_WELCOME_SYMBOL.length());
-
-        if (command.isBlank() || command.isComment())
-            return;
-
-        commandConsumer.accept(command);
-
-        get().getCommands().add(command.value());
-        get().setHistoryIndex(get().getCommands().size());
-    }
-
-    private void navigateHistory(final int direction) {
-        if (get().getHistory().isEmpty())
-            return;
-
-        get().setHistoryIndex(get().getHistoryIndex() + direction);
-
-        if (get().getHistoryIndex() < 0)
-            get().setHistoryIndex(0);
-
-        if (get().getHistoryIndex() >= get().getCommands().size()) {
-            get().setHistoryIndex(get().getCommands().size());
-            get().getInputBuffer().setLength(Definitions.CONSOLE_WELCOME_SYMBOL.length());
-            return;
-        }
-
-        final var historyCommand = get().getCommands().get(get().getHistoryIndex());
-        get().getInputBuffer().setLength(Definitions.CONSOLE_WELCOME_SYMBOL.length());
-        get().getInputBuffer().append(historyCommand);
     }
 
     public void header(final String format, final Object... arguments) {

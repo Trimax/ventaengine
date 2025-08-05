@@ -62,7 +62,7 @@ public final class ConsoleRenderer extends AbstractStateRenderer<ConsoleState, C
             renderItem(console, line);
 
         try (final var _ = consoleItemRenderer.withContext(getContext())
-                .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getInputBuffer().toString()))
+                .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getBuffer()))
                 .withPosition(-0.98f, 0.05f)
                 .withScale(0.001f)) {
             consoleItemRenderer.render(console.getConsoleItem());

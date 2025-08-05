@@ -27,10 +27,10 @@ public final class ConsoleItemManagerImplementation
     private final Memory memory;
 
     public ConsoleItemEntity create() {
-        log.debug("Creating console item");
+        log.debug("Creating console text");
 
-        final int vertexArrayObjectID = memory.getVertexArrays().create("Console item VAO");
-        final int verticesBufferID = memory.getBuffers().create("Console item vertex buffer");
+        final int vertexArrayObjectID = memory.getVertexArrays().create("Console text VAO");
+        final int verticesBufferID = memory.getBuffers().create("Console text vertex buffer");
 
         glBindVertexArray(vertexArrayObjectID);
         glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
