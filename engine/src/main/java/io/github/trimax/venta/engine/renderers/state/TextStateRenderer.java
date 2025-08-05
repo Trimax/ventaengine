@@ -23,7 +23,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TextRenderer extends AbstractStateRenderer<TextState, TextRenderer.ConsoleItemRenderContext, ConsoleRenderer.ConsoleRenderContext> {
+public final class TextStateRenderer extends AbstractStateRenderer<TextState, TextStateRenderer.ConsoleItemRenderContext, ConsoleStateRenderer.ConsoleRenderContext> {
     private final ConsoleItemBinder consoleItemBinder;
 
     @Override
@@ -100,7 +100,7 @@ public final class TextRenderer extends AbstractStateRenderer<TextState, TextRen
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class ConsoleItemRenderContext extends AbstractRenderContext<ConsoleRenderer.ConsoleRenderContext> {
+    public static final class ConsoleItemRenderContext extends AbstractRenderContext<ConsoleStateRenderer.ConsoleRenderContext> {
         private final FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4);
 
         private float x;

@@ -13,9 +13,9 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class WindowRenderer extends AbstractStateRenderer<WindowState, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
+public final class WindowStateRenderer extends AbstractStateRenderer<WindowState, WindowStateRenderer.WindowRenderContext, WindowStateRenderer.WindowRenderContext> {
     private final ConsoleController consoleController;
-    private final ConsoleRenderer consoleRenderer;
+    private final ConsoleStateRenderer consoleRenderer;
     private long lastUpdated = 0;
 
     @Override

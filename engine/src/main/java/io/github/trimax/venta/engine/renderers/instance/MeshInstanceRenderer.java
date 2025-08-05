@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers.entity;
+package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MeshRenderer extends AbstractEntityRenderer<MeshInstanceImplementation, MeshRenderer.MeshRenderContext, ObjectRenderer.ObjectRenderContext> {
+public final class MeshInstanceRenderer extends AbstractInstanceRenderer<MeshInstanceImplementation, MeshInstanceRenderer.MeshRenderContext, ObjectInstanceRenderer.ObjectRenderContext> {
     private final MaterialBinder materialBinder;
 
     @Override
@@ -44,7 +44,7 @@ public final class MeshRenderer extends AbstractEntityRenderer<MeshInstanceImple
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class MeshRenderContext extends AbstractRenderContext<ObjectRenderer.ObjectRenderContext> {
+    public static final class MeshRenderContext extends AbstractRenderContext<ObjectInstanceRenderer.ObjectRenderContext> {
         private ProgramEntityImplementation program;
 
         public MeshRenderContext withProgram(final ProgramEntityImplementation program) {

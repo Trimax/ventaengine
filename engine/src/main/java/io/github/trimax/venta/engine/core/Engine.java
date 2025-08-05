@@ -12,7 +12,7 @@ import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.renderers.EngineRenderer;
+import io.github.trimax.venta.engine.renderers.common.EngineRenderer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;

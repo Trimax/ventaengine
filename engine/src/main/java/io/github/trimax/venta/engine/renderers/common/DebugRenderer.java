@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers;
+package io.github.trimax.venta.engine.renderers.common;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
@@ -9,8 +9,9 @@ import io.github.trimax.venta.engine.model.instance.implementation.LightInstance
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
-import io.github.trimax.venta.engine.renderers.entity.GizmoRenderer;
-import io.github.trimax.venta.engine.renderers.entity.SceneRenderer;
+import io.github.trimax.venta.engine.renderers.AbstractRenderer;
+import io.github.trimax.venta.engine.renderers.instance.GizmoInstanceRenderer;
+import io.github.trimax.venta.engine.renderers.instance.SceneInstanceRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,14 +25,14 @@ import java.nio.FloatBuffer;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class DebugRenderer extends AbstractRenderer<SceneInstanceImplementation, DebugRenderer.DebugRenderContext, SceneRenderer.SceneRenderContext> {
+public final class DebugRenderer extends AbstractRenderer<SceneInstanceImplementation, DebugRenderer.DebugRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private static final Vector3f VECTOR_INFINITY = new Vector3f(100000);
     private static final Vector3f VECTOR_ZERO = new Vector3f(0);
     private static final Vector3f VECTOR_ONE = new Vector3f(1);
 
     private final CameraManagerImplementation cameraManager;
     private final GizmoManagerImplementation gizmoManager;
-    private final GizmoRenderer gizmoRenderer;
+    private final GizmoInstanceRenderer gizmoRenderer;
 
     @Override
     protected DebugRenderContext createContext() {
@@ -81,7 +82,7 @@ public final class DebugRenderer extends AbstractRenderer<SceneInstanceImplement
 
     @Getter
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class DebugRenderContext extends AbstractRenderContext<SceneRenderer.SceneRenderContext> {
+    public static final class DebugRenderContext extends AbstractRenderContext<SceneInstanceRenderer.SceneRenderContext> {
         private final FloatBuffer viewProjectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
         private CameraInstance camera;

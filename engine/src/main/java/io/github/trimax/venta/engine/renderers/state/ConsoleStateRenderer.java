@@ -17,8 +17,8 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleRenderer extends AbstractStateRenderer<ConsoleState, ConsoleRenderer.ConsoleRenderContext, WindowRenderer.WindowRenderContext> {
-    private final TextRenderer consoleItemRenderer;
+public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleState, ConsoleStateRenderer.ConsoleRenderContext, WindowStateRenderer.WindowRenderContext> {
+    private final TextStateRenderer consoleItemRenderer;
     private final TextController textController;
 
     @Override
@@ -89,7 +89,7 @@ public final class ConsoleRenderer extends AbstractStateRenderer<ConsoleState, C
 
     @Getter(AccessLevel.PACKAGE)
     @AllArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class ConsoleRenderContext extends AbstractRenderContext<WindowRenderer.WindowRenderContext> {
+    public static final class ConsoleRenderContext extends AbstractRenderContext<WindowStateRenderer.WindowRenderContext> {
         @Override
         public void close() {
         }

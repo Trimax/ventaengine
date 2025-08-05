@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers;
+package io.github.trimax.venta.engine.renderers.common;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.EngineController;
@@ -6,8 +6,8 @@ import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
-import io.github.trimax.venta.engine.renderers.entity.SceneRenderer;
-import io.github.trimax.venta.engine.renderers.state.WindowRenderer;
+import io.github.trimax.venta.engine.renderers.instance.SceneInstanceRenderer;
+import io.github.trimax.venta.engine.renderers.state.WindowStateRenderer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +26,9 @@ public final class EngineRenderer {
     private final CameraManagerImplementation cameraManager;
     private final SceneManagerImplementation sceneManager;
 
-    private final WindowRenderer windowRenderer;
+    private final WindowStateRenderer windowRenderer;
     private final DebugRenderer debugRenderer;
-    private final SceneRenderer sceneRenderer;
+    private final SceneInstanceRenderer sceneRenderer;
 
 
     public void render(final FPSCounter fpsCounter) {
