@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.ConsoleItemBinder;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.model.entity.ConsoleItemEntity;
+import io.github.trimax.venta.engine.renderers.state.ConsoleRenderer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

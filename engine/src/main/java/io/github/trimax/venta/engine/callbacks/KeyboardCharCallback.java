@@ -13,6 +13,6 @@ public final class KeyboardCharCallback extends GLFWCharCallback implements Abst
         if (!consoleController.get().isVisible())
             return;
 
-        consoleController.get().accept((char) code);
+        consoleController.accept((char) code);
     }
 }

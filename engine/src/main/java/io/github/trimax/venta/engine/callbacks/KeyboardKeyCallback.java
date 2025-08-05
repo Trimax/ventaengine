@@ -16,17 +16,16 @@ public final class KeyboardKeyCallback extends GLFWKeyCallback implements Abstra
 
     @Override
     public void invoke(final long windowID, final int key, final int scancode, final int action, final int mods) {
-        final var console = consoleController.get();
         final var window = windowController.get();
 
         if (key == GLFW_KEY_F12 && action == GLFW_PRESS) {
-            console.toggle();
+            consoleController.toggle();
             return;
         }
 
-        if (console.isVisible()) {
+        if (consoleController.isVisible()) {
             if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                console.handle(key, consoleCommandQueue::add);
+                consoleController.handle(key, consoleCommandQueue::add);
             return;
         }
 

@@ -3,7 +3,6 @@ package io.github.trimax.venta.engine.renderers.state;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.model.states.WindowState;
-import io.github.trimax.venta.engine.renderers.ConsoleRenderer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

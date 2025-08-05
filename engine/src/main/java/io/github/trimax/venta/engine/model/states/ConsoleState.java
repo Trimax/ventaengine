@@ -4,11 +4,15 @@ import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.model.entity.ConsoleItemEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @RequiredArgsConstructor
 public final class ConsoleState extends AbstractState {
     private final StringBuilder inputBuffer = new StringBuilder(Definitions.CONSOLE_WELCOME_SYMBOL);
