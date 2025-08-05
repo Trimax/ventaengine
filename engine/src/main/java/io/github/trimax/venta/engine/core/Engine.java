@@ -7,6 +7,7 @@ import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.controllers.TextController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
@@ -29,7 +30,7 @@ import static org.lwjgl.opengl.GL33C.glEnable;
 public final class Engine implements Runnable {
     private final ConsoleController consoleController;
     private final WindowController windowController;
-
+    private final TextController textController;
 
     private final InternalVentaContext internalVentaContext;
     private final ConsoleCommandExecutor consoleCommandExecutor;
@@ -54,6 +55,8 @@ public final class Engine implements Runnable {
         GL.createCapabilities();
 
         consoleController.initialize();
+        textController.initialize();
+
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
     }
@@ -78,6 +81,7 @@ public final class Engine implements Runnable {
 
         consoleController.deinitialize();
         windowController.deinitialize();
+        textController.deinitialize();
 
         managerContext.cleanup();
         memory.cleanup();

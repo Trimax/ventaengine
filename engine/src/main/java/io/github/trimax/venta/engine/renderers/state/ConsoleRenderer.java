@@ -2,10 +2,10 @@ package io.github.trimax.venta.engine.renderers.state;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.controllers.TextController;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
-import io.github.trimax.venta.engine.renderers.ConsoleItemRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +18,8 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleRenderer extends AbstractStateRenderer<ConsoleState, ConsoleRenderer.ConsoleRenderContext, WindowRenderer.WindowRenderContext> {
-    private final ConsoleItemRenderer consoleItemRenderer;
+    private final TextRenderer consoleItemRenderer;
+    private final TextController textController;
 
     @Override
     protected ConsoleRenderContext createContext() {
@@ -65,7 +66,7 @@ public final class ConsoleRenderer extends AbstractStateRenderer<ConsoleState, C
                 .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getBuffer()))
                 .withPosition(-0.98f, 0.05f)
                 .withScale(0.001f)) {
-            consoleItemRenderer.render(console.getConsoleItem());
+            consoleItemRenderer.render(textController.get());
         }
 
         glDisable(GL_BLEND);
@@ -82,7 +83,7 @@ public final class ConsoleRenderer extends AbstractStateRenderer<ConsoleState, C
                 .withText(message)
                 .withPosition(-0.98f, 0.1f + Definitions.CONSOLE_LINE_HEIGHT * line)
                 .withScale(0.001f)) {
-            consoleItemRenderer.render(console.getConsoleItem());
+            consoleItemRenderer.render(textController.get());
         }
     }
 

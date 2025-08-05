@@ -1,12 +1,13 @@
-package io.github.trimax.venta.engine.managers.implementation;
+package io.github.trimax.venta.engine.controllers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.ConsoleItemManager;
+import io.github.trimax.venta.engine.managers.implementation.FontManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
 import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.model.entity.ConsoleItemEntity;
-import io.github.trimax.venta.engine.model.view.ConsoleItemView;
+import io.github.trimax.venta.engine.model.states.TextState;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
@@ -18,16 +19,15 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleItemManagerImplementation
-        extends AbstractManagerImplementation<ConsoleItemEntity, ConsoleItemView>
-        implements ConsoleItemManager {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TextController extends AbstractController<TextState, Void> {
     private final ProgramManagerImplementation programManager;
     private final FontManagerImplementation fontManager;
     private final Memory memory;
 
-    public ConsoleItemEntity create() {
-        log.debug("Creating console text");
+    @Override
+    protected TextState create(final Void argument) {
+        log.debug("Creating text");
 
         final int vertexArrayObjectID = memory.getVertexArrays().create("Console text VAO");
         final int verticesBufferID = memory.getBuffers().create("Console text vertex buffer");
@@ -45,21 +45,16 @@ public final class ConsoleItemManagerImplementation
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return store(new ConsoleItemEntity("SHARED",
-                programManager.load("text"),
+        return new TextState(programManager.load("text"),
                 fontManager.load("DejaVuSansMono"),
-                vertexArrayObjectID, verticesBufferID));
+                vertexArrayObjectID, verticesBufferID);
     }
 
     @Override
-    protected void destroy(final ConsoleItemEntity consoleItem) {
-        log.debug("Destroying console item {} ({})", consoleItem.getID(), consoleItem.getName());
-        memory.getVertexArrays().delete(consoleItem.getVertexArrayObjectID());
-        memory.getBuffers().delete(consoleItem.getVerticesBufferID());
-    }
+    protected void destroy(@NonNull final TextState text) {
+        log.debug("Destroying text");
 
-    @Override
-    protected boolean shouldCache() {
-        return true;
+        memory.getVertexArrays().delete(text.getVertexArrayObjectID());
+        memory.getBuffers().delete(text.getVerticesBufferID());
     }
 }

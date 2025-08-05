@@ -3,7 +3,6 @@ package io.github.trimax.venta.engine.controllers;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleItemManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
@@ -25,7 +24,6 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleController extends AbstractController<ConsoleState, Void> {
-    private final ConsoleItemManagerImplementation consoleItemManager;
     private final ProgramManagerImplementation programManager;
     private final Memory memory;
 
@@ -53,7 +51,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return new ConsoleState(consoleItemManager.create(), programManager.load("console"),
+        return new ConsoleState(programManager.load("console"),
                 consoleVertexArrayObjectID, consoleVerticesBufferID);
     }
 

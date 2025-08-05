@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.context.VentaState;
-import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
@@ -21,7 +20,6 @@ import static org.lwjgl.opengl.GL11C.*;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EngineRenderer {
-    private final ConsoleController consoleController;
     private final WindowController windowController;
 
     private final CameraManagerImplementation cameraManager;
@@ -51,7 +49,10 @@ public final class EngineRenderer {
                 debugRenderer.render(sceneManager.getCurrent());
             }
 
-        windowRenderer.render(window);
+        try (final var _ = windowRenderer.withContext(null)
+                        .withFrameRate((int) fpsCounter.getCurrentFps())) {
+            windowRenderer.render(window);
+        }
 
         glfwPollEvents();
     }
