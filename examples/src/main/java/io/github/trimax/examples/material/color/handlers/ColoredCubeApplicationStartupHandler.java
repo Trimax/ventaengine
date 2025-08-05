@@ -11,7 +11,7 @@ public final class ColoredCubeApplicationStartupHandler implements VentaEngineSt
         final var scene = context.getSceneManager().getCurrent();
 
         final var cube = context.getObjectManager().load("colouredcube");
-        cube.getMesh().setMaterial(context.getMaterialManager().load("stone"));
+        cube.getMesh().setMaterial(context.getMaterialRegistry().get("stone"));
         cube.setScale(new Vector3f(5.f));
         scene.add(cube);
 

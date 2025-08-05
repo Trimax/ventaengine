@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.model.instance.MeshInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
+import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
@@ -25,8 +26,8 @@ import org.apache.commons.collections4.CollectionUtils;
 public final class ObjectManagerImplementation
         extends AbstractManagerImplementation<ObjectInstanceImplementation, ObjectInstance>
         implements ObjectManager {
+    private final MaterialRegistryImplementation materialRegistry;
     private final ProgramRegistryImplementation programRegistry;
-    private final MaterialManagerImplementation materialManager;
     private final GizmoManagerImplementation gizmoManager;
     private final MeshManagerImplementation meshManager;
 
@@ -54,7 +55,7 @@ public final class ObjectManagerImplementation
 
     private MeshInstanceImplementation buildMeshHierarchy(@NonNull final ObjectMeshDTO meshDTO) {
         final var mesh = meshManager.load(meshDTO.name());
-        mesh.setMaterial(materialManager.load(meshDTO.material()));
+        mesh.setMaterial(materialRegistry.get(meshDTO.material()));
 
         //TODO: Set transformation matrix
         if (CollectionUtils.isNotEmpty(meshDTO.children()))
