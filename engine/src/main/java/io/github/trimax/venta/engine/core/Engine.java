@@ -10,7 +10,6 @@ import io.github.trimax.venta.engine.controllers.TextController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
-import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.renderers.EngineRenderer;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,7 +34,6 @@ public final class Engine implements Runnable {
     private final ConsoleCommandExecutor consoleCommandExecutor;
     private final EngineRenderer engineRenderer;
     private final VentaContext context;
-    private final Memory memory;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         glfwSetErrorCallback(new ErrorCallback());
@@ -80,7 +78,6 @@ public final class Engine implements Runnable {
         textController.deinitialize();
         engineController.deinitialize();
 
-        memory.cleanup();
         glfwTerminate();
     }
 
