@@ -17,8 +17,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import one.util.streamex.StreamEx;
-import org.apache.commons.collections4.CollectionUtils;
 
 @Slf4j
 @Component
@@ -56,10 +54,6 @@ public final class ObjectManagerImplementation
     private MeshInstanceImplementation buildMeshHierarchy(@NonNull final ObjectMeshDTO meshDTO) {
         final var mesh = meshManager.load(meshDTO.name());
         mesh.setMaterial(materialRegistry.get(meshDTO.material()));
-
-        //TODO: Set transformation matrix
-        if (CollectionUtils.isNotEmpty(meshDTO.children()))
-            StreamEx.of(meshDTO.children()).map(this::buildMeshHierarchy).forEach(mesh::addChild);
 
         return mesh;
     }

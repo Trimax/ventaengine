@@ -1,14 +1,15 @@
-package io.github.trimax.venta.engine.model.instance.implementation;
+package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
-import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.instance.MeshInstance;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 
 @Getter
-public final class MeshInstanceImplementation extends AbstractInstanceImplementation implements MeshInstance {
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+public final class MeshEntityImplementation extends AbstractEntityImplementation implements MeshEntity {
     private final int verticesCount;
     private final int facetsCount;
     private final int edgesCount;
@@ -22,17 +23,14 @@ public final class MeshInstanceImplementation extends AbstractInstanceImplementa
 
     private MaterialEntityImplementation material;
 
-    public MeshInstanceImplementation(@NonNull final String name,
-                                      final int verticesCount,
-                                      final int facetsCount,
-                                      final int edgesCount,
-                                      final int vertexArrayObjectID,
-                                      final int verticesBufferID,
-                                      final int facetsBufferID,
-                                      final int edgesBufferID,
-                                      final BoundingBox boundingBox) {
-        super(name);
-
+    public MeshEntityImplementation(final int verticesCount,
+                                    final int facetsCount,
+                                    final int edgesCount,
+                                    final int vertexArrayObjectID,
+                                    final int verticesBufferID,
+                                    final int facetsBufferID,
+                                    final int edgesBufferID,
+                                    final BoundingBox boundingBox) {
         this.verticesCount = verticesCount;
         this.facetsCount = facetsCount;
         this.edgesCount = edgesCount;
