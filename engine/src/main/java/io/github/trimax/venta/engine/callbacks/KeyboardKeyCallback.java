@@ -1,6 +1,8 @@
 package io.github.trimax.venta.engine.callbacks;
 
-import io.github.trimax.venta.engine.model.entity.WindowEntity;
+import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.controllers.WindowController;
 import lombok.AllArgsConstructor;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
@@ -8,22 +10,23 @@ import static org.lwjgl.glfw.GLFW.*;
 
 @AllArgsConstructor
 public final class KeyboardKeyCallback extends GLFWKeyCallback implements AbstractCallback {
-    private final WindowEntity window;
+    private final ConsoleCommandQueue consoleCommandQueue;
+    private final ConsoleController consoleController;
+    private final WindowController windowController;
 
     @Override
     public void invoke(final long windowID, final int key, final int scancode, final int action, final int mods) {
-        if (key == GLFW_KEY_F12 && action == GLFW_PRESS && window.hasConsole()) {
-            window.getConsole().toggle();
+        if (key == GLFW_KEY_F12 && action == GLFW_PRESS) {
+            consoleController.toggle();
             return;
         }
 
-        if (window.hasConsole() && window.getConsole().isVisible()) {
+        if (consoleController.isVisible()) {
             if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                window.getConsole().handle(key, window.getConsoleCommandQueue()::add);
+                consoleController.handle(key, consoleCommandQueue::add);
             return;
         }
 
-        if (window.hasHandler())
-            window.getHandler().onKey(key, scancode, action, mods);
+        windowController.get().handleKeyboardKey(key, scancode, action, mods);
     }
 }

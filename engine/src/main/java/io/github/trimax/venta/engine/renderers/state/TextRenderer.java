@@ -1,9 +1,9 @@
-package io.github.trimax.venta.engine.renderers;
+package io.github.trimax.venta.engine.renderers.state;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.ConsoleItemBinder;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
-import io.github.trimax.venta.engine.model.entity.ConsoleItemEntity;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.model.states.TextState;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntity, ConsoleItemRenderer.ConsoleItemRenderContext, ConsoleRenderer.ConsoleRenderContext> {
+public final class TextRenderer extends AbstractStateRenderer<TextState, TextRenderer.ConsoleItemRenderContext, ConsoleRenderer.ConsoleRenderContext> {
     private final ConsoleItemBinder consoleItemBinder;
 
     @Override
@@ -32,10 +32,10 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
     }
 
     @Override
-    void render(final ConsoleItemEntity consoleItem) {
-        glUseProgram(consoleItem.getProgram().getInternalID());
-        glBindVertexArray(consoleItem.getVertexArrayObjectID());
-        consoleItemBinder.bind(consoleItem.getProgram(), getContext().getMessage().type().getColor());
+    public void render(final TextState state) {
+        glUseProgram(state.getProgram().getInternalID());
+        glBindVertexArray(state.getVertexArrayObjectID());
+        consoleItemBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
 
         float penX = getContext().x;
         final float penY = getContext().y - FONT_HEIGHT * getContext().scale;
@@ -43,7 +43,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
         // Iterate through each character in the text
         final var message = getContext().message;
         final var text = message.text();
-        final var font = consoleItem.getFont();
+        final var font = state.getFont();
 
         for (int i = 0; i < text.length(); i++) {
             final var codepoint = text.codePointAt(i);
@@ -84,7 +84,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternalID());
 
-            glBindBuffer(GL_ARRAY_BUFFER, consoleItem.getVerticesBufferID());
+            glBindBuffer(GL_ARRAY_BUFFER, state.getVerticesBufferID());
             glBufferData(GL_ARRAY_BUFFER, getContext().vertices, GL_DYNAMIC_DRAW);
 
             glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -106,7 +106,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
         private float x;
         private float y;
         private float scale;
-        private ConsoleManagerImplementation.ConsoleMessage message;
+        private ConsoleController.ConsoleMessage message;
 
         public ConsoleItemRenderContext withPosition(final float x, final float y) {
             this.x = x;
@@ -119,7 +119,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
             return this;
         }
 
-        public ConsoleItemRenderContext withText(final ConsoleManagerImplementation.ConsoleMessage message) {
+        public ConsoleItemRenderContext withText(final ConsoleController.ConsoleMessage message) {
             this.message = message;
             return this;
         }

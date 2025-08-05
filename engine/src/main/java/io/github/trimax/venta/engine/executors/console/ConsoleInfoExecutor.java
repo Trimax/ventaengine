@@ -17,7 +17,7 @@ public final class ConsoleInfoExecutor extends AbstractConsoleExecutor {
     @Override
     public void execute(final ConsoleCommandQueue.Command command) {
         getConsole().header("Console information:");
-        getConsole().info("Commands executed: %d", getConsole().getCommands().size());
-        getConsole().info("     History size: %d", getConsole().getHistory().size());
+        getConsole().info("Commands executed: %d", getConsole().get().getCommands().size());
+        getConsole().info("     History size: %d", getConsole().get().getHistory().size());
     }
 }

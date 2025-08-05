@@ -16,6 +16,6 @@ public final class ConsoleClearExecutor extends AbstractConsoleExecutor {
 
     @Override
     public void execute(final ConsoleCommandQueue.Command command) {
-        getConsole().getHistory().clear();
+        getConsole().clear();
     }
 }

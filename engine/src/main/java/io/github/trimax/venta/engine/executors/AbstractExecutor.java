@@ -5,7 +5,7 @@ import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.context.VentaState;
-import io.github.trimax.venta.engine.model.entity.ConsoleEntity;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.Getter;
 import lombok.NonNull;
@@ -51,8 +51,8 @@ public abstract class AbstractExecutor {
         return internalContext.getContext();
     }
 
-    protected final ConsoleEntity getConsole() {
-        return internalContext.getConsole();
+    protected final ConsoleController getConsole() {
+        return internalContext.getConsoleController();
     }
 
     protected final VentaState getState() {
@@ -70,13 +70,13 @@ public abstract class AbstractExecutor {
         }
 
         if ("help".equalsIgnoreCase(command.getCommand())) {
-            printHelp(internalContext.getConsole());
+            printHelp();
             return;
         }
 
         final var executor = getExecutor(command.getCommand());
         if (executor == null) {
-            internalContext.getConsole().error(String.format("Unknown command: '%s'. Type '%s help'",
+            getConsole().error(String.format("Unknown command: '%s'. Type '%s help'",
                     command.getFullPath(), command.parent().getFullPath()));
             log.warn("Executor is not registered for command: {}", command.parent().getFullPath());
             return;
@@ -89,11 +89,11 @@ public abstract class AbstractExecutor {
         return String.format("  %-20s - %s", command, description);
     }
 
-    private void printHelp(final ConsoleEntity console) {
-        console.info("Available commands:");
+    private void printHelp() {
+        getConsole().info("Available commands:");
         StreamEx.of(executors.values())
                 .map(AbstractExecutor::getPublicDescription)
-                .forEach(console::info);
+                .forEach(getConsole()::info);
     }
 
     public abstract void execute(final ConsoleCommandQueue.Command command);
