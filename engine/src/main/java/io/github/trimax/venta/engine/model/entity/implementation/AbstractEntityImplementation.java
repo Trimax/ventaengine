@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.utils.IdentifierUtil;
 public abstract class AbstractEntityImplementation implements AbstractEntity {
     private final String id = IdentifierUtil.generate(10);
 
+    @Override
     public final String getID() {
         return id;
     }
