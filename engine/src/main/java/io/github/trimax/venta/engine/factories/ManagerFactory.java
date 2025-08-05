@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ManagerFactory extends AbstractFactory {
+public final class ManagerFactory extends AbstractFactory {
     private final Map<Class<?>, AbstractManagerImplementation<?, ?>> managers;
 
     private ManagerFactory(final List<AbstractManagerImplementation<?, ?>> managers) {
