@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers.entity;
+package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
@@ -6,7 +6,7 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.GizmoInstanceImplementation;
-import io.github.trimax.venta.engine.renderers.DebugRenderer;
+import io.github.trimax.venta.engine.renderers.common.DebugRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,8 +26,8 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GizmoRenderer extends AbstractEntityRenderer<GizmoInstanceImplementation, GizmoRenderer.GizmoRenderContext, DebugRenderer.DebugRenderContext> {
-    private final MeshRenderer meshRenderer;
+public final class GizmoInstanceRenderer extends AbstractInstanceRenderer<GizmoInstanceImplementation, GizmoInstanceRenderer.GizmoRenderContext, DebugRenderer.DebugRenderContext> {
+    private final MeshInstanceRenderer meshRenderer;
     private final MatrixBinder matrixBinder;
 
     @Override

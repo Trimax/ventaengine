@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers.entity;
+package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
@@ -15,10 +15,10 @@ import java.nio.FloatBuffer;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SceneRenderer
-        extends AbstractEntityRenderer<SceneInstanceImplementation, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
+public final class SceneInstanceRenderer
+        extends AbstractInstanceRenderer<SceneInstanceImplementation, SceneInstanceRenderer.SceneRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final ObjectManagerImplementation objectManager;
-    private final ObjectRenderer objectRenderer;
+    private final ObjectInstanceRenderer objectRenderer;
 
     @Override
     public SceneRenderContext createContext() {

@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers.entity;
+package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.CameraBinder;
@@ -25,8 +25,8 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ObjectRenderer extends AbstractEntityRenderer<ObjectInstanceImplementation, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
-    private final MeshRenderer meshRenderer;
+public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<ObjectInstanceImplementation, ObjectInstanceRenderer.ObjectRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final MeshInstanceRenderer meshRenderer;
 
     private final ObjectBinder objectBinder;
     private final MatrixBinder matrixBinder;
@@ -64,7 +64,7 @@ public final class ObjectRenderer extends AbstractEntityRenderer<ObjectInstanceI
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class ObjectRenderContext extends AbstractRenderContext<SceneRenderer.SceneRenderContext> {
+    public static final class ObjectRenderContext extends AbstractRenderContext<SceneInstanceRenderer.SceneRenderContext> {
         private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final FloatBuffer normalMatrixBuffer = MemoryUtil.memAllocFloat(9);
         private final Matrix3f normalMatrix = new Matrix3f();
