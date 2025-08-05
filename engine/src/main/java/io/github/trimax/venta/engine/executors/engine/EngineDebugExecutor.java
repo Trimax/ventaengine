@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.executors.engine;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @SuppressWarnings("unused")
 public final class EngineDebugExecutor extends AbstractEngineExecutor {
-    private EngineDebugExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "debug", "turns on/off the debug mode");
+    private EngineDebugExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "debug", "turns on/off the debug mode");
     }
 
     @Override

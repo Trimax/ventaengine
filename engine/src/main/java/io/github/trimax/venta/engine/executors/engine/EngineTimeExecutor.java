@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.executors.engine;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 public final class EngineTimeExecutor extends AbstractEngineExecutor {
     private final long timeStarted = System.nanoTime();
 
-    private EngineTimeExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "time", "prints the number of seconds the engine is running");
+    private EngineTimeExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "time", "prints the number of seconds the engine is running");
     }
 
     @Override

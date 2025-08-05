@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.executors.object;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import io.github.trimax.venta.engine.utils.FormatUtil;
@@ -14,15 +14,15 @@ import one.util.streamex.StreamEx;
 @Component
 @SuppressWarnings("unused")
 public final class ObjectListExecutor extends AbstractObjectExecutor {
-    private ObjectListExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "list", "prints the list of objects");
+    private ObjectListExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "list", "prints the list of objects");
     }
 
     @Override
     public void execute(final ConsoleCommandQueue.Command command) {
         getConsole().header("Objects:");
 
-        final var objectManager = getManagers().get(ObjectManagerImplementation.class);
+        final var objectManager = getManager(ObjectManagerImplementation.class);
         StreamEx.of(objectManager.iterator())
                 .map(AbstractInstance::getPublicInformation)
                 .map(FormatUtil::indent)

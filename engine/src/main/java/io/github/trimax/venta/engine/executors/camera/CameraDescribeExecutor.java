@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.executors.camera;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @SuppressWarnings("unused")
 public final class CameraDescribeExecutor extends AbstractCameraExecutor {
-    private CameraDescribeExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "describe", "prints information about the camera");
+    private CameraDescribeExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "describe", "prints information about the camera");
     }
 
     @Override
     public void execute(final ConsoleCommandQueue.Command command) {
-        final var cameraManager = getManagers().get(CameraManagerImplementation.class);
+        final var cameraManager = getManager(CameraManagerImplementation.class);
         if (command.asArgument().isBlank()) {
             getConsole().warning("Usage: %s <id>", command.getFullPath());
             return;

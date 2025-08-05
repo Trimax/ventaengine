@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.context.VentaState;
+import io.github.trimax.venta.engine.controllers.EngineController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
@@ -20,6 +20,7 @@ import static org.lwjgl.opengl.GL11C.*;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EngineRenderer {
+    private final EngineController engineController;
     private final WindowController windowController;
 
     private final CameraManagerImplementation cameraManager;
@@ -30,10 +31,10 @@ public final class EngineRenderer {
     private final SceneRenderer sceneRenderer;
 
 
-    public void render(final VentaState state, final FPSCounter fpsCounter) {
+    public void render(final FPSCounter fpsCounter) {
         final var window = windowController.get();
         if (glfwWindowShouldClose(window.getInternalID()))
-            state.setApplicationRunning(false);
+            engineController.get().setApplicationRunning(false);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -43,7 +44,7 @@ public final class EngineRenderer {
             sceneRenderer.render(sceneManager.getCurrent());
         }
 
-        if (state.isDebugEnabled())
+        if (engineController.get().isDebugEnabled())
             try (final var _ = debugRenderer.withContext(null)
                     .with(window, camera)) {
                 debugRenderer.render(sceneManager.getCurrent());

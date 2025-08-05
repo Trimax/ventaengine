@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.executors.scene;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @SuppressWarnings("unused")
 public final class SceneInfoExecutor extends AbstractSceneExecutor {
-    private SceneInfoExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "info", "prints information about selected scene");
+    private SceneInfoExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "info", "prints information about selected scene");
     }
 
     @Override
     public void execute(final ConsoleCommandQueue.Command command) {
-        final var scene = getManagers().get(SceneManagerImplementation.class).getCurrent();
+        final var scene = getManager(SceneManagerImplementation.class).getCurrent();
         if (scene == null) {
             getConsole().error("The scene is not selected");
             return;

@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.executors.engine;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.MetricUtil;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -12,8 +12,8 @@ import org.apache.commons.io.FileUtils;
 @Component
 @SuppressWarnings("unused")
 public final class EngineInfoExecutor extends AbstractEngineExecutor {
-    private EngineInfoExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "info", "prints engine resource utilization");
+    private EngineInfoExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "info", "prints engine resource utilization");
     }
 
     @Override
