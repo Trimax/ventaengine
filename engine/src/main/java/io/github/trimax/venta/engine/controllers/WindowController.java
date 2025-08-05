@@ -1,8 +1,7 @@
 package io.github.trimax.venta.engine.controllers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.callbacks.KeyboardCharCallback;
-import io.github.trimax.venta.engine.callbacks.KeyboardKeyCallback;
+import io.github.trimax.venta.engine.callbacks.*;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
@@ -60,11 +59,10 @@ public final class WindowController extends AbstractController<WindowEntity, Ven
         glfwRestoreWindow(id);
         glfwFocusWindow(id);
 
-        //TODO: Remove console commands queue to a separate singleton
-        final var window = new WindowEntity(id, width, height, title, handler, null);
-        glfwSetFramebufferSizeCallback(id, window.getWindowSizeCallback());
-        glfwSetMouseButtonCallback(id, window.getMouseClickCallback());
-        glfwSetCursorPosCallback(id, window.getMouseCursorCallback());
+        final var window = new WindowEntity(id, width, height, title, handler);
+        glfwSetFramebufferSizeCallback(id, new WindowSizeCallback(this));
+        glfwSetMouseButtonCallback(id, new MouseButtonCallback(this));
+        glfwSetCursorPosCallback(id, new MouseCursorCallback(this));
         glfwSetCharCallback(id, new KeyboardCharCallback(consoleController));
         glfwSetKeyCallback(id, new KeyboardKeyCallback(consoleCommandQueue, consoleController, this));
 
@@ -78,9 +76,6 @@ public final class WindowController extends AbstractController<WindowEntity, Ven
         log.info("Destroying window");
 
         glfwMakeContextCurrent(NULL);
-        window.getWindowSizeCallback().close();
-        window.getMouseClickCallback().close();
-        window.getMouseCursorCallback().close();
         memory.getWindows().delete(window.getInternalID());
     }
 }
