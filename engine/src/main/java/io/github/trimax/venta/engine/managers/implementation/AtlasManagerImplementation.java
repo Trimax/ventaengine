@@ -1,5 +1,13 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.*;
+
+import java.nio.ByteBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBTTBakedChar;
+import org.lwjgl.stb.STBTruetype;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.TextureBakeException;
 import io.github.trimax.venta.engine.managers.AtlasManager;
@@ -8,14 +16,6 @@ import io.github.trimax.venta.engine.model.view.AtlasView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBTTBakedChar;
-import org.lwjgl.stb.STBTruetype;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-
-import static io.github.trimax.venta.engine.definitions.Definitions.*;
 
 @Slf4j
 @Component
@@ -35,13 +35,12 @@ public final class AtlasManagerImplementation
         if (result <= 0)
             throw new TextureBakeException("Failed to bake font bitmap atlas " + i);
 
-        return store(new AtlasEntity(name, textureManager.create(name, bitmap), characterBuffer, bitmap));
+        return store(new AtlasEntity(name, textureManager.create(name, bitmap), characterBuffer));
     }
 
     @Override
     protected void destroy(final AtlasEntity font) {
         log.info("Destroying atlas {} ({})", font.getID(), font.getName());
-        MemoryUtil.memFree(font.getBitmap());
         font.getBuffer().free();
     }
 

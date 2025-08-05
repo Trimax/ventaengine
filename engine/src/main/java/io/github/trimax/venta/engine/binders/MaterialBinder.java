@@ -1,20 +1,20 @@
 package io.github.trimax.venta.engine.binders;
 
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.ShaderUniform;
-import io.github.trimax.venta.engine.enums.TextureType;
-import io.github.trimax.venta.engine.managers.implementation.TextureManagerImplementation;
-import io.github.trimax.venta.engine.model.entity.ProgramEntity;
-import io.github.trimax.venta.engine.model.entity.TextureEntity;
-import io.github.trimax.venta.engine.model.view.MaterialView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11C.glBindTexture;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL20C.glUniform1i;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.ShaderUniform;
+import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.managers.implementation.TextureManagerImplementation;
+import io.github.trimax.venta.engine.model.entity.MaterialEntity;
+import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.TextureEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL20C.glUniform1i;
 public final class MaterialBinder extends AbstractBinder {
     private final TextureManagerImplementation textureManager;
 
-    public void bind(final ProgramEntity program, final MaterialView material) {
+    public void bind(final ProgramEntity program, final MaterialEntity material) {
         if (material == null)
             return;
 
@@ -34,7 +34,7 @@ public final class MaterialBinder extends AbstractBinder {
     }
 
     private void bind(final TextureType type, final ProgramEntity program,
-                      final MaterialView material, final ShaderUniform useTextureUniform, final ShaderUniform textureUniform) {
+                      final MaterialEntity material, final ShaderUniform useTextureUniform, final ShaderUniform textureUniform) {
         bind(type, textureManager.getEntity(material.getTexture(type).getID()), program.getUniformID(useTextureUniform), program.getUniformID(textureUniform));
     }
 

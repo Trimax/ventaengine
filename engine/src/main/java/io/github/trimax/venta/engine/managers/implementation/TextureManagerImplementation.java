@@ -1,21 +1,5 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
-import io.github.trimax.venta.engine.managers.TextureManager;
-import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.model.entity.TextureEntity;
-import io.github.trimax.venta.engine.model.view.TextureView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
 import static org.lwjgl.opengl.GL11.*;
@@ -34,13 +18,29 @@ import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11C.GL_UNPACK_ALIGNMENT;
 import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL11C.glGenTextures;
 import static org.lwjgl.opengl.GL11C.glPixelStorei;
 import static org.lwjgl.opengl.GL11C.glTexImage2D;
 import static org.lwjgl.opengl.GL11C.glTexParameteri;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
+
+import java.nio.ByteBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
+import io.github.trimax.venta.engine.managers.TextureManager;
+import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.entity.TextureEntity;
+import io.github.trimax.venta.engine.model.view.TextureView;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -93,7 +93,7 @@ public final class TextureManagerImplementation
             final var width = widthBuffer.get(0);
             final var height = heightBuffer.get(0);
 
-            final int textureID = glGenTextures();
+            final int textureID = memory.getTextures().create(name);
             glBindTexture(GL_TEXTURE_2D, textureID);
 
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
