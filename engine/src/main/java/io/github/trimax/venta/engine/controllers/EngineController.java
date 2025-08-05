@@ -5,7 +5,6 @@ import io.github.trimax.venta.engine.factories.ManagerFactory;
 import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.implementation.AbstractManagerImplementation;
-import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.AbstractEntity;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import io.github.trimax.venta.engine.model.states.EngineState;
@@ -21,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 public final class EngineController extends AbstractController<EngineState, VentaEngineApplication> {
     private final RegistryFactory registryFactory;
     private final ManagerFactory managerFactory;
-    private final Memory memory;
 
     @Override
     protected EngineState create(final VentaEngineApplication application) {
@@ -39,7 +37,6 @@ public final class EngineController extends AbstractController<EngineState, Vent
 
         registryFactory.cleanup();
         managerFactory.cleanup();
-        memory.cleanup();
     }
 
     public <T extends I, I extends AbstractInstance, M extends AbstractManagerImplementation<T, I>> M getManager(@NonNull final Class<M> managerClass) {
