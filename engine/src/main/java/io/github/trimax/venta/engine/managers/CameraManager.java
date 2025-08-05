@@ -1,12 +1,12 @@
 package io.github.trimax.venta.engine.managers;
 
-import io.github.trimax.venta.engine.model.view.CameraView;
+import io.github.trimax.venta.engine.model.instance.CameraInstance;
 import lombok.NonNull;
 
-public interface CameraManager extends AbstractManager<CameraView> {
-    CameraView create(@NonNull final String name);
+public interface CameraManager extends AbstractManager<CameraInstance> {
+    CameraInstance create(@NonNull final String name);
 
-    CameraView getCurrent();
+    CameraInstance getCurrent();
 
-    void setCurrent(@NonNull final CameraView camera);
+    void setCurrent(@NonNull final CameraInstance camera);
 }

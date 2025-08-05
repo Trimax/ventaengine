@@ -4,8 +4,8 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.managers.TextureManager;
 import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import io.github.trimax.venta.engine.model.instance.TextureInstance;
-import io.github.trimax.venta.engine.model.view.TextureView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -46,12 +46,12 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureManagerImplementation
-        extends AbstractManagerImplementation<TextureInstance, TextureView>
+        extends AbstractManagerImplementation<TextureEntity, TextureInstance>
         implements TextureManager {
     private final Memory memory;
 
-    public TextureInstance create(@NonNull final String name,
-                                  @NonNull final ByteBuffer bitmap) {
+    public TextureEntity create(@NonNull final String name,
+                                @NonNull final ByteBuffer bitmap) {
         final var textureID = memory.getTextures().create("Texture %s", name);
 
         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -63,11 +63,11 @@ public final class TextureManagerImplementation
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        return store(new TextureInstance(name, bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
+        return store(new TextureEntity(name, bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
     }
 
     @Override
-    public TextureView load(@NonNull final String name) {
+    public TextureInstance load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);
 
@@ -107,12 +107,12 @@ public final class TextureManagerImplementation
 
             STBImage.stbi_image_free(pixels);
 
-            return store(new TextureInstance(name, imageBuffer, textureID, width, height));
+            return store(new TextureEntity(name, imageBuffer, textureID, width, height));
         }
     }
 
     @Override
-    protected void destroy(final TextureInstance texture) {
+    protected void destroy(final TextureEntity texture) {
         log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
         memory.getTextures().delete(texture.getInternalID());
         MemoryUtil.memFree(texture.getBuffer());

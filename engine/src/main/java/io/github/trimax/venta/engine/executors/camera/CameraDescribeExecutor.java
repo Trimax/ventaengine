@@ -23,7 +23,7 @@ public final class CameraDescribeExecutor extends AbstractCameraExecutor {
             return;
         }
 
-        final var camera = cameraManager.getEntity(command.asArgument().value());
+        final var camera = cameraManager.getInstance(command.asArgument().value());
         if (camera == null) {
             getConsole().error("Camera <%s> can't be described because it does not exist", command.asArgument().value());
             return;

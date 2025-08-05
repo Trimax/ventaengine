@@ -23,7 +23,7 @@ public final class MeshDescribeExecutor extends AbstractMeshExecutor {
             return;
         }
 
-        final var mesh = meshManager.getEntity(command.asArgument().value());
+        final var mesh = meshManager.getInstance(command.asArgument().value());
         if (mesh == null) {
             getConsole().error("Mesh <%s> can't be described because it does not exist", command.asArgument().value());
             return;

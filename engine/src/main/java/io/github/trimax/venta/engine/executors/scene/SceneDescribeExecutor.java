@@ -23,7 +23,7 @@ public final class SceneDescribeExecutor extends AbstractSceneExecutor {
             return;
         }
 
-        final var scene = sceneManager.getEntity(command.asArgument().value());
+        final var scene = sceneManager.getInstance(command.asArgument().value());
         if (scene == null) {
             getConsole().error("Scene <%s> can't be described because it does not exist", command.asArgument().value());
             return;

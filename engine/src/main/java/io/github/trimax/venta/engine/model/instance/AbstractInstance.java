@@ -1,31 +1,11 @@
 package io.github.trimax.venta.engine.model.instance;
 
-import io.github.trimax.venta.engine.model.view.AbstractView;
-import io.github.trimax.venta.engine.utils.IdentifierUtil;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+public interface AbstractInstance {
+    String getID();
 
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class AbstractInstance implements AbstractView {
-    private final String id = IdentifierUtil.generate(6);
-    private final GizmoInstance gizmo;
-    private final String name;
+    String getName();
 
-    protected AbstractInstance(final String name) {
-        this(null, name);
-    }
-
-    @Override
-    public final String getID() {
-        return id;
-    }
-
-    @Override
-    public final String getName() {
-        return name;
-    }
-
-    public final GizmoInstance getGizmo() {
-        return gizmo;
+    default String getPublicInformation() {
+        return String.format("%s: %s", getID(), getName());
     }
 }

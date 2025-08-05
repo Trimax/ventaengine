@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
-import io.github.trimax.venta.engine.model.view.AbstractView;
+import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import io.github.trimax.venta.engine.utils.FormatUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public final class SceneListExecutor extends AbstractSceneExecutor {
 
         final var sceneManager = getManagers().get(SceneManagerImplementation.class);
         StreamEx.of(sceneManager.iterator())
-                .map(AbstractView::getPublicInformation)
+                .map(AbstractInstance::getPublicInformation)
                 .map(FormatUtil::indent)
                 .forEach(getConsole()::info);
     }

@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.*;
-import io.github.trimax.venta.engine.model.view.AbstractView;
+import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.NonNull;
 import one.util.streamex.StreamEx;
@@ -19,7 +19,7 @@ public final class ManagerContext {
         this.managers = TransformationUtil.toMap(managers, AbstractManagerImplementation::getClass);
     }
 
-    public <E extends V, V extends AbstractView, M extends AbstractManagerImplementation<E, V>> M get(@NonNull final Class<M> managerClass) {
+    public <E extends V, V extends AbstractInstance, M extends AbstractManagerImplementation<E, V>> M get(@NonNull final Class<M> managerClass) {
         return managerClass.cast(managers.get(managerClass));
     }
 

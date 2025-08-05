@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.managers;
 
-import io.github.trimax.venta.engine.model.view.AbstractView;
+import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import lombok.NonNull;
 
-public interface AbstractManager<V extends AbstractView> extends Iterable<V> {
-    V get(@NonNull final String id);
+public interface AbstractManager<I extends AbstractInstance> extends Iterable<I> {
+    I get(@NonNull final String id);
 }

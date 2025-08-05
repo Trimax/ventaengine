@@ -23,7 +23,7 @@ public final class ObjectDescribeExecutor extends AbstractObjectExecutor {
             return;
         }
 
-        final var object = objectManager.getEntity(command.asArgument().value());
+        final var object = objectManager.getInstance(command.asArgument().value());
         if (object == null) {
             getConsole().error("Object <%s> can't be described because it does not exist", command.asArgument().value());
             return;

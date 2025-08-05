@@ -37,7 +37,7 @@ public final class EngineRenderer {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        final var camera = cameraManager.getEntity(cameraManager.getCurrent().getID());
+        final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
         try (final var _ = sceneRenderer.withContext(null)
                 .with(window, camera)) {
             sceneRenderer.render(sceneManager.getCurrent());

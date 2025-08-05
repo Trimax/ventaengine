@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.managers.ShaderManager;
 import io.github.trimax.venta.engine.model.instance.ShaderInstance;
-import io.github.trimax.venta.engine.model.view.ShaderView;
+import io.github.trimax.venta.engine.model.instance.implementation.ShaderInstanceImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,11 +17,11 @@ import static org.lwjgl.opengl.GL20C.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ShaderManagerImplementation
-        extends AbstractManagerImplementation<ShaderInstance, ShaderView>
+        extends AbstractManagerImplementation<ShaderInstanceImplementation, ShaderInstance>
         implements ShaderManager {
     @Override
-    public ShaderInstance load(@NonNull final String name,
-                               @NonNull final ShaderInstance.Type type) {
+    public ShaderInstanceImplementation load(@NonNull final String name,
+                                             @NonNull final ShaderInstanceImplementation.Type type) {
         if (isCached(name))
             return getCached(name);
 
@@ -35,11 +35,11 @@ public final class ShaderManagerImplementation
         if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE)
             throw new ShaderCompileException(glGetShaderInfoLog(id));
 
-        return store(new ShaderInstance(id, type, name, code));
+        return store(new ShaderInstanceImplementation(id, type, name, code));
     }
 
     @Override
-    protected void destroy(final ShaderInstance shader) {
+    protected void destroy(final ShaderInstanceImplementation shader) {
         log.info("Destroying shader {} ({})", shader.getID(), shader.getName());
         glDeleteShader(shader.getInternalID());
     }

@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.FontManager;
 import io.github.trimax.venta.engine.model.instance.FontInstance;
-import io.github.trimax.venta.engine.model.view.FontView;
+import io.github.trimax.venta.engine.model.instance.implementation.FontInstanceImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,14 +17,14 @@ import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_C
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FontManagerImplementation
-        extends AbstractManagerImplementation<FontInstance, FontView>
+        extends AbstractManagerImplementation<FontInstanceImplementation, FontInstance>
         implements FontManager {
     private final AtlasManagerImplementation atlasManagerImplementation;
 
-    public FontInstance load(@NonNull final String name) {
+    public FontInstanceImplementation load(@NonNull final String name) {
         final var buffer = ResourceUtil.loadAsBuffer(String.format("/fonts/%s.ttf", name));
 
-        final var font = new FontInstance(name, buffer);
+        final var font = new FontInstanceImplementation(name, buffer);
         for (int i = 0; i < FONT_ATLAS_COUNT; i++)
             font.add(atlasManagerImplementation.create(String.format("%s-%d", name, i), i, buffer));
 
@@ -32,7 +32,7 @@ public final class FontManagerImplementation
     }
 
     @Override
-    protected void destroy(final FontInstance font) {
+    protected void destroy(final FontInstanceImplementation font) {
         log.info("Destroying font {} ({})", font.getID(), font.getName());
         MemoryUtil.memFree(font.getBuffer());
     }

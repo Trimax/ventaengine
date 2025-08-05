@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.MaterialManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
 import io.github.trimax.venta.engine.model.dto.ObjectMeshDTO;
-import io.github.trimax.venta.engine.model.instance.MeshInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -17,7 +17,7 @@ public final class MeshHelper {
     private final MaterialManagerImplementation materialManager;
     private final MeshManagerImplementation meshManager;
 
-    public MeshInstance build(@NonNull final ObjectMeshDTO meshDTO) {
+    public MeshInstanceImplementation build(@NonNull final ObjectMeshDTO meshDTO) {
         final var mesh = meshManager.load(meshDTO.name());
         mesh.setMaterial(materialManager.load(meshDTO.material()));
 

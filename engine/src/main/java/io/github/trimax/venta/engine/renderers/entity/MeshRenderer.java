@@ -2,8 +2,8 @@ package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
-import io.github.trimax.venta.engine.model.instance.MeshInstance;
-import io.github.trimax.venta.engine.model.instance.ProgramInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.ProgramInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MeshRenderer extends AbstractEntityRenderer<MeshInstance, MeshRenderer.MeshRenderContext, ObjectRenderer.ObjectRenderContext> {
+public final class MeshRenderer extends AbstractEntityRenderer<MeshInstanceImplementation, MeshRenderer.MeshRenderContext, ObjectRenderer.ObjectRenderContext> {
     private final MaterialBinder materialBinder;
 
     @Override
@@ -25,7 +25,7 @@ public final class MeshRenderer extends AbstractEntityRenderer<MeshInstance, Mes
     }
 
     @Override
-    public void render(final MeshInstance object) {
+    public void render(final MeshInstanceImplementation object) {
         glBindVertexArray(object.getVertexArrayObjectID());
         materialBinder.bind(getContext().getProgram(), object.getMaterial());
 
@@ -45,9 +45,9 @@ public final class MeshRenderer extends AbstractEntityRenderer<MeshInstance, Mes
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class MeshRenderContext extends AbstractRenderContext<ObjectRenderer.ObjectRenderContext> {
-        private ProgramInstance program;
+        private ProgramInstanceImplementation program;
 
-        public MeshRenderContext withProgram(final ProgramInstance program) {
+        public MeshRenderContext withProgram(final ProgramInstanceImplementation program) {
             this.program = program;
             return this;
         }

@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.binders;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.model.instance.ProgramInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.ProgramInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.joml.Vector3f;
 public final class ConsoleItemBinder extends AbstractBinder {
     private static final Vector2f ZERO = new Vector2f();
 
-    public void bind(final ProgramInstance program, final Vector3f color) {
+    public void bind(final ProgramInstanceImplementation program, final Vector3f color) {
         if (color != null)
             bind(program.getUniformID("color"), color);
 

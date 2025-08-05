@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.TextureBakeException;
 import io.github.trimax.venta.engine.managers.AtlasManager;
 import io.github.trimax.venta.engine.model.instance.AtlasInstance;
-import io.github.trimax.venta.engine.model.view.AtlasView;
+import io.github.trimax.venta.engine.model.instance.implementation.AtlasInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +20,11 @@ import static io.github.trimax.venta.engine.definitions.Definitions.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AtlasManagerImplementation
-        extends AbstractManagerImplementation<AtlasInstance, AtlasView>
+        extends AbstractManagerImplementation<AtlasInstanceImplementation, AtlasInstance>
         implements AtlasManager {
     private final TextureManagerImplementation textureManager;
 
-    public AtlasInstance create(final String name, final int i, final ByteBuffer fontBuffer) {
+    public AtlasInstanceImplementation create(final String name, final int i, final ByteBuffer fontBuffer) {
         final var bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
         final var characterBuffer = STBTTBakedChar.malloc(FONT_ATLAS_CHARACTERS_COUNT);
 
@@ -34,11 +34,11 @@ public final class AtlasManagerImplementation
         if (result <= 0)
             throw new TextureBakeException("Failed to bake font bitmap atlas " + i);
 
-        return store(new AtlasInstance(name, textureManager.create(name, bitmap), characterBuffer));
+        return store(new AtlasInstanceImplementation(name, textureManager.create(name, bitmap), characterBuffer));
     }
 
     @Override
-    protected void destroy(final AtlasInstance font) {
+    protected void destroy(final AtlasInstanceImplementation font) {
         log.info("Destroying atlas {} ({})", font.getID(), font.getName());
         font.getBuffer().free();
     }
