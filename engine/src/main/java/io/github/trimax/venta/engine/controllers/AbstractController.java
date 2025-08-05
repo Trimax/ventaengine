@@ -1,33 +1,34 @@
 package io.github.trimax.venta.engine.controllers;
 
+import io.github.trimax.venta.engine.model.states.AbstractState;
 import lombok.NonNull;
 
-public abstract class AbstractController<O, A> {
-    private O object;
+public abstract class AbstractController<S extends AbstractState, A> {
+    private S state;
 
     public final void initialize() {
         initialize(null);
     }
 
     public final void initialize(final A argument) {
-        if (object != null)
+        if (state != null)
             return;
 
-        object = create(argument);
+        state = create(argument);
     }
 
-    public final O get() {
-        return object;
+    public final S get() {
+        return state;
     }
 
     public final void deinitialize() {
-        if (object != null)
-            destroy(object);
+        if (state != null)
+            destroy(state);
 
-        object = null;
+        state = null;
     }
 
-    protected abstract O create(final A argument);
+    protected abstract S create(final A argument);
 
-    protected abstract void destroy(@NonNull final O object);
+    protected abstract void destroy(@NonNull final S object);
 }

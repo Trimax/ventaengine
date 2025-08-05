@@ -24,6 +24,16 @@ public final class WindowState extends AbstractState {
         return projectionMatrix.identity().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f);
     }
 
+    public void handleKeyboardKey(final int key, final int scancode, final int action, final int mods) {
+        if (handler != null)
+            handler.onKey(key, scancode, action, mods);
+    }
+
+    public void handleMouseButton(final int button, final int action, final int mods) {
+        if (handler != null)
+            handler.onMouseButton(button, action, mods);
+    }
+
     public boolean hasHandler() {
         return handler != null;
     }

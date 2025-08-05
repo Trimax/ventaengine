@@ -10,7 +10,7 @@ public final class KeyboardCharCallback extends GLFWCharCallback implements Abst
 
     @Override
     public void invoke(final long windowID, final int code) {
-        if (!consoleController.get().isVisible())
+        if (!consoleController.isVisible())
             return;
 
         consoleController.accept((char) code);

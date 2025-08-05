@@ -25,7 +25,7 @@ public final class WindowRenderer extends AbstractStateRenderer<WindowState, Win
 
     @Override
     public void render(final WindowState window) {
-        if (consoleController.get().isVisible())
+        if (consoleController.isVisible())
             try (final var _ = consoleRenderer.withContext(getContext())) {
                 consoleRenderer.render(consoleController.get());
             }

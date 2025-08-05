@@ -10,7 +10,6 @@ public final class MouseButtonCallback extends GLFWMouseButtonCallback implement
 
     @Override
     public void invoke(final long windowID, final int button, final int action, final int mods) {
-        if (windowController.get().hasHandler())
-            windowController.get().getHandler().onMouseButton(button, action, mods);
+        windowController.get().handleMouseButton(button, action, mods);
     }
 }

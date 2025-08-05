@@ -16,8 +16,6 @@ public final class KeyboardKeyCallback extends GLFWKeyCallback implements Abstra
 
     @Override
     public void invoke(final long windowID, final int key, final int scancode, final int action, final int mods) {
-        final var window = windowController.get();
-
         if (key == GLFW_KEY_F12 && action == GLFW_PRESS) {
             consoleController.toggle();
             return;
@@ -29,7 +27,6 @@ public final class KeyboardKeyCallback extends GLFWKeyCallback implements Abstra
             return;
         }
 
-        if (window.hasHandler())
-            window.getHandler().onKey(key, scancode, action, mods);
+        windowController.get().handleKeyboardKey(key, scancode, action, mods);
     }
 }
