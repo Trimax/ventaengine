@@ -4,7 +4,6 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.instance.MeshInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.math.Transform;
 import lombok.Getter;
@@ -108,11 +107,5 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     public void setProgram(final ProgramEntity program) {
         if (program instanceof ProgramEntityImplementation entity)
             this.program = entity;
-    }
-
-    @Override
-    public void setMesh(final MeshInstance mesh) {
-        if (mesh instanceof MeshInstanceImplementation entity)
-            this.mesh = entity;
     }
 }
