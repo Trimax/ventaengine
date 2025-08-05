@@ -1,26 +1,10 @@
 package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.FontManager;
-import io.github.trimax.venta.engine.managers.LightManager;
-import io.github.trimax.venta.engine.managers.MaterialManager;
-import io.github.trimax.venta.engine.managers.MeshManager;
-import io.github.trimax.venta.engine.managers.ObjectManager;
-import io.github.trimax.venta.engine.managers.ProgramManager;
-import io.github.trimax.venta.engine.managers.SceneManager;
-import io.github.trimax.venta.engine.managers.ShaderManager;
-import io.github.trimax.venta.engine.managers.TextureManager;
-import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.FontManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.LightManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.MaterialManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.ShaderManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.TextureManagerImplementation;
+import io.github.trimax.venta.engine.managers.*;
+import io.github.trimax.venta.engine.managers.implementation.*;
+import io.github.trimax.venta.engine.registries.TextureRegistry;
+import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaContext {
     private final MaterialManagerImplementation materialManager;
-    private final TextureManagerImplementation textureManager;
     private final ProgramManagerImplementation programManager;
     private final ObjectManagerImplementation objectManager;
     private final ShaderManagerImplementation shaderManager;
@@ -40,12 +23,14 @@ public final class VentaContext {
     private final MeshManagerImplementation meshManager;
     private final FontManagerImplementation fontManager;
 
+    private final TextureRegistryImplementation textureRegistry;
+
     public MaterialManager getMaterialManager() {
         return materialManager;
     }
 
-    public TextureManager getTextureManage() {
-        return textureManager;
+    public TextureRegistry getTextureRegistry() {
+        return textureRegistry;
     }
 
     public ProgramManager getProgramManager() {

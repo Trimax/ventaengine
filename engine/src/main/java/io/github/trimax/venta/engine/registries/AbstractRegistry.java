@@ -1,4 +1,10 @@
 package io.github.trimax.venta.engine.registries;
 
-public interface AbstractRegistry {
+import io.github.trimax.venta.engine.model.entity.AbstractEntity;
+import lombok.NonNull;
+
+public interface AbstractRegistry<E extends AbstractEntity, A> {
+    E get(@NonNull final String resourcePath, final A argument);
+
+    E get(@NonNull final String resourcePath);
 }
