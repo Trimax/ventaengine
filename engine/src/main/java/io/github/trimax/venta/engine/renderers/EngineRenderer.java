@@ -2,10 +2,10 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.context.VentaState;
+import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,9 @@ import static org.lwjgl.opengl.GL11C.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EngineRenderer {
+    private final WindowController windowController;
+
     private final CameraManagerImplementation cameraManager;
-    private final WindowManagerImplementation windowManager;
     private final SceneManagerImplementation sceneManager;
 
     private final WindowRenderer windowRenderer;
@@ -27,7 +28,7 @@ public final class EngineRenderer {
     private final SceneRenderer sceneRenderer;
 
     public void render(final VentaState state, final FPSCounter fpsCounter) {
-        final var window = windowManager.getEntity(windowManager.getCurrent().getID());
+        final var window = windowController.get();
         if (glfwWindowShouldClose(window.getInternalID()))
             state.setApplicationRunning(false);
 

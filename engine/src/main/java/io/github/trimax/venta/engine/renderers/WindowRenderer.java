@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.model.entity.WindowEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
-    private final ConsoleManagerImplementation consoleManager;
+    private final ConsoleController consoleController;
     private final ConsoleRenderer consoleRenderer;
     private long lastUpdated = 0;
 
@@ -25,10 +25,9 @@ public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowR
 
     @Override
     public void render(final WindowEntity window) {
-        if (window.hasConsole())
+        if (consoleController.get().isVisible())
             try (final var _ = consoleRenderer.withContext(getContext())) {
-                if (window.getConsole().isVisible())
-                    consoleRenderer.render(window.getConsole());
+                consoleRenderer.render(consoleController.get());
             }
 
         glfwSwapBuffers(window.getInternalID());

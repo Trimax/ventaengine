@@ -6,12 +6,11 @@ import io.github.trimax.venta.engine.console.ConsoleCommandExecutor;
 import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.context.ManagerContext;
 import io.github.trimax.venta.engine.context.VentaContext;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
-import io.github.trimax.venta.engine.managers.implementation.ConsoleManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.WindowManagerImplementation;
 import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.model.view.WindowView;
 import io.github.trimax.venta.engine.renderers.EngineRenderer;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,6 +27,10 @@ import static org.lwjgl.opengl.GL33C.glEnable;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Engine implements Runnable {
+    private final ConsoleController consoleController;
+    private final WindowController windowController;
+
+
     private final InternalVentaContext internalVentaContext;
     private final ConsoleCommandExecutor consoleCommandExecutor;
     private final EngineRenderer engineRenderer;
@@ -46,24 +49,18 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         internalVentaContext.getState().setDebugEnabled(ventaEngineApplication.getConfiguration().getRenderConfiguration().isDebugEnabled());
-        managerContext.get(WindowManagerImplementation.class).setCurrent(createWindow(ventaEngineApplication));
 
+        windowController.initialize(ventaEngineApplication);
         GL.createCapabilities();
+
+        consoleController.initialize();
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
-        managerContext.get(WindowManagerImplementation.class).getCurrent()
-                .setConsole(managerContext.get(ConsoleManagerImplementation.class).create("Default console"));
-    }
-
-    private WindowView createWindow(final VentaEngineApplication ventaEngineApplication) {
-        return managerContext.get(WindowManagerImplementation.class)
-                .create(ventaEngineApplication.getConfiguration().getWindowConfiguration(),
-                        ventaEngineApplication.getInputHandler());
     }
 
     @Override
     public void run() {
-        internalVentaContext.getConsole().info("Venta engine started");
+        consoleController.get().info("Venta engine started");
         glEnable(GL_DEPTH_TEST);
 
         final var updateHandler = internalVentaContext.getState().getApplication().getUpdateHandler();
@@ -78,6 +75,9 @@ public final class Engine implements Runnable {
 
             consoleCommandExecutor.execute();
         }
+
+        consoleController.deinitialize();
+        windowController.deinitialize();
 
         managerContext.cleanup();
         memory.cleanup();

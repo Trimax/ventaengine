@@ -1,6 +1,8 @@
 package io.github.trimax.venta.engine.model.entity;
 
-import io.github.trimax.venta.engine.callbacks.*;
+import io.github.trimax.venta.engine.callbacks.MouseButtonCallback;
+import io.github.trimax.venta.engine.callbacks.MouseCursorCallback;
+import io.github.trimax.venta.engine.callbacks.WindowSizeCallback;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.model.view.WindowView;
@@ -9,7 +11,9 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
-import org.lwjgl.glfw.*;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 @Slf4j
 @Getter
@@ -17,8 +21,6 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
     private final GLFWFramebufferSizeCallback windowSizeCallback;
     private final GLFWMouseButtonCallback mouseClickCallback;
     private final GLFWCursorPosCallback mouseCursorCallback;
-    private final GLFWCharCallback charCallback;
-    private final GLFWKeyCallback keyCallback;
 
     private final VentaEngineInputHandler handler;
     private final ConsoleCommandQueue consoleCommandQueue;
@@ -26,7 +28,7 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
     private final long internalID;
 
     @Setter
-    private ConsoleEntity console;
+    private boolean isConsoleVisible;
 
     @Setter
     private int width;
@@ -34,13 +36,12 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
     @Setter
     private int height;
 
-
     public WindowEntity(final long internalID,
                         final int width,
                         final int height,
                         @NonNull final String title,
                         @NonNull final VentaEngineInputHandler inputHandler,
-                        @NonNull final ConsoleCommandQueue consoleCommandQueue) {
+                        final ConsoleCommandQueue consoleCommandQueue) {
         super(title);
 
         this.handler = inputHandler;
@@ -49,8 +50,6 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
         this.mouseCursorCallback = new MouseCursorCallback(this);
         this.mouseClickCallback = new MouseButtonCallback(this);
         this.windowSizeCallback = new WindowSizeCallback(this);
-        this.charCallback = new KeyboardCharCallback(this);
-        this.keyCallback = new KeyboardKeyCallback(this);
 
         this.internalID = internalID;
         this.width = width;
@@ -62,9 +61,5 @@ public final class WindowEntity extends AbstractEntity implements WindowView {
 
     public boolean hasHandler() {
         return handler != null;
-    }
-
-    public boolean hasConsole() {
-        return console != null;
     }
 }

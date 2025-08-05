@@ -1,21 +1,18 @@
 package io.github.trimax.venta.engine.callbacks;
 
-import io.github.trimax.venta.engine.model.entity.WindowEntity;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
 import lombok.AllArgsConstructor;
 import org.lwjgl.glfw.GLFWCharCallback;
 
 @AllArgsConstructor
 public final class KeyboardCharCallback extends GLFWCharCallback implements AbstractCallback {
-    private final WindowEntity window;
+    private final ConsoleController consoleController;
 
     @Override
     public void invoke(final long windowID, final int code) {
-        if (!window.hasConsole())
+        if (!consoleController.get().isVisible())
             return;
 
-        if (!window.getConsole().isVisible())
-            return;
-
-        window.getConsole().accept((char) code);
+        consoleController.get().accept((char) code);
     }
 }
