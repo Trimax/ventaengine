@@ -46,9 +46,4 @@ public final class GizmoManagerImplementation
     protected void destroy(final GizmoInstanceImplementation object) {
         log.debug("Destroying gizmo {} ({})", object.getID(), object.getName());
     }
-
-    @Override
-    protected boolean shouldCache() {
-        return false;
-    }
 }

@@ -41,9 +41,4 @@ public final class CameraManagerImplementation
     protected void destroy(final CameraInstanceImplementation camera) {
         log.info("Destroying camera {} ({})", camera.getID(), camera.getName());
     }
-
-    @Override
-    protected boolean shouldCache() {
-        return false;
-    }
 }

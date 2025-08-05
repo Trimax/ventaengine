@@ -32,9 +32,4 @@ public final class LightManagerImplementation
     protected void destroy(final LightInstanceImplementation light) {
         log.info("Destroying light {} ({})", light.getID(), light.getName());
     }
-
-    @Override
-    protected boolean shouldCache() {
-        return false;
-    }
 }

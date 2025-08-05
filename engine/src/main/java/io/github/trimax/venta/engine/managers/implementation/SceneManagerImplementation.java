@@ -87,9 +87,4 @@ public final class SceneManagerImplementation
     protected void destroy(final SceneInstanceImplementation scene) {
         log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
     }
-
-    @Override
-    protected boolean shouldCache() {
-        return false;
-    }
 }
