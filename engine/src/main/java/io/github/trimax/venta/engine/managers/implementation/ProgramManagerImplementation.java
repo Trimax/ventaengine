@@ -1,11 +1,14 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import static org.lwjgl.opengl.GL20C.*;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
 import io.github.trimax.venta.engine.managers.ProgramManager;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.ShaderEntity;
@@ -16,8 +19,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.lwjgl.opengl.GL20C.*;
-
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -26,6 +27,7 @@ public final class ProgramManagerImplementation
         implements ProgramManager {
     private final ResourceManagerImplementation resourceManager;
     private final ShaderManagerImplementation shaderManager;
+    private final Memory memory;
 
     @Override
     public ProgramEntity load(@NonNull final String name) {
@@ -56,7 +58,7 @@ public final class ProgramManagerImplementation
                                  @NonNull final ShaderView shaderVertex,
                                  @NonNull final ShaderView shaderFragment) {
         log.info("Creating program {}", name);
-        final var id = glCreateProgram();
+        final var id = memory.getPrograms().create(name);
 
         glAttachShader(id, shaderManager.getEntity(shaderVertex.getID()).getInternalID());
         glAttachShader(id, shaderManager.getEntity(shaderFragment.getID()).getInternalID());
@@ -80,7 +82,7 @@ public final class ProgramManagerImplementation
     @Override
     protected void destroy(final ProgramEntity program) {
         log.info("Destroying program {} ({})", program.getID(), program.getName());
-        glDeleteProgram(program.getInternalID());
+        memory.getPrograms().delete(program.getInternalID());
     }
 
     @Override
