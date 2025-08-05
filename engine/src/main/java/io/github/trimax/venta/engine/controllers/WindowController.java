@@ -47,7 +47,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
                                 final int width,
                                 final int height,
                                 final VentaEngineInputHandler handler) {
-        log.info("Creating window");
+        log.info("Initializing window");
 
         final var id = memory.getWindows().create(() -> glfwCreateWindow(width, height, title, monitorID, NULL), "Window %s", title);
         if (id == NULL)
@@ -73,7 +73,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
 
     @Override
     protected void destroy(@NonNull final WindowState state) {
-        log.info("Destroying window");
+        log.info("Deinitializing window");
 
         glfwMakeContextCurrent(NULL);
         memory.getWindows().delete(state.getInternalID());
