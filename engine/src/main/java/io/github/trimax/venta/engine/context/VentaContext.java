@@ -1,6 +1,8 @@
 package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.factories.ManagerFactory;
+import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.managers.*;
 import io.github.trimax.venta.engine.managers.implementation.*;
 import io.github.trimax.venta.engine.registries.*;
@@ -13,59 +15,50 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaContext {
-    private final ObjectManagerImplementation objectManager;
-    private final CameraManagerImplementation cameraManager;
-    private final SceneManagerImplementation sceneManager;
-    private final LightManagerImplementation lightManager;
-    private final MeshManagerImplementation meshManager;
-
-    private final MaterialRegistryImplementation materialRegistry;
-    private final TextureRegistryImplementation textureRegistry;
-    private final ProgramRegistryImplementation programRegistry;
-    private final ShaderRegistryImplementation shaderRegistry;
-    private final FontRegistryImplementation fontRegistry;
+    private final RegistryFactory registryFactory;
+    private final ManagerFactory managerFactory;
 
     /*** Managers ***/
 
     public ObjectManager getObjectManager() {
-        return objectManager;
+        return managerFactory.get(ObjectManagerImplementation.class);
     }
 
     public CameraManager getCameraManager() {
-        return cameraManager;
+        return managerFactory.get(CameraManagerImplementation.class);
     }
 
     public SceneManager getSceneManager() {
-        return sceneManager;
+        return managerFactory.get(SceneManagerImplementation.class);
     }
 
     public LightManager getLightManager() {
-        return lightManager;
+        return managerFactory.get(LightManagerImplementation.class);
     }
 
     public MeshManager getMeshManager() {
-        return meshManager;
+        return managerFactory.get(MeshManagerImplementation.class);
     }
 
     /*** Registries ***/
 
     public MaterialRegistry getMaterialRegistry() {
-        return materialRegistry;
+        return registryFactory.get(MaterialRegistryImplementation.class);
     }
 
     public TextureRegistry getTextureRegistry() {
-        return textureRegistry;
+        return registryFactory.get(TextureRegistryImplementation.class);
     }
 
     public ProgramRegistry getProgramRegistry() {
-        return programRegistry;
+        return registryFactory.get(ProgramRegistryImplementation.class);
     }
 
     public ShaderRegistry getShaderRegistry() {
-        return shaderRegistry;
+        return registryFactory.get(ShaderRegistryImplementation.class);
     }
 
     public FontRegistry getFontRegistry() {
-        return fontRegistry;
+        return registryFactory.get(FontRegistryImplementation.class);
     }
 }
