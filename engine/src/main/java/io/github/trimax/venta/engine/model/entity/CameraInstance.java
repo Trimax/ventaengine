@@ -8,7 +8,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 @Getter
-public final class CameraEntity extends AbstractEntity implements CameraView {
+public final class CameraInstance extends AbstractInstance implements CameraView {
     private static final Vector3f worldUp = new Vector3f(0, 1, 0);
 
     private final Vector3f position = new Vector3f(0.f);
@@ -18,10 +18,10 @@ public final class CameraEntity extends AbstractEntity implements CameraView {
     private final Vector3f up = new Vector3f(0, 1, 0);
     private final Vector3f right = new Vector3f(1, 0, 0);
 
-    public CameraEntity(@NonNull final String name,
-                        final Vector3f position,
-                        final Vector3f target,
-                        @NonNull final GizmoEntity gizmo) {
+    public CameraInstance(@NonNull final String name,
+                          final Vector3f position,
+                          final Vector3f target,
+                          @NonNull final GizmoInstance gizmo) {
         super(gizmo, name);
 
         setPosition(position);

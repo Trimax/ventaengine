@@ -6,12 +6,12 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class AbstractEntity implements AbstractView {
+public abstract class AbstractInstance implements AbstractView {
     private final String id = IdentifierUtil.generate(6);
-    private final GizmoEntity gizmo;
+    private final GizmoInstance gizmo;
     private final String name;
 
-    protected AbstractEntity(final String name) {
+    protected AbstractInstance(final String name) {
         this(null, name);
     }
 
@@ -25,7 +25,7 @@ public abstract class AbstractEntity implements AbstractView {
         return name;
     }
 
-    public final GizmoEntity getGizmo() {
+    public final GizmoInstance getGizmo() {
         return gizmo;
     }
 }

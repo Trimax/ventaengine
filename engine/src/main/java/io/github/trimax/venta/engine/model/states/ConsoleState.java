@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.model.states;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.definitions.Definitions;
-import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.ProgramInstance;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public final class ConsoleState extends AbstractState {
     private final List<ConsoleController.ConsoleMessage> history = new ArrayList<>();
     private final List<String> commands = new ArrayList<>();
 
-    private final ProgramEntity program;
+    private final ProgramInstance program;
 
     private final int vertexArrayObjectID;
     private final int verticesBufferID;

@@ -6,7 +6,7 @@ import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.ObjectBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.model.entity.ObjectEntity;
+import io.github.trimax.venta.engine.model.entity.ObjectInstance;
 import io.github.trimax.venta.engine.model.view.SceneView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ObjectRenderer extends AbstractEntityRenderer<ObjectEntity, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
+public final class ObjectRenderer extends AbstractEntityRenderer<ObjectInstance, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
     private final MeshRenderer meshRenderer;
 
     private final ObjectBinder objectBinder;
@@ -39,7 +39,7 @@ public final class ObjectRenderer extends AbstractEntityRenderer<ObjectEntity, O
     }
 
     @Override
-    public void render(final ObjectEntity object) {
+    public void render(final ObjectInstance object) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");

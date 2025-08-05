@@ -10,7 +10,7 @@ import lombok.Getter;
 import org.joml.Vector3f;
 
 @Getter
-public final class ObjectEntity extends AbstractEntity implements ObjectView {
+public final class ObjectInstance extends AbstractInstance implements ObjectView {
     private final Transform transform = new Transform();
     private final BoundingBox box;
 
@@ -18,13 +18,13 @@ public final class ObjectEntity extends AbstractEntity implements ObjectView {
     private boolean isVisible = true;
     private boolean isLit = true;
 
-    private ProgramEntity program;
-    private MeshEntity mesh;
+    private ProgramInstance program;
+    private MeshInstance mesh;
 
-    public ObjectEntity(final String name,
-                        final ProgramEntity program,
-                        final MeshEntity mesh,
-                        final GizmoEntity gizmo) {
+    public ObjectInstance(final String name,
+                          final ProgramInstance program,
+                          final MeshInstance mesh,
+                          final GizmoInstance gizmo) {
         super(gizmo, name);
 
         this.mesh = mesh;
@@ -104,13 +104,13 @@ public final class ObjectEntity extends AbstractEntity implements ObjectView {
 
     @Override
     public void setProgram(final ProgramView program) {
-        if (program instanceof ProgramEntity entity)
+        if (program instanceof ProgramInstance entity)
             this.program = entity;
     }
 
     @Override
     public void setMesh(final MeshView mesh) {
-        if (mesh instanceof MeshEntity entity)
+        if (mesh instanceof MeshInstance entity)
             this.mesh = entity;
     }
 }

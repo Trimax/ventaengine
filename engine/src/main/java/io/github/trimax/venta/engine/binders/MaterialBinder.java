@@ -1,20 +1,20 @@
 package io.github.trimax.venta.engine.binders;
 
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL13C.glActiveTexture;
-import static org.lwjgl.opengl.GL20C.glUniform1i;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.managers.implementation.TextureManagerImplementation;
-import io.github.trimax.venta.engine.model.entity.MaterialEntity;
-import io.github.trimax.venta.engine.model.entity.ProgramEntity;
-import io.github.trimax.venta.engine.model.entity.TextureEntity;
+import io.github.trimax.venta.engine.model.entity.MaterialInstance;
+import io.github.trimax.venta.engine.model.entity.ProgramInstance;
+import io.github.trimax.venta.engine.model.entity.TextureInstance;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11C.glBindTexture;
+import static org.lwjgl.opengl.GL13C.glActiveTexture;
+import static org.lwjgl.opengl.GL20C.glUniform1i;
 
 @Slf4j
 @Component
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class MaterialBinder extends AbstractBinder {
     private final TextureManagerImplementation textureManager;
 
-    public void bind(final ProgramEntity program, final MaterialEntity material) {
+    public void bind(final ProgramInstance program, final MaterialInstance material) {
         if (material == null)
             return;
 
@@ -33,12 +33,12 @@ public final class MaterialBinder extends AbstractBinder {
         bind(TextureType.Roughness, program, material, ShaderUniform.UseTextureRoughness, ShaderUniform.TextureRoughness);
     }
 
-    private void bind(final TextureType type, final ProgramEntity program,
-                      final MaterialEntity material, final ShaderUniform useTextureUniform, final ShaderUniform textureUniform) {
+    private void bind(final TextureType type, final ProgramInstance program,
+                      final MaterialInstance material, final ShaderUniform useTextureUniform, final ShaderUniform textureUniform) {
         bind(type, textureManager.getEntity(material.getTexture(type).getID()), program.getUniformID(useTextureUniform), program.getUniformID(textureUniform));
     }
 
-    private void bind(final TextureType type, final TextureEntity texture, final int useTextureUniformID, final int textureUniformID) {
+    private void bind(final TextureType type, final TextureInstance texture, final int useTextureUniformID, final int textureUniformID) {
         glActiveTexture(type.getLocationID());
         if (texture == null) {
             glBindTexture(GL_TEXTURE_2D, 0);

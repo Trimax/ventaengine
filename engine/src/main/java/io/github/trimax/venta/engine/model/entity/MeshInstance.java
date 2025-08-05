@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public final class MeshEntity extends AbstractEntity implements MeshView {
-    private final List<MeshEntity> children = new ArrayList<>();
+public final class MeshInstance extends AbstractInstance implements MeshView {
+    private final List<MeshInstance> children = new ArrayList<>();
     private final Transform transform = new Transform();
 
     private final int verticesCount;
@@ -26,17 +26,17 @@ public final class MeshEntity extends AbstractEntity implements MeshView {
 
     private final BoundingBox boundingBox;
 
-    private MaterialEntity material;
+    private MaterialInstance material;
 
-    public MeshEntity(@NonNull final String name,
-                      final int verticesCount,
-                      final int facetsCount,
-                      final int edgesCount,
-                      final int vertexArrayObjectID,
-                      final int verticesBufferID,
-                      final int facetsBufferID,
-                      final int edgesBufferID,
-                      final BoundingBox boundingBox) {
+    public MeshInstance(@NonNull final String name,
+                        final int verticesCount,
+                        final int facetsCount,
+                        final int edgesCount,
+                        final int vertexArrayObjectID,
+                        final int verticesBufferID,
+                        final int facetsBufferID,
+                        final int edgesBufferID,
+                        final BoundingBox boundingBox) {
         super(name);
 
         this.verticesCount = verticesCount;
@@ -53,7 +53,7 @@ public final class MeshEntity extends AbstractEntity implements MeshView {
 
     @Override
     public void setMaterial(final MaterialView material) {
-        if (material instanceof MaterialEntity entity)
+        if (material instanceof MaterialInstance entity)
             this.material = entity;
     }
 
@@ -62,7 +62,7 @@ public final class MeshEntity extends AbstractEntity implements MeshView {
         return material != null;
     }
 
-    public void addChild(@NonNull final MeshEntity mesh) {
+    public void addChild(@NonNull final MeshInstance mesh) {
         this.children.add(mesh);
     }
 }

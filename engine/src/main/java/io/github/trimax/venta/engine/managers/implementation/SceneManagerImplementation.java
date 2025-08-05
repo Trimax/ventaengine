@@ -1,13 +1,11 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
-import java.util.Optional;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
-import io.github.trimax.venta.engine.model.entity.SceneEntity;
+import io.github.trimax.venta.engine.model.entity.SceneInstance;
 import io.github.trimax.venta.engine.model.view.SceneView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
@@ -16,24 +14,26 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneManagerImplementation
-        extends AbstractManagerImplementation<SceneEntity, SceneView>
+        extends AbstractManagerImplementation<SceneInstance, SceneView>
         implements SceneManager {
     private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
 
     @Getter(onMethod_ = @__(@Override))
-    private SceneEntity current;
+    private SceneInstance current;
 
     @Override
-    public SceneEntity load(@NonNull final String name) {
+    public SceneInstance load(@NonNull final String name) {
         log.info("Loading scene {}", name);
 
         final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s.json", name), SceneDTO.class);
-        final var scene = new SceneEntity(name);
+        final var scene = new SceneInstance(name);
 
         if (sceneDTO.hasObjects())
             for (final var sceneObject : sceneDTO.objects()) {
@@ -60,15 +60,15 @@ public final class SceneManagerImplementation
     }
 
     @Override
-    public SceneEntity create(@NonNull final String name) {
+    public SceneInstance create(@NonNull final String name) {
         log.info("Creating scene {}", name);
 
-        return store(new SceneEntity(name));
+        return store(new SceneInstance(name));
     }
 
     @Override
     public void setCurrent(@NonNull final SceneView scene) {
-        if (scene instanceof SceneEntity entity)
+        if (scene instanceof SceneInstance entity)
             this.current = entity;
     }
 
@@ -79,12 +79,12 @@ public final class SceneManagerImplementation
             return;
         }
 
-        if (scene instanceof SceneEntity entity)
+        if (scene instanceof SceneInstance entity)
             delete(entity);
     }
 
     @Override
-    protected void destroy(final SceneEntity scene) {
+    protected void destroy(final SceneInstance scene) {
         log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
     }
 

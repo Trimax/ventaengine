@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public final class ProgramEntity extends AbstractEntity implements ProgramView {
+public final class ProgramInstance extends AbstractInstance implements ProgramView {
     private final int internalID;
 
     @Getter(AccessLevel.NONE)
     private final Map<String, Integer> uniforms = new HashMap<>();
 
-    public ProgramEntity(final int internalID, @NonNull final String name) {
+    public ProgramInstance(final int internalID, @NonNull final String name) {
         super(name);
 
         this.internalID = internalID;
