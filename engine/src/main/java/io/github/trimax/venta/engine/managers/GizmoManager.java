@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.managers;
 
-import io.github.trimax.venta.engine.model.view.GizmoView;
+import io.github.trimax.venta.engine.model.instance.GizmoInstance;
 
-public interface GizmoManager extends AbstractManager<GizmoView> {
+public interface GizmoManager extends AbstractManager<GizmoInstance> {
 }

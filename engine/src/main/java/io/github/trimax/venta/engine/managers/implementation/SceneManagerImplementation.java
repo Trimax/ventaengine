@@ -6,7 +6,7 @@ import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
-import io.github.trimax.venta.engine.model.view.SceneView;
+import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,20 +20,20 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneManagerImplementation
-        extends AbstractManagerImplementation<SceneInstance, SceneView>
+        extends AbstractManagerImplementation<SceneInstanceImplementation, SceneInstance>
         implements SceneManager {
     private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
 
     @Getter(onMethod_ = @__(@Override))
-    private SceneInstance current;
+    private SceneInstanceImplementation current;
 
     @Override
-    public SceneInstance load(@NonNull final String name) {
+    public SceneInstanceImplementation load(@NonNull final String name) {
         log.info("Loading scene {}", name);
 
         final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s.json", name), SceneDTO.class);
-        final var scene = new SceneInstance(name);
+        final var scene = new SceneInstanceImplementation(name);
 
         if (sceneDTO.hasObjects())
             for (final var sceneObject : sceneDTO.objects()) {
@@ -60,31 +60,31 @@ public final class SceneManagerImplementation
     }
 
     @Override
-    public SceneInstance create(@NonNull final String name) {
+    public SceneInstanceImplementation create(@NonNull final String name) {
         log.info("Creating scene {}", name);
 
-        return store(new SceneInstance(name));
+        return store(new SceneInstanceImplementation(name));
     }
 
     @Override
-    public void setCurrent(@NonNull final SceneView scene) {
-        if (scene instanceof SceneInstance entity)
+    public void setCurrent(@NonNull final SceneInstance scene) {
+        if (scene instanceof SceneInstanceImplementation entity)
             this.current = entity;
     }
 
     @Override
-    public void delete(@NonNull final SceneView scene) {
+    public void delete(@NonNull final SceneInstance scene) {
         if (scene == getCurrent()) {
             log.error("Scene {} can't be deleted because it is currently selected", scene.getID());
             return;
         }
 
-        if (scene instanceof SceneInstance entity)
+        if (scene instanceof SceneInstanceImplementation entity)
             delete(entity);
     }
 
     @Override
-    protected void destroy(final SceneInstance scene) {
+    protected void destroy(final SceneInstanceImplementation scene) {
         log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
     }
 

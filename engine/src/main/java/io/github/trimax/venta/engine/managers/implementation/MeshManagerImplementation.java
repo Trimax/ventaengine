@@ -6,7 +6,7 @@ import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.instance.MeshInstance;
-import io.github.trimax.venta.engine.model.view.MeshView;
+import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,12 +28,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MeshManagerImplementation
-        extends AbstractManagerImplementation<MeshInstance, MeshView>
+        extends AbstractManagerImplementation<MeshInstanceImplementation, MeshInstance>
         implements MeshManager {
     private final Memory memory;
 
     @Override
-    public MeshInstance load(@NonNull final String name) {
+    public MeshInstanceImplementation load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);
 
@@ -108,12 +108,12 @@ public final class MeshManagerImplementation
 
         glBindVertexArray(0);
 
-        return store(new MeshInstance(name, vertices.length, meshDTO.getFacetsArrayLength(),
+        return store(new MeshInstanceImplementation(name, vertices.length, meshDTO.getFacetsArrayLength(),
                 meshDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO)));
     }
 
     @Override
-    protected void destroy(final MeshInstance object) {
+    protected void destroy(final MeshInstanceImplementation object) {
         log.info("Destroying mesh {} ({})", object.getID(), object.getName());
         memory.getVertexArrays().delete(object.getVertexArrayObjectID());
         memory.getBuffers().delete(object.getVerticesBufferID());

@@ -6,8 +6,8 @@ import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.ObjectBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
-import io.github.trimax.venta.engine.model.instance.ObjectInstance;
-import io.github.trimax.venta.engine.model.view.SceneView;
+import io.github.trimax.venta.engine.model.instance.SceneInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ObjectRenderer extends AbstractEntityRenderer<ObjectInstance, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
+public final class ObjectRenderer extends AbstractEntityRenderer<ObjectInstanceImplementation, ObjectRenderer.ObjectRenderContext, SceneRenderer.SceneRenderContext> {
     private final MeshRenderer meshRenderer;
 
     private final ObjectBinder objectBinder;
@@ -39,7 +39,7 @@ public final class ObjectRenderer extends AbstractEntityRenderer<ObjectInstance,
     }
 
     @Override
-    public void render(final ObjectInstance object) {
+    public void render(final ObjectInstanceImplementation object) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
@@ -70,7 +70,7 @@ public final class ObjectRenderer extends AbstractEntityRenderer<ObjectInstance,
         private final Matrix3f normalMatrix = new Matrix3f();
         private final Matrix4f modelMatrix = new Matrix4f();
 
-        private SceneView scene;
+        private SceneInstance scene;
 
         public ObjectRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
             modelMatrix.identity()
@@ -86,7 +86,7 @@ public final class ObjectRenderer extends AbstractEntityRenderer<ObjectInstance,
             return this;
         }
 
-        public ObjectRenderContext withScene(final SceneView scene) {
+        public ObjectRenderContext withScene(final SceneInstance scene) {
             this.scene = scene;
             return this;
         }

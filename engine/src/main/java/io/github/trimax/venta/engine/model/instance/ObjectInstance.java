@@ -1,116 +1,48 @@
 package io.github.trimax.venta.engine.model.instance;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
-import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.math.Transform;
-import io.github.trimax.venta.engine.model.view.MeshView;
-import io.github.trimax.venta.engine.model.view.ObjectView;
-import io.github.trimax.venta.engine.model.view.ProgramView;
-import lombok.Getter;
 import org.joml.Vector3f;
 
-@Getter
-public final class ObjectInstance extends AbstractInstance implements ObjectView {
-    private final Transform transform = new Transform();
-    private final BoundingBox box;
+public interface ObjectInstance extends AbstractInstance {
+    MeshInstance getMesh();
 
-    private DrawMode drawMode = DrawMode.Polygon;
-    private boolean isVisible = true;
-    private boolean isLit = true;
+    Vector3f getPosition();
 
-    private ProgramInstance program;
-    private MeshInstance mesh;
+    Vector3f getRotation();
 
-    public ObjectInstance(final String name,
-                          final ProgramInstance program,
-                          final MeshInstance mesh,
-                          final GizmoInstance gizmo) {
-        super(gizmo, name);
+    Vector3f getScale();
 
-        this.mesh = mesh;
-        this.program = program;
-        this.box = BoundingBox.of(mesh.getBoundingBox());
-    }
+    boolean isVisible();
 
-    @Override
-    public boolean hasProgram() {
-        return program != null;
-    }
+    boolean isLit();
 
-    @Override
-    public boolean hasMesh() {
-        return mesh != null;
-    }
+    boolean hasProgram();
 
-    @Override
-    public Vector3f getPosition() {
-        return transform.getPosition();
-    }
+    boolean hasMesh();
 
-    @Override
-    public Vector3f getRotation() {
-        return transform.getRotation();
-    }
+    DrawMode getDrawMode();
 
-    @Override
-    public Vector3f getScale() {
-        return transform.getScale();
-    }
+    ProgramInstance getProgram();
 
-    @Override
-    public void setPosition(final Vector3f position) {
-        this.transform.setPosition(position);
-    }
+    void setPosition(final Vector3f position);
 
-    @Override
-    public void setRotation(final Vector3f angles) {
-        this.transform.setRotation(angles);
-    }
+    void setRotation(final Vector3f rotation);
 
-    @Override
-    public void setScale(final Vector3f scale) {
-        this.transform.setScale(scale);
-    }
+    void setScale(final Vector3f scale);
 
-    @Override
-    public void move(final Vector3f offset) {
-        this.transform.getPosition().add(offset, this.transform.getPosition());
-    }
+    void move(final Vector3f offset);
 
-    @Override
-    public void rotate(final Vector3f angles) {
-        this.transform.getRotation().add(angles, this.transform.getRotation());
-    }
+    void rotate(final Vector3f angles);
 
-    @Override
-    public void scale(final Vector3f factor) {
-        this.transform.getScale().add(factor, this.transform.getScale());
-    }
+    void scale(final Vector3f factor);
 
-    @Override
-    public void setDrawMode(final DrawMode drawMode) {
-        this.drawMode = drawMode;
-    }
+    void setDrawMode(final DrawMode drawMode);
 
-    @Override
-    public void setLit(final boolean lit) {
-        this.isLit = lit;
-    }
+    void setLit(final boolean lit);
 
-    @Override
-    public void setVisible(final boolean visible) {
-        this.isVisible = visible;
-    }
+    void setVisible(final boolean visible);
 
-    @Override
-    public void setProgram(final ProgramView program) {
-        if (program instanceof ProgramInstance entity)
-            this.program = entity;
-    }
+    void setProgram(final ProgramInstance program);
 
-    @Override
-    public void setMesh(final MeshView mesh) {
-        if (mesh instanceof MeshInstance entity)
-            this.mesh = entity;
-    }
+    void setMesh(final MeshInstance mesh);
 }

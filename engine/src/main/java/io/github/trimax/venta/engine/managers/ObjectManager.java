@@ -1,14 +1,14 @@
 package io.github.trimax.venta.engine.managers;
 
-import io.github.trimax.venta.engine.model.view.MeshView;
-import io.github.trimax.venta.engine.model.view.ObjectView;
-import io.github.trimax.venta.engine.model.view.ProgramView;
+import io.github.trimax.venta.engine.model.instance.MeshInstance;
+import io.github.trimax.venta.engine.model.instance.ObjectInstance;
+import io.github.trimax.venta.engine.model.instance.ProgramInstance;
 import lombok.NonNull;
 
-public interface ObjectManager extends AbstractManager<ObjectView> {
-    ObjectView load(@NonNull final String name);
+public interface ObjectManager extends AbstractManager<ObjectInstance> {
+    ObjectInstance load(@NonNull final String name);
 
-    ObjectView create(@NonNull final String name,
-                      @NonNull final MeshView mesh,
-                      @NonNull final ProgramView program);
+    ObjectInstance create(@NonNull final String name,
+                          @NonNull final MeshInstance mesh,
+                          @NonNull final ProgramInstance program);
 }

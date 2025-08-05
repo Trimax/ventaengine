@@ -7,9 +7,9 @@ import io.github.trimax.venta.engine.model.dto.ObjectDTO;
 import io.github.trimax.venta.engine.model.dto.ObjectMeshDTO;
 import io.github.trimax.venta.engine.model.instance.MeshInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
-import io.github.trimax.venta.engine.model.view.MeshView;
-import io.github.trimax.venta.engine.model.view.ObjectView;
-import io.github.trimax.venta.engine.model.view.ProgramView;
+import io.github.trimax.venta.engine.model.instance.ProgramInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ObjectManagerImplementation
-        extends AbstractManagerImplementation<ObjectInstance, ObjectView>
+        extends AbstractManagerImplementation<ObjectInstanceImplementation, ObjectInstance>
         implements ObjectManager {
     private final MaterialManagerImplementation materialManager;
     private final ProgramManagerImplementation programManager;
@@ -30,29 +30,29 @@ public final class ObjectManagerImplementation
     private final MeshManagerImplementation meshManager;
 
     @Override
-    public ObjectView create(@NonNull final String name,
-                             @NonNull final MeshView mesh,
-                             @NonNull final ProgramView program) {
+    public ObjectInstance create(@NonNull final String name,
+                                 @NonNull final MeshInstance mesh,
+                                 @NonNull final ProgramInstance program) {
         log.info("Creating object {}", name);
 
-        return store(new ObjectInstance(name,
-                programManager.getEntity(program.getID()),
-                meshManager.getEntity(mesh.getID()),
+        return store(new ObjectInstanceImplementation(name,
+                programManager.getInstance(program.getID()),
+                meshManager.getInstance(mesh.getID()),
                 gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 
     @Override
-    public ObjectView load(@NonNull final String name) {
+    public ObjectInstance load(@NonNull final String name) {
         log.info("Loading object {}", name);
 
         final var objectDTO = ResourceUtil.loadAsObject(String.format("/objects/%s.json", name), ObjectDTO.class);
-        return store(new ObjectInstance(name,
+        return store(new ObjectInstanceImplementation(name,
                 programManager.load(objectDTO.program()),
                 buildMeshHierarchy(objectDTO.mesh()),
                 gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 
-    private MeshInstance buildMeshHierarchy(@NonNull final ObjectMeshDTO meshDTO) {
+    private MeshInstanceImplementation buildMeshHierarchy(@NonNull final ObjectMeshDTO meshDTO) {
         final var mesh = meshManager.load(meshDTO.name());
         mesh.setMaterial(materialManager.load(meshDTO.material()));
 
@@ -64,7 +64,7 @@ public final class ObjectManagerImplementation
     }
 
     @Override
-    protected void destroy(final ObjectInstance object) {
+    protected void destroy(final ObjectInstanceImplementation object) {
         log.info("Destroying object {} ({})", object.getID(), object.getName());
     }
 

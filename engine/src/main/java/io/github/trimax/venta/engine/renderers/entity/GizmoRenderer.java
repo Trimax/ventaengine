@@ -6,9 +6,9 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
-import io.github.trimax.venta.engine.model.instance.CameraInstance;
-import io.github.trimax.venta.engine.model.instance.GizmoInstance;
-import io.github.trimax.venta.engine.model.instance.ProgramInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.GizmoInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.ProgramInstanceImplementation;
 import io.github.trimax.venta.engine.renderers.DebugRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GizmoRenderer extends AbstractEntityRenderer<GizmoInstance, GizmoRenderer.GizmoRenderContext, DebugRenderer.DebugRenderContext> {
+public final class GizmoRenderer extends AbstractEntityRenderer<GizmoInstanceImplementation, GizmoRenderer.GizmoRenderContext, DebugRenderer.DebugRenderContext> {
     private final ProgramManagerImplementation programManager;
     private final MeshRenderer meshRenderer;
     private final MatrixBinder matrixBinder;
@@ -40,12 +40,12 @@ public final class GizmoRenderer extends AbstractEntityRenderer<GizmoInstance, G
     }
 
     @Override
-    public void render(final GizmoInstance gizmo) {
+    public void render(final GizmoInstanceImplementation gizmo) {
         //TODO: Why not to create Program on Gizmo creation?
         render(gizmo, programManager.load(ProgramType.Simple.name()));
     }
 
-    private void render(final GizmoInstance gizmo, final ProgramInstance program) {
+    private void render(final GizmoInstanceImplementation gizmo, final ProgramInstanceImplementation program) {
         final var context = getContext();
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
@@ -85,7 +85,7 @@ public final class GizmoRenderer extends AbstractEntityRenderer<GizmoInstance, G
             return this;
         }
 
-        public GizmoRenderContext withModelMatrix(final CameraInstance camera) {
+        public GizmoRenderContext withModelMatrix(final CameraInstanceImplementation camera) {
             modelMatrix.set(camera.getViewMatrix()).invert();
 
             modelMatrix.get(modelMatrixBuffer);

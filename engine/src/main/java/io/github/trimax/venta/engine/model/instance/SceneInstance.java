@@ -1,47 +1,19 @@
 package io.github.trimax.venta.engine.model.instance;
 
-import io.github.trimax.venta.engine.definitions.Definitions;
-import io.github.trimax.venta.engine.model.view.LightView;
-import io.github.trimax.venta.engine.model.view.ObjectView;
-import io.github.trimax.venta.engine.model.view.SceneView;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector4f;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
-@Getter
-public final class SceneInstance extends AbstractInstance implements SceneView {
-    private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
-    private final List<ObjectInstance> objects = new ArrayList<>();
-    private final List<LightInstance> lights = new ArrayList<>();
+public interface SceneInstance extends AbstractInstance {
+    Vector4f getAmbientLight();
 
-    public SceneInstance(@NonNull final String name) {
-        super(name);
-    }
+    void setAmbientLight(final Vector4f ambientLight);
 
-    @Override
-    public void setAmbientLight(final Vector4f ambientLight) {
-        this.ambientLight.set(ambientLight);
-    }
+    void add(final ObjectInstance object);
 
-    @Override
-    public void add(final ObjectView object) {
-        if (object instanceof ObjectInstance entity)
-            objects.add(entity);
-    }
+    void add(final LightInstance light);
 
-    @Override
-    public void add(final LightView light) {
-        if (this.lights.size() >= Definitions.LIGHT_MAX) {
-            log.warn("There are maximum amount of lights ({}) in the scene {}", Definitions.LIGHT_MAX, this.lights.size());
-            return;
-        }
+    List<? extends ObjectInstance> getObjects();
 
-        if (light instanceof LightInstance entity)
-            lights.add(entity);
-    }
+    List<? extends LightInstance> getLights();
 }
