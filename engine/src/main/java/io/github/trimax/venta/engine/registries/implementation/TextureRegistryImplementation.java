@@ -19,12 +19,10 @@ import java.nio.ByteBuffer;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_RGBA8;
-import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL11C.GL_LINEAR;
 import static org.lwjgl.opengl.GL11C.GL_RED;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
@@ -109,7 +107,7 @@ public final class TextureRegistryImplementation
 
     @Override
     protected void unload(@NonNull final TextureEntityImplementation entity) {
-        log.info("Unloading texture entity {}", entity.getID());
+        log.info("Unloading texture {}", entity.getID());
 
         memory.getTextures().delete(entity.getInternalID());
         MemoryUtil.memFree(entity.getBuffer());

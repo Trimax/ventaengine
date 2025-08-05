@@ -39,7 +39,7 @@ public final class ShaderRegistryImplementation
 
     @Override
     protected void unload(@NonNull final ShaderEntityImplementation entity) {
-        log.info("Unloading shader prefab {}", entity.getID());
+        log.info("Unloading shader {}", entity.getID());
         glDeleteShader(entity.getInternalID());
     }
 }
