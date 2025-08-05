@@ -1,7 +1,8 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import io.github.trimax.venta.engine.model.entity.MaterialEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.instance.MaterialInstance;
 import io.github.trimax.venta.engine.model.instance.MeshInstance;
 import io.github.trimax.venta.engine.model.math.Transform;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public final class MeshInstanceImplementation extends AbstractInstanceImplementa
 
     private final BoundingBox boundingBox;
 
-    private MaterialInstanceImplementation material;
+    private MaterialEntityImplementation material;
 
     public MeshInstanceImplementation(@NonNull final String name,
                                       final int verticesCount,
@@ -52,8 +53,8 @@ public final class MeshInstanceImplementation extends AbstractInstanceImplementa
     }
 
     @Override
-    public void setMaterial(final MaterialInstance material) {
-        if (material instanceof MaterialInstanceImplementation entity)
+    public void setMaterial(final MaterialEntity material) {
+        if (material instanceof MaterialEntityImplementation entity)
             this.material = entity;
     }
 

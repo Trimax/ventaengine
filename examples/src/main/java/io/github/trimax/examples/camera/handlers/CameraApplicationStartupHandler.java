@@ -19,7 +19,7 @@ public final class CameraApplicationStartupHandler implements VentaEngineStartup
         scene.setAmbientLight(new Vector4f(0.6f, 0.6f, 0.6f, 1.f));
 
         final var cube = context.getObjectManager().load("cube");
-        cube.getMesh().setMaterial(context.getMaterialManager().load("stone"));
+        cube.getMesh().setMaterial(context.getMaterialRegistry().get("stone"));
         state.setCube(cube);
         scene.add(cube);
 

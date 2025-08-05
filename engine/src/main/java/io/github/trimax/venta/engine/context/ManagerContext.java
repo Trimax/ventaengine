@@ -40,7 +40,6 @@ public final class ManagerContext {
             GizmoManagerImplementation.class,
             MeshManagerImplementation.class,
             CameraManagerImplementation.class,
-            MaterialManagerImplementation.class,
             AtlasManagerImplementation.class);
 
     /* The cleanup order of registries */
@@ -49,5 +48,6 @@ public final class ManagerContext {
             AtlasRegistryImplementation.class,
             ProgramRegistryImplementation.class,
             ShaderRegistryImplementation.class,
+            MaterialRegistryImplementation.class,
             TextureRegistryImplementation.class);
 }

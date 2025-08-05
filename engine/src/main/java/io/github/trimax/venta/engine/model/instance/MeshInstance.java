@@ -1,9 +1,11 @@
 package io.github.trimax.venta.engine.model.instance;
 
-public interface MeshInstance extends AbstractInstance {
-    MaterialInstance getMaterial();
+import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 
-    void setMaterial(final MaterialInstance material);
+public interface MeshInstance extends AbstractInstance {
+    MaterialEntity getMaterial();
+
+    void setMaterial(final MaterialEntity material);
 
     public boolean hasMaterial();
 }

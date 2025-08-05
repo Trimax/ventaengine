@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import static org.lwjgl.opengl.GL11C.GL_FALSE;
 import static org.lwjgl.opengl.GL20C.*;
 
-
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,16 +36,14 @@ public final class ProgramRegistryImplementation
 
         final var programDTO = ResourceUtil.loadAsObject(String.format("/programs/%s.json", resourcePath), ProgramDTO.class);
 
-
         final var id = memory.getPrograms().create(resourcePath);
-
         glAttachShader(id, shaderRegistry.get(programDTO.shaderVertex(), ShaderType.Vertex).getInternalID());
         glAttachShader(id, shaderRegistry.get(programDTO.shaderFragment(), ShaderType.Fragment).getInternalID());
 
         glLinkProgram(id);
         if (glGetProgrami(id, GL_LINK_STATUS) == GL_FALSE) {
             final var message = glGetProgramInfoLog(id);
-            glDeleteProgram(id);
+            memory.getPrograms().delete(id);
 
             throw new ProgramLinkException(message);
         }
