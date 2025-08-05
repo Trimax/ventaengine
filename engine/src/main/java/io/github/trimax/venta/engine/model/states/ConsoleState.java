@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.model.states;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.definitions.Definitions;
-import io.github.trimax.venta.engine.model.entity.ProgramInstance;
+import io.github.trimax.venta.engine.model.instance.ProgramInstance;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

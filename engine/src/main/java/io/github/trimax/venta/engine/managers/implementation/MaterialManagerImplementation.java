@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.MaterialManager;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
-import io.github.trimax.venta.engine.model.entity.MaterialInstance;
+import io.github.trimax.venta.engine.model.instance.MaterialInstance;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;

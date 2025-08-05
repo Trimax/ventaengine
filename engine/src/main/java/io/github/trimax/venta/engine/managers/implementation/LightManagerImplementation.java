@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.model.dto.LightDTO;
-import io.github.trimax.venta.engine.model.entity.LightInstance;
+import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.view.LightView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;

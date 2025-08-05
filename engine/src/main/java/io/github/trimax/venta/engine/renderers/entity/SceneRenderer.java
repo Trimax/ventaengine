@@ -2,8 +2,8 @@ package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
-import io.github.trimax.venta.engine.model.entity.CameraInstance;
-import io.github.trimax.venta.engine.model.entity.SceneInstance;
+import io.github.trimax.venta.engine.model.instance.CameraInstance;
+import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.model.view.CameraView;
 import io.github.trimax.venta.engine.model.view.ObjectView;

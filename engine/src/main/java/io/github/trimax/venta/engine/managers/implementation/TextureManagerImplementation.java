@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.managers.TextureManager;
 import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.model.entity.TextureInstance;
+import io.github.trimax.venta.engine.model.instance.TextureInstance;
 import io.github.trimax.venta.engine.model.view.TextureView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;

@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.MaterialManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
 import io.github.trimax.venta.engine.model.dto.ObjectMeshDTO;
-import io.github.trimax.venta.engine.model.entity.MeshInstance;
+import io.github.trimax.venta.engine.model.instance.MeshInstance;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;

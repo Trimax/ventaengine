@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.FontManager;
-import io.github.trimax.venta.engine.model.entity.FontInstance;
+import io.github.trimax.venta.engine.model.instance.FontInstance;
 import io.github.trimax.venta.engine.model.view.FontView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
