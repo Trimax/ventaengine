@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import io.github.trimax.venta.engine.model.entity.TextureEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.AtlasInstance;
 import lombok.Getter;
 import lombok.NonNull;
@@ -13,10 +13,10 @@ import static io.github.trimax.venta.engine.definitions.Definitions.*;
 @Getter
 public final class AtlasInstanceImplementation extends AbstractInstanceImplementation implements AtlasInstance {
     private final STBTTBakedChar.Buffer buffer;
-    private final TextureEntity texture;
+    private final TextureEntityImplementation texture;
 
     public AtlasInstanceImplementation(@NonNull final String name,
-                                       @NonNull final TextureEntity texture,
+                                       @NonNull final TextureEntityImplementation texture,
                                        @NonNull final STBTTBakedChar.Buffer buffer) {
         super(name);
 

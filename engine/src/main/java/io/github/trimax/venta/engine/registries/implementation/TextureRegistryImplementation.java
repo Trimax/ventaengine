@@ -1,11 +1,11 @@
-package io.github.trimax.venta.engine.managers.implementation;
+package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
-import io.github.trimax.venta.engine.managers.TextureManager;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
-import io.github.trimax.venta.engine.model.instance.TextureInstance;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
+import io.github.trimax.venta.engine.registries.TextureRegistry;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -45,35 +45,31 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TextureManagerImplementation
-        extends AbstractManagerImplementation<TextureEntity, TextureInstance>
-        implements TextureManager {
+public final class TextureRegistryImplementation
+        extends AbstractRegistryImplementation<TextureEntityImplementation, TextureEntity, Void>
+        implements TextureRegistry {
     private final Memory memory;
 
-    public TextureEntity create(@NonNull final String name,
-                                @NonNull final ByteBuffer bitmap) {
-        final var textureID = memory.getTextures().create("Texture %s", name);
+    public TextureEntityImplementation create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
+        return get(name, () -> {
+            final var textureID = memory.getTextures().create("Texture %s", name);
 
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
+            glBindTexture(GL_TEXTURE_2D, textureID);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        return store(new TextureEntity(name, bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
+            return new TextureEntityImplementation(bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT);
+        });
     }
 
     @Override
-    public TextureInstance load(@NonNull final String name) {
-        if (isCached(name))
-            return getCached(name);
-
-        log.info("Loading texture {}", name);
-
-        final byte[] imageData = ResourceUtil.loadAsBytes(String.format("/textures/%s", name));
+    protected TextureEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
+        final byte[] imageData = ResourceUtil.loadAsBytes(String.format("/textures/%s", resourcePath));
         try (var stack = stackPush()) {
             final var widthBuffer = stack.mallocInt(1);
             final var heightBuffer = stack.mallocInt(1);
@@ -86,13 +82,13 @@ public final class TextureManagerImplementation
             final var pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 4);
             if (pixels == null) {
                 MemoryUtil.memFree(imageBuffer);
-                throw new UnknownTextureFormatException(String.format("%s (%s)", name, STBImage.stbi_failure_reason()));
+                throw new UnknownTextureFormatException(String.format("%s (%s)", resourcePath, STBImage.stbi_failure_reason()));
             }
 
             final var width = widthBuffer.get(0);
             final var height = heightBuffer.get(0);
 
-            final int textureID = memory.getTextures().create(name);
+            final var textureID = memory.getTextures().create("Texture %s", resourcePath);
             glBindTexture(GL_TEXTURE_2D, textureID);
 
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
@@ -107,19 +103,15 @@ public final class TextureManagerImplementation
 
             STBImage.stbi_image_free(pixels);
 
-            return store(new TextureEntity(name, imageBuffer, textureID, width, height));
+            return new TextureEntityImplementation(imageBuffer, textureID, width, height);
         }
     }
 
     @Override
-    protected void destroy(final TextureEntity texture) {
-        log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
-        memory.getTextures().delete(texture.getInternalID());
-        MemoryUtil.memFree(texture.getBuffer());
-    }
+    protected void unload(@NonNull final TextureEntityImplementation entity) {
+        log.info("Unloading texture entity {}", entity.getID());
 
-    @Override
-    protected boolean shouldCache() {
-        return true;
+        memory.getTextures().delete(entity.getInternalID());
+        MemoryUtil.memFree(entity.getBuffer());
     }
 }

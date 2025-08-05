@@ -3,8 +3,7 @@ package io.github.trimax.venta.engine.binders;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
-import io.github.trimax.venta.engine.managers.implementation.TextureManagerImplementation;
-import io.github.trimax.venta.engine.model.entity.TextureEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.MaterialInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.ProgramInstanceImplementation;
 import lombok.AccessLevel;
@@ -20,8 +19,6 @@ import static org.lwjgl.opengl.GL20C.glUniform1i;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MaterialBinder extends AbstractBinder {
-    private final TextureManagerImplementation textureManager;
-
     public void bind(final ProgramInstanceImplementation program, final MaterialInstanceImplementation material) {
         if (material == null)
             return;
@@ -35,10 +32,10 @@ public final class MaterialBinder extends AbstractBinder {
 
     private void bind(final TextureType type, final ProgramInstanceImplementation program,
                       final MaterialInstanceImplementation material, final ShaderUniform useTextureUniform, final ShaderUniform textureUniform) {
-        bind(type, textureManager.getInstance(material.getTexture(type).getID()), program.getUniformID(useTextureUniform), program.getUniformID(textureUniform));
+        bind(type, material.getTexture(type), program.getUniformID(useTextureUniform), program.getUniformID(textureUniform));
     }
 
-    private void bind(final TextureType type, final TextureEntity texture, final int useTextureUniformID, final int textureUniformID) {
+    private void bind(final TextureType type, final TextureEntityImplementation texture, final int useTextureUniformID, final int textureUniformID) {
         glActiveTexture(type.getLocationID());
         if (texture == null) {
             glBindTexture(GL_TEXTURE_2D, 0);

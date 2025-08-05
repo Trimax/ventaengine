@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.exceptions.TextureBakeException;
 import io.github.trimax.venta.engine.managers.AtlasManager;
 import io.github.trimax.venta.engine.model.instance.AtlasInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.AtlasInstanceImplementation;
+import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import static io.github.trimax.venta.engine.definitions.Definitions.*;
 public final class AtlasManagerImplementation
         extends AbstractManagerImplementation<AtlasInstanceImplementation, AtlasInstance>
         implements AtlasManager {
-    private final TextureManagerImplementation textureManager;
+    private final TextureRegistryImplementation textureManager;
 
     public AtlasInstanceImplementation create(final String name, final int i, final ByteBuffer fontBuffer) {
         final var bitmap = BufferUtils.createByteBuffer(FONT_ATLAS_WIDTH * FONT_ATLAS_HEIGHT);
