@@ -3,15 +3,16 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
+import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
 import io.github.trimax.venta.engine.managers.ProgramManager;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
+import io.github.trimax.venta.engine.model.entity.implementation.ShaderEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.ProgramInstance;
-import io.github.trimax.venta.engine.model.instance.ShaderInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ProgramInstanceImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.ShaderInstanceImplementation;
+import io.github.trimax.venta.engine.registries.implementation.ShaderRegistryImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ import static org.lwjgl.opengl.GL20C.*;
 public final class ProgramManagerImplementation
         extends AbstractManagerImplementation<ProgramInstanceImplementation, ProgramInstance>
         implements ProgramManager {
-    private final ShaderManagerImplementation shaderManager;
+    private final ShaderRegistryImplementation shaderRegistry;
     private final Memory memory;
 
     @Override
@@ -39,8 +40,8 @@ public final class ProgramManagerImplementation
         final var programDTO = ResourceUtil.loadAsObject(String.format("/programs/%s.json", name), ProgramDTO.class);
 
         return store(create(name,
-                shaderManager.load(programDTO.shaderVertex(), ShaderInstanceImplementation.Type.Vertex),
-                shaderManager.load(programDTO.shaderFragment(), ShaderInstanceImplementation.Type.Fragment)));
+                shaderRegistry.get(programDTO.shaderVertex(), ShaderType.Vertex),
+                shaderRegistry.get(programDTO.shaderFragment(), ShaderType.Fragment)));
     }
 
     private void registerUniforms(final ProgramInstanceImplementation program) {
@@ -55,13 +56,13 @@ public final class ProgramManagerImplementation
     }
 
     private ProgramInstanceImplementation create(@NonNull final String name,
-                                                 @NonNull final ShaderInstance shaderVertex,
-                                                 @NonNull final ShaderInstance shaderFragment) {
+                                                 @NonNull final ShaderEntityImplementation shaderVertex,
+                                                 @NonNull final ShaderEntityImplementation shaderFragment) {
         log.info("Creating program {}", name);
         final var id = memory.getPrograms().create(name);
 
-        glAttachShader(id, shaderManager.getInstance(shaderVertex.getID()).getInternalID());
-        glAttachShader(id, shaderManager.getInstance(shaderFragment.getID()).getInternalID());
+        glAttachShader(id, shaderVertex.getInternalID());
+        glAttachShader(id, shaderFragment.getInternalID());
 
         glLinkProgram(id);
         if (glGetProgrami(id, GL_LINK_STATUS) == GL_FALSE) {
