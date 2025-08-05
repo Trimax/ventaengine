@@ -7,7 +7,7 @@ import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.model.entity.WindowEntity;
+import io.github.trimax.venta.engine.model.states.WindowState;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -19,13 +19,13 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class WindowController extends AbstractController<WindowEntity, VentaEngineApplication> {
+public final class WindowController extends AbstractController<WindowState, VentaEngineApplication> {
     private final ConsoleCommandQueue consoleCommandQueue;
     private final ConsoleController consoleController;
     private final Memory memory;
 
     @Override
-    protected WindowEntity create(@NonNull final VentaEngineApplication application) {
+    protected WindowState create(@NonNull final VentaEngineApplication application) {
         final var windowConfiguration = application.getConfiguration().getWindowConfiguration();
 
         if (!windowConfiguration.isFullscreen())
@@ -42,7 +42,7 @@ public final class WindowController extends AbstractController<WindowEntity, Ven
         return create(windowConfiguration.title(), monitorID, videoMode.width(), videoMode.height(), application.getInputHandler());
     }
 
-    private WindowEntity create(@NonNull final String title,
+    private WindowState create(@NonNull final String title,
                                 final long monitorID,
                                 final int width,
                                 final int height,
@@ -59,7 +59,7 @@ public final class WindowController extends AbstractController<WindowEntity, Ven
         glfwRestoreWindow(id);
         glfwFocusWindow(id);
 
-        final var window = new WindowEntity(id, width, height, title, handler);
+        final var window = new WindowState(handler, id, title, width, height);
         glfwSetFramebufferSizeCallback(id, new WindowSizeCallback(this));
         glfwSetMouseButtonCallback(id, new MouseButtonCallback(this));
         glfwSetCursorPosCallback(id, new MouseCursorCallback(this));
@@ -72,10 +72,10 @@ public final class WindowController extends AbstractController<WindowEntity, Ven
     }
 
     @Override
-    protected void destroy(@NonNull final WindowEntity window) {
+    protected void destroy(@NonNull final WindowState state) {
         log.info("Destroying window");
 
         glfwMakeContextCurrent(NULL);
-        memory.getWindows().delete(window.getInternalID());
+        memory.getWindows().delete(state.getInternalID());
     }
 }

@@ -1,10 +1,10 @@
-package io.github.trimax.venta.engine.renderers;
+package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.model.entity.CameraEntity;
 import io.github.trimax.venta.engine.model.entity.SceneEntity;
-import io.github.trimax.venta.engine.model.entity.WindowEntity;
+import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.model.view.CameraView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import lombok.*;
@@ -15,12 +15,13 @@ import java.nio.FloatBuffer;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SceneRenderer extends AbstractRenderer<SceneEntity, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
+public final class SceneRenderer
+        extends AbstractEntityRenderer<SceneEntity, SceneRenderer.SceneRenderContext, SceneRenderer.SceneRenderContext> {
     private final ObjectManagerImplementation objectManager;
     private final ObjectRenderer objectRenderer;
 
     @Override
-    protected SceneRenderContext createContext() {
+    public SceneRenderContext createContext() {
         return new SceneRenderContext();
     }
 
@@ -45,7 +46,7 @@ public final class SceneRenderer extends AbstractRenderer<SceneEntity, SceneRend
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
         private CameraView camera;
 
-        public SceneRenderContext with(final WindowEntity window, final CameraEntity camera) {
+        public SceneRenderContext with(final WindowState window, final CameraEntity camera) {
             window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
             this.camera = camera;

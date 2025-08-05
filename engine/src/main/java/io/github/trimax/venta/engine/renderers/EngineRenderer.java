@@ -2,12 +2,15 @@ package io.github.trimax.venta.engine.renderers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.context.VentaState;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.renderers.entity.SceneRenderer;
+import io.github.trimax.venta.engine.renderers.state.WindowRenderer;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -16,8 +19,9 @@ import static org.lwjgl.opengl.GL11C.*;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EngineRenderer {
+    private final ConsoleController consoleController;
     private final WindowController windowController;
 
     private final CameraManagerImplementation cameraManager;
@@ -26,6 +30,7 @@ public final class EngineRenderer {
     private final WindowRenderer windowRenderer;
     private final DebugRenderer debugRenderer;
     private final SceneRenderer sceneRenderer;
+
 
     public void render(final VentaState state, final FPSCounter fpsCounter) {
         final var window = windowController.get();
@@ -46,10 +51,7 @@ public final class EngineRenderer {
                 debugRenderer.render(sceneManager.getCurrent());
             }
 
-        try (final var _ = windowRenderer.withContext(null)
-                .withFrameRate((int) fpsCounter.getCurrentFps())) {
-            windowRenderer.render(window);
-        }
+        windowRenderer.render(window);
 
         glfwPollEvents();
     }

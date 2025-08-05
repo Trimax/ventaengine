@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.model.entity.ConsoleEntity;
+import io.github.trimax.venta.engine.renderers.state.WindowRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public final class ConsoleRenderer extends AbstractRenderer<ConsoleEntity, Conso
     }
 
     @Override
-    void render(final ConsoleEntity console) {
+    public void render(final ConsoleEntity console) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         renderBackground(console);

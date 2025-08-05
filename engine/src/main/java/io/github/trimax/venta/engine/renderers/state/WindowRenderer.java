@@ -1,8 +1,9 @@
-package io.github.trimax.venta.engine.renderers;
+package io.github.trimax.venta.engine.renderers.state;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
-import io.github.trimax.venta.engine.model.entity.WindowEntity;
+import io.github.trimax.venta.engine.model.states.WindowState;
+import io.github.trimax.venta.engine.renderers.ConsoleRenderer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
+public final class WindowRenderer extends AbstractStateRenderer<WindowState, WindowRenderer.WindowRenderContext, WindowRenderer.WindowRenderContext> {
     private final ConsoleController consoleController;
     private final ConsoleRenderer consoleRenderer;
     private long lastUpdated = 0;
@@ -24,7 +25,7 @@ public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowR
     }
 
     @Override
-    public void render(final WindowEntity window) {
+    public void render(final WindowState window) {
         if (consoleController.get().isVisible())
             try (final var _ = consoleRenderer.withContext(getContext())) {
                 consoleRenderer.render(consoleController.get());
@@ -35,7 +36,7 @@ public final class WindowRenderer extends AbstractRenderer<WindowEntity, WindowR
         final var now = System.currentTimeMillis();
         if (now - lastUpdated >= 1000) {
             lastUpdated = now;
-            glfwSetWindowTitle(window.getInternalID(), window.getName() + ": " + getContext().getFrameRate());
+            glfwSetWindowTitle(window.getInternalID(), window.getTitle() + ": " + getContext().getFrameRate());
         }
     }
 

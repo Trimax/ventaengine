@@ -32,7 +32,7 @@ public final class ConsoleItemRenderer extends AbstractRenderer<ConsoleItemEntit
     }
 
     @Override
-    void render(final ConsoleItemEntity consoleItem) {
+    public void render(final ConsoleItemEntity consoleItem) {
         glUseProgram(consoleItem.getProgram().getInternalID());
         glBindVertexArray(consoleItem.getVertexArrayObjectID());
         consoleItemBinder.bind(consoleItem.getProgram(), getContext().getMessage().type().getColor());

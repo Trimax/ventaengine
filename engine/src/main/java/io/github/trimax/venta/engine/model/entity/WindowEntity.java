@@ -7,15 +7,13 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 
+//TODO: Should be state hierarchy
 @Slf4j
 @Getter
 public final class WindowEntity extends AbstractEntity {
     private final VentaEngineInputHandler handler;
     private final Matrix4f projectionMatrix;
     private final long internalID;
-
-    @Setter
-    private boolean isConsoleVisible;
 
     @Setter
     private int width;

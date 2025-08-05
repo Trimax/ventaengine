@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers;
+package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
@@ -9,6 +9,7 @@ import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImple
 import io.github.trimax.venta.engine.model.entity.CameraEntity;
 import io.github.trimax.venta.engine.model.entity.GizmoEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.renderers.DebugRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +29,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GizmoRenderer extends AbstractRenderer<GizmoEntity, GizmoRenderer.GizmoRenderContext, SceneRenderer.SceneRenderContext> {
+public final class GizmoRenderer extends AbstractEntityRenderer<GizmoEntity, GizmoRenderer.GizmoRenderContext, DebugRenderer.DebugRenderContext> {
     private final ProgramManagerImplementation programManager;
     private final MeshRenderer meshRenderer;
     private final MatrixBinder matrixBinder;
@@ -39,7 +40,7 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoEntity, GizmoRend
     }
 
     @Override
-    void render(final GizmoEntity gizmo) {
+    public void render(final GizmoEntity gizmo) {
         //TODO: Why not to create Program on Gizmo creation?
         render(gizmo, programManager.load(ProgramType.Simple.name()));
     }
@@ -64,7 +65,7 @@ public final class GizmoRenderer extends AbstractRenderer<GizmoEntity, GizmoRend
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class GizmoRenderContext extends AbstractRenderContext<SceneRenderer.SceneRenderContext> {
+    public static final class GizmoRenderContext extends AbstractRenderContext<DebugRenderer.DebugRenderContext> {
         private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final FloatBuffer normalMatrixBuffer = MemoryUtil.memAllocFloat(9);
         private final Matrix3f normalMatrix = new Matrix3f();
