@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.model.entity.CameraInstance;
+import io.github.trimax.venta.engine.model.instance.CameraInstance;
 import io.github.trimax.venta.engine.model.view.CameraView;
 import lombok.AccessLevel;
 import lombok.Getter;

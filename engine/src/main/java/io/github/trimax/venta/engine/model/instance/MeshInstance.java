@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.entity;
+package io.github.trimax.venta.engine.model.instance;
 
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.math.Transform;

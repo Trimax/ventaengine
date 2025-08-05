@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.model.states;
 
-import io.github.trimax.venta.engine.model.entity.FontInstance;
-import io.github.trimax.venta.engine.model.entity.ProgramInstance;
+import io.github.trimax.venta.engine.model.instance.FontInstance;
+import io.github.trimax.venta.engine.model.instance.ProgramInstance;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

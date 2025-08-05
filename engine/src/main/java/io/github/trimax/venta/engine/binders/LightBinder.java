@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.binders;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
-import io.github.trimax.venta.engine.model.entity.ProgramInstance;
+import io.github.trimax.venta.engine.model.instance.ProgramInstance;
 import io.github.trimax.venta.engine.model.view.LightView;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

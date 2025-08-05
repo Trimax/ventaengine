@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.entity;
+package io.github.trimax.venta.engine.model.instance;
 
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.model.view.LightView;

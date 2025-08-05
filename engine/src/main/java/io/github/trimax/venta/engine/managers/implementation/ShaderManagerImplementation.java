@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.managers.ShaderManager;
-import io.github.trimax.venta.engine.model.entity.ShaderInstance;
+import io.github.trimax.venta.engine.model.instance.ShaderInstance;
 import io.github.trimax.venta.engine.model.view.ShaderView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;

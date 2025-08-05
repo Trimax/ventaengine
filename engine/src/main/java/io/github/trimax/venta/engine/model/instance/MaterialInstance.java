@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.entity;
+package io.github.trimax.venta.engine.model.instance;
 
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
