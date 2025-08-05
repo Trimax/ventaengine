@@ -1,14 +1,16 @@
 package io.github.trimax.venta.engine.renderers;
 
-import io.github.trimax.venta.engine.model.entity.AbstractEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-abstract class AbstractRenderer<E extends AbstractEntity, C extends AbstractRenderer.AbstractRenderContext<P>,
-        P extends AbstractRenderer.AbstractRenderContext<?>> implements AutoCloseable {
+@Slf4j
+public abstract class AbstractRenderer<O,
+        C extends AbstractRenderer.AbstractRenderContext<P>,
+        P extends AbstractRenderer.AbstractRenderContext<?>>
+        implements AutoCloseable {
     @Getter(AccessLevel.PROTECTED)
     private final C context;
 
@@ -23,13 +25,12 @@ abstract class AbstractRenderer<E extends AbstractEntity, C extends AbstractRend
 
     protected abstract C createContext();
 
-    abstract void render(final E view);
+    public abstract void render(final O object);
 
-    @Slf4j
+    @Getter
     @NoArgsConstructor
-    @Getter(AccessLevel.PACKAGE)
-    abstract static class AbstractRenderContext<C extends AbstractRenderContext<?>> implements AutoCloseable {
-        @Setter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.PROTECTED)
+    public abstract static class AbstractRenderContext<C extends AbstractRenderContext<?>> implements AutoCloseable {
         private C parent;
 
         public abstract void destroy();
@@ -37,7 +38,7 @@ abstract class AbstractRenderer<E extends AbstractEntity, C extends AbstractRend
 
     @Override
     public final void close() {
-        AbstractRenderContext.log.debug("{} destroyed", getClass().getSimpleName());
+        log.debug("{} destroyed", getClass().getSimpleName());
         context.destroy();
     }
 }

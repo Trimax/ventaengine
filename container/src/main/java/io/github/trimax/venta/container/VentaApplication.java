@@ -1,17 +1,5 @@
 package io.github.trimax.venta.container;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import io.github.trimax.venta.container.exceptions.CyclicDependencyException;
 import io.github.trimax.venta.container.exceptions.InjectionConstructorNotFoundException;
 import io.github.trimax.venta.container.utils.ComponentUtil;
@@ -20,6 +8,11 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Slf4j
 public final class VentaApplication {
@@ -86,7 +79,7 @@ public final class VentaApplication {
         if (constructors.length == 1)
             return constructors[0];
 
-        throw new InjectionConstructorNotFoundException(clazz);
+        throw new InjectionConstructorNotFoundException(StreamEx.of(creationStack).append(clazz).joining(" -> "));
     }
 
     private static Object[] resolveParameters(final Constructor<?> constructor) {
