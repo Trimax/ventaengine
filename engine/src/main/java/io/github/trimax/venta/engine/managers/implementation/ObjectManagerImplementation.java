@@ -2,15 +2,17 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
+import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.ObjectManager;
 import io.github.trimax.venta.engine.model.dto.ObjectDTO;
 import io.github.trimax.venta.engine.model.dto.ObjectMeshDTO;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
-import io.github.trimax.venta.engine.model.instance.MeshInstance;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
-import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
+import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
@@ -27,17 +29,20 @@ public final class ObjectManagerImplementation
     private final MaterialRegistryImplementation materialRegistry;
     private final ProgramRegistryImplementation programRegistry;
     private final GizmoManagerImplementation gizmoManager;
-    private final MeshManagerImplementation meshManager;
+
+    private final MeshRegistryImplementation meshRegistry;
 
     @Override
     public ObjectInstance create(@NonNull final String name,
-                                 @NonNull final MeshInstance mesh,
+                                 @NonNull final MeshEntity mesh,
                                  @NonNull final ProgramEntity program) {
         log.info("Creating object {}", name);
 
-        return store(new ObjectInstanceImplementation(name, program,
-                meshManager.getInstance(mesh.getID()),
+        if (mesh instanceof MeshEntityImplementation entity)
+            return store(new ObjectInstanceImplementation(name, program, entity,
                 gizmoManager.create("Bounding box", GizmoType.Object)));
+
+        throw new UnknownInstanceException(mesh.getClass());
     }
 
     @Override
@@ -51,8 +56,8 @@ public final class ObjectManagerImplementation
                 gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 
-    private MeshInstanceImplementation buildMeshHierarchy(@NonNull final ObjectMeshDTO meshDTO) {
-        final var mesh = meshManager.load(meshDTO.name());
+    private MeshEntityImplementation buildMeshHierarchy(@NonNull final ObjectMeshDTO meshDTO) {
+        final var mesh = meshRegistry.get(meshDTO.name());
         mesh.setMaterial(materialRegistry.get(meshDTO.material()));
 
         return mesh;
