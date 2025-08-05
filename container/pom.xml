@@ -8,7 +8,7 @@
     <parent>
         <groupId>io.github.trimax</groupId>
         <artifactId>ventaengine</artifactId>
-        <version>0.6.14</version>
+        <version>0.6.15</version>
     </parent>
 
     <name>${project.artifactId}</name>
