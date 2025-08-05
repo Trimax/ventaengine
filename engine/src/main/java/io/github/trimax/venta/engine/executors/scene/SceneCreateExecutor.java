@@ -2,7 +2,8 @@ package io.github.trimax.venta.engine.executors.scene;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
+import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,8 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @SuppressWarnings("unused")
 public final class SceneCreateExecutor extends AbstractSceneExecutor {
-    private SceneCreateExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "create", "creates a new scene");
+    private SceneCreateExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "create", "creates a new scene");
     }
 
     @Override
@@ -21,7 +22,7 @@ public final class SceneCreateExecutor extends AbstractSceneExecutor {
             return;
         }
 
-        final var scene = getContext().getSceneManager().create(command.value());
+        final var scene = getManager(SceneManagerImplementation.class).create(command.value());
         getConsole().info("Scene <%s> created", scene.getID());
     }
 }

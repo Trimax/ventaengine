@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.executors.camera;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import io.github.trimax.venta.engine.utils.FormatUtil;
@@ -14,15 +14,15 @@ import one.util.streamex.StreamEx;
 @Component
 @SuppressWarnings("unused")
 public final class CameraListExecutor extends AbstractCameraExecutor {
-    private CameraListExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "list", "prints the list of cameras");
+    private CameraListExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "list", "prints the list of cameras");
     }
 
     @Override
     public void execute(final ConsoleCommandQueue.Command command) {
         getConsole().header("Cameras:");
 
-        final var cameraManager = getManagers().get(CameraManagerImplementation.class);
+        final var cameraManager = getManager(CameraManagerImplementation.class);
         StreamEx.of(cameraManager.iterator())
                 .map(AbstractInstance::getPublicInformation)
                 .map(FormatUtil::indent)

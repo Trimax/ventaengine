@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.executors.system;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,8 +15,8 @@ import java.time.format.DateTimeFormatter;
 public final class SystemTimeExecutor extends AbstractSystemExecutor {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
-    private SystemTimeExecutor(@NonNull final InternalVentaContext context) {
-        super(context, "time", "prints current date and time");
+    private SystemTimeExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "time", "prints current date and time");
     }
 
     @Override

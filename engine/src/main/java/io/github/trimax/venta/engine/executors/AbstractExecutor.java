@@ -1,11 +1,14 @@
 package io.github.trimax.venta.engine.executors;
 
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
-import io.github.trimax.venta.engine.context.ManagerContext;
-import io.github.trimax.venta.engine.context.VentaContext;
-import io.github.trimax.venta.engine.context.VentaState;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.controllers.EngineController;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
+import io.github.trimax.venta.engine.managers.implementation.AbstractManagerImplementation;
+import io.github.trimax.venta.engine.model.entity.AbstractEntity;
+import io.github.trimax.venta.engine.model.instance.AbstractInstance;
+import io.github.trimax.venta.engine.model.states.EngineState;
+import io.github.trimax.venta.engine.registries.implementation.AbstractRegistryImplementation;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.Getter;
 import lombok.NonNull;
@@ -20,43 +23,45 @@ import java.util.Map;
 @Slf4j
 public abstract class AbstractExecutor {
     private final Map<String, ? extends AbstractExecutor> executors;
-    private final InternalVentaContext internalContext;
+    private final ConsoleController consoleController;
+    private final EngineController engineController;
 
     @Getter
     @Accessors(makeFinal = true)
     private final String command;
     private final String description;
 
-    protected AbstractExecutor(@NonNull final InternalVentaContext context,
+    protected AbstractExecutor(@NonNull final ControllerFactory factory,
                                @NonNull final String command,
                                @NonNull final String description,
                                final List<? extends AbstractExecutor> executors) {
         this.executors = TransformationUtil.toMap(executors, AbstractExecutor::getCommand);
-        this.internalContext = context;
+        this.consoleController = factory.get(ConsoleController.class);
+        this.engineController = factory.get(EngineController.class);
         this.description = description;
         this.command = command;
     }
 
-    protected AbstractExecutor(@NonNull final InternalVentaContext context,
+    protected AbstractExecutor(@NonNull final ControllerFactory factory,
                                @NonNull final String command,
                                @NonNull final String description) {
-        this(context, command, description, null);
+        this(factory, command, description, null);
     }
 
-    protected final ManagerContext getManagers() {
-        return internalContext.getManagerContext();
+    public <T extends I, I extends AbstractInstance, M extends AbstractManagerImplementation<T, I>> M getManager(@NonNull final Class<M> managerClass) {
+        return engineController.getManager(managerClass);
     }
 
-    protected final VentaContext getContext() {
-        return internalContext.getContext();
+    public <A, T extends E, E extends AbstractEntity, M extends AbstractRegistryImplementation<T, E, A>> M getRegistry(@NonNull final Class<M> registryClass) {
+        return engineController.getRegistry(registryClass);
+    }
+
+    protected final EngineState getState() {
+        return engineController.get();
     }
 
     protected final ConsoleController getConsole() {
-        return internalContext.getConsoleController();
-    }
-
-    protected final VentaState getState() {
-        return internalContext.getState();
+        return consoleController;
     }
 
     protected final AbstractExecutor getExecutor(@NonNull final String command) {

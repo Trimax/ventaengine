@@ -1,8 +1,8 @@
 package io.github.trimax.venta.engine.executors.core;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.context.InternalVentaContext;
 import io.github.trimax.venta.engine.executors.console.AbstractConsoleExecutor;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 @SuppressWarnings("unused")
 public final class ConsoleExecutor extends AbstractCoreExecutor {
-    private ConsoleExecutor(@NonNull final InternalVentaContext context, @NonNull final List<AbstractConsoleExecutor> executors) {
-        super(context, "console", "the set of commands to manage console", executors);
+    private ConsoleExecutor(@NonNull final ControllerFactory factory, @NonNull final List<AbstractConsoleExecutor> executors) {
+        super(factory, "console", "the set of commands to manage console", executors);
     }
 }
