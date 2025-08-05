@@ -3,8 +3,14 @@ package io.github.trimax.venta.engine.context;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.factories.ManagerFactory;
 import io.github.trimax.venta.engine.factories.RegistryFactory;
-import io.github.trimax.venta.engine.managers.*;
-import io.github.trimax.venta.engine.managers.implementation.*;
+import io.github.trimax.venta.engine.managers.CameraManager;
+import io.github.trimax.venta.engine.managers.LightManager;
+import io.github.trimax.venta.engine.managers.ObjectManager;
+import io.github.trimax.venta.engine.managers.SceneManager;
+import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.LightManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.registries.*;
 import io.github.trimax.venta.engine.registries.implementation.*;
 import lombok.AccessLevel;
@@ -36,10 +42,6 @@ public final class VentaContext {
         return managerFactory.get(LightManagerImplementation.class);
     }
 
-    public MeshManager getMeshManager() {
-        return managerFactory.get(MeshManagerImplementation.class);
-    }
-
     /*** Registries ***/
 
     public MaterialRegistry getMaterialRegistry() {
@@ -60,5 +62,9 @@ public final class VentaContext {
 
     public FontRegistry getFontRegistry() {
         return registryFactory.get(FontRegistryImplementation.class);
+    }
+
+    public MeshRegistry getMeshRegistry() {
+        return registryFactory.get(MeshRegistryImplementation.class);
     }
 }

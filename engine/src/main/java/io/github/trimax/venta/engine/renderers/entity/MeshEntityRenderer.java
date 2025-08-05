@@ -1,9 +1,10 @@
-package io.github.trimax.venta.engine.renderers.instance;
+package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
+import io.github.trimax.venta.engine.renderers.instance.ObjectInstanceRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MeshInstanceRenderer extends AbstractInstanceRenderer<MeshInstanceImplementation, MeshInstanceRenderer.MeshRenderContext, ObjectInstanceRenderer.ObjectRenderContext> {
+public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityImplementation, MeshEntityRenderer.MeshRenderContext, ObjectInstanceRenderer.ObjectRenderContext> {
     private final MaterialBinder materialBinder;
 
     @Override
@@ -25,7 +26,7 @@ public final class MeshInstanceRenderer extends AbstractInstanceRenderer<MeshIns
     }
 
     @Override
-    public void render(final MeshInstanceImplementation object) {
+    public void render(final MeshEntityImplementation object) {
         glBindVertexArray(object.getVertexArrayObjectID());
         materialBinder.bind(getContext().getProgram(), object.getMaterial());
 
