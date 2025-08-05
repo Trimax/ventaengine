@@ -44,6 +44,4 @@ public interface ObjectInstance extends AbstractInstance {
     void setVisible(final boolean visible);
 
     void setProgram(final ProgramEntity program);
-
-    void setMesh(final MeshInstance mesh);
 }

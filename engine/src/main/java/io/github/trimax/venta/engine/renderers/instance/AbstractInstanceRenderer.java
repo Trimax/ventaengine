@@ -5,5 +5,4 @@ import io.github.trimax.venta.engine.renderers.AbstractRenderer;
 
 public abstract class AbstractInstanceRenderer<E extends AbstractInstanceImplementation, C extends AbstractRenderer.AbstractRenderContext<P>,
         P extends AbstractRenderer.AbstractRenderContext<?>> extends AbstractRenderer<E, C, P> {
-
 }

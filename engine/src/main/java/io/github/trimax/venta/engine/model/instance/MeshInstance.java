@@ -7,5 +7,5 @@ public interface MeshInstance extends AbstractInstance {
 
     void setMaterial(final MaterialEntity material);
 
-    public boolean hasMaterial();
+    boolean hasMaterial();
 }
