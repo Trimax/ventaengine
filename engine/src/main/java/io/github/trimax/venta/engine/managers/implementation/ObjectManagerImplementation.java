@@ -67,9 +67,4 @@ public final class ObjectManagerImplementation
     protected void destroy(final ObjectInstanceImplementation object) {
         log.info("Destroying object {} ({})", object.getID(), object.getName());
     }
-
-    @Override
-    protected boolean shouldCache() {
-        return false;
-    }
 }
