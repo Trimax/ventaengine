@@ -4,9 +4,11 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.*;
 import io.github.trimax.venta.engine.managers.implementation.*;
 import io.github.trimax.venta.engine.registries.FontRegistry;
+import io.github.trimax.venta.engine.registries.ProgramRegistry;
 import io.github.trimax.venta.engine.registries.ShaderRegistry;
 import io.github.trimax.venta.engine.registries.TextureRegistry;
 import io.github.trimax.venta.engine.registries.implementation.FontRegistryImplementation;
+import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ShaderRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import lombok.AccessLevel;
@@ -18,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaContext {
     private final MaterialManagerImplementation materialManager;
-    private final ProgramManagerImplementation programManager;
     private final ObjectManagerImplementation objectManager;
     private final CameraManagerImplementation cameraManager;
     private final SceneManagerImplementation sceneManager;
@@ -26,6 +27,7 @@ public final class VentaContext {
     private final MeshManagerImplementation meshManager;
 
     private final TextureRegistryImplementation textureRegistry;
+    private final ProgramRegistryImplementation programRegistry;
     private final ShaderRegistryImplementation shaderRegistry;
     private final FontRegistryImplementation fontRegistry;
 
@@ -33,10 +35,6 @@ public final class VentaContext {
 
     public MaterialManager getMaterialManager() {
         return materialManager;
-    }
-
-    public ProgramManager getProgramManager() {
-        return programManager;
     }
 
     public ObjectManager getObjectManager() {
@@ -63,6 +61,10 @@ public final class VentaContext {
 
     public TextureRegistry getTextureRegistry() {
         return textureRegistry;
+    }
+
+    public ProgramRegistry getProgramRegistry() {
+        return programRegistry;
     }
 
     public ShaderRegistry getShaderRegistry() {

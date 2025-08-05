@@ -1,10 +1,11 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.instance.MeshInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
-import io.github.trimax.venta.engine.model.instance.ProgramInstance;
 import io.github.trimax.venta.engine.model.math.Transform;
 import lombok.Getter;
 import org.joml.Vector3f;
@@ -18,18 +19,19 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     private boolean isVisible = true;
     private boolean isLit = true;
 
-    private ProgramInstanceImplementation program;
+    private ProgramEntityImplementation program;
     private MeshInstanceImplementation mesh;
 
     public ObjectInstanceImplementation(final String name,
-                                        final ProgramInstanceImplementation program,
+                                        final ProgramEntity program,
                                         final MeshInstanceImplementation mesh,
                                         final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
         this.mesh = mesh;
-        this.program = program;
         this.box = BoundingBox.of(mesh.getBoundingBox());
+
+        setProgram(program);
     }
 
     @Override
@@ -103,8 +105,8 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     }
 
     @Override
-    public void setProgram(final ProgramInstance program) {
-        if (program instanceof ProgramInstanceImplementation entity)
+    public void setProgram(final ProgramEntity program) {
+        if (program instanceof ProgramEntityImplementation entity)
             this.program = entity;
     }
 

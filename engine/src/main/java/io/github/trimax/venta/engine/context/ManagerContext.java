@@ -39,7 +39,6 @@ public final class ManagerContext {
             ObjectManagerImplementation.class,
             GizmoManagerImplementation.class,
             MeshManagerImplementation.class,
-            ProgramManagerImplementation.class,
             CameraManagerImplementation.class,
             MaterialManagerImplementation.class,
             AtlasManagerImplementation.class);
@@ -48,6 +47,7 @@ public final class ManagerContext {
     private static final List<Class<? extends AbstractRegistryImplementation<?, ?, ?>>> REGISTRY_CLEANUP_ORDER = Arrays.asList(
             FontRegistryImplementation.class,
             AtlasRegistryImplementation.class,
+            ProgramRegistryImplementation.class,
             ShaderRegistryImplementation.class,
             TextureRegistryImplementation.class);
 }

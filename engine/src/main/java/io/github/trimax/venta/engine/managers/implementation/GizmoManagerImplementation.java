@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.managers.GizmoManager;
 import io.github.trimax.venta.engine.model.instance.GizmoInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.GizmoInstanceImplementation;
+import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ import org.joml.Vector3f;
 public final class GizmoManagerImplementation
         extends AbstractManagerImplementation<GizmoInstanceImplementation, GizmoInstance>
         implements GizmoManager {
-    private final ProgramManagerImplementation programManager;
+    private final ProgramRegistryImplementation programRegistry;
     private final MeshManagerImplementation meshManager;
 
     private GizmoInstanceImplementation origin;
@@ -33,7 +34,7 @@ public final class GizmoManagerImplementation
         log.debug("Creating gizmo {}", name);
 
         return store(new GizmoInstanceImplementation(name,
-                programManager.load(ProgramType.Simple.name()),
+                programRegistry.get(ProgramType.Simple.name()),
                 meshManager.load(type.getMesh()),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(0.f, 0.f, 0.f),

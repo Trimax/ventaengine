@@ -8,7 +8,7 @@ import lombok.NonNull;
 
 @Getter
 @AllArgsConstructor
-public class ShaderEntityImplementation extends AbstractEntityImplementation implements ShaderEntity {
+public final class ShaderEntityImplementation extends AbstractEntityImplementation implements ShaderEntity {
     private final int internalID;
 
     @NonNull

@@ -2,8 +2,8 @@ package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.MeshInstanceImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.ProgramInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,9 +45,9 @@ public final class MeshRenderer extends AbstractEntityRenderer<MeshInstanceImple
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class MeshRenderContext extends AbstractRenderContext<ObjectRenderer.ObjectRenderContext> {
-        private ProgramInstanceImplementation program;
+        private ProgramEntityImplementation program;
 
-        public MeshRenderContext withProgram(final ProgramInstanceImplementation program) {
+        public MeshRenderContext withProgram(final ProgramEntityImplementation program) {
             this.program = program;
             return this;
         }

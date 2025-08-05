@@ -46,5 +46,5 @@ public abstract class AbstractRegistryImplementation<T extends E, E extends Abst
 
     protected abstract T load(@NonNull final String resourcePath, final A argument);
 
-    protected abstract void unload(@NonNull final T prefab);
+    protected abstract void unload(@NonNull final T entity);
 }
