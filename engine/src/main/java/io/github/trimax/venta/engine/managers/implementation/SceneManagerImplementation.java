@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import java.util.Optional;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
@@ -7,13 +9,12 @@ import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.entity.SceneEntity;
 import io.github.trimax.venta.engine.model.view.SceneView;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -21,7 +22,6 @@ import java.util.Optional;
 public final class SceneManagerImplementation
         extends AbstractManagerImplementation<SceneEntity, SceneView>
         implements SceneManager {
-    private final ResourceManagerImplementation resourceManager;
     private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
 
@@ -32,7 +32,7 @@ public final class SceneManagerImplementation
     public SceneEntity load(@NonNull final String name) {
         log.info("Loading scene {}", name);
 
-        final var sceneDTO = resourceManager.load(String.format("/scenes/%s.json", name), SceneDTO.class);
+        final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s.json", name), SceneDTO.class);
         final var scene = new SceneEntity(name);
 
         if (sceneDTO.hasObjects())

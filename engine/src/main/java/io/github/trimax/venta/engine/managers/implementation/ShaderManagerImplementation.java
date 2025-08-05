@@ -1,16 +1,17 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import static org.lwjgl.opengl.GL20C.*;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.managers.ShaderManager;
 import io.github.trimax.venta.engine.model.entity.ShaderEntity;
 import io.github.trimax.venta.engine.model.view.ShaderView;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
@@ -18,8 +19,6 @@ import static org.lwjgl.opengl.GL20C.*;
 public final class ShaderManagerImplementation
         extends AbstractManagerImplementation<ShaderEntity, ShaderView>
         implements ShaderManager {
-    private final ResourceManagerImplementation resourceManager;
-
     @Override
     public ShaderEntity load(@NonNull final String name,
                              @NonNull final ShaderEntity.Type type) {
@@ -28,7 +27,7 @@ public final class ShaderManagerImplementation
 
         log.info("Loading shader {}", name);
 
-        final var code = resourceManager.load(String.format("/shaders/%s", name));
+        final var code = ResourceUtil.loadAsString(String.format("/shaders/%s", name));
         final var id = glCreateShader(type.getValue());
 
         glShaderSource(id, code);

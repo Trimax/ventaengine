@@ -17,7 +17,6 @@ import io.github.trimax.venta.engine.managers.implementation.MaterialManagerImpl
 import io.github.trimax.venta.engine.managers.implementation.MeshManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ProgramManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.ResourceManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ShaderManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.TextureManagerImplementation;
@@ -59,6 +58,5 @@ public final class ManagerContext {
             AtlasManagerImplementation.class,
             ConsoleManagerImplementation.class,
             ConsoleItemManagerImplementation.class,
-            TextureManagerImplementation.class,
-            ResourceManagerImplementation.class);
+            TextureManagerImplementation.class);
 }

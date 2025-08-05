@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.managers.ObjectManager;
@@ -10,12 +12,12 @@ import io.github.trimax.venta.engine.model.entity.ObjectEntity;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.model.view.ObjectView;
 import io.github.trimax.venta.engine.model.view.ProgramView;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
-import org.apache.commons.collections4.CollectionUtils;
 
 @Slf4j
 @Component
@@ -24,7 +26,6 @@ public final class ObjectManagerImplementation
         extends AbstractManagerImplementation<ObjectEntity, ObjectView>
         implements ObjectManager {
     private final MaterialManagerImplementation materialManager;
-    private final ResourceManagerImplementation resourceManager;
     private final ProgramManagerImplementation programManager;
     private final GizmoManagerImplementation gizmoManager;
     private final MeshManagerImplementation meshManager;
@@ -45,7 +46,7 @@ public final class ObjectManagerImplementation
     public ObjectView load(@NonNull final String name) {
         log.info("Loading object {}", name);
 
-        final var objectDTO = resourceManager.load(String.format("/objects/%s.json", name), ObjectDTO.class);
+        final var objectDTO = ResourceUtil.loadAsObject(String.format("/objects/%s.json", name), ObjectDTO.class);
         return store(new ObjectEntity(name,
                 programManager.load(objectDTO.program()),
                 buildMeshHierarchy(objectDTO.mesh()),
