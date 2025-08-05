@@ -1,21 +1,10 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.*;
-import static org.lwjgl.opengl.GL11C.GL_FLOAT;
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.system.MemoryUtil.*;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.MeshManager;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
-import io.github.trimax.venta.engine.model.entity.MeshEntity;
+import io.github.trimax.venta.engine.model.entity.MeshInstance;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.view.MeshView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
@@ -24,16 +13,27 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import static io.github.trimax.venta.engine.definitions.Definitions.*;
+import static org.lwjgl.opengl.GL11C.GL_FLOAT;
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.system.MemoryUtil.*;
+
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MeshManagerImplementation
-        extends AbstractManagerImplementation<MeshEntity, MeshView>
+        extends AbstractManagerImplementation<MeshInstance, MeshView>
         implements MeshManager {
     private final Memory memory;
 
     @Override
-    public MeshEntity load(@NonNull final String name) {
+    public MeshInstance load(@NonNull final String name) {
         if (isCached(name))
             return getCached(name);
 
@@ -108,12 +108,12 @@ public final class MeshManagerImplementation
 
         glBindVertexArray(0);
 
-        return store(new MeshEntity(name, vertices.length, meshDTO.getFacetsArrayLength(),
+        return store(new MeshInstance(name, vertices.length, meshDTO.getFacetsArrayLength(),
                 meshDTO.getEdgesArrayLength(), vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO)));
     }
 
     @Override
-    protected void destroy(final MeshEntity object) {
+    protected void destroy(final MeshInstance object) {
         log.info("Destroying mesh {} ({})", object.getID(), object.getName());
         memory.getVertexArrays().delete(object.getVertexArrayObjectID());
         memory.getBuffers().delete(object.getVerticesBufferID());

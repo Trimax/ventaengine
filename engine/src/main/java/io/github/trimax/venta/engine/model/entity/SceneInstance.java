@@ -14,12 +14,12 @@ import java.util.List;
 
 @Slf4j
 @Getter
-public final class SceneEntity extends AbstractEntity implements SceneView {
+public final class SceneInstance extends AbstractInstance implements SceneView {
     private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
-    private final List<ObjectEntity> objects = new ArrayList<>();
-    private final List<LightEntity> lights = new ArrayList<>();
+    private final List<ObjectInstance> objects = new ArrayList<>();
+    private final List<LightInstance> lights = new ArrayList<>();
 
-    public SceneEntity(@NonNull final String name) {
+    public SceneInstance(@NonNull final String name) {
         super(name);
     }
 
@@ -30,7 +30,7 @@ public final class SceneEntity extends AbstractEntity implements SceneView {
 
     @Override
     public void add(final ObjectView object) {
-        if (object instanceof ObjectEntity entity)
+        if (object instanceof ObjectInstance entity)
             objects.add(entity);
     }
 
@@ -41,7 +41,7 @@ public final class SceneEntity extends AbstractEntity implements SceneView {
             return;
         }
 
-        if (light instanceof LightEntity entity)
+        if (light instanceof LightInstance entity)
             lights.add(entity);
     }
 }

@@ -8,12 +8,12 @@ import lombok.NonNull;
 import org.lwjgl.opengl.GL20C;
 
 @Getter
-public final class ShaderEntity extends AbstractEntity implements ShaderView {
+public final class ShaderInstance extends AbstractInstance implements ShaderView {
     private final int internalID;
     private final String code;
     private final Type type;
 
-    public ShaderEntity(final int internalID, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
+    public ShaderInstance(final int internalID, @NonNull final Type type, @NonNull final String name, @NonNull final String code) {
         super(name);
 
         this.internalID = internalID;

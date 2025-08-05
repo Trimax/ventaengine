@@ -7,7 +7,7 @@ import lombok.NonNull;
 import org.joml.Vector3f;
 
 @Getter
-public final class LightEntity extends AbstractEntity implements LightView {
+public final class LightInstance extends AbstractInstance implements LightView {
     private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
     private final Vector3f direction = new Vector3f(0.f, 0.f, 0.f);
     private final Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
@@ -15,11 +15,11 @@ public final class LightEntity extends AbstractEntity implements LightView {
     private Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
     private float intensity = 1.f;
 
-    LightEntity(@NonNull final String name, @NonNull final GizmoEntity gizmo) {
+    LightInstance(@NonNull final String name, @NonNull final GizmoInstance gizmo) {
         super(gizmo, name);
     }
 
-    public LightEntity(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoEntity gizmo) {
+    public LightInstance(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoInstance gizmo) {
         this(name, gizmo);
 
         setColor(dto.color());

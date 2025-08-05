@@ -1,5 +1,22 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
+import io.github.trimax.venta.engine.managers.TextureManager;
+import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.entity.TextureInstance;
+import io.github.trimax.venta.engine.model.view.TextureView;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.ByteBuffer;
+
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
 import static org.lwjgl.opengl.GL11.*;
@@ -25,34 +42,16 @@ import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-import java.nio.ByteBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryUtil;
-
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
-import io.github.trimax.venta.engine.managers.TextureManager;
-import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.model.entity.TextureEntity;
-import io.github.trimax.venta.engine.model.view.TextureView;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureManagerImplementation
-        extends AbstractManagerImplementation<TextureEntity, TextureView>
+        extends AbstractManagerImplementation<TextureInstance, TextureView>
         implements TextureManager {
     private final Memory memory;
 
-    public TextureEntity create(@NonNull final String name,
-                                @NonNull final ByteBuffer bitmap) {
+    public TextureInstance create(@NonNull final String name,
+                                  @NonNull final ByteBuffer bitmap) {
         final var textureID = memory.getTextures().create("Texture %s", name);
 
         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -64,7 +63,7 @@ public final class TextureManagerImplementation
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        return store(new TextureEntity(name, bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
+        return store(new TextureInstance(name, bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT));
     }
 
     @Override
@@ -108,12 +107,12 @@ public final class TextureManagerImplementation
 
             STBImage.stbi_image_free(pixels);
 
-            return store(new TextureEntity(name, imageBuffer, textureID, width, height));
+            return store(new TextureInstance(name, imageBuffer, textureID, width, height));
         }
     }
 
     @Override
-    protected void destroy(final TextureEntity texture) {
+    protected void destroy(final TextureInstance texture) {
         log.info("Destroying texture {} ({})", texture.getID(), texture.getName());
         memory.getTextures().delete(texture.getInternalID());
         MemoryUtil.memFree(texture.getBuffer());

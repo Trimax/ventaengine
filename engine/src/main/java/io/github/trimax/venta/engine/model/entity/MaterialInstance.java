@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public final class MaterialEntity extends AbstractEntity implements MaterialView {
+public final class MaterialInstance extends AbstractInstance implements MaterialView {
     private final Map<TextureType, TextureView> textures = new HashMap<>();
     private final Float shininess;
     private final Float opacity;
@@ -20,7 +20,7 @@ public final class MaterialEntity extends AbstractEntity implements MaterialView
     private final Vector2f offset;
 
 
-    MaterialEntity(@NonNull final String name, final Float shininess, final Float opacity, final Vector2f tiling, final Vector2f offset) {
+    MaterialInstance(@NonNull final String name, final Float shininess, final Float opacity, final Vector2f tiling, final Vector2f offset) {
         super(name);
 
         this.shininess = shininess;
@@ -29,7 +29,7 @@ public final class MaterialEntity extends AbstractEntity implements MaterialView
         this.offset = offset;
     }
 
-    public MaterialEntity(@NonNull final String name, @NonNull final MaterialDTO dto) {
+    public MaterialInstance(@NonNull final String name, @NonNull final MaterialDTO dto) {
         this(name, dto.shininess(), dto.opacity(), dto.tiling(), dto.offset());
     }
 

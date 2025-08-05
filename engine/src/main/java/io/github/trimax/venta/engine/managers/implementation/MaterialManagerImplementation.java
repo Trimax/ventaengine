@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.MaterialManager;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
-import io.github.trimax.venta.engine.model.entity.MaterialEntity;
+import io.github.trimax.venta.engine.model.entity.MaterialInstance;
 import io.github.trimax.venta.engine.model.view.MaterialView;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
@@ -15,24 +15,24 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MaterialManagerImplementation
-        extends AbstractManagerImplementation<MaterialEntity, MaterialView>
+        extends AbstractManagerImplementation<MaterialInstance, MaterialView>
         implements MaterialManager {
     private final TextureManagerImplementation textureManager;
 
     @Override
-    public MaterialEntity load(@NonNull final String name) {
+    public MaterialInstance load(@NonNull final String name) {
         log.info("Loading material {}", name);
 
         final var materialDTO = ResourceUtil.loadAsObject(String.format("/materials/%s.json", name), MaterialDTO.class);
 
-        final var material = store(new MaterialEntity(name, materialDTO));
+        final var material = store(new MaterialInstance(name, materialDTO));
         materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureManager.load(path)));
 
         return material;
     }
 
     @Override
-    protected void destroy(final MaterialEntity material) {
+    protected void destroy(final MaterialInstance material) {
         log.info("Destroying material {} ({})", material.getID(), material.getName());
     }
 
