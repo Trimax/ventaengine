@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.managers.MaterialManager;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.view.MaterialView;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -16,14 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 public final class MaterialManagerImplementation
         extends AbstractManagerImplementation<MaterialEntity, MaterialView>
         implements MaterialManager {
-    private final ResourceManagerImplementation resourceManager;
     private final TextureManagerImplementation textureManager;
 
     @Override
     public MaterialEntity load(@NonNull final String name) {
         log.info("Loading material {}", name);
 
-        final var materialDTO = resourceManager.load(String.format("/materials/%s.json", name), MaterialDTO.class);
+        final var materialDTO = ResourceUtil.loadAsObject(String.format("/materials/%s.json", name), MaterialDTO.class);
 
         final var material = store(new MaterialEntity(name, materialDTO));
         materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureManager.load(path)));

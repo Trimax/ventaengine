@@ -14,6 +14,7 @@ import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.ShaderEntity;
 import io.github.trimax.venta.engine.model.view.ProgramView;
 import io.github.trimax.venta.engine.model.view.ShaderView;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -25,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 public final class ProgramManagerImplementation
         extends AbstractManagerImplementation<ProgramEntity, ProgramView>
         implements ProgramManager {
-    private final ResourceManagerImplementation resourceManager;
     private final ShaderManagerImplementation shaderManager;
     private final Memory memory;
 
@@ -36,7 +36,7 @@ public final class ProgramManagerImplementation
 
         log.info("Loading program {}", name);
 
-        final var programDTO = resourceManager.load(String.format("/programs/%s.json", name), ProgramDTO.class);
+        final var programDTO = ResourceUtil.loadAsObject(String.format("/programs/%s.json", name), ProgramDTO.class);
 
         return store(create(name,
                 shaderManager.load(programDTO.shaderVertex(), ShaderEntity.Type.Vertex),

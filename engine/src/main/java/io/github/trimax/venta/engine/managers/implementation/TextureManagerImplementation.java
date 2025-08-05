@@ -37,6 +37,7 @@ import io.github.trimax.venta.engine.managers.TextureManager;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import io.github.trimax.venta.engine.model.view.TextureView;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -48,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
 public final class TextureManagerImplementation
         extends AbstractManagerImplementation<TextureEntity, TextureView>
         implements TextureManager {
-    private final ResourceManagerImplementation resourceManager;
     private final Memory memory;
 
     public TextureEntity create(@NonNull final String name,
@@ -74,7 +74,7 @@ public final class TextureManagerImplementation
 
         log.info("Loading texture {}", name);
 
-        final byte[] imageData = resourceManager.loadAsBytes(String.format("/textures/%s", name));
+        final byte[] imageData = ResourceUtil.loadAsBytes(String.format("/textures/%s", name));
         try (var stack = stackPush()) {
             final var widthBuffer = stack.mallocInt(1);
             final var heightBuffer = stack.mallocInt(1);

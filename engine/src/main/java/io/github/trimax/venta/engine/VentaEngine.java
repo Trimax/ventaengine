@@ -20,7 +20,7 @@ public final class VentaEngine implements AbstractVentaApplication<VentaEngineAp
     private final Engine engine;
 
     public static void run(final String[] args, @NonNull final VentaEngineApplication application) {
-        log.info("Starting {}", ResourceUtil.load("/banner.txt"));
+        log.info("Starting {}", ResourceUtil.loadAsString("/banner.txt"));
         VentaApplication.run(args, VentaEngine.class, application);
     }
 

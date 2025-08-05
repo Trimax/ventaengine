@@ -1,20 +1,5 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.managers.MeshManager;
-import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.model.dto.MeshDTO;
-import io.github.trimax.venta.engine.model.entity.MeshEntity;
-import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.view.MeshView;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
@@ -23,13 +8,28 @@ import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.managers.MeshManager;
+import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
+import io.github.trimax.venta.engine.model.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.view.MeshView;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MeshManagerImplementation
         extends AbstractManagerImplementation<MeshEntity, MeshView>
         implements MeshManager {
-    private final ResourceManagerImplementation resourceManager;
     private final Memory memory;
 
     @Override
@@ -39,7 +39,7 @@ public final class MeshManagerImplementation
 
         log.info("Loading mesh {}", name);
 
-        final var meshDTO = resourceManager.load(String.format("/meshes/%s.json", name), MeshDTO.class);
+        final var meshDTO = ResourceUtil.loadAsObject(String.format("/meshes/%s.json", name), MeshDTO.class);
 
         final var vertices = meshDTO.getVerticesArray();
 
