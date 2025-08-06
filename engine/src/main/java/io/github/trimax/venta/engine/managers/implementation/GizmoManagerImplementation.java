@@ -6,7 +6,7 @@ import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.managers.GizmoManager;
 import io.github.trimax.venta.engine.model.instance.GizmoInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.GizmoInstanceImplementation;
-import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
+import io.github.trimax.venta.engine.repositories.implementation.MeshRepositoryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public final class GizmoManagerImplementation
         extends AbstractManagerImplementation<GizmoInstanceImplementation, GizmoInstance>
         implements GizmoManager {
     private final ProgramRegistryImplementation programRegistry;
-    private final MeshRegistryImplementation meshRegistry;
+    private final MeshRepositoryImplementation meshRegistry;
 
     private GizmoInstanceImplementation origin;
 

@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.executors.mesh;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
-import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
+import io.github.trimax.venta.engine.repositories.implementation.MeshRepositoryImplementation;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,13 +17,13 @@ public final class MeshDescribeExecutor extends AbstractMeshExecutor {
 
     @Override
     public void execute(final ConsoleCommandQueue.Command command) {
-        final var meshRegistry = getRegistry(MeshRegistryImplementation.class);
+        final var meshRepository = getRepository(MeshRepositoryImplementation.class);
         if (command.asArgument().isBlank()) {
             getConsole().warning("Usage: %s <id>", command.getFullPath());
             return;
         }
 
-        final var mesh = meshRegistry.get(command.asArgument().value());
+        final var mesh = meshRepository.get(command.asArgument().value());
         if (mesh == null) {
             getConsole().error("Mesh <%s> can't be described because it does not exist", command.asArgument().value());
             return;
