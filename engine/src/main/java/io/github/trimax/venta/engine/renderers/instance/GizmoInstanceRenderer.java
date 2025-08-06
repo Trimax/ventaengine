@@ -7,7 +7,7 @@ import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.GizmoInstanceImplementation;
 import io.github.trimax.venta.engine.renderers.common.DebugRenderer;
-import io.github.trimax.venta.engine.renderers.prefab.MeshEntityRenderer;
+import io.github.trimax.venta.engine.renderers.entity.MeshEntityRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

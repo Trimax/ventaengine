@@ -8,7 +8,7 @@ import io.github.trimax.venta.engine.binders.ObjectBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
-import io.github.trimax.venta.engine.renderers.prefab.MeshEntityRenderer;
+import io.github.trimax.venta.engine.renderers.entity.MeshEntityRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
