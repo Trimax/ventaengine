@@ -6,8 +6,10 @@ import io.github.trimax.venta.engine.model.prefabs.AbstractPrefab;
 import io.github.trimax.venta.engine.repositories.AbstractRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -31,6 +33,15 @@ public abstract class AbstractRepositoryImplementation<T extends P, P extends Ab
                     () -> prefabs.put(id, creator.get()));
 
         return prefabs.get(id);
+    }
+
+    @Override
+    public final Iterator<P> iterator() {
+        return StreamEx.ofValues(prefabs).map(this::toView).iterator();
+    }
+
+    private P toView(final T prefab) {
+        return prefab;
     }
 
     public final void cleanup() {

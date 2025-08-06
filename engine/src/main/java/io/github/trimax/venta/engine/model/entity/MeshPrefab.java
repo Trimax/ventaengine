@@ -1,6 +1,8 @@
 package io.github.trimax.venta.engine.model.entity;
 
-public interface MeshEntity extends AbstractEntity {
+import io.github.trimax.venta.engine.model.prefabs.AbstractPrefab;
+
+public interface MeshPrefab extends AbstractPrefab {
     MaterialEntity getMaterial();
 
     //TODO: mOVE to node
