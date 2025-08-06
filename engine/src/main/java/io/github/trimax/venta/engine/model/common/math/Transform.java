@@ -2,16 +2,24 @@ package io.github.trimax.venta.engine.model.common.math;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-@Getter
+@ToString
 @NoArgsConstructor
 public final class Transform {
     private final Matrix4f matrix = new Matrix4f();
+
+    @Getter
     private final Vector3f position = new Vector3f(0, 0, 0);
+
+    @Getter
     private final Vector3f rotation = new Vector3f(0, 0, 0);
+
+    @Getter
     private final Vector3f scale = new Vector3f(1, 1, 1);
+
     private boolean dirty = true;
 
     public Transform(final Transform transform) {
@@ -32,6 +40,21 @@ public final class Transform {
 
     public void setScale(final Vector3f scale) {
         this.scale.set(scale);
+        this.dirty = true;
+    }
+
+    public void move(final Vector3f offset) {
+        this.position.add(offset, this.position);
+        this.dirty = true;
+    }
+
+    public void rotate(final Vector3f angles) {
+        this.rotation.add(angles, this.rotation);
+        this.dirty = true;
+    }
+
+    public void scale(final Vector3f factor) {
+        this.scale.add(factor, this.scale);
         this.dirty = true;
     }
 

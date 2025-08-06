@@ -79,17 +79,17 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
 
     @Override
     public void move(final Vector3f offset) {
-        this.transform.getPosition().add(offset, this.transform.getPosition());
+        this.transform.move(offset);
     }
 
     @Override
     public void rotate(final Vector3f angles) {
-        this.transform.getRotation().add(angles, this.transform.getRotation());
+        this.transform.rotate(angles);
     }
 
     @Override
     public void scale(final Vector3f factor) {
-        this.transform.getScale().add(factor, this.transform.getScale());
+        this.transform.scale(factor);
     }
 
     @Override
