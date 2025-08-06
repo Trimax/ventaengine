@@ -9,6 +9,11 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 abstract class AbstractBinder {
+    protected final void bind(final int uniformID, final boolean value) {
+        if (uniformID >= 0)
+            glUniform1i(uniformID, value ? 1 : 0);
+    }
+
     protected final void bind(final int uniformID, final int value) {
         if (uniformID >= 0)
             glUniform1i(uniformID, value);
