@@ -1,12 +1,13 @@
 package io.github.trimax.venta.engine.model.instance;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
-import io.github.trimax.venta.engine.model.entity.MeshEntity;
+import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.hierarchy.Node;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import org.joml.Vector3f;
 
 public interface ObjectInstance extends AbstractInstance {
-    MeshEntity getMesh();
+    Node<MeshReference> getMesh();
 
     Vector3f getPosition();
 

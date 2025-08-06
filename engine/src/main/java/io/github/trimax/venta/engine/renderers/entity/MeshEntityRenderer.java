@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.renderers.instance.ObjectInstanceRenderer;
@@ -28,7 +29,8 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
     @Override
     public void render(final MeshEntityImplementation object) {
         glBindVertexArray(object.getVertexArrayObjectID());
-        materialBinder.bind(getContext().getProgram(), object.getMaterial());
+
+        materialBinder.bind(getContext().getProgram(), getContext().getMaterial());
 
         if (object.getFacetsCount() > 0) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getFacetsBufferID());
@@ -46,6 +48,7 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class MeshRenderContext extends AbstractRenderContext<ObjectInstanceRenderer.ObjectRenderContext> {
+        private MaterialEntityImplementation material;
         private ProgramEntityImplementation program;
 
         public MeshRenderContext withProgram(final ProgramEntityImplementation program) {
@@ -53,8 +56,14 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
             return this;
         }
 
+        public MeshRenderContext withMaterial(final MaterialEntityImplementation material) {
+            this.material = material;
+            return this;
+        }
+
         @Override
         public void close() {
+            material = null;
             program = null;
         }
 

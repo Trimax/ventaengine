@@ -1,10 +1,89 @@
 {
-  "position": {"x": 0.0, "y": 0.0, "z": 0.0},
-  "angles": {"x": 0.0, "y": 0.0, "z": 0.0},
-  "scale": {"x": 1.0, "y": 1.0, "z": 1.0},
   "program": "basic",
-  "mesh": {
+  "root": {
     "name": "cube",
-    "material": "stone"
+    "value": {
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "scale": {"x": 1.0, "y": 1.0, "z": 1.0}
+      }
+    },
+    "children": [
+      {
+        "name": "+X",
+        "value": {
+          "mesh": "plane",
+          "material": "stone",
+          "transform": {
+            "position": {"x": 0.5, "y": 0.0, "z": 0.0},
+            "rotation": {"x": 0.0, "y": 0.0, "z": -1.5708},
+            "scale": {"x": 1.0, "y": 1.0, "z": 1.0}
+          }
+        }
+      },
+      {
+        "name": "-X",
+        "value": {
+          "mesh": "plane",
+          "material": "stone",
+          "transform": {
+            "position": {"x": -0.5, "y": 0.0, "z": 0.0},
+            "rotation": {"x": 0.0, "y": 0.0, "z": 1.5708},
+            "scale": {"x": 1.0, "y": 1.0, "z": 1.0
+            }
+          }
+        }
+      },
+      {
+        "name": "+Y",
+        "value": {
+          "mesh": "plane",
+          "material": "stone",
+          "transform": {
+            "position": {"x": 0.0, "y": 0.5, "z": 0.0},
+            "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+            "scale": {"x": 1.0, "y": 1.0, "z": 1.0}
+          }
+        }
+      },
+      {
+        "name": "-Y",
+        "value": {
+          "mesh": "plane",
+          "material": "stone",
+          "transform": {
+            "position": {"x": 0.0, "y": -0.5, "z": 0.0},
+            "rotation": {"x": 3.1416, "y": 0.0, "z": 0.0},
+            "scale": {"x": 1.0, "y": 1.0, "z": 1.0}
+          }
+        }
+      },
+      {
+        "name": "+Z",
+        "value": {
+          "mesh": "plane",
+          "material": "stone",
+          "transform": {
+            "position": {"x": 0.0, "y": 0.0, "z": 0.5},
+            "rotation": {"x": 1.5708, "y": 0.0, "z": 0.0},
+            "scale": {"x": 1.0, "y": 1.0, "z": 1.0}
+          }
+        }
+      },
+      {
+        "name": "-Z",
+        "value": {
+          "mesh": "plane",
+          "material": "stone",
+          "transform": {
+            "position": {"x": 0.0, "y": 0.0, "z": -0.5},
+            "rotation": {"x": -1.5708, "y": 0.0, "z": 0.0},
+            "scale": {"x": 1.0, "y": 1.0, "z": 1.0
+            }
+          }
+        }
+      }
+    ]
   }
 }

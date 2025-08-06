@@ -45,7 +45,9 @@ public final class GizmoInstanceRenderer extends AbstractInstanceRenderer<GizmoI
         glUseProgram(gizmo.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Edge.getMode());
 
-        matrixBinder.bind(gizmo.getProgram(), context.getParent().getViewProjectionMatrixBuffer(), context.getModelMatrixBuffer(), context.getNormalMatrixBuffer());
+        matrixBinder.bindViewProjectionMatrix(gizmo.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
+        matrixBinder.bindNormalMatrix(gizmo.getProgram(), context.getNormalMatrixBuffer());
+        matrixBinder.bindModelMatrix(gizmo.getProgram(), context.getModelMatrixBuffer());
 
         try (var _ = meshRenderer.withContext(null)
                 .withProgram(gizmo.getProgram())) {

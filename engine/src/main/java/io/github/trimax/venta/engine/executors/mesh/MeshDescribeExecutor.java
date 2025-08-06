@@ -30,7 +30,6 @@ public final class MeshDescribeExecutor extends AbstractMeshExecutor {
         }
 
         getConsole().header("Mesh <%s>:", mesh.getID());
-        getConsole().info("  Material ID: %s", mesh.hasMaterial() ? mesh.getMaterial().getID() : "not assigned");
         getConsole().info("     Vertices: %s", mesh.getVerticesCount());
         getConsole().info("       Facets: %s", mesh.getFacetsCount());
         getConsole().info("        Edges: %s", mesh.getEdgesCount());

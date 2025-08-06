@@ -4,7 +4,6 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
-import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
@@ -35,6 +34,7 @@ public final class SceneManagerImplementation
         final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s.json", name), SceneDTO.class);
         final var scene = new SceneInstanceImplementation(name);
 
+        /* TODO: Implement
         if (sceneDTO.hasObjects())
             for (final var sceneObject : sceneDTO.objects()) {
                 final var object = objectManager.load(sceneObject.name());
@@ -44,6 +44,7 @@ public final class SceneManagerImplementation
 
                 scene.add(object);
             }
+         */
 
         if (sceneDTO.hasLights())
             for (final var sceneLight : sceneDTO.lights()) {
