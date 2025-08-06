@@ -13,9 +13,15 @@ import java.nio.FloatBuffer;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MatrixBinder extends AbstractBinder {
-    public void bind(final ProgramEntityImplementation program, final FloatBuffer matrixViewProjection, final FloatBuffer matrixModel, final FloatBuffer matrixNormal) {
+    public void bindViewProjectionMatrix(final ProgramEntityImplementation program, final FloatBuffer matrixViewProjection) {
         bindMatrix4(program.getUniformID(ShaderUniform.MatrixViewProjection), matrixViewProjection);
-        bindMatrix4(program.getUniformID(ShaderUniform.MatrixModel), matrixModel);
+    }
+
+    public void bindNormalMatrix(final ProgramEntityImplementation program, final FloatBuffer matrixNormal) {
         bindMatrix3(program.getUniformID(ShaderUniform.MatrixNormal), matrixNormal);
+    }
+
+    public void bindModelMatrix(final ProgramEntityImplementation program, final FloatBuffer matrixModel) {
+        bindMatrix4(program.getUniformID(ShaderUniform.MatrixModel), matrixModel);
     }
 }

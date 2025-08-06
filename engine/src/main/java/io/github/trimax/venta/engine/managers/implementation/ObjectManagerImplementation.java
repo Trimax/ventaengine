@@ -4,21 +4,18 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.ObjectManager;
-import io.github.trimax.venta.engine.model.dto.ObjectDTO;
-import io.github.trimax.venta.engine.model.dto.ObjectMeshDTO;
-import io.github.trimax.venta.engine.model.entity.MeshEntity;
-import io.github.trimax.venta.engine.model.entity.ProgramEntity;
-import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
+import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.hierarchy.Node;
+import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
-import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
+import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
+import io.github.trimax.venta.engine.model.prefabs.implementation.ObjectPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
 
 @Slf4j
 @Component
@@ -26,41 +23,31 @@ import lombok.extern.slf4j.Slf4j;
 public final class ObjectManagerImplementation
         extends AbstractManagerImplementation<ObjectInstanceImplementation, ObjectInstance>
         implements ObjectManager {
-    private final MaterialRegistryImplementation materialRegistry;
-    private final ProgramRegistryImplementation programRegistry;
     private final GizmoManagerImplementation gizmoManager;
 
-    private final MeshRegistryImplementation meshRegistry;
-
     @Override
-    public ObjectInstance create(@NonNull final String name,
-                                 @NonNull final MeshEntity mesh,
-                                 @NonNull final ProgramEntity program) {
-        log.info("Creating object {}", name);
+    public ObjectInstance create(@NonNull final String name, @NonNull final ObjectPrefab prefab) {
+        if (prefab instanceof ObjectPrefabImplementation object)
+            return create(name, object);
 
-        if (mesh instanceof MeshEntityImplementation entity)
-            return store(new ObjectInstanceImplementation(name, program, entity,
-                gizmoManager.create("Bounding box", GizmoType.Object)));
-
-        throw new UnknownInstanceException(mesh.getClass());
+        throw new UnknownInstanceException(prefab.getClass());
     }
 
-    @Override
-    public ObjectInstance load(@NonNull final String name) {
-        log.info("Loading object {}", name);
-
-        final var objectDTO = ResourceUtil.loadAsObject(String.format("/objects/%s.json", name), ObjectDTO.class);
+    private ObjectInstance create(final String name, final ObjectPrefabImplementation prefab) {
         return store(new ObjectInstanceImplementation(name,
-                programRegistry.get(objectDTO.program()),
-                buildMeshHierarchy(objectDTO.mesh()),
+                prefab.getProgram(),
+                createHierarchy(prefab.getRoot()),
                 gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 
-    private MeshEntityImplementation buildMeshHierarchy(@NonNull final ObjectMeshDTO meshDTO) {
-        final var mesh = meshRegistry.get(meshDTO.name());
-        mesh.setMaterial(materialRegistry.get(meshDTO.material()));
+    private Node<MeshReference> createHierarchy(final Node<MeshReference> node) {
+        return new Node<>(node.name(),
+                createMesh(node.value()),
+                node.hasChildren() ? StreamEx.of(node.children()).map(this::createHierarchy).toList() : null);
+    }
 
-        return mesh;
+    private MeshReference createMesh(final MeshReference reference) {
+        return new MeshReference(reference.mesh(), reference.material(), new Transform(reference.transform()));
     }
 
     @Override
