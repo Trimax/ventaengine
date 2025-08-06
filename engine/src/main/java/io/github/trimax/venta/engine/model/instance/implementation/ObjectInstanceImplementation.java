@@ -8,6 +8,7 @@ import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
+import io.github.trimax.venta.engine.utils.GeometryUtil;
 import lombok.Getter;
 import org.joml.Vector3f;
 
@@ -30,9 +31,7 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
         super(gizmo, name);
 
         this.mesh = mesh;
-
-        //TODO: fix
-        this.box = null; //BoundingBox.of(mesh.value().mesh().getBoundingBox());
+        this.box = GeometryUtil.computeBoundingBox(mesh);
 
         setProgram(program);
     }
