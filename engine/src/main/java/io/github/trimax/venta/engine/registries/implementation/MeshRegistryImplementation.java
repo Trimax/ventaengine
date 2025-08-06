@@ -5,7 +5,7 @@ import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
-import io.github.trimax.venta.engine.model.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.registries.MeshRegistry;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
