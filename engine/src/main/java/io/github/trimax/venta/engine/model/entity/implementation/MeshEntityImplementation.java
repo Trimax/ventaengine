@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
-import io.github.trimax.venta.engine.model.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

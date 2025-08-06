@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.geo;
+package io.github.trimax.venta.engine.model.common.hierarchy;
 
 import org.apache.commons.collections4.CollectionUtils;
 

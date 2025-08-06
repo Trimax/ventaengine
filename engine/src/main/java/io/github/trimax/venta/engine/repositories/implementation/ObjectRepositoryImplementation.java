@@ -3,7 +3,8 @@ package io.github.trimax.venta.engine.repositories.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.dto.MeshPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.ObjectPrefabDTO;
-import io.github.trimax.venta.engine.model.geo.Node;
+import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.hierarchy.Node;
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ObjectPrefabImplementation;
 import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
@@ -37,13 +38,13 @@ public final class ObjectRepositoryImplementation
         return new ObjectPrefabImplementation(programRegistry.get(objectDTO.program()), loadMeshHierarchy(objectDTO.root()));
     }
     
-    private Node<ObjectPrefabImplementation.MeshReference> loadMeshHierarchy(@NonNull final Node<MeshPrefabDTO> node) {
+    private Node<MeshReference> loadMeshHierarchy(@NonNull final Node<MeshPrefabDTO> node) {
         return new Node<>(node.name(), convert(node.value()),
                 node.hasChildren() ? StreamEx.of(node.children()).map(this::loadMeshHierarchy).toList() : null);
     }
 
-    private ObjectPrefabImplementation.MeshReference convert(@NonNull final MeshPrefabDTO value) {
-        return new ObjectPrefabImplementation.MeshReference(
+    private MeshReference convert(@NonNull final MeshPrefabDTO value) {
+        return new MeshReference(
                 Optional.ofNullable(value.mesh()).map(meshRegistry::get).orElse(null),
                 Optional.ofNullable(value.material()).map(materialRegistry::get).orElse(null),
                 value.transform()

@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.math;
+package io.github.trimax.venta.engine.model.common.math;
 
 import lombok.Getter;
 import org.joml.Matrix4f;
