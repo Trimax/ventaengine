@@ -1,12 +1,12 @@
-package io.github.trimax.venta.engine.repositories.implementation;
+package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
-import io.github.trimax.venta.engine.model.entity.MeshPrefab;
-import io.github.trimax.venta.engine.model.entity.implementation.MeshPrefabImplementation;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.repositories.MeshRepository;
+import io.github.trimax.venta.engine.registries.MeshRegistry;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,13 +27,13 @@ import static org.lwjgl.system.MemoryUtil.*;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class MeshRepositoryImplementation
-        extends AbstractRepositoryImplementation<MeshPrefabImplementation, MeshPrefab>
-        implements MeshRepository {
+public final class MeshRegistryImplementation
+        extends AbstractRegistryImplementation<MeshEntityImplementation, MeshEntity, Void>
+        implements MeshRegistry {
     private final Memory memory;
 
     @Override
-    protected MeshPrefabImplementation load(@NonNull final String resourcePath) {
+    protected MeshEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         log.info("Loading mesh {}", resourcePath);
 
         final var meshDTO = ResourceUtil.loadAsObject(String.format("/meshes/%s.json", resourcePath), MeshDTO.class);
@@ -105,12 +105,12 @@ public final class MeshRepositoryImplementation
 
         glBindVertexArray(0);
 
-        return new MeshPrefabImplementation(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
+        return new MeshEntityImplementation(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
                 vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO));
     }
 
     @Override
-    protected void unload(@NonNull final MeshPrefabImplementation entity) {
+    protected void unload(@NonNull final MeshEntityImplementation entity) {
         log.info("Unloading mesh {}", entity.getID());
 
         memory.getVertexArrays().delete(entity.getVertexArrayObjectID());

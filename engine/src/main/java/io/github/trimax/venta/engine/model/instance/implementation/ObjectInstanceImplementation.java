@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
-import io.github.trimax.venta.engine.model.entity.implementation.MeshPrefabImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
@@ -20,11 +20,11 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     private boolean isLit = true;
 
     private ProgramEntityImplementation program;
-    private MeshPrefabImplementation mesh;
+    private MeshEntityImplementation mesh;
 
     public ObjectInstanceImplementation(final String name,
                                         final ProgramEntity program,
-                                        final MeshPrefabImplementation mesh,
+                                        final MeshEntityImplementation mesh,
                                         final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 

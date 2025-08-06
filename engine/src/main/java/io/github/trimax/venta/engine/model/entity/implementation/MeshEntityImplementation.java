@@ -1,16 +1,15 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
-import io.github.trimax.venta.engine.model.entity.MeshPrefab;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.prefabs.implementation.AbstractPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class MeshPrefabImplementation extends AbstractPrefabImplementation implements MeshPrefab {
+public final class MeshEntityImplementation extends AbstractEntityImplementation implements MeshEntity {
     private final int verticesCount;
     private final int facetsCount;
     private final int edgesCount;
@@ -24,7 +23,7 @@ public final class MeshPrefabImplementation extends AbstractPrefabImplementation
 
     private MaterialEntityImplementation material;
 
-    public MeshPrefabImplementation(final int verticesCount,
+    public MeshEntityImplementation(final int verticesCount,
                                     final int facetsCount,
                                     final int edgesCount,
                                     final int vertexArrayObjectID,

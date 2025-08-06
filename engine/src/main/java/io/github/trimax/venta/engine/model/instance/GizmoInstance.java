@@ -1,10 +1,10 @@
 package io.github.trimax.venta.engine.model.instance;
 
-import io.github.trimax.venta.engine.model.entity.MeshPrefab;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import org.joml.Vector3f;
 
 public interface GizmoInstance extends AbstractInstance {
-    MeshPrefab getMesh();
+    MeshEntity getMesh();
 
     Vector3f getPosition();
 
