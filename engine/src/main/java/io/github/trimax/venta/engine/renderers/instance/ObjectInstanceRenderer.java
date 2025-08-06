@@ -8,7 +8,6 @@ import io.github.trimax.venta.engine.binders.ObjectBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.hierarchy.Node;
-import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
@@ -54,29 +53,39 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         cameraBinder.bind(object.getProgram(), getContext().getParent().getCamera());
         objectBinder.bind(object.getProgram(), object);
-        matrixBinder.bind(object.getProgram(), context.getParent().getViewProjectionMatrixBuffer(), context.getModelMatrixBuffer(), context.getNormalMatrixBuffer());
+        matrixBinder.bindViewProjectionMatrix(object.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
 
         lightBinder.bind(object.getProgram(), context.getScene().getAmbientLight());
         lightBinder.bind(object.getProgram(), context.getScene().getLights());
 
-        render(object.getProgram(), object.getMesh(), object.getTransform());
+        render(object.getProgram(), object.getMesh(), object.getTransform().getMatrix());
 
         glUseProgram(0);
     }
 
-    private void render(final ProgramEntityImplementation program, final Node<MeshReference> node, final Transform transform) {
+    private void render(final ProgramEntityImplementation program, final Node<MeshReference> node, final Matrix4f parentMatrix) {
         if (node == null)
             return;
 
+        //TODO: Do not create the matrix here. Reuse buffer
+        final Matrix4f localMatrix = new Matrix4f(parentMatrix);
         if (node.value() != null)
-            render(program, node.value(), transform);
+            localMatrix.mul(node.value().transform().getMatrix());
+
+        if (node.value() != null)
+            render(program, node.value(), localMatrix);
 
         if (node.hasChildren())
             for (final Node<MeshReference> child : node.children())
-                render(program, child, transform);
+                render(program, child, localMatrix);
     }
 
-    private void render(final ProgramEntityImplementation program, final MeshReference reference, final Transform transform) {
+    private void render(final ProgramEntityImplementation program, final MeshReference reference, final Matrix4f modelMatrix) {
+        getContext().withModelMatrix(modelMatrix);
+
+        matrixBinder.bindModelMatrix(program, getContext().getModelMatrixBuffer());
+        matrixBinder.bindNormalMatrix(program, getContext().getNormalMatrixBuffer());
+
         if (reference.hasMesh())
             try (var _ = meshRenderer.withContext(getContext())
                     .withMaterial(reference.material())
@@ -102,6 +111,16 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
                     .rotateY(rotation.y)
                     .rotateZ(rotation.z)
                     .scale(scale);
+            modelMatrix.get(modelMatrixBuffer);
+
+            modelMatrix.normal(normalMatrix);
+            normalMatrix.get(normalMatrixBuffer);
+            return this;
+        }
+
+        public ObjectRenderContext withModelMatrix(final Matrix4f matrix) {
+            modelMatrix.identity()
+                    .set(matrix);
             modelMatrix.get(modelMatrixBuffer);
 
             modelMatrix.normal(normalMatrix);

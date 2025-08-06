@@ -29,6 +29,7 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
     @Override
     public void render(final MeshEntityImplementation object) {
         glBindVertexArray(object.getVertexArrayObjectID());
+
         materialBinder.bind(getContext().getProgram(), getContext().getMaterial());
 
         if (object.getFacetsCount() > 0) {
