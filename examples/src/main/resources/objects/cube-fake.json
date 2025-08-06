@@ -13,7 +13,8 @@
       {
         "name": "+X",
         "value": {
-          "mesh": "plane",
+          "mesh": "colored/plane-yellow",
+          "material": "stone",
           "transform": {
             "position": {"x": 0.5, "y": 0.0, "z": 0.0},
             "rotation": {"x": 0.0, "y": 0.0, "z": -1.5708},
@@ -22,21 +23,10 @@
         }
       },
       {
-        "name": "-X",
-        "value": {
-          "mesh": "plane",
-          "transform": {
-            "position": {"x": -0.5, "y": 0.0, "z": 0.0},
-            "rotation": {"x": 0.0, "y": 0.0, "z": 1.5708},
-            "scale": {"x": 1.0, "y": 1.0, "z": 1.0
-            }
-          }
-        }
-      },
-      {
         "name": "+Y",
         "value": {
-          "mesh": "plane",
+          "mesh": "colored/plane-green",
+          "material": "stone",
           "transform": {
             "position": {"x": 0.0, "y": 0.5, "z": 0.0},
             "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -45,36 +35,14 @@
         }
       },
       {
-        "name": "-Y",
-        "value": {
-          "mesh": "plane",
-          "transform": {
-            "position": {"x": 0.0, "y": -0.5, "z": 0.0},
-            "rotation": {"x": 3.1416, "y": 0.0, "z": 0.0},
-            "scale": {"x": 1.0, "y": 1.0, "z": 1.0}
-          }
-        }
-      },
-      {
         "name": "+Z",
         "value": {
-          "mesh": "plane",
+          "mesh": "colored/plane-purple",
+          "material": "stone",
           "transform": {
             "position": {"x": 0.0, "y": 0.0, "z": 0.5},
             "rotation": {"x": 1.5708, "y": 0.0, "z": 0.0},
             "scale": {"x": 1.0, "y": 1.0, "z": 1.0}
-          }
-        }
-      },
-      {
-        "name": "-Z",
-        "value": {
-          "mesh": "plane",
-          "transform": {
-            "position": {"x": 0.0, "y": 0.0, "z": -0.5},
-            "rotation": {"x": -1.5708, "y": 0.0, "z": 0.0},
-            "scale": {"x": 1.0, "y": 1.0, "z": 1.0
-            }
           }
         }
       }
