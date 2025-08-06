@@ -10,7 +10,7 @@ public final class TexturedCubeApplicationStartupHandler implements VentaEngineS
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
 
-        final var cube = context.getObjectManager().load("colouredcube");
+        final var cube = context.getObjectManager().create("cube", context.getObjectRepository().get("cube-complex"));
         cube.setScale(new Vector3f(5.f));
         scene.add(cube);
 

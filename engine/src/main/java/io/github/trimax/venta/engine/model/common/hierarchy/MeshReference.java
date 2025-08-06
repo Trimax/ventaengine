@@ -7,4 +7,7 @@ import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImple
 public record MeshReference(MeshEntityImplementation mesh,
                             MaterialEntityImplementation material,
                             Transform transform) {
+    public boolean hasMesh() {
+        return mesh != null;
+    }
 }

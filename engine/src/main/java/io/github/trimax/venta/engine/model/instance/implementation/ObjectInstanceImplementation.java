@@ -30,7 +30,9 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
         super(gizmo, name);
 
         this.mesh = mesh;
-        this.box = BoundingBox.of(mesh.value().mesh().getBoundingBox());
+
+        //TODO: fix
+        this.box = null; //BoundingBox.of(mesh.value().mesh().getBoundingBox());
 
         setProgram(program);
     }

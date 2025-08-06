@@ -13,7 +13,9 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
 
-        final var cube = context.getObjectManager().load("cube");
+        final var cubePrefab = context.getObjectRepository().get("cube-complex");
+
+        final var cube = context.getObjectManager().create("cube", cubePrefab);
         cube.setScale(new Vector3f(2.f));
         state.setCube(cube);
         scene.add(cube);
@@ -39,7 +41,7 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
 
         final int cubeCount = 10;
         for (int cubeID = 0; cubeID < cubeCount; cubeID++) {
-            final var miniCube = context.getObjectManager().create("cube" + cubeID, cube.getMesh(), cube.getProgram());
+            final var miniCube = context.getObjectManager().create("cube" + cubeID, cubePrefab);
             miniCube.setPosition(new Vector3f(
                     3.f * (float) Math.sin(cubeID * (2 * Math.PI / cubeCount)),
                     0.f,

@@ -6,6 +6,10 @@ import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.ObjectBinder;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
+import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.hierarchy.Node;
+import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.renderers.entity.MeshEntityRenderer;
@@ -55,12 +59,30 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         lightBinder.bind(object.getProgram(), context.getScene().getAmbientLight());
         lightBinder.bind(object.getProgram(), context.getScene().getLights());
 
-        try (var _ = meshRenderer.withContext(getContext())
-                        .withProgram(object.getProgram())) {
-            meshRenderer.render(object.getMesh());
-        }
+        render(object.getProgram(), object.getMesh(), object.getTransform());
 
         glUseProgram(0);
+    }
+
+    private void render(final ProgramEntityImplementation program, final Node<MeshReference> node, final Transform transform) {
+        if (node == null)
+            return;
+
+        if (node.value() != null)
+            render(program, node.value(), transform);
+
+        if (node.hasChildren())
+            for (final Node<MeshReference> child : node.children())
+                render(program, child, transform);
+    }
+
+    private void render(final ProgramEntityImplementation program, final MeshReference reference, final Transform transform) {
+        if (reference.hasMesh())
+            try (var _ = meshRenderer.withContext(getContext())
+                    .withMaterial(reference.material())
+                    .withProgram(program)) {
+                meshRenderer.render(reference.mesh());
+            }
     }
 
     @Getter(AccessLevel.PACKAGE)

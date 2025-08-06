@@ -11,7 +11,8 @@ public final class PointLightApplicationStartupHandler implements VentaEngineSta
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
 
-        final var plane = context.getObjectManager().load("plane");
+        //TODO: fix
+        final var plane = context.getObjectManager().create("plane", context.getObjectRepository().get("plane"));
         plane.setScale(new Vector3f(50f));
         scene.add(plane);
 
