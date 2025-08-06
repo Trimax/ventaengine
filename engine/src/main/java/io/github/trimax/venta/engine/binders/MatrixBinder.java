@@ -18,7 +18,7 @@ public final class MatrixBinder extends AbstractBinder {
     }
 
     public void bindNormalMatrix(final ProgramEntityImplementation program, final FloatBuffer matrixNormal) {
-        bindMatrix4(program.getUniformID(ShaderUniform.MatrixNormal), matrixNormal);
+        bindMatrix3(program.getUniformID(ShaderUniform.MatrixNormal), matrixNormal);
     }
 
     public void bindModelMatrix(final ProgramEntityImplementation program, final FloatBuffer matrixModel) {
