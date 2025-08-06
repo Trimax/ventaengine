@@ -1,9 +1,11 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.dto.LightDTO;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.joml.Vector3f;
 
 @Getter
@@ -12,15 +14,26 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     private final Vector3f direction = new Vector3f(0.f, 0.f, 0.f);
     private final Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
 
+    private final LightType type;
     private Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
     private float intensity = 1.f;
 
-    LightInstanceImplementation(@NonNull final String name, @NonNull final GizmoInstanceImplementation gizmo) {
+    @Setter
+    private boolean castShadows = false;
+
+    @Setter
+    private boolean enabled = true;
+
+    LightInstanceImplementation(@NonNull final String name,
+                                @NonNull final LightType type,
+                                @NonNull final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
+
+        this.type = type;
     }
 
     public LightInstanceImplementation(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoInstanceImplementation gizmo) {
-        this(name, gizmo);
+        this(name, dto.type(), gizmo);
 
         setColor(dto.color());
         setAttenuation(attenuation);

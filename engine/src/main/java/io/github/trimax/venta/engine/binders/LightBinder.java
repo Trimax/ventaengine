@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.LightInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +28,14 @@ public final class LightBinder extends AbstractBinder {
     }
 
     private void bind(final ProgramEntityImplementation program, final LightInstance light, final int lightIndex) {
-        bind(program.getUniformID(ShaderLightUniform.Type.getUniformName(lightIndex)), 0); //TODO: Only point light supported so far
-        bind(program.getUniformID(ShaderLightUniform.Enabled.getUniformName(lightIndex)), 1);
-        bind(program.getUniformID(ShaderLightUniform.CastShadows.getUniformName(lightIndex)), 0); //TODO: Pass from view
+        if (light instanceof LightInstanceImplementation instance)
+            bind(program, instance, lightIndex);
+    }
+
+    private void bind(final ProgramEntityImplementation program, final LightInstanceImplementation light, final int lightIndex) {
+        bind(program.getUniformID(ShaderLightUniform.Type.getUniformName(lightIndex)), light.getType().getValue());
+        bind(program.getUniformID(ShaderLightUniform.Enabled.getUniformName(lightIndex)), light.isEnabled());
+        bind(program.getUniformID(ShaderLightUniform.CastShadows.getUniformName(lightIndex)), light.isCastShadows());
 
         /* Position and direction */
         bind(program.getUniformID(ShaderLightUniform.Position.getUniformName(lightIndex)), light.getPosition());

@@ -1,8 +1,11 @@
 package io.github.trimax.venta.engine.model.instance;
 
+import io.github.trimax.venta.engine.enums.LightType;
 import org.joml.Vector3f;
 
 public interface LightInstance extends AbstractInstance {
+    LightType getType();
+
     Vector3f getPosition();
 
     Vector3f getDirection();
@@ -22,6 +25,14 @@ public interface LightInstance extends AbstractInstance {
     void setColor(final Vector3f color);
 
     void setAttenuation(final Attenuation attenuation);
+
+    boolean isEnabled();
+
+    void setEnabled(final boolean value);
+
+    boolean isCastShadows();
+
+    void setCastShadows(final boolean value);
 
     record Attenuation(float constant, float linear, float quadratic) {}
 }
