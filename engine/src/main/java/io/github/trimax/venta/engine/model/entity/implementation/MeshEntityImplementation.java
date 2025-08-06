@@ -1,14 +1,12 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
-import io.github.trimax.venta.engine.model.entity.MaterialEntity;
-import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
-import lombok.AccessLevel;
+import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor
 public final class MeshEntityImplementation extends AbstractEntityImplementation implements MeshEntity {
     private final int verticesCount;
     private final int facetsCount;
@@ -20,37 +18,4 @@ public final class MeshEntityImplementation extends AbstractEntityImplementation
     private final int edgesBufferID;
 
     private final BoundingBox boundingBox;
-
-    private MaterialEntityImplementation material;
-
-    public MeshEntityImplementation(final int verticesCount,
-                                    final int facetsCount,
-                                    final int edgesCount,
-                                    final int vertexArrayObjectID,
-                                    final int verticesBufferID,
-                                    final int facetsBufferID,
-                                    final int edgesBufferID,
-                                    final BoundingBox boundingBox) {
-        this.verticesCount = verticesCount;
-        this.facetsCount = facetsCount;
-        this.edgesCount = edgesCount;
-
-        this.vertexArrayObjectID = vertexArrayObjectID;
-        this.verticesBufferID = verticesBufferID;
-        this.facetsBufferID = facetsBufferID;
-        this.edgesBufferID = edgesBufferID;
-
-        this.boundingBox = boundingBox;
-    }
-
-    @Override
-    public void setMaterial(final MaterialEntity material) {
-        if (material instanceof MaterialEntityImplementation entity)
-            this.material = entity;
-    }
-
-    @Override
-    public boolean hasMaterial() {
-        return material != null;
-    }
 }

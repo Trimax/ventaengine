@@ -105,6 +105,9 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         private SceneInstance scene;
 
         public ObjectRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
+            normalMatrixBuffer.clear();
+            modelMatrixBuffer.clear();
+
             modelMatrix.identity()
                     .translate(position)
                     .rotateX(rotation.x)
@@ -119,6 +122,9 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         }
 
         public ObjectRenderContext withModelMatrix(final Matrix4f matrix) {
+            normalMatrixBuffer.clear();
+            modelMatrixBuffer.clear();
+
             modelMatrix.identity()
                     .set(matrix);
             modelMatrix.get(modelMatrixBuffer);
