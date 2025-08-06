@@ -1,35 +1,36 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
-import io.github.trimax.venta.engine.model.entity.ProgramEntity;
-import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.instance.ObjectInstance;
+import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.hierarchy.Node;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import lombok.Getter;
 import org.joml.Vector3f;
 
 @Getter
 public final class ObjectInstanceImplementation extends AbstractInstanceImplementation implements ObjectInstance {
     private final Transform transform = new Transform();
+    private final Node<MeshReference> mesh;
     private final BoundingBox box;
+
+    private ProgramEntityImplementation program;
 
     private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
     private boolean isLit = true;
 
-    private ProgramEntityImplementation program;
-    private MeshEntityImplementation mesh;
-
     public ObjectInstanceImplementation(final String name,
                                         final ProgramEntity program,
-                                        final MeshEntityImplementation mesh,
+                                        final Node<MeshReference> mesh,
                                         final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
         this.mesh = mesh;
-        this.box = BoundingBox.of(mesh.getBoundingBox());
+        this.box = BoundingBox.of(mesh.value().mesh().getBoundingBox());
 
         setProgram(program);
     }

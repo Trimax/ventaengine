@@ -1,8 +1,10 @@
 package io.github.trimax.venta.engine.model.common.hierarchy;
 
-import io.github.trimax.venta.engine.model.entity.MaterialEntity;
-import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 
-public record MeshReference(MeshEntity mesh, MaterialEntity material, Transform transform) {
+public record MeshReference(MeshEntityImplementation mesh,
+                            MaterialEntityImplementation material,
+                            Transform transform) {
 }
