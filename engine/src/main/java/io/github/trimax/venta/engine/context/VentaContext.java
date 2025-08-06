@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.context;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.factories.ManagerFactory;
 import io.github.trimax.venta.engine.factories.RegistryFactory;
+import io.github.trimax.venta.engine.factories.RepositoryFactory;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.managers.ObjectManager;
@@ -13,6 +14,7 @@ import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplem
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.registries.*;
 import io.github.trimax.venta.engine.registries.implementation.*;
+import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaContext {
+    private final RepositoryFactory repositoryFactory;
     private final RegistryFactory registryFactory;
     private final ManagerFactory managerFactory;
 
@@ -66,5 +69,11 @@ public final class VentaContext {
 
     public MeshRegistry getMeshRegistry() {
         return registryFactory.get(MeshRegistryImplementation.class);
+    }
+
+    /*** Repositories ***/
+
+    public ObjectRepositoryImplementation getObjectRepository() {
+        return repositoryFactory.get(ObjectRepositoryImplementation.class);
     }
 }
