@@ -36,7 +36,7 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
         this(name, dto.type(), gizmo);
 
         setColor(dto.color());
-        setAttenuation(attenuation);
+        setAttenuation(dto.attenuation().getAttenuation());
     }
 
     @Override
