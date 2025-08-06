@@ -33,7 +33,6 @@ public final class SceneInstanceRenderer
 
         for (final ObjectInstance object : scene.getObjects())
             try (final var _ = objectRenderer.withContext(getContext())
-                    .withModelMatrix(object.getPosition(), object.getRotation(), object.getScale())
                     .withScene(scene)) {
                 objectRenderer.render(objectManager.getInstance(object.getID()));
             }

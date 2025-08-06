@@ -16,12 +16,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11C.glPolygonMode;
@@ -69,11 +64,13 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         //TODO: Do not create the matrix here. Reuse buffer
         final Matrix4f localMatrix = new Matrix4f(parentMatrix);
-        if (node.value() != null)
-            localMatrix.mul(node.value().transform().getMatrix());
+        if (node.hasValue()) {
+            final var reference = node.value();
+            if (reference.hasTransform())
+                localMatrix.mul(node.value().transform().getMatrix());
 
-        if (node.value() != null)
-            render(program, node.value(), localMatrix);
+            render(program, reference, localMatrix);
+        }
 
         if (node.hasChildren())
             for (final Node<MeshReference> child : node.children())
@@ -81,14 +78,10 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
     }
 
     private void render(final ProgramEntityImplementation program, final MeshReference reference, final Matrix4f modelMatrix) {
-        getContext().withModelMatrix(modelMatrix);
-
-        matrixBinder.bindModelMatrix(program, getContext().getModelMatrixBuffer());
-        matrixBinder.bindNormalMatrix(program, getContext().getNormalMatrixBuffer());
-
         if (reference.hasMesh())
             try (var _ = meshRenderer.withContext(getContext())
                     .withMaterial(reference.material())
+                    .withModelMatrix(modelMatrix)
                     .withProgram(program)) {
                 meshRenderer.render(reference.mesh());
             }
@@ -97,42 +90,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class ObjectRenderContext extends AbstractRenderContext<SceneInstanceRenderer.SceneRenderContext> {
-        private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
-        private final FloatBuffer normalMatrixBuffer = MemoryUtil.memAllocFloat(9);
-        private final Matrix3f normalMatrix = new Matrix3f();
-        private final Matrix4f modelMatrix = new Matrix4f();
-
         private SceneInstance scene;
-
-        public ObjectRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
-            normalMatrixBuffer.clear();
-            modelMatrixBuffer.clear();
-
-            modelMatrix.identity()
-                    .translate(position)
-                    .rotateX(rotation.x)
-                    .rotateY(rotation.y)
-                    .rotateZ(rotation.z)
-                    .scale(scale);
-            modelMatrix.get(modelMatrixBuffer);
-
-            modelMatrix.normal(normalMatrix);
-            normalMatrix.get(normalMatrixBuffer);
-            return this;
-        }
-
-        public ObjectRenderContext withModelMatrix(final Matrix4f matrix) {
-            normalMatrixBuffer.clear();
-            modelMatrixBuffer.clear();
-
-            modelMatrix.identity()
-                    .set(matrix);
-            modelMatrix.get(modelMatrixBuffer);
-
-            modelMatrix.normal(normalMatrix);
-            normalMatrix.get(normalMatrixBuffer);
-            return this;
-        }
 
         public ObjectRenderContext withScene(final SceneInstance scene) {
             this.scene = scene;
@@ -141,15 +99,11 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         @Override
         public void close() {
-            normalMatrixBuffer.clear();
-            modelMatrixBuffer.clear();
             scene = null;
         }
 
         @Override
         public void destroy() {
-            MemoryUtil.memFree(normalMatrixBuffer);
-            MemoryUtil.memFree(modelMatrixBuffer);
         }
     }
 }

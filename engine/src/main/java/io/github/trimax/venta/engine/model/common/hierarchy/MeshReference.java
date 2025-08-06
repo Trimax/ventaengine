@@ -10,4 +10,8 @@ public record MeshReference(MeshEntityImplementation mesh,
     public boolean hasMesh() {
         return mesh != null;
     }
+
+    public boolean hasTransform() {
+        return transform != null;
+    }
 }
