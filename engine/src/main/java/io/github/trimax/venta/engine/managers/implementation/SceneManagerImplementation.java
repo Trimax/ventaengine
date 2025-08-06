@@ -21,12 +21,12 @@ import java.util.Optional;
 public final class SceneManagerImplementation
         extends AbstractManagerImplementation<SceneInstanceImplementation, SceneInstance>
         implements SceneManager {
-    private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
 
     @Getter(onMethod_ = @__(@Override))
     private SceneInstanceImplementation current;
 
+    // TODO: This method will be replaced with the method create(name, scenePrefab)
     @Override
     public SceneInstanceImplementation load(@NonNull final String name) {
         log.info("Loading scene {}", name);
@@ -34,7 +34,7 @@ public final class SceneManagerImplementation
         final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s.json", name), SceneDTO.class);
         final var scene = new SceneInstanceImplementation(name);
 
-        /* TODO: Implement
+        /*
         if (sceneDTO.hasObjects())
             for (final var sceneObject : sceneDTO.objects()) {
                 final var object = objectManager.load(sceneObject.name());

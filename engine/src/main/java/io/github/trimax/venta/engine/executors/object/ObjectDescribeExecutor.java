@@ -4,14 +4,8 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
-import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.common.hierarchy.Node;
-import io.github.trimax.venta.engine.model.entity.implementation.AbstractEntityImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -38,7 +32,6 @@ public final class ObjectDescribeExecutor extends AbstractObjectExecutor {
         getConsole().header("Object <%s>:", object.getID());
         getConsole().info("         Name: %s", object.getName());
         getConsole().info("   Program ID: %s", object.hasProgram() ? object.getProgram().getID() : "not assigned");
-        getConsole().info("      Mesh ID: %s", Optional.of(object).map(ObjectInstanceImplementation::getMesh).map(Node::value).map(MeshReference::mesh).map(AbstractEntityImplementation::getID).orElse("not assigned"));
         getConsole().info("     Position: %s", object.getPosition());
         getConsole().info("     Rotation: %s", object.getRotation());
         getConsole().info("        Scale: %s", object.getScale());
