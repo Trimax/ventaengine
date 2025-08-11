@@ -32,10 +32,9 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
 
         final Maze maze = new Maze(ResourceUtil.loadAsString("/maze/maze.txt"), CUBE_SIZE, CUBE_SIZE);
         for (int x = 0; x < CUBE_SIZE; x++) {
-            for (int z = 0; z < CUBE_SIZE; z++) {
+            for (int z = 0; z < CUBE_SIZE; z++)
                 if (maze.hasCube(x, z))
                     placeCube(x, z, context, scene);
-            }
         }
     }
 
@@ -46,7 +45,7 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
         scene.add(miniCube);
     }
 
-    static class Maze {
+    private static class Maze {
         private final String value;
         private final int width;
         private final int length;
