@@ -11,4 +11,6 @@ public interface LightManager extends AbstractManager<LightInstance> {
 
     LightInstance create(@NonNull final String name,
                          @NonNull final LightParameters parameters);
+
+    void delete(@NonNull final LightInstance instance);
 }

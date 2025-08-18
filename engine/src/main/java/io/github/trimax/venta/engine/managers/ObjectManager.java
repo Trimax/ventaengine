@@ -11,4 +11,6 @@ public interface ObjectManager extends AbstractManager<ObjectInstance> {
 
     ObjectInstance create(@NonNull final String name,
                           @NonNull final ObjectParameters parameters);
+
+    void delete(@NonNull final ObjectInstance instance);
 }
