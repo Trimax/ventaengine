@@ -1,8 +1,9 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.enums.LightType;
-import io.github.trimax.venta.engine.model.dto.LightDTO;
+import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
+import io.github.trimax.venta.engine.model.parameters.LightParameters;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -32,11 +33,13 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
         this.type = type;
     }
 
-    public LightInstanceImplementation(@NonNull final String name, @NonNull final LightDTO dto, @NonNull final GizmoInstanceImplementation gizmo) {
-        this(name, dto.type(), gizmo);
+    public LightInstanceImplementation(@NonNull final String name, @NonNull final LightParameters parameters, @NonNull final GizmoInstanceImplementation gizmo) {
+        this(name, parameters.getType(), gizmo);
 
-        setColor(dto.color());
-        setAttenuation(dto.attenuation().getAttenuation());
+        setCastShadows(parameters.isCastShadows());
+        setAttenuation(parameters.getAttenuation());
+        setIntensity(parameters.getIntensity());
+        setColor(parameters.getColor());
     }
 
     @Override

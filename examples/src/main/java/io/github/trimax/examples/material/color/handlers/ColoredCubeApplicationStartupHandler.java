@@ -14,7 +14,7 @@ public final class ColoredCubeApplicationStartupHandler implements VentaEngineSt
         cube.setScale(new Vector3f(5.f));
         scene.add(cube);
 
-        final var lightXZ = context.getLightManager().load("basic.json");
+        final var lightXZ = context.getLightManager().create("XZ light", context.getLightRepository().get("basic.json"));
         lightXZ.setPosition(new Vector3f(3.f, 3.f, 3.f));
         lightXZ.setIntensity(6.0f);
         scene.add(lightXZ);

@@ -3,7 +3,7 @@ package io.github.trimax.examples.maze.handlers;
 import io.github.trimax.examples.maze.state.MazeApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
-import io.github.trimax.venta.engine.model.instance.LightInstance;
+import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AllArgsConstructor;
@@ -24,9 +24,9 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
         camera.lookAt(new Vector3f(0.f, 0.5f, 10.f));
         state.setCamera(camera);
 
-        final var light = context.getLightManager().load("basic.json");
+        final var light = context.getLightManager().create("Flashlight", context.getLightRepository().get("basic.json"));
         light.setIntensity(3.0f);
-        light.setAttenuation(new LightInstance.Attenuation(1.0f, 1.5f, 2.0f));
+        light.setAttenuation(new Attenuation(1.0f, 1.5f, 2.0f));
         state.setLight(light);
         scene.add(light);
 
