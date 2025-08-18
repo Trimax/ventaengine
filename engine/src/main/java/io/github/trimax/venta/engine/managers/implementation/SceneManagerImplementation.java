@@ -4,8 +4,10 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
+import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public final class SceneManagerImplementation
         extends AbstractManagerImplementation<SceneInstanceImplementation, SceneInstance>
         implements SceneManager {
+    private final ObjectRepositoryImplementation objectRepository;
+    private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
 
     @Getter(onMethod_ = @__(@Override))
@@ -34,17 +38,15 @@ public final class SceneManagerImplementation
         final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s", name), SceneDTO.class);
         final var scene = new SceneInstanceImplementation(name);
 
-        /*
         if (sceneDTO.hasObjects())
             for (final var sceneObject : sceneDTO.objects()) {
-                final var object = objectManager.load(sceneObject.name());
+                final var object = objectManager.create(sceneObject.name(), objectRepository.get(sceneObject.object()));
                 Optional.of(sceneObject).map(SceneObjectDTO::position).ifPresent(object::setPosition);
                 Optional.of(sceneObject).map(SceneObjectDTO::angles).ifPresent(object::setRotation);
                 Optional.of(sceneObject).map(SceneObjectDTO::scale).ifPresent(object::setScale);
 
                 scene.add(object);
             }
-         */
 
         if (sceneDTO.hasLights())
             for (final var sceneLight : sceneDTO.lights()) {
