@@ -50,6 +50,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
                                 final VentaEngineInputHandler handler) {
         log.info("Initializing window");
 
+        glfwWindowHint(GLFW_SAMPLES, 4); // Antialiasing
         final var id = memory.getWindows().create(() -> glfwCreateWindow(width, height, title, monitorID, NULL), "Window %s", title);
         if (id == NULL)
             throw new WindowCreationException(title);
