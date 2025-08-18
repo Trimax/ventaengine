@@ -4,10 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.callbacks.ErrorCallback;
 import io.github.trimax.venta.engine.console.ConsoleCommandExecutor;
 import io.github.trimax.venta.engine.context.VentaContext;
-import io.github.trimax.venta.engine.controllers.ConsoleController;
-import io.github.trimax.venta.engine.controllers.EngineController;
-import io.github.trimax.venta.engine.controllers.TextController;
-import io.github.trimax.venta.engine.controllers.WindowController;
+import io.github.trimax.venta.engine.controllers.*;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
@@ -43,6 +40,7 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+        controllerFactory.get(KeyboardController.class).initialize();
         controllerFactory.get(EngineController.class).initialize(ventaEngineApplication);
         controllerFactory.get(WindowController.class).initialize(ventaEngineApplication);
         GL.createCapabilities();

@@ -21,6 +21,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WindowController extends AbstractController<WindowState, VentaEngineApplication> {
     private final ConsoleCommandQueue consoleCommandQueue;
+    private final KeyboardController keyboardController;
     private final ConsoleController consoleController;
     private final Memory memory;
 
@@ -64,7 +65,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
         glfwSetMouseButtonCallback(id, new MouseButtonCallback(this));
         glfwSetCursorPosCallback(id, new MouseCursorCallback(this));
         glfwSetCharCallback(id, new KeyboardCharCallback(consoleController));
-        glfwSetKeyCallback(id, new KeyboardKeyCallback(consoleCommandQueue, consoleController, this));
+        glfwSetKeyCallback(id, new KeyboardKeyCallback(consoleCommandQueue, keyboardController, consoleController, this));
 
         glfwMakeContextCurrent(id);
 

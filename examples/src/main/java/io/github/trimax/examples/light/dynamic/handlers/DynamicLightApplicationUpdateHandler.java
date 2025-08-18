@@ -7,6 +7,8 @@ import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import lombok.RequiredArgsConstructor;
 import org.joml.Vector3f;
 
+import java.util.function.Predicate;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 @RequiredArgsConstructor
@@ -15,7 +17,7 @@ public final class DynamicLightApplicationUpdateHandler implements VentaEngineUp
 
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
         state.getCube().rotate(state.getCubeRotationVelocity());
-        handleCubeRotation();
+        handleCubeRotation(context::isButtonPushed);
 
         state.getLightXZ().setPosition(
                 new Vector3f(2.5f * (float) Math.sin(time.getTimeElapsed()), 2.5f, 2.5f * (float) Math.cos(time.getTimeElapsed())));
@@ -27,18 +29,19 @@ public final class DynamicLightApplicationUpdateHandler implements VentaEngineUp
                 new Vector3f(2.5f, 2.5f * (float) Math.cos(time.getTimeElapsed()), 2.5f * (float) Math.sin(time.getTimeElapsed())));
     }
 
-    private void handleCubeRotation() {
+    private void handleCubeRotation(final Predicate<Integer> isButtonPushed) {
         state.getCubeRotationVelocity().set(0.f);
-        if (state.getPushedButtons().contains(GLFW_KEY_LEFT))
+
+        if (isButtonPushed.test(GLFW_KEY_LEFT))
             state.getCubeRotationVelocity().y = -0.05f;
 
-        if (state.getPushedButtons().contains(GLFW_KEY_RIGHT))
+        if (isButtonPushed.test(GLFW_KEY_RIGHT))
             state.getCubeRotationVelocity().y = 0.05f;
 
-        if (state.getPushedButtons().contains(GLFW_KEY_UP))
+        if (isButtonPushed.test(GLFW_KEY_UP))
             state.getCubeRotationVelocity().x = -0.05f;
 
-        if (state.getPushedButtons().contains(GLFW_KEY_DOWN))
+        if (isButtonPushed.test(GLFW_KEY_DOWN))
             state.getCubeRotationVelocity().x = 0.05f;
     }
 }

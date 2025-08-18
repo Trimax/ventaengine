@@ -1,12 +1,10 @@
 package io.github.trimax.examples.maze;
 
-import io.github.trimax.examples.maze.handlers.MazeApplicationInputHandler;
 import io.github.trimax.examples.maze.handlers.MazeApplicationStartupHandler;
 import io.github.trimax.examples.maze.handlers.MazeApplicationUpdateHandler;
 import io.github.trimax.examples.maze.state.MazeApplicationState;
 import io.github.trimax.venta.engine.VentaEngine;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
-import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import lombok.NonNull;
@@ -19,11 +17,6 @@ public final class MazeVentaApplication implements VentaEngineApplication {
     @Override
     public @NonNull VentaEngineStartupHandler getStartupHandler() {
         return new MazeApplicationStartupHandler(state);
-    }
-
-    @Override
-    public @NonNull VentaEngineInputHandler getInputHandler() {
-        return new MazeApplicationInputHandler(state);
     }
 
     @Override
