@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL33C.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL33C.glEnable;
 
@@ -44,6 +45,7 @@ public final class Engine implements Runnable {
         controllerFactory.get(EngineController.class).initialize(ventaEngineApplication);
         controllerFactory.get(WindowController.class).initialize(ventaEngineApplication);
         GL.createCapabilities();
+        glEnable(GL_MULTISAMPLE);
 
         controllerFactory.get(ConsoleController.class).initialize();
         controllerFactory.get(TextController.class).initialize();
