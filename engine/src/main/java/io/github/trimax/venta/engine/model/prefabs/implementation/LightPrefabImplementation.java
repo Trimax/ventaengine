@@ -19,6 +19,6 @@ public class LightPrefabImplementation extends AbstractPrefabImplementation impl
     boolean castShadows;
 
     public LightPrefabImplementation(final LightPrefabDTO dto) {
-        this(dto.type(), dto.color(), dto.attenuation().getAttenuation(), dto.intensity(), dto.range(), dto.castShadows());
+        this(dto.type(), dto.color(), dto.attenuation(), dto.intensity(), dto.range(), dto.castShadows());
     }
 }

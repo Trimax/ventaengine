@@ -18,8 +18,10 @@ import io.github.trimax.venta.engine.registries.*;
 import io.github.trimax.venta.engine.registries.implementation.*;
 import io.github.trimax.venta.engine.repositories.LightRepository;
 import io.github.trimax.venta.engine.repositories.ObjectRepository;
+import io.github.trimax.venta.engine.repositories.SceneRepository;
 import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
+import io.github.trimax.venta.engine.repositories.implementation.SceneRepositoryImplementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +87,10 @@ public final class VentaContext {
 
     public LightRepository getLightRepository() {
         return repositoryFactory.get(LightRepositoryImplementation.class);
+    }
+
+    public SceneRepository getSceneRepository() {
+        return repositoryFactory.get(SceneRepositoryImplementation.class);
     }
 
     /*** Keyboard ***/

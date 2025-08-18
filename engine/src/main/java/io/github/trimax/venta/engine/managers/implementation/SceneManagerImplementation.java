@@ -1,15 +1,16 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.SceneManager;
-import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
+import io.github.trimax.venta.engine.model.prefabs.implementation.ScenePrefabImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -33,12 +34,19 @@ public final class SceneManagerImplementation
     private SceneInstanceImplementation current;
 
     @Override
-    public SceneInstanceImplementation load(@NonNull final String name) {
+    public SceneInstanceImplementation create(@NonNull final String name, @NonNull final ScenePrefab prefab) {
+        if (prefab instanceof ScenePrefabImplementation scene)
+            return create(name, scene);
+
+        throw new UnknownInstanceException(prefab.getClass());
+    }
+
+    private SceneInstanceImplementation create(@NonNull final String name, @NonNull final ScenePrefabImplementation prefab) {
         log.info("Loading scene {}", name);
 
-        final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s", name), SceneDTO.class);
         final var scene = new SceneInstanceImplementation(name);
 
+        final var sceneDTO = prefab.getDto();
         if (sceneDTO.hasObjects())
             for (final var sceneObject : sceneDTO.objects()) {
                 final var object = objectManager.create(sceneObject.name(), objectRepository.get(sceneObject.object()));
