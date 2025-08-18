@@ -1,6 +1,8 @@
 package io.github.trimax.venta.engine.context;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.controllers.KeyboardController;
+import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.factories.ManagerFactory;
 import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.factories.RepositoryFactory;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaContext {
+    private final ControllerFactory controllerFactory;
     private final RepositoryFactory repositoryFactory;
     private final RegistryFactory registryFactory;
     private final ManagerFactory managerFactory;
@@ -75,5 +78,10 @@ public final class VentaContext {
 
     public ObjectRepositoryImplementation getObjectRepository() {
         return repositoryFactory.get(ObjectRepositoryImplementation.class);
+    }
+
+    /*** Keyboard ***/
+    public boolean isButtonPushed(final int key) {
+        return controllerFactory.get(KeyboardController.class).get().isButtonPushed(key);
     }
 }

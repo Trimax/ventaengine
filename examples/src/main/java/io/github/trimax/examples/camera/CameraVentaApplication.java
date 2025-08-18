@@ -1,13 +1,11 @@
 package io.github.trimax.examples.camera;
 
-import io.github.trimax.examples.camera.handlers.CameraApplicationInputHandler;
 import io.github.trimax.examples.camera.handlers.CameraApplicationStartupHandler;
 import io.github.trimax.examples.camera.handlers.CameraApplicationUpdateHandler;
 import io.github.trimax.examples.camera.state.CameraApplicationState;
 import io.github.trimax.venta.engine.VentaEngine;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
-import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import lombok.NonNull;
@@ -30,11 +28,6 @@ public final class CameraVentaApplication implements VentaEngineApplication {
     @Override
     public @NonNull VentaEngineStartupHandler getStartupHandler() {
         return new CameraApplicationStartupHandler(state);
-    }
-
-    @Override
-    public @NonNull VentaEngineInputHandler getInputHandler() {
-        return new CameraApplicationInputHandler(state);
     }
 
     @Override

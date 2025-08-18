@@ -1,15 +1,15 @@
 package io.github.trimax.examples.light.dynamic.handlers;
 
-import static org.lwjgl.glfw.GLFW.*;
-
-import java.util.Random;
-
-import org.joml.Vector3f;
-
 import io.github.trimax.examples.light.dynamic.state.DynamicLightApplicationState;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+
+import java.util.Random;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 @Slf4j
 @AllArgsConstructor
@@ -18,12 +18,6 @@ public final class DynamicLightApplicationInputHandler implements VentaEngineInp
 
     @Override
     public void onKey(final int key, final int scancode, final int action, final int mods) {
-        if (action == GLFW_PRESS)
-            state.getPushedButtons().add(key);
-
-        if (action == GLFW_RELEASE)
-            state.getPushedButtons().remove(key);
-
         if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
             state.getLightXZ().setColor(createRandomVector3());
             state.getLightXY().setColor(createRandomVector3());

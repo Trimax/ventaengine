@@ -18,16 +18,16 @@ public final class CameraApplicationUpdateHandler implements VentaEngineUpdateHa
     private final CameraApplicationState state;
 
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
-        if (state.getPushedButtons().contains(GLFW_KEY_DOWN))
+        if (context.isButtonPushed(GLFW_KEY_DOWN))
             state.setCameraDistance(state.getCameraDistance() + (float) time.getDelta());
 
-        if (state.getPushedButtons().contains(GLFW_KEY_UP))
+        if (context.isButtonPushed(GLFW_KEY_UP))
             state.setCameraDistance(Math.max(state.getCameraDistance() - (float) time.getDelta(), MINIMAL_CAMERA_DISTANCE));
 
-        if (state.getPushedButtons().contains(GLFW_KEY_LEFT))
+        if (context.isButtonPushed(GLFW_KEY_LEFT))
             state.setCameraAngle(state.getCameraAngle() + (float) time.getDelta());
 
-        if (state.getPushedButtons().contains(GLFW_KEY_RIGHT))
+        if (context.isButtonPushed(GLFW_KEY_RIGHT))
             state.setCameraAngle(state.getCameraAngle() - (float) time.getDelta());
 
         state.getCamera().setPosition(new Vector3f((float) Math.sin(state.getCameraAngle()), 1, (float) Math.cos(state.getCameraAngle())).mul(state.getCameraDistance()));
