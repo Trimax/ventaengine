@@ -1,0 +1,16 @@
+{
+  "program": "basic.json",
+  "root": {
+    "name": "castle",
+    "value": {
+      "name": "Castle",
+      "mesh": "castle.obj",
+      "material": "castle.json",
+      "transform": {
+        "position": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
+        "scale": {"x": 0.1, "y": 0.1, "z": 0.1}
+      }
+    }
+  }
+}

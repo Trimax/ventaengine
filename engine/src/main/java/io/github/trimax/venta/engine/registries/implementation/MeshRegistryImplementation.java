@@ -1,13 +1,15 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.exceptions.UnknownFileFormatException;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
+import io.github.trimax.venta.engine.parsers.JsonParsingStrategy;
+import io.github.trimax.venta.engine.parsers.ObjParsingStrategy;
 import io.github.trimax.venta.engine.registries.MeshRegistry;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -36,7 +38,15 @@ public final class MeshRegistryImplementation
     protected MeshEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         log.info("Loading mesh {}", resourcePath);
 
-        return createMesh(resourcePath, ResourceUtil.loadAsObject(String.format("/meshes/%s", resourcePath), MeshDTO.class));
+        //TODO: Reimplement it with automatic detection
+        final var extension = resourcePath.substring(resourcePath.lastIndexOf('.') + 1).toLowerCase();
+        final var parsingStrategy = switch (extension) {
+            case "json" -> new JsonParsingStrategy();
+            case "obj"  -> new ObjParsingStrategy();
+            default     -> throw new UnknownFileFormatException("." + extension);
+        };
+
+        return createMesh(resourcePath, parsingStrategy.parse(String.format("/meshes/%s", resourcePath)));
     }
 
     private MeshEntityImplementation createMesh(final String resourcePath, final MeshDTO meshDTO) {
