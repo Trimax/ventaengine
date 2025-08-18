@@ -68,6 +68,12 @@ public final class ObjectManagerImplementation
     }
 
     @Override
+    public void delete(@NonNull final ObjectInstance instance) {
+        if (instance instanceof ObjectInstanceImplementation object)
+            super.delete(object);
+    }
+
+    @Override
     protected void destroy(final ObjectInstanceImplementation object) {
         log.info("Destroying object {} ({})", object.getID(), object.getName());
     }

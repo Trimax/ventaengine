@@ -49,6 +49,12 @@ public final class LightManagerImplementation
     }
 
     @Override
+    public void delete(@NonNull final LightInstance instance) {
+        if (instance instanceof LightInstanceImplementation light)
+            super.delete(light);
+    }
+
+    @Override
     protected void destroy(final LightInstanceImplementation light) {
         log.info("Destroying light {} ({})", light.getID(), light.getName());
     }
