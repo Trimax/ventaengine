@@ -1,16 +1,12 @@
 package io.github.trimax.venta.engine.model.instance;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
-import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.common.hierarchy.Node;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.NonNull;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 public interface ObjectInstance extends AbstractInstance {
-    Node<MeshReference> getMesh();
-
     Vector3fc getPosition();
 
     Vector3fc getRotation();
@@ -22,8 +18,6 @@ public interface ObjectInstance extends AbstractInstance {
     boolean isLit();
 
     boolean hasProgram();
-
-    boolean hasMesh();
 
     DrawMode getDrawMode();
 

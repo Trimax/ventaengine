@@ -2,9 +2,7 @@ package io.github.trimax.examples.debug.handlers;
 
 import io.github.trimax.examples.debug.state.DebugApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
-import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
-import io.github.trimax.venta.engine.model.parameters.LightParameters;
 import lombok.AllArgsConstructor;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -23,12 +21,10 @@ public final class DebugApplicationStartupHandler implements VentaEngineStartupH
         context.getCameraManager().getCurrent().setPosition(new Vector3f(3.f, 3.f, 3.f));
         context.getCameraManager().getCurrent().lookAt(new Vector3f(0.f));
 
-        final var light = context.getLightManager().create("Default light", LightParameters.builder()
-                .type(LightType.Point)
-                .color(new Vector3f(1.f, 1.f, 1.f))
-                .intensity(2.f)
-                .build());
+        final var light = context.getLightManager().create("Default light", context.getLightRepository().get("point.json"));
         light.setPosition(new Vector3f(0.f, 2.f, 0.f));
+        light.setColor(new Vector3f(1.f, 1.f, 1.f));
+        light.setIntensity(2.f);
         scene.add(light);
 
         final var xCamera = context.getCameraManager().create("X Camera");
