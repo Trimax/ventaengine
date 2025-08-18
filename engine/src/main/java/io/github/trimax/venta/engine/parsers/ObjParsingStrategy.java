@@ -1,0 +1,123 @@
+package io.github.trimax.venta.engine.parsers;
+
+import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import io.github.trimax.venta.engine.utils.ResourceUtil;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+@Slf4j
+public final class ObjParsingStrategy implements AbstractParsingStrategy<MeshDTO> {
+    @Override
+    @SneakyThrows
+    public MeshDTO parse(@NonNull final String resourcePath) {
+        try (final var reader = new BufferedReader(new InputStreamReader(ResourceUtil.loadAsInputStream(resourcePath)))) {
+            return parse(reader);
+        }
+    }
+
+    private MeshDTO parse(final BufferedReader reader) throws IOException {
+        final List<Vector3f> positions = new ArrayList<>();
+        final List<Vector3f> normals = new ArrayList<>();
+        final List<Vector2f> textureCoordinates = new ArrayList<>();
+        final List<MeshDTO.Vertex> vertices = new ArrayList<>();
+        final List<MeshDTO.Facet> facets = new ArrayList<>();
+        final List<MeshDTO.Edge> edges = new ArrayList<>();
+
+        final Map<String, Integer> vertexCache = new HashMap<>();
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
+            if (line.isEmpty() || line.startsWith("#"))
+                continue;
+
+            final var tokens = line.split("\\s+");
+            switch (tokens[0]) {
+                case "v" -> positions.add(new Vector3f(
+                        Float.parseFloat(tokens[1]),
+                        Float.parseFloat(tokens[2]),
+                        Float.parseFloat(tokens[3])
+                ));
+                case "vt" -> textureCoordinates.add(new Vector2f(
+                        Float.parseFloat(tokens[1]),
+                        1.f - Float.parseFloat(tokens[2])
+                ));
+                case "vn" -> normals.add(new Vector3f(
+                        Float.parseFloat(tokens[1]),
+                        Float.parseFloat(tokens[2]),
+                        Float.parseFloat(tokens[3])
+                ));
+                case "f" -> {
+                    if (tokens.length == 4) {
+                        // The face is a triangle
+                        addFace(tokens[1], tokens[2], tokens[3],
+                                positions, textureCoordinates, normals,
+                                vertices, facets, edges, vertexCache);
+                    } else if (tokens.length == 5) {
+                        // The face is a square
+                        addFace(tokens[1], tokens[2], tokens[3],
+                                positions, textureCoordinates, normals,
+                                vertices, facets, edges, vertexCache);
+                        addFace(tokens[1], tokens[3], tokens[4],
+                                positions, textureCoordinates, normals,
+                                vertices, facets, edges, vertexCache);
+                    } else
+                        log.warn("Unsupported facet (ignored): {}", line);
+                }
+                default -> log.warn("Unsupported type: {}", line);
+            }
+        }
+
+        return new MeshDTO(vertices, facets, edges);
+    }
+
+    private static void addFace(final String a, final String b, final String c,
+                                final List<Vector3f> positions,
+                                final List<Vector2f> textureCoordinates,
+                                final List<Vector3f> normals,
+                                final List<MeshDTO.Vertex> vertices,
+                                final List<MeshDTO.Facet> facets,
+                                final List<MeshDTO.Edge> edges,
+                                final Map<String, Integer> vertexCache) {
+        final String[] arr = {a, b, c};
+        final var faceIndices = new int[3];
+
+        for (int i = 0; i < 3; i++) {
+            final var parts = arr[i].split("/");
+            final var vIdx = Integer.parseInt(parts[0]) - 1;
+
+            final var pos = positions.get(vIdx);
+
+            final var uv = (parts.length > 1 && !parts[1].isEmpty())
+                    ? textureCoordinates.get(Integer.parseInt(parts[1]) - 1)
+                    : null;
+
+            final var normal = (parts.length > 2 && !parts[2].isEmpty())
+                    ? normals.get(Integer.parseInt(parts[2]) - 1)
+                    : null;
+
+            final var key = Arrays.toString(parts);
+            final var vertexIndex = vertexCache.computeIfAbsent(key, _ -> {
+                vertices.add(new MeshDTO.Vertex(pos, normal, uv, new Vector4f(1, 1, 1, 1)));
+                return vertices.size() - 1;
+            });
+
+            faceIndices[i] = vertexIndex;
+        }
+
+        facets.add(new MeshDTO.Facet(faceIndices[0], faceIndices[1], faceIndices[2]));
+
+        edges.add(new MeshDTO.Edge(faceIndices[0], faceIndices[1]));
+        edges.add(new MeshDTO.Edge(faceIndices[1], faceIndices[2]));
+        edges.add(new MeshDTO.Edge(faceIndices[2], faceIndices[0]));
+    }
+}

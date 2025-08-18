@@ -29,4 +29,8 @@ public final class GizmoInstanceImplementation extends AbstractInstanceImplement
         this.rotation.set(rotation);
         this.scale.set(scale);
     }
+
+    public void setScale(final Vector3f scale) {
+        this.scale.set(scale);
+    }
 }
