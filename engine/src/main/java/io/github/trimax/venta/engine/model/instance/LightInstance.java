@@ -3,17 +3,18 @@ package io.github.trimax.venta.engine.model.instance;
 import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 public interface LightInstance extends AbstractInstance {
     LightType getType();
 
-    Vector3f getPosition();
+    Vector3fc getPosition();
 
-    Vector3f getDirection();
+    Vector3fc getDirection();
 
     float getIntensity();
 
-    Vector3f getColor();
+    Vector3fc getColor();
 
     Attenuation getAttenuation();
 
