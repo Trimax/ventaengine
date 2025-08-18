@@ -34,7 +34,7 @@ public final class ObjectRepositoryImplementation
     protected ObjectPrefabImplementation load(@NonNull final String resourcePath) {
         log.info("Loading object {}", resourcePath);
 
-        final var objectDTO = ResourceUtil.loadAsObject(String.format("/objects/%s.json", resourcePath), ObjectPrefabDTO.class);
+        final var objectDTO = ResourceUtil.loadAsObject(String.format("/objects/%s", resourcePath), ObjectPrefabDTO.class);
         return new ObjectPrefabImplementation(programRegistry.get(objectDTO.program()), loadMeshHierarchy(objectDTO.root()));
     }
     

@@ -1,11 +1,11 @@
 {
-  "program": "basic",
+  "program": "basic.json",
   "root": {
     "name": "plane",
     "value": {
       "name": "XZ plane",
-      "mesh": "plane",
-      "material": "stone",
+      "mesh": "plane.json",
+      "material": "stone.json",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},
         "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},

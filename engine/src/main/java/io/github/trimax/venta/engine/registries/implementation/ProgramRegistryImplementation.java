@@ -34,7 +34,7 @@ public final class ProgramRegistryImplementation
     protected ProgramEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         log.info("Loading program {}", resourcePath);
 
-        final var programDTO = ResourceUtil.loadAsObject(String.format("/programs/%s.json", resourcePath), ProgramDTO.class);
+        final var programDTO = ResourceUtil.loadAsObject(String.format("/programs/%s", resourcePath), ProgramDTO.class);
 
         final var id = memory.getPrograms().create(resourcePath);
         glAttachShader(id, shaderRegistry.get(programDTO.shaderVertex(), ShaderType.Vertex).getInternalID());

@@ -45,7 +45,7 @@ public final class TextController extends AbstractController<TextState, Void> {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return new TextState(programRegistry.get("text"),
+        return new TextState(programRegistry.get("text.json"),
                 fontRegistry.get("DejaVuSansMono"),
                 vertexArrayObjectID, verticesBufferID);
     }

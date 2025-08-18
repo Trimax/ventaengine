@@ -24,7 +24,7 @@ public final class LightManagerImplementation
     public LightInstanceImplementation load(@NonNull final String name) {
         log.info("Loading light {}", name);
 
-        return store(new LightInstanceImplementation(name, ResourceUtil.loadAsObject(String.format("/lights/%s.json", name), LightDTO.class),
+        return store(new LightInstanceImplementation(name, ResourceUtil.loadAsObject(String.format("/lights/%s", name), LightDTO.class),
                 gizmoManager.create("light", GizmoType.Light)));
     }
 

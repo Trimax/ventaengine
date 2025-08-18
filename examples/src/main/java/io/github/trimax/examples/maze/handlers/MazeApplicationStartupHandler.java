@@ -24,7 +24,7 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
         camera.lookAt(new Vector3f(0.f, 0.5f, 10.f));
         state.setCamera(camera);
 
-        final var light = context.getLightManager().load("basic");
+        final var light = context.getLightManager().load("basic.json");
         light.setIntensity(3.0f);
         light.setAttenuation(new LightInstance.Attenuation(1.0f, 1.5f, 2.0f));
         state.setLight(light);
@@ -39,7 +39,7 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
 
     public void placeCube(final int x, final int z, final VentaContext context, final SceneInstance scene) {
         final var miniCube = context.getObjectManager().create("cube" + (x * CUBE_SIZE + z),
-                context.getObjectRepository().get("cube"));
+                context.getObjectRepository().get("cube.json"));
         miniCube.setPosition(new Vector3f(x + 0.5f, 0.5f, z + 0.5f));
         scene.add(miniCube);
     }

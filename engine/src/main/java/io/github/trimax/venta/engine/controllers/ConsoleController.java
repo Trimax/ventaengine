@@ -51,7 +51,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return new ConsoleState(programRegistry.get("console"),
+        return new ConsoleState(programRegistry.get("console.json"),
                 consoleVertexArrayObjectID, consoleVerticesBufferID);
     }
 

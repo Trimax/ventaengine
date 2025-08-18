@@ -31,7 +31,7 @@ public final class SceneManagerImplementation
     public SceneInstanceImplementation load(@NonNull final String name) {
         log.info("Loading scene {}", name);
 
-        final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s.json", name), SceneDTO.class);
+        final var sceneDTO = ResourceUtil.loadAsObject(String.format("/scenes/%s", name), SceneDTO.class);
         final var scene = new SceneInstanceImplementation(name);
 
         /*

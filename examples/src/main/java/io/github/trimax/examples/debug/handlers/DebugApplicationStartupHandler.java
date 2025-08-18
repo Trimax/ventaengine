@@ -15,8 +15,7 @@ public final class DebugApplicationStartupHandler implements VentaEngineStartupH
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector4f(0.6f, 0.6f, 0.6f, 1.f));
 
-        final var tetrahedronPrefab = context.getObjectRepository().get("tetrahedron");
-        state.setTetrahedron(context.getObjectManager().create("tetrahedron", tetrahedronPrefab));
+        state.setTetrahedron(context.getObjectManager().create("tetrahedron", context.getObjectRepository().get("tetrahedron.json")));
         scene.add(state.getTetrahedron());
 
         context.getCameraManager().getCurrent().setPosition(new Vector3f(3.f, 3.f, 3.f));

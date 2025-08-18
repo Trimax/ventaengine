@@ -12,25 +12,24 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
 
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
-
-        final var cubePrefab = context.getObjectRepository().get("cube");
+        final var cubePrefab = context.getObjectRepository().get("cube.json");
 
         final var cube = context.getObjectManager().create("cube", cubePrefab);
         cube.setScale(new Vector3f(2.f));
         state.setCube(cube);
         scene.add(cube);
 
-        final var lightXZ = context.getLightManager().load("basic");
+        final var lightXZ = context.getLightManager().load("basic.json");
         lightXZ.setPosition(new Vector3f(2.f, 2.f, 2.f));
         state.setLightXZ(lightXZ);
         scene.add(lightXZ);
 
-        final var lightXY = context.getLightManager().load("basic");
+        final var lightXY = context.getLightManager().load("basic.json");
         lightXY.setPosition(new Vector3f(-2.f, -2.f, 2.f));
         state.setLightXY(lightXY);
         scene.add(lightXY);
 
-        final var lightYZ = context.getLightManager().load("basic");
+        final var lightYZ = context.getLightManager().load("basic.json");
         lightXY.setPosition(new Vector3f(2.f, -2.f, -2.f));
         state.setLightYZ(lightYZ);
         scene.add(lightYZ);

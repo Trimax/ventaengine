@@ -23,7 +23,7 @@ public final class MaterialRegistryImplementation
     protected MaterialEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         log.info("Loading material {}", resourcePath);
 
-        final var materialDTO = ResourceUtil.loadAsObject(String.format("/materials/%s.json", resourcePath), MaterialDTO.class);
+        final var materialDTO = ResourceUtil.loadAsObject(String.format("/materials/%s", resourcePath), MaterialDTO.class);
 
         final var material = new MaterialEntityImplementation(materialDTO);
         materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureRegistry.get(path)));
