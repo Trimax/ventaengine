@@ -2,11 +2,13 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GizmoType;
+import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.LightManager;
-import io.github.trimax.venta.engine.model.dto.LightDTO;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.LightInstanceImplementation;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
+import io.github.trimax.venta.engine.model.parameters.LightParameters;
+import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
+import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -21,11 +23,29 @@ public final class LightManagerImplementation
     private final GizmoManagerImplementation gizmoManager;
 
     @Override
-    public LightInstanceImplementation load(@NonNull final String name) {
+    public LightInstanceImplementation create(@NonNull final String name, @NonNull final LightPrefab prefab) {
+        if (prefab instanceof LightPrefabImplementation light)
+            return create(name, convert(light));
+
+        throw new UnknownInstanceException(prefab.getClass());
+    }
+
+    @Override
+    public LightInstanceImplementation create(@NonNull final String name, @NonNull final LightParameters parameters) {
         log.info("Loading light {}", name);
 
-        return store(new LightInstanceImplementation(name, ResourceUtil.loadAsObject(String.format("/lights/%s", name), LightDTO.class),
-                gizmoManager.create("light", GizmoType.Light)));
+        return store(new LightInstanceImplementation(name, parameters, gizmoManager.create("light", GizmoType.Light)));
+    }
+
+    private LightParameters convert(final LightPrefabImplementation prefab) {
+        return LightParameters.builder()
+                .type(prefab.getType())
+                .range(prefab.getRange())
+                .color(prefab.getColor())
+                .intensity(prefab.getIntensity())
+                .attenuation(prefab.getAttenuation())
+                .castShadows(prefab.isCastShadows())
+                .build();
     }
 
     @Override

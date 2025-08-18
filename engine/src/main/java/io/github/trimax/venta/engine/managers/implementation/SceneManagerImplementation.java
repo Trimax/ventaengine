@@ -7,6 +7,7 @@ import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
@@ -24,13 +25,13 @@ public final class SceneManagerImplementation
         extends AbstractManagerImplementation<SceneInstanceImplementation, SceneInstance>
         implements SceneManager {
     private final ObjectRepositoryImplementation objectRepository;
+    private final LightRepositoryImplementation lightRepository;
     private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
 
     @Getter(onMethod_ = @__(@Override))
     private SceneInstanceImplementation current;
 
-    // TODO: This method will be replaced with the method create(name, scenePrefab)
     @Override
     public SceneInstanceImplementation load(@NonNull final String name) {
         log.info("Loading scene {}", name);
@@ -50,11 +51,11 @@ public final class SceneManagerImplementation
 
         if (sceneDTO.hasLights())
             for (final var sceneLight : sceneDTO.lights()) {
-                final var object = lightManager.load(sceneLight.light());
-                Optional.of(sceneLight).map(SceneLightDTO::position).ifPresent(object::setPosition);
-                Optional.of(sceneLight).map(SceneLightDTO::direction).ifPresent(object::setDirection);
+                final var light = lightManager.create(sceneLight.name(), lightRepository.get(sceneLight.light()));
+                Optional.of(sceneLight).map(SceneLightDTO::position).ifPresent(light::setPosition);
+                Optional.of(sceneLight).map(SceneLightDTO::direction).ifPresent(light::setDirection);
 
-                scene.add(object);
+                scene.add(light);
             }
 
         Optional.ofNullable(sceneDTO.ambientLight()).ifPresent(scene::setAmbientLight);

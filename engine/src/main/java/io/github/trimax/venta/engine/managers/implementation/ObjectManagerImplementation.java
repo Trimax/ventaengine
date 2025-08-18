@@ -7,8 +7,11 @@ import io.github.trimax.venta.engine.managers.ObjectManager;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.hierarchy.Node;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
+import io.github.trimax.venta.engine.model.parameters.ObjectParameters;
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ObjectPrefabImplementation;
 import lombok.AccessLevel;
@@ -16,6 +19,8 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
+
+import java.util.ArrayList;
 
 @Slf4j
 @Component
@@ -31,6 +36,18 @@ public final class ObjectManagerImplementation
             return create(name, object);
 
         throw new UnknownInstanceException(prefab.getClass());
+    }
+
+    @Override
+    public ObjectInstance create(@NonNull final String name, @NonNull final ObjectParameters parameters) {
+        if (parameters.getMesh() instanceof MeshEntityImplementation mesh)
+            if (parameters.getMaterial() instanceof MaterialEntityImplementation material)
+                return store(new ObjectInstanceImplementation(name,
+                        parameters.getProgram(),
+                        new Node<>("root", new MeshReference(mesh, material, new Transform()), new ArrayList<>()),
+                        gizmoManager.create("Bounding box", GizmoType.Object)));
+
+        throw new UnknownInstanceException(parameters.getMesh().getClass());
     }
 
     private ObjectInstance create(final String name, final ObjectPrefabImplementation prefab) {
