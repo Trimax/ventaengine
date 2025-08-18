@@ -6,7 +6,6 @@ import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.LightInstanceImplementation;
-import io.github.trimax.venta.engine.model.parameters.LightParameters;
 import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
@@ -25,27 +24,15 @@ public final class LightManagerImplementation
     @Override
     public LightInstanceImplementation create(@NonNull final String name, @NonNull final LightPrefab prefab) {
         if (prefab instanceof LightPrefabImplementation light)
-            return create(name, convert(light));
+            return create(name, light);
 
         throw new UnknownInstanceException(prefab.getClass());
     }
 
-    @Override
-    public LightInstanceImplementation create(@NonNull final String name, @NonNull final LightParameters parameters) {
+    private LightInstanceImplementation create(@NonNull final String name, @NonNull final LightPrefabImplementation prefab) {
         log.info("Loading light {}", name);
 
-        return store(new LightInstanceImplementation(name, parameters, gizmoManager.create("light", GizmoType.Light)));
-    }
-
-    private LightParameters convert(final LightPrefabImplementation prefab) {
-        return LightParameters.builder()
-                .type(prefab.getType())
-                .range(prefab.getRange())
-                .color(prefab.getColor())
-                .intensity(prefab.getIntensity())
-                .attenuation(prefab.getAttenuation())
-                .castShadows(prefab.isCastShadows())
-                .build();
+        return store(new LightInstanceImplementation(name, prefab, gizmoManager.create("light", GizmoType.Light)));
     }
 
     @Override

@@ -24,7 +24,7 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
         camera.lookAt(new Vector3f(0.f, 0.5f, 10.f));
         state.setCamera(camera);
 
-        final var light = context.getLightManager().create("Flashlight", context.getLightRepository().get("basic.json"));
+        final var light = context.getLightManager().create("Flashlight", context.getLightRepository().get("point.json"));
         light.setIntensity(3.0f);
         light.setAttenuation(new Attenuation(1.0f, 1.5f, 2.0f));
         state.setLight(light);

@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
-import io.github.trimax.venta.engine.model.parameters.LightParameters;
+import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -27,21 +27,17 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     @Setter
     private boolean enabled = true;
 
-    LightInstanceImplementation(@NonNull final String name,
-                                @NonNull final LightType type,
-                                @NonNull final GizmoInstanceImplementation gizmo) {
+    public LightInstanceImplementation(@NonNull final String name,
+                                       @NonNull final LightPrefabImplementation prefab,
+                                       @NonNull final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
-        this.type = type;
-    }
+        this.type = prefab.getType();
 
-    public LightInstanceImplementation(@NonNull final String name, @NonNull final LightParameters parameters, @NonNull final GizmoInstanceImplementation gizmo) {
-        this(name, parameters.getType(), gizmo);
-
-        setAttenuation(Optional.ofNullable(parameters.getAttenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
-        setCastShadows(parameters.isCastShadows());
-        setIntensity(parameters.getIntensity());
-        setColor(parameters.getColor());
+        setAttenuation(Optional.ofNullable(prefab.getAttenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
+        setCastShadows(prefab.isCastShadows());
+        setIntensity(prefab.getIntensity());
+        setColor(prefab.getColor());
     }
 
     @Override

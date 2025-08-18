@@ -43,11 +43,6 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     }
 
     @Override
-    public boolean hasMesh() {
-        return mesh != null;
-    }
-
-    @Override
     public Vector3f getPosition() {
         return transform.getPosition();
     }
