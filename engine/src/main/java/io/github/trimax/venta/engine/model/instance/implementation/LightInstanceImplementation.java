@@ -9,6 +9,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.joml.Vector3f;
 
+import java.util.Optional;
+
 @Getter
 public final class LightInstanceImplementation extends AbstractInstanceImplementation implements LightInstance {
     private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
@@ -36,29 +38,29 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     public LightInstanceImplementation(@NonNull final String name, @NonNull final LightParameters parameters, @NonNull final GizmoInstanceImplementation gizmo) {
         this(name, parameters.getType(), gizmo);
 
+        setAttenuation(Optional.ofNullable(parameters.getAttenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
         setCastShadows(parameters.isCastShadows());
-        setAttenuation(parameters.getAttenuation());
         setIntensity(parameters.getIntensity());
         setColor(parameters.getColor());
     }
 
     @Override
-    public void setPosition(final Vector3f position) {
+    public void setPosition(@NonNull final Vector3f position) {
         this.position.set(position);
     }
 
     @Override
-    public void setDirection(final Vector3f direction) {
+    public void setDirection(@NonNull final Vector3f direction) {
         this.direction.set(direction);
     }
 
     @Override
-    public void setColor(final Vector3f color) {
+    public void setColor(@NonNull final Vector3f color) {
         this.color.set(color);
     }
 
     @Override
-    public void setAttenuation(final Attenuation attenuation) {
+    public void setAttenuation(@NonNull final Attenuation attenuation) {
         this.attenuation = attenuation;
     }
 

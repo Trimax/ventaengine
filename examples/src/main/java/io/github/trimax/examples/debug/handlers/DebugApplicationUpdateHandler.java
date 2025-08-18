@@ -13,6 +13,6 @@ public final class DebugApplicationUpdateHandler implements VentaEngineUpdateHan
 
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
         state.getTetrahedron().rotate(new Vector3f(0.1f * (float) time.getDelta(), 0.2f * (float) time.getDelta(), 0.3f * (float)  time.getDelta()));
-        state.getTetrahedron().getScale().y = 1.f + 0.5f * (float) Math.sin(time.getTimeElapsed());
+        state.getTetrahedron().setScale(new Vector3f(1.f, 1.f + 0.5f * (float) Math.sin(time.getTimeElapsed()), 1.f));
     }
 }

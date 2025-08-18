@@ -4,16 +4,18 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.hierarchy.Node;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import lombok.NonNull;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 public interface ObjectInstance extends AbstractInstance {
     Node<MeshReference> getMesh();
 
-    Vector3f getPosition();
+    Vector3fc getPosition();
 
-    Vector3f getRotation();
+    Vector3fc getRotation();
 
-    Vector3f getScale();
+    Vector3fc getScale();
 
     boolean isVisible();
 
@@ -27,23 +29,23 @@ public interface ObjectInstance extends AbstractInstance {
 
     ProgramEntity getProgram();
 
-    void setPosition(final Vector3f position);
+    void setPosition(@NonNull final Vector3f position);
 
-    void setRotation(final Vector3f rotation);
+    void setRotation(@NonNull final Vector3f rotation);
 
-    void setScale(final Vector3f scale);
+    void setScale(@NonNull final Vector3f scale);
 
-    void move(final Vector3f offset);
+    void move(@NonNull final Vector3f offset);
 
-    void rotate(final Vector3f angles);
+    void rotate(@NonNull final Vector3f angles);
 
-    void scale(final Vector3f factor);
+    void scale(@NonNull final Vector3f factor);
 
-    void setDrawMode(final DrawMode drawMode);
+    void setDrawMode(@NonNull final DrawMode drawMode);
 
     void setLit(final boolean lit);
 
     void setVisible(final boolean visible);
 
-    void setProgram(final ProgramEntity program);
+    void setProgram(@NonNull final ProgramEntity program);
 }

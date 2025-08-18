@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityIm
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.utils.GeometryUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import org.joml.Vector3f;
 
 @Getter
@@ -62,37 +63,37 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     }
 
     @Override
-    public void setPosition(final Vector3f position) {
+    public void setPosition(@NonNull final Vector3f position) {
         this.transform.setPosition(position);
     }
 
     @Override
-    public void setRotation(final Vector3f angles) {
+    public void setRotation(@NonNull final Vector3f angles) {
         this.transform.setRotation(angles);
     }
 
     @Override
-    public void setScale(final Vector3f scale) {
+    public void setScale(@NonNull final Vector3f scale) {
         this.transform.setScale(scale);
     }
 
     @Override
-    public void move(final Vector3f offset) {
+    public void move(@NonNull final Vector3f offset) {
         this.transform.move(offset);
     }
 
     @Override
-    public void rotate(final Vector3f angles) {
+    public void rotate(@NonNull final Vector3f angles) {
         this.transform.rotate(angles);
     }
 
     @Override
-    public void scale(final Vector3f factor) {
+    public void scale(@NonNull final Vector3f factor) {
         this.transform.scale(factor);
     }
 
     @Override
-    public void setDrawMode(final DrawMode drawMode) {
+    public void setDrawMode(@NonNull final DrawMode drawMode) {
         this.drawMode = drawMode;
     }
 
@@ -107,7 +108,7 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     }
 
     @Override
-    public void setProgram(final ProgramEntity program) {
+    public void setProgram(@NonNull final ProgramEntity program) {
         if (program instanceof ProgramEntityImplementation entity)
             this.program = entity;
     }
