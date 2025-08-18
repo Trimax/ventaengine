@@ -11,7 +11,7 @@ import org.joml.Vector3f;
 public final class SceneApplicationStartupHandler implements VentaEngineStartupHandler {
     @Override
     public void onStartup(final String[] args, final VentaContext context) {
-        context.getSceneManager().setCurrent(context.getSceneManager().load("demo"));
+        context.getSceneManager().setCurrent(context.getSceneManager().load("demo.json"));
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(5.f, 5.f, 5.f));

@@ -7,10 +7,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum GizmoType {
-    Origin("origin"),
-    Object("box"),
-    Camera("frustum"),
-    Light("bipyramid");
+    Origin("origin.json"),
+    Object("box.json"),
+    Camera("frustum.json"),
+    Light("bipyramid.json");
 
     private final String mesh;
 }

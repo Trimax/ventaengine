@@ -2,10 +2,10 @@ package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
-import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.registries.MeshRegistry;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
@@ -36,8 +36,10 @@ public final class MeshRegistryImplementation
     protected MeshEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         log.info("Loading mesh {}", resourcePath);
 
-        final var meshDTO = ResourceUtil.loadAsObject(String.format("/meshes/%s.json", resourcePath), MeshDTO.class);
+        return createMesh(resourcePath, ResourceUtil.loadAsObject(String.format("/meshes/%s", resourcePath), MeshDTO.class));
+    }
 
+    private MeshEntityImplementation createMesh(final String resourcePath, final MeshDTO meshDTO) {
         final var vertices = meshDTO.getVerticesArray();
 
         final int vertexArrayObjectID = memory.getVertexArrays().create("Mesh %s VAO", resourcePath);

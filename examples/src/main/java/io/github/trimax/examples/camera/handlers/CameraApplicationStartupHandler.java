@@ -18,9 +18,7 @@ public final class CameraApplicationStartupHandler implements VentaEngineStartup
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector4f(0.6f, 0.6f, 0.6f, 1.f));
 
-        final var cubePrefab = context.getObjectRepository().get("cube");
-
-        final var cube = context.getObjectManager().create("cube", cubePrefab);
+        final var cube = context.getObjectManager().create("cube", context.getObjectRepository().get("cube.json"));
         state.setCube(cube);
         scene.add(cube);
 

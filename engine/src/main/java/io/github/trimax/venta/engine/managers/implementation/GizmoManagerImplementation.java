@@ -35,7 +35,7 @@ public final class GizmoManagerImplementation
         log.debug("Creating gizmo {}", name);
 
         return store(new GizmoInstanceImplementation(name,
-                programRegistry.get(ProgramType.Simple.name()),
+                programRegistry.get(ProgramType.Simple.getProgramName()),
                 meshRegistry.get(type.getMesh()),
                 new Vector3f(0.f, 0.f, 0.f),
                 new Vector3f(0.f, 0.f, 0.f),
