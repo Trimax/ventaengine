@@ -1,16 +1,17 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.model.dto.MeshPrefabDTO;
-import io.github.trimax.venta.engine.model.dto.ObjectPrefabDTO;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.hierarchy.Node;
+import io.github.trimax.venta.engine.model.dto.MeshPrefabDTO;
+import io.github.trimax.venta.engine.model.dto.ObjectPrefabDTO;
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ObjectPrefabImplementation;
 import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.ObjectRepository;
+import io.github.trimax.venta.engine.utils.MeshUtil;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public final class ObjectRepositoryImplementation
         log.info("Loading object {}", resourcePath);
 
         final var objectDTO = ResourceUtil.loadAsObject(String.format("/objects/%s", resourcePath), ObjectPrefabDTO.class);
-        return new ObjectPrefabImplementation(programRegistry.get(objectDTO.program()), loadMeshHierarchy(objectDTO.root()));
+        return new ObjectPrefabImplementation(programRegistry.get(objectDTO.program()), MeshUtil.normalize(loadMeshHierarchy(objectDTO.root())));
     }
     
     private Node<MeshReference> loadMeshHierarchy(@NonNull final Node<MeshPrefabDTO> node) {
