@@ -18,4 +18,5 @@ public final class Icons {
     public static final Image SCENE = new Image(Objects.requireNonNull(Icons.class.getResourceAsStream("/icons/scene.png")));
     public static final Image LIGHT = new Image(Objects.requireNonNull(Icons.class.getResourceAsStream("/icons/light.png")));
     public static final Image MESH = new Image(Objects.requireNonNull(Icons.class.getResourceAsStream("/icons/mesh.png")));
+    public static final Image FILE = new Image(Objects.requireNonNull(Icons.class.getResourceAsStream("/icons/file.png")));
 }

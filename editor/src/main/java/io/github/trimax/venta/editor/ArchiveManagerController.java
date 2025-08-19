@@ -19,7 +19,7 @@ public final class ArchiveManagerController {
 
     @FXML
     public void initialize() {
-        final var root = new TreeItem<>(new Item(ItemType.Root, Icons.UNKNOWN, "Root", null));
+        final var root = new TreeItem<>(new Item());
         resourceTree.setRoot(root);
         resourceTree.getSelectionModel().selectedItemProperty().addListener((_, _, newSel) -> updateInfoPanel(newSel));
         resourceTree.setShowRoot(false);
@@ -64,7 +64,7 @@ public final class ArchiveManagerController {
             return;
         }
 
-        final var newFile = new TreeItem<>(new Item(Icons.OBJECT, "New File","/path/to/file"));
+        final var newFile = new TreeItem<>(new Item(Icons.FILE, "New File","/path/to/file"));
         selected.getChildren().add(newFile);
         selected.setExpanded(true);
         statusLabel.setText("New file added");
@@ -100,11 +100,21 @@ public final class ArchiveManagerController {
             return;
         }
 
-        final var newFolder = new TreeItem<>(new Item("New Folder"));
-        selected.getChildren().add(newFolder);
-        selected.setExpanded(true);
+        final var dialog = new TextInputDialog("New Folder");
+        dialog.setTitle("Create Folder");
+        dialog.setHeaderText("Enter folder name:");
+        dialog.setContentText("Name:");
 
-        statusLabel.setText("New folder added");
+        dialog.showAndWait().ifPresent(name -> {
+            if (!name.isBlank()) {
+                final var newFolder = new TreeItem<>(new Item(name));
+                selected.getChildren().add(newFolder);
+                selected.setExpanded(true);
+                statusLabel.setText("Folder `" + name + "` added");
+            } else {
+                statusLabel.setText("Folder name cannot be empty");
+            }
+        });
     }
 
     private void removeFolder() {
