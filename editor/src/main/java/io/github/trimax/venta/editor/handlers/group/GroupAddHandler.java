@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.handlers;
+package io.github.trimax.venta.editor.handlers.group;
 
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.model.ItemType;
@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 @AllArgsConstructor
-public final class FolderAddHandler implements EventHandler<ActionEvent> {
+public final class GroupAddHandler implements EventHandler<ActionEvent> {
     private final TreeView<Item> tree;
     private final Label status;
 

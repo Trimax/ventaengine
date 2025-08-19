@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.handlers;
+package io.github.trimax.venta.editor.handlers.resource;
 
 import io.github.trimax.venta.editor.model.Item;
 import javafx.event.ActionEvent;
@@ -8,7 +8,7 @@ import javafx.scene.control.TreeView;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public final class FileRemoveHandler implements EventHandler<ActionEvent> {
+public final class ResourceRemoveHandler implements EventHandler<ActionEvent> {
     private final TreeView<Item> tree;
     private final Label status;
 

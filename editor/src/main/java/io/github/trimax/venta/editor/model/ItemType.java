@@ -6,10 +6,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ItemType {
-    Root(false),
-    Group(false),
-    Folder(true),
-    File(true);
+    Root(false, false),
+    Group(false, true),
+    Folder(true, true),
+    File(true, false);
 
     private final boolean isDeletable;
+    private final boolean isContainer;
 }

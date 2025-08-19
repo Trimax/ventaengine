@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.renderers;
+package io.github.trimax.venta.editor.tree;
 
 import io.github.trimax.venta.editor.model.Item;
 import javafx.scene.control.TreeCell;

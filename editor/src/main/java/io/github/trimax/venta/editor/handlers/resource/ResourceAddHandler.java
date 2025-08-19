@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.handlers;
+package io.github.trimax.venta.editor.handlers.resource;
 
 import io.github.trimax.venta.editor.definitions.Icons;
 import io.github.trimax.venta.editor.model.Item;
@@ -11,7 +11,7 @@ import javafx.scene.control.TreeView;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public final class FileAddHandler implements EventHandler<ActionEvent> {
+public final class ResourceAddHandler implements EventHandler<ActionEvent> {
     private final TreeView<Item> tree;
     private final Label status;
 
@@ -28,7 +28,7 @@ public final class FileAddHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        final var newFile = new TreeItem<>(new Item(Icons.FILE, "New File","/path/to/file"));
+        final var newFile = new TreeItem<>(new Item(Icons.FILE, "New File", "/path/to/file"));
         selected.getChildren().add(newFile);
         selected.setExpanded(true);
         status.setText("New file added");

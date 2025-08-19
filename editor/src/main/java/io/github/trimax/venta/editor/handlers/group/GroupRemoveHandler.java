@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.handlers;
+package io.github.trimax.venta.editor.handlers.group;
 
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.utils.DialogUtil;
@@ -10,7 +10,7 @@ import javafx.scene.control.TreeView;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public final class FolderRemoveHandler implements EventHandler<ActionEvent> {
+public final class GroupRemoveHandler implements EventHandler<ActionEvent> {
     private final TreeView<Item> tree;
     private final Label status;
 

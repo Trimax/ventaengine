@@ -1,9 +1,13 @@
 package io.github.trimax.venta.editor.controllers;
 
-import io.github.trimax.venta.editor.handlers.*;
-import io.github.trimax.venta.editor.listeners.TreeItemListener;
+import io.github.trimax.venta.editor.handlers.archive.ArchiveNewHandler;
+import io.github.trimax.venta.editor.handlers.group.GroupAddHandler;
+import io.github.trimax.venta.editor.handlers.group.GroupRemoveHandler;
+import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
+import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.model.ToolBar;
+import io.github.trimax.venta.editor.tree.TreeItemListener;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,19 +42,19 @@ public final class ArchiveManagerController {
     }
 
     private void bindMenu() {
-        btnMenuFileAdd.setOnAction(new FileAddHandler(tree, status));
-        btnMenuFileRemove.setOnAction(new FileRemoveHandler(tree, status));
-        btnMenuFolderAdd.setOnAction(new FolderAddHandler(tree, status));
-        btnMenuFolderRemove.setOnAction(new FolderRemoveHandler(tree, status));
+        btnMenuFileAdd.setOnAction(new ResourceAddHandler(tree, status));
+        btnMenuFileRemove.setOnAction(new ResourceRemoveHandler(tree, status));
+        btnMenuFolderAdd.setOnAction(new GroupAddHandler(tree, status));
+        btnMenuFolderRemove.setOnAction(new GroupRemoveHandler(tree, status));
     }
 
     private void bindToolBar() {
         btnToolBarArchiveNew.setOnAction(new ArchiveNewHandler(tree, createListener()));
 
-        btnToolBarFileAdd.setOnAction(new FileAddHandler(tree, status));
-        btnToolBarFileRemove.setOnAction(new FileRemoveHandler(tree, status));
-        btnToolBarFolderAdd.setOnAction(new FolderAddHandler(tree, status));
-        btnToolBarFolderRemove.setOnAction(new FolderRemoveHandler(tree, status));
+        btnToolBarFileAdd.setOnAction(new ResourceAddHandler(tree, status));
+        btnToolBarFileRemove.setOnAction(new ResourceRemoveHandler(tree, status));
+        btnToolBarFolderAdd.setOnAction(new GroupAddHandler(tree, status));
+        btnToolBarFolderRemove.setOnAction(new GroupRemoveHandler(tree, status));
     }
 
     private TreeItemListener createListener() {

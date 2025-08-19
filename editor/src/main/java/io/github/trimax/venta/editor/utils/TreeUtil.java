@@ -1,10 +1,11 @@
 package io.github.trimax.venta.editor.utils;
 
 import io.github.trimax.venta.editor.definitions.Icons;
-import io.github.trimax.venta.editor.listeners.TreeItemListener;
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.model.ItemType;
-import io.github.trimax.venta.editor.renderers.TreeCellRenderer;
+import io.github.trimax.venta.editor.tree.TreeCellRenderer;
+import io.github.trimax.venta.editor.tree.TreeItemListener;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import lombok.NonNull;
@@ -26,9 +27,11 @@ public final class TreeUtil {
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.TEXTURE, "Textures", null)));
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.SHADER, "Shaders", null)));
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.OBJECT, "Objects", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.MESH, "Meshes", null)));
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.LIGHT, "Lights", null)));
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.SCENE, "Scenes", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.MESH, "Meshes", null)));
+
+        enableAutoSort(root);
     }
 
     public boolean isItemExist(@NonNull final TreeItem<Item> item, @NonNull final String name) {
@@ -37,5 +40,21 @@ public final class TreeUtil {
                 .filterBy(Item::name, name)
                 .findAny()
                 .isPresent();
+    }
+
+    private void enableAutoSort(final TreeItem<Item> parent) {
+        for (final var child : parent.getChildren())
+            enableAutoSort(child);
+
+        parent.getChildren().addListener((ListChangeListener<TreeItem<Item>>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (final var added : change.getAddedSubList())
+                        enableAutoSort(added);
+
+                    parent.getChildren().sort((a, b) -> a.getValue().name().compareToIgnoreCase(b.getValue().name()));
+                }
+            }
+        });
     }
 }

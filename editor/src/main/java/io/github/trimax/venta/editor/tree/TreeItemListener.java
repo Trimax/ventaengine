@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.listeners;
+package io.github.trimax.venta.editor.tree;
 
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.model.ToolBar;
@@ -16,6 +16,11 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
 
     @Override
     public void accept(final TreeItem<Item> selected) {
+        toolBar.update(selected.getValue());
+        updateInfoPanel(selected);
+    }
+
+    private void updateInfoPanel(final TreeItem<Item> selected) {
         info.getChildren().clear();
         if (selected != null) {
             final var nameLabel = new Label("Name: " + selected.getValue().name());
