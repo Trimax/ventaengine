@@ -14,7 +14,7 @@ public final class SceneApplicationStartupHandler implements VentaEngineStartupH
         context.getSceneManager().setCurrent(context.getSceneManager().create("Demo scene", context.getSceneRepository().get("demo.json")));
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(0.f, 4.f, 15.f));
+        camera.setPosition(new Vector3f(0.f, 1.5f, 1.5f));
         camera.lookAt(new Vector3f(0.f));
     }
 }

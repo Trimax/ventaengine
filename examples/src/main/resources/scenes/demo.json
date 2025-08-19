@@ -13,7 +13,7 @@
     {
       "name": "Sun",
       "light": "point.json",
-      "position": {"x": 0.0, "y": 5.0, "z": 5.0}
+      "position": {"x": 0.0, "y": 2.0, "z": 2.0}
     }
   ]
 }
