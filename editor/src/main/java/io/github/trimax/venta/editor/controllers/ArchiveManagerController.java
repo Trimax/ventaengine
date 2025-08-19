@@ -1,7 +1,9 @@
 package io.github.trimax.venta.editor.controllers;
 
 import io.github.trimax.venta.editor.handlers.*;
+import io.github.trimax.venta.editor.listeners.TreeItemListener;
 import io.github.trimax.venta.editor.model.Item;
+import io.github.trimax.venta.editor.model.ToolBar;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,7 +31,7 @@ public final class ArchiveManagerController {
 
     @FXML
     public void initialize() {
-        TreeUtil.initialize(tree, info);
+        TreeUtil.initialize(tree, createListener());
 
         bindToolBar();
         bindMenu();
@@ -43,11 +45,21 @@ public final class ArchiveManagerController {
     }
 
     private void bindToolBar() {
-        btnToolBarArchiveNew.setOnAction(new ArchiveNewHandler(tree, info));
+        btnToolBarArchiveNew.setOnAction(new ArchiveNewHandler(tree, createListener()));
 
         btnToolBarFileAdd.setOnAction(new FileAddHandler(tree, status));
         btnToolBarFileRemove.setOnAction(new FileRemoveHandler(tree, status));
         btnToolBarFolderAdd.setOnAction(new FolderAddHandler(tree, status));
         btnToolBarFolderRemove.setOnAction(new FolderRemoveHandler(tree, status));
+    }
+
+    private TreeItemListener createListener() {
+        return new TreeItemListener(ToolBar.builder()
+                .btnToolBarArchiveNew(btnToolBarArchiveNew)
+                .btnToolBarFileAdd(btnToolBarFileAdd)
+                .btnToolBarFileRemove(btnToolBarFileRemove)
+                .btnToolBarFolderAdd(btnToolBarFolderAdd)
+                .btnToolBarFolderRemove(btnToolBarFolderRemove)
+                .build(), info);
     }
 }

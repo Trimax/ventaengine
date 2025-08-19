@@ -1,25 +1,26 @@
 package io.github.trimax.venta.editor.utils;
 
 import io.github.trimax.venta.editor.definitions.Icons;
+import io.github.trimax.venta.editor.listeners.TreeItemListener;
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.model.ItemType;
 import io.github.trimax.venta.editor.renderers.TreeCellRenderer;
-import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.VBox;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import one.util.streamex.StreamEx;
 
 @UtilityClass
 public final class TreeUtil {
-    public void initialize(@NonNull final TreeView<Item> tree, @NonNull final VBox info) {
+    public void initialize(@NonNull final TreeView<Item> tree, @NonNull final TreeItemListener listener) {
         final var root = new TreeItem<>(new Item());
-        tree.setRoot(root);
-        tree.getSelectionModel().selectedItemProperty().addListener((_, _, newSel) -> updateInfoPanel(newSel, info));
         tree.setCellFactory(_ -> new TreeCellRenderer());
         tree.setShowRoot(false);
+        tree.setRoot(root);
+
+        tree.getSelectionModel().selectedItemProperty()
+                .addListener((_, _, newSel) -> listener.accept(newSel));
 
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.MATERIAL, "Materials", null)));
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.TEXTURE, "Textures", null)));
@@ -36,14 +37,5 @@ public final class TreeUtil {
                 .filterBy(Item::name, name)
                 .findAny()
                 .isPresent();
-    }
-
-    private void updateInfoPanel(final TreeItem<Item> selected, final VBox info) {
-        info.getChildren().clear();
-        if (selected != null) {
-            final var nameLabel = new Label("Name: " + selected.getValue().name());
-            final var typeLabel = new Label(selected.getChildren().isEmpty() ? "Type: File" : "Type: Folder");
-            info.getChildren().addAll(nameLabel, typeLabel);
-        }
     }
 }
