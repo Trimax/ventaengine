@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>editor</artifactId>
+    
+    <parent>
+        <groupId>io.github.trimax</groupId>
+        <artifactId>ventaengine</artifactId>
+        <version>0.8.12</version>
+    </parent>
+
+    <name>${project.artifactId}</name>
+    <description>${project.artifactId} module</description>
+    <url>${project.parent.url}</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.trimax</groupId>
+            <artifactId>container</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>24.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>24.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>24.0.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>io.github.trimax.venta.editor.VentaArchiveManager</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>trimax</id>
+            <name>Dmitrii Eliseev</name>
+            <email>trimax@users.noreply.github.com</email>
+            <url>https://github.com/trimax</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/trimax/ventaengine.git</connection>
+        <developerConnection>scm:git:ssh://github.com/trimax/ventaengine.git</developerConnection>
+        <url>https://github.com/trimax/ventaengine</url>
+    </scm>
+</project>

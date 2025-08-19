@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.ArchiveManagerController">
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Archive">
+                    <MenuItem text="New" fx:id="btnMenuArchiveNew" />
+                    <MenuItem text="Save" fx:id="btnMenuArchiveSave"/>
+                    <MenuItem text="Open" fx:id="btnMenuArchiveLoad" />
+                    <MenuItem text="Build" fx:id="btnMenuArchiveBuild" />
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Exit" fx:id="btnMenuExit" />
+                </Menu>
+                <Menu text="Structure">
+                    <MenuItem text="Add File" fx:id="btnMenuFileAdd" />
+                    <MenuItem text="Remove File" fx:id="btnMenuFileRemove" />
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Add Folder" fx:id="btnMenuFolderAdd" />
+                    <MenuItem text="Remove Folder" fx:id="btnMenuFolderRemove" />
+                </Menu>
+                <Menu text="Help">
+                    <MenuItem text="About"/>
+                </Menu>
+            </MenuBar>
+            <ToolBar>
+                <Button text="New" fx:id="btnToolBarArchiveNew" />
+                <Button text="Save" fx:id="btnToolBarArchiveSave"/>
+                <Button text="Load" fx:id="btnToolBarArchiveLoad" />
+                <Button text="Build" fx:id="btnToolBarArchiveBuild"/>
+                <Separator/>
+                <Button text="Add File" fx:id="btnToolBarFileAdd" />
+                <Button text="Remove File" fx:id="btnToolBarFileRemove" />
+                <Button text="Add Folder" fx:id="btnToolBarFolderAdd" />
+                <Button text="Remove Folder" fx:id="btnToolBarFolderRemove" />
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <left>
+        <TreeView fx:id="resourceTree" prefWidth="250"/>
+    </left>
+
+    <center>
+        <VBox fx:id="infoPanel" spacing="10" style="-fx-padding:10;-fx-border-color: lightgray; -fx-border-width:1"/>
+    </center>
+
+    <bottom>
+        <HBox>
+            <Label fx:id="statusLabel" text="Ready"/>
+        </HBox>
+    </bottom>
+</BorderPane>
