@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ItemType {
     Root(false, false),
-    Group(false, true),
-    Folder(true, true),
-    File(true, false);
+    Folder(false, true),
+    Group(true, true),
+    Resource(true, false);
 
     private final boolean isDeletable;
     private final boolean isContainer;

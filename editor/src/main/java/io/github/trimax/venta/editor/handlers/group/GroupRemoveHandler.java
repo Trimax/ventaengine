@@ -18,7 +18,7 @@ public final class GroupRemoveHandler implements EventHandler<ActionEvent> {
     public void handle(final ActionEvent event) {
         final var selected = tree.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            status.setText("Select a file or a folder to delete it");
+            status.setText("Please select an item to remove");
             return;
         }
 
@@ -28,12 +28,12 @@ public final class GroupRemoveHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        DialogUtil.showConfirm("Are you sure you want to delete folder `" + item.name() + "` and all its contents?",
+        DialogUtil.showConfirm("Are you sure you want to delete group `" + item.name() + "` and all its contents?",
                 () -> removeFolder(selected));
     }
 
     private void removeFolder(final TreeItem<Item> selected) {
         selected.getParent().getChildren().remove(selected);
-        status.setText("File `" + selected.getValue().name() + "` removed");
+        status.setText("Group `" + selected.getValue().name() + "` removed");
     }
 }

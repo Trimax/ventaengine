@@ -23,7 +23,7 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        if (selected.getValue().type() != ItemType.Folder) {
+        if (selected.getValue().type() != ItemType.Group) {
             status.setText("Selected item is not a folder");
             return;
         }

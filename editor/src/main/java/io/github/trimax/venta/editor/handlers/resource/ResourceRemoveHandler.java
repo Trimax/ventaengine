@@ -16,17 +16,17 @@ public final class ResourceRemoveHandler implements EventHandler<ActionEvent> {
     public void handle(final ActionEvent event) {
         final var selected = tree.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            status.setText("Select a file or a folder to remove");
+            status.setText("Please select an item to remove");
             return;
         }
 
         final var item = selected.getValue();
         if (!item.type().isDeletable()) {
-            status.setText("Neither root nor group can be removed");
+            status.setText("This item can not be deleted");
             return;
         }
 
         selected.getParent().getChildren().remove(selected);
-        status.setText("File `" + item.name() + "` removed");
+        status.setText("Resource `" + item.name() + "` removed");
     }
 }

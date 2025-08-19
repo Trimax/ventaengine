@@ -23,14 +23,14 @@ public final class TreeUtil {
         tree.getSelectionModel().selectedItemProperty()
                 .addListener((_, _, newSel) -> listener.accept(newSel));
 
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.MATERIAL, "Materials", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.TEXTURE, "Textures", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.PROGRAM, "Programs", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.SHADER, "Shaders", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.OBJECT, "Objects", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.LIGHT, "Lights", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.SCENE, "Scenes", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.MESH, "Meshes", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.MATERIAL, "Materials", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.TEXTURE, "Textures", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.PROGRAM, "Programs", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.SHADER, "Shaders", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.OBJECT, "Objects", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.LIGHT, "Lights", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.SCENE, "Scenes", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.MESH, "Meshes", null)));
 
         enableAutoSort(root);
     }

@@ -22,9 +22,9 @@ public final class ToolBar {
     private Button btnToolBarFolderRemove;
 
     public void update(final Item selected) {
-        btnToolBarFileAdd.setDisable(selected == null || selected.type() != ItemType.Folder);
-        btnToolBarFileRemove.setDisable(selected == null || selected.type() != ItemType.File);
+        btnToolBarFileAdd.setDisable(selected == null || selected.type() != ItemType.Group);
+        btnToolBarFileRemove.setDisable(selected == null || selected.type() != ItemType.Resource);
         btnToolBarFolderAdd.setDisable(selected == null || !selected.type().isContainer());
-        btnToolBarFolderRemove.setDisable(selected == null || selected.type() != ItemType.Folder);
+        btnToolBarFolderRemove.setDisable(selected == null || selected.type() != ItemType.Group);
     }
 }

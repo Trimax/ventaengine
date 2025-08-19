@@ -24,7 +24,7 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
         info.getChildren().clear();
         if (selected != null) {
             final var nameLabel = new Label("Name: " + selected.getValue().name());
-            final var typeLabel = new Label(selected.getChildren().isEmpty() ? "Type: File" : "Type: Folder");
+            final var typeLabel = new Label(selected.getValue().type().name());
             info.getChildren().addAll(nameLabel, typeLabel);
         }
     }

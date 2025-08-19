@@ -10,11 +10,11 @@ public record Item(ItemType type, Image icon, String name, String reference) {
     }
 
     public Item(final String name) {
-        this(ItemType.Folder, Icons.FOLDER, name, null);
+        this(ItemType.Group, Icons.FOLDER, name, null);
     }
 
     public Item(final Image icon, final String name, final String reference) {
-        this(ItemType.File, icon, name, reference);
+        this(ItemType.Resource, icon, name, reference);
     }
 
     public ImageView iconView() {
@@ -22,7 +22,7 @@ public record Item(ItemType type, Image icon, String name, String reference) {
         view.setFitWidth(16);
         view.setFitHeight(16);
 
-        if (type() == ItemType.Group) {
+        if (type() == ItemType.Folder) {
             view.setFitWidth(32);
             view.setFitHeight(32);
         }
