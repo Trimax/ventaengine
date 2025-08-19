@@ -1,0 +1,16 @@
+package io.github.trimax.venta.editor.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public enum ItemType {
+    Root(false, false),
+    Folder(false, true),
+    Group(true, true),
+    Resource(true, false);
+
+    private final boolean isDeletable;
+    private final boolean isContainer;
+}
