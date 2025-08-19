@@ -42,16 +42,16 @@
     </top>
 
     <left>
-        <TreeView fx:id="resourceTree" prefWidth="250"/>
+        <TreeView fx:id="tree" prefWidth="250"/>
     </left>
 
     <center>
-        <VBox fx:id="infoPanel" spacing="10" style="-fx-padding:10;-fx-border-color: lightgray; -fx-border-width:1"/>
+        <VBox fx:id="info" spacing="10" style="-fx-padding:10;-fx-border-color: lightgray; -fx-border-width:1"/>
     </center>
 
     <bottom>
         <HBox>
-            <Label fx:id="statusLabel" text="Ready"/>
+            <Label fx:id="status" text="Ready"/>
         </HBox>
     </bottom>
 </BorderPane>
