@@ -1,6 +1,8 @@
 package io.github.trimax.venta.editor.controllers;
 
 import io.github.trimax.venta.editor.handlers.archive.ArchiveNewHandler;
+import io.github.trimax.venta.editor.handlers.editor.EditorAboutHandler;
+import io.github.trimax.venta.editor.handlers.editor.EditorQuitHandler;
 import io.github.trimax.venta.editor.handlers.group.GroupAddHandler;
 import io.github.trimax.venta.editor.handlers.group.GroupRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
@@ -28,10 +30,14 @@ public final class ArchiveManagerController {
     @FXML private Button btnToolBarFolderAdd;
     @FXML private Button btnToolBarFolderRemove;
 
-    @FXML private MenuItem btnMenuFileAdd;
-    @FXML private MenuItem btnMenuFileRemove;
-    @FXML private MenuItem btnMenuFolderAdd;
-    @FXML private MenuItem btnMenuFolderRemove;
+    @FXML private MenuItem btnMenuEditorAbout;
+    @FXML private MenuItem btnMenuEditorQuit;
+
+    @FXML private MenuItem btnMenuGroupAdd;
+    @FXML private MenuItem btnMenuGroupRemove;
+
+    @FXML private MenuItem btnMenuResourceAdd;
+    @FXML private MenuItem btnMenuResourceRemove;
 
     @FXML
     public void initialize() {
@@ -42,10 +48,14 @@ public final class ArchiveManagerController {
     }
 
     private void bindMenu() {
-        btnMenuFileAdd.setOnAction(new ResourceAddHandler(tree, status));
-        btnMenuFileRemove.setOnAction(new ResourceRemoveHandler(tree, status));
-        btnMenuFolderAdd.setOnAction(new GroupAddHandler(tree, status));
-        btnMenuFolderRemove.setOnAction(new GroupRemoveHandler(tree, status));
+        btnMenuEditorAbout.setOnAction(new EditorAboutHandler());
+        btnMenuEditorQuit.setOnAction(new EditorQuitHandler());
+
+        btnMenuGroupAdd.setOnAction(new GroupAddHandler(tree, status));
+        btnMenuGroupRemove.setOnAction(new GroupRemoveHandler(tree, status));
+
+        btnMenuResourceAdd.setOnAction(new ResourceAddHandler(tree, status));
+        btnMenuResourceRemove.setOnAction(new ResourceRemoveHandler(tree, status));
     }
 
     private void bindToolBar() {

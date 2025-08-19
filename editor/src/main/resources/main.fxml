@@ -10,7 +10,7 @@
             <MenuBar>
                 <Menu text="Editor">
                     <MenuItem text="About" accelerator="Ctrl+H" fx:id="btnMenuEditorAbout" />
-                    <MenuItem text="Exit"  accelerator="Ctrl+Q" fx:id="btnMenuEditorExit" />
+                    <MenuItem text="Exit"  accelerator="Ctrl+Q" fx:id="btnMenuEditorQuit" />
                 </Menu>
                 <Menu text="Archive">
                     <MenuItem text="New"   accelerator="Ctrl+N" fx:id="btnMenuArchiveNew" />
@@ -19,12 +19,12 @@
                     <MenuItem text="Build" accelerator="Ctrl+B" fx:id="btnMenuArchiveBuild" />
                 </Menu>
                 <Menu text="Group">
-                    <MenuItem text="Add Group"      accelerator="Ctrl+G"       fx:id="btnMenuFolderAdd" />
-                    <MenuItem text="Remove Group"   accelerator="Ctrl+Shift+G" fx:id="btnMenuFolderRemove" />
+                    <MenuItem text="Add Group"      accelerator="Ctrl+G"       fx:id="btnMenuGroupAdd"/>
+                    <MenuItem text="Remove Group"   accelerator="Ctrl+Shift+G" fx:id="btnMenuGroupRemove"/>
                 </Menu>
                 <Menu text="Resource">
-                    <MenuItem text="Add Resource"    accelerator="Ctrl+R"       fx:id="btnMenuFileAdd" />
-                    <MenuItem text="Remove Resource" accelerator="Ctrl+Shift+R" fx:id="btnMenuFileRemove" />
+                    <MenuItem text="Add Resource"    accelerator="Ctrl+R"       fx:id="btnMenuResourceAdd"/>
+                    <MenuItem text="Remove Resource" accelerator="Ctrl+Shift+R" fx:id="btnMenuResourceRemove"/>
                 </Menu>
             </MenuBar>
             <ToolBar>

@@ -33,4 +33,11 @@ public final class DialogUtil {
                 action.run();
         });
     }
+
+    public void showInfo(@NonNull final String message) {
+        final var dialog = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        dialog.setHeaderText(null);
+
+        dialog.showAndWait();
+    }
 }
