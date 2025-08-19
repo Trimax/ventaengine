@@ -25,9 +25,10 @@ public final class DialogUtil {
 
     public void showConfirm(@NonNull final String header,
                             @NonNull final Runnable action) {
-        new Alert(Alert.AlertType.CONFIRMATION, header, ButtonType.YES, ButtonType.NO)
-                .showAndWait()
-                .ifPresent(response -> {
+        final var dialog = new Alert(Alert.AlertType.CONFIRMATION, header, ButtonType.YES, ButtonType.NO);
+        dialog.setHeaderText(null);
+
+        dialog.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES)
                 action.run();
         });

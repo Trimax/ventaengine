@@ -28,7 +28,8 @@ public final class FolderRemoveHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        DialogUtil.showConfirm("Delete folder `" + item.name() + "` and all its contents?", () -> removeFolder(selected));
+        DialogUtil.showConfirm("Are you sure you want to delete folder `" + item.name() + "` and all its contents?",
+                () -> removeFolder(selected));
     }
 
     private void removeFolder(final TreeItem<Item> selected) {
