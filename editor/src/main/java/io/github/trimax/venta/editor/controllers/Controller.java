@@ -18,17 +18,17 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
 
-public final class ArchiveManagerController {
+public final class Controller {
     @FXML private TreeView<Item> tree;
     @FXML private Label status;
     @FXML private VBox info;
 
     @FXML private Button btnToolBarArchiveNew;
 
-    @FXML private Button btnToolBarFileAdd;
-    @FXML private Button btnToolBarFileRemove;
-    @FXML private Button btnToolBarFolderAdd;
-    @FXML private Button btnToolBarFolderRemove;
+    @FXML private Button btnToolBarResourceAdd;
+    @FXML private Button btnToolBarResourceRemove;
+    @FXML private Button btnToolBarGroupAdd;
+    @FXML private Button btnToolBarGroupRemove;
 
     @FXML private MenuItem btnMenuEditorAbout;
     @FXML private MenuItem btnMenuEditorQuit;
@@ -61,19 +61,19 @@ public final class ArchiveManagerController {
     private void bindToolBar() {
         btnToolBarArchiveNew.setOnAction(new ArchiveNewHandler(tree, createListener()));
 
-        btnToolBarFileAdd.setOnAction(new ResourceAddHandler(tree, status));
-        btnToolBarFileRemove.setOnAction(new ResourceRemoveHandler(tree, status));
-        btnToolBarFolderAdd.setOnAction(new GroupAddHandler(tree, status));
-        btnToolBarFolderRemove.setOnAction(new GroupRemoveHandler(tree, status));
+        btnToolBarResourceAdd.setOnAction(new ResourceAddHandler(tree, status));
+        btnToolBarResourceRemove.setOnAction(new ResourceRemoveHandler(tree, status));
+        btnToolBarGroupAdd.setOnAction(new GroupAddHandler(tree, status));
+        btnToolBarGroupRemove.setOnAction(new GroupRemoveHandler(tree, status));
     }
 
     private TreeItemListener createListener() {
         return new TreeItemListener(ToolBar.builder()
                 .btnToolBarArchiveNew(btnToolBarArchiveNew)
-                .btnToolBarFileAdd(btnToolBarFileAdd)
-                .btnToolBarFileRemove(btnToolBarFileRemove)
-                .btnToolBarFolderAdd(btnToolBarFolderAdd)
-                .btnToolBarFolderRemove(btnToolBarFolderRemove)
+                .btnToolBarFileAdd(btnToolBarResourceAdd)
+                .btnToolBarFileRemove(btnToolBarResourceRemove)
+                .btnToolBarFolderAdd(btnToolBarGroupAdd)
+                .btnToolBarFolderRemove(btnToolBarGroupRemove)
                 .build(), info);
     }
 }

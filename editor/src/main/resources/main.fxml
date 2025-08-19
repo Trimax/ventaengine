@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.ArchiveManagerController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.Controller">
     <top>
         <VBox>
             <MenuBar>
@@ -28,15 +28,18 @@
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <Button text="New" fx:id="btnToolBarArchiveNew" />
-                <Button text="Save" fx:id="btnToolBarArchiveSave" />
-                <Button text="Load" fx:id="btnToolBarArchiveLoad" />
+                <Button text="New"   fx:id="btnToolBarArchiveNew" />
+                <Button text="Save"  fx:id="btnToolBarArchiveSave" />
+                <Button text="Load"  fx:id="btnToolBarArchiveLoad" />
                 <Button text="Build" fx:id="btnToolBarArchiveBuild" />
+
                 <Separator/>
-                <Button text="Add File"      disable="true" fx:id="btnToolBarFileAdd" />
-                <Button text="Remove File"   disable="true" fx:id="btnToolBarFileRemove" />
-                <Button text="Add Folder"    disable="true" fx:id="btnToolBarFolderAdd" />
-                <Button text="Remove Folder" disable="true" fx:id="btnToolBarFolderRemove" />
+
+                <Button text="Add Group"    disable="true" fx:id="btnToolBarGroupAdd"/>
+                <Button text="Remove Group" disable="true" fx:id="btnToolBarGroupRemove"/>
+
+                <Button text="Add Resource"    disable="true" fx:id="btnToolBarResourceAdd"/>
+                <Button text="Remove Resource" disable="true" fx:id="btnToolBarResourceRemove"/>
             </ToolBar>
         </VBox>
     </top>
