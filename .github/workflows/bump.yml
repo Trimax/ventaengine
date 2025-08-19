@@ -33,11 +33,9 @@ jobs:
           NEW="$MAJOR.$MINOR.$((PATCH + 1))"
           echo "new_version=$NEW" >> $GITHUB_OUTPUT
 
-      - name: Replace versions in all pom.xml files
+      - name: Bump project version with Maven Versions Plugin
         run: |
-          OLD=${{ steps.get_version.outputs.version }}
-          NEW=${{ steps.bump.outputs.new_version }}
-          find . -name pom.xml -exec sed -i "s/<version>$OLD<\/version>/<version>$NEW<\/version>/g" {} \;
+          mvn versions:set -DnewVersion=${{ steps.bump.outputs.new_version }} -DgenerateBackupPoms=false
 
       - name: Commit and push updated versions
         env:
