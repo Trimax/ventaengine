@@ -1,5 +1,6 @@
 package io.github.trimax.venta.editor;
 
+import io.github.trimax.venta.editor.definitions.Icons;
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.model.ItemType;
 import javafx.fxml.FXML;
@@ -18,27 +19,32 @@ public final class ArchiveManagerController {
 
     @FXML
     public void initialize() {
-        final var root = new TreeItem<>(new Item(ItemType.Root, "Root", null));
+        final var root = new TreeItem<>(new Item(ItemType.Root, Icons.UNKNOWN, "Root", null));
         resourceTree.setRoot(root);
         resourceTree.getSelectionModel().selectedItemProperty().addListener((_, _, newSel) -> updateInfoPanel(newSel));
         resourceTree.setShowRoot(false);
-        resourceTree.setCellFactory(tv -> new TreeCell<>() {
+        resourceTree.setCellFactory(_ -> new TreeCell<>() {
             @Override
             protected void updateItem(final Item item, final boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null)
+                if (item == null) {
+                    setGraphic(null);
                     setText(null);
-                else
-                    setText(item.name());
+                    return;
+                }
+
+                setText(item.name());
+                setGraphic(item.iconView());
             }
         });
 
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, "Shaders", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, "Textures", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, "Objects", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, "Meshes", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, "Scenes", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, "Materials", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.MATERIAL, "Materials", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.TEXTURE, "Textures", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.SHADER, "Shaders", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.OBJECT, "Objects", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.MESH, "Meshes", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.LIGHT, "Lights", null)));
+        root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.SCENE, "Scenes", null)));
 
         btnToolBarFileAdd.setOnAction(_ -> addFile());
         btnToolBarFileRemove.setOnAction(_ -> removeFile());
@@ -58,7 +64,7 @@ public final class ArchiveManagerController {
             return;
         }
 
-        final var newFile = new TreeItem<>(new Item("New File", "/path/to/file"));
+        final var newFile = new TreeItem<>(new Item(Icons.OBJECT, "New File","/path/to/file"));
         selected.getChildren().add(newFile);
         selected.setExpanded(true);
         statusLabel.setText("New file added");
