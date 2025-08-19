@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor;
+package io.github.trimax.venta.editor.utils;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;

@@ -1,5 +1,7 @@
 package io.github.trimax.venta.editor.utils;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -19,5 +21,15 @@ public final class DialogUtil {
         dialog.setWidth(512);
 
         dialog.showAndWait().ifPresent(action);
+    }
+
+    public void showConfirm(@NonNull final String header,
+                            @NonNull final Runnable action) {
+        new Alert(Alert.AlertType.CONFIRMATION, header, ButtonType.YES, ButtonType.NO)
+                .showAndWait()
+                .ifPresent(response -> {
+            if (response == ButtonType.YES)
+                action.run();
+        });
     }
 }

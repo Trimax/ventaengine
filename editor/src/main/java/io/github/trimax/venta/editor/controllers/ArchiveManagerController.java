@@ -1,16 +1,15 @@
-package io.github.trimax.venta.editor;
+package io.github.trimax.venta.editor.controllers;
 
 import io.github.trimax.venta.editor.definitions.Icons;
+import io.github.trimax.venta.editor.handlers.FileAddHandler;
+import io.github.trimax.venta.editor.handlers.FileRemoveHandler;
 import io.github.trimax.venta.editor.handlers.FolderAddHandler;
 import io.github.trimax.venta.editor.handlers.FolderRemoveHandler;
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.model.ItemType;
 import io.github.trimax.venta.editor.renderers.TreeCellRenderer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 public final class ArchiveManagerController {
@@ -22,6 +21,11 @@ public final class ArchiveManagerController {
     @FXML private Button btnToolBarFileRemove;
     @FXML private Button btnToolBarFolderAdd;
     @FXML private Button btnToolBarFolderRemove;
+
+    @FXML private MenuItem btnMenuFileAdd;
+    @FXML private MenuItem btnMenuFileRemove;
+    @FXML private MenuItem btnMenuFolderAdd;
+    @FXML private MenuItem btnMenuFolderRemove;
 
     @FXML
     public void initialize() {
@@ -39,45 +43,15 @@ public final class ArchiveManagerController {
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.LIGHT, "Lights", null)));
         root.getChildren().add(new TreeItem<>(new Item(ItemType.Group, Icons.SCENE, "Scenes", null)));
 
-        btnToolBarFileAdd.setOnAction(_ -> addFile());
-        btnToolBarFileRemove.setOnAction(_ -> removeFile());
+        btnToolBarFileAdd.setOnAction(new FileAddHandler(tree, status));
+        btnToolBarFileRemove.setOnAction(new FileRemoveHandler(tree, status));
         btnToolBarFolderAdd.setOnAction(new FolderAddHandler(tree, status));
         btnToolBarFolderRemove.setOnAction(new FolderRemoveHandler(tree, status));
-    }
 
-    private void addFile() {
-        final var selected = tree.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            status.setText("Select a folder to add file");
-            return;
-        }
-
-        if (selected.getValue().type() != ItemType.Folder) {
-            status.setText("Selected item is not a folder");
-            return;
-        }
-
-        final var newFile = new TreeItem<>(new Item(Icons.FILE, "New File","/path/to/file"));
-        selected.getChildren().add(newFile);
-        selected.setExpanded(true);
-        status.setText("New file added");
-    }
-
-    private void removeFile() {
-        final var selected = tree.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            status.setText("Select a file or a folder to remove");
-            return;
-        }
-
-        final var item = selected.getValue();
-        if (item.type() == ItemType.Root || item.type() == ItemType.Group) {
-            status.setText("Neither root nor group can be removed");
-            return;
-        }
-
-        selected.getParent().getChildren().remove(selected);
-        status.setText("File removed");
+        btnMenuFileAdd.setOnAction(new FileAddHandler(tree, status));
+        btnMenuFileRemove.setOnAction(new FileRemoveHandler(tree, status));
+        btnMenuFolderAdd.setOnAction(new FolderAddHandler(tree, status));
+        btnMenuFolderRemove.setOnAction(new FolderRemoveHandler(tree, status));
     }
 
     private void updateInfoPanel(final TreeItem<Item> selected) {

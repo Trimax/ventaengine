@@ -1,9 +1,9 @@
 package io.github.trimax.venta.editor.handlers;
 
-import io.github.trimax.venta.editor.NameUtil;
 import io.github.trimax.venta.editor.model.Item;
 import io.github.trimax.venta.editor.model.ItemType;
 import io.github.trimax.venta.editor.utils.DialogUtil;
+import io.github.trimax.venta.editor.utils.NameUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,10 +32,10 @@ public final class FolderAddHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        DialogUtil.showInput("Enter folder name:", "Create folder", "Name", name -> create(name, selected));
+        DialogUtil.showInput("Enter folder name:", "Create folder", "Name", name -> addFolder(name, selected));
     }
 
-    private void create(final String name, final TreeItem<Item> selected) {
+    private void addFolder(final String name, final TreeItem<Item> selected) {
         if (StringUtils.isBlank(name) || !NameUtil.isValidName(name)) {
             status.setText("Folder name is incorrect. Must contain only symbols, digits, -, _");
             return;
