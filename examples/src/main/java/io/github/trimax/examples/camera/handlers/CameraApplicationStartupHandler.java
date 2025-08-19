@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 @Slf4j
@@ -18,9 +19,10 @@ public final class CameraApplicationStartupHandler implements VentaEngineStartup
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector4f(0.6f, 0.6f, 0.6f, 1.f));
 
-        final var cube = context.getObjectManager().create("cube", context.getObjectRepository().get("cube.json"));
-        state.setCube(cube);
-        scene.add(cube);
+        final var castle = context.getObjectManager().create("Castle", context.getObjectRepository().get("castle.json"));
+        castle.move(new Vector3f(0, 1.5f, 0));
+        castle.setScale(new Vector3f(3.f));
+        scene.add(castle);
 
         final var camera = context.getCameraManager().getCurrent();
         state.setCamera(camera);
