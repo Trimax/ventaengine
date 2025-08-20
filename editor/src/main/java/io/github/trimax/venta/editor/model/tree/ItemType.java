@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ItemType {
-    Root(false, false),
+    Root(false, true),
     Folder(false, true),
     Group(true, true),
     Resource(true, false);
