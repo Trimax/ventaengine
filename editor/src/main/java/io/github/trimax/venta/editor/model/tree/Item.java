@@ -1,5 +1,10 @@
 package io.github.trimax.venta.editor.model.tree;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.apache.commons.lang3.StringUtils;
+
 import io.github.trimax.venta.editor.definitions.Element;
 import io.github.trimax.venta.editor.definitions.Folder;
 import javafx.scene.image.Image;
@@ -33,5 +38,9 @@ public record Item(ItemType type, Image icon, String name, String reference) {
         }
 
         return view;
+    }
+
+    public boolean hasExistingReference() {
+        return StringUtils.isNotBlank(reference) && Files.exists(Path.of(reference));
     }
 }

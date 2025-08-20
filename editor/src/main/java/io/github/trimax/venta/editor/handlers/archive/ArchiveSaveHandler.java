@@ -9,7 +9,6 @@ import java.util.UUID;
 import com.google.gson.Gson;
 import io.github.trimax.venta.core.model.common.Node;
 import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
-import io.github.trimax.venta.editor.model.dto.MetaDTO;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
@@ -36,11 +35,10 @@ public final class ArchiveSaveHandler implements EventHandler<ActionEvent> {
     @SneakyThrows
     private void save(final File file) {
         try (final var writer = new FileWriter(file)) {
-            new Gson().toJson(new ArchiveDTO(new MetaDTO(UUID.randomUUID().toString(), System.currentTimeMillis()),
-                    createTreeNode(tree.getRoot())), writer);
+            new Gson().toJson(new ArchiveDTO(UUID.randomUUID().toString(), createTreeNode(tree.getRoot())), writer);
         }
 
-        status.setText("File saved to " + file.getAbsoluteFile());
+        status.setText("Archive saved to " + file.getAbsoluteFile());
     }
 
     private Node<String> createTreeNode(final TreeItem<Item> node) {
