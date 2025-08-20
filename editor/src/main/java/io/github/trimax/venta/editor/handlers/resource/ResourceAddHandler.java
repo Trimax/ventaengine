@@ -34,10 +34,10 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
         }
 
         final var stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        DialogUtil.showFileChoose("Please choose a resource to add", file -> addResource(file, selected), stage);
+        DialogUtil.showFileOpen("Please choose a resource to add", file -> addResource(file, selected), stage);
     }
 
-    private void addResource(final File file, TreeItem<Item> selected) {
+    private void addResource(final File file, final TreeItem<Item> selected) {
         final var newFile = new TreeItem<>(new Item(Icons.FILE, file.getName(), file.getAbsolutePath()));
         selected.getChildren().add(newFile);
         selected.setExpanded(true);

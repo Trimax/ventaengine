@@ -45,9 +45,9 @@ public final class DialogUtil {
         dialog.showAndWait();
     }
 
-    public void showFileChoose(@NonNull final String message,
-                               @NonNull final Consumer<File> action,
-                               @NonNull final Stage stage) {
+    public void showFileOpen(@NonNull final String message,
+                             @NonNull final Consumer<File> action,
+                             @NonNull final Stage stage) {
         final var dialog = new FileChooser();
         dialog.setTitle(message);
 
@@ -58,5 +58,16 @@ public final class DialogUtil {
                 new FileChooser.ExtensionFilter("Meshes", "*.obj"));
 
         Optional.ofNullable(dialog.showOpenDialog(stage)).ifPresent(action);
+    }
+
+    public void showFileSave(@NonNull final String message,
+                             @NonNull final Consumer<File> action,
+                             @NonNull final Stage stage) {
+        final var dialog = new FileChooser();
+        dialog.setTitle(message);
+
+        dialog.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archive files (*.json)", "*.json"));
+
+        Optional.ofNullable(dialog.showSaveDialog(stage)).ifPresent(action);
     }
 }
