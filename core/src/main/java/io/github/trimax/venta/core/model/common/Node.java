@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.common.hierarchy;
+package io.github.trimax.venta.core.model.common;
 
 import org.apache.commons.collections4.CollectionUtils;
 

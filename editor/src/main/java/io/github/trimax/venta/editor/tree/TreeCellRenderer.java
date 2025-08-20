@@ -1,6 +1,6 @@
 package io.github.trimax.venta.editor.tree;
 
-import io.github.trimax.venta.editor.model.Item;
+import io.github.trimax.venta.editor.model.tree.Item;
 import javafx.scene.control.TreeCell;
 
 public final class TreeCellRenderer extends TreeCell<Item> {
