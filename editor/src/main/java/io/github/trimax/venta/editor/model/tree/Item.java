@@ -1,19 +1,19 @@
 package io.github.trimax.venta.editor.model.tree;
 
-import io.github.trimax.venta.editor.definitions.Icons;
+import io.github.trimax.venta.editor.definitions.Element;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public record Item(ItemType type, Image icon, String name, String reference) {
     public Item() {
-        this(ItemType.Root, Icons.UNKNOWN, "Root", null);
+        this(ItemType.Root, Element.Unknown.getIcon(), "Root", null);
     }
 
     public Item(final String name) {
-        this(ItemType.Group, Icons.FOLDER, name, null);
+        this(ItemType.Group, Element.Folder.getIcon(), name, null);
     }
 
-    public Item(final Image icon, final String name, final String reference) {
+    public Item(final String name, final Image icon, final String reference) {
         this(ItemType.Resource, icon, name, reference);
     }
 

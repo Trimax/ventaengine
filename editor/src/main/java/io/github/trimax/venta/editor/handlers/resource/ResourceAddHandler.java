@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import io.github.trimax.venta.editor.definitions.Icons;
+import io.github.trimax.venta.editor.definitions.Element;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ItemType;
 import io.github.trimax.venta.editor.utils.DialogUtil;
@@ -44,7 +44,7 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
     }
 
     private void addResource(final File file, final TreeItem<Item> selected) {
-        final var newFile = new TreeItem<>(new Item(Icons.FILE, file.getName(), file.getAbsolutePath()));
+        final var newFile = new TreeItem<>(new Item(file.getName(), Element.File.getIcon(), file.getAbsolutePath()));
         selected.getChildren().add(newFile);
         selected.setExpanded(true);
         status.setText("Resource `" + file.getName() + "` added");

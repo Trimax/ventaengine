@@ -6,8 +6,8 @@ import io.github.trimax.venta.core.model.common.Node;
 import lombok.NonNull;
 import one.util.streamex.StreamEx;
 
-public record ArchiveDTO(MetaDTO meta, Node<ResourceDTO> tree) {
-    public Node<ResourceDTO> getGroup(@NonNull final String name) {
+public record ArchiveDTO(MetaDTO meta, Node<String> tree) {
+    public Node<String> getGroup(@NonNull final String name) {
         if (tree == null || !tree.hasChildren())
             return null;
 

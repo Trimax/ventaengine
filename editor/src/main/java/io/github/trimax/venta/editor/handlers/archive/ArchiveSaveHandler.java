@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import io.github.trimax.venta.core.model.common.Node;
 import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
 import io.github.trimax.venta.editor.model.dto.MetaDTO;
-import io.github.trimax.venta.editor.model.dto.ResourceDTO;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
@@ -44,8 +43,8 @@ public final class ArchiveSaveHandler implements EventHandler<ActionEvent> {
         status.setText("File saved to " + file.getAbsoluteFile());
     }
 
-    private Node<ResourceDTO> createTreeNode(final TreeItem<Item> node) {
-        return new Node<>(node.getValue().name(), new ResourceDTO(node.getValue().name(), node.getValue().reference()),
+    private Node<String> createTreeNode(final TreeItem<Item> node) {
+        return new Node<>(node.getValue().name(), node.getValue().reference(),
                 node.getChildren().stream().map(this::createTreeNode).toList());
     }
 }
