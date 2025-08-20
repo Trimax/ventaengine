@@ -3,9 +3,13 @@ package io.github.trimax.venta.editor.utils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
+import java.io.File;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @UtilityClass
@@ -39,5 +43,20 @@ public final class DialogUtil {
         dialog.setHeaderText(null);
 
         dialog.showAndWait();
+    }
+
+    public void showFileChoose(@NonNull final String message,
+                               @NonNull final Consumer<File> action,
+                               @NonNull final Stage stage) {
+        final var dialog = new FileChooser();
+        dialog.setTitle(message);
+
+        dialog.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*"),
+                new FileChooser.ExtensionFilter("JSON Files", "*.json"),
+                new FileChooser.ExtensionFilter("Textures", "*.png", "*.jpg", "*.jpeg", "*.tga"),
+                new FileChooser.ExtensionFilter("Meshes", "*.obj"));
+
+        Optional.ofNullable(dialog.showOpenDialog(stage)).ifPresent(action);
     }
 }
