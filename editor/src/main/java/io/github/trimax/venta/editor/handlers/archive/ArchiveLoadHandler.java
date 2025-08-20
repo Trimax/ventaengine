@@ -56,16 +56,14 @@ public final class ArchiveLoadHandler implements EventHandler<ActionEvent> {
     }
 
     private void loadGroup(final TreeItem<Item> node, final Node<String> group) {
-        System.out.println("Loading group: " + group.name() + " into node: " + node.getValue().name());
-
-        if (group.hasChildren()) {
-            final var newGroup = new TreeItem<>(new Item(group.name()));
-            node.getChildren().add(newGroup);
-            StreamEx.of(group.children()).forEach(child -> loadGroup(newGroup, child));
+        if (!group.hasChildren()) {
+            node.getChildren().add(new TreeItem<>(Item.asElement(group.name(), group.value(), Element.File.getIcon())));
             return;
         }
 
-        node.setValue(new Item(group.name(), Element.File.getIcon(), group.value()));
+        final var newGroup = new TreeItem<>(Item.asGroup(group.name()));
+        node.getChildren().add(newGroup);
+        StreamEx.of(group.children()).forEach(child -> loadGroup(newGroup, child));
     }
 
     private TreeItem<Item> findNode(final TreeItem<Item> parent, final String name) {

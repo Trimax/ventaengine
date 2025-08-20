@@ -44,7 +44,7 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
     }
 
     private void addResource(final File file, final TreeItem<Item> selected) {
-        final var newFile = new TreeItem<>(new Item(file.getName(), Element.File.getIcon(), file.getAbsolutePath()));
+        final var newFile = new TreeItem<>(Item.asElement(file.getName(), file.getAbsolutePath(), Element.File.getIcon()));
         selected.getChildren().add(newFile);
         selected.setExpanded(true);
         status.setText("Resource `" + file.getName() + "` added");
