@@ -1,8 +1,7 @@
 package io.github.trimax.venta.editor.utils;
 
-import io.github.trimax.venta.editor.definitions.Icons;
-import io.github.trimax.venta.editor.model.Item;
-import io.github.trimax.venta.editor.model.ItemType;
+import io.github.trimax.venta.editor.definitions.Folder;
+import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.tree.TreeCellRenderer;
 import io.github.trimax.venta.editor.tree.TreeItemListener;
 import javafx.collections.ListChangeListener;
@@ -23,14 +22,10 @@ public final class TreeUtil {
         tree.getSelectionModel().selectedItemProperty()
                 .addListener((_, _, newSel) -> listener.accept(newSel));
 
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.MATERIAL, "Materials", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.TEXTURE, "Textures", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.PROGRAM, "Programs", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.SHADER, "Shaders", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.OBJECT, "Objects", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.LIGHT, "Lights", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.SCENE, "Scenes", null)));
-        root.getChildren().add(new TreeItem<>(new Item(ItemType.Folder, Icons.MESH, "Meshes", null)));
+        StreamEx.of(Folder.values())
+                .map(Item::asFolder)
+                .map(TreeItem::new)
+                .forEach(root.getChildren()::add);
 
         enableAutoSort(root);
     }

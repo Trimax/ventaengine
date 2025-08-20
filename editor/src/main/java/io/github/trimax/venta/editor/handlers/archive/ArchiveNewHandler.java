@@ -1,6 +1,6 @@
 package io.github.trimax.venta.editor.handlers.archive;
 
-import io.github.trimax.venta.editor.model.Item;
+import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.tree.TreeItemListener;
 import io.github.trimax.venta.editor.utils.DialogUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;

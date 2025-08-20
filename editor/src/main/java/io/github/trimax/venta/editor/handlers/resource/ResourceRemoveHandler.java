@@ -1,6 +1,6 @@
 package io.github.trimax.venta.editor.handlers.resource;
 
-import io.github.trimax.venta.editor.model.Item;
+import io.github.trimax.venta.editor.model.tree.Item;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;

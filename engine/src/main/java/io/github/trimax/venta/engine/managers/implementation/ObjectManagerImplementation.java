@@ -1,11 +1,11 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.core.model.common.Node;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.ObjectManager;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.common.hierarchy.Node;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;

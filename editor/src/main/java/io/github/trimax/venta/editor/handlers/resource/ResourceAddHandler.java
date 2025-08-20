@@ -1,13 +1,19 @@
 package io.github.trimax.venta.editor.handlers.resource;
 
-import io.github.trimax.venta.editor.definitions.Icons;
-import io.github.trimax.venta.editor.model.Item;
-import io.github.trimax.venta.editor.model.ItemType;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
+import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.editor.model.tree.ItemType;
+import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -28,9 +34,18 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        final var newFile = new TreeItem<>(new Item(Icons.FILE, "New File", "/path/to/file"));
+        final var stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        DialogUtil.showFileOpen("Please choose a resource to add", file -> addResource(file, selected), stage,
+                Map.of("All Files (*.*)", List.of("*.*"),
+                        "JSON Files (*.json)", List.of("*.json"),
+                        "Meshes (*.obj)", List.of("*.obj"),
+                        "Textures (*.png)", List.of("*.png", "*.jpg", "*.jpeg", "*.tga")));
+    }
+
+    private void addResource(final File file, final TreeItem<Item> selected) {
+        final var newFile = new TreeItem<>(Item.asResource(file.getName(), file.getAbsolutePath()));
         selected.getChildren().add(newFile);
         selected.setExpanded(true);
-        status.setText("New file added");
+        status.setText("Resource `" + file.getName() + "` added");
     }
 }
