@@ -1,7 +1,9 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
+import java.util.Optional;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.core.model.common.Node;
+import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.dto.MeshPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.ObjectPrefabDTO;
@@ -18,8 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
-
-import java.util.Optional;
 
 @Slf4j
 @Component

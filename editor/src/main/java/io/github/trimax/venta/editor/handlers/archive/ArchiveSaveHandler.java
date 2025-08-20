@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.google.gson.Gson;
-import io.github.trimax.venta.core.model.common.Node;
+import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.DialogUtil;
