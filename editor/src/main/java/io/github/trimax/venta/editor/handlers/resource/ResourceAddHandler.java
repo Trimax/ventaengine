@@ -1,5 +1,9 @@
 package io.github.trimax.venta.editor.handlers.resource;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 import io.github.trimax.venta.editor.definitions.Icons;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ItemType;
@@ -12,8 +16,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
-
-import java.io.File;
 
 @AllArgsConstructor
 public final class ResourceAddHandler implements EventHandler<ActionEvent> {
@@ -34,7 +36,11 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
         }
 
         final var stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        DialogUtil.showFileOpen("Please choose a resource to add", file -> addResource(file, selected), stage);
+        DialogUtil.showFileOpen("Please choose a resource to add", file -> addResource(file, selected), stage,
+                Map.of("All Files (*.*)", List.of("*.*"),
+                        "JSON Files (*.json)", List.of("*.json"),
+                        "Meshes (*.obj)", List.of("*.obj"),
+                        "Textures (*.png)", List.of("*.png", "*.jpg", "*.jpeg", "*.tga")));
     }
 
     private void addResource(final File file, final TreeItem<Item> selected) {
