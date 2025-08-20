@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.core.model.common.Node;
+import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.ObjectManager;

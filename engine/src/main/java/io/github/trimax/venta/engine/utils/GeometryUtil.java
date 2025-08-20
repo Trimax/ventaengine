@@ -1,10 +1,11 @@
 package io.github.trimax.venta.engine.utils;
 
-import io.github.trimax.venta.core.model.common.Node;
+import org.joml.Vector3f;
+
+import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import lombok.experimental.UtilityClass;
-import org.joml.Vector3f;
 
 @UtilityClass
 public final class GeometryUtil {

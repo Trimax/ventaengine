@@ -2,7 +2,7 @@ package io.github.trimax.venta.editor.model.dto;
 
 import org.apache.commons.lang3.Strings;
 
-import io.github.trimax.venta.core.model.common.Node;
+import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.editor.definitions.Folder;
 import lombok.NonNull;
 import one.util.streamex.StreamEx;

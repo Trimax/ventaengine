@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import io.github.trimax.venta.core.model.common.Node;
+import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.editor.definitions.Folder;
 import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
 import io.github.trimax.venta.editor.model.tree.Item;

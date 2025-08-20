@@ -23,12 +23,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.github.trimax</groupId>
-            <artifactId>core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- Math -->
         <dependency>
             <groupId>org.joml</groupId>

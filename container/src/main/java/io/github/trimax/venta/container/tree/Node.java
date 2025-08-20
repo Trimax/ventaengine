@@ -1,8 +1,8 @@
-package io.github.trimax.venta.core.model.common;
-
-import org.apache.commons.collections4.CollectionUtils;
+package io.github.trimax.venta.container.tree;
 
 import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 public record Node<T>(String name, T value, List<Node<T>> children) {
     public boolean hasChildren() {

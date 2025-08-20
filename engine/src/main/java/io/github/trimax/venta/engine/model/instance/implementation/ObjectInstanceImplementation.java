@@ -1,6 +1,8 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import io.github.trimax.venta.core.model.common.Node;
+import org.joml.Vector3f;
+
+import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
@@ -11,7 +13,6 @@ import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.utils.GeometryUtil;
 import lombok.Getter;
 import lombok.NonNull;
-import org.joml.Vector3f;
 
 @Getter
 public final class ObjectInstanceImplementation extends AbstractInstanceImplementation implements ObjectInstance {
