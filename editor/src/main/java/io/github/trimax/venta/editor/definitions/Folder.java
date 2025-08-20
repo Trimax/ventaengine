@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum Group {
+public enum Folder {
     Materials("/icons/material.png"),
     Textures("/icons/texture.png"),
     Programs("/icons/program.png"),
@@ -19,7 +19,7 @@ public enum Group {
 
     private final Image icon;
 
-    Group(final String iconPath) {
-        this(new Image(java.util.Objects.requireNonNull(Group.class.getResourceAsStream(iconPath))));
+    Folder(final String iconPath) {
+        this(new Image(java.util.Objects.requireNonNull(Folder.class.getResourceAsStream(iconPath))));
     }
 }

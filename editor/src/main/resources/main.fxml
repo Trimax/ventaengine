@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -75,7 +83,7 @@
                         <ImageView>
                             <fitWidth>16</fitWidth>
                             <fitHeight>16</fitHeight>
-                            <Image url="@/icons/folder.png" />
+                            <Image url="@/icons/group.png" />
                         </ImageView>
                     </graphic>
                 </Button>
@@ -84,7 +92,7 @@
                         <ImageView>
                             <fitWidth>16</fitWidth>
                             <fitHeight>16</fitHeight>
-                            <Image url="@/icons/folder.png" />
+                            <Image url="@/icons/resource.png" />
                         </ImageView>
                     </graphic>
                 </Button>
@@ -97,7 +105,7 @@
                         <ImageView>
                             <fitWidth>16</fitWidth>
                             <fitHeight>16</fitHeight>
-                            <Image url="@/icons/file.png" />
+                            <Image url="@/icons/resource.png" />
                         </ImageView>
                     </graphic>
                 </Button>
@@ -106,7 +114,7 @@
                         <ImageView>
                             <fitWidth>16</fitWidth>
                             <fitHeight>16</fitHeight>
-                            <Image url="@/icons/file.png" />
+                            <Image url="@/icons/resource.png" />
                         </ImageView>
                     </graphic>
                 </Button>

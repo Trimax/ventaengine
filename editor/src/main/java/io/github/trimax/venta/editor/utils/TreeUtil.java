@@ -1,6 +1,6 @@
 package io.github.trimax.venta.editor.utils;
 
-import io.github.trimax.venta.editor.definitions.Group;
+import io.github.trimax.venta.editor.definitions.Folder;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.tree.TreeCellRenderer;
 import io.github.trimax.venta.editor.tree.TreeItemListener;
@@ -22,7 +22,7 @@ public final class TreeUtil {
         tree.getSelectionModel().selectedItemProperty()
                 .addListener((_, _, newSel) -> listener.accept(newSel));
 
-        StreamEx.of(Group.values())
+        StreamEx.of(Folder.values())
                 .map(Item::asFolder)
                 .map(TreeItem::new)
                 .forEach(root.getChildren()::add);
