@@ -1,6 +1,6 @@
 package io.github.trimax.venta.editor.handlers.archive;
 
-import io.github.trimax.venta.editor.model.Item;
+import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

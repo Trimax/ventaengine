@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.model;
+package io.github.trimax.venta.editor.model.tree;
 
 import io.github.trimax.venta.editor.definitions.Icons;
 import javafx.scene.image.Image;

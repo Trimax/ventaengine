@@ -20,12 +20,12 @@
                     <MenuItem text="Build" accelerator="Ctrl+B" fx:id="btnMenuArchiveBuild" />
                 </Menu>
                 <Menu text="Group">
-                    <MenuItem text="Add Group"      accelerator="Ctrl+G"       fx:id="btnMenuGroupAdd" />
-                    <MenuItem text="Remove Group"   accelerator="Ctrl+Shift+G" fx:id="btnMenuGroupRemove" />
+                    <MenuItem text="Add Group"    accelerator="Ctrl+G"       disable="true" fx:id="btnMenuGroupAdd" />
+                    <MenuItem text="Remove Group" accelerator="Ctrl+Shift+G" disable="true" fx:id="btnMenuGroupRemove" />
                 </Menu>
                 <Menu text="Resource">
-                    <MenuItem text="Add Resource"    accelerator="Ctrl+R"       fx:id="btnMenuResourceAdd" />
-                    <MenuItem text="Remove Resource" accelerator="Ctrl+Shift+R" fx:id="btnMenuResourceRemove" />
+                    <MenuItem text="Add Resource"    accelerator="Ctrl+R"       disable="true" fx:id="btnMenuResourceAdd" />
+                    <MenuItem text="Remove Resource" accelerator="Ctrl+Shift+R" disable="true" fx:id="btnMenuResourceRemove" />
                 </Menu>
             </MenuBar>
             <ToolBar>

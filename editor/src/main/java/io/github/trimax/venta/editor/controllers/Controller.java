@@ -10,8 +10,9 @@ import io.github.trimax.venta.editor.handlers.group.GroupAddHandler;
 import io.github.trimax.venta.editor.handlers.group.GroupRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
-import io.github.trimax.venta.editor.model.Item;
-import io.github.trimax.venta.editor.model.ToolBar;
+import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.editor.model.ui.Menu;
+import io.github.trimax.venta.editor.model.ui.ToolBar;
 import io.github.trimax.venta.editor.tree.TreeItemListener;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.fxml.FXML;
@@ -89,12 +90,19 @@ public final class Controller {
     }
 
     private TreeItemListener createListener() {
-        return new TreeItemListener(ToolBar.builder()
-                .btnToolBarArchiveNew(btnToolBarArchiveNew)
-                .btnToolBarFileAdd(btnToolBarResourceAdd)
-                .btnToolBarFileRemove(btnToolBarResourceRemove)
-                .btnToolBarFolderAdd(btnToolBarGroupAdd)
-                .btnToolBarFolderRemove(btnToolBarGroupRemove)
-                .build(), info);
+        return new TreeItemListener(
+                ToolBar.builder()
+                        .btnToolBarResourceAdd(btnToolBarResourceAdd)
+                        .btnToolBarResourceRemove(btnToolBarResourceRemove)
+                        .btnToolBarGroupAdd(btnToolBarGroupAdd)
+                        .btnToolBarGroupRemove(btnToolBarGroupRemove)
+                        .build(),
+                Menu.builder()
+                        .btnMenuResourceAdd(btnMenuResourceAdd)
+                        .btnMenuResourceRemove(btnMenuResourceRemove)
+                        .btnMenuGroupAdd(btnMenuGroupAdd)
+                        .btnMenuGroupRemove(btnMenuGroupRemove)
+                        .build(),
+                info);
     }
 }

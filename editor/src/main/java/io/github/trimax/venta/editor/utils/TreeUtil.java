@@ -1,8 +1,8 @@
 package io.github.trimax.venta.editor.utils;
 
 import io.github.trimax.venta.editor.definitions.Icons;
-import io.github.trimax.venta.editor.model.Item;
-import io.github.trimax.venta.editor.model.ItemType;
+import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.editor.model.tree.ItemType;
 import io.github.trimax.venta.editor.tree.TreeCellRenderer;
 import io.github.trimax.venta.editor.tree.TreeItemListener;
 import javafx.collections.ListChangeListener;
