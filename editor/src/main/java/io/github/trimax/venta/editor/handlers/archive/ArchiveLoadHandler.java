@@ -49,12 +49,12 @@ public final class ArchiveLoadHandler implements EventHandler<ActionEvent> {
 
     private void loadTree(final ArchiveDTO archive) {
         TreeUtil.initialize(tree, listener);
-        StreamEx.of(Group.values()).forEach(group -> loadFolder(tree.getRoot(), group, archive));
+        StreamEx.of(Group.values()).forEach(group -> loadGroup(tree.getRoot(), group, archive));
 
         status.setText("Archive loaded");
     }
 
-    private void loadFolder(final TreeItem<Item> node, final Group group, final ArchiveDTO archive) {
+    private void loadGroup(final TreeItem<Item> node, final Group group, final ArchiveDTO archive) {
         loadGroup(findNode(node, group.name()), Objects.requireNonNull(archive.getGroup(group)));
     }
 

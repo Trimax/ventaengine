@@ -24,12 +24,12 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
     public void handle(final ActionEvent event) {
         final var selected = tree.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            status.setText("Select a folder to add file");
+            status.setText("Select a group to add the resource");
             return;
         }
 
         if (!selected.getValue().type().isContainer()) {
-            status.setText("Selected item is not a folder or group");
+            status.setText("Selected item is not a group");
             return;
         }
 
@@ -42,8 +42,8 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
     }
 
     private void addResource(final File file, final TreeItem<Item> selected) {
-        final var newFile = new TreeItem<>(Item.asResource(file.getName(), file.getAbsolutePath()));
-        selected.getChildren().add(newFile);
+        final var resource = new TreeItem<>(Item.asResource(file.getName(), file.getAbsolutePath()));
+        selected.getChildren().add(resource);
         selected.setExpanded(true);
         status.setText("Resource `" + file.getName() + "` added");
     }
