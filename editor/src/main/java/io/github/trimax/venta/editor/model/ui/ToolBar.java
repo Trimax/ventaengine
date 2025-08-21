@@ -1,7 +1,6 @@
 package io.github.trimax.venta.editor.model.ui;
 
 import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.editor.model.tree.ItemType;
 import javafx.scene.control.Button;
 import lombok.Builder;
 import lombok.NonNull;
@@ -21,9 +20,10 @@ public final class ToolBar {
     private Button btnToolBarGroupRemove;
 
     public void update(final Item selected) {
-        btnToolBarResourceAdd.setDisable(selected == null || selected.type() != ItemType.Group);
-        btnToolBarResourceRemove.setDisable(selected == null || selected.type() != ItemType.Resource);
+        btnToolBarResourceAdd.setDisable(selected == null || !selected.type().isContainer());
+        btnToolBarResourceRemove.setDisable(selected == null || selected.type().isContainer());
+
         btnToolBarGroupAdd.setDisable(selected == null || !selected.type().isContainer());
-        btnToolBarGroupRemove.setDisable(selected == null || selected.type() != ItemType.Group);
+        btnToolBarGroupRemove.setDisable(selected == null || !selected.type().isContainer() || !selected.deletable());
     }
 }
