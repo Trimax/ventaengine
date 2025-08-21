@@ -29,10 +29,10 @@ public final class GroupRemoveHandler implements EventHandler<ActionEvent> {
         }
 
         DialogUtil.showConfirm("Are you sure you want to delete group `" + item.name() + "` and all its contents?",
-                () -> removeFolder(selected));
+                () -> removeGroup(selected));
     }
 
-    private void removeFolder(final TreeItem<Item> selected) {
+    private void removeGroup(final TreeItem<Item> selected) {
         selected.getParent().getChildren().remove(selected);
         status.setText("Group `" + selected.getValue().name() + "` removed");
     }

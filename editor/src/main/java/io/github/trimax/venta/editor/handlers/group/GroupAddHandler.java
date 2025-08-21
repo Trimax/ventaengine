@@ -1,7 +1,5 @@
 package io.github.trimax.venta.editor.handlers.group;
 
-import org.apache.commons.lang3.StringUtils;
-
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ItemType;
 import io.github.trimax.venta.editor.utils.DialogUtil;
@@ -13,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 @AllArgsConstructor
 public final class GroupAddHandler implements EventHandler<ActionEvent> {
@@ -33,10 +32,10 @@ public final class GroupAddHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        DialogUtil.showInput("Enter group name:", "Create group", "Name", name -> addFolder(name, selected));
+        DialogUtil.showInput("Enter group name:", "Create group", "Name", name -> addGroup(name, selected));
     }
 
-    private void addFolder(final String name, final TreeItem<Item> selected) {
+    private void addGroup(final String name, final TreeItem<Item> selected) {
         if (StringUtils.isBlank(name) || !NameUtil.isValidName(name)) {
             status.setText("Group name is incorrect. Name must contain only symbols, digits, -, _");
             return;
@@ -47,8 +46,8 @@ public final class GroupAddHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        final var newFolder = new TreeItem<>(Item.asGroup(name));
-        selected.getChildren().add(newFolder);
+        final var group = new TreeItem<>(Item.asGroup(name));
+        selected.getChildren().add(group);
         selected.setExpanded(true);
         status.setText("Group `" + name + "` created");
     }
