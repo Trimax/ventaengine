@@ -1,11 +1,6 @@
 package io.github.trimax.venta.editor.handlers.resource;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.editor.model.tree.ItemType;
 import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,6 +10,10 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 public final class ResourceAddHandler implements EventHandler<ActionEvent> {
@@ -29,8 +28,8 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
             return;
         }
 
-        if (selected.getValue().type() != ItemType.Group) {
-            status.setText("Selected item is not a folder");
+        if (!selected.getValue().type().isContainer()) {
+            status.setText("Selected item is not a folder or group");
             return;
         }
 

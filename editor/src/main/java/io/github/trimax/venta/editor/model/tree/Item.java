@@ -1,30 +1,29 @@
 package io.github.trimax.venta.editor.model.tree;
 
+import io.github.trimax.venta.editor.definitions.Element;
+import io.github.trimax.venta.editor.definitions.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import org.apache.commons.lang3.StringUtils;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.apache.commons.lang3.StringUtils;
-
-import io.github.trimax.venta.editor.definitions.Element;
-import io.github.trimax.venta.editor.definitions.Folder;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-public record Item(ItemType type, Image icon, String name, String reference) {
+public record Item(ItemType type, Image icon, String name, String reference, boolean deletable) {
     public Item() {
-        this(ItemType.Root, Element.Unknown.getIcon(), "Root", null);
+        this(ItemType.Root, Element.Unknown.getIcon(), "Root", null, false);
     }
 
-    public static Item asFolder(final Folder folder) {
-        return new Item(ItemType.Folder, folder.getIcon(), folder.name(), null);
+    public static Item asGroup(final Group group) {
+        return new Item(ItemType.Group, group.getIcon(), group.name(), null, false);
     }
 
     public static Item asGroup(final String name) {
-        return new Item(ItemType.Group, Element.Group.getIcon(), name, null);
+        return new Item(ItemType.Group, Element.Group.getIcon(), name, null, true);
     }
 
     public static Item asResource(final String name, final String reference) {
-        return new Item(ItemType.Resource, Element.Resource.getIcon(), name, reference);
+        return new Item(ItemType.Resource, Element.Resource.getIcon(), name, reference, true);
     }
 
     public ImageView iconView() {
@@ -32,7 +31,7 @@ public record Item(ItemType type, Image icon, String name, String reference) {
         view.setFitWidth(16);
         view.setFitHeight(16);
 
-        if (type() == ItemType.Folder) {
+        if (!deletable()) {
             view.setFitWidth(32);
             view.setFitHeight(32);
         }

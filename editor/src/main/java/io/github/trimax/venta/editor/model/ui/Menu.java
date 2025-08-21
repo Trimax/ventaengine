@@ -1,7 +1,6 @@
 package io.github.trimax.venta.editor.model.ui;
 
 import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.editor.model.tree.ItemType;
 import javafx.scene.control.MenuItem;
 import lombok.Builder;
 import lombok.NonNull;
@@ -21,9 +20,10 @@ public final class Menu {
     private MenuItem btnMenuGroupRemove;
 
     public void update(final Item selected) {
-        btnMenuResourceAdd.setDisable(selected == null || selected.type() != ItemType.Group);
-        btnMenuResourceRemove.setDisable(selected == null || selected.type() != ItemType.Resource);
+        btnMenuResourceAdd.setDisable(selected == null || !selected.type().isContainer());
+        btnMenuResourceRemove.setDisable(selected == null || selected.type().isContainer());
+
         btnMenuGroupAdd.setDisable(selected == null || !selected.type().isContainer());
-        btnMenuGroupRemove.setDisable(selected == null || selected.type() != ItemType.Group);
+        btnMenuGroupRemove.setDisable(selected == null || !selected.type().isContainer() || !selected.deletable());
     }
 }

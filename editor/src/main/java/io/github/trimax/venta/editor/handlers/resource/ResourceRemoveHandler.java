@@ -21,7 +21,7 @@ public final class ResourceRemoveHandler implements EventHandler<ActionEvent> {
         }
 
         final var item = selected.getValue();
-        if (!item.type().isDeletable()) {
+        if (!item.deletable()) {
             status.setText("This item can not be deleted");
             return;
         }
