@@ -22,9 +22,13 @@ import io.github.trimax.venta.engine.repositories.SceneRepository;
 import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.SceneRepositoryImplementation;
+import io.github.trimax.venta.engine.utils.ArchiveUtil;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.File;
 
 @Slf4j
 @Component
@@ -94,7 +98,16 @@ public final class VentaContext {
     }
 
     /*** Keyboard ***/
+
     public boolean isButtonPushed(final int key) {
         return controllerFactory.get(KeyboardController.class).get().isButtonPushed(key);
+    }
+
+    /*** Resources ***/
+
+    public void loadArchive(@NonNull final String path) {
+        ArchiveUtil.load(new File(path), (name, data) -> {
+            log.info("Resource read: {}. Length: {}", name, data.length);
+        });
     }
 }

@@ -1,15 +1,5 @@
 package io.github.trimax.venta.editor.handlers.archive;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.GZIPOutputStream;
-
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
@@ -20,6 +10,16 @@ import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 @AllArgsConstructor
 public final class ArchiveBuildHandler implements EventHandler<ActionEvent> {
@@ -46,23 +46,16 @@ public final class ArchiveBuildHandler implements EventHandler<ActionEvent> {
     private void writeNode(final DataOutputStream out, final TreeItem<Item> node) {
         final var item = node.getValue();
         out.writeUTF(item.name());
-        out.writeBoolean(item.type().isContainer());
 
-        if (item.type().isContainer()) {
-            out.writeInt(node.getChildren().size());
-            for (final var child : node.getChildren())
-                writeNode(out, child);
-
-            return;
+        out.writeBoolean(item.hasExistingReference());
+        if (item.hasExistingReference()) {
+            final var bytes = Files.readAllBytes(Path.of(item.reference()));
+            out.writeInt(bytes.length);
+            out.write(bytes);
         }
 
-        if (!item.hasExistingReference()) {
-            out.writeInt(0);
-            return;
-        }
-
-        final var bytes = Files.readAllBytes(Path.of(item.reference()));
-        out.writeInt(bytes.length);
-        out.write(bytes);
+        out.writeInt(node.getChildren().size());
+        for (final var child : node.getChildren())
+            writeNode(out, child);
     }
 }
