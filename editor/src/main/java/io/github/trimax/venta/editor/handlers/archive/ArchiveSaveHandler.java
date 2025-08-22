@@ -1,11 +1,5 @@
 package io.github.trimax.venta.editor.handlers.archive;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import com.google.gson.Gson;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
@@ -16,9 +10,14 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @AllArgsConstructor
 public final class ArchiveSaveHandler implements EventHandler<ActionEvent> {
@@ -27,9 +26,8 @@ public final class ArchiveSaveHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(final ActionEvent event) {
-        final var stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        DialogUtil.showFileSave("Please choose a file to save an archive", this::save, stage,
-                Map.of("Archive files (*.json)", List.of("*.json")));
+        DialogUtil.showFileSave("Please choose a file to save an archive", this::save,
+                tree.getScene().getWindow(), Map.of("Archive files (*.json)", List.of("*.json")));
     }
 
     @SneakyThrows

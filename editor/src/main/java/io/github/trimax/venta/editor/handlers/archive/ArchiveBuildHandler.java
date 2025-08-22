@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -28,9 +27,8 @@ public final class ArchiveBuildHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(final ActionEvent event) {
-        final var stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        DialogUtil.showFileSave("Please choose a file to save built archive", this::build, stage,
-                Map.of("Binary archive files (*.vea)", List.of("*.vea")));
+        DialogUtil.showFileSave("Please choose a file to save built archive", this::build,
+                tree.getScene().getWindow(), Map.of("Binary archive files (*.vea)", List.of("*.vea")));
     }
 
     @SneakyThrows
