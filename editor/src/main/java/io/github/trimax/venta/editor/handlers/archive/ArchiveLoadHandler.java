@@ -14,7 +14,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import one.util.streamex.StreamEx;
 
@@ -34,8 +33,7 @@ public final class ArchiveLoadHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(final ActionEvent event) {
-        final var stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        DialogUtil.showFileOpen("Please choose a resource to add", this::load, stage,
+        DialogUtil.showFileOpen("Please choose a resource to add", this::load, tree.getScene().getWindow(),
                 Map.of("Archive files (*.json)", List.of("*.json")));
     }
 
