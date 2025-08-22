@@ -7,8 +7,10 @@ import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.managers.implementation.AbstractManagerImplementation;
 import io.github.trimax.venta.engine.model.entity.AbstractEntity;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
+import io.github.trimax.venta.engine.model.prefabs.AbstractPrefab;
 import io.github.trimax.venta.engine.model.states.EngineState;
 import io.github.trimax.venta.engine.registries.implementation.AbstractRegistryImplementation;
+import io.github.trimax.venta.engine.repositories.implementation.AbstractRepositoryImplementation;
 import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.Getter;
 import lombok.NonNull;
@@ -52,8 +54,13 @@ public abstract class AbstractExecutor {
         return engineController.getManager(managerClass);
     }
 
-    public <A, T extends E, E extends AbstractEntity, M extends AbstractRegistryImplementation<T, E, A>> M getRegistry(@NonNull final Class<M> registryClass) {
+
+    public <A, T extends E, E extends AbstractEntity, R extends AbstractRegistryImplementation<T, E, A>> R getRegistry(@NonNull final Class<R> registryClass) {
         return engineController.getRegistry(registryClass);
+    }
+
+    public <T extends P, P extends AbstractPrefab, R extends AbstractRepositoryImplementation<T, P>> R getRepository(@NonNull final Class<R> repositoryClass) {
+        return engineController.getRepository(repositoryClass);
     }
 
     protected final EngineState getState() {

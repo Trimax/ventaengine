@@ -35,10 +35,7 @@ public final class ResourceAddHandler implements EventHandler<ActionEvent> {
 
         final var stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         DialogUtil.showFileOpen("Please choose a resource to add", file -> addResource(file, selected), stage,
-                Map.of("All Files (*.*)", List.of("*.*"),
-                        "JSON Files (*.json)", List.of("*.json"),
-                        "Meshes (*.obj)", List.of("*.obj"),
-                        "Textures (*.png)", List.of("*.png", "*.jpg", "*.jpeg", "*.tga")));
+                Map.of("All Files (*.*)", List.of("*.*")));
     }
 
     private void addResource(final File file, final TreeItem<Item> selected) {
