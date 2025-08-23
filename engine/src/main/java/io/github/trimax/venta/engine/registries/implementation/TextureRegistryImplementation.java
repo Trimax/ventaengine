@@ -2,12 +2,11 @@ package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
-import io.github.trimax.venta.engine.loaders.ResourceLoader;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.registries.TextureRegistry;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
+import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -47,6 +46,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 public final class TextureRegistryImplementation
         extends AbstractRegistryImplementation<TextureEntityImplementation, TextureEntity, Void>
         implements TextureRegistry {
+    private final ResourceService resourceService;
     private final Memory memory;
 
     public TextureEntityImplementation create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
@@ -66,13 +66,9 @@ public final class TextureRegistryImplementation
         });
     }
 
-    public TextureEntityImplementation load(@NonNull final ResourceLoader.Resource resource) {
-        return get(resource.getPath(), () -> load(resource.getPath(), resource.getData()));
-    }
-
     @Override
     protected TextureEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
-        return load(resourcePath, ResourceUtil.loadAsBytes(String.format("/textures/%s", resourcePath)));
+        return load(resourcePath, resourceService.getAsBytes(String.format("/textures/%s", resourcePath)));
     }
 
     private TextureEntityImplementation load(@NonNull final String resourcePath, final byte[] data) {

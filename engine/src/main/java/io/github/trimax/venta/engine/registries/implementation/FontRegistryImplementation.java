@@ -4,7 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.entity.FontEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.FontEntityImplementation;
 import io.github.trimax.venta.engine.registries.FontRegistry;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
+import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -20,10 +20,11 @@ public final class FontRegistryImplementation
         extends AbstractRegistryImplementation<FontEntityImplementation, FontEntity, Void>
         implements FontRegistry {
     private final AtlasRegistryImplementation atlasRepository;
+    private final ResourceService resourceService;
 
     @Override
     protected FontEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
-        final var buffer = ResourceUtil.loadAsBuffer(String.format("/fonts/%s.ttf", resourcePath));
+        final var buffer = resourceService.getAsBuffer(String.format("/fonts/%s.ttf", resourcePath));
 
         final var font = new FontEntityImplementation(buffer);
         for (int i = 0; i < FONT_ATLAS_COUNT; i++)

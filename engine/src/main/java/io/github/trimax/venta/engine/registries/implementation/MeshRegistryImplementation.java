@@ -38,7 +38,7 @@ public final class MeshRegistryImplementation
     protected MeshEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         log.info("Loading mesh {}", resourcePath);
 
-        //TODO: Reimplement it with automatic detection
+        //TODO: Reimplement it with automatic detection + use resourceService
         final var extension = resourcePath.substring(resourcePath.lastIndexOf('.') + 1).toLowerCase();
         final var parsingStrategy = switch (extension) {
             case "json" -> new JsonParsingStrategy();

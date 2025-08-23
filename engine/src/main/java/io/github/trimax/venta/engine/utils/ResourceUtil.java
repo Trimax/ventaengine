@@ -9,11 +9,9 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
@@ -22,17 +20,6 @@ public final class ResourceUtil {
     private static final Gson parser = new GsonBuilder()
             .registerTypeAdapter(TextureType.class, new TextureTypeAdapter())
             .create();
-
-    public ByteBuffer loadAsBuffer(@NonNull final String path) {
-        log.debug("Loading resource as byte buffer: {}", path);
-        final var bytes = loadAsBytes(path);
-
-        final var buffer = BufferUtils.createByteBuffer(bytes.length);
-        buffer.put(bytes);
-        buffer.flip();
-
-        return buffer;
-    }
 
     public byte[] loadAsBytes(@NonNull final String path) {
         log.debug("Loading resource byte array: {}", path);
@@ -49,6 +36,10 @@ public final class ResourceUtil {
 
     public <O> O loadAsObject(@NonNull final String path, @NonNull final Class<O> objectClass) {
         return parser.fromJson(loadAsString(path), objectClass);
+    }
+
+    public <O> O loadAsObject(@NonNull final byte[] data, @NonNull final Class<O> objectClass) {
+        return loadAsObject(new String(data, StandardCharsets.UTF_8), objectClass);
     }
 
     public String loadAsString(@NonNull final String path) {

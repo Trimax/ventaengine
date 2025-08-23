@@ -8,6 +8,8 @@ import org.joml.Vector3f;
 @AllArgsConstructor
 public final class TexturedCubeApplicationStartupHandler implements VentaEngineStartupHandler {
     public void onStartup(final String[] args, final VentaContext context) {
+        context.registerArchive("c:\\Data\\test.vea");
+
         final var scene = context.getSceneManager().getCurrent();
 
         final var cube = context.getObjectManager().create("cube", context.getObjectRepository().get("cube.json"));
