@@ -21,9 +21,8 @@ public abstract class AbstractFactory<T> {
         StreamEx.ofValues(instances).forEach(cleaner);
     }
 
-    @SuppressWarnings("unchecked")
     public <C extends T> C get(@NonNull final Class<C> instanceClass) {
-        return (C) instances.get(instanceClass);
+        return instanceClass.cast(instances.get(instanceClass));
     }
 }
 

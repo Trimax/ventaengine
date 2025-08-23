@@ -32,12 +32,11 @@ public abstract class AbstractRegistryImplementation<T extends E, E extends Abst
     }
 
     protected final T get(@NonNull final String resourceName, @NonNull final Supplier<T> creator) {
-        final var id = String.format("runtime-%s", resourceName);
-        if (!entities.containsKey(id))
-            MeasurementUtil.measure("Entity `" + id + "` creation",
-                    () -> entities.put(id, creator.get()));
+        if (!entities.containsKey(resourceName))
+            MeasurementUtil.measure("Entity `" + resourceName + "` creation",
+                    () -> entities.put(resourceName, creator.get()));
 
-        return entities.get(id);
+        return entities.get(resourceName);
     }
 
     @Override
