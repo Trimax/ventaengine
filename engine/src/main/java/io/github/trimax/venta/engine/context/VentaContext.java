@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.factories.ManagerFactory;
 import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.factories.RepositoryFactory;
+import io.github.trimax.venta.engine.loaders.ResourceLoader;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.managers.ObjectManager;
@@ -38,6 +39,7 @@ public final class VentaContext {
     private final RepositoryFactory repositoryFactory;
     private final RegistryFactory registryFactory;
     private final ManagerFactory managerFactory;
+    private final ResourceLoader resourceLoader;
 
     /*** Managers ***/
 
@@ -106,8 +108,6 @@ public final class VentaContext {
     /*** Resources ***/
 
     public void loadArchive(@NonNull final String path) {
-        ArchiveUtil.load(new File(path), (name, data) -> {
-            log.info("Resource read: {}. Length: {}", name, data.length);
-        });
+        ArchiveUtil.load(new File(path), resourceLoader::load);
     }
 }

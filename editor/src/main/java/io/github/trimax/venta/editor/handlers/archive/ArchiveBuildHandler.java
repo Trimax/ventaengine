@@ -34,16 +34,19 @@ public final class ArchiveBuildHandler implements EventHandler<ActionEvent> {
     @SneakyThrows
     private void build(final File file) {
         try (final var out = new DataOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file))))) {
-            writeNode(out, tree.getRoot());
+            writeNode(out, tree.getRoot(), null);
         }
 
         status.setText("Archive built and saved to " + file.getAbsoluteFile());
     }
 
     @SneakyThrows
-    private void writeNode(final DataOutputStream out, final TreeItem<Item> node) {
+    private void writeNode(final DataOutputStream out, final TreeItem<Item> node, final String type) {
         final var item = node.getValue();
         out.writeUTF(item.name());
+
+        final String currentType = getType(type, item);
+        out.writeUTF(currentType);
 
         out.writeBoolean(item.hasExistingReference());
         if (item.hasExistingReference()) {
@@ -54,6 +57,10 @@ public final class ArchiveBuildHandler implements EventHandler<ActionEvent> {
 
         out.writeInt(node.getChildren().size());
         for (final var child : node.getChildren())
-            writeNode(out, child);
+            writeNode(out, child, currentType);
+    }
+
+    private String getType(final String currentType, final Item item) {
+        return !item.deletable() ? item.name() : currentType;
     }
 }

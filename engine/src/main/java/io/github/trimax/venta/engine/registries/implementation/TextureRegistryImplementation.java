@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
+import io.github.trimax.venta.engine.loaders.ResourceLoader;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
@@ -65,16 +66,23 @@ public final class TextureRegistryImplementation
         });
     }
 
+    public TextureEntityImplementation load(@NonNull final ResourceLoader.Resource resource) {
+        return get(resource.getPath(), () -> load(resource.getPath(), resource.getData()));
+    }
+
     @Override
     protected TextureEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
-        final byte[] imageData = ResourceUtil.loadAsBytes(String.format("/textures/%s", resourcePath));
+        return load(resourcePath, ResourceUtil.loadAsBytes(String.format("/textures/%s", resourcePath)));
+    }
+
+    private TextureEntityImplementation load(@NonNull final String resourcePath, final byte[] data) {
         try (var stack = stackPush()) {
             final var widthBuffer = stack.mallocInt(1);
             final var heightBuffer = stack.mallocInt(1);
             final var channelsBuffer = stack.mallocInt(1);
 
-            final var imageBuffer = BufferUtils.createByteBuffer(imageData.length);
-            imageBuffer.put(imageData);
+            final var imageBuffer = BufferUtils.createByteBuffer(data.length);
+            imageBuffer.put(data);
             imageBuffer.flip();
 
             final var pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 4);
