@@ -1,7 +1,11 @@
 package io.github.trimax.venta.engine.parsers;
 
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.MeshFormat;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +19,9 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 @Slf4j
-public final class ObjParsingStrategy implements AbstractParsingStrategy<MeshDTO> {
+@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ObjMeshParser implements AbstractParser<MeshDTO> {
     @Override
     @SneakyThrows
     public MeshDTO parse(@NonNull final String resourcePath) {
@@ -119,5 +125,10 @@ public final class ObjParsingStrategy implements AbstractParsingStrategy<MeshDTO
         edges.add(new MeshDTO.Edge(faceIndices[0], faceIndices[1]));
         edges.add(new MeshDTO.Edge(faceIndices[1], faceIndices[2]));
         edges.add(new MeshDTO.Edge(faceIndices[2], faceIndices[0]));
+    }
+
+    @Override
+    public MeshFormat format() {
+        return MeshFormat.OBJ;
     }
 }
