@@ -4,23 +4,22 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>engine</artifactId>
-
     <parent>
         <groupId>io.github.trimax</groupId>
         <artifactId>ventaengine</artifactId>
-        <version>0.8.25</version>
+        <version>0.8.31</version>
     </parent>
 
-    <name>${project.artifactId}</name>
-    <description>${project.artifactId} module</description>
-    <url>${project.parent.url}</url>
+    <artifactId>engine</artifactId>
+    <name>engine</name>
+    <description>Engine module</description>
+    <url>https://github.com/trimax/ventaengine</url>
 
     <dependencies>
         <dependency>
             <groupId>io.github.trimax</groupId>
             <artifactId>container</artifactId>
-            <version>${project.version}</version>
+            <version>0.8.31</version>
         </dependency>
 
         <!-- Math -->
