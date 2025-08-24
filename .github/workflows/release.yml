@@ -27,7 +27,11 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Build & publish
-        run: mvn -P release --batch-mode clean deploy -pl container,engine | tee maven-build.log
+        run: |
+          mvn clean install --batch-mode | tee maven-install-all.log
+          mvn -P release --batch-mode deploy -N | tee maven-deploy-parent.log
+          mvn -P release --batch-mode deploy -pl container | tee maven-deploy-container.log
+          mvn -P release --batch-mode deploy -pl engine | tee maven-deploy-engine.log
         env:
           CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
           CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
@@ -38,4 +42,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: maven-logs
-          path: maven-build.log
+          path: |
+            maven-install-all.log
+            maven-deploy-parent.log
+            maven-deploy-container.log
+            maven-deploy-engine.log

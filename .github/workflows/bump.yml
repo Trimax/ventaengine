@@ -35,7 +35,7 @@ jobs:
 
       - name: Bump project version with Maven Versions Plugin
         run: |
-          mvn versions:set -DnewVersion=${{ steps.bump.outputs.new_version }} -DgenerateBackupPoms=false
+          mvn versions:set -DnewVersion=${{ steps.bump.outputs.new_version }} -DgenerateBackupPoms=false -DprocessAllModules=true
 
       - name: Commit and push updated versions
         env:
