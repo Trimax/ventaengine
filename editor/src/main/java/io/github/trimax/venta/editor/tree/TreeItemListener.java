@@ -4,19 +4,17 @@ import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ResourceType;
 import io.github.trimax.venta.editor.model.ui.Menu;
 import io.github.trimax.venta.editor.model.ui.ToolBar;
+import io.github.trimax.venta.editor.renderers.ShaderRenderer;
+import io.github.trimax.venta.editor.renderers.TextureRenderer;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import one.util.streamex.StreamEx;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 
@@ -69,25 +67,13 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
             return;
         }
 
+        //TODO: Create automatic selection
         switch (type) {
             case Textures:
-                final var imageView = new ImageView(file.toURI().toString());
-                imageView.setFitWidth(imageView.getImage().getWidth());
-                imageView.setPreserveRatio(true);
-                imageView.setFitWidth(Math.min(imageView.getImage().getWidth(), 1024));
-
-                final var image = imageView.getImage();
-                final var labelTextureParameters = new Label(String.format("Width: %d; Height: %d", (int) image.getWidth(), (int) image.getHeight()));
-
-                info.getChildren().addAll(labelTextureParameters, imageView);
+                new TextureRenderer(node, info).render(file);
                 return;
             case Shaders:
-                final var textShader = new TextArea( FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-                textShader.setEditable(false);
-                textShader.setWrapText(true);
-                textShader.setPrefRowCount(50);
-
-                info.getChildren().add(textShader);
+                new ShaderRenderer(node, info).render(file);
                 return;
             default:
                 info.getChildren().add(new Label("the resource type is not supported"));
