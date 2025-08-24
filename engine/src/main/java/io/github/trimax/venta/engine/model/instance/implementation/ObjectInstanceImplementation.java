@@ -1,7 +1,5 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
@@ -13,6 +11,7 @@ import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.utils.GeometryUtil;
 import lombok.Getter;
 import lombok.NonNull;
+import org.joml.Vector3f;
 
 @Getter
 public final class ObjectInstanceImplementation extends AbstractInstanceImplementation implements ObjectInstance {
@@ -26,7 +25,7 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     private boolean isVisible = true;
     private boolean isLit = true;
 
-    public ObjectInstanceImplementation(final String name,
+    ObjectInstanceImplementation(final String name,
                                         final ProgramEntity program,
                                         final Node<MeshReference> mesh,
                                         final GizmoInstanceImplementation gizmo) {

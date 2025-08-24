@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class ProgramEntityImplementation  extends AbstractEntityImplementation implements ProgramEntity {
     private final int internalID;
 

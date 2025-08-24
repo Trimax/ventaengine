@@ -2,12 +2,13 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
 
 @Value
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class ScenePrefabImplementation extends AbstractPrefabImplementation implements ScenePrefab {
     @NonNull
     SceneDTO dto;

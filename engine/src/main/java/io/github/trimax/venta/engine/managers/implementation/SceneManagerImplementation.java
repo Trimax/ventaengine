@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.dto.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ScenePrefabImplementation;
@@ -29,6 +30,7 @@ public final class SceneManagerImplementation
     private final LightRepositoryImplementation lightRepository;
     private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
+    private final Abettor abettor;
 
     @Getter(onMethod_ = @__(@Override))
     private SceneInstanceImplementation current;
@@ -42,9 +44,7 @@ public final class SceneManagerImplementation
     }
 
     private SceneInstanceImplementation create(@NonNull final String name, @NonNull final ScenePrefabImplementation prefab) {
-        log.info("Loading scene {}", name);
-
-        final var scene = new SceneInstanceImplementation(name);
+        final var scene = create(name);
 
         final var sceneDTO = prefab.getDto();
         if (sceneDTO.hasObjects())
@@ -75,7 +75,7 @@ public final class SceneManagerImplementation
     public SceneInstanceImplementation create(@NonNull final String name) {
         log.info("Creating scene {}", name);
 
-        return store(new SceneInstanceImplementation(name));
+        return store(abettor.createScene(name));
     }
 
     @Override

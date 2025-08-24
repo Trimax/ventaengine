@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.registries.ProgramRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
@@ -29,6 +30,7 @@ public final class ProgramRegistryImplementation
         implements ProgramRegistry {
     private final ShaderRegistryImplementation shaderRegistry;
     private final ResourceService resourceService;
+    private final Abettor abettor;
     private final Memory memory;
 
     @Override
@@ -51,7 +53,7 @@ public final class ProgramRegistryImplementation
 
         glUseProgram(id);
 
-        final var program = new ProgramEntityImplementation(id);
+        final var program = abettor.createProgram(id);
         registerUniforms(program);
 
         return program;

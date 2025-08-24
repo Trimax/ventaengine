@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.managers.GizmoManager;
 import io.github.trimax.venta.engine.model.instance.GizmoInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.GizmoInstanceImplementation;
 import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
@@ -21,6 +22,7 @@ public final class GizmoManagerImplementation
         implements GizmoManager {
     private final ProgramRegistryImplementation programRegistry;
     private final MeshRegistryImplementation meshRegistry;
+    private final Abettor abettor;
 
     private GizmoInstanceImplementation origin;
 
@@ -36,12 +38,9 @@ public final class GizmoManagerImplementation
     public GizmoInstanceImplementation create(final String name, final GizmoType type) {
         log.debug("Creating gizmo {}", name);
 
-        return store(new GizmoInstanceImplementation(name,
+        return store(abettor.createGizmo(name,
                 programRegistry.get(ProgramType.Simple.getProgramName()),
-                meshRegistry.get(type.getMesh()),
-                new Vector3f(0.f, 0.f, 0.f),
-                new Vector3f(0.f, 0.f, 0.f),
-                new Vector3f(1.f, 1.f, 1.f)));
+                meshRegistry.get(type.getMesh())));
     }
 
     @Override

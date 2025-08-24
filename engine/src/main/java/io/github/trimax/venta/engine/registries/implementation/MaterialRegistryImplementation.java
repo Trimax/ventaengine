@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.registries.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.registries.MaterialRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
@@ -19,6 +20,7 @@ public final class MaterialRegistryImplementation
         implements MaterialRegistry {
     private final TextureRegistryImplementation textureRegistry;
     private final ResourceService resourceService;
+    private final Abettor abettor;
 
     @Override
     protected MaterialEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
@@ -26,7 +28,7 @@ public final class MaterialRegistryImplementation
 
         final var materialDTO = resourceService.getAsObject(String.format("/materials/%s", resourcePath), MaterialDTO.class);
 
-        final var material = new MaterialEntityImplementation(materialDTO);
+        final var material = abettor.createMaterial(materialDTO);
         materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureRegistry.get(path)));
 
         return material;

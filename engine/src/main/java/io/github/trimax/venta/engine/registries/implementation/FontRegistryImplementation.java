@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.entity.FontEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.FontEntityImplementation;
 import io.github.trimax.venta.engine.registries.FontRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
@@ -24,12 +25,13 @@ public final class FontRegistryImplementation
         implements FontRegistry {
     private final AtlasRegistryImplementation atlasRepository;
     private final ResourceService resourceService;
+    private final Abettor abettor;
 
     @Override
     protected FontEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         final var buffer = toBuffer(resourceService.getAsBytes(String.format("/fonts/%s.ttf", resourcePath)));
 
-        final var font = new FontEntityImplementation(buffer);
+        final var font = abettor.createFont(buffer);
         for (int i = 0; i < FONT_ATLAS_COUNT; i++)
             font.add(atlasRepository.create(String.format("%s-%d", resourcePath, i), i, buffer));
 

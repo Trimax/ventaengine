@@ -2,11 +2,12 @@ package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class MeshEntityImplementation extends AbstractEntityImplementation implements MeshEntity {
     private final int verticesCount;
     private final int facetsCount;

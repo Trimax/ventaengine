@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.model.entity.ShaderEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.ShaderEntityImplementation;
 import io.github.trimax.venta.engine.registries.ShaderRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
@@ -22,6 +23,7 @@ public final class ShaderRegistryImplementation
         extends AbstractRegistryImplementation<ShaderEntityImplementation, ShaderEntity, ShaderType>
         implements ShaderRegistry {
     private final ResourceService resourceService;
+    private final Abettor abettor;
 
     @Override
     protected ShaderEntityImplementation load(@NonNull final String resourcePath, final ShaderType type) {
@@ -35,7 +37,7 @@ public final class ShaderRegistryImplementation
         if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE)
             throw new ShaderCompileException(glGetShaderInfoLog(id));
 
-        return new ShaderEntityImplementation(id, type, code);
+        return abettor.createShader(id, type, code);
     }
 
     @Override

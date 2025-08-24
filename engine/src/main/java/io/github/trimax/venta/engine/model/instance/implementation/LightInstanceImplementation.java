@@ -27,9 +27,9 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     @Setter
     private boolean enabled = true;
 
-    public LightInstanceImplementation(@NonNull final String name,
-                                       @NonNull final LightPrefabImplementation prefab,
-                                       @NonNull final GizmoInstanceImplementation gizmo) {
+    LightInstanceImplementation(@NonNull final String name,
+                                @NonNull final LightPrefabImplementation prefab,
+                                @NonNull final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
         final var lightDto = prefab.getDto();

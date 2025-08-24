@@ -19,7 +19,7 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     private final List<ObjectInstanceImplementation> objects = new ArrayList<>();
     private final List<LightInstanceImplementation> lights = new ArrayList<>();
 
-    public SceneInstanceImplementation(@NonNull final String name) {
+    SceneInstanceImplementation(@NonNull final String name) {
         super(name);
     }
 

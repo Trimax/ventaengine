@@ -22,7 +22,7 @@ public final class MaterialEntityImplementation extends AbstractEntityImplementa
     private final Vector2f tiling;
     private final Vector2f offset;
 
-    public MaterialEntityImplementation(@NonNull final MaterialDTO dto) {
+    MaterialEntityImplementation(@NonNull final MaterialDTO dto) {
         this(dto.shininess(), dto.opacity(), dto.tiling(), dto.offset());
     }
 

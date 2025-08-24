@@ -1,10 +1,10 @@
 package io.github.trimax.venta.container.utils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 final class MeasurementUtilTest {
     @Test
@@ -31,10 +31,8 @@ final class MeasurementUtilTest {
 
     @Test
     void testMeasureWithException() {
-        assertThrows(RuntimeException.class, () -> {
-            MeasurementUtil.measure("Test", () -> {
-                throw new RuntimeException("Test exception");
-            });
-        }, "Measurement util should throw an exception when the runnable throws one");
+        assertThrows(RuntimeException.class, () -> MeasurementUtil.measure("Test", () -> {
+            throw new RuntimeException("Test exception");
+        }), "Measurement util should throw an exception when the runnable throws one");
     }
 }

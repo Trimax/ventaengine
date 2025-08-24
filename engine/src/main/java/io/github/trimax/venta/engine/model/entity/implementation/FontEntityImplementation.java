@@ -14,7 +14,7 @@ public final class FontEntityImplementation extends AbstractEntityImplementation
     private final List<AtlasEntityImplementation> atlases = new ArrayList<>();
     private final ByteBuffer buffer;
 
-    public FontEntityImplementation(@NonNull final ByteBuffer buffer) {
+    FontEntityImplementation(@NonNull final ByteBuffer buffer) {
         this.buffer = buffer;
     }
 
