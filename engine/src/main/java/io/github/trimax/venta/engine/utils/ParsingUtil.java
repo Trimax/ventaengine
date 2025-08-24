@@ -1,12 +1,20 @@
 package io.github.trimax.venta.engine.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.github.trimax.venta.engine.adapters.TextureTypeAdapter;
+import io.github.trimax.venta.engine.enums.TextureType;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import lombok.experimental.UtilityClass;
-
 @UtilityClass
 public final class ParsingUtil {
+    private static final Gson parser = new GsonBuilder()
+            .registerTypeAdapter(TextureType.class, new TextureTypeAdapter())
+            .create();
+
     public boolean asBoolean(final String value) {
         return Boolean.parseBoolean(value);
     }
@@ -41,5 +49,9 @@ public final class ParsingUtil {
             return trimmedValue.substring(1, trimmedValue.length() - 1).trim();
 
         throw new IllegalArgumentException("Expected string in format " + expectedFormat + ", got: " + value);
+    }
+
+    public <O> O asObject(@NonNull final String data, @NonNull final Class<O> objectClass) {
+        return parser.fromJson(data, objectClass);
     }
 }
