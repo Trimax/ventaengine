@@ -6,7 +6,6 @@ import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.factories.ManagerFactory;
 import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.factories.RepositoryFactory;
-import io.github.trimax.venta.engine.loaders.ResourceLoader;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.managers.ObjectManager;
@@ -23,13 +22,11 @@ import io.github.trimax.venta.engine.repositories.SceneRepository;
 import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.SceneRepositoryImplementation;
-import io.github.trimax.venta.engine.utils.ArchiveUtil;
+import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.File;
 
 @Slf4j
 @Component
@@ -39,7 +36,7 @@ public final class VentaContext {
     private final RepositoryFactory repositoryFactory;
     private final RegistryFactory registryFactory;
     private final ManagerFactory managerFactory;
-    private final ResourceLoader resourceLoader;
+    private final ResourceService resourceService;
 
     /*** Managers ***/
 
@@ -107,7 +104,7 @@ public final class VentaContext {
 
     /*** Resources ***/
 
-    public void loadArchive(@NonNull final String path) {
-        ArchiveUtil.load(new File(path), resourceLoader::load);
+    public void registerArchive(@NonNull final String archiveFilePath) {
+        resourceService.loadArchive(archiveFilePath);
     }
 }

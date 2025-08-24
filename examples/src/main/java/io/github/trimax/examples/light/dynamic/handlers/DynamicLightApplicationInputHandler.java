@@ -31,7 +31,7 @@ public final class DynamicLightApplicationInputHandler implements VentaEngineInp
     }
 
     public Vector3f createRandomVector3() {
-        final Random random = new Random();
+        final Random random = new Random(System.currentTimeMillis());
         random.setSeed(System.nanoTime());
         return new Vector3f(random.nextFloat(), random.nextFloat(), random.nextFloat());
     }

@@ -43,7 +43,7 @@ public final class ArchiveBuildHandler implements EventHandler<ActionEvent> {
     @SneakyThrows
     private void writeNode(final DataOutputStream out, final TreeItem<Item> node, final String type) {
         final var item = node.getValue();
-        out.writeUTF(item.name());
+        out.writeUTF(item.name().toLowerCase());
 
         final String currentType = getType(type, item);
         out.writeUTF(currentType);
