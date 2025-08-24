@@ -3,9 +3,9 @@ package io.github.trimax.venta.engine.parsers;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.MeshFormat;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
+import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,18 +14,22 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
 @Slf4j
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@SuppressWarnings("unused")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ObjMeshParser implements AbstractParser<MeshDTO> {
+    private final ResourceService resourceService;
+
     @Override
     @SneakyThrows
     public MeshDTO parse(@NonNull final String resourcePath) {
-        try (final var reader = new BufferedReader(new InputStreamReader(ResourceUtil.loadAsInputStream(resourcePath)))) {
+        try (final var reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(resourceService.getAsBytes(resourcePath))))) {
             return parse(reader);
         }
     }

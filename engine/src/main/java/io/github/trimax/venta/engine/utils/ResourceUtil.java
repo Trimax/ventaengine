@@ -52,8 +52,4 @@ public final class ResourceUtil {
             throw new ResourceNotFoundException(path);
         }
     }
-
-    public InputStream loadAsInputStream(@NonNull final String path) {
-        return ResourceUtil.class.getResourceAsStream(path);
-    }
 }
