@@ -12,7 +12,7 @@ import io.github.trimax.venta.engine.model.dto.ProgramDTO;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.registries.ProgramRegistry;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
+import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -28,13 +28,14 @@ public final class ProgramRegistryImplementation
         extends AbstractRegistryImplementation<ProgramEntityImplementation, ProgramEntity, Void>
         implements ProgramRegistry {
     private final ShaderRegistryImplementation shaderRegistry;
+    private final ResourceService resourceService;
     private final Memory memory;
 
     @Override
     protected ProgramEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         log.info("Loading program {}", resourcePath);
 
-        final var programDTO = ResourceUtil.loadAsObject(String.format("/programs/%s", resourcePath), ProgramDTO.class);
+        final var programDTO = resourceService.getAsObject(String.format("/programs/%s", resourcePath), ProgramDTO.class);
 
         final var id = memory.getPrograms().create(resourcePath);
         glAttachShader(id, shaderRegistry.get(programDTO.shaderVertex(), ShaderType.Vertex).getInternalID());

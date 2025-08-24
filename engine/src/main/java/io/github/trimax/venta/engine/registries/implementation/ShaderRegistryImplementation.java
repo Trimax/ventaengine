@@ -6,7 +6,7 @@ import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
 import io.github.trimax.venta.engine.model.entity.ShaderEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.ShaderEntityImplementation;
 import io.github.trimax.venta.engine.registries.ShaderRegistry;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
+import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -21,12 +21,13 @@ import static org.lwjgl.opengl.GL20C.*;
 public final class ShaderRegistryImplementation
         extends AbstractRegistryImplementation<ShaderEntityImplementation, ShaderEntity, ShaderType>
         implements ShaderRegistry {
+    private final ResourceService resourceService;
 
     @Override
     protected ShaderEntityImplementation load(@NonNull final String resourcePath, final ShaderType type) {
         log.info("Loading shader {}", resourcePath);
 
-        final var code = ResourceUtil.loadAsString(String.format("/shaders/%s", resourcePath));
+        final var code = resourceService.getAsString(String.format("/shaders/%s", resourcePath));
         final var id = glCreateShader(type.getValue());
 
         glShaderSource(id, code);

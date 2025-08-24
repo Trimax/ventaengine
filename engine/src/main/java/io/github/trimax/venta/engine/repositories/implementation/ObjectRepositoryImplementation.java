@@ -1,7 +1,5 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
-import java.util.Optional;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
@@ -13,13 +11,15 @@ import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryI
 import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.ObjectRepository;
+import io.github.trimax.venta.engine.services.ResourceService;
 import io.github.trimax.venta.engine.utils.MeshUtil;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
+
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -30,12 +30,13 @@ public final class ObjectRepositoryImplementation
     private final MaterialRegistryImplementation materialRegistry;
     private final ProgramRegistryImplementation programRegistry;
     private final MeshRegistryImplementation meshRegistry;
+    private final ResourceService resourceService;
     
     @Override
     protected ObjectPrefabImplementation load(@NonNull final String resourcePath) {
         log.info("Loading object {}", resourcePath);
 
-        final var objectDTO = ResourceUtil.loadAsObject(String.format("/objects/%s", resourcePath), ObjectPrefabDTO.class);
+        final var objectDTO = resourceService.getAsObject(String.format("/objects/%s", resourcePath), ObjectPrefabDTO.class);
         return new ObjectPrefabImplementation(programRegistry.get(objectDTO.program()), MeshUtil.normalize(loadMeshHierarchy(objectDTO.root())));
     }
     

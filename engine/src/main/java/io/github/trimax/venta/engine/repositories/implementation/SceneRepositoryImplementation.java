@@ -5,7 +5,7 @@ import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ScenePrefabImplementation;
 import io.github.trimax.venta.engine.repositories.SceneRepository;
-import io.github.trimax.venta.engine.utils.ResourceUtil;
+import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -17,11 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 public final class SceneRepositoryImplementation
         extends AbstractRepositoryImplementation<ScenePrefabImplementation, ScenePrefab>
         implements SceneRepository {
+    private final ResourceService resourceService;
+
     @Override
     protected ScenePrefabImplementation load(@NonNull final String resourcePath) {
         log.info("Loading scene {}", resourcePath);
 
-        return new ScenePrefabImplementation(ResourceUtil.loadAsObject(String.format("/scenes/%s", resourcePath), SceneDTO.class));
+        return new ScenePrefabImplementation(resourceService.getAsObject(String.format("/scenes/%s", resourcePath), SceneDTO.class));
     }
 
     @Override

@@ -1,39 +1,18 @@
 package io.github.trimax.venta.engine.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import io.github.trimax.venta.engine.adapters.TextureTypeAdapter;
-import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ResourceNotFoundException;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @UtilityClass
 public final class ResourceUtil {
-    private static final Gson parser = new GsonBuilder()
-            .registerTypeAdapter(TextureType.class, new TextureTypeAdapter())
-            .create();
-
-    public ByteBuffer loadAsBuffer(@NonNull final String path) {
-        log.debug("Loading resource as byte buffer: {}", path);
-        final var bytes = loadAsBytes(path);
-
-        final var buffer = BufferUtils.createByteBuffer(bytes.length);
-        buffer.put(bytes);
-        buffer.flip();
-
-        return buffer;
-    }
-
     public byte[] loadAsBytes(@NonNull final String path) {
         log.debug("Loading resource byte array: {}", path);
 
@@ -47,10 +26,6 @@ public final class ResourceUtil {
         }
     }
 
-    public <O> O loadAsObject(@NonNull final String path, @NonNull final Class<O> objectClass) {
-        return parser.fromJson(loadAsString(path), objectClass);
-    }
-
     public String loadAsString(@NonNull final String path) {
         try (final InputStream stream = ResourceUtil.class.getResourceAsStream(path)) {
             if (stream == null)
@@ -60,9 +35,5 @@ public final class ResourceUtil {
         } catch (final IOException e) {
             throw new ResourceNotFoundException(path);
         }
-    }
-
-    public InputStream loadAsInputStream(@NonNull final String path) {
-        return ResourceUtil.class.getResourceAsStream(path);
     }
 }

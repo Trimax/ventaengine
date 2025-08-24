@@ -7,7 +7,7 @@ import lombok.NonNull;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum DataType {
+public enum ResourceType {
     Materials,
     Textures,
     Programs,
@@ -21,7 +21,7 @@ public enum DataType {
         return path.substring(String.format("/%s", name()).length() + 1);
     }
 
-    public static DataType of(final String value) {
+    public static ResourceType of(final String value) {
         for (final var currentValue : values())
             if (currentValue.name().equalsIgnoreCase(value))
                 return currentValue;
