@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.registries.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.TextureBakeException;
 import io.github.trimax.venta.engine.model.entity.AtlasEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.AtlasEntityImplementation;
 import io.github.trimax.venta.engine.registries.AtlasRegistry;
 import lombok.AccessLevel;
@@ -25,6 +26,7 @@ public final class AtlasRegistryImplementation
         extends AbstractRegistryImplementation<AtlasEntityImplementation, AtlasEntity, Void>
         implements AtlasRegistry {
     private final TextureRegistryImplementation textureRepository;
+    private final Abettor abettor;
 
     public AtlasEntityImplementation create(final String name, final int i, final ByteBuffer fontBuffer) {
         return get(name, () -> {
@@ -37,7 +39,7 @@ public final class AtlasRegistryImplementation
             if (result <= 0)
                 throw new TextureBakeException("Failed to bake font bitmap atlas " + i);
 
-            return new AtlasEntityImplementation(textureRepository.create(name, bitmap), characterBuffer);
+            return abettor.createAtlas(textureRepository.create(name, bitmap), characterBuffer);
         });
     }
 

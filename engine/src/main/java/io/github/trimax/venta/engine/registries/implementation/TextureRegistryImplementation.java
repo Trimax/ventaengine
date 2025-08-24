@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.registries.TextureRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
@@ -47,6 +48,7 @@ public final class TextureRegistryImplementation
         extends AbstractRegistryImplementation<TextureEntityImplementation, TextureEntity, Void>
         implements TextureRegistry {
     private final ResourceService resourceService;
+    private final Abettor abettor;
     private final Memory memory;
 
     public TextureEntityImplementation create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
@@ -62,7 +64,7 @@ public final class TextureRegistryImplementation
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            return new TextureEntityImplementation(bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT);
+            return abettor.createTexture(bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT);
         });
     }
 
@@ -105,7 +107,7 @@ public final class TextureRegistryImplementation
 
             STBImage.stbi_image_free(pixels);
 
-            return new TextureEntityImplementation(imageBuffer, textureID, width, height);
+            return abettor.createTexture(imageBuffer, textureID, width, height);
         }
     }
 

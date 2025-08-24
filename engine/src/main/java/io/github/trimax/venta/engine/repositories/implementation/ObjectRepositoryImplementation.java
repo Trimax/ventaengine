@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.dto.MeshPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.ObjectPrefabDTO;
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
+import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ObjectPrefabImplementation;
 import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
@@ -31,13 +32,14 @@ public final class ObjectRepositoryImplementation
     private final ProgramRegistryImplementation programRegistry;
     private final MeshRegistryImplementation meshRegistry;
     private final ResourceService resourceService;
+    private final Abettor abettor;
     
     @Override
     protected ObjectPrefabImplementation load(@NonNull final String resourcePath) {
         log.info("Loading object {}", resourcePath);
 
         final var objectDTO = resourceService.getAsObject(String.format("/objects/%s", resourcePath), ObjectPrefabDTO.class);
-        return new ObjectPrefabImplementation(programRegistry.get(objectDTO.program()), MeshUtil.normalize(loadMeshHierarchy(objectDTO.root())));
+        return abettor.createObject(programRegistry.get(objectDTO.program()), MeshUtil.normalize(loadMeshHierarchy(objectDTO.root())));
     }
     
     private Node<MeshReference> loadMeshHierarchy(@NonNull final Node<MeshPrefabDTO> node) {

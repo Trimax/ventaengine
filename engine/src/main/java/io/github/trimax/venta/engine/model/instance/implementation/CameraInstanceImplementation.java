@@ -18,10 +18,10 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
     private final Vector3f up = new Vector3f(0, 1, 0);
     private final Vector3f right = new Vector3f(1, 0, 0);
 
-    public CameraInstanceImplementation(@NonNull final String name,
-                                        final Vector3f position,
-                                        final Vector3f target,
-                                        @NonNull final GizmoInstanceImplementation gizmo) {
+    CameraInstanceImplementation(@NonNull final String name,
+                                 @NonNull final Vector3f position,
+                                 @NonNull final Vector3f target,
+                                 @NonNull final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
         setPosition(position);

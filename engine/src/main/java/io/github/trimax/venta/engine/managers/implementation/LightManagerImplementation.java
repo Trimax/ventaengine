@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.LightInstanceImplementation;
 import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
@@ -20,6 +21,7 @@ public final class LightManagerImplementation
         extends AbstractManagerImplementation<LightInstanceImplementation, LightInstance>
         implements LightManager {
     private final GizmoManagerImplementation gizmoManager;
+    private final Abettor abettor;
 
     @Override
     public LightInstanceImplementation create(@NonNull final String name, @NonNull final LightPrefab prefab) {
@@ -32,7 +34,7 @@ public final class LightManagerImplementation
     private LightInstanceImplementation create(@NonNull final String name, @NonNull final LightPrefabImplementation prefab) {
         log.info("Loading light {}", name);
 
-        return store(new LightInstanceImplementation(name, prefab, gizmoManager.create("light", GizmoType.Light)));
+        return store(abettor.createLight(name, prefab, gizmoManager.create("light", GizmoType.Light)));
     }
 
     @Override

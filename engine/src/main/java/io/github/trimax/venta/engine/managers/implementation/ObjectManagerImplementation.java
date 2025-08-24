@@ -8,6 +8,7 @@ import io.github.trimax.venta.engine.managers.ObjectManager;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ObjectPrefabImplementation;
@@ -24,6 +25,7 @@ public final class ObjectManagerImplementation
         extends AbstractManagerImplementation<ObjectInstanceImplementation, ObjectInstance>
         implements ObjectManager {
     private final GizmoManagerImplementation gizmoManager;
+    private final Abettor abettor;
 
     @Override
     public ObjectInstance create(@NonNull final String name, @NonNull final ObjectPrefab prefab) {
@@ -34,9 +36,7 @@ public final class ObjectManagerImplementation
     }
 
     private ObjectInstance create(final String name, final ObjectPrefabImplementation prefab) {
-        return store(new ObjectInstanceImplementation(name,
-                prefab.getProgram(),
-                createHierarchy(prefab.getRoot()),
+        return store(abettor.createObject(name, prefab.getProgram(), createHierarchy(prefab.getRoot()),
                 gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 

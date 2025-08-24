@@ -14,7 +14,7 @@ public final class AtlasEntityImplementation extends AbstractEntityImplementatio
     private final TextureEntityImplementation texture;
     private final STBTTBakedChar.Buffer buffer;
 
-    public AtlasEntityImplementation(@NonNull final TextureEntityImplementation texture,
+    AtlasEntityImplementation(@NonNull final TextureEntityImplementation texture,
                                      @NonNull final STBTTBakedChar.Buffer buffer) {
         this.texture = texture;
         this.buffer = buffer;

@@ -14,7 +14,7 @@ public final class GizmoInstanceImplementation extends AbstractInstanceImplement
     private final ProgramEntityImplementation program;
     private final MeshEntityImplementation mesh;
 
-    public GizmoInstanceImplementation(final String name,
+    GizmoInstanceImplementation(final String name,
                                        final ProgramEntityImplementation program,
                                        final MeshEntityImplementation mesh,
                                        final Vector3f position,

@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.repositories.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
+import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ScenePrefabImplementation;
 import io.github.trimax.venta.engine.repositories.SceneRepository;
 import io.github.trimax.venta.engine.services.ResourceService;
@@ -18,12 +19,13 @@ public final class SceneRepositoryImplementation
         extends AbstractRepositoryImplementation<ScenePrefabImplementation, ScenePrefab>
         implements SceneRepository {
     private final ResourceService resourceService;
+    private final Abettor abettor;
 
     @Override
     protected ScenePrefabImplementation load(@NonNull final String resourcePath) {
         log.info("Loading scene {}", resourcePath);
 
-        return new ScenePrefabImplementation(resourceService.getAsObject(String.format("/scenes/%s", resourcePath), SceneDTO.class));
+        return abettor.createScene(resourceService.getAsObject(String.format("/scenes/%s", resourcePath), SceneDTO.class));
     }
 
     @Override

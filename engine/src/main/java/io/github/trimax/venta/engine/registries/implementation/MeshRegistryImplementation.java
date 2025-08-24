@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.registries.MeshRegistry;
 import lombok.AccessLevel;
@@ -31,6 +32,7 @@ public final class MeshRegistryImplementation
         extends AbstractRegistryImplementation<MeshEntityImplementation, MeshEntity, Void>
         implements MeshRegistry {
     private final MeshParserFactory meshParserFactory;
+    private final Abettor abettor;
     private final Memory memory;
 
     @Override
@@ -108,7 +110,7 @@ public final class MeshRegistryImplementation
 
         glBindVertexArray(0);
 
-        return new MeshEntityImplementation(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
+        return abettor.createMesh(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
                 vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO));
     }
 
