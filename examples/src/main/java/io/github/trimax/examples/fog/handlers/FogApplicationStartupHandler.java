@@ -20,7 +20,9 @@ public final class FogApplicationStartupHandler implements VentaEngineStartupHan
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector4f(0.5f, 0.5f, 0.5f, 1.f));
 
-        scene.setFog(Fog.linear(new Vector4f(0.7f, 0.7f, 0.7f, 1.f), 0.f, 100.0f));
+//        scene.setFog(Fog.exponential(new Vector4f(0.8f, 0.8f, 0.8f, 0.1f), 0.1f));
+
+//        scene.setFog(Fog.linear(new Vector4f(0.7f, 0.7f, 0.7f, 1.f), 0.f, 10.0f));
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(0.f, 2.5f, 2.f));

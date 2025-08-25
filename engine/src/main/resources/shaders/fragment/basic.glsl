@@ -23,6 +23,7 @@ struct Light {
 };
 
 struct Fog {
+    int type;
     int enabled;
     vec3 color;
     float density;
@@ -113,7 +114,11 @@ vec3 getNormal(vec2 textureCoordinates) {
 }
 
 float computeFogFactor(float distance) {
-    return clamp(exp(-pow(distance * fog.density, 2.0)), 0.0, 1.0);
+    if (fog.type == 0) {
+        return clamp((fog.end - distance) / (fog.end - fog.start), 0.0, 1.0);
+    } else {
+        return clamp(exp(-pow(distance * fog.density, 2.0)), 0.0, 1.0);
+    }
 }
 
 
@@ -176,7 +181,11 @@ void main() {
     vec4 diffuseColor = getDiffuseColor(textureCoordinates) * vec4(materialColor, 1.0);
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
     vec4 resultColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
-    float distance = length(vertexPosition);
-    float fogFactor = computeFogFactor(distance);
-    FragColor = vec4(mix(fog.color, resultColor.rgb, fogFactor), resultColor.a);
+    if (isSet(fog.enabled)) {
+        float distance = length(vertexPosition);
+        float fogFactor = computeFogFactor(distance);
+        FragColor = vec4(mix(fog.color, resultColor.rgb, fogFactor), resultColor.a);
+    } else {
+        FragColor = resultColor;
+    }
 }
