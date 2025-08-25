@@ -39,9 +39,9 @@ public final class FogApplicationStartupHandler implements VentaEngineStartupHan
     }
 
     public void placeCube(final int x, final VentaContext context, final SceneInstance scene) {
-        final var miniCube = context.getObjectManager().create("cube" + (x * CUBE_SIZE),
+        final var cube = context.getObjectManager().create("cube" + (x * CUBE_SIZE),
                 context.getObjectRepository().get("cube.json"));
-        miniCube.setPosition(new Vector3f(x * CUBE_SPACING + 0.5f, 0.5f, 0.f));
-        scene.add(miniCube);
+        cube.setPosition(new Vector3f(x * CUBE_SPACING + 0.5f, 0.5f, 0.f));
+        scene.add(cube);
     }
 }
