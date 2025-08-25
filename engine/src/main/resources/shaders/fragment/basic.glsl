@@ -22,6 +22,14 @@ struct Light {
     int enabled;
 };
 
+struct Fog {
+    int enabled;
+    vec3 color;
+    float density;
+    float start;
+    float end;
+};
+
 /* Vertex shader output */
 in vec4 vertexColor;
 in vec3 vertexViewDirection;
@@ -55,6 +63,9 @@ uniform vec3 materialColor;
 uniform Light lights[MAX_LIGHTS];
 uniform vec4 ambientLight;
 uniform int lightCount;
+
+/* Fog */
+uniform Fog fog;
 
 /* Output color */
 out vec4 FragColor;
@@ -100,6 +111,11 @@ vec3 getNormal(vec2 textureCoordinates) {
     /* Normal mapping */
     return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0));
 }
+
+float computeFogFactor(float distance) {
+    return clamp(exp(-pow(distance * fog.density, 2.0)), 0.0, 1.0);
+}
+
 
 /* Calculates effect of one light source */
 vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
@@ -159,6 +175,8 @@ void main() {
 
     vec4 diffuseColor = getDiffuseColor(textureCoordinates) * vec4(materialColor, 1.0);
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
-
-    FragColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
+    vec4 resultColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
+    float distance = length(vertexPosition);
+    float fogFactor = computeFogFactor(distance);
+    FragColor = vec4(mix(fog.color, resultColor.rgb, fogFactor), resultColor.a);
 }

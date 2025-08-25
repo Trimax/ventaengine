@@ -9,7 +9,7 @@ import io.github.trimax.venta.engine.model.instance.implementation.LightInstance
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector4f;
+import org.joml.Vector4fc;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LightBinder extends AbstractBinder {
-    public void bind(final ProgramEntityImplementation program, final Vector4f ambientLight) {
+    public void bind(final ProgramEntityImplementation program, final Vector4fc ambientLight) {
         bind(program.getUniformID(ShaderUniform.AmbientLight), ambientLight);
     }
 

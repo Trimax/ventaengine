@@ -40,6 +40,14 @@ public enum ShaderUniform {
     UseLighting("useLighting"),
     LightCount("lightCount"),
 
+    /* Fog */
+    FogType("fogType"),
+    FogEnabled("fogEnabled"),
+    FogColor("fogColor"),
+    FogDensity("fogDensity"),
+    FogStart("fogStart"),
+    FogEnd("fogEnd"),
+
     /* Common model parameters transformation*/
     Position("position"),
     Scale("scale"),
