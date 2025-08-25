@@ -8,9 +8,13 @@ import org.joml.Vector2fc;
 public interface MaterialEntity extends AbstractEntity {
     Vector2fc getTiling();
 
+    Vector2fc getOffset();
+
     TextureEntity getTexture(@NonNull final TextureType texture);
 
     void setTiling(@NonNull final Vector2f tiling);
+
+    void setOffset(@NonNull final Vector2f tiling);
 
     void setTexture(@NonNull final TextureType type, @NonNull final TextureEntity texture);
 }

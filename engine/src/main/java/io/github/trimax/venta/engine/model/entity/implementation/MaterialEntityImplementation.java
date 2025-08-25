@@ -38,6 +38,11 @@ public final class MaterialEntityImplementation extends AbstractEntityImplementa
     }
 
     @Override
+    public void setOffset(@NonNull final Vector2f offset) {
+        this.offset.set(offset);
+    }
+
+    @Override
     public TextureEntityImplementation getTexture(final TextureType texture) {
         return this.textures.get(texture);
     }

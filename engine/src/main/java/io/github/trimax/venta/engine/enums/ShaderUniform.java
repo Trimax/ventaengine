@@ -27,7 +27,9 @@ public enum ShaderUniform {
     UseTextureAmbientOcclusion("useTextureAmbientOcclusion"),
 
     /* Materials */
+    MaterialShininess("materialShininess"),
     MaterialTiling("materialTiling"),
+    MaterialOffset("materialOffset"),
 
     /* Camera */
     CameraPosition("cameraPosition"),
