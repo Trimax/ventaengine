@@ -53,21 +53,21 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
     }
 
     private record Maze(String value, int width, int length) {
-            private Maze(final String value, final int width, final int length) {
-                this.value = value.replaceAll("\\R", "");
-                this.width = width;
-                this.length = length;
+        private Maze(final String value, final int width, final int length) {
+            this.value = value.replaceAll("\\R", "");
+            this.width = width;
+            this.length = length;
 
-                if (this.value.length() != width * length)
-                    throw new IllegalArgumentException("The length of the value must equal to " + width * length);
-            }
-
-            public boolean hasCube(final int x, final int z) {
-                return withinBounds(x, width) && withinBounds(z, length) && value.charAt(x * length + z) == '1';
-            }
-
-            private boolean withinBounds(final int value, final int max) {
-                return value >= 0 && value < max;
-            }
+            if (this.value.length() != width * length)
+                throw new IllegalArgumentException("The length of the value must equal to " + width * length);
         }
+
+        public boolean hasCube(final int x, final int z) {
+            return withinBounds(x, width) && withinBounds(z, length) && value.charAt(x * length + z) == '1';
+        }
+
+        private boolean withinBounds(final int value, final int max) {
+            return value >= 0 && value < max;
+        }
+    }
 }
