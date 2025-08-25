@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
@@ -11,6 +12,7 @@ import lombok.NonNull;
 import org.lwjgl.stb.STBTTBakedChar;
 
 import java.nio.ByteBuffer;
+import java.util.Map;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -56,5 +58,12 @@ public final class Abettor {
                                                      final int width,
                                                      final int height) {
         return new TextureEntityImplementation(buffer, format, internalID, width, height);
+    }
+
+    public CubemapEntityImplementation createCubemap(@NonNull final Map<CubemapFace, ByteBuffer> buffers,
+                                                     @NonNull final ProgramEntityImplementation program,
+                                                     @NonNull final TextureFormat format,
+                                                     final int internalID) {
+        return new CubemapEntityImplementation(buffers, program, format, internalID);
     }
 }
