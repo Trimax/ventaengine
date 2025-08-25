@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
@@ -22,25 +23,8 @@ import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_H
 import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
-import static org.lwjgl.opengl.GL11.GL_RGBA8;
-import static org.lwjgl.opengl.GL11C.GL_LINEAR;
-import static org.lwjgl.opengl.GL11C.GL_RED;
-import static org.lwjgl.opengl.GL11C.GL_RGB;
-import static org.lwjgl.opengl.GL11C.GL_RGB8;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_S;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_T;
-import static org.lwjgl.opengl.GL11C.GL_UNPACK_ALIGNMENT;
-import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL11C.glPixelStorei;
-import static org.lwjgl.opengl.GL11C.glTexImage2D;
-import static org.lwjgl.opengl.GL11C.glTexParameteri;
+import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL30C.GL_R8;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
@@ -92,36 +76,19 @@ public final class TextureRegistryImplementation
                 throw new UnknownTextureFormatException(String.format("%s (%s)", resourcePath, STBImage.stbi_failure_reason()));
             }
 
+            final var textureFormat = TextureFormat.of(channelsBuffer.get(0));
+            if (textureFormat == null) {
+                MemoryUtil.memFree(imageBuffer);
+                throw new UnknownTextureFormatException(String.format("Unsupported channels count: %d", channelsBuffer.get(0)));
+            }
+
             final var width = widthBuffer.get(0);
             final var height = heightBuffer.get(0);
 
             final var textureID = memory.getTextures().create("Texture %s", resourcePath);
             glBindTexture(GL_TEXTURE_2D, textureID);
 
-            final var channels = channelsBuffer.get(0);
-            int internalFormat, format;
-            switch (channels) {
-                case 1 -> { // Grayscale
-                    internalFormat = GL_R8;
-                    format = GL_RED;
-                }
-                case 3 -> { // RGB
-                    internalFormat = GL_RGB8;
-                    format = GL_RGB;
-                }
-                case 4 -> { // RGBA
-                    internalFormat = GL_RGBA8;
-                    format = GL_RGBA;
-                }
-                default -> {
-                    STBImage.stbi_image_free(pixels);
-                    MemoryUtil.memFree(imageBuffer);
-                    memory.getTextures().delete(textureID);
-                    throw new UnknownTextureFormatException("Unsupported channel count: " + channels);
-                }
-            }
-
-            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
+            glTexImage2D(GL_TEXTURE_2D, 0, textureFormat.getInternal(), width, height, 0, textureFormat.getExternal(), GL_UNSIGNED_BYTE, pixels);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
