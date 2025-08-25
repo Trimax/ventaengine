@@ -49,6 +49,7 @@ uniform int useLighting;
 uniform float materialShininess;
 uniform vec2 materialTiling;
 uniform vec2 materialOffset;
+uniform vec3 materialColor;
 
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
@@ -156,7 +157,7 @@ vec2 getTextureCoordinates() {
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
-    vec4 diffuseColor = getDiffuseColor(textureCoordinates);
+    vec4 diffuseColor = getDiffuseColor(textureCoordinates) * vec4(materialColor, 1.0);
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
 
     FragColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
