@@ -33,9 +33,8 @@ public final class FogApplicationStartupHandler implements VentaEngineStartupHan
         state.setLight(light);
         scene.add(light);
 
-        for (int x = 0; x < CUBE_SIZE; x++) {
+        for (int x = 0; x < CUBE_SIZE; x++)
             placeCube(x, context, scene);
-        }
     }
 
     public void placeCube(final int x, final VentaContext context, final SceneInstance scene) {
