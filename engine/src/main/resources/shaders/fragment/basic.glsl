@@ -180,6 +180,6 @@ void main() {
 
     vec4 diffuseColor = getDiffuseColor(textureCoordinates) * vec4(materialColor, 1.0);
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
-    vec4 resultColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
-    FragColor = applyFog(resultColor);
+    vec4 colorWithLighting = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
+    FragColor = applyFog(colorWithLighting);
 }
