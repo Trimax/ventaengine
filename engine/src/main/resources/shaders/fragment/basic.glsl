@@ -22,10 +22,17 @@ struct Light {
     int enabled;
 };
 
+struct Fog {
+    int enabled;
+    vec3 color;
+    float density;
+};
+
 /* Vertex shader output */
 in vec4 vertexColor;
 in vec3 vertexViewDirection;
 in vec2 vertexTextureCoordinates;
+in vec3 vertexCameraPosition;
 in vec3 vertexPosition;
 
 in mat3 vertexTBN;
@@ -56,6 +63,9 @@ uniform vec3 materialColor;
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 ambientLight;
 uniform int lightCount;
+
+/* Fog */
+uniform Fog fog;
 
 /* Output color */
 out vec4 FragColor;
@@ -155,6 +165,17 @@ vec2 getTextureCoordinates() {
     return isSet(useTextureHeight) ? parallaxMapping(textureCoordinates) : textureCoordinates;
 }
 
+float computeFogFactor(float distance) {
+    return clamp(exp(-pow(distance * fog.density, 2.0)), 0.0, 1.0);
+}
+
+vec4 applyFog(vec4 color) {
+    if (!isSet(fog.enabled))
+        return color;
+
+    return mix(vec4(fog.color, 1.0), color, computeFogFactor(length(vertexCameraPosition - vertexPosition)));
+}
+
 vec4 getMaterialColor() {
     return isSet(useMaterial) ? vec4(materialColor, 1.0) : vec4(1.0);
 }
@@ -164,6 +185,6 @@ void main() {
 
     vec4 diffuseColor = getDiffuseColor(textureCoordinates) * getMaterialColor();
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
-
-    FragColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
+    vec4 colorWithLighting = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
+    FragColor = applyFog(colorWithLighting);
 }

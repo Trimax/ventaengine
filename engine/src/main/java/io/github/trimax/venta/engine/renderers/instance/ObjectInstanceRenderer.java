@@ -9,6 +9,7 @@ import org.joml.Matrix4f;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.binders.CameraBinder;
+import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.ObjectBinder;
@@ -32,6 +33,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
     private final MatrixBinder matrixBinder;
     private final CameraBinder cameraBinder;
     private final LightBinder lightBinder;
+    private final FogBinder fogBinder;
 
     @Override
     protected ObjectRenderContext createContext() {
@@ -53,6 +55,8 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         lightBinder.bind(object.getProgram(), context.getScene().getAmbientLight());
         lightBinder.bind(object.getProgram(), context.getScene().getLights());
+
+        fogBinder.bind(object.getProgram(), context.getScene().getFog());
 
         render(object.getProgram(), object.getMesh(), object.getTransform().getMatrix());
 

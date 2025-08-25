@@ -7,6 +7,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.model.common.scene.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
@@ -14,6 +15,7 @@ import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,6 +26,9 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     private final List<LightInstanceImplementation> lights = new ArrayList<>();
 
     private CubemapEntityImplementation skybox;
+
+    @Setter(onMethod_ = @__(@Override))
+    private Fog fog;
 
     SceneInstanceImplementation(@NonNull final String name) {
         super(name);

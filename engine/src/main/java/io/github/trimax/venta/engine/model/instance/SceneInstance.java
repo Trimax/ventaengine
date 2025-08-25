@@ -20,4 +20,8 @@ public interface SceneInstance extends AbstractInstance {
     List<? extends ObjectInstance> getObjects();
 
     List<? extends LightInstance> getLights();
+
+    void setFog(final Fog fog);
+
+    Fog getFog();
 }

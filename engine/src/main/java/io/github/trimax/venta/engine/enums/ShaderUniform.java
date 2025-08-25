@@ -45,6 +45,13 @@ public enum ShaderUniform {
     UseLighting("useLighting"),
     LightCount("lightCount"),
 
+    /* Fog */
+    FogColor("fog.color"),
+    FogDensity("fog.density"),
+
+    /* Fog flag */
+    UseFogFlag("useFog"),
+
     /* Common model parameters transformation*/
     Position("position"),
     Scale("scale"),

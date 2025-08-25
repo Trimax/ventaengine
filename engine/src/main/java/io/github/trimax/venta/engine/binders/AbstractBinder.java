@@ -4,9 +4,7 @@ import static org.lwjgl.opengl.GL20C.*;
 
 import java.nio.FloatBuffer;
 
-import org.joml.Vector2fc;
-import org.joml.Vector3fc;
-import org.joml.Vector4fc;
+import org.joml.*;
 
 abstract class AbstractBinder {
     protected final void bind(final int uniformID, final boolean value) {
