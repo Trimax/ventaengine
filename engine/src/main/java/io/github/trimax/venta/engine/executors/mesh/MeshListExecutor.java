@@ -3,7 +3,6 @@ package io.github.trimax.venta.engine.executors.mesh;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
-import io.github.trimax.venta.engine.model.entity.AbstractEntity;
 import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
 import io.github.trimax.venta.engine.utils.FormatUtil;
 import lombok.NonNull;
@@ -23,8 +22,7 @@ public final class MeshListExecutor extends AbstractMeshExecutor {
         getConsole().header("Meshes:");
 
         final var meshRegistry = getRegistry(MeshRegistryImplementation.class);
-        StreamEx.of(meshRegistry.iterator())
-                .map(AbstractEntity::getID)
+        StreamEx.of(meshRegistry.getIds())
                 .map(FormatUtil::indent)
                 .forEach(getConsole()::info);
     }

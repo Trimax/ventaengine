@@ -10,6 +10,7 @@ import one.util.streamex.StreamEx;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 
@@ -42,6 +43,10 @@ public abstract class AbstractRegistryImplementation<T extends E, E extends Abst
     @Override
     public final Iterator<E> iterator() {
         return StreamEx.ofValues(entities).map(this::toView).iterator();
+    }
+
+    public final Set<String> getIds() {
+        return entities.keySet();
     }
 
     private E toView(final T entity) {
