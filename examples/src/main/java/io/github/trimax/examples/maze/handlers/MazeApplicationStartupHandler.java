@@ -42,7 +42,7 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
         floor.setScale(new Vector3f(20f, 1f, 20f));
         scene.add(floor);
 
-        context.getMaterialRegistry().get("concrete.json").setTiling(new Vector2f(10f));
+        context.getMaterialRegistry().get("concrete.json").setTiling(new Vector2f(15f));
     }
 
     public void placeCube(final int x, final int z, final VentaContext context, final SceneInstance scene) {

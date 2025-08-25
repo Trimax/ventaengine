@@ -46,7 +46,9 @@ uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
 
 /* Material parameters */
+uniform float materialShininess;
 uniform vec2 materialTiling;
+uniform vec2 materialOffset;
 
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
@@ -146,7 +148,7 @@ vec3 calculateLighting(vec2 textureCoordinates) {
 }
 
 vec2 getTextureCoordinates() {
-    vec2 textureCoordinates = vertexTextureCoordinates * materialTiling;
+    vec2 textureCoordinates = vertexTextureCoordinates * materialTiling + materialOffset;
 
     return isSet(useTextureHeight) ? parallaxMapping(textureCoordinates) : textureCoordinates;
 }
