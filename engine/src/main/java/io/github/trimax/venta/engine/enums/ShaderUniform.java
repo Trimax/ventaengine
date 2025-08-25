@@ -30,6 +30,7 @@ public enum ShaderUniform {
     MaterialShininess("materialShininess"),
     MaterialTiling("materialTiling"),
     MaterialOffset("materialOffset"),
+    MaterialColor("materialColor"),
 
     /* Camera */
     CameraPosition("cameraPosition"),

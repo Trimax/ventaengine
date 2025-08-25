@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +20,12 @@ public final class MaterialEntityImplementation extends AbstractEntityImplementa
     private final Map<TextureType, TextureEntityImplementation> textures = new HashMap<>();
     private final Float shininess;
     private final Float opacity;
+    private final Vector3f color;
     private final Vector2f tiling;
     private final Vector2f offset;
 
     MaterialEntityImplementation(@NonNull final MaterialDTO dto) {
-        this(dto.shininess(), dto.opacity(), dto.tiling(), dto.offset());
+        this(dto.shininess(), dto.opacity(), dto.color(), dto.tiling(), dto.offset());
     }
 
     @Override
@@ -40,6 +42,11 @@ public final class MaterialEntityImplementation extends AbstractEntityImplementa
     @Override
     public void setOffset(@NonNull final Vector2f offset) {
         this.offset.set(offset);
+    }
+
+    @Override
+    public void setColor(@NonNull final Vector3f color) {
+        this.color.set(color);
     }
 
     @Override

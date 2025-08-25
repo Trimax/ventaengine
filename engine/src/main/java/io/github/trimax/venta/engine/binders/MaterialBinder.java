@@ -26,6 +26,7 @@ public final class MaterialBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.MaterialShininess), material.getShininess());
         bind(program.getUniformID(ShaderUniform.MaterialTiling), material.getTiling());
         bind(program.getUniformID(ShaderUniform.MaterialOffset), material.getOffset());
+        bind(program.getUniformID(ShaderUniform.MaterialColor), material.getColor());
 
         bind(TextureType.Diffuse, program, material, ShaderUniform.UseTextureDiffuseFlag, ShaderUniform.TextureDiffuse);
         bind(TextureType.Height, program, material, ShaderUniform.UseTextureHeight, ShaderUniform.TextureHeight);

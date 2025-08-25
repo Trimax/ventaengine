@@ -34,6 +34,7 @@ public final class MaterialDescribeExecutor extends AbstractMaterialExecutor {
             getConsole().info("       Shininess: %.2f", material.getShininess());
             getConsole().info("          Tiling: %s", material.getTiling());
             getConsole().info("          Offset: %s", material.getOffset());
+            getConsole().info("           Color: %s", material.getColor());
             getConsole().info("  Textures count: %d", material.getTextures().size());
             material.getTextures().forEach((type, texture) ->
                     getConsole().info("   Texture %s: %s", texture.getID(), type));
