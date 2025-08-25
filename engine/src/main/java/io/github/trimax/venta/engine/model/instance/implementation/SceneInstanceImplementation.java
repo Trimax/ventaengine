@@ -1,11 +1,13 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.model.common.scene.Fog;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector4f;
 
@@ -18,6 +20,9 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
     private final List<ObjectInstanceImplementation> objects = new ArrayList<>();
     private final List<LightInstanceImplementation> lights = new ArrayList<>();
+
+    @Setter(onMethod_ = @__(@Override))
+    private Fog fog;
 
     SceneInstanceImplementation(@NonNull final String name) {
         super(name);
