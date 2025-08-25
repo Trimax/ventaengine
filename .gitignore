@@ -24,9 +24,10 @@ logs
 hs_err_pid*
 replay_pid*
 
-# IntelliJ
+# IntelliJ and VSCode
 target
 .idea
 *.ipr
 *.ids
 *.iml
+.vscode
