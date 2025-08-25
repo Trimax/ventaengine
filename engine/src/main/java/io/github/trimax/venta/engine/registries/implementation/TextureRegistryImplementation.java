@@ -26,6 +26,8 @@ import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_RGBA8;
 import static org.lwjgl.opengl.GL11C.GL_LINEAR;
 import static org.lwjgl.opengl.GL11C.GL_RED;
+import static org.lwjgl.opengl.GL11C.GL_RGB;
+import static org.lwjgl.opengl.GL11C.GL_RGB8;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
@@ -38,6 +40,7 @@ import static org.lwjgl.opengl.GL11C.glPixelStorei;
 import static org.lwjgl.opengl.GL11C.glTexImage2D;
 import static org.lwjgl.opengl.GL11C.glTexParameteri;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL30C.GL_R8;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
@@ -83,7 +86,7 @@ public final class TextureRegistryImplementation
             imageBuffer.put(data);
             imageBuffer.flip();
 
-            final var pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 4);
+            final var pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 0);
             if (pixels == null) {
                 MemoryUtil.memFree(imageBuffer);
                 throw new UnknownTextureFormatException(String.format("%s (%s)", resourcePath, STBImage.stbi_failure_reason()));
@@ -95,7 +98,30 @@ public final class TextureRegistryImplementation
             final var textureID = memory.getTextures().create("Texture %s", resourcePath);
             glBindTexture(GL_TEXTURE_2D, textureID);
 
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+            final var channels = channelsBuffer.get(0);
+            int internalFormat, format;
+            switch (channels) {
+                case 1 -> { // Grayscale
+                    internalFormat = GL_R8;
+                    format = GL_RED;
+                }
+                case 3 -> { // RGB
+                    internalFormat = GL_RGB8;
+                    format = GL_RGB;
+                }
+                case 4 -> { // RGBA
+                    internalFormat = GL_RGBA8;
+                    format = GL_RGBA;
+                }
+                default -> {
+                    STBImage.stbi_image_free(pixels);
+                    MemoryUtil.memFree(imageBuffer);
+                    memory.getTextures().delete(textureID);
+                    throw new UnknownTextureFormatException("Unsupported channel count: " + channels);
+                }
+            }
+
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
