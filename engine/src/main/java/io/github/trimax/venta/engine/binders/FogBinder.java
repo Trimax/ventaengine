@@ -18,11 +18,8 @@ public final class FogBinder extends AbstractBinder {
             return;
         }
 
-        bind(program.getUniformID(ShaderUniform.FogType), fog.type().getValue());
         bind(program.getUniformID(ShaderUniform.FogEnabled), true);
         bind(program.getUniformID(ShaderUniform.FogColor), fog.color());
         bind(program.getUniformID(ShaderUniform.FogDensity), fog.density());
-        bind(program.getUniformID(ShaderUniform.FogStart), fog.start());
-        bind(program.getUniformID(ShaderUniform.FogEnd), fog.end());
     }
 }
