@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderType;
+import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import lombok.AccessLevel;
@@ -50,9 +51,10 @@ public final class Abettor {
     }
 
     public TextureEntityImplementation createTexture(@NonNull final ByteBuffer buffer,
+                                                     @NonNull final TextureFormat format,
                                                      final int internalID,
                                                      final int width,
                                                      final int height) {
-        return new TextureEntityImplementation(buffer, internalID, width, height);
+        return new TextureEntityImplementation(buffer, format, internalID, width, height);
     }
 }

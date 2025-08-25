@@ -51,7 +51,7 @@ public final class TextureRegistryImplementation
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            return abettor.createTexture(bitmap, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT);
+            return abettor.createTexture(bitmap, TextureFormat.Grayscale, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT);
         });
     }
 
@@ -76,8 +76,8 @@ public final class TextureRegistryImplementation
                 throw new UnknownTextureFormatException(String.format("%s (%s)", resourcePath, STBImage.stbi_failure_reason()));
             }
 
-            final var textureFormat = TextureFormat.of(channelsBuffer.get(0));
-            if (textureFormat == null) {
+            final var format = TextureFormat.of(channelsBuffer.get(0));
+            if (format == null) {
                 MemoryUtil.memFree(imageBuffer);
                 throw new UnknownTextureFormatException(String.format("Unsupported channels count: %d", channelsBuffer.get(0)));
             }
@@ -88,7 +88,7 @@ public final class TextureRegistryImplementation
             final var textureID = memory.getTextures().create("Texture %s", resourcePath);
             glBindTexture(GL_TEXTURE_2D, textureID);
 
-            glTexImage2D(GL_TEXTURE_2D, 0, textureFormat.getInternal(), width, height, 0, textureFormat.getExternal(), GL_UNSIGNED_BYTE, pixels);
+            glTexImage2D(GL_TEXTURE_2D, 0, format.getInternal(), width, height, 0, format.getExternal(), GL_UNSIGNED_BYTE, pixels);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -100,7 +100,7 @@ public final class TextureRegistryImplementation
 
             STBImage.stbi_image_free(pixels);
 
-            return abettor.createTexture(imageBuffer, textureID, width, height);
+            return abettor.createTexture(imageBuffer, format, textureID, width, height);
         }
     }
 

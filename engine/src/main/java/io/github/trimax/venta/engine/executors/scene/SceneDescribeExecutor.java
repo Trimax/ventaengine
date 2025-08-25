@@ -30,10 +30,10 @@ public final class SceneDescribeExecutor extends AbstractSceneExecutor {
         }
 
         getConsole().header("Scene <%s>:", scene.getID());
-        getConsole().info("           ID: %s", scene.getID());
-        getConsole().info("         Name: %s", scene.getName());
-        getConsole().info("Objects count: %s", scene.getObjects().size());
-        getConsole().info(" Lights count: %s", scene.getLights().size());
-        getConsole().info("      Ambient: %s", scene.getAmbientLight());
+        getConsole().info("             ID: %s", scene.getID());
+        getConsole().info("           Name: %s", scene.getName());
+        getConsole().info("  Objects count: %s", scene.getObjects().size());
+        getConsole().info("   Lights count: %s", scene.getLights().size());
+        getConsole().info("        Ambient: %s", scene.getAmbientLight());
     }
 }

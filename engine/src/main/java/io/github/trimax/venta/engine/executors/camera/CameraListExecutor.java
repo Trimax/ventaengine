@@ -22,8 +22,7 @@ public final class CameraListExecutor extends AbstractCameraExecutor {
     public void execute(final ConsoleCommandQueue.Command command) {
         getConsole().header("Cameras:");
 
-        final var cameraManager = getManager(CameraManagerImplementation.class);
-        StreamEx.of(cameraManager.iterator())
+        StreamEx.of(getManager(CameraManagerImplementation.class).iterator())
                 .map(AbstractInstance::getPublicInformation)
                 .map(FormatUtil::indent)
                 .forEach(getConsole()::info);

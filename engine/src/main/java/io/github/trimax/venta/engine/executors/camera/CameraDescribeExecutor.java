@@ -30,11 +30,11 @@ public final class CameraDescribeExecutor extends AbstractCameraExecutor {
         }
 
         getConsole().header("Camera <%s>:", camera.getID());
-        getConsole().info("         Name: %s", camera.getName());
-        getConsole().info("     Position: %s", camera.getPosition());
-        getConsole().info("     Rotation: %s", camera.getRotation());
-        getConsole().info("        Front: %s", camera.getFront());
-        getConsole().info("           Up: %s", camera.getUp());
-        getConsole().info("        Right: %b", camera.getRight());
+        getConsole().info("      Name: %s", camera.getName());
+        getConsole().info("  Position: %s", camera.getPosition());
+        getConsole().info("  Rotation: %s", camera.getRotation());
+        getConsole().info("     Front: %s", camera.getFront());
+        getConsole().info("        Up: %s", camera.getUp());
+        getConsole().info("     Right: %b", camera.getRight());
     }
 }
