@@ -4,10 +4,10 @@
     "tiling": {"x": 1.0, "y": 1.0},
     "offset": {"x": 0.0, "y": 0.0},
     "textures": {
-        "ambientOcclusion": "stone_ambient_occlusion.png",
-        "diffuse": "stone_diffuse.png",
-        "height": "stone_height.png",
-        "normal": "stone_normal.png",
-        "roughness": "stone_roughness.png"
+        "ambientOcclusion": "stone/ambient_occlusion.png",
+        "diffuse": "stone/diffuse.png",
+        "height": "stone/height.png",
+        "normal": "stone/normal.png",
+        "roughness": "stone/roughness.png"
     }
 }

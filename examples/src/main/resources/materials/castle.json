@@ -4,8 +4,8 @@
     "tiling": {"x": 1.0, "y": 1.0},
     "offset": {"x": 0.0, "y": 0.0},
     "textures": {
-      "ambientOcclusion": "castle_specular.png",
-      "diffuse": "castle_diffuse.png",
-      "normal": "castle_normal.png"
+      "ambientOcclusion": "castle/specular.png",
+      "diffuse": "castle/diffuse.png",
+      "normal": "castle/normal.png"
     }
 }
