@@ -23,6 +23,8 @@ public final class MaterialBinder extends AbstractBinder {
         if (material == null)
             return;
 
+        bind(program.getUniformID(ShaderUniform.MaterialTiling), material.getTiling());
+
         bind(TextureType.Diffuse, program, material, ShaderUniform.UseTextureDiffuseFlag, ShaderUniform.TextureDiffuse);
         bind(TextureType.Height, program, material, ShaderUniform.UseTextureHeight, ShaderUniform.TextureHeight);
         bind(TextureType.Normal, program, material, ShaderUniform.UseTextureNormal, ShaderUniform.TextureNormal);

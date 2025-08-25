@@ -45,6 +45,9 @@ uniform int useTextureRoughness;
 uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
 
+/* Material parameters */
+uniform vec2 materialTiling;
+
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
 uniform vec4 ambientLight;
@@ -142,8 +145,14 @@ vec3 calculateLighting(vec2 textureCoordinates) {
     return lighting;
 }
 
+vec2 getTextureCoordinates() {
+    vec2 textureCoordinates = vertexTextureCoordinates * materialTiling;
+
+    return isSet(useTextureHeight) ? parallaxMapping(textureCoordinates) : textureCoordinates;
+}
+
 void main() {
-    vec2 textureCoordinates = isSet(useTextureHeight) ? parallaxMapping(vertexTextureCoordinates) : vertexTextureCoordinates;
+    vec2 textureCoordinates = getTextureCoordinates();
 
     vec4 diffuseColor = getDiffuseColor(textureCoordinates);
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);

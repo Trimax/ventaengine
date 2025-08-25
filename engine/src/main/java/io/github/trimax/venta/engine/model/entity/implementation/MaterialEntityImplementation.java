@@ -33,6 +33,11 @@ public final class MaterialEntityImplementation extends AbstractEntityImplementa
     }
 
     @Override
+    public void setTiling(@NonNull final Vector2f tiling) {
+        this.tiling.set(tiling);
+    }
+
+    @Override
     public TextureEntityImplementation getTexture(final TextureType texture) {
         return this.textures.get(texture);
     }
