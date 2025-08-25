@@ -1,9 +1,9 @@
-package io.github.trimax.venta.engine.executors.scene;
+package io.github.trimax.venta.engine.executors.light;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
-import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.LightManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import io.github.trimax.venta.engine.utils.FormatUtil;
 import lombok.NonNull;
@@ -13,16 +13,16 @@ import one.util.streamex.StreamEx;
 @Slf4j
 @Component
 @SuppressWarnings("unused")
-public final class SceneListExecutor extends AbstractSceneExecutor {
-    private SceneListExecutor(@NonNull final ControllerFactory factory) {
-        super(factory, "list", "prints the list of scenes");
+public final class LightListExecutor extends AbstractLightExecutor {
+    private LightListExecutor(@NonNull final ControllerFactory factory) {
+        super(factory, "list", "prints the list of lights");
     }
 
     @Override
     public void execute(final ConsoleCommandQueue.Command command) {
-        getConsole().header("Scenes:");
+        getConsole().header("Lights:");
 
-        StreamEx.of(getManager(SceneManagerImplementation.class).iterator())
+        StreamEx.of(getManager(LightManagerImplementation.class).iterator())
                 .map(AbstractInstance::getPublicInformation)
                 .map(FormatUtil::indent)
                 .forEach(getConsole()::info);

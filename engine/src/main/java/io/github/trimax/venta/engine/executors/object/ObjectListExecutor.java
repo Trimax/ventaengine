@@ -22,8 +22,7 @@ public final class ObjectListExecutor extends AbstractObjectExecutor {
     public void execute(final ConsoleCommandQueue.Command command) {
         getConsole().header("Objects:");
 
-        final var objectManager = getManager(ObjectManagerImplementation.class);
-        StreamEx.of(objectManager.iterator())
+        StreamEx.of(getManager(ObjectManagerImplementation.class).iterator())
                 .map(AbstractInstance::getPublicInformation)
                 .map(FormatUtil::indent)
                 .forEach(getConsole()::info);

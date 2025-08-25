@@ -30,13 +30,13 @@ public final class ObjectDescribeExecutor extends AbstractObjectExecutor {
         }
 
         getConsole().header("Object <%s>:", object.getID());
-        getConsole().info("         Name: %s", object.getName());
-        getConsole().info("   Program ID: %s", object.hasProgram() ? object.getProgram().getID() : "not assigned");
-        getConsole().info("     Position: %s", object.getPosition());
-        getConsole().info("     Rotation: %s", object.getRotation());
-        getConsole().info("        Scale: %s", object.getScale());
-        getConsole().info("    Draw mode: %s", object.getDrawMode());
-        getConsole().info("      Visible: %b", object.isVisible());
-        getConsole().info("          Lit: %b", object.isLit());
+        getConsole().info("        Name: %s", object.getName());
+        getConsole().info("  Program ID: %s", object.hasProgram() ? object.getProgram().getID() : "not assigned");
+        getConsole().info("    Position: %s", object.getPosition());
+        getConsole().info("    Rotation: %s", object.getRotation());
+        getConsole().info("       Scale: %s", object.getScale());
+        getConsole().info("   Draw mode: %s", object.getDrawMode());
+        getConsole().info("     Visible: %b", object.isVisible());
+        getConsole().info("         Lit: %b", object.isLit());
     }
 }
