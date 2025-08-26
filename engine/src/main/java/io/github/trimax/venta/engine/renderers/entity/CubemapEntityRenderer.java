@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.renderers.instance.SceneInstanceRenderer;
@@ -33,6 +34,8 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
 
     @Override
     public void render(final CubemapEntityImplementation cubemap) {
+        glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
+
         final var program = cubemap.getProgram();
 
         glDepthFunc(GL_LEQUAL);
