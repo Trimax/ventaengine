@@ -19,6 +19,7 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector4f(0.2f, 0.2f, 0.2f, 1.5f));
+        scene.setCubemap(context.getCubemapRegistry().get("stars.json"));
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(-1.f, 0.5f, 10.f));
