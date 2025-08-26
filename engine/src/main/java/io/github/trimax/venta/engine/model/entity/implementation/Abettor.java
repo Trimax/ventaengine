@@ -63,7 +63,9 @@ public final class Abettor {
     public CubemapEntityImplementation createCubemap(@NonNull final Map<CubemapFace, ByteBuffer> buffers,
                                                      @NonNull final ProgramEntityImplementation program,
                                                      @NonNull final TextureFormat format,
+                                                     final int vertexArrayObjectID,
+                                                     final int verticesBufferID,
                                                      final int internalID) {
-        return new CubemapEntityImplementation(buffers, program, format, internalID);
+        return new CubemapEntityImplementation(buffers, program, vertexArrayObjectID, verticesBufferID, format, internalID);
     }
 }

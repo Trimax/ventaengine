@@ -1,13 +1,13 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector4f;
 
@@ -21,7 +21,6 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     private final List<ObjectInstanceImplementation> objects = new ArrayList<>();
     private final List<LightInstanceImplementation> lights = new ArrayList<>();
 
-    @Setter
     private CubemapEntityImplementation cubemap;
 
     SceneInstanceImplementation(@NonNull final String name) {
@@ -31,6 +30,12 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     @Override
     public void setAmbientLight(final Vector4f ambientLight) {
         this.ambientLight.set(ambientLight);
+    }
+
+    @Override
+    public void setCubemap(final CubemapEntity cubemap) {
+        if (cubemap instanceof CubemapEntityImplementation entity)
+            this.cubemap = entity;
     }
 
     @Override

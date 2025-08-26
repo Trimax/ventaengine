@@ -11,6 +11,7 @@ import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.registries.CubemapRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
+import io.github.trimax.venta.engine.utils.SkyboxUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -63,7 +64,9 @@ public final class CubemapRegistryImplementation
 
             glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-            return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB, textureID);
+            final var objectBuffers = SkyboxUtil.create();
+            return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB,
+                    objectBuffers[0], objectBuffers[1], textureID);
         });
     }
 

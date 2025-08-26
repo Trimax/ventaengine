@@ -15,6 +15,8 @@ import java.util.Map;
 public final class CubemapEntityImplementation extends AbstractEntityImplementation implements CubemapEntity {
     private final Map<CubemapFace, ByteBuffer> buffers;
     private final ProgramEntityImplementation program;
+    private final int vertexArrayObjectID;
+    private final int verticesBufferID;
     private final TextureFormat format;
     private final int internalID;
 }

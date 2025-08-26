@@ -50,12 +50,21 @@ public final class SceneInstanceRenderer
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class SceneRenderContext extends AbstractRenderContext<SceneRenderContext> {
         private final FloatBuffer viewProjectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final FloatBuffer projectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final FloatBuffer viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
+        private final Matrix4f projectionMatrix = new Matrix4f();
+        private final Matrix4f viewMatrix = new Matrix4f();
         private CameraInstanceImplementation camera;
 
         public SceneRenderContext with(final WindowState window, final CameraInstanceImplementation camera) {
             window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
+            projectionMatrix.set(window.getProjectionMatrix());
+            viewMatrix.set(camera.getViewMatrix());
+
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
+            projectionMatrix.get(projectionMatrixBuffer);
+            viewMatrix.get(viewMatrixBuffer);
             this.camera = camera;
 
             return this;
@@ -64,11 +73,15 @@ public final class SceneInstanceRenderer
         @Override
         public void close() {
             viewProjectionMatrixBuffer.clear();
+            projectionMatrixBuffer.clear();
+            viewMatrixBuffer.clear();
         }
 
         @Override
         public void destroy() {
             MemoryUtil.memFree(viewProjectionMatrixBuffer);
+            MemoryUtil.memFree(projectionMatrixBuffer);
+            MemoryUtil.memFree(viewMatrixBuffer);
         }
     }
 }
