@@ -17,6 +17,14 @@ public final class MatrixBinder extends AbstractBinder {
         bindMatrix4(program.getUniformID(ShaderUniform.MatrixViewProjection), matrixViewProjection);
     }
 
+    public void bindProjectionMatrix(final ProgramEntityImplementation program, final FloatBuffer matrixProjection) {
+        bindMatrix4(program.getUniformID(ShaderUniform.MatrixProjection), matrixProjection);
+    }
+
+    public void bindViewMatrix(final ProgramEntityImplementation program, final FloatBuffer matrixView) {
+        bindMatrix4(program.getUniformID(ShaderUniform.MatrixView), matrixView);
+    }
+
     public void bindNormalMatrix(final ProgramEntityImplementation program, final FloatBuffer matrixNormal) {
         bindMatrix3(program.getUniformID(ShaderUniform.MatrixNormal), matrixNormal);
     }

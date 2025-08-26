@@ -70,6 +70,9 @@ public final class WindowController extends AbstractController<WindowState, Vent
 
         glfwMakeContextCurrent(id);
 
+        //TODO: Turn it on/off depending on the configuration
+        //glfwSetInputMode(id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
         return window;
     }
 

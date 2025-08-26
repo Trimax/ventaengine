@@ -9,8 +9,10 @@ import lombok.Getter;
 public enum ShaderUniform {
     /* Matrices */
     MatrixViewProjection("matrixViewProjection"),
+    MatrixProjection("matrixProjection"),
     MatrixNormal("matrixNormal"),
     MatrixModel("matrixModel"),
+    MatrixView("matrixView"),
 
     /* Textures */
     TextureDiffuse("textureDiffuse"),

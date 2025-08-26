@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "vertex/sky.glsl",
+  "shaderFragment": "fragment/sky.glsl"
+}

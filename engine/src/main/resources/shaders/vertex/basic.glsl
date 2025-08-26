@@ -16,6 +16,7 @@ uniform mat4 matrixViewProjection;  // Multiplied View & Projections matrices (b
 uniform mat3 matrixNormal;          // Multiplied P * R * S
 uniform mat4 matrixModel;           // Normal matrix computed by model matrix
 
+/* Parameters going to fragment shader */
 out mat3 vertexTBN;
 out vec4 vertexColor;
 out vec3 vertexPosition;

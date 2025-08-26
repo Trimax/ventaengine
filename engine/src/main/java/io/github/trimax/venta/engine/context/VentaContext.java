@@ -58,6 +58,10 @@ public final class VentaContext {
 
     /*** Registries ***/
 
+    public CubemapRegistry getCubemapRegistry() {
+        return registryFactory.get(CubemapRegistryImplementation.class);
+    }
+
     public MaterialRegistry getMaterialRegistry() {
         return registryFactory.get(MaterialRegistryImplementation.class);
     }
