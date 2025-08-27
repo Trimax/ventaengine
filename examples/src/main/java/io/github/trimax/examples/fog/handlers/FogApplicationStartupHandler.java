@@ -18,7 +18,7 @@ public final class FogApplicationStartupHandler implements VentaEngineStartupHan
         scene.setSkybox(context.getCubemapRegistry().get("stars.json"));
         scene.setAmbientLight(new Vector3f(0.8f, 0.8f, 0.8f));
 
-        scene.setFog(new Fog(10.f, 25.f, new Vector3f(0.8f, 0f, 0f)));
+        scene.setFog(new Fog(10.f, 25.f, new Vector3f(0.6f, 0.6f, 0.6f)));
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(-17.0f, 4.0f, 0.0f));
