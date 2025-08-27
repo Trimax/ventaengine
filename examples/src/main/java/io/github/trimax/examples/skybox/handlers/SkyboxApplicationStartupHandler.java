@@ -1,11 +1,10 @@
 package io.github.trimax.examples.skybox.handlers;
 
-import org.joml.Vector3f;
-
 import io.github.trimax.examples.skybox.state.SkyboxApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
+import org.joml.Vector3f;
 
 @AllArgsConstructor
 public final class SkyboxApplicationStartupHandler implements VentaEngineStartupHandler {
