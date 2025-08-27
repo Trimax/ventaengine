@@ -23,7 +23,6 @@ struct Light {
 };
 
 struct Fog {
-    int enabled;
     vec3 color;
     float density;
 };
@@ -52,6 +51,7 @@ uniform int useTextureRoughness;
 uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
 uniform int useMaterial;
+uniform int useFog;
 
 /* Material parameters */
 uniform float materialShininess;
@@ -170,7 +170,7 @@ float computeFogFactor(float distance) {
 }
 
 vec4 applyFog(vec4 color) {
-    if (!isSet(fog.enabled))
+    if (!isSet(useFog))
         return color;
 
     return mix(vec4(fog.color, 1.0), color, computeFogFactor(length(vertexCameraPosition - vertexPosition)));

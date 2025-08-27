@@ -6,7 +6,6 @@ import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import io.github.trimax.venta.engine.model.common.scene.Fog;
 import lombok.AllArgsConstructor;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 @AllArgsConstructor
 public final class FogApplicationStartupHandler implements VentaEngineStartupHandler {
@@ -16,7 +15,7 @@ public final class FogApplicationStartupHandler implements VentaEngineStartupHan
 
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
-        scene.setAmbientLight(new Vector4f(0.8f, 0.8f, 0.8f, 1.f));
+        scene.setAmbientLight(new Vector3f(0.8f, 0.8f, 0.8f));
 
         scene.setFog(new Fog(new Vector3f(0.8f, 0f, 0f), 0.1f));
 
