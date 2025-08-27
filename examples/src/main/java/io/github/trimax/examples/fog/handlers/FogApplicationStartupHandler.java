@@ -22,7 +22,7 @@ public final class FogApplicationStartupHandler implements VentaEngineStartupHan
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(-17.0f, 4.0f, 0.0f));
-        camera.lookAt(new Vector3f(0.f, 0.f, 0.f));
+        camera.lookAt(new Vector3f(0.f, 4.f, 0.f));
         state.setCamera(camera);
         state.setFog(scene.getFog());
 
