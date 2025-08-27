@@ -3,7 +3,6 @@ package io.github.trimax.venta.engine.model.instance;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.NonNull;
-import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 public interface ObjectInstance extends AbstractInstance {
@@ -23,17 +22,17 @@ public interface ObjectInstance extends AbstractInstance {
 
     ProgramEntity getProgram();
 
-    void setPosition(@NonNull final Vector3f position);
+    void setPosition(@NonNull final Vector3fc position);
 
-    void setRotation(@NonNull final Vector3f rotation);
+    void setRotation(@NonNull final Vector3fc rotation);
 
-    void setScale(@NonNull final Vector3f scale);
+    void setScale(@NonNull final Vector3fc scale);
 
-    void move(@NonNull final Vector3f offset);
+    void move(@NonNull final Vector3fc offset);
 
-    void rotate(@NonNull final Vector3f angles);
+    void rotate(@NonNull final Vector3fc angles);
 
-    void scale(@NonNull final Vector3f factor);
+    void scale(@NonNull final Vector3fc factor);
 
     void setDrawMode(@NonNull final DrawMode drawMode);
 

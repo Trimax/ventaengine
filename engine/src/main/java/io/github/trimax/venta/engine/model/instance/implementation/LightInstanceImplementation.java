@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     private final Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
 
     private final LightType type;
-    private Attenuation attenuation = new Attenuation(1.0f, 0.1f, 0.01f);
+    private Attenuation attenuation = new Attenuation(0f, 0f, 0f);
     private float intensity = 1.f;
 
     @Setter
@@ -42,17 +43,17 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     }
 
     @Override
-    public void setPosition(@NonNull final Vector3f position) {
+    public void setPosition(@NonNull final Vector3fc position) {
         this.position.set(position);
     }
 
     @Override
-    public void setDirection(@NonNull final Vector3f direction) {
+    public void setDirection(@NonNull final Vector3fc direction) {
         this.direction.set(direction);
     }
 
     @Override
-    public void setColor(@NonNull final Vector3f color) {
+    public void setColor(@NonNull final Vector3fc color) {
         this.color.set(color);
     }
 

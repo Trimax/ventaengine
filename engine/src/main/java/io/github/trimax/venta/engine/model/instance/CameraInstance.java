@@ -1,15 +1,18 @@
 package io.github.trimax.venta.engine.model.instance;
 
-import org.joml.Vector3f;
+import lombok.NonNull;
+import org.joml.Vector3fc;
 
 public interface CameraInstance extends AbstractInstance {
-    Vector3f getPosition();
+    Vector3fc getPosition();
 
-    Vector3f getRotation();
+    Vector3fc getRotation();
 
-    void setPosition(final Vector3f position);
+    void setPosition(@NonNull final Vector3fc position);
 
-    void lookAt(final Vector3f position);
+    void lookAt(@NonNull final Vector3fc position);
+
+    void move(@NonNull final Vector3fc direction);
 
     void moveForward(final float distance);
 

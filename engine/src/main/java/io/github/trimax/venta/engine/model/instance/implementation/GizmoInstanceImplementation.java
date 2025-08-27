@@ -4,7 +4,9 @@ import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImple
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.GizmoInstance;
 import lombok.Getter;
+import lombok.NonNull;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 @Getter
 public final class GizmoInstanceImplementation extends AbstractInstanceImplementation implements GizmoInstance {
@@ -30,7 +32,7 @@ public final class GizmoInstanceImplementation extends AbstractInstanceImplement
         this.scale.set(scale);
     }
 
-    public void setScale(final Vector3f scale) {
+    public void setScale(@NonNull final Vector3fc scale) {
         this.scale.set(scale);
     }
 }

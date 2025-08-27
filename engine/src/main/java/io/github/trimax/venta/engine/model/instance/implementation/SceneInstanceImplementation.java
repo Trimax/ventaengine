@@ -1,11 +1,5 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.model.common.scene.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
@@ -17,6 +11,11 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Getter
@@ -35,7 +34,7 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     }
 
     @Override
-    public void setAmbientLight(final Vector3fc ambientLight) {
+    public void setAmbientLight(@NonNull final Vector3fc ambientLight) {
         this.ambientLight.set(ambientLight);
     }
 
