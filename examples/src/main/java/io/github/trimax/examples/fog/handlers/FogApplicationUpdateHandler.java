@@ -8,16 +8,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
+import static io.github.trimax.examples.fog.definitions.Definitions.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 @Slf4j
 @RequiredArgsConstructor
 public final class FogApplicationUpdateHandler implements VentaEngineUpdateHandler {
     private final FogApplicationState state;
-    private static final int CIRCLE_RADIUS = 10;
-    private static final int CUBE_COUNT = 10;
-    private static final float ROTATION_SPEED = 30.0f;
-    private float rotationAngle = 0.0f;
+    private static float rotationSpeed = 30.f;
+    private float rotationAngle = 0.f;
+    private float fogDistance = 5.f;
 
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
         final float delta = (float) time.getDelta();
@@ -31,33 +31,33 @@ public final class FogApplicationUpdateHandler implements VentaEngineUpdateHandl
         if (context.isButtonPushed(GLFW_KEY_RIGHT))
             state.getCamera().moveRight(delta);
 
+        if (context.isButtonPushed(GLFW_KEY_KP_ADD))
+            rotationSpeed += 1;
+        if (context.isButtonPushed(GLFW_KEY_KP_SUBTRACT))
+            rotationSpeed = Math.max(0, rotationSpeed - 1);
+
         if (context.isButtonPushed(GLFW_KEY_W))
-            state.getFog().setMaximalDistance(state.getFog().getMaximalDistance() + 1);
+            fogDistance += 1;
         if (context.isButtonPushed(GLFW_KEY_S))
-            state.getFog().setMaximalDistance(state.getFog().getMaximalDistance() - 1);
+            fogDistance = Math.max(0, fogDistance - 1);
 
-        if (context.isButtonPushed(GLFW_KEY_Q))
-            state.getFog().setMinimalDistance(state.getFog().getMinimalDistance() + 1);
-        if (context.isButtonPushed(GLFW_KEY_A))
-            state.getFog().setMinimalDistance(state.getFog().getMinimalDistance() - 1);
+        state.getFog().setMinimalDistance(fogDistance);
+        state.getFog().setMaximalDistance(fogDistance + FOG_SPACE);
 
-        final float rotationDelta = ROTATION_SPEED * delta;
-        rotationAngle += rotationDelta;
-
+        rotationAngle += rotationSpeed * delta;
         if (rotationAngle >= 360.0f)
             rotationAngle -= 360.0f;
 
-        for (int i = 0; i < state.getCubes().size(); i++) {
-            final var cube = state.getCubes().get(i);
-            final float baseAngle = i * (360.0f / CUBE_COUNT);
-            final float currentAngle = baseAngle + rotationAngle;
-            final float radians = (float) Math.toRadians(currentAngle);
+        updateCubesPosition();
+    }
 
-            cube.setPosition(new Vector3f(
-                    CIRCLE_RADIUS * (float) Math.cos(radians),
-                    0.0f,
-                    CIRCLE_RADIUS * (float) Math.sin(radians)
-            ));
+    private void updateCubesPosition() {
+        for (int i = 0; i < state.getCubes().size(); i++) {
+            final float radians = (float) Math.toRadians(i * (360.0f / CUBE_COUNT) + rotationAngle);
+
+            final var cube = state.getCubes().get(i);
+            cube.setRotation(new Vector3f(0.f, -radians, 0.f));
+            cube.setPosition(new Vector3f((float) Math.cos(radians),0.0f, (float) Math.sin(radians)).mul(CIRCLE_RADIUS));
         }
     }
 }
