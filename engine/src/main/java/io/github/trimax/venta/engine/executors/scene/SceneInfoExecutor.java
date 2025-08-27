@@ -29,5 +29,7 @@ public final class SceneInfoExecutor extends AbstractSceneExecutor {
         getConsole().info("Objects count: %s", scene.getObjects().size());
         getConsole().info(" Lights count: %s", scene.getLights().size());
         getConsole().info("      Ambient: %s", scene.getAmbientLight());
+        getConsole().info("       Skybox: %b", scene.getSkybox() != null);
+        getConsole().info("          Fog: %s", scene.getFog());
     }
 }
