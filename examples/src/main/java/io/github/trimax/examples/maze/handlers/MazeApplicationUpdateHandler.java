@@ -20,6 +20,7 @@ public final class MazeApplicationUpdateHandler implements VentaEngineUpdateHand
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
         direction.set(state.getCamera().getFront());
         direction.y = 0f;
+        direction.normalize();
 
         if (context.isButtonPushed(GLFW_KEY_DOWN))
             state.getCamera().move(direction.mul(-(float) time.getDelta()));
