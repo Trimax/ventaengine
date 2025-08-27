@@ -1,5 +1,6 @@
 {
-  "ambientLight": {"x": 0.7, "y": 0.7, "z": 0.7, "w": 1.0},
+  "ambientLight": {"x": 0.7, "y": 0.7, "z": 0.7},
+  "skybox": "stars.json",
   "objects": [
     {
       "name": "Castle",

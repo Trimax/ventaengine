@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ScenePrefabImplementation;
+import io.github.trimax.venta.engine.registries.implementation.CubemapRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
 import lombok.AccessLevel;
@@ -28,6 +29,7 @@ public final class SceneManagerImplementation
         implements SceneManager {
     private final ObjectRepositoryImplementation objectRepository;
     private final LightRepositoryImplementation lightRepository;
+    private final CubemapRegistryImplementation cubemapRegistry;
     private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
     private final Abettor abettor;
@@ -67,6 +69,9 @@ public final class SceneManagerImplementation
             }
 
         Optional.ofNullable(sceneDTO.ambientLight()).ifPresent(scene::setAmbientLight);
+
+        Optional.ofNullable(sceneDTO.fog()).ifPresent(scene::setFog);
+        Optional.ofNullable(sceneDTO.skybox()).map(cubemapRegistry::get).ifPresent(scene::setSkybox);
 
         return store(scene);
     }
