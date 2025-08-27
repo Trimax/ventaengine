@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Consumer;
 
+import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.CONSOLE_VERTICES;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
@@ -37,13 +38,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
         glBindVertexArray(consoleVertexArrayObjectID);
         glBindBuffer(GL_ARRAY_BUFFER, consoleVerticesBufferID);
 
-        final float[] vertices = {
-                /* Top-left */    -1.0f, 1.0f,
-                /* Top-right */    1.0f, 1.0f,
-                /* Bottom-right */ 1.0f, 0.0f,
-                /* Bottom-left */ -1.0f, 0.0f};
-
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, CONSOLE_VERTICES, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);

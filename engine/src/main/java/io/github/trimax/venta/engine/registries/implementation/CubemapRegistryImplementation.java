@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.registries.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
-import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
+import io.github.trimax.venta.engine.exceptions.CubemapBakeException;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.CubemapDTO;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
@@ -11,7 +11,6 @@ import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.registries.CubemapRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
-import io.github.trimax.venta.engine.utils.SkyboxUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -22,13 +21,19 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 import java.util.function.Function;
 
+import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.SKYBOX_VERTICES;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL12C.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
 @Slf4j
@@ -53,7 +58,15 @@ public final class CubemapRegistryImplementation
             final int textureID = memory.getTextures().create("3D texture %s", resourcePath);
             glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
-            final var buffers = StreamEx.of(CubemapFace.values()).toMap(Function.identity(), face -> loadTexture(face, dto.getTexturePath(face)));
+            final var buffers = StreamEx.of(CubemapFace.values())
+                    .mapToEntry(Function.identity(), face -> loadTextureSafe(face, dto.getTexturePath(face)))
+                    .filterValues(Objects::nonNull)
+                    .toMap();
+
+            if (buffers.size() != CubemapFace.values().length) {
+                StreamEx.ofValues(buffers).forEach(MemoryUtil::memFree);
+                throw new CubemapBakeException("Cubemap can't be constructed. Some textures can't be loaded");
+            }
 
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -63,10 +76,33 @@ public final class CubemapRegistryImplementation
 
             glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-            final var objectBuffers = SkyboxUtil.create();
+            final var vertexArrayObjectID = memory.getVertexArrays().create("Cubemap %s vertex array buffer", resourcePath);
+            final var verticesBufferID = memory.getBuffers().create("Cubemap %s vertex buffer", resourcePath);
+
+            glBindVertexArray(vertexArrayObjectID);
+
+            glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
+            glBufferData(GL_ARRAY_BUFFER, SKYBOX_VERTICES, GL_STATIC_DRAW);
+
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0L);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+
             return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB,
-                    objectBuffers[0], objectBuffers[1], textureID);
+                    vertexArrayObjectID, verticesBufferID, textureID);
         });
+    }
+
+    private ByteBuffer loadTextureSafe(final CubemapFace face, final String path) {
+        try {
+            return loadTexture(face, path);
+        } catch (final Exception ignored) {
+            log.warn("Can't load texture {}", path);
+        }
+
+        return null;
     }
 
     private ByteBuffer loadTexture(final CubemapFace face, final String path) {
@@ -80,11 +116,10 @@ public final class CubemapRegistryImplementation
             final var imageBuffer = BufferUtils.createByteBuffer(data.length);
             imageBuffer.put(data).flip();
 
-            //TODO: Handle properly. In case one of faces is failed to load, all loaded must be freed
-            final ByteBuffer pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 0);
+            final ByteBuffer pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 3);
             if (pixels == null) {
                 MemoryUtil.memFree(imageBuffer);
-                throw new UnknownTextureFormatException(String.format("%s (%s)", path, STBImage.stbi_failure_reason()));
+                return null;
             }
 
             final var width = widthBuffer.get(0);
@@ -103,8 +138,9 @@ public final class CubemapRegistryImplementation
     protected void unload(@NonNull final CubemapEntityImplementation entity) {
         log.info("Unloading texture {}", entity.getID());
 
+        memory.getVertexArrays().delete(entity.getVertexArrayObjectID());
+        memory.getBuffers().delete(entity.getVerticesBufferID());
         memory.getTextures().delete(entity.getInternalID());
-
         StreamEx.ofValues(entity.getBuffers()).forEach(MemoryUtil::memFree);
     }
 }
