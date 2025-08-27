@@ -45,7 +45,7 @@ public final class MeshRegistryImplementation
     private MeshEntityImplementation createMesh(final String resourcePath, final MeshDTO meshDTO) {
         final var vertices = meshDTO.getVerticesArray();
 
-        final int vertexArrayObjectID = memory.getVertexArrays().create("Mesh %s VAO", resourcePath);
+        final int vertexArrayObjectID = memory.getVertexArrays().create("Mesh %s vertex array buffer", resourcePath);
         final int vertexBufferID = memory.getBuffers().create("Mesh %s vertex buffer", resourcePath);
         final int facetsBufferID = memory.getBuffers().create("Mesh %s face buffer", resourcePath);
         final int edgesBufferID = memory.getBuffers().create("Mesh %s edge buffer", resourcePath);
