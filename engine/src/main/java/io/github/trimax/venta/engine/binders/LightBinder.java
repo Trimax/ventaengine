@@ -1,5 +1,9 @@
 package io.github.trimax.venta.engine.binders;
 
+import java.util.List;
+
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
@@ -9,15 +13,12 @@ import io.github.trimax.venta.engine.model.instance.implementation.LightInstance
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector4f;
-
-import java.util.List;
 
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LightBinder extends AbstractBinder {
-    public void bind(final ProgramEntityImplementation program, final Vector4f ambientLight) {
+    public void bind(final ProgramEntityImplementation program, final Vector3fc ambientLight) {
         bind(program.getUniformID(ShaderUniform.AmbientLight), ambientLight);
     }
 

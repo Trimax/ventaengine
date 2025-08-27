@@ -1,13 +1,13 @@
 package io.github.trimax.venta.engine.model.dto;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.joml.Vector4f;
-
 import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.joml.Vector3f;
 
 public record SceneDTO(List<SceneObjectDTO> objects,
                        List<SceneLightDTO> lights,
-                       Vector4f ambientLight) {
+                       Vector3f ambientLight) {
     public boolean hasObjects() {
         return CollectionUtils.isNotEmpty(objects);
     }
