@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.interfaces;
 
+import io.github.trimax.venta.engine.enums.AntialiasingSamples;
 import lombok.NonNull;
 
 public interface VentaEngineConfiguration {
@@ -13,8 +14,12 @@ public interface VentaEngineConfiguration {
         return WindowConfiguration.DEFAULT;
     }
 
-    record RenderConfiguration(boolean isConsoleEnabled, boolean isDebugEnabled) {
-        public static final RenderConfiguration DEFAULT = new RenderConfiguration(false, false);
+    record RenderConfiguration(boolean isConsoleEnabled,
+                               boolean isDebugEnabled,
+                               boolean isMouseCursorVisible,
+                               boolean isVerticalSynchronizationEnabled,
+                               AntialiasingSamples antialiasingSamples) {
+        public static final RenderConfiguration DEFAULT = new RenderConfiguration(false, false, true, true, AntialiasingSamples.X4);
     }
 
     record WindowConfiguration(String title, int width, int height, boolean isFullscreen) {

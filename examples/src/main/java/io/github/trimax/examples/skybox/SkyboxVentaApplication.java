@@ -4,6 +4,7 @@ import io.github.trimax.examples.skybox.handlers.SkyboxApplicationInputHandler;
 import io.github.trimax.examples.skybox.handlers.SkyboxApplicationStartupHandler;
 import io.github.trimax.examples.skybox.state.SkyboxApplicationState;
 import io.github.trimax.venta.engine.VentaEngine;
+import io.github.trimax.venta.engine.enums.AntialiasingSamples;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
@@ -18,7 +19,7 @@ public final class SkyboxVentaApplication implements VentaEngineApplication {
         return new VentaEngineConfiguration() {
             @Override
             public @NonNull RenderConfiguration getRenderConfiguration() {
-                return new RenderConfiguration(false, true);
+                return new RenderConfiguration(false, true, false, true, AntialiasingSamples.X2);
             }
         };
     }

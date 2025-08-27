@@ -44,6 +44,7 @@ uniform int useTextureNormal;
 uniform int useTextureRoughness;
 uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
+uniform int useMaterial;
 
 /* Material parameters */
 uniform float materialShininess;
@@ -154,10 +155,14 @@ vec2 getTextureCoordinates() {
     return isSet(useTextureHeight) ? parallaxMapping(textureCoordinates) : textureCoordinates;
 }
 
+vec4 getMaterialColor() {
+    return isSet(useMaterial) ? vec4(materialColor, 1.0) : vec4(1.0);
+}
+
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
-    vec4 diffuseColor = getDiffuseColor(textureCoordinates) * vec4(materialColor, 1.0);
+    vec4 diffuseColor = getDiffuseColor(textureCoordinates) * getMaterialColor();
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
 
     FragColor = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
