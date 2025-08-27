@@ -1,15 +1,15 @@
 package io.github.trimax.venta.engine.model;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
-
+import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import lombok.NonNull;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
-import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import java.util.List;
+
+import static io.github.trimax.venta.engine.definitions.Definitions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public final class MeshDTOTest {
     @Test
@@ -74,7 +74,7 @@ public final class MeshDTOTest {
         );
     }
 
-    private static MeshDTO.Vertex createVertex(final Vector3f position, final Vector2f textureCoordinates) {
+    private static MeshDTO.Vertex createVertex(@NonNull final Vector3f position, @NonNull final Vector2f textureCoordinates) {
         return new MeshDTO.Vertex(position, null, textureCoordinates, null);
     }
 }

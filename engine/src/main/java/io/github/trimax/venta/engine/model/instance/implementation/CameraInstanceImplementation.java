@@ -6,6 +6,7 @@ import lombok.NonNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 @Getter
 public final class CameraInstanceImplementation extends AbstractInstanceImplementation implements CameraInstance {
@@ -28,7 +29,7 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
         lookAt(target);
     }
 
-    private void rotateAround(final Vector3f axis, final float angleRadians) {
+    private void rotateAround(@NonNull final Vector3fc axis, final float angleRadians) {
         final var rotationMatrix = new Matrix3f().rotate(angleRadians, axis);
 
         front.mul(rotationMatrix).normalize();
@@ -38,6 +39,11 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
 
     public Matrix4f getViewMatrix() {
         return new Matrix4f().lookAt(position, new Vector3f(position).add(front), up);
+    }
+
+    @Override
+    public void move(@NonNull final Vector3fc direction) {
+        position.add(direction);
     }
 
     @Override
@@ -71,17 +77,17 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
     }
 
     @Override
-    public Vector3f getPosition() {
-        return new Vector3f(position);
+    public Vector3fc getPosition() {
+        return position;
     }
 
     @Override
-    public void setPosition(final Vector3f newPosition) {
+    public void setPosition(@NonNull final Vector3fc newPosition) {
         this.position.set(newPosition);
     }
 
     @Override
-    public void lookAt(final Vector3f target) {
+    public void lookAt(@NonNull final Vector3fc target) {
         front.set(new Vector3f(target).sub(position).normalize());
 
         final var tempUp = new Vector3f(0, 1, 0);

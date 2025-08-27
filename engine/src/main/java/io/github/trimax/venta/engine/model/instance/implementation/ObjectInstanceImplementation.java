@@ -11,7 +11,7 @@ import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.utils.GeometryUtil;
 import lombok.Getter;
 import lombok.NonNull;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 @Getter
 public final class ObjectInstanceImplementation extends AbstractInstanceImplementation implements ObjectInstance {
@@ -43,47 +43,47 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     }
 
     @Override
-    public Vector3f getPosition() {
+    public Vector3fc getPosition() {
         return transform.getPosition();
     }
 
     @Override
-    public Vector3f getRotation() {
+    public Vector3fc getRotation() {
         return transform.getRotation();
     }
 
     @Override
-    public Vector3f getScale() {
+    public Vector3fc getScale() {
         return transform.getScale();
     }
 
     @Override
-    public void setPosition(@NonNull final Vector3f position) {
+    public void setPosition(@NonNull final Vector3fc position) {
         this.transform.setPosition(position);
     }
 
     @Override
-    public void setRotation(@NonNull final Vector3f angles) {
+    public void setRotation(@NonNull final Vector3fc angles) {
         this.transform.setRotation(angles);
     }
 
     @Override
-    public void setScale(@NonNull final Vector3f scale) {
+    public void setScale(@NonNull final Vector3fc scale) {
         this.transform.setScale(scale);
     }
 
     @Override
-    public void move(@NonNull final Vector3f offset) {
+    public void move(@NonNull final Vector3fc offset) {
         this.transform.move(offset);
     }
 
     @Override
-    public void rotate(@NonNull final Vector3f angles) {
+    public void rotate(@NonNull final Vector3fc angles) {
         this.transform.rotate(angles);
     }
 
     @Override
-    public void scale(@NonNull final Vector3f factor) {
+    public void scale(@NonNull final Vector3fc factor) {
         this.transform.scale(factor);
     }
 

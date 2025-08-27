@@ -8,14 +8,11 @@ import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanc
 import io.github.trimax.venta.engine.model.instance.implementation.GizmoInstanceImplementation;
 import io.github.trimax.venta.engine.renderers.common.DebugRenderer;
 import io.github.trimax.venta.engine.renderers.entity.MeshEntityRenderer;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
@@ -64,12 +61,12 @@ public final class GizmoInstanceRenderer extends AbstractInstanceRenderer<GizmoI
         private final Matrix3f normalMatrix = new Matrix3f();
         private final Matrix4f modelMatrix = new Matrix4f();
 
-        public GizmoRenderContext withModelMatrix(final Vector3f position, final Vector3f rotation, final Vector3f scale) {
+        public GizmoRenderContext withModelMatrix(@NonNull final Vector3fc position, @NonNull final Vector3fc rotation, @NonNull final Vector3fc scale) {
             modelMatrix.identity()
                     .translate(position)
-                    .rotateX(rotation.x)
-                    .rotateY(rotation.y)
-                    .rotateZ(rotation.z)
+                    .rotateX(rotation.x())
+                    .rotateY(rotation.y())
+                    .rotateZ(rotation.z())
                     .scale(scale)
                     .get(modelMatrixBuffer);
 

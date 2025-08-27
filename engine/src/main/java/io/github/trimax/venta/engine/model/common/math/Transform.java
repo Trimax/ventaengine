@@ -2,9 +2,11 @@ package io.github.trimax.venta.engine.model.common.math;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 @ToString
 @NoArgsConstructor
@@ -22,38 +24,38 @@ public final class Transform {
 
     private boolean dirty = true;
 
-    public Transform(final Transform transform) {
+    public Transform(@NonNull final Transform transform) {
         setPosition(transform.getPosition());
         setRotation(transform.getRotation());
         setScale(transform.getScale());
     }
 
-    public void setPosition(final Vector3f position) {
+    public void setPosition(@NonNull final Vector3fc position) {
         this.position.set(position);
         this.dirty = true;
     }
 
-    public void setRotation(final Vector3f rotation) {
+    public void setRotation(@NonNull final Vector3fc rotation) {
         this.rotation.set(rotation);
         this.dirty = true;
     }
 
-    public void setScale(final Vector3f scale) {
+    public void setScale(@NonNull final Vector3fc scale) {
         this.scale.set(scale);
         this.dirty = true;
     }
 
-    public void move(final Vector3f offset) {
+    public void move(@NonNull final Vector3fc offset) {
         this.position.add(offset, this.position);
         this.dirty = true;
     }
 
-    public void rotate(final Vector3f angles) {
+    public void rotate(@NonNull final Vector3fc angles) {
         this.rotation.add(angles, this.rotation);
         this.dirty = true;
     }
 
-    public void scale(final Vector3f factor) {
+    public void scale(@NonNull final Vector3fc factor) {
         this.scale.add(factor, this.scale);
         this.dirty = true;
     }

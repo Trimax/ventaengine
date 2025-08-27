@@ -1,21 +1,16 @@
 package io.github.trimax.venta.engine.model.dto;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import one.util.streamex.EntryStream;
-import one.util.streamex.StreamEx;
+import java.util.*;
+
+import static io.github.trimax.venta.engine.definitions.Definitions.*;
 
 public record MeshDTO(List<Vertex> vertices,
                       List<Facet> facets,
