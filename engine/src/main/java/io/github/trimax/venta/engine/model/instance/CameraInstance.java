@@ -8,6 +8,12 @@ public interface CameraInstance extends AbstractInstance {
 
     Vector3fc getRotation();
 
+    Vector3fc getFront();
+
+    Vector3fc getUp();
+
+    Vector3fc getRight();
+
     void setPosition(@NonNull final Vector3fc position);
 
     void lookAt(@NonNull final Vector3fc position);
