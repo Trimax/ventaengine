@@ -1,5 +1,10 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
@@ -7,11 +12,11 @@ import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanc
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
-import lombok.*;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,7 +37,7 @@ public final class SceneInstanceRenderer
         if (scene == null)
             return;
 
-        final var cubemap = scene.getCubemap();
+        final var cubemap = scene.getSkybox();
         if (cubemap != null)
             try (final var _ = cubemapRenderer.withContext(getContext())
                     .withScene(scene)) {

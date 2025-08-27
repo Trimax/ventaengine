@@ -54,7 +54,7 @@ uniform vec3 materialColor;
 
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
-uniform vec4 ambientLight;
+uniform vec3 ambientLight;
 uniform int lightCount;
 
 /* Output color */
@@ -142,7 +142,7 @@ vec3 calculateLighting(vec2 textureCoordinates) {
 
     vec3 normal = getNormal(textureCoordinates);
 
-    vec3 lighting = ambientLight.xyz * ambientLight.w;
+    vec3 lighting = ambientLight.xyz;
     for (int i = 0; i < lightCount; i++)
         lighting += calculateLight(lights[i], normal, vertexPosition);
 

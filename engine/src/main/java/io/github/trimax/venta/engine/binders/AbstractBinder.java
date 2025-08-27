@@ -4,9 +4,9 @@ import static org.lwjgl.opengl.GL20C.*;
 
 import java.nio.FloatBuffer;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.Vector2fc;
+import org.joml.Vector3fc;
+import org.joml.Vector4fc;
 
 abstract class AbstractBinder {
     protected final void bind(final int uniformID, final boolean value) {
@@ -24,19 +24,19 @@ abstract class AbstractBinder {
             glUniform1f(uniformID, value);
     }
 
-    protected final void bind(final int uniformID, final Vector4f vector) {
+    protected final void bind(final int uniformID, final Vector4fc vector) {
         if (uniformID >= 0)
-            glUniform4f(uniformID, vector.x, vector.y, vector.z, vector.w);
+            glUniform4f(uniformID, vector.x(), vector.y(), vector.z(), vector.w());
     }
 
-    protected final void bind(final int uniformID, final Vector3f vector) {
+    protected final void bind(final int uniformID, final Vector3fc vector) {
         if (uniformID >= 0)
-            glUniform3f(uniformID, vector.x, vector.y, vector.z);
+            glUniform3f(uniformID, vector.x(), vector.y(), vector.z());
     }
 
-    protected final void bind(final int uniformID, final Vector2f vector) {
+    protected final void bind(final int uniformID, final Vector2fc vector) {
         if (uniformID >= 0)
-            glUniform2f(uniformID, vector.x, vector.y);
+            glUniform2f(uniformID, vector.x(), vector.y());
     }
 
     protected final void bindMatrix3(final int uniformID, final FloatBuffer buffer) {

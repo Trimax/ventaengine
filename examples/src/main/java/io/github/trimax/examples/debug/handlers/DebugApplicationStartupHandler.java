@@ -1,11 +1,11 @@
 package io.github.trimax.examples.debug.handlers;
 
+import org.joml.Vector3f;
+
 import io.github.trimax.examples.debug.state.DebugApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 @AllArgsConstructor
 public final class DebugApplicationStartupHandler implements VentaEngineStartupHandler {
@@ -13,7 +13,7 @@ public final class DebugApplicationStartupHandler implements VentaEngineStartupH
 
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
-        scene.setAmbientLight(new Vector4f(0.6f, 0.6f, 0.6f, 1.f));
+        scene.setAmbientLight(new Vector3f(0.6f, 0.6f, 0.6f));
 
         state.setTetrahedron(context.getObjectManager().create("tetrahedron", context.getObjectRepository().get("tetrahedron.json")));
         scene.add(state.getTetrahedron());

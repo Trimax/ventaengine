@@ -1,5 +1,11 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
@@ -9,33 +15,29 @@ import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector4f;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Getter
 public final class SceneInstanceImplementation extends AbstractInstanceImplementation implements SceneInstance {
-    private final Vector4f ambientLight = new Vector4f(0.3f, 0.3f, 0.3f, 1.0f);
+    private final Vector3f ambientLight = new Vector3f(0.3f);
     private final List<ObjectInstanceImplementation> objects = new ArrayList<>();
     private final List<LightInstanceImplementation> lights = new ArrayList<>();
 
-    private CubemapEntityImplementation cubemap;
+    private CubemapEntityImplementation skybox;
 
     SceneInstanceImplementation(@NonNull final String name) {
         super(name);
     }
 
     @Override
-    public void setAmbientLight(final Vector4f ambientLight) {
+    public void setAmbientLight(final Vector3fc ambientLight) {
         this.ambientLight.set(ambientLight);
     }
 
     @Override
-    public void setCubemap(final CubemapEntity cubemap) {
-        if (cubemap instanceof CubemapEntityImplementation entity)
-            this.cubemap = entity;
+    public void setSkybox(final CubemapEntity skybox) {
+        if (skybox instanceof CubemapEntityImplementation entity)
+            this.skybox = entity;
     }
 
     @Override

@@ -1,16 +1,17 @@
 package io.github.trimax.venta.engine.model.instance;
 
-import io.github.trimax.venta.engine.model.entity.CubemapEntity;
-import org.joml.Vector4f;
-
 import java.util.List;
 
+import org.joml.Vector3fc;
+
+import io.github.trimax.venta.engine.model.entity.CubemapEntity;
+
 public interface SceneInstance extends AbstractInstance {
-    Vector4f getAmbientLight();
+    Vector3fc getAmbientLight();
 
-    void setAmbientLight(final Vector4f ambientLight);
+    void setAmbientLight(final Vector3fc ambientLight);
 
-    void setCubemap(final CubemapEntity cubemap);
+    void setSkybox(final CubemapEntity skybox);
 
     void add(final ObjectInstance object);
 
