@@ -1,7 +1,6 @@
 package io.github.trimax.venta.engine.model.common.scene;
 
 import lombok.Data;
-import lombok.Value;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -24,10 +23,10 @@ public final class Fog {
     }
 
     public void setMinimalDistance(final float minimalDistance) {
-        this.minimalDistance = Math.max(0 , minimalDistance);
+        this.minimalDistance = Math.max(0, minimalDistance);
     }
 
     public void setMaximalDistance(final float maximalDistance) {
-        this.maximalDistance = Math.max(minimalDistance , maximalDistance);
+        this.maximalDistance = Math.max(minimalDistance, maximalDistance);
     }
 }
