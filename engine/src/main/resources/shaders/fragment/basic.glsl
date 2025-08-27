@@ -24,7 +24,8 @@ struct Light {
 
 struct Fog {
     vec3 color;
-    float density;
+    float minimalDistance;
+    float maximalDistance;
 };
 
 /* Vertex shader output */
@@ -166,14 +167,14 @@ vec2 getTextureCoordinates() {
 }
 
 float computeFogFactor(float distance) {
-    return clamp(exp(-pow(distance * fog.density, 2.0)), 0.0, 1.0);
+    return clamp((distance - fog.minimalDistance) / (fog.maximalDistance - fog.minimalDistance), 0.0, 1.0);
 }
 
 vec4 applyFog(vec4 color) {
     if (!isSet(useFog))
         return color;
 
-    return mix(vec4(fog.color, 1.0), color, computeFogFactor(length(vertexCameraPosition - vertexPosition)));
+    return mix(color, vec4(fog.color, 1.0), computeFogFactor(length(vertexCameraPosition - vertexPosition)));
 }
 
 vec4 getMaterialColor() {

@@ -15,14 +15,16 @@ public final class FogApplicationStartupHandler implements VentaEngineStartupHan
 
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
+        scene.setSkybox(context.getCubemapRegistry().get("stars.json"));
         scene.setAmbientLight(new Vector3f(0.8f, 0.8f, 0.8f));
 
-        scene.setFog(new Fog(new Vector3f(0.8f, 0f, 0f), 0.1f));
+        scene.setFog(new Fog(10.f, 50.f, new Vector3f(0.8f, 0f, 0f)));
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(-17.0f, 4.0f, 0.0f));
         camera.lookAt(new Vector3f(0.f, 0.f, 0.f));
         state.setCamera(camera);
+        state.setFog(scene.getFog());
 
         for (int cubeID = 0; cubeID < CUBE_COUNT; cubeID++) {
             final var cube = context.getObjectManager().create("cube" + cubeID,

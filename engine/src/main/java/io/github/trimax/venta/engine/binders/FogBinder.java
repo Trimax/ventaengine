@@ -18,7 +18,8 @@ public final class FogBinder extends AbstractBinder {
         if (fog == null)
             return;
 
-        bind(program.getUniformID(ShaderUniform.FogColor), fog.color());
-        bind(program.getUniformID(ShaderUniform.FogDensity), fog.density());
+        bind(program.getUniformID(ShaderUniform.FogMinimalDistance), fog.getMinimalDistance());
+        bind(program.getUniformID(ShaderUniform.FogMaximalDistance), fog.getMaximalDistance());
+        bind(program.getUniformID(ShaderUniform.FogColor), fog.getColor());
     }
 }

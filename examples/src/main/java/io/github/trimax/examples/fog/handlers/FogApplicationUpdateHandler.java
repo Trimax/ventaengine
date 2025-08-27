@@ -31,6 +31,16 @@ public final class FogApplicationUpdateHandler implements VentaEngineUpdateHandl
         if (context.isButtonPushed(GLFW_KEY_RIGHT))
             state.getCamera().moveRight(delta);
 
+        if (context.isButtonPushed(GLFW_KEY_W))
+            state.getFog().setMaximalDistance(state.getFog().getMaximalDistance() + 1);
+        if (context.isButtonPushed(GLFW_KEY_S))
+            state.getFog().setMaximalDistance(state.getFog().getMaximalDistance() - 1);
+
+        if (context.isButtonPushed(GLFW_KEY_Q))
+            state.getFog().setMinimalDistance(state.getFog().getMinimalDistance() + 1);
+        if (context.isButtonPushed(GLFW_KEY_A))
+            state.getFog().setMinimalDistance(state.getFog().getMinimalDistance() - 1);
+
         final float rotationDelta = ROTATION_SPEED * delta;
         rotationAngle += rotationDelta;
 
