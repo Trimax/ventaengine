@@ -57,7 +57,7 @@ public final class FogApplicationUpdateHandler implements VentaEngineUpdateHandl
 
             final var cube = state.getCubes().get(i);
             cube.setRotation(new Vector3f(0.f, -radians, 0.f));
-            cube.setPosition(new Vector3f((float) Math.cos(radians),0.0f, (float) Math.sin(radians)).mul(CIRCLE_RADIUS));
+            cube.setPosition(new Vector3f((float) Math.cos(radians), 0.0f, (float) Math.sin(radians)).mul(CIRCLE_RADIUS));
         }
     }
 }
