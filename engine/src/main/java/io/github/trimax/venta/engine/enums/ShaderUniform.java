@@ -34,6 +34,9 @@ public enum ShaderUniform {
     MaterialOffset("materialOffset"),
     MaterialColor("materialColor"),
 
+    /* Material flags */
+    UseMaterial("useMaterial"),
+
     /* Camera */
     CameraPosition("cameraPosition"),
 

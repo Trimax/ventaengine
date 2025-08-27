@@ -1,10 +1,18 @@
 package io.github.trimax.venta.engine.controllers;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.callbacks.*;
+import io.github.trimax.venta.engine.callbacks.KeyboardCharCallback;
+import io.github.trimax.venta.engine.callbacks.KeyboardKeyCallback;
+import io.github.trimax.venta.engine.callbacks.MouseButtonCallback;
+import io.github.trimax.venta.engine.callbacks.MouseCursorCallback;
+import io.github.trimax.venta.engine.callbacks.WindowSizeCallback;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
+import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.WindowState;
@@ -12,9 +20,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
@@ -30,7 +35,8 @@ public final class WindowController extends AbstractController<WindowState, Vent
         final var windowConfiguration = application.getConfiguration().getWindowConfiguration();
 
         if (!windowConfiguration.isFullscreen())
-            return create(windowConfiguration.title(), NULL, windowConfiguration.width(), windowConfiguration.height(), application.getInputHandler());
+            return create(windowConfiguration.title(), NULL, windowConfiguration.width(), windowConfiguration.height(),
+                    application.getInputHandler(), application.getConfiguration().getRenderConfiguration());
 
         final var monitorID = glfwGetPrimaryMonitor();
         if (monitorID == NULL)
@@ -40,23 +46,25 @@ public final class WindowController extends AbstractController<WindowState, Vent
         if (videoMode == null)
             throw new WindowCreationException("Can't determine video mode for the fullscreen window");
 
-        return create(windowConfiguration.title(), monitorID, videoMode.width(), videoMode.height(), application.getInputHandler());
+        return create(windowConfiguration.title(), monitorID, videoMode.width(), videoMode.height(),
+                application.getInputHandler(), application.getConfiguration().getRenderConfiguration());
     }
 
     private WindowState create(@NonNull final String title,
                                 final long monitorID,
                                 final int width,
                                 final int height,
-                                final VentaEngineInputHandler handler) {
+                                final VentaEngineInputHandler handler,
+                                final VentaEngineConfiguration.RenderConfiguration renderConfiguration) {
         log.info("Initializing window");
 
-        glfwWindowHint(GLFW_SAMPLES, 4); // Antialiasing
+        glfwWindowHint(GLFW_SAMPLES, renderConfiguration.antialiasingSamples().getValue());
         final var id = memory.getWindows().create(() -> glfwCreateWindow(width, height, title, monitorID, NULL), "Window %s", title);
         if (id == NULL)
             throw new WindowCreationException(title);
 
         glfwMakeContextCurrent(id);
-        glfwSwapInterval(1); // vertical synchronization (setting to 0 produces 5000 FPS)
+        glfwSwapInterval(renderConfiguration.isVerticalSynchronizationEnabled() ? 1 : 0);
         glfwShowWindow(id);
         glfwRestoreWindow(id);
         glfwFocusWindow(id);
@@ -70,8 +78,8 @@ public final class WindowController extends AbstractController<WindowState, Vent
 
         glfwMakeContextCurrent(id);
 
-        //TODO: Turn it on/off depending on the configuration
-        //glfwSetInputMode(id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        if (!renderConfiguration.isMouseCursorVisible())
+            glfwSetInputMode(id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         return window;
     }

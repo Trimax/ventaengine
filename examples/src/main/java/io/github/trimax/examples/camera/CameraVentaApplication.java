@@ -4,6 +4,7 @@ import io.github.trimax.examples.camera.handlers.CameraApplicationStartupHandler
 import io.github.trimax.examples.camera.handlers.CameraApplicationUpdateHandler;
 import io.github.trimax.examples.camera.state.CameraApplicationState;
 import io.github.trimax.venta.engine.VentaEngine;
+import io.github.trimax.venta.engine.enums.AntialiasingSamples;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
@@ -20,7 +21,7 @@ public final class CameraVentaApplication implements VentaEngineApplication {
         return new VentaEngineConfiguration() {
             @Override
             public @NonNull RenderConfiguration getRenderConfiguration() {
-                return new RenderConfiguration(false, true);
+                return new RenderConfiguration(false, true, true, true, AntialiasingSamples.X8);
             }
         };
     }

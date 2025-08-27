@@ -4,6 +4,7 @@ import io.github.trimax.examples.debug.handlers.DebugApplicationStartupHandler;
 import io.github.trimax.examples.debug.handlers.DebugApplicationUpdateHandler;
 import io.github.trimax.examples.debug.state.DebugApplicationState;
 import io.github.trimax.venta.engine.VentaEngine;
+import io.github.trimax.venta.engine.enums.AntialiasingSamples;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
@@ -18,7 +19,7 @@ public final class DebugVentaApplication implements VentaEngineApplication {
         return new VentaEngineConfiguration() {
             @Override
             public @NonNull RenderConfiguration getRenderConfiguration() {
-                return new RenderConfiguration(false, true);
+                return new RenderConfiguration(false, true, true, false, AntialiasingSamples.X2);
             }
         };
     }
