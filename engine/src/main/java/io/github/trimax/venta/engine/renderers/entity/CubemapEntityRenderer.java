@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
@@ -23,9 +24,11 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapEntityImplementation, CubemapEntityRenderer.CubemapRenderContext, SceneInstanceRenderer.SceneRenderContext> {
-    private final MatrixBinder matrixBinder;
     private final FloatBuffer viewMatrixWithoutTranslationBuffer = MemoryUtil.memAllocFloat(16);
     private final Matrix4f viewMatrixWithoutTranslation = new Matrix4f();
+
+    private final MatrixBinder matrixBinder;
+    private final FogBinder fogBinder;
 
     @Override
     protected CubemapRenderContext createContext() {
@@ -50,6 +53,8 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
 
         matrixBinder.bindProjectionMatrix(program, getContext().getParent().getProjectionMatrixBuffer());
         matrixBinder.bindViewMatrix(program, viewMatrixWithoutTranslationBuffer);
+
+        fogBinder.bind(program, getContext().getScene().getFog());
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.getInternalID());

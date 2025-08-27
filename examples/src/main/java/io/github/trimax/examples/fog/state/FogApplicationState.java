@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 public final class FogApplicationState {
-    private CameraInstance camera;
     private final List<ObjectInstance> cubes = new ArrayList<>();
+    private CameraInstance camera;
     private Fog fog;
 }
