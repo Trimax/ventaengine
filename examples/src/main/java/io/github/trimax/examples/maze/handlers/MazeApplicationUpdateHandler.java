@@ -22,16 +22,16 @@ public final class MazeApplicationUpdateHandler implements VentaEngineUpdateHand
         direction.y = 0f;
         direction.normalize();
 
-        if (context.isButtonPushed(GLFW_KEY_DOWN))
+        if (context.isButtonPushed(GLFW_KEY_DOWN) || context.isButtonPushed(GLFW_KEY_S))
             state.getCamera().move(direction.mul(-(float) time.getDelta()));
 
-        if (context.isButtonPushed(GLFW_KEY_UP))
+        if (context.isButtonPushed(GLFW_KEY_UP) || context.isButtonPushed(GLFW_KEY_W))
             state.getCamera().move(direction.mul((float) time.getDelta()));
 
-        if (context.isButtonPushed(GLFW_KEY_LEFT))
+        if (context.isButtonPushed(GLFW_KEY_LEFT) || context.isButtonPushed(GLFW_KEY_A))
             state.getCamera().moveRight(-(float) time.getDelta());
 
-        if (context.isButtonPushed(GLFW_KEY_RIGHT))
+        if (context.isButtonPushed(GLFW_KEY_RIGHT) || context.isButtonPushed(GLFW_KEY_D))
             state.getCamera().moveRight((float) time.getDelta());
 
         state.getLight().setPosition(state.getCamera().getPosition());
