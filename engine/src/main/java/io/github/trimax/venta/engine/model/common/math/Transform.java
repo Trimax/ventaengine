@@ -60,6 +60,11 @@ public final class Transform {
         this.dirty = true;
     }
 
+    public void scale(final float factor) {
+        this.scale.mul(factor, this.scale);
+        this.dirty = true;
+    }
+
     public Matrix4f getMatrix() {
         if (dirty)
             matrix.identity()

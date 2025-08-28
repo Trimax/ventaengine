@@ -1,8 +1,5 @@
 package io.github.trimax.examples.maze.handlers;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
 import io.github.trimax.examples.maze.state.MazeApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
@@ -10,6 +7,8 @@ import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AllArgsConstructor;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 @AllArgsConstructor
 public final class MazeApplicationStartupHandler implements VentaEngineStartupHandler {
@@ -34,9 +33,13 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
 
         final var maze = new Maze(ResourceUtil.loadAsString("/maze/maze.txt"), CUBE_SIZE, CUBE_SIZE);
         for (int x = 0; x < CUBE_SIZE; x++)
-            for (int z = 0; z < CUBE_SIZE; z++)
+            for (int z = 0; z < CUBE_SIZE; z++) {
                 if (maze.hasCube(x, z))
                     placeCube(x, z, context, scene);
+
+                if (maze.hasChest(x, z))
+                    placeChest(x, z, context, scene);
+            }
 
         final var floor = context.getObjectManager().create("Floor", context.getObjectRepository().get("plane.json"));
         floor.setPosition(new Vector3f(10f, 0f, 10f));
@@ -46,11 +49,20 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
         context.getMaterialRegistry().get("concrete.json").setTiling(new Vector2f(15f));
     }
 
-    public void placeCube(final int x, final int z, final VentaContext context, final SceneInstance scene) {
+    private void placeCube(final int x, final int z, final VentaContext context, final SceneInstance scene) {
         final var cube = context.getObjectManager().create("cube" + (x * CUBE_SIZE + z),
                 context.getObjectRepository().get("cube.json"));
         cube.setPosition(new Vector3f(x + 0.5f, 0.5f, z + 0.5f));
         scene.add(cube);
+    }
+
+    private void placeChest(final int x, final int z, final VentaContext context, final SceneInstance scene) {
+        final var chest = context.getObjectManager().create("chest" + (x * CUBE_SIZE + z),
+                context.getObjectRepository().get("chest.json"));
+        chest.setRotation(new Vector3f(0f, (float) Math.PI / 4, 0f));
+        chest.setPosition(new Vector3f(x + 0.5f, 0.15f, z + 0.5f));
+        chest.scale(0.3f);
+        scene.add(chest);
     }
 
     private record Maze(String value, int width, int length) {
@@ -65,6 +77,10 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
 
         public boolean hasCube(final int x, final int z) {
             return withinBounds(x, width) && withinBounds(z, length) && value.charAt(x * length + z) == '1';
+        }
+
+        public boolean hasChest(final int x, final int z) {
+            return withinBounds(x, width) && withinBounds(z, length) && value.charAt(x * length + z) == 'X';
         }
 
         private boolean withinBounds(final int value, final int max) {

@@ -16,7 +16,7 @@ public final class FogApplicationStartupHandler implements VentaEngineStartupHan
 
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
-        scene.setSkybox(context.getCubemapRegistry().get("debug.json"));
+        scene.setSkybox(context.getCubemapRegistry().get("default.json"));
         scene.setAmbientLight(new Vector3f(0.8f, 0.8f, 0.8f));
 
         scene.setFog(new Fog(10.f, 25.f, new Vector3f(0.6f, 0.6f, 0.6f)));

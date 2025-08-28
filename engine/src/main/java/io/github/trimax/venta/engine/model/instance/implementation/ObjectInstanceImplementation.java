@@ -88,6 +88,11 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     }
 
     @Override
+    public void scale(final float factor) {
+        this.transform.scale(factor);
+    }
+
+    @Override
     public void setDrawMode(@NonNull final DrawMode drawMode) {
         this.drawMode = drawMode;
     }

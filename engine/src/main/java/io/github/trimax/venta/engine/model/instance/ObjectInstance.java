@@ -34,6 +34,8 @@ public interface ObjectInstance extends AbstractInstance {
 
     void scale(@NonNull final Vector3fc factor);
 
+    void scale(final float factor);
+
     void setDrawMode(@NonNull final DrawMode drawMode);
 
     void setLit(final boolean lit);
