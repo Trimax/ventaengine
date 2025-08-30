@@ -11,8 +11,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
-public final class ShaderRenderer extends AbstractRenderer {
-    public ShaderRenderer(@NonNull final TreeItem<Item> node, @NonNull final VBox panel) {
+public final class TextFileRenderer extends AbstractRenderer {
+    public TextFileRenderer(@NonNull final TreeItem<Item> node, @NonNull final VBox panel) {
         super(node, panel);
     }
 

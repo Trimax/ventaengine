@@ -15,7 +15,8 @@ public enum Group {
     Objects("/icons/object.png"),
     Scenes("/icons/scene.png"),
     Lights("/icons/light.png"),
-    Meshes("/icons/mesh.png");
+    Meshes("/icons/mesh.png"),
+    Cubemaps("/icons/cube.png");
 
     private final Image icon;
 

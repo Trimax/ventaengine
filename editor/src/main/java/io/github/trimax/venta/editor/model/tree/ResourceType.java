@@ -14,7 +14,8 @@ public enum ResourceType {
     Objects("Object"),
     Scenes("Scene"),
     Lights("Light"),
-    Meshes("Mesh");
+    Meshes("Mesh"),
+    Cubemaps("Cubemap");
 
     private final String displayName;
 }
