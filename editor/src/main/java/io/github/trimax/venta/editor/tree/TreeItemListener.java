@@ -4,7 +4,7 @@ import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ResourceType;
 import io.github.trimax.venta.editor.model.ui.Menu;
 import io.github.trimax.venta.editor.model.ui.ToolBar;
-import io.github.trimax.venta.editor.renderers.ShaderRenderer;
+import io.github.trimax.venta.editor.renderers.TextFileRenderer;
 import io.github.trimax.venta.editor.renderers.TextureRenderer;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
@@ -72,8 +72,15 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
             case Textures:
                 new TextureRenderer(node, info).render(file);
                 return;
+            case Materials:
+            case Programs:
+            case Scenes:
+            case Objects:
+            case Meshes:
+            case Lights:
+            case Cubemaps:
             case Shaders:
-                new ShaderRenderer(node, info).render(file);
+                new TextFileRenderer(node, info).render(file);
                 return;
             default:
                 info.getChildren().add(new Label("the resource type is not supported"));
