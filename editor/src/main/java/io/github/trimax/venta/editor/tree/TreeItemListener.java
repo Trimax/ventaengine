@@ -1,5 +1,10 @@
 package io.github.trimax.venta.editor.tree;
 
+import java.io.File;
+import java.util.function.Consumer;
+
+import org.apache.commons.collections4.CollectionUtils;
+
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ResourceType;
 import io.github.trimax.venta.editor.model.ui.Menu;
@@ -12,10 +17,6 @@ import javafx.scene.layout.VBox;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import one.util.streamex.StreamEx;
-import org.apache.commons.collections4.CollectionUtils;
-
-import java.io.File;
-import java.util.function.Consumer;
 
 
 @AllArgsConstructor
@@ -36,7 +37,7 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
 
     private void updateInfoPanel(final TreeItem<Item> selected) {
         info.getChildren().clear();
-        if (!selected.getValue().deletable() || !selected.getChildren().isEmpty())
+        if (!selected.getValue().deletable() || !selected.getValue().hasExistingReference())
             showGroupInformation(selected);
         else
             showResourceInformation(selected);
@@ -44,8 +45,8 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
 
     private void showGroupInformation(final TreeItem<Item> node) {
         final var labelGroupName = new Label("Group: " + node.getValue().name());
-        final var labelCountGroups = new Label("Groups: " + StreamEx.of(node.getChildren()).filter(this::hasChildren).count());
-        final var labelCountResources = new Label("Resources: " + StreamEx.of(node.getChildren()).remove(this::hasChildren).count());
+        final var labelCountGroups = new Label("Groups: " + StreamEx.of(node.getChildren()).filter(this::isGroup).count());
+        final var labelCountResources = new Label("Resources: " + StreamEx.of(node.getChildren()).remove(this::isGroup).count());
 
         labelGroupName.setStyle("-fx-font-weight: bold;");
         info.getChildren().addAll(labelGroupName, labelCountGroups, labelCountResources);
@@ -87,8 +88,8 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
         }
     }
 
-    private boolean hasChildren(final TreeItem<Item> node) {
-        return CollectionUtils.isNotEmpty(node.getChildren());
+    private boolean isGroup(final TreeItem<Item> node) {
+        return CollectionUtils.isNotEmpty(node.getChildren()) || !node.getValue().hasExistingReference();
     }
 
     private ResourceType getResourceType(final TreeItem<Item> node) {
