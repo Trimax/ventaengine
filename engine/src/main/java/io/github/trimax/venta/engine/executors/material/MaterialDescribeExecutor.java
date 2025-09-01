@@ -31,7 +31,8 @@ public final class MaterialDescribeExecutor extends AbstractMaterialExecutor {
             }
 
             getConsole().header("Material <%s>:", command.asArgument().value());
-            getConsole().info("       Shininess: %.2f", material.getShininess());
+            getConsole().info("       Metalness: %.2f", material.getMetalness());
+            getConsole().info("       Roughness: %.2f", material.getRoughness());
             getConsole().info("          Tiling: %s", material.getTiling());
             getConsole().info("          Offset: %s", material.getOffset());
             getConsole().info("           Color: %s", material.getColor());
