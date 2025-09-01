@@ -1,9 +1,17 @@
 #version 330 core
 
+/***
+ * Definitions
+ ***/
+
 const int MAX_LIGHTS = 64;
 const int LIGHT_TYPE_POINT = 0;
 const int LIGHT_TYPE_DIRECTIONAL = 1;
 const int LIGHT_TYPE_SPOT = 2;
+
+/***
+ * Structures
+ ***/
 
 struct Attenuation {
     float constant;
@@ -12,7 +20,7 @@ struct Attenuation {
 };
 
 struct Light {
-    int type; // See LIGHT_TYPE constants
+    int type;
     vec3 position;
     vec3 direction;
     vec3 color;
@@ -22,11 +30,23 @@ struct Light {
     int enabled;
 };
 
+struct Material {
+    vec3 color;
+    vec2 tiling;
+    vec2 offset;
+    float metalness;
+    float roughness;
+};
+
 struct Fog {
     vec3 color;
     float minimalDistance;
     float maximalDistance;
 };
+
+/***
+ * Input variables and uniforms
+ ***/
 
 /* Vertex shader output */
 in vec4 vertexColor;
@@ -54,22 +74,23 @@ uniform int useLighting;
 uniform int useMaterial;
 uniform int useFog;
 
-/* Material parameters */
-uniform float materialShininess;
-uniform vec2 materialTiling;
-uniform vec2 materialOffset;
-uniform vec3 materialColor;
-
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 ambientLight;
 uniform int lightCount;
+
+/* Material */
+uniform Material material;
 
 /* Fog */
 uniform Fog fog;
 
 /* Output color */
 out vec4 FragColor;
+
+/***
+ * Common functions
+ ***/
 
 /* Checks if flag is set (bools are not supported by macOS Radeon cards */
 bool isSet(int value) {
@@ -93,7 +114,13 @@ float getHeight(vec2 textureCoordinates) {
 
 /* Gets roughness */
 float getRoughness(vec2 textureCoordinates) {
-    return isSet(useTextureRoughness) ? texture(textureRoughness, textureCoordinates).r : 1.0;
+    if (isSet(useTextureRoughness))
+        return texture(textureRoughness, textureCoordinates).r;
+
+    if (isSet(useMaterial))
+        return material.roughness;
+
+    return 1.0;
 }
 
 /* Translates texture coordinates according to parallax effect */
@@ -112,6 +139,22 @@ vec3 getNormal(vec2 textureCoordinates) {
     /* Normal mapping */
     return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0));
 }
+
+/* Gets preprocessed texture coordinates */
+vec2 getTextureCoordinates() {
+    vec2 textureCoordinates = isSet(useMaterial) ? (vertexTextureCoordinates * material.tiling + material.offset) : vertexTextureCoordinates;
+
+    return isSet(useTextureHeight) ? parallaxMapping(textureCoordinates) : textureCoordinates;
+}
+
+/* Gets material color if set othewise white color */
+vec4 getMaterialColor() {
+    return isSet(useMaterial) ? vec4(material.color, 1.0) : vec4(1.0);
+}
+
+/***
+ * Lighting
+ ***/
 
 /* Calculates effect of one light source */
 vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
@@ -160,11 +203,23 @@ vec3 calculateLighting(vec2 textureCoordinates) {
     return lighting;
 }
 
-vec2 getTextureCoordinates() {
-    vec2 textureCoordinates = vertexTextureCoordinates * materialTiling + materialOffset;
+vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
+    vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * (1.0 - getRoughness(textureCoordinates));
 
-    return isSet(useTextureHeight) ? parallaxMapping(textureCoordinates) : textureCoordinates;
+    return vertexColor * vec4(clamp(color.rgb * lighting, 0.0, 1.0), color.a);
 }
+
+/***
+ * Reflections
+ ***/
+
+vec4 applyReflections(vec4 color, vec2 textureCoordinates) {
+    return color; // TODO: Implement reflections
+}
+
+/***
+ * Fog
+ ***/
 
 float computeFogFactor(float distance) {
     return clamp((distance - fog.minimalDistance) / (fog.maximalDistance - fog.minimalDistance), 0.0, 1.0);
@@ -177,15 +232,13 @@ vec4 applyFog(vec4 color) {
     return mix(color, vec4(fog.color, 1.0), computeFogFactor(length(vertexCameraPosition - vertexPosition)));
 }
 
-vec4 getMaterialColor() {
-    return isSet(useMaterial) ? vec4(materialColor, 1.0) : vec4(1.0);
-}
-
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
-    vec4 diffuseColor = getDiffuseColor(textureCoordinates) * getMaterialColor();
-    vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * getRoughness(textureCoordinates);
-    vec4 colorWithLighting = vertexColor * vec4(clamp(diffuseColor.rgb * lighting, 0.0, 1.0), diffuseColor.a);
-    FragColor = applyFog(colorWithLighting);
+    vec4 colorWithoutEffects = getDiffuseColor(textureCoordinates) * getMaterialColor();
+    vec4 colorWithLighting = applyLighting(colorWithoutEffects, textureCoordinates);
+    vec4 colorWithReflections = applyReflections(colorWithLighting, textureCoordinates);
+    vec4 colorWithFog = applyFog(colorWithReflections);
+
+    FragColor = colorWithFog;
 }

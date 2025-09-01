@@ -29,10 +29,11 @@ public enum ShaderUniform {
     UseTextureAmbientOcclusion("useTextureAmbientOcclusion"),
 
     /* Materials */
-    MaterialShininess("materialShininess"),
-    MaterialTiling("materialTiling"),
-    MaterialOffset("materialOffset"),
-    MaterialColor("materialColor"),
+    MaterialMetalness("material.metalness"),
+    MaterialRoughness("material.roughness"),
+    MaterialTiling("material.tiling"),
+    MaterialOffset("material.offset"),
+    MaterialColor("material.color"),
 
     /* Material flags */
     UseMaterial("useMaterial"),

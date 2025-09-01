@@ -25,7 +25,8 @@ public final class MaterialBinder extends AbstractBinder {
         if (material == null)
             return;
 
-        bind(program.getUniformID(ShaderUniform.MaterialShininess), material.getShininess());
+        bind(program.getUniformID(ShaderUniform.MaterialMetalness), material.getMetalness());
+        bind(program.getUniformID(ShaderUniform.MaterialRoughness), material.getRoughness());
         bind(program.getUniformID(ShaderUniform.MaterialTiling), material.getTiling());
         bind(program.getUniformID(ShaderUniform.MaterialOffset), material.getOffset());
         bind(program.getUniformID(ShaderUniform.MaterialColor), material.getColor());
