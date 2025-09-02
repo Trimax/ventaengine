@@ -16,7 +16,6 @@ public final class MetalicityApplicationStartupHandler implements VentaEngineSta
         scene.setSkybox(context.getCubemapRegistry().get("stars.json"));
 
         final var cube = context.getObjectManager().create("cube", context.getObjectRepository().get("reflective-cube.json"));
-        cube.setPosition(new Vector3f(0.0f, 0.0f, 0.0f));
         scene.add(cube);
 
         final var camera = context.getCameraManager().getCurrent();
