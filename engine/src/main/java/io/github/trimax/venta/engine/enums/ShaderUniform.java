@@ -15,6 +15,7 @@ public enum ShaderUniform {
     MatrixView("matrixView"),
 
     /* Textures */
+    TextureSkybox("textureSkybox"),
     TextureDiffuse("textureDiffuse"),
     TextureHeight("textureHeight"),
     TextureNormal("textureNormal"),
@@ -22,6 +23,7 @@ public enum ShaderUniform {
     TextureAmbientOcclusion("textureAmbientOcclusion"),
 
     /* Texture flags */
+    UseTextureSkybox("useTextureSkybox"),
     UseTextureDiffuseFlag("useTextureDiffuse"),
     UseTextureHeight("useTextureHeight"),
     UseTextureNormal("useTextureNormal"),

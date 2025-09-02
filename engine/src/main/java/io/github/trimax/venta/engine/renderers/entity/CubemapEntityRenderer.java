@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.renderers.entity;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
@@ -17,7 +18,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL13C.*;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
@@ -27,6 +28,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
     private final FloatBuffer viewMatrixWithoutTranslationBuffer = MemoryUtil.memAllocFloat(16);
     private final Matrix4f viewMatrixWithoutTranslation = new Matrix4f();
 
+    private final TextureBinder textureBinder;
     private final MatrixBinder matrixBinder;
     private final FogBinder fogBinder;
 
@@ -55,9 +57,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
         matrixBinder.bindViewMatrix(program, viewMatrixWithoutTranslationBuffer);
 
         fogBinder.bind(program, getContext().getScene().getFog());
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.getInternalID());
+        textureBinder.bind(program, cubemap);
 
         glBindVertexArray(cubemap.getVertexArrayObjectID());
         glDrawArrays(GL_TRIANGLES, 0, 36);

@@ -57,10 +57,8 @@ in vec3 vertexPosition;
 
 in mat3 vertexTBN;
 
-/* Skybox texture */
-uniform samplerCube skybox;
-
 /* Textures */
+uniform samplerCube textureSkybox;
 uniform sampler2D textureDiffuse;
 uniform sampler2D textureHeight;
 uniform sampler2D textureNormal;
@@ -68,6 +66,7 @@ uniform sampler2D textureRoughness;
 uniform sampler2D textureAmbientOcclusion;
 
 /* Feature flags */
+uniform int useTextureSkybox;
 uniform int useTextureDiffuse;
 uniform int useTextureHeight;
 uniform int useTextureNormal;
