@@ -1,10 +1,5 @@
 package io.github.trimax.venta.engine.binders;
 
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL13C.glActiveTexture;
-import static org.lwjgl.opengl.GL20C.glUniform1i;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
@@ -14,6 +9,11 @@ import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityIm
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11C.glBindTexture;
+import static org.lwjgl.opengl.GL13C.glActiveTexture;
+import static org.lwjgl.opengl.GL20C.glUniform1i;
 
 @Slf4j
 @Component
@@ -47,7 +47,7 @@ public final class MaterialBinder extends AbstractBinder {
     }
 
     private void bind(final TextureType type, final TextureEntityImplementation texture, final int useTextureUniformID, final int textureUniformID) {
-        glActiveTexture(type.getLocationID());
+        glActiveTexture(type.getUnit().getLocationID());
         if (texture == null) {
             glBindTexture(GL_TEXTURE_2D, 0);
             glUniform1i(useTextureUniformID, 0);
@@ -55,7 +55,7 @@ public final class MaterialBinder extends AbstractBinder {
         }
 
         glBindTexture(GL_TEXTURE_2D, texture.getInternalID());
-        glUniform1i(textureUniformID, type.getUnitID());
+        glUniform1i(textureUniformID, type.getUnit().getId());
         glUniform1i(useTextureUniformID, 1);
     }
 }
