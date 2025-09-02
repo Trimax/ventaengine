@@ -20,6 +20,7 @@ public enum ShaderUniform {
     TextureHeight("textureHeight"),
     TextureNormal("textureNormal"),
     TextureRoughness("textureRoughness"),
+    TextureMetalness("textureMetalness"),
     TextureAmbientOcclusion("textureAmbientOcclusion"),
 
     /* Texture flags */
@@ -28,6 +29,7 @@ public enum ShaderUniform {
     UseTextureHeight("useTextureHeight"),
     UseTextureNormal("useTextureNormal"),
     UseTextureRoughness("useTextureRoughness"),
+    UseTextureMetalness("useTextureMetalness"),
     UseTextureAmbientOcclusion("useTextureAmbientOcclusion"),
 
     /* Materials */

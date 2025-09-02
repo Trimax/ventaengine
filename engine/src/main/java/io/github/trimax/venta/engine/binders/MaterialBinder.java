@@ -5,20 +5,17 @@ import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11C.glBindTexture;
-import static org.lwjgl.opengl.GL13C.glActiveTexture;
-import static org.lwjgl.opengl.GL20C.glUniform1i;
+import one.util.streamex.StreamEx;
 
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MaterialBinder extends AbstractBinder {
+    private final TextureBinder textureBinder;
+
     public void bind(final ProgramEntityImplementation program, final MaterialEntityImplementation material) {
         bind(program.getUniformID(ShaderUniform.UseMaterial), material != null);
 
@@ -31,31 +28,10 @@ public final class MaterialBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.MaterialOffset), material.getOffset());
         bind(program.getUniformID(ShaderUniform.MaterialColor), material.getColor());
 
-        bind(TextureType.Diffuse, program, material, ShaderUniform.UseTextureDiffuseFlag, ShaderUniform.TextureDiffuse);
-        bind(TextureType.Height, program, material, ShaderUniform.UseTextureHeight, ShaderUniform.TextureHeight);
-        bind(TextureType.Normal, program, material, ShaderUniform.UseTextureNormal, ShaderUniform.TextureNormal);
-        bind(TextureType.AmbientOcclusion, program, material, ShaderUniform.UseTextureAmbientOcclusion, ShaderUniform.TextureAmbientOcclusion);
-        bind(TextureType.Roughness, program, material, ShaderUniform.UseTextureRoughness, ShaderUniform.TextureRoughness);
+        StreamEx.of(TextureType.values()).forEach(type -> bind(type, program, material));
     }
 
-    private void bind(final TextureType type,
-                      final ProgramEntityImplementation program,
-                      final MaterialEntityImplementation material,
-                      final ShaderUniform useTextureUniform,
-                      final ShaderUniform textureUniform) {
-        bind(type, material.getTexture(type), program.getUniformID(useTextureUniform), program.getUniformID(textureUniform));
-    }
-
-    private void bind(final TextureType type, final TextureEntityImplementation texture, final int useTextureUniformID, final int textureUniformID) {
-        glActiveTexture(type.getUnit().getLocationID());
-        if (texture == null) {
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glUniform1i(useTextureUniformID, 0);
-            return;
-        }
-
-        glBindTexture(GL_TEXTURE_2D, texture.getInternalID());
-        glUniform1i(textureUniformID, type.getUnit().getId());
-        glUniform1i(useTextureUniformID, 1);
+    private void bind(final TextureType type, final ProgramEntityImplementation program, final MaterialEntityImplementation material) {
+        textureBinder.bind(type, program, material.getTexture(type));
     }
 }
