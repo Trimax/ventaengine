@@ -29,7 +29,9 @@ public final class MaterialRegistryImplementation
         final var materialDTO = resourceService.getAsObject(String.format("/materials/%s", resourcePath), MaterialDTO.class);
 
         final var material = abettor.createMaterial(materialDTO);
-        materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureRegistry.get(path)));
+
+        if (materialDTO.hasTextures())
+            materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureRegistry.get(path)));
 
         return material;
     }

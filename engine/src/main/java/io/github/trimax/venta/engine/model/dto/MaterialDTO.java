@@ -14,5 +14,8 @@ public record MaterialDTO(Float metalness,
                           Vector2f tiling,
                           Vector2f offset,
                           Map<TextureType, String> textures) {
+    public boolean hasTextures() {
+        return textures != null && !textures.isEmpty();
+    }
 }
 
