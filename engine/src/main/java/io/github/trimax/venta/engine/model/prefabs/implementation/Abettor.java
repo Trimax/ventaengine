@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.dto.EmitterDTO;
 import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
@@ -20,6 +21,10 @@ public final class Abettor {
     public ObjectPrefabImplementation createObject(final ProgramEntity program,
                                                    final Node<MeshReference> root) {
         return new ObjectPrefabImplementation(program, root);
+    }
+
+    public EmitterPrefabImplementation createEmitter(@NonNull final EmitterDTO dto) {
+        return new EmitterPrefabImplementation(dto);
     }
 
     public ScenePrefabImplementation createScene(@NonNull final SceneDTO dto) {
