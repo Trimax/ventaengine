@@ -6,7 +6,6 @@ import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.EmitterManager;
 import io.github.trimax.venta.engine.memory.Memory;
-import io.github.trimax.venta.engine.model.common.effects.Particle;
 import io.github.trimax.venta.engine.model.instance.EmitterInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
@@ -18,7 +17,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
@@ -49,7 +47,9 @@ public final class EmitterManagerImplementation
         log.info("Loading emitter {}", name);
 
         final var particleVertexArrayObjectID = memory.getVertexArrays().create("Emitter %s vertex array buffer", name);
-        final var particleVerticesBufferID = memory.getBuffers().create("Emitter %s vertex buffer", name);
+
+        final int particleVerticesBufferID = memory.getBuffers().create("Emitter %s vertex buffer", name);
+        final int particleFacesBufferID = memory.getBuffers().create("Emitter %s element buffer", name);
 
         //TODO: Move somewhere
         final float[] vertices = {
@@ -64,10 +64,10 @@ public final class EmitterManagerImplementation
 
         glBindVertexArray(particleVertexArrayObjectID);
 
-        glBindBuffer(GL_ARRAY_BUFFER, particleVertexArrayObjectID);
+        glBindBuffer(GL_ARRAY_BUFFER, particleVerticesBufferID);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, particleVerticesBufferID);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, particleFacesBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
@@ -78,17 +78,7 @@ public final class EmitterManagerImplementation
         //TODO: change gizmo type
         return store(abettor.createEmitter(name, programRegistry.get(ProgramType.Particle.getProgramName()), prefab,
                 textureRegistry.get(prefab.getDto().texture()), gizmoManager.create("emitter", GizmoType.Light),
-                particleVertexArrayObjectID, particleVerticesBufferID));
-    }
-
-    private Particle createParticle(final EmitterPrefabImplementation prefab) {
-        final var particle = new Particle(new Vector3f(0), prefab.getDto().velocity(), new Vector3f(0f));
-
-        final var life = 2.f + (float) Math.random();
-        particle.setMaxLife(life);
-        particle.setLife(life);
-
-        return particle;
+                particleVertexArrayObjectID, particleVerticesBufferID, particleFacesBufferID));
     }
 
     @Override
@@ -103,5 +93,6 @@ public final class EmitterManagerImplementation
 
         memory.getVertexArrays().delete(emitter.getParticleVertexArrayObjectID());
         memory.getBuffers().delete(emitter.getParticleVerticesBufferID());
+        memory.getBuffers().delete(emitter.getParticleFacesBufferID());
     }
 }

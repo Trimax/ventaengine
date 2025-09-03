@@ -26,6 +26,7 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
     private final ProgramEntityImplementation program;
     private final int particleVertexArrayObjectID;
     private final int particleVerticesBufferID;
+    private final int particleFacesBufferID;
 
     @Setter
     private float emissionRate;
@@ -40,12 +41,14 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
                                   @NonNull final ProgramEntityImplementation program,
                                   @NonNull final GizmoInstanceImplementation gizmo,
                                   final int particleVertexArrayObjectID,
-                                  final int particleVerticesBufferID) {
+                                  final int particleVerticesBufferID,
+                                  final int particleFacesBufferID) {
         super(gizmo, name);
 
         this.program = program;
         this.texture = texture;
         this.emissionRate = prefab.getDto().emissionRate();
+        this.particleFacesBufferID = particleFacesBufferID;
         this.particleVerticesBufferID = particleVerticesBufferID;
         this.particleVertexArrayObjectID = particleVertexArrayObjectID;
         Optional.ofNullable(prefab.getDto().deviation()).ifPresent(deviation::set);

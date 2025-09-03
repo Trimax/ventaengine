@@ -13,6 +13,8 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 
+import static org.lwjgl.opengl.GL11C.*;
+
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneInstanceRenderer
@@ -47,10 +49,15 @@ public final class SceneInstanceRenderer
                 objectRenderer.render(objectManager.getInstance(object.getID()));
             }
 
+        glEnable(GL_BLEND);
+        glDepthMask(false);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         for (final var emitter : scene.getEmitters())
             try (final var _ = emitterRenderer.withContext(getContext())) {
                 emitterRenderer.render(emitterManager.getInstance(emitter.getID()));
             }
+        glDepthMask(true);
+        glDisable(GL_BLEND);
     }
 
     @Getter
