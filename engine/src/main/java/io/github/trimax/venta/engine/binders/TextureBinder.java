@@ -39,15 +39,15 @@ public final class TextureBinder extends AbstractBinder {
     }
 
     private void bind(final TextureUnit unit, final TextureEntityImplementation texture, final int useTextureUniformID, final int textureUniformID) {
+        bind(useTextureUniformID, texture != null);
+
         glActiveTexture(unit.getLocationID());
         if (texture == null) {
             glBindTexture(GL_TEXTURE_2D, 0);
-            glUniform1i(useTextureUniformID, 0);
             return;
         }
 
         glBindTexture(GL_TEXTURE_2D, texture.getInternalID());
         glUniform1i(textureUniformID, unit.getId());
-        glUniform1i(useTextureUniformID, 1);
     }
 }

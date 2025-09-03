@@ -1,0 +1,36 @@
+package io.github.trimax.examples.reflections.handlers;
+
+import io.github.trimax.examples.reflections.state.ReflectionsApplicationState;
+import io.github.trimax.venta.engine.context.VentaContext;
+import io.github.trimax.venta.engine.core.Engine;
+import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+
+import static org.lwjgl.glfw.GLFW.*;
+
+@Slf4j
+@RequiredArgsConstructor
+public final class ReflectionsApplicationUpdateHandler implements VentaEngineUpdateHandler {
+    private static final Vector3f ZERO = new Vector3f(0.f);
+    private static final float MINIMAL_CAMERA_DISTANCE = 2.f;
+    private final ReflectionsApplicationState state;
+
+    public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
+        if (context.isButtonPushed(GLFW_KEY_DOWN))
+            state.setCameraDistance(state.getCameraDistance() + (float) time.getDelta());
+
+        if (context.isButtonPushed(GLFW_KEY_UP))
+            state.setCameraDistance(Math.max(state.getCameraDistance() - (float) time.getDelta(), MINIMAL_CAMERA_DISTANCE));
+
+        if (context.isButtonPushed(GLFW_KEY_LEFT))
+            state.setCameraAngle(state.getCameraAngle() + (float) time.getDelta());
+
+        if (context.isButtonPushed(GLFW_KEY_RIGHT))
+            state.setCameraAngle(state.getCameraAngle() - (float) time.getDelta());
+
+        state.getCamera().setPosition(new Vector3f((float) Math.sin(state.getCameraAngle()), 1, (float) Math.cos(state.getCameraAngle())).mul(state.getCameraDistance()));
+        state.getCamera().lookAt(ZERO);
+    }
+}
