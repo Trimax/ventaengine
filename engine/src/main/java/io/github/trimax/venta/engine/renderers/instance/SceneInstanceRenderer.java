@@ -1,28 +1,25 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
-import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneInstanceRenderer
         extends AbstractInstanceRenderer<SceneInstanceImplementation, SceneInstanceRenderer.SceneRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
+    private final EmitterInstanceRenderer emitterRenderer;
     private final ObjectInstanceRenderer objectRenderer;
     private final CubemapEntityRenderer cubemapRenderer;
 
@@ -44,10 +41,15 @@ public final class SceneInstanceRenderer
                 cubemapRenderer.render(cubemap);
             }
 
-        for (final ObjectInstance object : scene.getObjects())
+        for (final var object : scene.getObjects())
             try (final var _ = objectRenderer.withContext(getContext())
                     .withScene(scene)) {
                 objectRenderer.render(objectManager.getInstance(object.getID()));
+            }
+
+        for (final var emitter : scene.getEmitters())
+            try (final var _ = emitterRenderer.withContext(getContext())) {
+                emitterRenderer.render(emitterManager.getInstance(emitter.getID()));
             }
     }
 

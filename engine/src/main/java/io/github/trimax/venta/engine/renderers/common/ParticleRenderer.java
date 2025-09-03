@@ -1,11 +1,11 @@
 package io.github.trimax.venta.engine.renderers.common;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.TextureBinder;
+import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.effects.Particle;
-import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
 import io.github.trimax.venta.engine.renderers.AbstractRenderer;
 import io.github.trimax.venta.engine.renderers.instance.EmitterInstanceRenderer;
 import lombok.AccessLevel;
@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
@@ -26,7 +27,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleRenderer.ParticleRenderContext, EmitterInstanceRenderer.EmitterRenderContext> {
-    private final MaterialBinder materialBinder;
+    private final TextureBinder textureBinder;
     private final MatrixBinder matrixBinder;
 
     @Override
@@ -36,20 +37,41 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
 
     @Override
     public void render(final Particle particle) {
-        matrixBinder.bindModelMatrix(getContext().getProgram(), getContext().getModelMatrixBuffer());
-        matrixBinder.bindNormalMatrix(getContext().getProgram(), getContext().getNormalMatrixBuffer());
+        final var model = new Matrix4f()
+                .translate(particle.getPosition())
+                .scale(particle.getSize());
 
+        applyBillboard(model, getContext().getParent().getParent().getViewMatrix());
 
-        //TODO: Bind texture
-        //materialBinder.bind(getContext().getProgram(), getContext().getMaterial());
+        final var emitter = getContext().getEmitter();
+        matrixBinder.bindViewProjectionMatrix(emitter.getProgram(), getContext().getParent().getParent().getViewProjectionMatrixBuffer());
 
-        //TODO: Create VAO somewhere
-        glBindVertexArray(particle.getVertexArrayObjectID());
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, particle.getFacetsBufferID());
-        glDrawElements(GL_TRIANGLES, particle.getFacetsCount(), GL_UNSIGNED_INT, 0);
+        //TODO: Reimplement using context
+        try (final var stack = MemoryStack.stackPush()) {
+            final var fb = stack.mallocFloat(16);
+            model.get(fb);
+            matrixBinder.bindModelMatrix(emitter.getProgram(), fb);
+        }
+
+        textureBinder.bind(TextureType.Diffuse, emitter.getProgram(), emitter.getTexture());
+
+        glBindVertexArray(emitter.getParticleVertexArrayObjectID());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, emitter.getParticleVerticesBufferID());
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
     }
+
+    private void applyBillboard(final Matrix4f model, final Matrix4f viewMatrix) {
+        final var billboardRotation = new Matrix4f(viewMatrix);
+        billboardRotation.m30(0);
+        billboardRotation.m31(0);
+        billboardRotation.m32(0);
+
+        billboardRotation.invert();
+        model.mul(billboardRotation);
+    }
+
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
@@ -59,8 +81,7 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
         private final Matrix3f normalMatrix = new Matrix3f();
         private final Matrix4f modelMatrix = new Matrix4f();
 
-        private TextureEntityImplementation texture;
-        private ProgramEntityImplementation program;
+        private EmitterInstanceImplementation emitter;
 
         public ParticleRenderContext withModelMatrix(final Matrix4f matrix) {
             normalMatrixBuffer.clear();
@@ -75,13 +96,8 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
             return this;
         }
 
-        public ParticleRenderContext withProgram(final ProgramEntityImplementation program) {
-            this.program = program;
-            return this;
-        }
-
-        public ParticleRenderContext withTexture(final TextureEntityImplementation texture) {
-            this.texture = texture;
+        public ParticleRenderContext withEmitter(final EmitterInstanceImplementation emitter) {
+            this.emitter = emitter;
             return this;
         }
 
@@ -89,8 +105,7 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
         public void close() {
             normalMatrixBuffer.clear();
             modelMatrixBuffer.clear();
-            texture = null;
-            program = null;
+            emitter = null;
         }
 
         @Override

@@ -19,7 +19,7 @@ uniform Fog fog;
 uniform int useFog;
 
 /* Output color */
-out vec4 FragColor;
+out vec4 outputColor;
 
 /* Checks if flag is set (bools are not supported by macOS Radeon cards */
 bool isSet(int value) {
@@ -27,5 +27,5 @@ bool isSet(int value) {
 }
 
 void main() {
-    FragColor = isSet(useFog) ? vec4(fog.color, 1.0) : texture(skybox, vertexPosition);
+    outputColor = isSet(useFog) ? vec4(fog.color, 1.0) : texture(skybox, vertexPosition);
 }
