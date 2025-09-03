@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.renderers.common;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.ParticleBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.effects.Particle;
@@ -27,6 +28,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleRenderer.ParticleRenderContext, EmitterInstanceRenderer.EmitterRenderContext> {
+    private final ParticleBinder particleBinder;
     private final TextureBinder textureBinder;
     private final MatrixBinder matrixBinder;
 
@@ -53,6 +55,7 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
             matrixBinder.bindModelMatrix(emitter.getProgram(), fb);
         }
 
+        particleBinder.bind(emitter.getProgram(), particle);
         textureBinder.bind(TextureType.Diffuse, emitter.getProgram(), emitter.getTexture());
 
         glBindVertexArray(emitter.getParticleVertexArrayObjectID());
@@ -69,6 +72,10 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
         billboardRotation.m32(0);
 
         billboardRotation.invert();
+        billboardRotation.m30(0);
+        billboardRotation.m31(0);
+        billboardRotation.m32(0);
+
         model.mul(billboardRotation);
     }
 

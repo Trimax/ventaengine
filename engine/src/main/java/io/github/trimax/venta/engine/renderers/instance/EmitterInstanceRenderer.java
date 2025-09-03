@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.renderers.instance;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
 import io.github.trimax.venta.engine.renderers.common.ParticleRenderer;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
@@ -32,7 +34,12 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
+        glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
         glUseProgram(emitter.getProgram().getInternalID());
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthMask(false);
 
         cameraBinder.bind(emitter.getProgram(), getContext().getParent().getCamera());
         matrixBinder.bindViewProjectionMatrix(emitter.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
@@ -43,6 +50,9 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
                     .withEmitter(emitter)) {
                 particleRenderer.render(particle);
             }
+
+        glDepthMask(true);
+        glDisable(GL_BLEND);
 
         glUseProgram(0);
     }

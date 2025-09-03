@@ -11,5 +11,5 @@ uniform vec4 color;
 out vec4 outputColor;
 
 void main() {
-    outputColor = texture(textureDiffuse, vertexTextureCoordinates); // * color;
+    outputColor = texture(textureDiffuse, vertexTextureCoordinates) * color;
 }
