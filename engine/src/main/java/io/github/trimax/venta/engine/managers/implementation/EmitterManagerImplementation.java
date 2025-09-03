@@ -51,6 +51,7 @@ public final class EmitterManagerImplementation
         final var particleVertexArrayObjectID = memory.getVertexArrays().create("Emitter %s vertex array buffer", name);
         final var particleVerticesBufferID = memory.getBuffers().create("Emitter %s vertex buffer", name);
 
+        //TODO: Move somewhere
         final float[] vertices = {
                 // posX, posY
                 -0.5f, -0.5f,
@@ -75,14 +76,9 @@ public final class EmitterManagerImplementation
         glBindVertexArray(0);
 
         //TODO: change gizmo type
-        final var emitter = abettor.createEmitter(name, programRegistry.get(ProgramType.Particle.getProgramName()), prefab,
+        return store(abettor.createEmitter(name, programRegistry.get(ProgramType.Particle.getProgramName()), prefab,
                 textureRegistry.get(prefab.getDto().texture()), gizmoManager.create("emitter", GizmoType.Light),
-                particleVertexArrayObjectID, particleVerticesBufferID);
-
-        for (int particleID = 0; particleID < prefab.getDto().particlesCount(); particleID++)
-            emitter.getParticles().add(createParticle(prefab));
-
-        return store(emitter);
+                particleVertexArrayObjectID, particleVerticesBufferID));
     }
 
     private Particle createParticle(final EmitterPrefabImplementation prefab) {

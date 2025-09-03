@@ -30,6 +30,8 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
     @Setter
     private float emissionRate;
 
+    private float emissionAccumulator = 0f;
+
     private TextureEntityImplementation texture;
 
     EmitterInstanceImplementation(@NonNull final String name,
@@ -48,6 +50,10 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
         this.particleVertexArrayObjectID = particleVertexArrayObjectID;
         Optional.ofNullable(prefab.getDto().deviation()).ifPresent(deviation::set);
         Optional.ofNullable(prefab.getDto().velocity()).ifPresent(velocity::set);
+    }
+
+    public void updateEmissionAccumulator(final float delta) {
+        emissionAccumulator += delta;
     }
 
     @Override
