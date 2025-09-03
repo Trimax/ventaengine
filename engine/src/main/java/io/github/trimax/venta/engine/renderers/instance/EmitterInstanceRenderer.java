@@ -12,7 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
@@ -37,10 +38,6 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
         glUseProgram(emitter.getProgram().getInternalID());
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDepthMask(false);
-
         cameraBinder.bind(emitter.getProgram(), getContext().getParent().getCamera());
         matrixBinder.bindViewProjectionMatrix(emitter.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
 
@@ -50,9 +47,6 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
                     .withEmitter(emitter)) {
                 particleRenderer.render(particle);
             }
-
-        glDepthMask(true);
-        glDisable(GL_BLEND);
 
         glUseProgram(0);
     }

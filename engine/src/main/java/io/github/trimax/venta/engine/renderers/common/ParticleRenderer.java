@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -59,7 +58,7 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
         textureBinder.bind(TextureType.Diffuse, emitter.getProgram(), emitter.getTexture());
 
         glBindVertexArray(emitter.getParticleVertexArrayObjectID());
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, emitter.getParticleVerticesBufferID());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, emitter.getParticleFacesBufferID());
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
@@ -72,34 +71,24 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
         billboardRotation.m32(0);
 
         billboardRotation.invert();
-        billboardRotation.m30(0);
-        billboardRotation.m31(0);
-        billboardRotation.m32(0);
-
         model.mul(billboardRotation);
     }
-
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class ParticleRenderContext extends AbstractRenderContext<EmitterInstanceRenderer.EmitterRenderContext> {
         private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
-        private final FloatBuffer normalMatrixBuffer = MemoryUtil.memAllocFloat(9);
-        private final Matrix3f normalMatrix = new Matrix3f();
         private final Matrix4f modelMatrix = new Matrix4f();
 
         private EmitterInstanceImplementation emitter;
 
         public ParticleRenderContext withModelMatrix(final Matrix4f matrix) {
-            normalMatrixBuffer.clear();
             modelMatrixBuffer.clear();
 
             modelMatrix.identity()
                     .set(matrix);
             modelMatrix.get(modelMatrixBuffer);
 
-            modelMatrix.normal(normalMatrix);
-            normalMatrix.get(normalMatrixBuffer);
             return this;
         }
 
@@ -110,14 +99,12 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
 
         @Override
         public void close() {
-            normalMatrixBuffer.clear();
             modelMatrixBuffer.clear();
             emitter = null;
         }
 
         @Override
         public void destroy() {
-            MemoryUtil.memFree(normalMatrixBuffer);
             MemoryUtil.memFree(modelMatrixBuffer);
         }
     }

@@ -11,8 +11,14 @@ public final class EmitterApplicationStartupHandler implements VentaEngineStartu
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector3f(0.9f));
 
-        final var emitter = context.getEmitterManager().create("emitter", context.getEmitterRepository().get("smoke.json"));
-        scene.add(emitter);
+        final var emitterPrefab = context.getEmitterRepository().get("smoke.json");
+        for (int emitterID = 0; emitterID < 10; emitterID++) {
+            final var angle = emitterID * (2.f * Math.PI / 10.f);
+
+            final var emitter = context.getEmitterManager().create("emitter" + emitterID, emitterPrefab);
+            emitter.setPosition(new Vector3f((float) Math.sin(angle), 0.f, (float) Math.cos(angle)).mul(2.5f));
+            scene.add(emitter);
+        }
 
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(4.f, 4.f, 4.f));
