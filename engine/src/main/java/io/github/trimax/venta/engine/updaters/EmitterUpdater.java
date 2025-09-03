@@ -31,7 +31,6 @@ public final class EmitterUpdater implements AbstractUpdater<EmitterInstanceImpl
         //TODO: Get 100 from emitter's parameter
         for (int i = 0; i < spawnCount && emitter.getParticles().size() < 100; i++)
             emitter.getParticles().add(spawnParticle(emitter));
-
     }
 
     private Particle spawnParticle(final EmitterInstanceImplementation emitter) {
@@ -49,7 +48,8 @@ public final class EmitterUpdater implements AbstractUpdater<EmitterInstanceImpl
 
         final var particle = new Particle(new Vector3f(emitter.getPosition()),  velocity, new Vector3f(0));
 
-        final var life = 4.0f + (float)Math.random();
+        //TODO: Get correct parameters
+        final var life = 4.0f + (float) Math.random();
         particle.setMaxLife(life);
         particle.setLife(life);
 

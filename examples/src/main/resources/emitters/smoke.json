@@ -2,6 +2,6 @@
   "particlesCount": 150,
   "emissionRate": 10,
   "velocity": {"x": 0.0, "y": 0.5, "z": 0.0},
-  "deviation": {"x": 0.1, "y": 0.1, "z": 0.1},
+  "deviation": {"x": 0.1, "y": 0.2, "z": 0.1},
   "texture": "sprites/smoke.png"
 }
