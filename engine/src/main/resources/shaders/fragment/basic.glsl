@@ -88,7 +88,7 @@ uniform Material material;
 uniform Fog fog;
 
 /* Output color */
-out vec4 FragColor;
+out vec4 outputColor;
 
 /***
  * Common functions
@@ -122,7 +122,7 @@ float getRoughness(vec2 textureCoordinates) {
     if (isSet(useMaterial))
         return material.roughness;
 
-    return 1.0;
+    return 0.0;
 }
 
 /* Translates texture coordinates according to parallax effect */
@@ -237,10 +237,10 @@ vec4 applyFog(vec4 color) {
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
-    vec4 colorWithoutEffects = getDiffuseColor(textureCoordinates) * getMaterialColor();
+    vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();
     vec4 colorWithLighting = applyLighting(colorWithoutEffects, textureCoordinates);
     vec4 colorWithReflections = applyReflections(colorWithLighting, textureCoordinates);
     vec4 colorWithFog = applyFog(colorWithReflections);
 
-    FragColor = colorWithFog;
+    outputColor = colorWithFog;
 }

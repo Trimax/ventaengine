@@ -4,6 +4,7 @@ import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.model.common.scene.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
+import io.github.trimax.venta.engine.model.instance.EmitterInstance;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
@@ -23,6 +24,7 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     private final Vector3f ambientLight = new Vector3f(0.3f);
     private final List<ObjectInstanceImplementation> objects = new ArrayList<>();
     private final List<LightInstanceImplementation> lights = new ArrayList<>();
+    private final List<EmitterInstanceImplementation> emitters = new ArrayList<>();
 
     private CubemapEntityImplementation skybox;
 
@@ -59,5 +61,11 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
 
         if (light instanceof LightInstanceImplementation entity)
             lights.add(entity);
+    }
+
+    @Override
+    public void add(@NonNull final EmitterInstance emitter) {
+        if (emitter instanceof EmitterInstanceImplementation entity)
+            emitters.add(entity);
     }
 }

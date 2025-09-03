@@ -30,7 +30,6 @@ public final class EngineRenderer {
     private final DebugRenderer debugRenderer;
     private final SceneInstanceRenderer sceneRenderer;
 
-
     public void render(final FPSCounter fpsCounter) {
         final var window = windowController.get();
         if (glfwWindowShouldClose(window.getInternalID()))

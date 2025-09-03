@@ -6,6 +6,8 @@ import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
+import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -40,6 +42,17 @@ public final class Abettor {
                                                      @NonNull final Node<MeshReference> mesh,
                                                      @NonNull final GizmoInstanceImplementation gizmo) {
         return new ObjectInstanceImplementation(name, program, mesh, gizmo);
+    }
+
+    public EmitterInstanceImplementation createEmitter(@NonNull final String name,
+                                                       @NonNull final ProgramEntityImplementation program,
+                                                       @NonNull final EmitterPrefabImplementation prefab,
+                                                       @NonNull final TextureEntityImplementation texture,
+                                                       @NonNull final GizmoInstanceImplementation gizmo,
+                                                       final int particleVertexArrayObjectID,
+                                                       final int particleVerticesBufferID) {
+        return new EmitterInstanceImplementation(name, prefab, texture, program, gizmo,
+                particleVertexArrayObjectID, particleVerticesBufferID);
     }
 
     public SceneInstanceImplementation createScene(@NonNull final String name) {
