@@ -63,6 +63,7 @@ uniform sampler2D textureDiffuse;
 uniform sampler2D textureHeight;
 uniform sampler2D textureNormal;
 uniform sampler2D textureRoughness;
+uniform sampler2D textureMetalness;
 uniform sampler2D textureAmbientOcclusion;
 
 /* Feature flags */
@@ -71,6 +72,7 @@ uniform int useTextureDiffuse;
 uniform int useTextureHeight;
 uniform int useTextureNormal;
 uniform int useTextureRoughness;
+uniform int useTextureMetalness;
 uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
 uniform int useMaterial;
@@ -121,6 +123,17 @@ float getRoughness(vec2 textureCoordinates) {
 
     if (isSet(useMaterial))
         return material.roughness;
+
+    return 0.0;
+}
+
+/* Gets metalness */
+float getMetalness(vec2 textureCoordinates) {
+    if (isSet(useTextureMetalness))
+        return texture(textureMetalness, textureCoordinates).r;
+
+    if (isSet(useMaterial))
+        return material.metalness;
 
     return 0.0;
 }
@@ -236,11 +249,20 @@ vec4 applyFog(vec4 color) {
 
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
+//
+//    vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();
+//    vec4 colorWithLighting = applyLighting(colorWithoutEffects, textureCoordinates);
+//    vec4 colorWithReflections = applyReflections(colorWithLighting, textureCoordinates);
+//    vec4 colorWithFog = applyFog(colorWithReflections);
+//
+//    outputColor = colorWithFog;
 
-    vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();
-    vec4 colorWithLighting = applyLighting(colorWithoutEffects, textureCoordinates);
-    vec4 colorWithReflections = applyReflections(colorWithLighting, textureCoordinates);
-    vec4 colorWithFog = applyFog(colorWithReflections);
 
-    outputColor = colorWithFog;
+    // Нормаль в мировых координатах
+    vec3 N = normalize(vertexTBN[2]); // нормаль из TBN (колонка Z)
+    //vec3 N = normalize(getNormal(textureCoordinates));
+
+    vec3 V = normalize(vertexViewDirection);
+
+    outputColor = vec4(texture(textureSkybox, reflect(-V, N)).rgb, 1.0);
 }

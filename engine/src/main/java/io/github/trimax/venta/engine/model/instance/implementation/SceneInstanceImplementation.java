@@ -36,6 +36,11 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     }
 
     @Override
+    public CubemapEntityImplementation getSkybox() {
+        return skybox;
+    }
+
+    @Override
     public void setAmbientLight(@NonNull final Vector3fc ambientLight) {
         this.ambientLight.set(ambientLight);
     }
