@@ -26,8 +26,11 @@ replay_pid*
 
 # IntelliJ and VSCode
 target
+.vscode
 .idea
 *.ipr
 *.ids
 *.iml
-.vscode
+
+# POM files produced by the plugin
+dependency-reduced-pom.xml
