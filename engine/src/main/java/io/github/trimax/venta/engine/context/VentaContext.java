@@ -6,19 +6,15 @@ import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.factories.ManagerFactory;
 import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.factories.RepositoryFactory;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.LightManager;
-import io.github.trimax.venta.engine.managers.ObjectManager;
-import io.github.trimax.venta.engine.managers.SceneManager;
-import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.LightManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.managers.*;
+import io.github.trimax.venta.engine.managers.implementation.*;
 import io.github.trimax.venta.engine.registries.*;
 import io.github.trimax.venta.engine.registries.implementation.*;
+import io.github.trimax.venta.engine.repositories.EmitterRepository;
 import io.github.trimax.venta.engine.repositories.LightRepository;
 import io.github.trimax.venta.engine.repositories.ObjectRepository;
 import io.github.trimax.venta.engine.repositories.SceneRepository;
+import io.github.trimax.venta.engine.repositories.implementation.EmitterRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.SceneRepositoryImplementation;
@@ -54,6 +50,10 @@ public final class VentaContext {
 
     public LightManager getLightManager() {
         return managerFactory.get(LightManagerImplementation.class);
+    }
+
+    public EmitterManager getEmitterManager() {
+        return managerFactory.get(EmitterManagerImplementation.class);
     }
 
     /*** Registries ***/
@@ -98,6 +98,10 @@ public final class VentaContext {
 
     public SceneRepository getSceneRepository() {
         return repositoryFactory.get(SceneRepositoryImplementation.class);
+    }
+
+    public EmitterRepository getEmitterRepository() {
+        return repositoryFactory.get(EmitterRepositoryImplementation.class);
     }
 
     /*** Keyboard ***/

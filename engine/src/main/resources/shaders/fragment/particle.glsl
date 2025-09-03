@@ -3,15 +3,13 @@
 /* Vertex shader output */
 in vec2 vertexTextureCoordinates;
 
-/* Texture */
+/* Textures */
 uniform sampler2D textureDiffuse;
-
-/* Text color */
-uniform vec3 color;
+uniform vec4 color;
 
 /* Output color */
 out vec4 outputColor;
 
 void main() {
-    outputColor = vec4(color, texture(textureDiffuse, vertexTextureCoordinates).r);
+    outputColor = texture(textureDiffuse, vertexTextureCoordinates) * color;
 }

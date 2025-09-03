@@ -4,10 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.GizmoManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.CameraInstance;
-import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.LightInstanceImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
-import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.*;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.AbstractRenderer;
 import io.github.trimax.venta.engine.renderers.instance.GizmoInstanceRenderer;
@@ -45,8 +42,16 @@ public final class DebugRenderer extends AbstractRenderer<SceneInstanceImplement
 
         StreamEx.of(scene.getLights()).forEach(this::render);
         StreamEx.of(scene.getObjects()).forEach(this::render);
+        StreamEx.of(scene.getEmitters()).forEach(this::render);
 
         StreamEx.of(cameraManager.instanceIterator()).forEach(this::render);
+    }
+
+    private void render(final EmitterInstanceImplementation emitter) {
+        try (final var _ = gizmoRenderer.withContext(getContext())
+                .withModelMatrix(emitter.getPosition(), emitter.getTransform().getRotation(), emitter.getTransform().getScale())) {
+            gizmoRenderer.render(emitter.getGizmo());
+        }
     }
 
     private void render(final ObjectInstanceImplementation object) {

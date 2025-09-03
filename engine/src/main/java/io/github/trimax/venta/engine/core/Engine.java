@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.renderers.common.EngineRenderer;
+import io.github.trimax.venta.engine.updaters.EngineUpdater;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -29,6 +30,7 @@ public final class Engine implements Runnable {
     private final ConsoleCommandExecutor consoleCommandExecutor;
     private final ControllerFactory controllerFactory;
     private final EngineRenderer engineRenderer;
+    private final EngineUpdater engineUpdater;
     private final VentaContext context;
     private final Memory memory;
 
@@ -69,6 +71,7 @@ public final class Engine implements Runnable {
 
             time.setDelta(fpsCounter.tick());
             updateHandler.onUpdate(time, context);
+            engineUpdater.update(time);
 
             consoleCommandExecutor.execute();
         }

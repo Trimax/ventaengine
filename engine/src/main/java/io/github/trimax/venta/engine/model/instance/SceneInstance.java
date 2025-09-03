@@ -14,9 +14,13 @@ public interface SceneInstance extends AbstractInstance {
 
     void setSkybox(final CubemapEntity skybox);
 
-    void add(final ObjectInstance object);
+    void add(@NonNull final ObjectInstance object);
 
-    void add(final LightInstance light);
+    void add(@NonNull final LightInstance light);
+
+    void add(@NonNull final EmitterInstance emitter);
+
+    List<? extends EmitterInstance> getEmitters();
 
     List<? extends ObjectInstance> getObjects();
 

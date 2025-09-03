@@ -3,8 +3,9 @@
 /* Vertex shader output */
 in vec4 vertexColor;
 
-out vec4 fragColor;
+/* Output color */
+out vec4 outputColor;
 
 void main() {
-    fragColor = vertexColor;
+    outputColor = vertexColor;
 }
