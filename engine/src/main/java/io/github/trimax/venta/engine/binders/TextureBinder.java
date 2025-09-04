@@ -33,6 +33,10 @@ public final class TextureBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.TextureSkybox), TextureUnit.Skybox.getId());
     }
 
+    public void bind(final ProgramEntityImplementation program, final TextureEntityImplementation texture) {
+        bind(TextureUnit.Debug, texture, program.getUniformID(ShaderUniform.UseTextureDebug), program.getUniformID(ShaderUniform.TextureDebug));
+    }
+
     public void bind(final TextureType type, final ProgramEntityImplementation program, final TextureEntityImplementation texture) {
         bind(type.getUnit(), texture, program.getUniformID(type.getUseTextureUniform()), program.getUniformID(type.getTextureUniform()));
     }

@@ -50,10 +50,11 @@ struct Fog {
 
 /* Vertex shader output */
 in vec4 vertexColor;
-in vec3 vertexViewDirection;
-in vec2 vertexTextureCoordinates;
-in vec3 vertexCameraPosition;
 in vec3 vertexPosition;
+in vec3 vertexCameraPosition;
+in vec2 vertexTextureCoordinates;
+in vec3 vertexViewDirectionLocalSpace;
+in vec3 vertexViewDirectionWorldSpace;
 
 in mat3 vertexTBN;
 
@@ -65,6 +66,7 @@ uniform sampler2D textureNormal;
 uniform sampler2D textureRoughness;
 uniform sampler2D textureMetalness;
 uniform sampler2D textureAmbientOcclusion;
+uniform sampler2D textureDebug;
 
 /* Feature flags */
 uniform int useTextureSkybox;
@@ -74,6 +76,7 @@ uniform int useTextureNormal;
 uniform int useTextureRoughness;
 uniform int useTextureMetalness;
 uniform int useTextureAmbientOcclusion;
+uniform int useTextureDebug;
 uniform int useLighting;
 uniform int useMaterial;
 uniform int useFog;
@@ -143,7 +146,7 @@ vec2 parallaxMapping(vec2 textureCoordinates) {
     if (!isSet(useTextureHeight))
         return textureCoordinates;
 
-    return textureCoordinates + normalize(vertexViewDirection).xy * (getHeight(textureCoordinates) * 0.01);
+    return textureCoordinates + vertexViewDirectionLocalSpace.xy * (getHeight(textureCoordinates) * 0.01);
 }
 
 /* Gets normal (either face or from normal map) */
@@ -221,7 +224,7 @@ vec3 calculateLighting(vec2 textureCoordinates) {
 vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
     vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * (1.0 - getRoughness(textureCoordinates));
 
-    return vertexColor * vec4(clamp(color.rgb * lighting, 0.0, 1.0), color.a);
+    return vec4(clamp(color.rgb * lighting, 0.0, 1.0), color.a);
 }
 
 /***
@@ -230,10 +233,10 @@ vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
 
 vec4 applyReflections(vec4 color, vec2 textureCoordinates) {
     vec3 N = normalize(getNormal(textureCoordinates));
-    vec3 V = normalize(vertexViewDirection);
+    vec3 V = normalize(vertexViewDirectionWorldSpace);
     vec4 skyboxColor = vec4(texture(textureSkybox, reflect(-V, N)).rgb, 1.0);
 
-    return mix(color, skyboxColor, getMetalness(textureCoordinates)); // TODO: Implement reflections
+    return mix(color, skyboxColor, getMetalness(textureCoordinates));
 }
 
 /***
@@ -261,5 +264,3 @@ void main() {
 
     outputColor = colorWithFog;
 }
-
-//NEXT TEST: separate shader with SB only!

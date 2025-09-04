@@ -20,15 +20,21 @@ uniform mat4 matrixModel;           // Normal matrix computed by model matrix
 out mat3 vertexTBN;
 out vec4 vertexColor;
 out vec3 vertexPosition;
-out vec3 vertexViewDirection;
-out vec2 vertexTextureCoordinates;
 out vec3 vertexCameraPosition;
+out vec2 vertexTextureCoordinates;
+out vec3 vertexViewDirectionLocalSpace;
+out vec3 vertexViewDirectionWorldSpace;
 
 void main() {
     vec4 worldPos = matrixModel * vec4(position, 1.0);
 
-    vertexTBN = mat3(normalize(matrixNormal * tangent), normalize(matrixNormal * bitangent), normalize(matrixNormal * normal));
-    vertexViewDirection = normalize(vertexTBN * normalize(cameraPosition - worldPos.xyz));
+    vertexTBN = mat3(normalize(matrixNormal * tangent),
+                     normalize(matrixNormal * bitangent),
+                     normalize(matrixNormal * normal));
+
+    vertexViewDirectionWorldSpace = normalize(cameraPosition - worldPos.xyz);
+    vertexViewDirectionLocalSpace = normalize(transpose(vertexTBN) * vertexViewDirectionWorldSpace);
+
     vertexTextureCoordinates = textureCoordinates;
     vertexCameraPosition = cameraPosition;
     vertexPosition = worldPos.xyz;
