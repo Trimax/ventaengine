@@ -10,6 +10,8 @@ import java.util.List;
 public interface SceneInstance extends AbstractInstance {
     Vector3fc getAmbientLight();
 
+    CubemapEntity getSkybox();
+
     void setAmbientLight(@NonNull final Vector3fc ambientLight);
 
     void setSkybox(final CubemapEntity skybox);

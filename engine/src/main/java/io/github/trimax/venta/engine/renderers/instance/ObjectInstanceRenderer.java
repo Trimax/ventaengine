@@ -1,30 +1,30 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-
-import io.github.trimax.venta.engine.binders.*;
-import org.joml.Matrix4f;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.binders.*;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.renderers.entity.MeshEntityRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joml.Matrix4f;
+
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<ObjectInstanceImplementation, ObjectInstanceRenderer.ObjectRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final MeshEntityRenderer meshRenderer;
 
+    private final TextureBinder textureBinder;
     private final ObjectBinder objectBinder;
     private final MatrixBinder matrixBinder;
     private final CameraBinder cameraBinder;
@@ -52,6 +52,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         lightBinder.bind(object.getProgram(), context.getScene().getAmbientLight());
         lightBinder.bind(object.getProgram(), context.getScene().getLights());
 
+        textureBinder.bind(object.getProgram(), context.getScene().getSkybox());
         fogBinder.bind(object.getProgram(), context.getScene().getFog());
 
         render(object.getProgram(), object.getMesh(), object.getTransform().getMatrix());
@@ -91,9 +92,9 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class ObjectRenderContext extends AbstractRenderContext<SceneInstanceRenderer.SceneRenderContext> {
-        private SceneInstance scene;
+        private SceneInstanceImplementation scene;
 
-        public ObjectRenderContext withScene(final SceneInstance scene) {
+        public ObjectRenderContext withScene(final SceneInstanceImplementation scene) {
             this.scene = scene;
             return this;
         }
