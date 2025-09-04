@@ -15,7 +15,6 @@ import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11C.glBindTexture;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
-import static org.lwjgl.opengl.GL20C.glUniform1i;
 
 @Slf4j
 @Component
@@ -31,7 +30,7 @@ public final class TextureBinder extends AbstractBinder {
         }
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.getInternalID());
-        glUniform1i(program.getUniformID(ShaderUniform.TextureSkybox), TextureUnit.Skybox.getId());
+        bind(program.getUniformID(ShaderUniform.TextureSkybox), TextureUnit.Skybox.getId());
     }
 
     public void bind(final TextureType type, final ProgramEntityImplementation program, final TextureEntityImplementation texture) {
@@ -48,6 +47,6 @@ public final class TextureBinder extends AbstractBinder {
         }
 
         glBindTexture(GL_TEXTURE_2D, texture.getInternalID());
-        glUniform1i(textureUniformID, unit.getId());
+        bind(textureUniformID, unit.getId());
     }
 }

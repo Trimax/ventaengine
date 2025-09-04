@@ -19,7 +19,7 @@ public final class ReflectionsApplicationStartupHandler implements VentaEngineSt
         scene.setAmbientLight(new Vector3f(0.6f, 0.6f, 0.6f));
         scene.setSkybox(context.getCubemapRegistry().get("stars.json"));
 
-        final var cube = context.getObjectManager().create("Cube", context.getObjectRepository().get("cube.json"));
+        final var cube = context.getObjectManager().create("Cube", context.getObjectRepository().get("cube-mirror.json"));
         scene.add(cube);
 
         final var camera = context.getCameraManager().getCurrent();

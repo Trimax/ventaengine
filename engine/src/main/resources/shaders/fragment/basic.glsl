@@ -229,11 +229,8 @@ vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
  ***/
 
 vec4 applyReflections(vec4 color, vec2 textureCoordinates) {
-    //vec3 N = normalize(vertexTBN[2]); // нормаль из TBN (колонка Z)
     vec3 N = normalize(getNormal(textureCoordinates));
-
     vec3 V = normalize(vertexViewDirection);
-
     vec4 skyboxColor = vec4(texture(textureSkybox, reflect(-V, N)).rgb, 1.0);
 
     return mix(color, skyboxColor, getMetalness(textureCoordinates)); // TODO: Implement reflections
@@ -257,20 +254,12 @@ vec4 applyFog(vec4 color) {
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
-    //vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();
-    vec4 colorWithoutEffects = vertexColor  * getMaterialColor();
+    vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();
     vec4 colorWithLighting = applyLighting(colorWithoutEffects, textureCoordinates);
     vec4 colorWithReflections = applyReflections(colorWithLighting, textureCoordinates);
     vec4 colorWithFog = applyFog(colorWithReflections);
 
     outputColor = colorWithFog;
-
-
-//    // Нормаль в мировых координатах
-//    vec3 N = normalize(vertexTBN[2]); // нормаль из TBN (колонка Z)
-//    //vec3 N = normalize(getNormal(textureCoordinates));
-//
-//    vec3 V = normalize(vertexViewDirection);
-//
-//    outputColor = vec4(texture(textureSkybox, reflect(-V, N)).rgb, 1.0);
 }
+
+//NEXT TEST: separate shader with SB only!
