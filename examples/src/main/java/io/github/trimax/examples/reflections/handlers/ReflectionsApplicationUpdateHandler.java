@@ -30,7 +30,7 @@ public final class ReflectionsApplicationUpdateHandler implements VentaEngineUpd
         if (context.isButtonPushed(GLFW_KEY_RIGHT))
             state.setCameraAngle(state.getCameraAngle() - (float) time.getDelta());
 
-        state.getCamera().setPosition(new Vector3f((float) Math.sin(state.getCameraAngle()), 1, (float) Math.cos(state.getCameraAngle())).mul(state.getCameraDistance()));
+        state.getCamera().setPosition(new Vector3f((float) Math.sin(state.getCameraAngle()), 1f, (float) Math.cos(state.getCameraAngle())).mul(state.getCameraDistance()));
         state.getCamera().lookAt(ZERO);
     }
 }

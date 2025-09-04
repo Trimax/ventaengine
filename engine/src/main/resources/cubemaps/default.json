@@ -1,11 +1,11 @@
 {
   "program": "sky.json",
   "faces": {
-    "Right": "default_sky/right.png",
-    "Left": "default_sky/left.png",
-    "Front": "default_sky/front.png",
-    "Back": "default_sky/back.png",
-    "Top": "default_sky/top.png",
-    "Bottom": "default_sky/bottom.png"
+    "Right": "debug/white.png",
+    "Left": "debug/orange.png",
+    "Front": "debug/red.png",
+    "Back": "debug/purple.png",
+    "Top": "debug/blue.png",
+    "Bottom": "debug/black.png"
   }
 }

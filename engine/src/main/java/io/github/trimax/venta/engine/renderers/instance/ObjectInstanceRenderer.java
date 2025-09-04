@@ -8,6 +8,7 @@ import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import io.github.trimax.venta.engine.renderers.entity.MeshEntityRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<ObjectInstanceImplementation, ObjectInstanceRenderer.ObjectRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final TextureRegistryImplementation textureRegistry;
     private final MeshEntityRenderer meshRenderer;
 
     private final TextureBinder textureBinder;
@@ -44,6 +46,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         glUseProgram(object.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
+        textureBinder.bind(object.getProgram(), textureRegistry.get("debug/white.png"));
 
         cameraBinder.bind(object.getProgram(), getContext().getParent().getCamera());
         objectBinder.bind(object.getProgram(), object);

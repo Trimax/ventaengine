@@ -22,15 +22,17 @@ public enum ShaderUniform {
     TextureRoughness("textureRoughness"),
     TextureMetalness("textureMetalness"),
     TextureAmbientOcclusion("textureAmbientOcclusion"),
+    TextureDebug("textureDebug"),
 
     /* Texture flags */
     UseTextureSkybox("useTextureSkybox"),
-    UseTextureDiffuseFlag("useTextureDiffuse"),
+    UseTextureDiffuse("useTextureDiffuse"),
     UseTextureHeight("useTextureHeight"),
     UseTextureNormal("useTextureNormal"),
     UseTextureRoughness("useTextureRoughness"),
     UseTextureMetalness("useTextureMetalness"),
     UseTextureAmbientOcclusion("useTextureAmbientOcclusion"),
+    UseTextureDebug("useTextureDebug"),
 
     /* Materials */
     MaterialMetalness("material.metalness"),
