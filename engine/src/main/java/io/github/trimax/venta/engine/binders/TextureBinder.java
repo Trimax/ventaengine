@@ -15,42 +15,38 @@ import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11C.glBindTexture;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
-import static org.lwjgl.opengl.GL20C.glUniform1i;
 
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureBinder extends AbstractBinder {
-
-    public void bind(final TextureType type, final ProgramEntityImplementation program, final TextureEntityImplementation texture) {
-        bind(type.getUnit(), texture, program.getUniformID(type.getUseTextureUniform()), program.getUniformID(type.getTextureUniform()));
-    }
-
-    public void bind(final TextureUnit unit, final TextureEntityImplementation texture, final int useTextureUniformID, final int textureUniformID) {
-        glActiveTexture(unit.getLocationID());
-        if (texture == null) {
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glUniform1i(useTextureUniformID, 0);
-            return;
-        }
-
-        glBindTexture(GL_TEXTURE_2D, texture.getInternalID());
-        glUniform1i(textureUniformID, unit.getId());
-        glUniform1i(useTextureUniformID, 1);
-    }
-
     public void bind(final ProgramEntityImplementation program, final CubemapEntityImplementation skybox) {
         bind(program.getUniformID(ShaderUniform.UseTextureSkybox), skybox != null);
 
         glActiveTexture(TextureUnit.Skybox.getLocationID());
         if (skybox == null) {
             glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-            glUniform1i(program.getUniformID(ShaderUniform.UseTextureSkybox), 0);
             return;
         }
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.getInternalID());
-        glUniform1i(program.getUniformID(ShaderUniform.TextureSkybox), TextureUnit.Skybox.getId());
-        glUniform1i(program.getUniformID(ShaderUniform.UseTextureSkybox), 1);
+        bind(program.getUniformID(ShaderUniform.TextureSkybox), TextureUnit.Skybox.getId());
+    }
+
+    public void bind(final TextureType type, final ProgramEntityImplementation program, final TextureEntityImplementation texture) {
+        bind(type.getUnit(), texture, program.getUniformID(type.getUseTextureUniform()), program.getUniformID(type.getTextureUniform()));
+    }
+
+    private void bind(final TextureUnit unit, final TextureEntityImplementation texture, final int useTextureUniformID, final int textureUniformID) {
+        bind(useTextureUniformID, texture != null);
+
+        glActiveTexture(unit.getLocationID());
+        if (texture == null) {
+            glBindTexture(GL_TEXTURE_2D, 0);
+            return;
+        }
+
+        glBindTexture(GL_TEXTURE_2D, texture.getInternalID());
+        bind(textureUniformID, unit.getId());
     }
 }

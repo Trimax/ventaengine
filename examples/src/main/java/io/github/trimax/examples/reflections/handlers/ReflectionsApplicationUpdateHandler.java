@@ -1,6 +1,6 @@
-package io.github.trimax.examples.metalicity.handlers;
+package io.github.trimax.examples.reflections.handlers;
 
-import io.github.trimax.examples.metalicity.state.MetalicityApplicationState;
+import io.github.trimax.examples.reflections.state.ReflectionsApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
@@ -12,10 +12,10 @@ import static org.lwjgl.glfw.GLFW.*;
 
 @Slf4j
 @RequiredArgsConstructor
-public final class MetalicityApplicationUpdateHandler implements VentaEngineUpdateHandler {
+public final class ReflectionsApplicationUpdateHandler implements VentaEngineUpdateHandler {
     private static final Vector3f ZERO = new Vector3f(0.f);
     private static final float MINIMAL_CAMERA_DISTANCE = 2.f;
-    private final MetalicityApplicationState state;
+    private final ReflectionsApplicationState state;
 
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
         if (context.isButtonPushed(GLFW_KEY_DOWN))
