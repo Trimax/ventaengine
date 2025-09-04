@@ -1,6 +1,22 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
+import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
+import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
+import static org.lwjgl.system.MemoryStack.stackPush;
+
+import java.nio.ByteBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.TextureDefinitions;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.memory.Memory;
@@ -13,20 +29,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
-import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_REPEAT;
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
-import static org.lwjgl.system.MemoryStack.stackPush;
 
 @Slf4j
 @Component
@@ -37,6 +39,10 @@ public final class TextureRegistryImplementation
     private final ResourceService resourceService;
     private final Abettor abettor;
     private final Memory memory;
+
+    public TextureEntityImplementation getDefaultTexture() {
+        return get(TextureDefinitions.TEXTURE_DEFAULT);
+    }
 
     public TextureEntityImplementation create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
         return get(name, () -> {
