@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
@@ -51,24 +52,13 @@ public final class EmitterManagerImplementation
         final int particleVerticesBufferID = memory.getBuffers().create("Emitter %s vertex buffer", name);
         final int particleFacesBufferID = memory.getBuffers().create("Emitter %s element buffer", name);
 
-        //TODO: Move somewhere
-        final float[] vertices = {
-                // posX, posY
-                -0.5f, -0.5f,
-                0.5f, -0.5f,
-                0.5f,  0.5f,
-                -0.5f,  0.5f
-        };
-
-        final int[] indices = { 0, 1, 2, 2, 3, 0 };
-
         glBindVertexArray(particleVertexArrayObjectID);
 
         glBindBuffer(GL_ARRAY_BUFFER, particleVerticesBufferID);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, GeometryDefinitions.PARTICLE_VERTICES, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, particleFacesBufferID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, GeometryDefinitions.PARTICLE_INDICES, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, false, 2 * Float.BYTES, 0);

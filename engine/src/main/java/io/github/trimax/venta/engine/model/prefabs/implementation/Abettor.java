@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.dto.EmitterDTO;
 import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
+import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -19,8 +20,9 @@ public final class Abettor {
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntity program,
+                                                   final MaterialEntity material,
                                                    final Node<MeshReference> root) {
-        return new ObjectPrefabImplementation(program, root);
+        return new ObjectPrefabImplementation(program, material, root);
     }
 
     public EmitterPrefabImplementation createEmitter(@NonNull final EmitterDTO dto) {

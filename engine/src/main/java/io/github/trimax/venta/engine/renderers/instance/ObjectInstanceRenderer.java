@@ -5,6 +5,7 @@ import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.binders.*;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
@@ -58,12 +59,15 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         textureBinder.bind(object.getProgram(), context.getScene().getSkybox());
         fogBinder.bind(object.getProgram(), context.getScene().getFog());
 
-        render(object.getProgram(), object.getMesh(), object.getTransform().getMatrix());
+        render(object.getProgram(), object.getMaterial(), object.getMesh(), object.getTransform().getMatrix());
 
         glUseProgram(0);
     }
 
-    private void render(final ProgramEntityImplementation program, final Node<MeshReference> node, final Matrix4f parentMatrix) {
+    private void render(final ProgramEntityImplementation program,
+                        final MaterialEntityImplementation material,
+                        final Node<MeshReference> node,
+                        final Matrix4f parentMatrix) {
         if (node == null)
             return;
 
@@ -74,18 +78,21 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
             if (reference.hasTransform())
                 localMatrix.mul(node.value().transform().getMatrix());
 
-            render(program, reference, localMatrix);
+            render(program, material, reference, localMatrix);
         }
 
         if (node.hasChildren())
             for (final Node<MeshReference> child : node.children())
-                render(program, child, localMatrix);
+                render(program, material, child, localMatrix);
     }
 
-    private void render(final ProgramEntityImplementation program, final MeshReference reference, final Matrix4f modelMatrix) {
+    private void render(final ProgramEntityImplementation program,
+                        final MaterialEntityImplementation material,
+                        final MeshReference reference,
+                        final Matrix4f modelMatrix) {
         if (reference.hasMesh())
             try (var _ = meshRenderer.withContext(getContext())
-                    .withMaterial(reference.material())
+                    .withMaterial(reference.hasMaterial() ? reference.material() : material)
                     .withModelMatrix(modelMatrix)
                     .withProgram(program)) {
                 meshRenderer.render(reference.mesh());

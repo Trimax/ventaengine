@@ -1,5 +1,6 @@
 {
   "program": "default.json",
+  "material": "stone.json",
   "root": {
     "name": "cube",
     "value": {
@@ -14,7 +15,6 @@
         "name": "+X",
         "value": {
           "mesh": "plane.json",
-          "material": "stone.json",
           "transform": {
             "position": {"x": 0.5, "y": 0.0, "z": 0.0},
             "rotation": {"x": 1.5708, "y": 0.0, "z": -1.5708},
@@ -26,7 +26,6 @@
         "name": "-X",
         "value": {
           "mesh": "plane.json",
-          "material": "stone.json",
           "transform": {
             "position": {"x": -0.5, "y": 0.0, "z": 0.0},
             "rotation": {"x": 1.5708, "y": 0.0, "z": 1.5708},
@@ -39,7 +38,6 @@
         "name": "+Y",
         "value": {
           "mesh": "plane.json",
-          "material": "stone.json",
           "transform": {
             "position": {"x": 0.0, "y": 0.5, "z": 0.0},
             "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
@@ -51,7 +49,6 @@
         "name": "-Y",
         "value": {
           "mesh": "plane.json",
-          "material": "stone.json",
           "transform": {
             "position": {"x": 0.0, "y": -0.5, "z": 0.0},
             "rotation": {"x": 3.1416, "y": 0.0, "z": 0.0},
@@ -63,7 +60,6 @@
         "name": "+Z",
         "value": {
           "mesh": "plane.json",
-          "material": "stone.json",
           "transform": {
             "position": {"x": 0.0, "y": 0.0, "z": 0.5},
             "rotation": {"x": 1.5708, "y": 0.0, "z": 0.0},
@@ -75,7 +71,6 @@
         "name": "-Z",
         "value": {
           "mesh": "plane.json",
-          "material": "stone.json",
           "transform": {
             "position": {"x": 0.0, "y": 0.0, "z": -0.5},
             "rotation": {"x": -1.5708, "y": 0.0, "z": 0.0},
