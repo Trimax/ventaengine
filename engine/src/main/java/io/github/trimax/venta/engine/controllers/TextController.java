@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.controllers;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.TextState;
 import io.github.trimax.venta.engine.registries.implementation.FontRegistryImplementation;
@@ -45,7 +46,7 @@ public final class TextController extends AbstractController<TextState, Void> {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return new TextState(programRegistry.get("text.json"),
+        return new TextState(programRegistry.get(ProgramType.Text.getProgramName()),
                 fontRegistry.get("DejaVuSansMono"),
                 vertexArrayObjectID, verticesBufferID);
     }
