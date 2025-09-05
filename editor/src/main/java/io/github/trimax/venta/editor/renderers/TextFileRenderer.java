@@ -11,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
-public final class TextFileRenderer extends AbstractRenderer {
+public final class TextFileRenderer extends AbstractFileRenderer {
     public TextFileRenderer(@NonNull final TreeItem<Item> node, @NonNull final VBox panel) {
         super(node, panel);
     }
@@ -19,11 +19,11 @@ public final class TextFileRenderer extends AbstractRenderer {
     @Override
     @SneakyThrows
     public void render(@NonNull final File file) {
-        final var textShader = new TextArea(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
-        textShader.setEditable(false);
-        textShader.setWrapText(true);
-        textShader.setPrefRowCount(50);
+        final var text = new TextArea(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+        text.setPrefRowCount(50);
+        text.setEditable(false);
+        text.setWrapText(true);
 
-        add(textShader);
+        add(text);
     }
 }

@@ -1,22 +1,19 @@
 package io.github.trimax.venta.editor.tree;
 
-import java.io.File;
-import java.util.function.Consumer;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ResourceType;
 import io.github.trimax.venta.editor.model.ui.Menu;
 import io.github.trimax.venta.editor.model.ui.ToolBar;
-import io.github.trimax.venta.editor.renderers.TextFileRenderer;
-import io.github.trimax.venta.editor.renderers.TextureRenderer;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import one.util.streamex.StreamEx;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.io.File;
+import java.util.function.Consumer;
 
 
 @AllArgsConstructor
@@ -68,24 +65,7 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
             return;
         }
 
-        //TODO: Create automatic selection
-        switch (type) {
-            case Textures:
-                new TextureRenderer(node, info).render(file);
-                return;
-            case Materials:
-            case Programs:
-            case Scenes:
-            case Objects:
-            case Meshes:
-            case Lights:
-            case Cubemaps:
-            case Shaders:
-                new TextFileRenderer(node, info).render(file);
-                return;
-            default:
-                info.getChildren().add(new Label("the resource type is not supported"));
-        }
+        type.render(node, info, file);
     }
 
     private boolean isGroup(final TreeItem<Item> node) {
