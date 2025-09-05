@@ -9,13 +9,13 @@ import lombok.Getter;
 public enum ResourceType {
     Materials("Material"),
     Textures("Texture"),
+    Cubemaps("Cubemap"),
     Programs("Program"),
     Shaders("Shader"),
     Objects("Object"),
     Scenes("Scene"),
     Lights("Light"),
-    Meshes("Mesh"),
-    Cubemaps("Cubemap");
+    Meshes("Mesh");
 
     private final String displayName;
 }
