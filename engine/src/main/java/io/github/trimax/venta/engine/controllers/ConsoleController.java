@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.controllers;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
+import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
@@ -46,7 +47,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        return new ConsoleState(programRegistry.get("console.json"),
+        return new ConsoleState(programRegistry.get(ProgramType.Console.getProgramName()),
                 consoleVertexArrayObjectID, consoleVerticesBufferID);
     }
 
