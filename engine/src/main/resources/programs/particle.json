@@ -1,4 +1,4 @@
 {
-  "shaderVertex": "vertex/particle.glsl",
-  "shaderFragment": "fragment/particle.glsl"
+  "shaderVertex": "particle/vertex.glsl",
+  "shaderFragment": "particle/fragment.glsl"
 }
