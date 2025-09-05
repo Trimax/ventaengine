@@ -1,4 +1,4 @@
 {
-  "shaderVertex": "vertex/console.glsl",
-  "shaderFragment": "fragment/console.glsl"
+  "shaderVertex": "console/vertex.glsl",
+  "shaderFragment": "console/fragment.glsl"
 }
