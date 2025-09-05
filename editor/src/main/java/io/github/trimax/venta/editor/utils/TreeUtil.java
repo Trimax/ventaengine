@@ -23,11 +23,13 @@ public final class TreeUtil {
                 .addListener((_, _, newSel) -> listener.accept(newSel));
 
         StreamEx.of(Group.values())
+                .sorted()
                 .map(Item::asGroup)
                 .map(TreeItem::new)
                 .forEach(root.getChildren()::add);
 
         enableAutoSort(root);
+        sort(root);
     }
 
     public boolean isItemExist(@NonNull final TreeItem<Item> item, @NonNull final String name) {
@@ -47,10 +49,13 @@ public final class TreeUtil {
                 if (change.wasAdded()) {
                     for (final var added : change.getAddedSubList())
                         enableAutoSort(added);
-
-                    parent.getChildren().sort((a, b) -> a.getValue().name().compareToIgnoreCase(b.getValue().name()));
+                    sort(parent);
                 }
             }
         });
+    }
+
+    private void sort(final TreeItem<Item> node) {
+        node.getChildren().sort((a, b) -> a.getValue().name().compareToIgnoreCase(b.getValue().name()));
     }
 }
