@@ -14,4 +14,8 @@ public record MeshReference(MeshEntityImplementation mesh,
     public boolean hasTransform() {
         return transform != null;
     }
+
+    public boolean hasMaterial() {
+        return material != null;
+    }
 }

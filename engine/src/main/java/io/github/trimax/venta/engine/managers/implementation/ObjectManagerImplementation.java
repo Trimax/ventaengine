@@ -36,8 +36,8 @@ public final class ObjectManagerImplementation
     }
 
     private ObjectInstance create(final String name, final ObjectPrefabImplementation prefab) {
-        return store(abettor.createObject(name, prefab.getProgram(), createHierarchy(prefab.getRoot()),
-                gizmoManager.create("Bounding box", GizmoType.Object)));
+        return store(abettor.createObject(name, prefab.getProgram(), prefab.getMaterial(),
+                createHierarchy(prefab.getRoot()), gizmoManager.create("Bounding box", GizmoType.Object)));
     }
 
     private Node<MeshReference> createHierarchy(final Node<MeshReference> node) {

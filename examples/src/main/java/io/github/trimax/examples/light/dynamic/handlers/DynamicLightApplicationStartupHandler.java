@@ -43,6 +43,7 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
         final int cubeCount = 10;
         for (int cubeID = 0; cubeID < cubeCount; cubeID++) {
             final var miniCube = context.getObjectManager().create("cube" + cubeID, cubePrefab);
+            miniCube.setMaterial(context.getMaterialRegistry().get("concrete.json"));
             miniCube.setPosition(new Vector3f(
                     3.f * (float) Math.sin(cubeID * (2 * Math.PI / cubeCount)),
                     0.f,

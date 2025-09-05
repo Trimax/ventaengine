@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.model.instance;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.NonNull;
 import org.joml.Vector3fc;
@@ -21,6 +22,8 @@ public interface ObjectInstance extends AbstractInstance {
     DrawMode getDrawMode();
 
     ProgramEntity getProgram();
+
+    MaterialEntity getMaterial();
 
     void setPosition(@NonNull final Vector3fc position);
 
@@ -43,4 +46,6 @@ public interface ObjectInstance extends AbstractInstance {
     void setVisible(final boolean visible);
 
     void setProgram(@NonNull final ProgramEntity program);
+
+    void setMaterial(@NonNull final MaterialEntity material);
 }

@@ -39,7 +39,9 @@ public final class ObjectRepositoryImplementation
         log.info("Loading object {}", resourcePath);
 
         final var objectDTO = resourceService.getAsObject(String.format("/objects/%s", resourcePath), ObjectPrefabDTO.class);
-        return abettor.createObject(programRegistry.get(objectDTO.program()), MeshUtil.normalize(loadMeshHierarchy(objectDTO.root())));
+        return abettor.createObject(programRegistry.get(objectDTO.program()),
+                Optional.ofNullable(objectDTO.material()).map(materialRegistry::get).orElse(null),
+                MeshUtil.normalize(loadMeshHierarchy(objectDTO.root())));
     }
     
     private Node<MeshReference> loadMeshHierarchy(@NonNull final Node<MeshPrefabDTO> node) {

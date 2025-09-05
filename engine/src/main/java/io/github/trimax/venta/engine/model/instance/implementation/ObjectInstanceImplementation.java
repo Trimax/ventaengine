@@ -5,7 +5,9 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.utils.GeometryUtil;
@@ -19,6 +21,7 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     private final Node<MeshReference> mesh;
     private final BoundingBox box;
 
+    private MaterialEntityImplementation material;
     private ProgramEntityImplementation program;
 
     private DrawMode drawMode = DrawMode.Polygon;
@@ -26,15 +29,17 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     private boolean isLit = true;
 
     ObjectInstanceImplementation(final String name,
-                                        final ProgramEntity program,
-                                        final Node<MeshReference> mesh,
-                                        final GizmoInstanceImplementation gizmo) {
+                                 final ProgramEntity program,
+                                 final MaterialEntity material,
+                                 final Node<MeshReference> mesh,
+                                 final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
         this.mesh = mesh;
         this.box = GeometryUtil.computeBoundingBox(mesh);
 
         setProgram(program);
+        setMaterial(material);
     }
 
     @Override
@@ -111,5 +116,11 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     public void setProgram(@NonNull final ProgramEntity program) {
         if (program instanceof ProgramEntityImplementation entity)
             this.program = entity;
+    }
+
+    @Override
+    public void setMaterial(final MaterialEntity material) {
+        if (material instanceof MaterialEntityImplementation entity)
+            this.material = entity;
     }
 }

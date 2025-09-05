@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
@@ -39,9 +40,10 @@ public final class Abettor {
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,
                                                      @NonNull final ProgramEntity program,
+                                                     final MaterialEntity material,
                                                      @NonNull final Node<MeshReference> mesh,
                                                      @NonNull final GizmoInstanceImplementation gizmo) {
-        return new ObjectInstanceImplementation(name, program, mesh, gizmo);
+        return new ObjectInstanceImplementation(name, program, material, mesh, gizmo);
     }
 
     public EmitterInstanceImplementation createEmitter(@NonNull final String name,
