@@ -9,7 +9,7 @@ import lombok.Getter;
 public enum ProgramType {
     Particle("particle.json"),
     Simple("simple.json"),
-    Basic("basic.json");
+    Default("default.json");
 
     private final String programName;
 }
