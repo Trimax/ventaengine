@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Element {
-    Unknown("/icons/unknown.png"),
-    Group("/icons/group.png"),
-    Resource("/icons/resource.png");
+    Unknown("/icons/common/unknown.png"),
+    Group("/icons/common/group.png"),
+    Resource("/icons/common/resource.png");
 
     private final Image icon;
 

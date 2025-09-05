@@ -1,0 +1,16 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="12" y="12" width="104" height="104" rx="11" stroke="black" stroke-width="6"/>
+<rect x="25" y="25" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="25" y="56.2" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="25" y="87.4" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="40.6" y="40.6" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="40.6" y="71.8" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="71.8" y="40.6" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="71.8" y="71.8" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="56.2" y="25" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="56.2" y="56.2" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="56.2" y="87.4" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="87.4" y="25" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="87.4" y="56.2" width="15.6" height="15.6" rx="2" fill="black"/>
+<rect x="87.4" y="87.4" width="15.6" height="15.6" rx="2" fill="black"/>
+</svg>
