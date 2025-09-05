@@ -11,7 +11,7 @@ import lombok.NonNull;
 import java.io.File;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-abstract class AbstractRenderer {
+public abstract class AbstractFileRenderer {
     @NonNull
     protected final TreeItem<Item> node;
 

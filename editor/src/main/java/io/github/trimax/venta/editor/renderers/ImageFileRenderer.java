@@ -9,8 +9,8 @@ import lombok.NonNull;
 
 import java.io.File;
 
-public final class TextureRenderer extends AbstractRenderer {
-    public TextureRenderer(final TreeItem<Item> node, final VBox panel) {
+public final class ImageFileRenderer extends AbstractFileRenderer {
+    public ImageFileRenderer(final TreeItem<Item> node, final VBox panel) {
         super(node, panel);
     }
 
