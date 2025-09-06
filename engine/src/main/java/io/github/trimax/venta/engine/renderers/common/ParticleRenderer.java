@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryStack;
+import org.joml.Matrix4fc;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
@@ -38,21 +38,9 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
 
     @Override
     public void render(final Particle particle) {
-        final var model = new Matrix4f()
-                .translate(particle.getPosition())
-                .scale(particle.getSize());
-
-        applyBillboard(model, getContext().getParent().getParent().getViewMatrix());
-
         final var emitter = getContext().getEmitter();
         matrixBinder.bindViewProjectionMatrix(emitter.getProgram(), getContext().getParent().getParent().getViewProjectionMatrixBuffer());
-
-        //TODO: Reimplement using context
-        try (final var stack = MemoryStack.stackPush()) {
-            final var fb = stack.mallocFloat(16);
-            model.get(fb);
-            matrixBinder.bindModelMatrix(emitter.getProgram(), fb);
-        }
+        matrixBinder.bindModelMatrix(emitter.getProgram(), getContext().getModelMatrixBuffer());
 
         particleBinder.bind(emitter.getProgram(), particle);
         textureBinder.bind(TextureType.Diffuse, emitter.getProgram(), emitter.getTexture());
@@ -64,16 +52,6 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
         glBindVertexArray(0);
     }
 
-    private void applyBillboard(final Matrix4f model, final Matrix4f viewMatrix) {
-        final var billboardRotation = new Matrix4f(viewMatrix);
-        billboardRotation.m30(0);
-        billboardRotation.m31(0);
-        billboardRotation.m32(0);
-
-        billboardRotation.invert();
-        model.mul(billboardRotation);
-    }
-
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class ParticleRenderContext extends AbstractRenderContext<EmitterInstanceRenderer.EmitterRenderContext> {
@@ -82,11 +60,14 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
 
         private EmitterInstanceImplementation emitter;
 
-        public ParticleRenderContext withModelMatrix(final Matrix4f matrix) {
+        public ParticleRenderContext withViewMatrix(final Matrix4fc viewMatrix, final Particle particle) {
             modelMatrixBuffer.clear();
 
             modelMatrix.identity()
-                    .set(matrix);
+                    .translate(particle.getPosition())
+                    .scale(particle.getSize());
+
+            applyBillboard(modelMatrix, viewMatrix);
             modelMatrix.get(modelMatrixBuffer);
 
             return this;
@@ -106,6 +87,16 @@ public final class ParticleRenderer extends AbstractRenderer<Particle, ParticleR
         @Override
         public void destroy() {
             MemoryUtil.memFree(modelMatrixBuffer);
+        }
+
+        private void applyBillboard(final Matrix4f model, final Matrix4fc viewMatrix) {
+            final var billboardRotation = new Matrix4f(viewMatrix);
+            billboardRotation.m30(0);
+            billboardRotation.m31(0);
+            billboardRotation.m32(0);
+
+            billboardRotation.invert();
+            model.mul(billboardRotation);
         }
     }
 }

@@ -43,7 +43,7 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
 
         for (final var particle : emitter.getParticles())
             try (var _ = particleRenderer.withContext(getContext())
-                    .withModelMatrix(emitter.getTransform().getMatrix())
+                    .withViewMatrix(getContext().getParent().getViewMatrix(), particle)
                     .withEmitter(emitter)) {
                 particleRenderer.render(particle);
             }
