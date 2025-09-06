@@ -47,8 +47,7 @@ public final class EmitterUpdater implements AbstractUpdater<EmitterInstanceImpl
 
         final var particle = new Particle(new Vector3f(emitter.getPosition()),  velocity, new Vector3f(0));
 
-        //TODO: Get correct parameters
-        final var life = 4.0f + (float) Math.random();
+        final var life = emitter.getMinimalLifetime() + (float) Math.random() * emitter.getLifetimeDeviation();
         particle.setMaxLife(life);
         particle.setLife(life);
 
