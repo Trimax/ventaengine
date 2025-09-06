@@ -28,8 +28,7 @@ public final class EmitterUpdater implements AbstractUpdater<EmitterInstanceImpl
         final var spawnCount = (int) emitter.getEmissionAccumulator();
         emitter.updateEmissionAccumulator(-spawnCount);
 
-        //TODO: Get 100 from emitter's parameter
-        for (int i = 0; i < spawnCount && emitter.getParticles().size() < 100; i++)
+        for (int i = 0; i < spawnCount && emitter.getParticles().size() < emitter.getMaximalParticlesCount(); i++)
             emitter.getParticles().add(spawnParticle(emitter));
     }
 

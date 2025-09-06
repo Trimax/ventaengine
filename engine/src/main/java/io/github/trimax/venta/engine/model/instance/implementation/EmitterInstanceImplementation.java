@@ -24,6 +24,7 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
     private final Vector3f velocity = new Vector3f();
     private final Vector3f deviation = new Vector3f();
     private final ProgramEntityImplementation program;
+    private final int maximalParticlesCount;
     private final int particleVertexArrayObjectID;
     private final int particleVerticesBufferID;
     private final int particleFacesBufferID;
@@ -48,6 +49,7 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
         this.program = program;
         this.texture = texture;
         this.emissionRate = prefab.getDto().emissionRate();
+        this.maximalParticlesCount = prefab.getDto().particlesCount();
         this.particleFacesBufferID = particleFacesBufferID;
         this.particleVerticesBufferID = particleVerticesBufferID;
         this.particleVertexArrayObjectID = particleVertexArrayObjectID;
