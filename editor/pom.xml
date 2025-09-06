@@ -64,7 +64,26 @@
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>io.github.trimax.venta.editor.VentaArchiveManager</mainClass>
                                 </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/DEPENDENCIES</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+
+                                        <exclude>META-INF/versions/9/module-info.class</exclude>
+                                        <exclude>META-INF/substrate/config/*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
