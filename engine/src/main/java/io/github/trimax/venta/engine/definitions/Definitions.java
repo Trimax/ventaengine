@@ -80,12 +80,21 @@ public final class Definitions {
 
     /*** Console ***/
 
-    /* The number of lines visible in history */
-    public static final int CONSOLE_HISTORY_LINES_COUNT = 19;
+    /* The vertical line interval */
+    public static final float CONSOLE_LINE_INTERVAL = 1.2f;
 
-    /* The height of the line */
-    public static final float CONSOLE_LINE_HEIGHT = 0.05f;
+    /* The height of the line (px) */
+    public static final float CONSOLE_LINE_HEIGHT = 21f;
+
+    /* Width of the character */
+    public static final float CONSOLE_CHARACTER_WIDTH = 16f;
 
     /* Command line prefix */
     public static final String CONSOLE_WELCOME_SYMBOL = "> ";
+
+    /* Horizontal scale factor */
+    public static final float CONSOLE_SCALE_HORIZONTAL = 0.0015f * 800;
+
+    /* Vertical scale factor */
+    public static final float CONSOLE_SCALE_VERTICAL = 0.0015f * 600;
 }

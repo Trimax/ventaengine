@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.renderers.state;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.controllers.TextController;
+import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
@@ -19,6 +20,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleState, ConsoleStateRenderer.ConsoleRenderContext, WindowStateRenderer.WindowRenderContext> {
     private final TextStateRenderer consoleItemRenderer;
+    private final WindowController windowController;
     private final TextController textController;
 
     @Override
@@ -59,13 +61,16 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (int line = 0; line < Math.min(Definitions.CONSOLE_HISTORY_LINES_COUNT, console.getHistory().size()); line++)
-            renderItem(console, line);
+        final var scaleX = Definitions.CONSOLE_SCALE_HORIZONTAL / windowController.get().getWidth();
+        final var scaleY = Definitions.CONSOLE_SCALE_VERTICAL / windowController.get().getHeight();
+
+        for (int line = 0; line < Math.min(windowController.get().getHeight() / Definitions.CONSOLE_LINE_HEIGHT, console.getHistory().size()); line++)
+            renderItem(console, line, scaleX, scaleY);
 
         try (final var _ = consoleItemRenderer.withContext(getContext())
                 .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getBuffer()))
-                .withPosition(-0.98f, 0.05f)
-                .withScale(0.001f)) {
+                .withPosition(Definitions.CONSOLE_CHARACTER_WIDTH * scaleX - 1, Definitions.CONSOLE_LINE_HEIGHT * scaleY / 2)
+                .withScale(scaleX, scaleY)) {
             consoleItemRenderer.render(textController.get());
         }
 
@@ -73,7 +78,7 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         glEnable(GL_DEPTH_TEST);
     }
 
-    private void renderItem(final ConsoleState console, final int line) {
+    private void renderItem(final ConsoleState console, final int line, final float scaleX, final float scaleY) {
         final var index = console.getHistory().size() - line - 1;
         final var message = (index >= 0 && index < console.getHistory().size()) ? console.getHistory().get(index) : null;
         if (message == null || StringUtils.isBlank(message.text()))
@@ -81,8 +86,8 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
 
         try (final var _ = consoleItemRenderer.withContext(getContext())
                 .withText(message)
-                .withPosition(-0.98f, 0.1f + Definitions.CONSOLE_LINE_HEIGHT * line)
-                .withScale(0.001f)) {
+                .withPosition(Definitions.CONSOLE_CHARACTER_WIDTH * scaleX - 1, Definitions.CONSOLE_LINE_INTERVAL * Definitions.CONSOLE_LINE_HEIGHT * scaleY * (line + 2))
+                .withScale(scaleX, scaleY)) {
             consoleItemRenderer.render(textController.get());
         }
     }
