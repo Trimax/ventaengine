@@ -65,9 +65,8 @@ public final class EmitterManagerImplementation
 
         glBindVertexArray(0);
 
-        //TODO: change gizmo type
         return store(abettor.createEmitter(name, programRegistry.get(ProgramType.Particle.getProgramName()), prefab,
-                textureRegistry.get(prefab.getDto().texture()), gizmoManager.create("emitter", GizmoType.Light),
+                textureRegistry.get(prefab.getDto().texture()), gizmoManager.create("emitter", GizmoType.Emitter),
                 particleVertexArrayObjectID, particleVerticesBufferID, particleFacesBufferID));
     }
 
