@@ -38,7 +38,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
         consoleItemBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
 
         float penX = getContext().x;
-        final float penY = getContext().y - FONT_HEIGHT * getContext().scale;
+        final float penY = getContext().y;
 
         // Iterate through each character in the text
         final var message = getContext().message;
@@ -59,11 +59,11 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
             final var backedCharacter = font.getAtlases().get(atlasIndex).getBuffer().get(charIndex);
 
-            final var x0 = penX + backedCharacter.xoff() * getContext().scale;
-            final var x1 = x0 + (backedCharacter.x1() - backedCharacter.x0()) * getContext().scale;
+            final var x0 = penX + backedCharacter.xoff() * getContext().scaleX;
+            final var x1 = x0 + (backedCharacter.x1() - backedCharacter.x0()) * getContext().scaleX;
 
-            final var y0 = penY - (backedCharacter.y1() - backedCharacter.y0()) * getContext().scale - backedCharacter.yoff() * getContext().scale;
-            final var y1 = y0 + (backedCharacter.y1() - backedCharacter.y0()) * getContext().scale;
+            final var y0 = penY - (backedCharacter.y1() - backedCharacter.y0()) * getContext().scaleY - backedCharacter.yoff() * getContext().scaleY;
+            final var y1 = y0 + (backedCharacter.y1() - backedCharacter.y0()) * getContext().scaleY;
 
             final var s0 = backedCharacter.x0() / (float) FONT_ATLAS_WIDTH;
             final var t0 = backedCharacter.y0() / (float) FONT_ATLAS_HEIGHT;
@@ -89,7 +89,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
             glDrawArrays(GL_TRIANGLES, 0, 6);
 
-            penX += backedCharacter.xadvance() * getContext().scale;
+            penX += backedCharacter.xadvance() * getContext().scaleX;
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -105,7 +105,8 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
         private float x;
         private float y;
-        private float scale;
+        private float scaleX;
+        private float scaleY;
         private ConsoleController.ConsoleMessage message;
 
         public ConsoleItemRenderContext withPosition(final float x, final float y) {
@@ -114,8 +115,9 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
             return this;
         }
 
-        public ConsoleItemRenderContext withScale(final float scale) {
-            this.scale = scale;
+        public ConsoleItemRenderContext withScale(final float scaleX, final float scaleY) {
+            this.scaleX = scaleX;
+            this.scaleY = scaleY;
             return this;
         }
 
@@ -128,7 +130,8 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
         public void close() {
             vertices.rewind();
             this.message = null;
-            this.scale = 0.f;
+            this.scaleX = 0.f;
+            this.scaleY = 0.f;
             this.x = 0.f;
             this.y = 0.f;
         }
