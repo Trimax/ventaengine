@@ -1,14 +1,7 @@
 package io.github.trimax.venta.engine.controllers;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.callbacks.KeyboardCharCallback;
-import io.github.trimax.venta.engine.callbacks.KeyboardKeyCallback;
-import io.github.trimax.venta.engine.callbacks.MouseButtonCallback;
-import io.github.trimax.venta.engine.callbacks.MouseCursorCallback;
-import io.github.trimax.venta.engine.callbacks.WindowSizeCallback;
+import io.github.trimax.venta.engine.callbacks.*;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
@@ -20,6 +13,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
@@ -70,7 +66,8 @@ public final class WindowController extends AbstractController<WindowState, Vent
         glfwFocusWindow(id);
 
         final var window = new WindowState(handler, id, title, width, height);
-        glfwSetFramebufferSizeCallback(id, new WindowSizeCallback(this));
+        glfwSetFramebufferSizeCallback(id, new FramebufferSizeCallback(this));
+        glfwSetWindowSizeCallback(id, new WindowSizeCallback(this));
         glfwSetMouseButtonCallback(id, new MouseButtonCallback(this));
         glfwSetCursorPosCallback(id, new MouseCursorCallback(this));
         glfwSetCharCallback(id, new KeyboardCharCallback(consoleController));
