@@ -10,7 +10,8 @@ public enum GizmoType {
     Origin("origin.json"),
     Object("box.json"),
     Camera("frustum.json"),
-    Light("bipyramid.json");
+    Emitter("bipyramid.json"),
+    Light("light.json");
 
     private final String mesh;
 }
