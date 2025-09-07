@@ -174,38 +174,34 @@ vec4 getMaterialColor() {
  * Lighting
  ***/
 
+float getAttenuation(Attenuation attenuation, float distance) {
+    return 1.0 / (attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance);
+}
+
 /* Calculates effect of one light source */
-vec3 calculateLight(Light light, vec3 normal, vec3 fragPos) {
+vec3 calculateLight(Light light, vec3 normal, vec3 fragmentPosition) {
     if (!isSet(light.enabled))
         return vec3(0.0);
 
     vec3 lightDir = vec3(0.0);
-    float distance = 1.0;
     float attenuation = 1.0;
 
     switch (light.type) {
         case LIGHT_TYPE_POINT:
-            lightDir = normalize(light.position - fragPos);
-            distance = length(light.position - fragPos);
-            attenuation = 1.0 / (light.attenuation.constant + light.attenuation.linear * distance + light.attenuation.quadratic * distance * distance);
+        case LIGHT_TYPE_SPOT:
+            lightDir = normalize(light.position - fragmentPosition);
+            attenuation = getAttenuation(light.attenuation, length(light.position - fragmentPosition));
             break;
 
         case LIGHT_TYPE_DIRECTIONAL:
             lightDir = normalize(-light.direction);
             break;
 
-        case LIGHT_TYPE_SPOT:
-            lightDir = normalize(light.position - fragPos);
-            distance = length(light.position - fragPos);
-            attenuation = 1.0 / (light.attenuation.constant + light.attenuation.linear * distance + light.attenuation.quadratic * distance * distance);
-            break;
-
         default:
             return vec3(0.0);
     }
 
-    float diff = max(dot(normal, lightDir), 0.0);
-    return light.color * light.intensity * diff * attenuation;
+    return light.color * light.intensity * max(dot(normal, lightDir), 0.0) * attenuation;
 }
 
 vec3 calculateLighting(vec2 textureCoordinates) {
