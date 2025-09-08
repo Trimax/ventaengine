@@ -12,23 +12,30 @@ import static org.lwjgl.glfw.GLFW.*;
 @RequiredArgsConstructor
 public final class MoveableLightApplicationUpdateHandler implements VentaEngineUpdateHandler {
     private final MoveableLightApplicationState state;
+    private final Vector3f velocity = new Vector3f();
 
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
-        float dx = 0, dz = 0;
+        velocity.set(0);
 
         if (context.isButtonPushed(GLFW_KEY_LEFT))
-            dx = -0.05f;
+            velocity.setComponent(0, -0.05f);
 
         if (context.isButtonPushed(GLFW_KEY_RIGHT))
-            dx = 0.05f;
+            velocity.setComponent(0, 0.05f);
 
         if (context.isButtonPushed(GLFW_KEY_UP))
-            dz = -0.05f;
+            velocity.setComponent(2, -0.05f);
 
         if (context.isButtonPushed(GLFW_KEY_DOWN))
-            dz = 0.05f;
+            velocity.setComponent(2, 0.05f);
+
+        if (context.isButtonPushed(GLFW_KEY_KP_ADD))
+            state.getLight().setIntensity(state.getLight().getIntensity() + 0.1f);
+
+        if (context.isButtonPushed(GLFW_KEY_KP_SUBTRACT))
+            state.getLight().setIntensity(Math.max(0, state.getLight().getIntensity() - 0.1f));
 
         final var lightPosition = state.getLight().getPosition();
-        state.getLight().setPosition(new Vector3f(lightPosition).add(dx, 0.f, dz));
+        state.getLight().setPosition(new Vector3f(lightPosition).add(velocity.x(), 0.f, velocity.z()));
     }
 }
