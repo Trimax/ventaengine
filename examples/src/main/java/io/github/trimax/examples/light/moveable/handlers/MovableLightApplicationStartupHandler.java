@@ -28,7 +28,7 @@ public final class MovableLightApplicationStartupHandler implements VentaEngineS
         light.setAttenuation(new Attenuation(1, 0.5f, 0));
         light.setPosition(new Vector3f(0.f, 1.f, 0.f));
         light.setColor(new Vector3f(0.5f, 0.5f, 0.5f));
-        light.setIntensity(1.5f);
+        light.setIntensity(8.f);
         state.setLight(light);
         scene.add(light);
     }
