@@ -201,7 +201,17 @@ vec3 calculateLight(Light light, vec3 normal, vec3 fragmentPosition) {
             return vec3(0.0);
     }
 
-    return light.color * light.intensity * max(dot(normal, lightDir), 0.0) * attenuation;
+    float factorDiffuse = max(dot(normal, lightDir), 0.0);
+    vec3 colorDiffuse = factorDiffuse * light.color;
+
+    //
+
+    //TODO: Compute shininess (32) based on roughness texture (float shininess = mix(1.0, 256.0, 1.0 - getRoughness(textureCoordinates));)
+    //TODO: Compute specular instnsity (0.5) based on metalness texture (float dielectricF0 = 0.04; vec3 F0 = mix(vec3(dielectricF0), getMaterialColor().rgb, getMetalness(texCoords));)
+    float factorSpecular = pow(max(dot(vertexViewDirectionWorldSpace, reflect(-lightDir, normal)), 0.0), 32.0);
+    vec3 colorSpecular = 0.5 * factorSpecular * light.color;
+
+    return (colorDiffuse + colorSpecular) * light.intensity * attenuation;
 }
 
 vec3 calculateLighting(vec2 textureCoordinates) {
