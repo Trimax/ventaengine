@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleState, ConsoleStateRenderer.ConsoleRenderContext, WindowStateRenderer.WindowRenderContext> {
-    private final TextStateRenderer consoleItemRenderer;
+    private final TextStateRenderer textStateRenderer;
     private final WindowController windowController;
     private final TextController textController;
 
@@ -67,11 +67,11 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         for (int line = 0; line < Math.min(windowController.get().getHeight() / Definitions.CONSOLE_LINE_HEIGHT, console.getHistory().size()); line++)
             renderItem(console, line, scaleX, scaleY);
 
-        try (final var _ = consoleItemRenderer.withContext(getContext())
+        try (final var _ = textStateRenderer.withContext(getContext())
                 .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getBuffer()))
                 .withPosition(Definitions.CONSOLE_CHARACTER_WIDTH * scaleX - 1, Definitions.CONSOLE_LINE_HEIGHT * scaleY / 2)
                 .withScale(scaleX, scaleY)) {
-            consoleItemRenderer.render(textController.get());
+            textStateRenderer.render(textController.get());
         }
 
         glDisable(GL_BLEND);
@@ -84,11 +84,11 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         if (message == null || StringUtils.isBlank(message.text()))
             return;
 
-        try (final var _ = consoleItemRenderer.withContext(getContext())
+        try (final var _ = textStateRenderer.withContext(getContext())
                 .withText(message)
                 .withPosition(Definitions.CONSOLE_CHARACTER_WIDTH * scaleX - 1, Definitions.CONSOLE_LINE_INTERVAL * Definitions.CONSOLE_LINE_HEIGHT * scaleY * (line + 2))
                 .withScale(scaleX, scaleY)) {
-            consoleItemRenderer.render(textController.get());
+            textStateRenderer.render(textController.get());
         }
     }
 
