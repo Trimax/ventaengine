@@ -1,6 +1,6 @@
 {
   "program": "default.json",
-  "material": "stone.json",
+  "material": "default.json",
   "root": {
     "name": "cube",
     "value": {

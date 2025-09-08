@@ -1,5 +1,8 @@
 package io.github.trimax.examples.maze.handlers;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import io.github.trimax.examples.maze.state.MazeApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
@@ -7,8 +10,6 @@ import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AllArgsConstructor;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 @AllArgsConstructor
 public final class MazeApplicationStartupHandler implements VentaEngineStartupHandler {
@@ -53,6 +54,7 @@ public final class MazeApplicationStartupHandler implements VentaEngineStartupHa
         final var cube = context.getObjectManager().create("cube" + (x * CUBE_SIZE + z),
                 context.getObjectRepository().get("cube.json"));
         cube.setPosition(new Vector3f(x + 0.5f, 0.5f, z + 0.5f));
+        cube.setMaterial(context.getMaterialRegistry().get("stone.json"));
         scene.add(cube);
     }
 
