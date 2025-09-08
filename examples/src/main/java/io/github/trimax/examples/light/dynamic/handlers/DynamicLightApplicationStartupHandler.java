@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import io.github.trimax.examples.light.dynamic.state.DynamicLightApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
+import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
@@ -48,6 +49,7 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
 
     private void createLights(final VentaContext context, final SceneInstance scene, final LightPrefab prefab) {
         final var lightXZ = context.getLightManager().create("XZ light", prefab);
+        lightXZ.setAttenuation(new Attenuation(1, 0.5f, 0));
         lightXZ.setPosition(new Vector3f(2.f, 2.f, 2.f));
         lightXZ.setColor(new Vector3f(0.3f, 0.0f, 0.0f));
         lightXZ.setIntensity(1.f);
@@ -55,6 +57,7 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
         scene.add(lightXZ);
 
         final var lightXY = context.getLightManager().create("XY light", prefab);
+        lightXY.setAttenuation(new Attenuation(1, 0.5f, 0));
         lightXY.setPosition(new Vector3f(-2.f, -2.f, 2.f));
         lightXZ.setColor(new Vector3f(0.0f, 0.3f, 0.0f));
         lightXY.setIntensity(1.f);
@@ -62,6 +65,7 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
         scene.add(lightXY);
 
         final var lightYZ = context.getLightManager().create("YZ light", prefab);
+        lightYZ.setAttenuation(new Attenuation(1, 0.5f, 0));
         lightYZ.setPosition(new Vector3f(2.f, -2.f, -2.f));
         lightXZ.setColor(new Vector3f(0.0f, 0.0f, 0.3f));
         lightYZ.setIntensity(1.f);
@@ -71,7 +75,6 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
 
     private void createCubes(final VentaContext context, final SceneInstance scene, final ObjectPrefab prefab) {
         final var cube = context.getObjectManager().create("Main cube", prefab);
-        cube.setMaterial(context.getMaterialRegistry().get("default.json"));
         cube.setScale(new Vector3f(2.f));
         state.setCube(cube);
         scene.add(cube);
@@ -79,6 +82,7 @@ public final class DynamicLightApplicationStartupHandler implements VentaEngineS
         final int cubeCount = 10;
         for (int cubeID = 0; cubeID < cubeCount; cubeID++) {
             final var miniCube = context.getObjectManager().create("cube" + cubeID, prefab);
+            miniCube.setMaterial(context.getMaterialRegistry().get("stone.json"));
             miniCube.setPosition(new Vector3f(
                     3.f * (float) Math.sin(cubeID * (2 * Math.PI / cubeCount)),
                     0.f,

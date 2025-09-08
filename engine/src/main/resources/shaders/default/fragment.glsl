@@ -179,7 +179,7 @@ float getAttenuation(Attenuation attenuation, float distance) {
 }
 
 /* Calculates effect of one light source */
-vec3 calculateLight(Light light, vec3 normal, vec3 fragmentPosition) {
+vec3 calculateLight(Light light, vec3 normal, vec3 fragmentPosition, vec2 textureCoordinates) {
     if (!isSet(light.enabled))
         return vec3(0.0);
 
@@ -206,9 +206,9 @@ vec3 calculateLight(Light light, vec3 normal, vec3 fragmentPosition) {
 
     //
 
-    //TODO: Compute shininess (32) based on roughness texture (float shininess = mix(1.0, 256.0, 1.0 - getRoughness(textureCoordinates));)
     //TODO: Compute specular instnsity (0.5) based on metalness texture (float dielectricF0 = 0.04; vec3 F0 = mix(vec3(dielectricF0), getMaterialColor().rgb, getMetalness(texCoords));)
-    float factorSpecular = pow(max(dot(vertexViewDirectionWorldSpace, reflect(-lightDir, normal)), 0.0), 32.0);
+    float shininess = mix(1.0, 256.0, 1.0 - getRoughness(textureCoordinates));
+    float factorSpecular = pow(max(dot(vertexViewDirectionWorldSpace, reflect(-lightDir, normal)), 0.0), shininess);
     vec3 colorSpecular = 0.5 * factorSpecular * light.color;
 
     return (colorDiffuse + colorSpecular) * light.intensity * attenuation;
@@ -222,13 +222,13 @@ vec3 calculateLighting(vec2 textureCoordinates) {
 
     vec3 lighting = ambientLight.xyz;
     for (int i = 0; i < lightCount; i++)
-        lighting += calculateLight(lights[i], normal, vertexPosition);
+        lighting += calculateLight(lights[i], normal, vertexPosition, textureCoordinates);
 
     return lighting;
 }
 
 vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
-    vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates) * (1.0 - getRoughness(textureCoordinates));
+    vec3 lighting = calculateLighting(textureCoordinates) * getAmbientOcclusion(textureCoordinates);
 
     return vec4(clamp(color.rgb * lighting, 0.0, 1.0), color.a);
 }
