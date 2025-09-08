@@ -228,6 +228,9 @@ vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
  ***/
 
 vec4 applyReflections(vec4 color, vec2 textureCoordinates) {
+    if (!isSet(useTextureSkybox))
+        return color;
+
     vec3 N = normalize(getNormal(textureCoordinates));
     vec3 V = normalize(vertexViewDirectionWorldSpace);
     vec4 skyboxColor = vec4(texture(textureSkybox, reflect(-V, N)).rgb, 1.0);
