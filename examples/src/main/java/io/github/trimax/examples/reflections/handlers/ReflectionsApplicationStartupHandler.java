@@ -1,11 +1,12 @@
 package io.github.trimax.examples.reflections.handlers;
 
+import org.joml.Vector3f;
+
 import io.github.trimax.examples.reflections.state.ReflectionsApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 @Slf4j
 @AllArgsConstructor
@@ -23,8 +24,13 @@ public final class ReflectionsApplicationStartupHandler implements VentaEngineSt
         cubeMirror.setMaterial(context.getMaterialRegistry().get("mirror.json"));
         scene.add(cubeMirror);
 
+        final var cubeMetal = context.getObjectManager().create("Cube like metal", context.getObjectRepository().get("cube.json"));
+        cubeMetal.setPosition(new Vector3f(0.f, -1.f, 0.f));
+        cubeMetal.setMaterial(context.getMaterialRegistry().get("metal.json"));
+        scene.add(cubeMetal);
+
         final var cube = context.getObjectManager().create("Cube", context.getObjectRepository().get("cube.json"));
-        cube.setPosition(new Vector3f(0.f, -1.f, 0.f));
+        cube.setPosition(new Vector3f(0.f, -2.f, 0.f));
         scene.add(cube);
 
         final var camera = context.getCameraManager().getCurrent();
