@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.trimax</groupId>
         <artifactId>ventaengine</artifactId>
-        <version>0.9.44</version>
+        <version>0.9.45</version>
     </parent>
 
     <artifactId>container</artifactId>
