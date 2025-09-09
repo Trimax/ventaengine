@@ -52,11 +52,28 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         matrixBinder.bindViewProjectionMatrix(emitter.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
         textureBinder.bind(TextureType.Diffuse, emitter.getProgram(), emitter.getTexture());
 
+        prepareParticles(emitter);
+
+        glBindBuffer(GL_ARRAY_BUFFER, emitter.getParticleInstanceBufferID());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, emitter.getBufferMatrixModel());
+
+        glBindBuffer(GL_ARRAY_BUFFER, emitter.getParticleColorBufferID());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, emitter.getBufferColor());
+
+        glBindVertexArray(emitter.getParticleVertexArrayObjectID());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, emitter.getParticleFacesBufferID());
+        glDrawElementsInstanced(GL_TRIANGLES, GeometryDefinitions.PARTICLE_INDICES.length, GL_UNSIGNED_INT, 0, emitter.getParticles().size());
+        glBindVertexArray(0);
+
+        glUseProgram(0);
+    }
+
+    private void prepareParticles(final EmitterInstanceImplementation emitter) {
         final var bufferMatrixModel = emitter.getBufferMatrixModel();
         final var bufferColor = emitter.getBufferColor();
-        
-        bufferColor.clear();
+
         bufferMatrixModel.clear();
+        bufferColor.clear();
 
         for (final var particle : emitter.getParticles()) {
             BufferUtil.write(particle.getColor(), bufferColor);
@@ -67,19 +84,7 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         }
 
         bufferMatrixModel.flip();
-        glBindBuffer(GL_ARRAY_BUFFER, emitter.getParticleInstanceBufferID());
-        glBufferSubData(GL_ARRAY_BUFFER, 0, bufferMatrixModel);
-
         bufferColor.flip();
-        glBindBuffer(GL_ARRAY_BUFFER, emitter.getParticleColorBufferID());
-        glBufferSubData(GL_ARRAY_BUFFER, 0, bufferColor);
-
-        glBindVertexArray(emitter.getParticleVertexArrayObjectID());
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, emitter.getParticleFacesBufferID());
-        glDrawElementsInstanced(GL_TRIANGLES, GeometryDefinitions.PARTICLE_INDICES.length, GL_UNSIGNED_INT, 0, emitter.getParticles().size());
-        glBindVertexArray(0);
-
-        glUseProgram(0);
     }
 
     private void applyBillboard(final Matrix4f model, final Matrix4fc viewMatrix) {
