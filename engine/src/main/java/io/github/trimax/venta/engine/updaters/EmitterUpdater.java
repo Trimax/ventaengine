@@ -39,13 +39,6 @@ public final class EmitterUpdater implements AbstractUpdater<EmitterInstanceImpl
                 emitter.getVelocity().y + (float)(Math.random() * 2 - 1) * emitter.getDeviation().y,
                 emitter.getVelocity().z + (float)(Math.random() * 2 - 1) * emitter.getDeviation().z);
 
-//        if (dto.angle() > 0f) {
-//            vel.rotateAxis(
-//                    (float) Math.toRadians((Math.random() - 0.5f) * dto.angle()),
-//                    dto.direction().x, dto.direction().y, dto.direction().z
-//            );
-//        }
-
         final var particle = new Particle(new Vector3f(emitter.getPosition()), velocity, new Vector3f(0));
         particle.setMinimalSize(emitter.getMinimalSize());
         particle.setMaximalSize(emitter.getMaximalSize());
@@ -53,6 +46,9 @@ public final class EmitterUpdater implements AbstractUpdater<EmitterInstanceImpl
         final var life = emitter.getMinimalLifetime() + (float) Math.random() * emitter.getLifetimeDeviation();
         particle.setMaxLife(life);
         particle.setLife(life);
+
+        particle.setRotation(emitter.getInitialRotationDeviation());
+        particle.setAngularVelocity(emitter.getAngularVelocity());
 
         return particle;
     }

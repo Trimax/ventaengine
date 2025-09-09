@@ -12,6 +12,8 @@ public final class Particle {
     private final Vector3f acceleration;
 
     private final Vector4f color = new Vector4f(1f);
+
+    private float angularVelocity;
     private float rotation;
 
     private float minimalSize = 0.f;
@@ -29,6 +31,8 @@ public final class Particle {
         size = Math.clamp(size + delta, minimalSize, maximalSize);
         velocity.fma(delta, acceleration);      // velocity += a*dt
         position.fma(delta, velocity);          // position += v*dt
+
+        rotation += angularVelocity * delta;
 
         life = Math.max(life - delta, 0);
         color.w = life / maxLife;
