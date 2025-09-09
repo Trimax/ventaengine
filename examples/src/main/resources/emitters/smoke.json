@@ -1,6 +1,8 @@
 {
   "particlesCount": 150,
   "emissionRate": 10,
+  "minimalSize": 0.0,
+  "maximalSize": 1.0,
   "minimalLifetime": 4.0,
   "lifetimeDeviation": 2.0,
   "velocity": {"x": 0.0, "y": 0.5, "z": 0.0},

@@ -1,12 +1,13 @@
 package io.github.trimax.venta.engine.updaters;
 
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.common.effects.Particle;
 import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 @Slf4j
 @Component
@@ -38,14 +39,16 @@ public final class EmitterUpdater implements AbstractUpdater<EmitterInstanceImpl
                 emitter.getVelocity().y + (float)(Math.random() * 2 - 1) * emitter.getDeviation().y,
                 emitter.getVelocity().z + (float)(Math.random() * 2 - 1) * emitter.getDeviation().z);
 
-        //if (dto.angle() > 0f) {
-        //    vel.rotateAxis(
-        //            (float) Math.toRadians((Math.random() - 0.5f) * dto.angle()),
-        //            dto.direction().x, dto.direction().y, dto.direction().z
-        //    );
-        //}
+//        if (dto.angle() > 0f) {
+//            vel.rotateAxis(
+//                    (float) Math.toRadians((Math.random() - 0.5f) * dto.angle()),
+//                    dto.direction().x, dto.direction().y, dto.direction().z
+//            );
+//        }
 
-        final var particle = new Particle(new Vector3f(emitter.getPosition()),  velocity, new Vector3f(0));
+        final var particle = new Particle(new Vector3f(emitter.getPosition()), velocity, new Vector3f(0));
+        particle.setMinimalSize(emitter.getMinimalSize());
+        particle.setMaximalSize(emitter.getMaximalSize());
 
         final var life = emitter.getMinimalLifetime() + (float) Math.random() * emitter.getLifetimeDeviation();
         particle.setMaxLife(life);
