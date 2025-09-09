@@ -6,11 +6,11 @@ import io.github.trimax.packer.enums.TextureChannel;
 import io.github.trimax.packer.util.ImageUtil;
 
 public record Source(Image image, TextureChannel channel, Byte channelValue) {
-    private Source(Image image, TextureChannel channel) {
+    private Source(final Image image, final TextureChannel channel) {
         this(image, channel, null);
     }
 
-    private Source(Image image, byte channelValue) {
+    private Source(final Image image, final byte channelValue) {
         this(image, null, channelValue);
     }
 
@@ -21,7 +21,7 @@ public record Source(Image image, TextureChannel channel, Byte channelValue) {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid texture channel: " + channel));
     }
 
-    private static Source ofValue(final String channelValue, Image image) {
+    private static Source ofValue(final String channelValue, final Image image) {
         final var value = Integer.parseInt(channelValue);
         if (value < 0 || value > 255)
             throw new IllegalArgumentException("Channel value out of range 0-255: " + value);
