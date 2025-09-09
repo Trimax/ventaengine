@@ -5,6 +5,8 @@
   "maximalSize": 1.5,
   "minimalLifetime": 0.2,
   "lifetimeDeviation": 0.2,
+  "angularVelocity": 0.0,
+  "initialRotationDeviation": 0.0,
   "velocity": {"x": 0.0, "y": 1.0, "z": 0.0},
   "deviation": {"x": 0.1, "y": 0.2, "z": 0.1},
   "texture": "sprites/flame.png"

@@ -10,6 +10,8 @@ public record EmitterDTO(int particlesCount,
                          float maximalSize,
                          float minimalLifetime,
                          float lifetimeDeviation,
+                         float angularVelocity,
+                         float initialRotationDeviation,
                          Vector3f velocity,
                          Vector3f deviation,
                          @NonNull String texture) {

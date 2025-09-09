@@ -32,6 +32,8 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
     private final float minimalLifetime;
     private final float lifetimeDeviation;
     private final int maximalParticlesCount;
+    private final float angularVelocity;
+    private final float initialRotationDeviation;
 
     private final FloatBuffer bufferMatrixModel;
     private final FloatBuffer bufferColor;
@@ -69,9 +71,11 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
         this.emissionRate = Math.max(0.f, prefab.getDto().emissionRate());
         this.maximalSize = (float) Math.max(0.0, prefab.getDto().maximalSize());
         this.minimalSize = (float) Math.max(0.0, prefab.getDto().minimalSize());
+        this.angularVelocity = prefab.getDto().angularVelocity();
         this.minimalLifetime = (float) Math.max(0.0, prefab.getDto().minimalLifetime());
         this.lifetimeDeviation = (float) Math.max(0.0, prefab.getDto().lifetimeDeviation());
         this.maximalParticlesCount = Math.max(1, prefab.getDto().particlesCount());
+        this.initialRotationDeviation = prefab.getDto().initialRotationDeviation();
         this.bufferMatrixModel = bufferMatrixModel;
         this.particleColorBufferID = particleColorBufferID;
         this.particleFacesBufferID = particleFacesBufferID;

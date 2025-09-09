@@ -78,8 +78,11 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         for (final var particle : emitter.getParticles()) {
             BufferUtil.write(particle.getColor(), bufferColor);
 
-            matrix.identity().translate(particle.getPosition()).scale(particle.getSize());
+            matrix.identity().translate(particle.getPosition());
             applyBillboard(matrix, getContext().getParent().getViewMatrix());
+            matrix.rotateZ(particle.getRotation());
+            matrix.scale(particle.getSize());
+
             BufferUtil.write(matrix, bufferMatrixModel);
         }
 
