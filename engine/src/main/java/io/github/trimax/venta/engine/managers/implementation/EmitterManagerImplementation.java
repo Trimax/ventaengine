@@ -1,5 +1,13 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL33C.glVertexAttribDivisor;
+
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
 import io.github.trimax.venta.engine.enums.GizmoType;
@@ -18,11 +26,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Slf4j
 @Component
@@ -62,12 +65,28 @@ public final class EmitterManagerImplementation
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, false, 2 * Float.BYTES, 0);
+        System.out.println("Binding VAO " + particleVertexArrayObjectID + " for matrix attributes");
+
+
+        final int particleInstanceBufferID = memory.getBuffers().create("Emitter %s instance buffer", name);
+        glBindBuffer(GL_ARRAY_BUFFER, particleInstanceBufferID);
+        System.out.println("Matrix instance buffer bound: " + particleInstanceBufferID);
+
+        glBufferData(GL_ARRAY_BUFFER, 1000 * 16 * Float.BYTES, GL_DYNAMIC_DRAW);
+        for (int i = 0; i < 4; i++) {
+            glEnableVertexAttribArray(1 + i);
+            glVertexAttribPointer(1 + i, 4, GL_FLOAT, false, 16 * Float.BYTES, (long) i * 4 * Float.BYTES);
+
+//            glVertexAttribPointer(1 + i, 4, GL_FLOAT, false, 16 * Float.BYTES, i * 4 * Float.BYTES);
+            glVertexAttribDivisor(1 + i, 1);
+        }
 
         glBindVertexArray(0);
 
         return store(abettor.createEmitter(name, programRegistry.get(ProgramType.Particle.getProgramName()), prefab,
                 textureRegistry.get(prefab.getDto().texture()), gizmoManager.create("emitter", GizmoType.Emitter),
-                particleVertexArrayObjectID, particleVerticesBufferID, particleFacesBufferID));
+                MemoryUtil.memAllocFloat(prefab.getDto().particlesCount() * 16),
+                particleVertexArrayObjectID, particleVerticesBufferID, particleInstanceBufferID, particleFacesBufferID));
     }
 
     @Override
@@ -80,7 +99,9 @@ public final class EmitterManagerImplementation
     protected void destroy(final EmitterInstanceImplementation emitter) {
         log.info("Destroying emitter {} ({})", emitter.getID(), emitter.getName());
 
+        MemoryUtil.memFree(emitter.getModelMatrixBuffer());
         memory.getVertexArrays().delete(emitter.getParticleVertexArrayObjectID());
+        memory.getBuffers().delete(emitter.getParticleInstanceBufferID());
         memory.getBuffers().delete(emitter.getParticleVerticesBufferID());
         memory.getBuffers().delete(emitter.getParticleFacesBufferID());
     }
