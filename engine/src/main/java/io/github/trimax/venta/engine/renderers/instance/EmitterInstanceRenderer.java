@@ -47,14 +47,14 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
 
         glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
 
-        final var bufferMatrixModel = emitter.getBufferMatrixModel();
-        final var bufferColor = emitter.getBufferColor();
-
         glUseProgram(emitter.getProgram().getInternalID());
         cameraBinder.bind(emitter.getProgram(), getContext().getParent().getCamera());
         matrixBinder.bindViewProjectionMatrix(emitter.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
         textureBinder.bind(TextureType.Diffuse, emitter.getProgram(), emitter.getTexture());
 
+        final var bufferMatrixModel = emitter.getBufferMatrixModel();
+        final var bufferColor = emitter.getBufferColor();
+        
         bufferColor.clear();
         bufferMatrixModel.clear();
 
