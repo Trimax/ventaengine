@@ -1,5 +1,9 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.nio.FloatBuffer;
+
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
@@ -13,7 +17,6 @@ import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImp
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.joml.Vector3f;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,11 +54,16 @@ public final class Abettor {
                                                        @NonNull final EmitterPrefabImplementation prefab,
                                                        @NonNull final TextureEntityImplementation texture,
                                                        @NonNull final GizmoInstanceImplementation gizmo,
+                                                       @NonNull final FloatBuffer bufferMatrixModel,
+                                                       @NonNull final FloatBuffer bufferColor,
                                                        final int particleVertexArrayObjectID,
                                                        final int particleVerticesBufferID,
-                                                       final int particleFacesBufferID) {
-        return new EmitterInstanceImplementation(name, prefab, texture, program, gizmo,
-                particleVertexArrayObjectID, particleVerticesBufferID, particleFacesBufferID);
+                                                       final int particleInstanceBufferID,
+                                                       final int particleFacesBufferID,
+                                                       final int particleColorBufferID) {
+        return new EmitterInstanceImplementation(name, prefab, texture, program, gizmo, bufferMatrixModel, bufferColor,
+                particleVertexArrayObjectID, particleVerticesBufferID, particleInstanceBufferID, particleFacesBufferID,
+                particleColorBufferID);
     }
 
     public SceneInstanceImplementation createScene(@NonNull final String name) {
