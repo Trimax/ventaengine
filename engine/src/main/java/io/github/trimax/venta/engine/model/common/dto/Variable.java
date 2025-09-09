@@ -1,4 +1,6 @@
 package io.github.trimax.venta.engine.model.common.dto;
 
-public record Variable<T> (T value, T deviation) {
+import lombok.NonNull;
+
+public record Variable<T> (@NonNull T value, @NonNull T deviation) {
 }

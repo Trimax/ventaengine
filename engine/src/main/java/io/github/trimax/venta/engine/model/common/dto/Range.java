@@ -1,4 +1,6 @@
 package io.github.trimax.venta.engine.model.common.dto;
 
-public record Range<T>(T min, T max) {
+import lombok.NonNull;
+
+public record Range<T>(@NonNull T min, @NonNull T max) {
 }
