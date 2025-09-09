@@ -1,13 +1,12 @@
 {
-  "particlesCount": 150,
-  "emissionRate": 10,
-  "minimalSize": 0.0,
-  "maximalSize": 1.0,
-  "minimalLifetime": 4.0,
-  "lifetimeDeviation": 2.0,
-  "angularVelocity": 0.01,
-  "initialRotationDeviation": 0.0,
-  "velocity": {"x": 0.0, "y": 0.5, "z": 0.0},
-  "deviation": {"x": 0.1, "y": 0.2, "z": 0.1},
-  "texture": "sprites/smoke.png"
+    "particlesCount": 150,
+    "emissionRate": 10,
+    "particleSize": {"min": 0.0, "max": 1.0},
+    "particleLifetime": {"value": 4.0, "deviation": 2.0},
+    "particleVelocity": {
+        "value": {"x": 0.0, "y": 0.5, "z": 0.0},
+        "deviation": {"x": 0.1, "y": 0.2, "z": 0.1}
+    },
+    "particleAngularVelocity": {"value": 0.01, "deviation": 0.0},
+    "texture": "sprites/smoke.png"
 }
