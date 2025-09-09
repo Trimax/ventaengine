@@ -31,11 +31,14 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
     private final float lifetimeDeviation;
     private final int maximalParticlesCount;
 
-    private final FloatBuffer modelMatrixBuffer;
+    private final FloatBuffer bufferMatrixModel;
+    private final FloatBuffer bufferColor;
+
     private final int particleVertexArrayObjectID;
     private final int particleVerticesBufferID;
     private final int particleInstanceBufferID;
     private final int particleFacesBufferID;
+    private final int particleColorBufferID;
 
     @Setter
     private float emissionRate;
@@ -49,20 +52,24 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
                                   @NonNull final TextureEntityImplementation texture,
                                   @NonNull final ProgramEntityImplementation program,
                                   @NonNull final GizmoInstanceImplementation gizmo,
-                                  @NonNull final FloatBuffer modelMatrixBuffer,
+                                  @NonNull final FloatBuffer bufferMatrixModel,
+                                  @NonNull final FloatBuffer bufferColor,
                                   final int particleVertexArrayObjectID,
                                   final int particleVerticesBufferID,
                                   final int particleInstanceBufferID,
-                                  final int particleFacesBufferID) {
+                                  final int particleFacesBufferID,
+                                  final int particleColorBufferID) {
         super(gizmo, name);
 
         this.program = program;
         this.texture = texture;
+        this.bufferColor = bufferColor;
         this.emissionRate = Math.max(0.f, prefab.getDto().emissionRate());
         this.minimalLifetime = (float) Math.max(0.0, prefab.getDto().minimalLifetime());
         this.lifetimeDeviation = (float) Math.max(0.0, prefab.getDto().lifetimeDeviation());
         this.maximalParticlesCount = Math.max(1, prefab.getDto().particlesCount());
-        this.modelMatrixBuffer = modelMatrixBuffer;
+        this.bufferMatrixModel = bufferMatrixModel;
+        this.particleColorBufferID = particleColorBufferID;
         this.particleFacesBufferID = particleFacesBufferID;
         this.particleVerticesBufferID = particleVerticesBufferID;
         this.particleInstanceBufferID = particleInstanceBufferID;

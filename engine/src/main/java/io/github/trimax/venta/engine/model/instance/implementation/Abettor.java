@@ -54,13 +54,16 @@ public final class Abettor {
                                                        @NonNull final EmitterPrefabImplementation prefab,
                                                        @NonNull final TextureEntityImplementation texture,
                                                        @NonNull final GizmoInstanceImplementation gizmo,
-                                                       @NonNull final FloatBuffer modelMatrixBuffer,
+                                                       @NonNull final FloatBuffer bufferMatrixModel,
+                                                       @NonNull final FloatBuffer bufferColor,
                                                        final int particleVertexArrayObjectID,
                                                        final int particleVerticesBufferID,
                                                        final int particleInstanceBufferID,
-                                                       final int particleFacesBufferID) {
-        return new EmitterInstanceImplementation(name, prefab, texture, program, gizmo, modelMatrixBuffer,
-                particleVertexArrayObjectID, particleVerticesBufferID, particleInstanceBufferID, particleFacesBufferID);
+                                                       final int particleFacesBufferID,
+                                                       final int particleColorBufferID) {
+        return new EmitterInstanceImplementation(name, prefab, texture, program, gizmo, bufferMatrixModel, bufferColor,
+                particleVertexArrayObjectID, particleVerticesBufferID, particleInstanceBufferID, particleFacesBufferID,
+                particleColorBufferID);
     }
 
     public SceneInstanceImplementation createScene(@NonNull final String name) {

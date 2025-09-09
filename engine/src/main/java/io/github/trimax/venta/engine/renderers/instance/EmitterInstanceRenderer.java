@@ -49,8 +49,10 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
 
         glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
 
-        FloatBuffer modelMatrixBuffer = emitter.getModelMatrixBuffer();
-        int maxParticles = modelMatrixBuffer.capacity() / 16; // 16 float на матрицу
+        FloatBuffer bufferMatrixModel = emitter.getBufferMatrixModel();
+        FloatBuffer bufferColor = emitter.getBufferColor();
+
+        int maxParticles = bufferMatrixModel.capacity() / 16; // 16 float на матрицу
         System.out.println("Buffer can hold up to " + maxParticles + " particles");
         System.out.println("Current particle count: " + emitter.getParticles().size());
 
@@ -59,44 +61,32 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         matrixBinder.bindViewProjectionMatrix(emitter.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
         textureBinder.bind(TextureType.Diffuse, emitter.getProgram(), emitter.getTexture());
 
+        bufferColor.clear();
+        bufferMatrixModel.clear();
 
-        // обновляем буфер матриц
-        modelMatrixBuffer.clear();
         for (final var particle : emitter.getParticles()) {
+            final var color = particle.getColor();
+            bufferColor.put(color.x).put(color.y).put(color.z).put(color.w);
+
+            //TODO: Reuse temporary matrix
             Matrix4f m = new Matrix4f().translate(particle.getPosition()).scale(particle.getSize());
             applyBillboard(m, getContext().getParent().getViewMatrix());
 
             float[] tmp = new float[16];
             m.get(tmp); // записываем матрицу в массив
 
-            for (float f : tmp) modelMatrixBuffer.put(f); // вручную в FloatBuffer
-
-//
-//            final var matrixModel = new Matrix4f().translate(particle.getPosition()).scale(particle.getSize());
-//            applyBillboard(matrixModel, getContext().getParent().getViewMatrix());
-//            matrixModel.get(modelMatrixBuffer);
+            for (float f : tmp)
+                bufferMatrixModel.put(f); // вручную в FloatBuffer
         }
 
-        modelMatrixBuffer.flip(); // готовим к чтению
-
-        int toPrint = Math.min(16, modelMatrixBuffer.remaining()); // не выйдем за предел
-        for (int i = 0; i < toPrint; i++) {
-            System.out.print(modelMatrixBuffer.get() + " "); // get() сдвигает позицию
-        }
-        System.out.println();
-
-        modelMatrixBuffer.rewind(); // обратно в начало для glBufferSubData
-
-
+        bufferMatrixModel.flip();
         glBindBuffer(GL_ARRAY_BUFFER, emitter.getParticleInstanceBufferID());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, bufferMatrixModel);
 
+        bufferColor.flip();
+        glBindBuffer(GL_ARRAY_BUFFER, emitter.getParticleColorBufferID());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, bufferColor);
 
-
-
-
-        glBufferSubData(GL_ARRAY_BUFFER, 0, modelMatrixBuffer);
-
-        // draw call
         glBindVertexArray(emitter.getParticleVertexArrayObjectID());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, emitter.getParticleFacesBufferID());
         glDrawElementsInstanced(GL_TRIANGLES, GeometryDefinitions.PARTICLE_INDICES.length, GL_UNSIGNED_INT, 0, emitter.getParticles().size());
