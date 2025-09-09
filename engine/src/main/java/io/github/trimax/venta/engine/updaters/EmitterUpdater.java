@@ -35,20 +35,20 @@ public final class EmitterUpdater implements AbstractUpdater<EmitterInstanceImpl
 
     private Particle spawnParticle(final EmitterInstanceImplementation emitter) {
         final var velocity = new Vector3f(
-                emitter.getVelocity().x + (float)(Math.random() * 2 - 1) * emitter.getDeviation().x,
-                emitter.getVelocity().y + (float)(Math.random() * 2 - 1) * emitter.getDeviation().y,
-                emitter.getVelocity().z + (float)(Math.random() * 2 - 1) * emitter.getDeviation().z);
+                emitter.getParticleVelocity().x + (float)(Math.random() * 2 - 1) * emitter.getParticleVelocityDeviation().x,
+                emitter.getParticleVelocity().y + (float)(Math.random() * 2 - 1) * emitter.getParticleVelocityDeviation().y,
+                emitter.getParticleVelocity().z + (float)(Math.random() * 2 - 1) * emitter.getParticleVelocityDeviation().z);
 
         final var particle = new Particle(new Vector3f(emitter.getPosition()), velocity, new Vector3f(0));
-        particle.setMinimalSize(emitter.getMinimalSize());
-        particle.setMaximalSize(emitter.getMaximalSize());
+        particle.setMinimalSize(emitter.getParticleSize().min());
+        particle.setMaximalSize(emitter.getParticleSize().max());
 
-        final var life = emitter.getMinimalLifetime() + (float) Math.random() * emitter.getLifetimeDeviation();
+        final var life = emitter.getParticleLifetime().value() + (float) Math.random() * emitter.getParticleLifetime().deviation();
         particle.setMaxLife(life);
         particle.setLife(life);
 
-        particle.setRotation(emitter.getInitialRotationDeviation());
-        particle.setAngularVelocity(emitter.getAngularVelocity());
+        particle.setRotation(emitter.getParticleAngularVelocity().deviation());
+        particle.setAngularVelocity(emitter.getParticleAngularVelocity().value());
 
         return particle;
     }

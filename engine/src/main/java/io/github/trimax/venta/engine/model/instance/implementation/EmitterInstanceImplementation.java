@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
+import io.github.trimax.venta.engine.model.common.dto.Range;
+import io.github.trimax.venta.engine.model.common.dto.Variable;
 import io.github.trimax.venta.engine.model.common.effects.Particle;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
@@ -23,18 +25,15 @@ import lombok.Setter;
 public final class EmitterInstanceImplementation extends AbstractInstanceImplementation implements EmitterInstance {
     private final List<Particle> particles = new ArrayList<>();
     private final Transform transform = new Transform();
-    private final Vector3f velocity = new Vector3f();
-    private final Vector3f deviation = new Vector3f();
     private final ProgramEntityImplementation program;
 
-    private final float maximalSize;
-    private final float minimalSize;
-    private final float minimalLifetime;
-    private final float lifetimeDeviation;
-    private final int maximalParticlesCount;
-    private final float angularVelocity;
-    private final float initialRotationDeviation;
+    private final Vector3f particleVelocity = new Vector3f();
+    private final Vector3f particleVelocityDeviation = new Vector3f();
+    private final Range<Float> particleSize;
+    private final Variable<Float> particleLifetime;
+    private final Variable<Float> particleAngularVelocity;
 
+    private final int maximalParticlesCount;
     private final FloatBuffer bufferMatrixModel;
     private final FloatBuffer bufferColor;
 
@@ -69,21 +68,19 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
         this.texture = texture;
         this.bufferColor = bufferColor;
         this.emissionRate = Math.max(0.f, prefab.getDto().emissionRate());
-        this.maximalSize = (float) Math.max(0.0, prefab.getDto().maximalSize());
-        this.minimalSize = (float) Math.max(0.0, prefab.getDto().minimalSize());
-        this.angularVelocity = prefab.getDto().angularVelocity();
-        this.minimalLifetime = (float) Math.max(0.0, prefab.getDto().minimalLifetime());
-        this.lifetimeDeviation = (float) Math.max(0.0, prefab.getDto().lifetimeDeviation());
+        this.particleSize = prefab.getDto().particleSize();
+        this.particleLifetime = prefab.getDto().particleLifetime();
+        this.particleAngularVelocity = prefab.getDto().particleAngularVelocity();
         this.maximalParticlesCount = Math.max(1, prefab.getDto().particlesCount());
-        this.initialRotationDeviation = prefab.getDto().initialRotationDeviation();
         this.bufferMatrixModel = bufferMatrixModel;
         this.particleColorBufferID = particleColorBufferID;
         this.particleFacesBufferID = particleFacesBufferID;
         this.particleVerticesBufferID = particleVerticesBufferID;
         this.particleInstanceBufferID = particleInstanceBufferID;
         this.particleVertexArrayObjectID = particleVertexArrayObjectID;
-        Optional.ofNullable(prefab.getDto().deviation()).ifPresent(deviation::set);
-        Optional.ofNullable(prefab.getDto().velocity()).ifPresent(velocity::set);
+        Optional.ofNullable(prefab.getDto().particleVelocity()).map(Variable::deviation).ifPresent(
+                particleVelocityDeviation::set);
+        Optional.ofNullable(prefab.getDto().particleVelocity()).map(Variable::value).ifPresent(particleVelocity::set);
     }
 
     public void updateEmissionAccumulator(final float delta) {
@@ -100,14 +97,12 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
         this.transform.setPosition(position);
     }
 
-    @Override
-    public void setVelocity(@NonNull final Vector3fc velocity) {
-        this.velocity.set(velocity);
+    public void setParticleVelocity(@NonNull final Vector3fc particleVelocity) {
+        this.particleVelocity.set(particleVelocity);
     }
 
-    @Override
-    public void setDeviation(@NonNull final Vector3fc deviation) {
-        this.deviation.set(deviation);
+    public void setParticleVelocityDeviation(@NonNull final Vector3fc particleVelocityDeviation) {
+        this.particleVelocityDeviation.set(particleVelocityDeviation);
     }
 
     @Override

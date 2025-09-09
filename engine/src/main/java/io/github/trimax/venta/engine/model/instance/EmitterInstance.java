@@ -1,15 +1,16 @@
 package io.github.trimax.venta.engine.model.instance;
 
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import lombok.NonNull;
-import org.joml.Vector3fc;
 
 public interface EmitterInstance extends AbstractInstance {
     Vector3fc getPosition();
 
-    Vector3fc getVelocity();
+    Vector3fc getParticleVelocity();
 
-    Vector3fc getDeviation();
+    Vector3fc getParticleVelocityDeviation();
 
     TextureEntity getTexture();
 
@@ -17,9 +18,9 @@ public interface EmitterInstance extends AbstractInstance {
 
     void setPosition(@NonNull final Vector3fc position);
 
-    void setVelocity(@NonNull final Vector3fc velocity);
+    void setParticleVelocity(@NonNull final Vector3fc particleVelocity);
 
-    void setDeviation(@NonNull final Vector3fc deviation);
+    void setParticleVelocityDeviation(@NonNull final Vector3fc particleVelocityDeviation);
 
     void setEmissionRate(final float rate);
 

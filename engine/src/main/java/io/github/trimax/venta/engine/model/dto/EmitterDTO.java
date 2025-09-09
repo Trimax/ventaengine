@@ -2,17 +2,15 @@ package io.github.trimax.venta.engine.model.dto;
 
 import org.joml.Vector3f;
 
+import io.github.trimax.venta.engine.model.common.dto.Range;
+import io.github.trimax.venta.engine.model.common.dto.Variable;
 import lombok.NonNull;
 
 public record EmitterDTO(int particlesCount,
                          float emissionRate,
-                         float minimalSize,
-                         float maximalSize,
-                         float minimalLifetime,
-                         float lifetimeDeviation,
-                         float angularVelocity,
-                         float initialRotationDeviation,
-                         Vector3f velocity,
-                         Vector3f deviation,
+                         Range<Float> particleSize,
+                         Variable<Vector3f> particleVelocity,
+                         Variable<Float> particleLifetime,
+                         Variable<Float> particleAngularVelocity,
                          @NonNull String texture) {
 }
