@@ -27,6 +27,8 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
     private final Vector3f deviation = new Vector3f();
     private final ProgramEntityImplementation program;
 
+    private final float maximalSize;
+    private final float minimalSize;
     private final float minimalLifetime;
     private final float lifetimeDeviation;
     private final int maximalParticlesCount;
@@ -65,6 +67,8 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
         this.texture = texture;
         this.bufferColor = bufferColor;
         this.emissionRate = Math.max(0.f, prefab.getDto().emissionRate());
+        this.maximalSize = (float) Math.max(0.0, prefab.getDto().maximalSize());
+        this.minimalSize = (float) Math.max(0.0, prefab.getDto().minimalSize());
         this.minimalLifetime = (float) Math.max(0.0, prefab.getDto().minimalLifetime());
         this.lifetimeDeviation = (float) Math.max(0.0, prefab.getDto().lifetimeDeviation());
         this.maximalParticlesCount = Math.max(1, prefab.getDto().particlesCount());
