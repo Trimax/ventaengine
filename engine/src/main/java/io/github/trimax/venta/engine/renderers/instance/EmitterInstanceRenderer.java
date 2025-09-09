@@ -7,8 +7,6 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.opengl.GL31C.glDrawElementsInstanced;
 
-import java.nio.FloatBuffer;
-
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
 
@@ -21,7 +19,7 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
-import io.github.trimax.venta.engine.renderers.common.ParticleRenderer;
+import io.github.trimax.venta.engine.utils.BufferUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<EmitterInstanceImplementation, EmitterInstanceRenderer.EmitterRenderContext, SceneInstanceRenderer.SceneRenderContext> {
-    private final ParticleRenderer particleRenderer;
+    private final Matrix4f matrix = new Matrix4f();
 
     private final TextureBinder textureBinder;
     private final MatrixBinder matrixBinder;
@@ -49,12 +47,8 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
 
         glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
 
-        FloatBuffer bufferMatrixModel = emitter.getBufferMatrixModel();
-        FloatBuffer bufferColor = emitter.getBufferColor();
-
-        int maxParticles = bufferMatrixModel.capacity() / 16; // 16 float на матрицу
-        System.out.println("Buffer can hold up to " + maxParticles + " particles");
-        System.out.println("Current particle count: " + emitter.getParticles().size());
+        final var bufferMatrixModel = emitter.getBufferMatrixModel();
+        final var bufferColor = emitter.getBufferColor();
 
         glUseProgram(emitter.getProgram().getInternalID());
         cameraBinder.bind(emitter.getProgram(), getContext().getParent().getCamera());
@@ -65,18 +59,11 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         bufferMatrixModel.clear();
 
         for (final var particle : emitter.getParticles()) {
-            final var color = particle.getColor();
-            bufferColor.put(color.x).put(color.y).put(color.z).put(color.w);
+            BufferUtil.write(particle.getColor(), bufferColor);
 
-            //TODO: Reuse temporary matrix
-            Matrix4f m = new Matrix4f().translate(particle.getPosition()).scale(particle.getSize());
-            applyBillboard(m, getContext().getParent().getViewMatrix());
-
-            float[] tmp = new float[16];
-            m.get(tmp); // записываем матрицу в массив
-
-            for (float f : tmp)
-                bufferMatrixModel.put(f); // вручную в FloatBuffer
+            matrix.identity().translate(particle.getPosition()).scale(particle.getSize());
+            applyBillboard(matrix, getContext().getParent().getViewMatrix());
+            BufferUtil.write(matrix, bufferMatrixModel);
         }
 
         bufferMatrixModel.flip();
