@@ -19,6 +19,15 @@ public final class Abettor {
         return new LightPrefabImplementation(dto);
     }
 
+    public GridMeshPrefabImplementation createGridMesh(final ProgramEntity program,
+                                                       final int verticesCount,
+                                                       final int facetsCount,
+                                                       final int vertexArrayObjectID,
+                                                       final int verticesBufferID,
+                                                       final int facetsBufferID) {
+        return new GridMeshPrefabImplementation(program, verticesCount, facetsCount, vertexArrayObjectID, verticesBufferID, facetsBufferID);
+    }
+
     public ObjectPrefabImplementation createObject(final ProgramEntity program,
                                                    final MaterialEntity material,
                                                    final Node<MeshReference> root) {
