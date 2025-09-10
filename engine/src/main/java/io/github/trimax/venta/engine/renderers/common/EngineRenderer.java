@@ -1,5 +1,9 @@
 package io.github.trimax.venta.engine.renderers.common;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.opengl.GL11C.*;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.EngineController;
 import io.github.trimax.venta.engine.controllers.WindowController;
@@ -12,10 +16,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11C.*;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -27,8 +27,8 @@ public final class EngineRenderer {
     private final SceneManagerImplementation sceneManager;
 
     private final WindowStateRenderer windowRenderer;
-    private final DebugRenderer debugRenderer;
     private final SceneInstanceRenderer sceneRenderer;
+    private final DebugRenderer debugRenderer;
 
     public void render(final FPSCounter fpsCounter) {
         final var window = windowController.get();

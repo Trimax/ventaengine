@@ -1,26 +1,34 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import static org.lwjgl.opengl.GL11C.*;
+
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.GridMeshManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
-import lombok.*;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.opengl.GL11C.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneInstanceRenderer
         extends AbstractInstanceRenderer<SceneInstanceImplementation, SceneInstanceRenderer.SceneRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final GridMeshManagerImplementation gridMeshManager;
     private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
+    private final GridMeshInstanceRenderer gridMeshRenderer;
     private final EmitterInstanceRenderer emitterRenderer;
     private final ObjectInstanceRenderer objectRenderer;
     private final CubemapEntityRenderer cubemapRenderer;
@@ -41,6 +49,12 @@ public final class SceneInstanceRenderer
             try (final var _ = cubemapRenderer.withContext(getContext())
                     .withScene(scene)) {
                 cubemapRenderer.render(cubemap);
+            }
+
+        for (final var gridMesh : scene.getGridMeshes())
+            try (final var _ = objectRenderer.withContext(getContext())
+                    .withScene(scene)) {
+                gridMeshRenderer.render(gridMeshManager.getInstance(gridMesh.getID()));
             }
 
         for (final var object : scene.getObjects())

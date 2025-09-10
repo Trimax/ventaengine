@@ -1,10 +1,17 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.model.common.scene.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.EmitterInstance;
+import io.github.trimax.venta.engine.model.instance.GridMeshInstance;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
@@ -12,11 +19,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Getter
@@ -25,6 +27,7 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     private final List<ObjectInstanceImplementation> objects = new ArrayList<>();
     private final List<LightInstanceImplementation> lights = new ArrayList<>();
     private final List<EmitterInstanceImplementation> emitters = new ArrayList<>();
+    private final List<GridMeshInstanceImplementation> gridMeshes = new ArrayList<>();
 
     private CubemapEntityImplementation skybox;
 
@@ -72,5 +75,11 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     public void add(@NonNull final EmitterInstance emitter) {
         if (emitter instanceof EmitterInstanceImplementation entity)
             emitters.add(entity);
+    }
+
+    @Override
+    public void add(@NonNull final GridMeshInstance gridMesh) {
+        if (gridMesh instanceof GridMeshInstanceImplementation entity)
+            gridMeshes.add(entity);
     }
 }
