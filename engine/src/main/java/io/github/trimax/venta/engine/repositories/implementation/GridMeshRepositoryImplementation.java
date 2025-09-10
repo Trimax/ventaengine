@@ -60,10 +60,13 @@ public final class GridMeshRepositoryImplementation
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 
-        // layout: position (3), uv (2)
         final var stride = 5 * Float.BYTES;
+
+        // layout(location = 0) -> position
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
+
+        // layout(location = 1) -> texture coordinates
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, false, stride, 3 * Float.BYTES);
 
