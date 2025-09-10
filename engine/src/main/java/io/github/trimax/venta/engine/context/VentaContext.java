@@ -8,11 +8,13 @@ import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.factories.RepositoryFactory;
 import io.github.trimax.venta.engine.managers.CameraManager;
 import io.github.trimax.venta.engine.managers.EmitterManager;
+import io.github.trimax.venta.engine.managers.GridMeshManager;
 import io.github.trimax.venta.engine.managers.LightManager;
 import io.github.trimax.venta.engine.managers.ObjectManager;
 import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.GridMeshManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.LightManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
@@ -76,6 +78,10 @@ public final class VentaContext {
 
     public EmitterManager getEmitterManager() {
         return managerFactory.get(EmitterManagerImplementation.class);
+    }
+
+    public GridMeshManager getGridMeshManager() {
+        return managerFactory.get(GridMeshManagerImplementation.class);
     }
 
     /*** Registries ***/

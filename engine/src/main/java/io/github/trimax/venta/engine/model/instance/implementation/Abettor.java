@@ -13,6 +13,7 @@ import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImple
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
+import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,13 @@ public final class Abettor {
                                                    @NonNull final LightPrefabImplementation prefab,
                                                    @NonNull final GizmoInstanceImplementation gizmo) {
         return new LightInstanceImplementation(name, prefab, gizmo);
+    }
+
+    public GridMeshInstanceImplementation createGridMesh(@NonNull final String name,
+                                                         @NonNull final ProgramEntity program,
+                                                         final MaterialEntity material, //TODO: Make it non-null
+                                                         @NonNull final GridMeshPrefabImplementation mesh) {
+        return new GridMeshInstanceImplementation(name, program, material, mesh);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,
