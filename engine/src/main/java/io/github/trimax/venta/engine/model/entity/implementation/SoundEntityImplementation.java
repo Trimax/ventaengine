@@ -11,5 +11,5 @@ import java.nio.ShortBuffer;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class SoundEntityImplementation extends AbstractEntityImplementation implements SoundEntity {
     private final ShortBuffer buffer;
-    private float duration;
+    private final float duration;
 }
