@@ -72,12 +72,12 @@ public final class SoundRegistryImplementation
                     final int channels = info.channels();
                     final int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
 
-                    final ShortBuffer result = MemoryUtil.memAllocShort(lengthSamples * channels);
+                    final ShortBuffer buffer = MemoryUtil.memAllocShort(lengthSamples * channels);
 
-                    final int samplesRead = stb_vorbis_get_samples_short_interleaved(decoder, channels, result);
-                    result.limit(samplesRead * channels);
+                    final int samplesRead = stb_vorbis_get_samples_short_interleaved(decoder, channels, buffer);
+                    buffer.limit(samplesRead * channels);
 
-                    return result;
+                    return buffer;
                 } finally {
                     stb_vorbis_close(decoder);
                 }
