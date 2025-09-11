@@ -50,7 +50,7 @@ public final class SoundRegistryImplementation
         }
     }
 
-    private static float getDuration(float samples, STBVorbisInfo info) {
+    private static float getDuration(float samples, final STBVorbisInfo info) {
         return samples / info.sample_rate();
     }
 
