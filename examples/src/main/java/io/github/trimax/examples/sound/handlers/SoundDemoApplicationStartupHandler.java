@@ -39,14 +39,14 @@ public final class SoundDemoApplicationStartupHandler implements VentaEngineStar
                 log.error("Failed to load sound file!");
             }
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Error during sound demo: {}", e.getMessage(), e);
         }
 
         log.info("=== Sound Demo Completed ===");
         try {
             Thread.sleep(2000);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
