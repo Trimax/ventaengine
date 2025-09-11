@@ -31,10 +31,14 @@ struct Light {
     int enabled;
 };
 
+/***
+ * Input variables and uniforms
+ ***/
+
+/* Vertex shader output */
 in vec3 vertexNormal;
 in vec3 vertexPosition;
 in vec2 vertexTextureCoordinates;
-
 
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
@@ -43,10 +47,15 @@ uniform int lightCount;
 
 uniform vec3 cameraPosition;
 
+/* Output color */
 out vec4 outputColor;
 
+/***
+ * Common functions
+ ***/
 
-vec3 calculateLight(Light light, vec3 N, vec3 V) {
+/* Computes light */
+vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
     if (light.enabled == 0)
         vec3(0.0);
 
@@ -66,9 +75,9 @@ vec3 calculateLight(Light light, vec3 N, vec3 V) {
         + light.attenuation.quadratic * distance * distance);
     }
 
-    float diff = max(dot(N, L), 0.0);
-    vec3 R = reflect(-L, N);
-    float spec = pow(max(dot(R, V), 0.0), 32.0);
+    float diff = max(dot(normal, L), 0.0);
+    vec3 R = reflect(-L, normal);
+    float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
 
     return (diff + spec * 0.3) * light.color * light.intensity * attenuation;
 }
