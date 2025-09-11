@@ -51,32 +51,38 @@ uniform vec3 cameraPosition;
 out vec4 outputColor;
 
 /***
- * Common functions
+ * Lighting functions
  ***/
+
+float getAttenuation(Attenuation attenuation, float distance) {
+    return 1.0 / (attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance);
+}
 
 /* Computes light */
 vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
     if (light.enabled == 0)
         vec3(0.0);
 
-    vec3 L;
-    if (light.type == LIGHT_TYPE_DIRECTIONAL) {
-        L = normalize(-light.direction);
-    } else {
-        L = normalize(light.position - vertexPosition);
-    }
-
-    float distance = length(light.position - vertexPosition);
+    vec3 lightDirection = vec3(0.0);
     float attenuation = 1.0;
 
-    if (light.type != 0) {
-        attenuation = 1.0 / (light.attenuation.constant
-        + light.attenuation.linear * distance
-        + light.attenuation.quadratic * distance * distance);
+    switch (light.type) {
+        case LIGHT_TYPE_POINT:
+        case LIGHT_TYPE_SPOT:
+            lightDirection = normalize(light.position - vertexPosition);
+            attenuation = getAttenuation(light.attenuation, length(light.position - vertexPosition));
+            break;
+
+        case LIGHT_TYPE_DIRECTIONAL:
+            lightDirection = normalize(-light.direction);
+            break;
+
+        default:
+            return vec3(0.0);
     }
 
-    float diff = max(dot(normal, L), 0.0);
-    vec3 R = reflect(-L, normal);
+    float diff = max(dot(normal, lightDirection), 0.0);
+    vec3 R = reflect(-lightDirection, normal);
     float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
 
     return (diff + spec * 0.3) * light.color * light.intensity * attenuation;
