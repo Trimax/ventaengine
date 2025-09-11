@@ -63,9 +63,8 @@ public final class SoundRegistryImplementation
                 final IntBuffer error = stack.mallocInt(1);
                 final long decoder = stb_vorbis_open_memory(audioBuffer, error, null);
 
-                if (decoder == NULL) {
+                if (decoder == NULL)
                     throw new RuntimeException("Failed to open Ogg Vorbis data. Error: " + error.get(0));
-                }
 
                 try {
                     stb_vorbis_get_info(decoder, info);
