@@ -12,7 +12,7 @@ public enum ShaderWaveUniform {
     Direction("direction"),
     Amplitude("amplitude"),
     Steepness("steepness"),
-    Length("length"),
+    Length("l"),
     Speed("speed");
 
     private final String uniformName;

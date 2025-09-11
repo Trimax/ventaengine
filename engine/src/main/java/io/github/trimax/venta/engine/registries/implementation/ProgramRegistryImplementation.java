@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
+import io.github.trimax.venta.engine.enums.ShaderWaveUniform;
 import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
@@ -65,6 +66,10 @@ public final class ProgramRegistryImplementation
 
         for (int i = 0; i < Definitions.LIGHT_MAX; i++)
             for (final var field : ShaderLightUniform.values())
+                program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
+
+        for (int i = 0; i < Definitions.WAVE_MAX; i++)
+            for (final var field : ShaderWaveUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 
         log.debug("{} uniforms found and registered for program {}", program.getUniformCount(), program.getID());

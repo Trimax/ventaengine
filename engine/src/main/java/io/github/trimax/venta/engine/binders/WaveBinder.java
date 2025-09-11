@@ -16,8 +16,10 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WaveBinder extends AbstractBinder {
     public void bind(final ProgramEntityImplementation program, final List<Wave> waves) {
-        bind(program.getUniformID(ShaderUniform.WaveCount), waves.size());
-        for (int waveID = 0; waveID < waves.size(); waveID++)
+        final var wavesCount = waves != null ? waves.size() : 0;
+
+        bind(program.getUniformID(ShaderUniform.WaveCount), wavesCount);
+        for (int waveID = 0; waveID < wavesCount; waveID++)
             bind(program, waves.get(waveID), waveID);
     }
 

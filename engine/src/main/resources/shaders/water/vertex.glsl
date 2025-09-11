@@ -9,7 +9,7 @@
 struct Wave {
     vec2 direction;
     float amplitude;
-    float wavelength;
+    float l;
     float steepness;
     float speed;
 };
@@ -35,7 +35,7 @@ out vec3 vertexPosition;
 out vec2 vertexTextureCoordinates;
 
 vec3 gerstnerWave(vec3 pos, Wave wave, out vec3 outNormal) {
-    float k = 2.0 * 3.14159 / wave.wavelength;
+    float k = 2.0 * 3.14159 / wave.l;
     float f = k * dot(wave.direction, pos.xz) - wave.speed * timeElapsed;
 
     float a = wave.amplitude;
@@ -53,13 +53,13 @@ vec3 gerstnerWave(vec3 pos, Wave wave, out vec3 outNormal) {
 
 void main() {
     vec3 transformedPosition = position;
-//    vec3 transformedNormal = vec3(0, 1, 0);
-//    for (int i = 0; i < waveCount; i++)
-//        transformedPosition = gerstnerWave(transformedPosition, waves[i], time, transformedNormal);
-//
-//    vertexPosition = transformedPosition;
-//    vertexNormal = normalize(transformedNormal);
-//    vertexTextureCoordinates = textureCoordinates;
+    vec3 transformedNormal = vec3(0, 1, 0);
+    for (int i = 0; i < waveCount; i++)
+        transformedPosition = gerstnerWave(transformedPosition, waves[i], transformedNormal);
+
+    vertexNormal = transformedNormal;
+    vertexPosition = transformedPosition;
+    vertexTextureCoordinates = textureCoordinates;
 
     gl_Position = matrixViewProjection * matrixModel * vec4(transformedPosition, 1.0);
 }
