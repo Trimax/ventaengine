@@ -35,7 +35,7 @@ public final class SoundRegistryImplementation
     }
 
     private SoundEntityImplementation load(final byte[] data) {
-        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+        try (final var info = STBVorbisInfo.malloc()) {
             final ShortBuffer buffer = readVorbis(data, info);
             final int samples = buffer.limit() / info.channels();
             final float duration = getDuration((float) samples, info);
