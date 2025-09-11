@@ -31,8 +31,6 @@ public final class GridMeshInstanceRenderer extends
     private final WaveBinder waveBinder;
     private final TimeBinder timeBinder;
 
-
-
     @Override
     protected GridMeshRenderContext createContext() {
         return new GridMeshRenderContext();
