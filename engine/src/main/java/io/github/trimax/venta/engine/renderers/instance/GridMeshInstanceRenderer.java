@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.TimeBinder;
 import io.github.trimax.venta.engine.binders.WaveBinder;
@@ -26,6 +27,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GridMeshInstanceRenderer extends
         AbstractInstanceRenderer<GridMeshInstanceImplementation, GridMeshInstanceRenderer.GridMeshRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
     private final WaveBinder waveBinder;
     private final TimeBinder timeBinder;
@@ -39,6 +41,8 @@ public final class GridMeshInstanceRenderer extends
     public void render(final GridMeshInstanceImplementation gridMesh) {
         glUseProgram(gridMesh.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, gridMesh.getDrawMode().getMode());
+
+        cameraBinder.bind(gridMesh.getProgram(), getContext().getParent().getCamera());
 
         matrixBinder.bindModelMatrix(gridMesh.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(gridMesh.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
