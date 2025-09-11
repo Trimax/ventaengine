@@ -89,8 +89,7 @@ public final class SoundRegistryImplementation
 
     @Override
     protected void unload(@NonNull final SoundEntityImplementation entity) {
-        if (entity.getBuffer() != null)
-            MemoryUtil.memFree(entity.getBuffer());
+        MemoryUtil.memFree(entity.getBuffer());
 
         log.debug("Unloaded sound entity: {}", entity.getID());
     }
