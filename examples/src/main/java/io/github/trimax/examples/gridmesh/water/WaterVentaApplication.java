@@ -16,7 +16,7 @@ public final class WaterVentaApplication implements VentaEngineApplication {
         return new VentaEngineConfiguration() {
             @Override
             public @NonNull RenderConfiguration getRenderConfiguration() {
-                return new RenderConfiguration(false, false, true, true, AntialiasingSamples.X8);
+                return new RenderConfiguration(false, true, true, true, AntialiasingSamples.X8);
             }
         };
     }

@@ -1,12 +1,5 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.GridMeshDTO;
@@ -21,6 +14,15 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.IntBuffer;
+
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Slf4j
 @Component
@@ -53,6 +55,10 @@ public final class GridMeshRepositoryImplementation
         glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
 
+        IntBuffer params = BufferUtils.createIntBuffer(1);
+        glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, params);
+        System.out.println("Vertex buffer size = " + params.get(0));
+
         // index buffer
         final var indexBuffer = MemoryUtil.memAllocInt(grid.indices().length);
         indexBuffer.put(grid.indices()).flip();
@@ -75,8 +81,8 @@ public final class GridMeshRepositoryImplementation
         MemoryUtil.memFree(vertexBuffer);
         MemoryUtil.memFree(indexBuffer);
 
-        return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()),
-                grid.verticesCount(), grid.facetsCount(), vertexArrayObjectID, verticesBufferID, facetsBufferID);
+        return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()), gridMeshDTO.waves(),
+                grid.verticesCount(), grid.facetsCount(), vertexArrayObjectID, verticesBufferID, facetsBufferID, grid);
     }
 
     @Override

@@ -1,30 +1,34 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL20C.*;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.TimeBinder;
+import io.github.trimax.venta.engine.binders.WaveBinder;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.GridMeshInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GridMeshInstanceRenderer extends
         AbstractInstanceRenderer<GridMeshInstanceImplementation, GridMeshInstanceRenderer.GridMeshRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final MatrixBinder matrixBinder;
+    private final WaveBinder waveBinder;
+    private final TimeBinder timeBinder;
 
     @Override
     protected GridMeshRenderContext createContext() {
@@ -35,14 +39,22 @@ public final class GridMeshInstanceRenderer extends
     public void render(final GridMeshInstanceImplementation gridMesh) {
         glUseProgram(gridMesh.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, gridMesh.getDrawMode().getMode());
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //TEMP
 
         matrixBinder.bindModelMatrix(gridMesh.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(gridMesh.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
+        timeBinder.bind(gridMesh.getProgram(), getContext().getParent().getTime());
+        waveBinder.bind(gridMesh.getProgram(), gridMesh.getMesh().getWaves());
+
         //TODO: Introduce material
         //materialBinder.bind(getContext().getProgram(), getContext().getMaterial());
 
+        renderMesh(gridMesh);
+
+        glUseProgram(0);
+    }
+
+    private static void renderMesh(final GridMeshInstanceImplementation gridMesh) {
         glBindVertexArray(gridMesh.getMesh().getVertexArrayObjectID());
 
         if (gridMesh.getMesh().getFacetsCount() > 0) {
@@ -51,8 +63,6 @@ public final class GridMeshInstanceRenderer extends
         }
 
         glBindVertexArray(0);
-
-        glUseProgram(0);
     }
 
     @Getter(AccessLevel.PACKAGE)
@@ -64,7 +74,6 @@ public final class GridMeshInstanceRenderer extends
         private final Matrix4f modelMatrix = new Matrix4f();
 
         private MaterialEntityImplementation material;
-        private ProgramEntityImplementation program;
 
         public GridMeshRenderContext withModelMatrix(final Matrix4f matrix) {
             normalMatrixBuffer.clear();
@@ -79,10 +88,7 @@ public final class GridMeshInstanceRenderer extends
             return this;
         }
 
-        public GridMeshRenderContext withProgram(final ProgramEntityImplementation program) {
-            this.program = program;
-            return this;
-        }
+
 
         public GridMeshRenderContext withMaterial(final MaterialEntityImplementation material) {
             this.material = material;
@@ -94,7 +100,6 @@ public final class GridMeshInstanceRenderer extends
             normalMatrixBuffer.clear();
             modelMatrixBuffer.clear();
             material = null;
-            program = null;
         }
 
         @Override
