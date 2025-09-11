@@ -1,0 +1,96 @@
+package io.github.trimax.venta.engine.registries.implementation;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.model.entity.SoundEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
+import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
+import io.github.trimax.venta.engine.registries.SoundRegistry;
+import io.github.trimax.venta.engine.services.ResourceService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.stb.STBVorbisInfo;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
+import static org.lwjgl.stb.STBVorbis.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
+@Slf4j
+@Component
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SoundRegistryImplementation
+        extends AbstractRegistryImplementation<SoundEntityImplementation, SoundEntity, Void>
+        implements SoundRegistry {
+    private final ResourceService resourceService;
+    private final Abettor abettor;
+
+    @Override
+    protected SoundEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
+        return load(resourcePath, resourceService.getAsBytes(String.format("/sounds/%s", resourcePath)));
+    }
+
+    private SoundEntityImplementation load(@NonNull final String resourcePath, final byte[] data) {
+        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+            ShortBuffer buffer = readVorbis(resourcePath, data, info);
+            int samples = buffer.limit() / info.channels();
+            float duration = (float) samples / info.sample_rate();
+
+            log.debug("Loaded sound: {} ({}s, {} channels, {} Hz)",
+                    resourcePath, duration, info.channels(), info.sample_rate());
+
+            return abettor.createSound(buffer, duration);
+        } catch (Exception e) {
+            log.error("Failed to load sound: {}", resourcePath, e);
+            throw new RuntimeException("Failed to load sound: " + resourcePath, e);
+        }
+    }
+
+    private ShortBuffer readVorbis(@NonNull final String resourcePath,
+                                   final byte[] data,
+                                   @NonNull final STBVorbisInfo info) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            var audioBuffer = MemoryUtil.memAlloc(data.length);
+            audioBuffer.put(data).flip();
+
+            try {
+                IntBuffer error = stack.mallocInt(1);
+                long decoder = stb_vorbis_open_memory(audioBuffer, error, null);
+
+                if (decoder == NULL) {
+                    throw new RuntimeException("Failed to open Ogg Vorbis data. Error: " + error.get(0));
+                }
+
+                try {
+                    stb_vorbis_get_info(decoder, info);
+
+                    int channels = info.channels();
+                    int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
+
+                    ShortBuffer result = MemoryUtil.memAllocShort(lengthSamples * channels);
+
+                    int samplesRead = stb_vorbis_get_samples_short_interleaved(decoder, channels, result);
+                    result.limit(samplesRead * channels);
+
+                    return result;
+                } finally {
+                    stb_vorbis_close(decoder);
+                }
+            } finally {
+                MemoryUtil.memFree(audioBuffer);
+            }
+        }
+    }
+
+    @Override
+    protected void unload(@NonNull final SoundEntityImplementation entity) {
+        if (entity.getBuffer() != null) {
+            MemoryUtil.memFree(entity.getBuffer());
+        }
+        log.debug("Unloaded sound entity: {}", entity.getID());
+    }
+}

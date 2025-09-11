@@ -18,20 +18,8 @@ import io.github.trimax.venta.engine.managers.implementation.GridMeshManagerImpl
 import io.github.trimax.venta.engine.managers.implementation.LightManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
-import io.github.trimax.venta.engine.registries.CubemapRegistry;
-import io.github.trimax.venta.engine.registries.FontRegistry;
-import io.github.trimax.venta.engine.registries.MaterialRegistry;
-import io.github.trimax.venta.engine.registries.MeshRegistry;
-import io.github.trimax.venta.engine.registries.ProgramRegistry;
-import io.github.trimax.venta.engine.registries.ShaderRegistry;
-import io.github.trimax.venta.engine.registries.TextureRegistry;
-import io.github.trimax.venta.engine.registries.implementation.CubemapRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.FontRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.ShaderRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
+import io.github.trimax.venta.engine.registries.*;
+import io.github.trimax.venta.engine.registries.implementation.*;
 import io.github.trimax.venta.engine.repositories.EmitterRepository;
 import io.github.trimax.venta.engine.repositories.GridMeshRepository;
 import io.github.trimax.venta.engine.repositories.LightRepository;
@@ -112,6 +100,10 @@ public final class VentaContext {
 
     public MeshRegistry getMeshRegistry() {
         return registryFactory.get(MeshRegistryImplementation.class);
+    }
+
+    public SoundRegistry getSoundRegistry() {
+        return registryFactory.get(SoundRegistryImplementation.class);
     }
 
     /*** Repositories ***/
