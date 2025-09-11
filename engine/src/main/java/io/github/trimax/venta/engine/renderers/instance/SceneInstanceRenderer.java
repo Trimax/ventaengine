@@ -1,7 +1,9 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.GridMeshManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
@@ -19,8 +21,10 @@ import static org.lwjgl.opengl.GL11C.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneInstanceRenderer
         extends AbstractInstanceRenderer<SceneInstanceImplementation, SceneInstanceRenderer.SceneRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final GridMeshManagerImplementation gridMeshManager;
     private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
+    private final GridMeshInstanceRenderer gridMeshRenderer;
     private final EmitterInstanceRenderer emitterRenderer;
     private final ObjectInstanceRenderer objectRenderer;
     private final CubemapEntityRenderer cubemapRenderer;
@@ -41,6 +45,13 @@ public final class SceneInstanceRenderer
             try (final var _ = cubemapRenderer.withContext(getContext())
                     .withScene(scene)) {
                 cubemapRenderer.render(cubemap);
+            }
+
+        for (final var gridMesh : scene.getGridMeshes())
+            try (final var _ = gridMeshRenderer.withContext(getContext())
+                    .withModelMatrix(gridMesh.getTransform().getMatrix())
+                    .withScene(scene)) {
+                gridMeshRenderer.render(gridMeshManager.getInstance(gridMesh.getID()));
             }
 
         for (final var object : scene.getObjects())
@@ -69,7 +80,9 @@ public final class SceneInstanceRenderer
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
         private final Matrix4f projectionMatrix = new Matrix4f();
         private final Matrix4f viewMatrix = new Matrix4f();
+
         private CameraInstanceImplementation camera;
+        private Engine.VentaTime time;
 
         public SceneRenderContext with(final WindowState window, final CameraInstanceImplementation camera) {
             window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
@@ -84,11 +97,17 @@ public final class SceneInstanceRenderer
             return this;
         }
 
+        public SceneRenderContext withTime(final Engine.VentaTime time) {
+            this.time = time;
+            return this;
+        }
+
         @Override
         public void close() {
             viewProjectionMatrixBuffer.clear();
             projectionMatrixBuffer.clear();
             viewMatrixBuffer.clear();
+            time = null;
         }
 
         @Override

@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Definitions {
     public static final int LIGHT_MAX = 64;
+    public static final int WAVE_MAX = 16;
 
     /*** Basic ***/
 

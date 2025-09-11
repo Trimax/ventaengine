@@ -67,7 +67,7 @@ public final class Engine implements Runnable {
         final var time = new VentaTime();
 
         while (engineController.get().isApplicationRunning()) {
-            engineRenderer.render(fpsCounter);
+            engineRenderer.render(fpsCounter, time);
 
             time.setDelta(fpsCounter.tick());
             updateHandler.onUpdate(time, context);

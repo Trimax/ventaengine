@@ -1,7 +1,5 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import org.joml.Vector3fc;
-
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
@@ -12,6 +10,7 @@ import io.github.trimax.venta.engine.model.instance.GridMeshInstance;
 import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
 import lombok.Getter;
 import lombok.NonNull;
+import org.joml.Vector3fc;
 
 @Getter
 public final class GridMeshInstanceImplementation extends AbstractInstanceImplementation implements GridMeshInstance {

@@ -2,6 +2,8 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.model.common.geo.Grid;
+import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.dto.EmitterDTO;
 import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
@@ -12,6 +14,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.List;
+
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Abettor {
@@ -20,12 +24,15 @@ public final class Abettor {
     }
 
     public GridMeshPrefabImplementation createGridMesh(final ProgramEntity program,
+                                                       final List<Wave> waves,
                                                        final int verticesCount,
                                                        final int facetsCount,
                                                        final int vertexArrayObjectID,
                                                        final int verticesBufferID,
-                                                       final int facetsBufferID) {
-        return new GridMeshPrefabImplementation(program, verticesCount, facetsCount, vertexArrayObjectID, verticesBufferID, facetsBufferID);
+                                                       final int facetsBufferID,
+
+                                                       final Grid grid) {
+        return new GridMeshPrefabImplementation(program, waves, verticesCount, facetsCount, vertexArrayObjectID, verticesBufferID, facetsBufferID, grid);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntity program,
