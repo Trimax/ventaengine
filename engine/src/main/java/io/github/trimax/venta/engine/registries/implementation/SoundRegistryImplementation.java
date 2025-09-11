@@ -36,7 +36,7 @@ public final class SoundRegistryImplementation
 
     private SoundEntityImplementation load(@NonNull final String resourcePath, final byte[] data) {
         try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
-            final ShortBuffer buffer = readVorbis(resourcePath, data, info);
+            final ShortBuffer buffer = readVorbis(data, info);
             final int samples = buffer.limit() / info.channels();
             final float duration = (float) samples / info.sample_rate();
 
@@ -50,9 +50,7 @@ public final class SoundRegistryImplementation
         }
     }
 
-    private ShortBuffer readVorbis(@NonNull final String resourcePath,
-                                   final byte[] data,
-                                   @NonNull final STBVorbisInfo info) {
+    private ShortBuffer readVorbis(final byte[] data, @NonNull final STBVorbisInfo info) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             final var audioBuffer = MemoryUtil.memAlloc(data.length);
             audioBuffer.put(data).flip();
