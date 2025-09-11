@@ -80,6 +80,7 @@ public final class SoundRegistryImplementation
                     return buffer;
                 } finally {
                     stb_vorbis_close(decoder);
+                    MemoryUtil.memFree(error);
                 }
             } finally {
                 MemoryUtil.memFree(audioBuffer);
