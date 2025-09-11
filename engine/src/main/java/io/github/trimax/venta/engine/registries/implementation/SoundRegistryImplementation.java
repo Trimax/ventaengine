@@ -50,7 +50,7 @@ public final class SoundRegistryImplementation
         }
     }
 
-    private static float getDuration(float samples, final STBVorbisInfo info) {
+    private static float getDuration(final float samples, final STBVorbisInfo info) {
         return samples / info.sample_rate();
     }
 
@@ -80,7 +80,6 @@ public final class SoundRegistryImplementation
                     return buffer;
                 } finally {
                     stb_vorbis_close(decoder);
-                    MemoryUtil.memFree(error);
                 }
             } finally {
                 MemoryUtil.memFree(audioBuffer);
