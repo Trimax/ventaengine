@@ -21,7 +21,7 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         scene.add(water);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(0f, 10f, 20f));
+        camera.setPosition(new Vector3f(0f, 10f, 250f));
         camera.lookAt(new Vector3f(0f));
 
         final var light = context.getLightManager().create("Sun", context.getLightRepository().get("point.json"));
