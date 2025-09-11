@@ -36,15 +36,15 @@ public final class SoundRegistryImplementation
 
     private SoundEntityImplementation load(@NonNull final String resourcePath, final byte[] data) {
         try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
-            ShortBuffer buffer = readVorbis(resourcePath, data, info);
-            int samples = buffer.limit() / info.channels();
-            float duration = (float) samples / info.sample_rate();
+            final ShortBuffer buffer = readVorbis(resourcePath, data, info);
+            final int samples = buffer.limit() / info.channels();
+            final float duration = (float) samples / info.sample_rate();
 
             log.debug("Loaded sound: {} ({}s, {} channels, {} Hz)",
                     resourcePath, duration, info.channels(), info.sample_rate());
 
             return abettor.createSound(buffer, duration);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Failed to load sound: {}", resourcePath, e);
             throw new RuntimeException("Failed to load sound: " + resourcePath, e);
         }
@@ -54,12 +54,12 @@ public final class SoundRegistryImplementation
                                    final byte[] data,
                                    @NonNull final STBVorbisInfo info) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            var audioBuffer = MemoryUtil.memAlloc(data.length);
+            final var audioBuffer = MemoryUtil.memAlloc(data.length);
             audioBuffer.put(data).flip();
 
             try {
-                IntBuffer error = stack.mallocInt(1);
-                long decoder = stb_vorbis_open_memory(audioBuffer, error, null);
+                final IntBuffer error = stack.mallocInt(1);
+                final long decoder = stb_vorbis_open_memory(audioBuffer, error, null);
 
                 if (decoder == NULL) {
                     throw new RuntimeException("Failed to open Ogg Vorbis data. Error: " + error.get(0));
@@ -68,12 +68,12 @@ public final class SoundRegistryImplementation
                 try {
                     stb_vorbis_get_info(decoder, info);
 
-                    int channels = info.channels();
-                    int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
+                    final int channels = info.channels();
+                    final int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
 
-                    ShortBuffer result = MemoryUtil.memAllocShort(lengthSamples * channels);
+                    final ShortBuffer result = MemoryUtil.memAllocShort(lengthSamples * channels);
 
-                    int samplesRead = stb_vorbis_get_samples_short_interleaved(decoder, channels, result);
+                    final int samplesRead = stb_vorbis_get_samples_short_interleaved(decoder, channels, result);
                     result.limit(samplesRead * channels);
 
                     return result;

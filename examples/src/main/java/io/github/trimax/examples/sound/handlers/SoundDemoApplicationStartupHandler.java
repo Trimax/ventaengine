@@ -49,6 +49,5 @@ public final class SoundDemoApplicationStartupHandler implements VentaEngineStar
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        System.exit(0);
     }
 }
