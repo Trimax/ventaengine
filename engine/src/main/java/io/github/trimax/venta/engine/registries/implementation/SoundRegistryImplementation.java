@@ -53,7 +53,7 @@ public final class SoundRegistryImplementation
     }
 
     private ShortBuffer readVorbis(@NonNull final byte[] data, @NonNull final STBVorbisInfo info) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
+        try (final var stack = MemoryStack.stackPush()) {
             final var audioBuffer = MemoryUtil.memAlloc(data.length);
             audioBuffer.put(data).flip();
 
