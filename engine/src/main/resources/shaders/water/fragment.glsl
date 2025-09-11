@@ -45,46 +45,48 @@ uniform vec3 cameraPosition;
 
 out vec4 outputColor;
 
-vec3 computeLighting(vec3 N, vec3 V, vec3 baseColor) {
+
+vec3 calculateLight(Light light, vec3 N, vec3 V) {
+    if (light.enabled == 0)
+        vec3(0.0);
+
+    vec3 L;
+    if (light.type == LIGHT_TYPE_DIRECTIONAL) {
+        L = normalize(-light.direction);
+    } else {
+        L = normalize(light.position - vertexPosition);
+    }
+
+    float distance = length(light.position - vertexPosition);
+    float attenuation = 1.0;
+
+    if (light.type != 0) {
+        attenuation = 1.0 / (light.attenuation.constant
+        + light.attenuation.linear * distance
+        + light.attenuation.quadratic * distance * distance);
+    }
+
+    float diff = max(dot(N, L), 0.0);
+    vec3 R = reflect(-L, N);
+    float spec = pow(max(dot(R, V), 0.0), 32.0);
+
+    return (diff + spec * 0.3) * light.color * light.intensity * attenuation;
+}
+
+vec3 computeLighting(vec3 baseColor, vec3 N, vec3 cameraDirection) {
     vec3 result = ambientLight * baseColor;
 
-    for (int i = 0; i < lightCount; i++) {
-        if (lights[i].enabled == 0)
-            continue;
-
-        vec3 L;
-        if (lights[i].type == LIGHT_TYPE_DIRECTIONAL) {
-            L = normalize(-lights[i].direction);
-        } else {
-            L = normalize(lights[i].position - vertexPosition);
-        }
-
-        float distance = length(lights[i].position - vertexPosition);
-        float attenuation = 1.0;
-
-        if (lights[i].type != 0) { // apply attenuation for point/spot
-                                   attenuation = 1.0 / (lights[i].attenuation.constant
-                                   + lights[i].attenuation.linear * distance
-                                   + lights[i].attenuation.quadratic * distance * distance);
-        }
-
-        float diff = max(dot(N, L), 0.0);
-        vec3 R = reflect(-L, N);
-        float spec = pow(max(dot(R, V), 0.0), 32.0);
-
-        result += (diff + spec * 0.3) * lights[i].color * lights[i].intensity * attenuation;
-    }
+    for (int i = 0; i < lightCount; i++)
+        result += calculateLight(lights[i], N, cameraDirection);
 
     return result;
 }
 
 void main() {
-    vec3 N = normalize(vertexNormal);
-    vec3 V = normalize(cameraPosition - vertexPosition);
+    vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
     vec3 baseColor = vec3(0.0, 0.3, 0.6);
 
-    vec3 color = computeLighting(N, V, baseColor);
+    vec3 color = computeLighting(baseColor, normalize(vertexNormal), cameraDirection);
 
     outputColor = vec4(color, 1.0);
-    //outputColor = vec4(1.0);
 }
