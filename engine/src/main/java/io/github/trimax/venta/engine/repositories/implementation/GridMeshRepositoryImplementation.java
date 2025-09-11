@@ -14,10 +14,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
-
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
@@ -54,10 +51,6 @@ public final class GridMeshRepositoryImplementation
 
         glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
-
-        IntBuffer params = BufferUtils.createIntBuffer(1);
-        glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, params);
-        System.out.println("Vertex buffer size = " + params.get(0));
 
         // index buffer
         final var indexBuffer = MemoryUtil.memAllocInt(grid.indices().length);

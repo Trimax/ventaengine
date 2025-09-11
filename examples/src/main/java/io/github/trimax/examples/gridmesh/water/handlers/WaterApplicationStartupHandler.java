@@ -1,8 +1,8 @@
 package io.github.trimax.examples.gridmesh.water.handlers;
 
 import io.github.trimax.venta.engine.context.VentaContext;
-import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
+import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -17,7 +17,8 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         scene.setAmbientLight(new Vector3f(0.6f, 0.6f, 0.6f));
 
         final var water = context.getGridMeshManager().create("Water", context.getGridMeshRepository().get("water.json"));
-        water.setDrawMode(DrawMode.Edge);
+        water.setMaterial(context.getMaterialRegistry().get("water.json"));
+      //  water.setDrawMode(DrawMode.Edge);
         scene.add(water);
 
         final var camera = context.getCameraManager().getCurrent();
@@ -25,8 +26,10 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         camera.lookAt(new Vector3f(0f));
 
         final var light = context.getLightManager().create("Sun", context.getLightRepository().get("point.json"));
-        light.setPosition(new Vector3f(5f, 2f, -10f));
-        //light.setIntensity(10f);
+        light.setAttenuation(new Attenuation(1, 1, 0));
+        light.setPosition(new Vector3f(5f, 5f, -10f));
+        light.setColor(new Vector3f(1.f, 0.85f, 0.6f));
+        light.setIntensity(5.f);
         scene.add(light);
     }
 }

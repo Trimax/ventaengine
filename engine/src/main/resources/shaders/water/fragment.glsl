@@ -31,6 +31,14 @@ struct Light {
     int enabled;
 };
 
+struct Material {
+    vec3 color;
+    vec2 tiling;
+    vec2 offset;
+    float metalness;
+    float roughness;
+};
+
 /***
  * Input variables and uniforms
  ***/
@@ -40,15 +48,58 @@ in vec3 vertexNormal;
 in vec3 vertexPosition;
 in vec2 vertexTextureCoordinates;
 
+/* Textures */
+uniform sampler2D textureDiffuse;
+uniform sampler2D textureNormal;
+
+/* Feature flags */
+uniform int useTextureDiffuse;
+uniform int useTextureNormal;
+uniform int useMaterial;
+
 /* Lighting */
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 ambientLight;
 uniform int lightCount;
 
+/* Material */
+uniform Material material;
+
+/* Camera */
 uniform vec3 cameraPosition;
 
 /* Output color */
 out vec4 outputColor;
+
+/***
+ * Common functions
+ ***/
+
+/* Checks if flag is set (bools are not supported by macOS Radeon cards */
+bool isSet(int value) {
+    return value != 0;
+}
+
+/* Gets preprocessed texture coordinates */
+vec2 getTextureCoordinates() {
+    return isSet(useMaterial) ? (vertexTextureCoordinates * material.tiling + material.offset) : vertexTextureCoordinates;
+}
+
+/* Gets diffuse texture color */
+vec3 getColor(vec2 textureCoordinates) {
+    if (!isSet(useTextureDiffuse))
+        return vec3(0.0, 0.3, 0.6);
+
+    return texture(textureDiffuse, textureCoordinates).rgb;
+}
+
+/* Gets normal (either face or from normal map) */
+vec3 getNormal(vec2 textureCoordinates) {
+    if (!isSet(useTextureNormal))
+        return vertexNormal;
+
+    return normalize(vertexNormal + normalize(texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0) * 0.2);
+}
 
 /***
  * Lighting functions
@@ -88,20 +139,22 @@ vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
     return (diff + spec * 0.3) * light.color * light.intensity * attenuation;
 }
 
-vec3 computeLighting(vec3 baseColor, vec3 N, vec3 cameraDirection) {
+vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     vec3 result = ambientLight * baseColor;
 
     for (int i = 0; i < lightCount; i++)
-        result += calculateLight(lights[i], N, cameraDirection);
+        result += calculateLight(lights[i], normal, cameraDirection);
 
     return result;
 }
 
 void main() {
-    vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
-    vec3 baseColor = vec3(0.0, 0.3, 0.6);
+    vec2 textureCoordinates = getTextureCoordinates();
 
-    vec3 color = computeLighting(baseColor, normalize(vertexNormal), cameraDirection);
+    vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
+    vec3 baseColor = getColor(textureCoordinates);
+
+    vec3 color = computeLighting(baseColor, getNormal(textureCoordinates), cameraDirection);
 
     outputColor = vec4(color, 1.0);
 }
