@@ -37,8 +37,7 @@ public final class SoundRegistryImplementation
     private SoundEntityImplementation load(final byte[] data) {
         try (final var info = STBVorbisInfo.malloc()) {
             final ShortBuffer buffer = readVorbis(data, info);
-            final int samples = buffer.limit() / info.channels();
-            final float duration = getDuration((float) samples, info);
+            final float duration = getDuration(buffer, info);
 
             log.debug("Loaded sound: ({}s, {} channels, {} Hz)", duration, info.channels(), info.sample_rate());
 
@@ -48,8 +47,9 @@ public final class SoundRegistryImplementation
         }
     }
 
-    private static float getDuration(final float samples, final STBVorbisInfo info) {
-        return samples / info.sample_rate();
+    private static float getDuration(final ShortBuffer buffer, final STBVorbisInfo info) {
+        final int samples = buffer.limit() / info.channels();
+        return (float) samples / info.sample_rate();
     }
 
     private ShortBuffer readVorbis(@NonNull final byte[] data, @NonNull final STBVorbisInfo info) {
