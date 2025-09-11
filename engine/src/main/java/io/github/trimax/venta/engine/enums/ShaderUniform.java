@@ -52,6 +52,13 @@ public enum ShaderUniform {
     UseLighting("useLighting"),
     LightCount("lightCount"),
 
+    /* Waves */
+    WaveCount("waveCount"),
+
+    /* Time */
+    TimeElapsed("timeElapsed"),
+    TimeDelta("timeDelta"),
+
     /* Fog */
     FogColor("fog.color"),
     FogMinimalDistance("fog.minimalDistance"),
