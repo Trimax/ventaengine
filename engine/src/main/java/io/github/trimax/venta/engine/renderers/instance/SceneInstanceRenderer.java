@@ -49,7 +49,8 @@ public final class SceneInstanceRenderer
 
         for (final var gridMesh : scene.getGridMeshes())
             try (final var _ = gridMeshRenderer.withContext(getContext())
-                    .withModelMatrix(gridMesh.getTransform().getMatrix())) {
+                    .withModelMatrix(gridMesh.getTransform().getMatrix())
+                    .withScene(scene)) {
                 gridMeshRenderer.render(gridMeshManager.getInstance(gridMesh.getID()));
             }
 

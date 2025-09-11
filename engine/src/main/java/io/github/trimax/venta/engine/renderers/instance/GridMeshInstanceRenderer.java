@@ -1,12 +1,10 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.binders.CameraBinder;
-import io.github.trimax.venta.engine.binders.MatrixBinder;
-import io.github.trimax.venta.engine.binders.TimeBinder;
-import io.github.trimax.venta.engine.binders.WaveBinder;
+import io.github.trimax.venta.engine.binders.*;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.GridMeshInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +27,7 @@ public final class GridMeshInstanceRenderer extends
         AbstractInstanceRenderer<GridMeshInstanceImplementation, GridMeshInstanceRenderer.GridMeshRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
+    private final LightBinder lightBinder;
     private final WaveBinder waveBinder;
     private final TimeBinder timeBinder;
 
@@ -41,6 +40,9 @@ public final class GridMeshInstanceRenderer extends
     public void render(final GridMeshInstanceImplementation gridMesh) {
         glUseProgram(gridMesh.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, gridMesh.getDrawMode().getMode());
+
+        lightBinder.bind(gridMesh.getProgram(), getContext().getScene().getAmbientLight());
+        lightBinder.bind(gridMesh.getProgram(), getContext().getScene().getLights());
 
         cameraBinder.bind(gridMesh.getProgram(), getContext().getParent().getCamera());
 
@@ -78,6 +80,7 @@ public final class GridMeshInstanceRenderer extends
         private final Matrix4f modelMatrix = new Matrix4f();
 
         private MaterialEntityImplementation material;
+        private SceneInstanceImplementation scene;
 
         public GridMeshRenderContext withModelMatrix(final Matrix4f matrix) {
             normalMatrixBuffer.clear();
@@ -92,10 +95,13 @@ public final class GridMeshInstanceRenderer extends
             return this;
         }
 
-
-
         public GridMeshRenderContext withMaterial(final MaterialEntityImplementation material) {
             this.material = material;
+            return this;
+        }
+
+        public GridMeshRenderContext withScene(final SceneInstanceImplementation scene) {
+            this.scene = scene;
             return this;
         }
 
@@ -104,6 +110,7 @@ public final class GridMeshInstanceRenderer extends
             normalMatrixBuffer.clear();
             modelMatrixBuffer.clear();
             material = null;
+            scene = null;
         }
 
         @Override
