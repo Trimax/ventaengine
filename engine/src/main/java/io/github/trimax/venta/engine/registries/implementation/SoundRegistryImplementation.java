@@ -31,22 +31,20 @@ public final class SoundRegistryImplementation
 
     @Override
     protected SoundEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
-        return load(resourcePath, resourceService.getAsBytes(String.format("/sounds/%s", resourcePath)));
+        return load(resourceService.getAsBytes(String.format("/sounds/%s", resourcePath)));
     }
 
-    private SoundEntityImplementation load(@NonNull final String resourcePath, final byte[] data) {
+    private SoundEntityImplementation load(final byte[] data) {
         try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
             final ShortBuffer buffer = readVorbis(data, info);
             final int samples = buffer.limit() / info.channels();
             final float duration = getDuration((float) samples, info);
 
-            log.debug("Loaded sound: {} ({}s, {} channels, {} Hz)",
-                    resourcePath, duration, info.channels(), info.sample_rate());
+            log.debug("Loaded sound: ({}s, {} channels, {} Hz)", duration, info.channels(), info.sample_rate());
 
             return abettor.createSound(buffer, duration);
         } catch (final Exception e) {
-            log.error("Failed to load sound: {}", resourcePath, e);
-            throw new RuntimeException("Failed to load sound: " + resourcePath, e);
+            throw new RuntimeException("Failed to load sound: " + e);
         }
     }
 
