@@ -86,7 +86,6 @@
             <artifactId>lwjgl-openal</artifactId>
             <classifier>natives-${os.detected.classifier}</classifier>
             <version>${lwjgl.version}</version>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
