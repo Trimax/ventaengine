@@ -38,7 +38,7 @@ public final class SoundRegistryImplementation
         try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
             final ShortBuffer buffer = readVorbis(data, info);
             final int samples = buffer.limit() / info.channels();
-            final float duration = (float) samples / info.sample_rate();
+            final float duration = getDuration((float) samples, info);
 
             log.debug("Loaded sound: {} ({}s, {} channels, {} Hz)",
                     resourcePath, duration, info.channels(), info.sample_rate());
@@ -48,6 +48,10 @@ public final class SoundRegistryImplementation
             log.error("Failed to load sound: {}", resourcePath, e);
             throw new RuntimeException("Failed to load sound: " + resourcePath, e);
         }
+    }
+
+    private static float getDuration(float samples, STBVorbisInfo info) {
+        return samples / info.sample_rate();
     }
 
     private ShortBuffer readVorbis(final byte[] data, @NonNull final STBVorbisInfo info) {
