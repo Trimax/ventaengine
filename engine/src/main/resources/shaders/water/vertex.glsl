@@ -32,6 +32,7 @@ uniform float timeElapsed;
 /* Parameters going to fragment shader */
 out vec3 vertexNormal;
 out vec3 vertexPosition;
+out float vertexTimeElapsed;
 out vec2 vertexTextureCoordinates;
 
 vec3 gerstnerWave(vec3 pos, Wave wave, out vec3 outNormal) {
@@ -59,6 +60,7 @@ void main() {
 
     vertexNormal = transformedNormal;
     vertexPosition = transformedPosition;
+    vertexTimeElapsed = timeElapsed;
     vertexTextureCoordinates = textureCoordinates;
 
     gl_Position = matrixViewProjection * matrixModel * vec4(transformedPosition, 1.0);

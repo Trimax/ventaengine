@@ -47,6 +47,7 @@ struct Material {
 in vec3 vertexNormal;
 in vec3 vertexPosition;
 in vec2 vertexTextureCoordinates;
+in float vertexTimeElapsed;
 
 /* Textures */
 uniform sampler2D textureDiffuse;
@@ -90,7 +91,7 @@ vec3 getColor(vec2 textureCoordinates) {
     if (!isSet(useTextureDiffuse))
         return vec3(0.0, 0.3, 0.6);
 
-    return texture(textureDiffuse, textureCoordinates).rgb;
+    return mix(vec3(0.0, 0.3, 0.6), texture(textureDiffuse, textureCoordinates).rgb, 0.3);
 }
 
 /* Gets normal (either face or from normal map) */
@@ -154,7 +155,10 @@ void main() {
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
     vec3 baseColor = getColor(textureCoordinates);
 
-    vec3 color = computeLighting(baseColor, getNormal(textureCoordinates), cameraDirection);
+    float fresnel = pow(1.0 - max(dot(getNormal(textureCoordinates), cameraDirection), 0.0), 5.0);
+    vec3 colorWithFresnel = mix(baseColor, vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
+
+    vec3 color = computeLighting(colorWithFresnel, getNormal(textureCoordinates), cameraDirection);
 
     outputColor = vec4(color, 1.0);
 }
