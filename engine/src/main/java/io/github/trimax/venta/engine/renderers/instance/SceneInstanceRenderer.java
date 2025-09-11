@@ -52,8 +52,7 @@ public final class SceneInstanceRenderer
             }
 
         for (final var gridMesh : scene.getGridMeshes())
-            try (final var _ = objectRenderer.withContext(getContext())
-                    .withScene(scene)) {
+            try (final var _ = gridMeshRenderer.withContext(getContext())) {
                 gridMeshRenderer.render(gridMeshManager.getInstance(gridMesh.getID()));
             }
 

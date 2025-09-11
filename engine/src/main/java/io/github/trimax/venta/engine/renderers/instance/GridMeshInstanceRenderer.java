@@ -35,9 +35,10 @@ public final class GridMeshInstanceRenderer extends
     public void render(final GridMeshInstanceImplementation gridMesh) {
         glUseProgram(gridMesh.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, gridMesh.getDrawMode().getMode());
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //TEMP
 
-        matrixBinder.bindModelMatrix(getContext().getProgram(), getContext().getModelMatrixBuffer());
-        matrixBinder.bindNormalMatrix(getContext().getProgram(), getContext().getNormalMatrixBuffer());
+        matrixBinder.bindModelMatrix(gridMesh.getProgram(), getContext().getModelMatrixBuffer());
+        matrixBinder.bindViewProjectionMatrix(gridMesh.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
         //TODO: Introduce material
         //materialBinder.bind(getContext().getProgram(), getContext().getMaterial());

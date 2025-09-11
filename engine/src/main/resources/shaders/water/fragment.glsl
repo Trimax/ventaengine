@@ -21,5 +21,6 @@ void main() {
     vec3 baseColor = vec3(0.0, 0.3, 0.6); // blueish water color
     vec3 color = baseColor * diff + vec3(1.0) * spec * 0.3;
 
-    outputColor = vec4(color, 1.0);
+    //outputColor = vec4(color, 1.0);
+    outputColor = vec4(1.0);
 }
