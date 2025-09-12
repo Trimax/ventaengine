@@ -1,6 +1,6 @@
 package io.github.trimax.examples.light.moveable;
 
-import io.github.trimax.examples.light.moveable.handlers.MovableLightApplicationStartupHandler;
+import io.github.trimax.examples.light.moveable.handlers.MoveableLightApplicationStartupHandler;
 import io.github.trimax.examples.light.moveable.handlers.MoveableLightApplicationUpdateHandler;
 import io.github.trimax.examples.light.moveable.state.MoveableLightApplicationState;
 import io.github.trimax.venta.engine.VentaEngine;
@@ -14,7 +14,7 @@ public final class MoveableLightVentaApplication implements VentaEngineApplicati
 
     @Override
     public @NonNull VentaEngineStartupHandler getStartupHandler() {
-        return new MovableLightApplicationStartupHandler(state);
+        return new MoveableLightApplicationStartupHandler(state);
     }
 
     @Override
