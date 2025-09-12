@@ -1,5 +1,15 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static org.lwjgl.stb.STBVorbis.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
+import org.lwjgl.stb.STBVorbisInfo;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.entity.SoundEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
@@ -10,15 +20,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.stb.STBVorbisInfo;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-
-import static org.lwjgl.stb.STBVorbis.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
@@ -87,8 +88,8 @@ public final class SoundRegistryImplementation
 
     @Override
     protected void unload(@NonNull final SoundEntityImplementation entity) {
-        MemoryUtil.memFree(entity.getBuffer());
+        log.info("Unloading sound {}", entity.getID());
 
-        log.debug("Unloaded sound entity: {}", entity.getID());
+        MemoryUtil.memFree(entity.getBuffer());
     }
 }

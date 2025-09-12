@@ -1,10 +1,24 @@
 package io.github.trimax.venta.engine.core;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.*;
+import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
+import static org.lwjgl.opengl.GL33C.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL33C.glEnable;
+
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.opengl.GL;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.callbacks.ErrorCallback;
 import io.github.trimax.venta.engine.console.ConsoleCommandExecutor;
 import io.github.trimax.venta.engine.context.VentaContext;
-import io.github.trimax.venta.engine.controllers.*;
+import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.controllers.EngineController;
+import io.github.trimax.venta.engine.controllers.KeyboardController;
+import io.github.trimax.venta.engine.controllers.TextController;
+import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
@@ -16,15 +30,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.opengl.GL;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.openal.ALC10.*;
-import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
-import static org.lwjgl.opengl.GL33C.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL33C.glEnable;
 
 @Slf4j
 @Component
@@ -64,6 +69,7 @@ public final class Engine implements Runnable {
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
     }
 
+    @SuppressWarnings("all")
     private void initializeOpenAL() {
         final var device = alcOpenDevice((String) null);
         if (device == 0)
