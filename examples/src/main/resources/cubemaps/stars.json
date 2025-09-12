@@ -1,11 +1,11 @@
 {
   "program": "sky.json",
   "faces": {
-    "Right": "sky/stars_right.png",
-    "Left": "sky/stars_left.png",
-    "Front": "sky/stars_front.png",
-    "Back": "sky/stars_back.png",
-    "Top": "sky/stars_top.png",
-    "Bottom": "sky/stars_bottom.png"
+    "Right": "sky/stars/right.png",
+    "Left": "sky/stars/left.png",
+    "Front": "sky/stars/front.png",
+    "Back": "sky/stars/back.png",
+    "Top": "sky/stars/top.png",
+    "Bottom": "sky/stars/bottom.png"
   }
 }

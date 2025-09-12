@@ -5,28 +5,28 @@
   "waves": [
     {
       "direction": {"x": 1.0, "y": 1.0},
-      "amplitude": 0.5,
+      "amplitude": 0.1,
       "length": 10,
       "steepness": 0.2,
       "speed": 1
     },
     {
       "direction": {"x": 0.5, "y": 0.5},
-      "amplitude": 0.3,
+      "amplitude": 0.05,
       "length": 5,
       "steepness": 0.1,
       "speed": 1.2
     },
     {
       "direction": {"x": -0.5, "y": 1},
-      "amplitude": 0.2,
+      "amplitude": 0.025,
       "length": 8,
       "steepness": 0.15,
       "speed": 0.8
     },
     {
       "direction": {"x": 0, "y": 1},
-      "amplitude": 0.4,
+      "amplitude": 0.0125,
       "length": 12,
       "steepness": 0.25,
       "speed": 1.1

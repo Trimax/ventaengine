@@ -50,10 +50,12 @@ in vec2 vertexTextureCoordinates;
 in float vertexTimeElapsed;
 
 /* Textures */
+uniform samplerCube textureSkybox;
 uniform sampler2D textureDiffuse;
 uniform sampler2D textureNormal;
 
 /* Feature flags */
+uniform int useTextureSkybox;
 uniform int useTextureDiffuse;
 uniform int useTextureNormal;
 uniform int useMaterial;
@@ -91,7 +93,7 @@ vec3 getColor(vec2 textureCoordinates) {
     if (!isSet(useTextureDiffuse))
         return vec3(0.0, 0.3, 0.6);
 
-    return mix(vec3(0.0, 0.3, 0.6), texture(textureDiffuse, textureCoordinates).rgb, 0.3);
+    return mix(vec3(0.0, 0.1, 0.4), texture(textureDiffuse, textureCoordinates).rgb, 0.3);
 }
 
 /* Gets normal (either face or from normal map) */
@@ -149,6 +151,16 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     return result;
 }
 
+vec3 applyReflections(vec3 color, vec3 cameraDirection, vec2 textureCoordinates) {
+    if (!isSet(useTextureSkybox))
+        return color;
+
+    vec3 N = normalize(getNormal(textureCoordinates));
+    vec3 skyboxColor = texture(textureSkybox, reflect(-cameraDirection, N)).rgb;
+
+    return mix(color, skyboxColor, 0.5); //TODO: Use metalness from material
+}
+
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
@@ -160,5 +172,7 @@ void main() {
 
     vec3 color = computeLighting(colorWithFresnel, getNormal(textureCoordinates), cameraDirection);
 
-    outputColor = vec4(color, 1.0);
+    vec3 colorWithReflections = applyReflections(color, cameraDirection, textureCoordinates);
+
+    outputColor = vec4(colorWithReflections, 1.0);
 }

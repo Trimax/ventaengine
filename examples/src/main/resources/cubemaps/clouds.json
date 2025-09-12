@@ -1,0 +1,11 @@
+{
+  "program": "sky.json",
+  "faces": {
+    "Right": "sky/clouds/right.jpg",
+    "Left": "sky/clouds/left.jpg",
+    "Front": "sky/clouds/front.jpg",
+    "Back": "sky/clouds/back.jpg",
+    "Top": "sky/clouds/top.jpg",
+    "Bottom": "sky/clouds/bottom.jpg"
+  }
+}
