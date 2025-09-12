@@ -38,8 +38,8 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
         this.type = lightDto.type();
 
         setAttenuation(Optional.ofNullable(lightDto.attenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
+        Optional.ofNullable(lightDto.direction()).ifPresent(this::setDirection);
         setCastShadows(lightDto.castShadows());
-        setDirection(lightDto.direction());
         setIntensity(lightDto.intensity());
         setColor(lightDto.color());
     }
