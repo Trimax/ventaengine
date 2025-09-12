@@ -12,6 +12,7 @@ import lombok.NonNull;
 import org.lwjgl.stb.STBTTBakedChar;
 
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 import java.util.Map;
 
 @Component
@@ -67,5 +68,9 @@ public final class Abettor {
                                                      final int verticesBufferID,
                                                      final int internalID) {
         return new CubemapEntityImplementation(buffers, program, vertexArrayObjectID, verticesBufferID, format, internalID);
+    }
+
+    public SoundEntityImplementation createSound(@NonNull final ShortBuffer buffer, final float duration) {
+        return new SoundEntityImplementation(buffer, duration);
     }
 }
