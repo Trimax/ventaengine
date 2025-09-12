@@ -24,12 +24,13 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         scene.add(water);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(0f, 10f, 250f));
-        camera.lookAt(new Vector3f(0f));
+        camera.setPosition(new Vector3f(0f, 5f, 250f));
+        camera.lookAt(new Vector3f(50f, 0f, 0f));
 
         final var light = context.getLightManager().create("Sun", context.getLightRepository().get("directional.json"));
         light.setAttenuation(new Attenuation(1, 1, 0));
-        light.setPosition(new Vector3f(0f, 10f, -10f));
+        light.setPosition(new Vector3f(5f, 5f, -1f));
+        light.setColor(new Vector3f(0.3f));
         scene.add(light);
     }
 }
