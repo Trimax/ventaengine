@@ -1,14 +1,15 @@
 package io.github.trimax.examples.light.moveable.handlers;
 
+import org.joml.Vector3f;
+
 import io.github.trimax.examples.light.moveable.state.MoveableLightApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import lombok.AllArgsConstructor;
-import org.joml.Vector3f;
 
 @AllArgsConstructor
-public final class MovableLightApplicationStartupHandler implements VentaEngineStartupHandler {
+public final class MoveableLightApplicationStartupHandler implements VentaEngineStartupHandler {
     private final MoveableLightApplicationState state;
 
     public void onStartup(final String[] args, final VentaContext context) {
