@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.parsers;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.MeshFormat;
+import io.github.trimax.venta.engine.model.common.dto.Color;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
@@ -11,7 +12,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -117,7 +117,7 @@ public final class ObjMeshParser implements AbstractParser<MeshDTO> {
 
             final var key = Arrays.toString(parts);
             final var vertexIndex = vertexCache.computeIfAbsent(key, _ -> {
-                vertices.add(new MeshDTO.Vertex(pos, normal, uv, new Vector4f(1, 1, 1, 1)));
+                vertices.add(new MeshDTO.Vertex(pos, normal, uv, new Color(1, 1, 1, 1)));
                 return vertices.size() - 1;
             });
 

@@ -89,7 +89,7 @@ vec2 getTextureCoordinates() {
 }
 
 vec3 getMaterialColor() {
-    return isSet(useMaterial) ? material.color : vec3(1.0);
+    return isSet(useMaterial) ? material.color.rgb : vec3(1.0);
 }
 
 float getMaterialMetalness() {
