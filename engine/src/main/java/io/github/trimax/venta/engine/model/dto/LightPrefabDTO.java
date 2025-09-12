@@ -1,12 +1,12 @@
 package io.github.trimax.venta.engine.model.dto;
 
+import io.github.trimax.venta.engine.enums.LightType;
+import io.github.trimax.venta.engine.model.common.dto.Color;
+import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import org.joml.Vector3f;
 
-import io.github.trimax.venta.engine.enums.LightType;
-import io.github.trimax.venta.engine.model.common.light.Attenuation;
-
 public record LightPrefabDTO(LightType type,
-                             Vector3f color,
+                             Color color,
                              Vector3f direction,
                              float intensity,
                              Attenuation attenuation,
