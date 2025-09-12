@@ -42,7 +42,7 @@ public final class Engine implements Runnable {
         initializeOpenGL(ventaEngineApplication);
     }
 
-    private void initializeOpenGL(VentaEngineApplication ventaEngineApplication) {
+    private void initializeOpenGL(final VentaEngineApplication ventaEngineApplication) {
         glfwSetErrorCallback(new ErrorCallback());
         if (!glfwInit())
             throw new EngineInitializationException("GLFW init failed");
@@ -65,11 +65,11 @@ public final class Engine implements Runnable {
     }
 
     private void initializeOpenAL() {
-        long device = alcOpenDevice((String) null);
+        final var device = alcOpenDevice((String) null);
         if (device == 0)
             throw new RuntimeException("Failed to open OpenAL device");
 
-        long context = alcCreateContext(device, (int[]) null);
+        final var context = alcCreateContext(device, (int[]) null);
         if (context == 0) {
             alcCloseDevice(device);
             throw new RuntimeException("Failed to create OpenAL context");
