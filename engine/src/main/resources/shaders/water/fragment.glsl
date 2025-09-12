@@ -88,12 +88,20 @@ vec2 getTextureCoordinates() {
     return isSet(useMaterial) ? (vertexTextureCoordinates * material.tiling + material.offset) : vertexTextureCoordinates;
 }
 
+vec3 getMaterialColor() {
+    return isSet(useMaterial) ? material.color : vec3(1.0);
+}
+
+float getMaterialMetalness() {
+    return isSet(useMaterial) ? material.metalness : 0.0;
+}
+
 /* Gets diffuse texture color */
 vec3 getColor(vec2 textureCoordinates) {
     if (!isSet(useTextureDiffuse))
-        return vec3(0.0, 0.3, 0.6);
+        return getMaterialColor();
 
-    return mix(vec3(0.0, 0.1, 0.4), texture(textureDiffuse, textureCoordinates).rgb, 0.3);
+    return mix(getMaterialColor(), texture(textureDiffuse, textureCoordinates).rgb, 0.5);
 }
 
 /* Gets normal (either face or from normal map) */
@@ -155,10 +163,10 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec2 textureCoordinates)
     if (!isSet(useTextureSkybox))
         return color;
 
-    vec3 N = normalize(getNormal(textureCoordinates));
-    vec3 skyboxColor = texture(textureSkybox, reflect(-cameraDirection, N)).rgb;
+    vec3 normal = normalize(getNormal(textureCoordinates));
+    vec3 skyboxColor = texture(textureSkybox, reflect(-cameraDirection, normal)).rgb;
 
-    return mix(color, skyboxColor, 0.5); //TODO: Use metalness from material
+    return mix(color, skyboxColor, getMaterialMetalness());
 }
 
 void main() {

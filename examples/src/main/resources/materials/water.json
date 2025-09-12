@@ -1,13 +1,12 @@
 {
-    "metalness": 0.0,
+    "metalness": 0.7,
     "roughness": 0.0,
     "opacity": 1.0,
     "tiling": {"x": 25.0, "y": 25.0},
     "offset": {"x": 0.0, "y": 0.0},
-    "color": {"x": 1.0, "y": 1.0, "z": 1.0},
+    "color": {"x": 0.0, "y": 0.1, "z": 0.6},
     "textures": {
         "ambientOcclusion": "water/ambient_occlusion.png",
-        "diffuse": "water/diffuse.png",
         "normal": "water/normal.png",
         "height": "water/height.png"
     }
