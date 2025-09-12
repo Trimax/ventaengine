@@ -16,9 +16,12 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL33C.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL33C.glEnable;
@@ -35,6 +38,11 @@ public final class Engine implements Runnable {
     private final Memory memory;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
+        initializeOpenAL();
+        initializeOpenGL(ventaEngineApplication);
+    }
+
+    private void initializeOpenGL(final VentaEngineApplication ventaEngineApplication) {
         glfwSetErrorCallback(new ErrorCallback());
         if (!glfwInit())
             throw new EngineInitializationException("GLFW init failed");
@@ -54,6 +62,22 @@ public final class Engine implements Runnable {
 
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
+    }
+
+    private void initializeOpenAL() {
+        final var device = alcOpenDevice((String) null);
+        if (device == 0)
+            throw new RuntimeException("Failed to open OpenAL device");
+
+        final var context = alcCreateContext(device, (int[]) null);
+        if (context == 0) {
+            alcCloseDevice(device);
+            throw new RuntimeException("Failed to create OpenAL context");
+        }
+
+        alcMakeContextCurrent(context);
+        ALC.createCapabilities(device);
+        AL.createCapabilities(ALC.createCapabilities(device));
     }
 
     @Override
