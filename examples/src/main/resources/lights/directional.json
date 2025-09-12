@@ -1,0 +1,13 @@
+{
+    "type": "Directional",
+    "color": {"x": 1.0, "y": 0.6, "z": 0.4},
+    "direction": {"x": 0.0, "y": -1.0, "z": 1.0},
+    "attenuation": {
+        "constant": 1.0,
+        "linear": 1.0,
+        "quadratic": 0.0
+    },
+    "intensity": 1.0,
+    "range": 100.0,
+    "castShadows": false
+}

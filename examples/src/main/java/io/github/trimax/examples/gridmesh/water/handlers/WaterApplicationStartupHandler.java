@@ -27,11 +27,9 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         camera.setPosition(new Vector3f(0f, 10f, 250f));
         camera.lookAt(new Vector3f(0f));
 
-        final var light = context.getLightManager().create("Sun", context.getLightRepository().get("point.json"));
+        final var light = context.getLightManager().create("Sun", context.getLightRepository().get("directional.json"));
         light.setAttenuation(new Attenuation(1, 1, 0));
-        light.setPosition(new Vector3f(5f, 5f, -10f));
-        light.setColor(new Vector3f(1.f, 0.85f, 0.6f));
-        light.setIntensity(5.f);
+        light.setPosition(new Vector3f(0f, 10f, -10f));
         scene.add(light);
     }
 }
