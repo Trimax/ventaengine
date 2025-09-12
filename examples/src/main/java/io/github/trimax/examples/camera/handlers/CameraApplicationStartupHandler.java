@@ -19,7 +19,7 @@ public final class CameraApplicationStartupHandler implements VentaEngineStartup
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector3f(0.6f, 0.6f, 0.6f));
 
-        final var castle = context.getObjectManager().create("Castle", context.getObjectRepository().get("castle.json"));
+        final var castle = context.getObjectManager().create("Lime", context.getObjectRepository().get("lime.json"));
         castle.move(new Vector3f(0, 1.5f, 0));
         castle.setScale(new Vector3f(3.f));
         scene.add(castle);
