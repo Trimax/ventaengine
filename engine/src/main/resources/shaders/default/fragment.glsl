@@ -35,7 +35,7 @@ struct Light {
 };
 
 struct Material {
-    vec3 color;
+    vec4 color;
     vec2 tiling;
     vec2 offset;
     float metalness;
@@ -171,7 +171,7 @@ vec2 getTextureCoordinates() {
 
 /* Gets material color if set othewise white color */
 vec4 getMaterialColor() {
-    return isSet(useMaterial) ? vec4(material.color, 1.0) : vec4(1.0);
+    return isSet(useMaterial) ? material.color : vec4(1.0);
 }
 
 /***

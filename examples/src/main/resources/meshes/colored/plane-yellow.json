@@ -1,9 +1,9 @@
 {
   "vertices": [
-    { "position": {"x": -0.5, "y": 0.0, "z": -0.5}, "color": {"x": 1, "y": 0.67, "z": 0, "w": 1}, "textureCoordinates": {"x": 0.0, "y": 0.0} },
-    { "position": {"x":  0.5, "y": 0.0, "z": -0.5}, "color": {"x": 1, "y": 0.67, "z": 0, "w": 1}, "textureCoordinates": {"x": 1.0, "y": 0.0} },
-    { "position": {"x":  0.5, "y": 0.0, "z":  0.5}, "color": {"x": 1, "y": 0.67, "z": 0, "w": 1}, "textureCoordinates": {"x": 1.0, "y": 1.0} },
-    { "position": {"x": -0.5, "y": 0.0, "z":  0.5}, "color": {"x": 1, "y": 0.67, "z": 0, "w": 1}, "textureCoordinates": {"x": 0.0, "y": 1.0} }
+    { "position": {"x": -0.5, "y": 0.0, "z": -0.5}, "color": {"r": 1, "g": 0.67, "b": 0, "a": 1}, "textureCoordinates": {"x": 0.0, "y": 0.0} },
+    { "position": {"x":  0.5, "y": 0.0, "z": -0.5}, "color": {"r": 1, "g": 0.67, "b": 0, "a": 1}, "textureCoordinates": {"x": 1.0, "y": 0.0} },
+    { "position": {"x":  0.5, "y": 0.0, "z":  0.5}, "color": {"r": 1, "g": 0.67, "b": 0, "a": 1}, "textureCoordinates": {"x": 1.0, "y": 1.0} },
+    { "position": {"x": -0.5, "y": 0.0, "z":  0.5}, "color": {"r": 1, "g": 0.67, "b": 0, "a": 1}, "textureCoordinates": {"x": 0.0, "y": 1.0} }
   ],
   "facets": [
     {"vertex1": 0, "vertex2": 2, "vertex3": 1},

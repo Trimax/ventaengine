@@ -1,12 +1,12 @@
 package io.github.trimax.venta.engine.model.dto;
 
+import io.github.trimax.venta.engine.model.common.dto.Color;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.*;
 
@@ -78,10 +78,10 @@ public record MeshDTO(List<Vertex> vertices,
             }
 
             if (vertex.hasColor()) {
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_R] = vertex.color().x();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_G] = vertex.color().y();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_B] = vertex.color().z();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_A] = vertex.color().w();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_R] = vertex.color().r();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_G] = vertex.color().g();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_B] = vertex.color().b();
+                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_A] = vertex.color().a();
             }
         }
 
@@ -255,7 +255,7 @@ public record MeshDTO(List<Vertex> vertices,
     public record Vertex(Vector3f position,
                          Vector3f normal,
                          Vector2f textureCoordinates,
-                         Vector4f color) {
+                         Color color) {
         public boolean hasPosition() {
             return position != null;
         }

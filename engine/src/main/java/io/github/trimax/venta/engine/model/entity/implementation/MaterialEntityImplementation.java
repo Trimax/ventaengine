@@ -1,13 +1,7 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.model.common.dto.Color;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
@@ -15,6 +9,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.joml.Vector4f;
+import org.joml.Vector4fc;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
@@ -23,7 +25,7 @@ public final class MaterialEntityImplementation extends AbstractEntityImplementa
     private final float metalness;
     private final float roughness;
     private final float opacity;
-    private final Vector3f color;
+    private final Vector4f color;
     private final Vector2f tiling;
     private final Vector2f offset;
 
@@ -31,7 +33,7 @@ public final class MaterialEntityImplementation extends AbstractEntityImplementa
         this(Optional.ofNullable(dto.metalness()).orElse(0.f),
                 Optional.ofNullable(dto.roughness()).orElse(0.f),
                 Optional.ofNullable(dto.opacity()).orElse(0.f),
-                Optional.ofNullable(dto.color()).orElse(new Vector3f(1.f)),
+                Optional.ofNullable(dto.color()).map(Color::toVector4f).orElse(new Vector4f(1.f)),
                 Optional.ofNullable(dto.tiling()).orElse(new Vector2f(1.f)),
                 Optional.ofNullable(dto.offset()).orElse(new Vector2f(0.f)));
     }
@@ -43,17 +45,17 @@ public final class MaterialEntityImplementation extends AbstractEntityImplementa
     }
 
     @Override
-    public void setTiling(@NonNull final Vector2f tiling) {
+    public void setTiling(@NonNull final Vector2fc tiling) {
         this.tiling.set(tiling);
     }
 
     @Override
-    public void setOffset(@NonNull final Vector2f offset) {
+    public void setOffset(@NonNull final Vector2fc offset) {
         this.offset.set(offset);
     }
 
     @Override
-    public void setColor(@NonNull final Vector3f color) {
+    public void setColor(@NonNull final Vector4fc color) {
         this.color.set(color);
     }
 
