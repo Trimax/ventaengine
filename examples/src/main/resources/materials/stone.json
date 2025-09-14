@@ -1,15 +1,15 @@
 {
-    "metalness": 0.0,
-    "roughness": 0.0,
-    "opacity": 1.0,
-    "tiling": {"x": 1.0, "y": 1.0},
-    "offset": {"x": 0.0, "y": 0.0},
-    "color": {"r": 1.0, "g": 1.0, "b": 1.0, "a": 1.0},
-    "textures": {
-        "ambientOcclusion": "stone/ambient_occlusion.png",
-        "diffuse": "stone/diffuse.png",
-        "height": "stone/height.png",
-        "normal": "stone/normal.png",
-        "roughness": "stone/roughness.png"
-    }
+  "metalness": 0.0,
+  "roughness": 0.0,
+  "opacity": 1.0,
+  "tiling": {"x": 1.0, "y": 1.0},
+  "offset": {"x": 0.0, "y": 0.0},
+  "color": {"r": 1.0, "g": 1.0, "b": 1.0, "a": 1.0},
+  "textures": {
+    "ambientOcclusion": "stone/ambient_occlusion.png",
+    "diffuse": "stone/diffuse.png",
+    "height": "stone/height.png",
+    "normal": "stone/normal.png",
+    "roughness": "stone/roughness.png"
+  }
 }
