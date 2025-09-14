@@ -1,16 +1,18 @@
 package io.github.trimax.examples.gridmesh.water.handlers;
 
-import org.joml.Vector3f;
-
+import io.github.trimax.examples.gridmesh.water.state.WaterApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 
 @Slf4j
 @AllArgsConstructor
 public final class WaterApplicationStartupHandler implements VentaEngineStartupHandler {
+    private final WaterApplicationState state;
+
     public void onStartup(final String[] args, final VentaContext context) {
         log.info("Water demo application started");
 
@@ -24,13 +26,14 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         scene.add(water);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(0f, 5f, 250f));
-        camera.lookAt(new Vector3f(50f, 0f, 0f));
+        camera.setPosition(new Vector3f(0f, 5f, 0f));
+        camera.lookAt(new Vector3f(-1f, 5f, -1f));
+        state.setCamera(camera);
 
         final var light = context.getLightManager().create("Sun", context.getLightRepository().get("directional.json"));
         light.setAttenuation(new Attenuation(1, 1, 0));
-        light.setPosition(new Vector3f(5f, 5f, -1f));
-        light.setColor(new Vector3f(0.3f));
+        light.setPosition(new Vector3f(5f, 6.5f, 3f));
+        light.setDirection(new Vector3f(-5f, -6.5f, -3f));
         scene.add(light);
     }
 }
