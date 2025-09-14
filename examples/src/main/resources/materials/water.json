@@ -1,13 +1,13 @@
 {
-    "metalness": 0.7,
-    "roughness": 0.0,
-    "opacity": 1.0,
-    "tiling": {"x": 25.0, "y": 25.0},
-    "offset": {"x": 0.0, "y": 0.0},
-    "color": {"r": 0.0, "g": 0.1, "b": 0.6, "a": 1.0},
-    "textures": {
-        "ambientOcclusion": "water/ambient_occlusion.png",
-        "normal": "water/normal.png",
-        "height": "water/height.png"
-    }
+  "metalness": 0.7,
+  "roughness": 0.0,
+  "opacity": 1.0,
+  "tiling": {"x": 25.0, "y": 25.0},
+  "offset": {"x": 0.0, "y": 0.0},
+  "color": {"r": 0.0, "g": 0.1, "b": 0.6, "a": 1.0},
+  "textures": {
+    "ambientOcclusion": "water/ambient_occlusion.png",
+    "normal": "water/normal.png",
+    "height": "water/height.png"
+  }
 }
