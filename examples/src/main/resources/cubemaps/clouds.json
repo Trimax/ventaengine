@@ -1,11 +1,11 @@
 {
   "program": "sky.json",
   "faces": {
-    "Right": "sky/clouds/right.jpg",
-    "Left": "sky/clouds/left.jpg",
-    "Front": "sky/clouds/front.jpg",
-    "Back": "sky/clouds/back.jpg",
-    "Top": "sky/clouds/top.jpg",
-    "Bottom": "sky/clouds/bottom.jpg"
+    "Right": "sky/clouds/right.png",
+    "Left": "sky/clouds/left.png",
+    "Front": "sky/clouds/back.png",
+    "Back": "sky/clouds/front.png",
+    "Top": "sky/clouds/top.png",
+    "Bottom": "sky/clouds/bottom.png"
   }
 }

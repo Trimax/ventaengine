@@ -116,7 +116,7 @@ public final class CubemapRegistryImplementation
             final var imageBuffer = BufferUtils.createByteBuffer(data.length);
             imageBuffer.put(data).flip();
 
-            final ByteBuffer pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 3);
+            final ByteBuffer pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 0);
             if (pixels == null) {
                 MemoryUtil.memFree(imageBuffer);
                 return null;

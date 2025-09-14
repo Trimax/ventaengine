@@ -84,3 +84,9 @@ jpackage \
 --icon engine/src/main/resources/icons/app.icns \
 --type dmg
 ```
+
+### Useful links
+- HDMI to cube map converter: https://matheowis.github.io/HDRI-to-CubeMap/
+- FBX to OBJ converter: https://convert3d.org/fbx-to-obj
+- Free textures: https://www.poliigon.com/textures/free
+- Free textures: https://www.textures.com/free
