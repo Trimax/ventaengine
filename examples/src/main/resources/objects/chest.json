@@ -1,9 +1,8 @@
 {
   "program": "default.json",
   "root": {
-    "name": "chest",
+    "name": "Chest",
     "value": {
-      "name": "Chest",
       "mesh": "chest.obj",
       "material": "chest.json",
       "transform": {

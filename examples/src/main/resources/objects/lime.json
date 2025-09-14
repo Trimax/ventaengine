@@ -1,9 +1,8 @@
 {
   "program": "default.json",
   "root": {
-    "name": "lime",
+    "name": "Lime",
     "value": {
-      "name": "Lime",
       "mesh": "lime.obj",
       "material": "lime.json",
       "transform": {
