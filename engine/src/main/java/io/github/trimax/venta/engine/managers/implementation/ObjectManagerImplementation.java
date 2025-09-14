@@ -18,6 +18,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -42,7 +44,7 @@ public final class ObjectManagerImplementation
 
     private Node<MeshReference> createHierarchy(final Node<MeshReference> node) {
         return new Node<>(node.name(),
-                createMesh(node.value()),
+                Optional.ofNullable(node.value()).map(this::createMesh).orElse(null),
                 node.hasChildren() ? StreamEx.of(node.children()).map(this::createHierarchy).toList() : null);
     }
 

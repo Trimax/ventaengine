@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -45,7 +46,8 @@ public final class ObjectRepositoryImplementation
     }
     
     private Node<MeshReference> loadMeshHierarchy(@NonNull final Node<MeshPrefabDTO> node) {
-        return new Node<>(node.name(), convert(node.value()),
+        return new Node<>(Optional.ofNullable(node.name()).orElse(UUID.randomUUID().toString()),
+                Optional.ofNullable(node.value()).map(this::convert).orElse(null),
                 node.hasChildren() ? StreamEx.of(node.children()).map(this::loadMeshHierarchy).toList() : null);
     }
 

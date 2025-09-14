@@ -1,9 +1,8 @@
 {
   "program": "default.json",
   "root": {
-    "name": "plane",
+    "name": "Tetrahedron",
     "value": {
-      "name": "An example of tetrahedron",
       "mesh": "tetrahedron.json",
       "transform": {
         "position": {"x": 0.0, "y": 0.0, "z": 0.0},

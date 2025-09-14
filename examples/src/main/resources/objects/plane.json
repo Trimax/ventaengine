@@ -2,7 +2,7 @@
   "program": "default.json",
   "material": "concrete.json",
   "root": {
-    "name": "plane",
+    "name": "Plane",
     "value": {
       "name": "XZ plane",
       "mesh": "plane.json",
