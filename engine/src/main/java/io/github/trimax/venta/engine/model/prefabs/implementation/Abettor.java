@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -47,5 +48,12 @@ public final class Abettor {
 
     public ScenePrefabImplementation createScene(@NonNull final SceneDTO dto) {
         return new ScenePrefabImplementation(dto);
+    }
+
+    public SoundSourcePrefabImplementation createSound(@NonNull SoundEntityImplementation sound,
+                                                       final float volume,
+                                                       final float pitch,
+                                                       final boolean looping) {
+        return new SoundSourcePrefabImplementation(sound, volume, pitch, looping);
     }
 }
