@@ -185,60 +185,46 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec2 textureCoordinates)
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
-    vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
-    vec3 baseColor = getColor(textureCoordinates);
+    vec3 N = normalize(getNormal(textureCoordinates));
+    vec3 V = normalize(cameraPosition - vertexPosition);
 
+    // --- 1. Базовый цвет по высоте ---
+    float height = vertexPosition.y;
 
+    // нормализуем высоту → плавный переход
+    float depthFactor = smoothstep(
+        uDepthThreshold - uDepthTransition,
+        uDepthThreshold + uDepthTransition,
+        height
+    );
 
+    // немного прижимаем экспонентой, чтобы гребни не были слишком светлыми
+    depthFactor = pow(depthFactor, 0.7);
 
+    // смешиваем глубину и основной цвет
+    vec3 waterColor = mix(uDepthColor, uSurfaceColor, depthFactor);
 
-    //float elevation = vertexPosition.y; // либо можно dot(N, vec3(0,1,0))
-    float elevation = dot(vertexNormal, vec3(0,1,0)); // либо можно dot(N, vec3(0,1,0))
+    // --- 2. Гребни волн ---
+    // если нормаль ближе к горизонтали → гребень
+    float peakFactor = smoothstep(
+        uPeakThreshold - uPeakTransition,
+        uPeakThreshold + uPeakTransition,
+        1.0 - abs(N.y)
+    );
 
-    float peakFactor = smoothstep(uPeakThreshold - uPeakTransition,
-                                  uPeakThreshold + uPeakTransition,
-                                  elevation);
-//    float depthFactor = smoothstep(uDepthThreshold - uDepthTransition,
-//                                   uDepthThreshold + uDepthTransition,
-//                                   elevation);
+    vec3 waterWithPeaks = mix(waterColor, uPeakColor, peakFactor);
 
+    // --- 3. Освещение ---
+    vec3 litColor = computeLighting(waterWithPeaks, N, V);
 
-    // Сначала смешиваем глубину с поверхностью
-   // vec3 mixedColor = mix(uDepthColor, uSurfaceColor, depthFactor);
-    // Потом добавляем гребни
-   // mixedColor = mix(mixedColor, uPeakColor, peakFactor);
+    // --- 4. Fresnel (угловой эффект) ---
+    float fresnel = pow(1.0 - max(dot(N, V), 0.0), 5.0);
 
+    // --- 5. Отражения ---
+    vec3 reflected = applyReflections(litColor, V, textureCoordinates);
 
+    // --- 6. Финальное смешивание ---
+    vec3 finalColor = mix(litColor, reflected, 0.6 + fresnel * 0.4);
 
-    //baseColor = mix(baseColor, mixedColor, 0.7); // коэффициент подбери
-//baseColor = mixedColor;
-
-
-
-    float fresnel = pow(1.0 - max(dot(getNormal(textureCoordinates), cameraDirection), 0.0), 5.0);
-    vec3 colorWithFresnel = mix(baseColor, vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
-
-    vec3 color = computeLighting(colorWithFresnel, getNormal(textureCoordinates), cameraDirection);
-
-    float depthFactor = clamp(dot(vertexNormal, cameraDirection), 0.0, 1.0);
-
-    // поглощение (чем более острый угол, тем глубже цвет)
-    vec3 waterColor = mix(uDepthColor, uSurfaceColor, pow(depthFactor, 0.5));
-
-
-    vec3 colorWithReflections = applyReflections(waterColor, cameraDirection, textureCoordinates);
-
-
-
-
-   // float depthFactor = clamp(dot(vertexNormal, cameraDirection), 0.0, 1.0);
-
-    // поглощение (чем более острый угол, тем глубже цвет)
-  //  vec3 waterColor = mix(uDepthColor, uSurfaceColor, pow(depthFactor, 0.5));
-
-    // итоговый цвет
-    vec3 finalColor = mix(waterColor, colorWithReflections, 0.8); // 0.5 = сила отражений
     outputColor = vec4(finalColor, 1.0);
-
-    outputColor = vec4(colorWithReflections, 1.0);
 }
