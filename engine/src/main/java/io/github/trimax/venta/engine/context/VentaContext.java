@@ -20,16 +20,8 @@ import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplem
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.registries.*;
 import io.github.trimax.venta.engine.registries.implementation.*;
-import io.github.trimax.venta.engine.repositories.EmitterRepository;
-import io.github.trimax.venta.engine.repositories.GridMeshRepository;
-import io.github.trimax.venta.engine.repositories.LightRepository;
-import io.github.trimax.venta.engine.repositories.ObjectRepository;
-import io.github.trimax.venta.engine.repositories.SceneRepository;
-import io.github.trimax.venta.engine.repositories.implementation.EmitterRepositoryImplementation;
-import io.github.trimax.venta.engine.repositories.implementation.GridMeshRepositoryImplementation;
-import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
-import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
-import io.github.trimax.venta.engine.repositories.implementation.SceneRepositoryImplementation;
+import io.github.trimax.venta.engine.repositories.*;
+import io.github.trimax.venta.engine.repositories.implementation.*;
 import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -126,6 +118,10 @@ public final class VentaContext {
 
     public GridMeshRepository getGridMeshRepository() {
         return repositoryFactory.get(GridMeshRepositoryImplementation.class);
+    }
+
+    public SoundSourceRepository getSoundSourceRepository() {
+        return repositoryFactory.get(SoundSourceRepositoryImplementation.class);
     }
 
     /*** Keyboard ***/
