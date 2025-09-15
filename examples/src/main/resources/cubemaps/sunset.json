@@ -1,0 +1,11 @@
+{
+  "program": "sky.json",
+  "faces": {
+    "Right": "sky/sunset/px.png",
+    "Left": "sky/sunset/nx.png",
+    "Front": "sky/sunset/pz.png",
+    "Back": "sky/sunset/nz.png",
+    "Top": "sky/sunset/py.png",
+    "Bottom": "sky/sunset/ny.png"
+  }
+}
