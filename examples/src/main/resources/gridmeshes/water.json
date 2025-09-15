@@ -86,6 +86,20 @@
       "length": 1,
       "steepness": 0.08,
       "speed": 0.7
+    },
+    {
+      "direction": {"x": 0.8, "y": 0.3},
+      "amplitude": 1.2,
+      "length": 80,
+      "steepness": 0.1,
+      "speed": 0.2
+    },
+    {
+      "direction": {"x": -0.4, "y": 0.9},
+      "amplitude": 0.9,
+      "length": 60,
+      "steepness": 0.12,
+      "speed": 0.15
     }
   ]
 }
