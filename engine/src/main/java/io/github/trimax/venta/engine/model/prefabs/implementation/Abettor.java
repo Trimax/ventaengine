@@ -50,7 +50,7 @@ public final class Abettor {
         return new ScenePrefabImplementation(dto);
     }
 
-    public SoundSourcePrefabImplementation createSound(@NonNull SoundEntityImplementation sound,
+    public SoundSourcePrefabImplementation createSound(@NonNull final SoundEntityImplementation sound,
                                                        final float volume,
                                                        final float pitch,
                                                        final boolean looping) {
