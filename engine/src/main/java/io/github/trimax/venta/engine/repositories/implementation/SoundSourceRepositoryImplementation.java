@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -33,14 +35,14 @@ public final class SoundSourceRepositoryImplementation
 
         return abettor.createSound(
                 soundRegistry.get(soundSourceDTO.sound()),
-                soundSourceDTO.volume(),
-                soundSourceDTO.pitch(),
-                soundSourceDTO.looping()
+                Optional.ofNullable(soundSourceDTO.volume()).orElse(1.0f),
+                Optional.ofNullable(soundSourceDTO.pitch()).orElse(0.0f),
+                Optional.ofNullable(soundSourceDTO.looping()).orElse(true)
         );
     }
 
     @Override
     protected void unload(@NonNull final SoundSourcePrefabImplementation entity) {
-        log.info("Unloading light {}", entity.getID());
+        log.info("Unloading sound {}", entity.getID());
     }
 }
