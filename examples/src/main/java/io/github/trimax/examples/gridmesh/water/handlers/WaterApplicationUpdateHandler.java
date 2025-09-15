@@ -29,6 +29,6 @@ public final class WaterApplicationUpdateHandler implements VentaEngineUpdateHan
         if (context.isButtonPushed(GLFW_KEY_RIGHT))
             state.setCameraAngle(state.getCameraAngle() - (float) time.getDelta());
 
-        state.getCamera().lookAt(new Vector3f((float) Math.sin(state.getCameraAngle()) * state.getCameraDistance(), 5, (float) Math.cos(state.getCameraAngle()) * state.getCameraDistance()));
+        state.getCamera().lookAt(new Vector3f((float) Math.sin(state.getCameraAngle()) * state.getCameraDistance(), 15f, (float) Math.cos(state.getCameraAngle()) * state.getCameraDistance()));
     }
 }

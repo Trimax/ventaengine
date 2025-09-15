@@ -1,7 +1,7 @@
 {
-  "program": "water.json",
+  "program": "water2.json",
   "size": {"x": 500.0, "y": 500.0},
-  "segments": {"x": 128, "y": 128},
+  "segments": {"x": 512, "y": 512},
   "waves": [
     {
       "direction": {"x": 1.0, "y": 1.0},

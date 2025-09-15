@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public final class WaterApplicationState {
-    private float cameraAngle = (float) Math.PI / 4;
+    private float cameraAngle = (float) Math.PI / 2;
     private float cameraDistance = 2.5f;
     private CameraInstance camera;
 }

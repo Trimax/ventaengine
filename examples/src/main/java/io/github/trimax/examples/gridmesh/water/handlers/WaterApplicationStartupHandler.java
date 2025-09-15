@@ -3,7 +3,6 @@ package io.github.trimax.examples.gridmesh.water.handlers;
 import io.github.trimax.examples.gridmesh.water.state.WaterApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
-import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -17,23 +16,24 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         log.info("Water demo application started");
 
         final var scene = context.getSceneManager().getCurrent();
-        scene.setSkybox(context.getCubemapRegistry().get("clouds.json"));
+        scene.setSkybox(context.getCubemapRegistry().get("sunset.json"));
         scene.setAmbientLight(new Vector3f(0.6f, 0.6f, 0.6f));
 
         final var water = context.getGridMeshManager().create("Water", context.getGridMeshRepository().get("water.json"));
         water.setMaterial(context.getMaterialRegistry().get("water.json"));
-        water.setPosition(new Vector3f(0f, 1.5f, 0f));
+        water.setPosition(new Vector3f(0f, 0.f, 0f));
+       // water.setDrawMode(DrawMode.Edge);
         scene.add(water);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(0f, 5f, 0f));
+        camera.setPosition(new Vector3f(0.8f, 15f, 0f));
         camera.lookAt(new Vector3f(-1f, 5f, -1f));
         state.setCamera(camera);
 
-        final var light = context.getLightManager().create("Sun", context.getLightRepository().get("directional.json"));
-        light.setAttenuation(new Attenuation(1, 1, 0));
-        light.setPosition(new Vector3f(5f, 6.5f, 3f));
-        light.setDirection(new Vector3f(-5f, -6.5f, -3f));
-        scene.add(light);
+//        final var light = context.getLightManager().create("Sun", context.getLightRepository().get("directional.json"));
+//        light.setAttenuation(new Attenuation(1, 1, 0));
+//        light.setPosition(new Vector3f(5f, 6.5f, 3f));
+//        light.setDirection(new Vector3f(-5f, -6.5f, -3f));
+//        scene.add(light);
     }
 }
