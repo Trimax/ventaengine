@@ -8,6 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 public final class SoundDemoApplicationStartupHandler implements VentaEngineStartupHandler {
     @Override
     public void onStartup(final String[] args, final VentaContext context) {
-        log.info("Loading sound file: {}", context.getSoundRegistry().get("water.ogg"));
+        log.info("Loading sound file: {}", context.getSoundSourceRepository().get("default.json"));
     }
 }
