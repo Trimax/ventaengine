@@ -67,6 +67,10 @@ public enum ShaderUniform {
     /* Fog flag */
     UseFogFlag("useFog"),
 
+    /* Fresnel */
+    FresnelScale("fresnel.scale"),
+    FresnelPower("fresnel.power"),
+
     /* Common model parameters transformation*/
     Position("position"),
     Scale("scale"),

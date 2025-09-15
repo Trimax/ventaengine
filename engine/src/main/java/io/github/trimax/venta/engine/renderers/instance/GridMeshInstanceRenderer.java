@@ -1,37 +1,33 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15C.glBindBuffer;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.binders.CameraBinder;
-import io.github.trimax.venta.engine.binders.LightBinder;
-import io.github.trimax.venta.engine.binders.MaterialBinder;
-import io.github.trimax.venta.engine.binders.MatrixBinder;
-import io.github.trimax.venta.engine.binders.TextureBinder;
-import io.github.trimax.venta.engine.binders.TimeBinder;
-import io.github.trimax.venta.engine.binders.WaveBinder;
+import io.github.trimax.venta.engine.binders.*;
+import io.github.trimax.venta.engine.enums.ShaderGridMeshUniform;
 import io.github.trimax.venta.engine.model.instance.implementation.GridMeshInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GridMeshInstanceRenderer extends
         AbstractInstanceRenderer<GridMeshInstanceImplementation, GridMeshInstanceRenderer.GridMeshRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final MaterialBinder materialBinder;
+    private final FresnelBinder fresnelBinder;
+    private final SurfaceBinder surfaceBinder;
     private final TextureBinder textureBinder;
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
@@ -61,7 +57,13 @@ public final class GridMeshInstanceRenderer extends
         //waveBinder.bind(mesh.getProgram(), mesh.getMesh().getWaves());
         waveBinder.bind(mesh.getProgram(), mesh.getMesh().getWave());
 
-        materialBinder.bind(mesh.getProgram(), mesh.getMaterial());
+        surfaceBinder.bind(mesh.getProgram(), ShaderGridMeshUniform.Surface, mesh.getMesh().getSurface());
+        surfaceBinder.bind(mesh.getProgram(), ShaderGridMeshUniform.Trough, mesh.getMesh().getTrough());
+        surfaceBinder.bind(mesh.getProgram(), ShaderGridMeshUniform.Peak, mesh.getMesh().getPeak());
+
+        fresnelBinder.bind(mesh.getProgram(), mesh.getMesh().getFresnel());
+
+       // materialBinder.bind(mesh.getProgram(), mesh.getMaterial());
 
         textureBinder.bind(mesh.getProgram(), getContext().getScene().getSkybox());
 

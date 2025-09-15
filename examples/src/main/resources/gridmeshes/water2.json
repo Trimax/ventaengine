@@ -1,30 +1,30 @@
 {
   "program": "water2.json",
   "size": {"x": 500.0, "y": 500.0},
-  "segments": {"x": 256, "y": 256},
+  "segments": {"x": 1024, "y": 1024},
   "wave": {
-      "amplitude": 0.025,
-      "frequency": 1.07,
-      "persistence": 0.3,
-      "lacunarity": 2.18,
+      "amplitude": 0.018,
+      "frequency": 1.50,
+      "persistence": 0.32,
+      "lacunarity": 2.32,
       "iterations": 8,
-      "speed": 0.4
+      "speed": 0.15
   },
   "surface": {
-    "color":{"r": 0.608, "g": 0.847, "b": 0.753, "a": 0.8}
+    "color":{"r": 0.12, "g": 0.52, "b": 0.34, "a": 1.0}
   },
   "trough": {
-    "color":{"r": 0.094, "g": 0.4, "b": 0.569, "a": 1.0},
-    "threshold": -0.01,
-    "transition": 0.15
+    "color":{"r": 0.01, "g": 0.13, "b": 0.28, "a": 1.0},
+    "threshold": 0.0,
+    "transition": 0.21
   },
   "peak": {
-    "color":{"r": 0.733, "g": 0.847, "b": 0.878, "a": 1.0},
-    "threshold": 0.08,
-    "transition": 0.05
+    "color":{"r": 0.50, "g": 0.69, "b": 0.75, "a": 1.0},
+    "threshold": 0.2,
+    "transition": 0.12
   },
   "fresnel": {
-    "scale": 0.8,
-    "power": 0.5
+    "scale": 0.51,
+    "power": 0 //1.30
   }
 }

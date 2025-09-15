@@ -74,8 +74,9 @@ public final class GridMeshRepositoryImplementation
         MemoryUtil.memFree(vertexBuffer);
         MemoryUtil.memFree(indexBuffer);
 
-        return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()), gridMeshDTO.waves(),
-                grid.verticesCount(), grid.facetsCount(), vertexArrayObjectID, verticesBufferID, facetsBufferID, grid);
+        return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()),
+                gridMeshDTO.wave(), gridMeshDTO.surface(), gridMeshDTO.trough(), gridMeshDTO.peak(), gridMeshDTO.fresnel(),
+                grid.verticesCount(), grid.facetsCount(), vertexArrayObjectID, verticesBufferID, facetsBufferID);
     }
 
     @Override

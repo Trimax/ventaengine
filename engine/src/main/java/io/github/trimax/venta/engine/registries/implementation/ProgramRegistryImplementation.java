@@ -3,10 +3,7 @@ package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
-import io.github.trimax.venta.engine.enums.ShaderLightUniform;
-import io.github.trimax.venta.engine.enums.ShaderType;
-import io.github.trimax.venta.engine.enums.ShaderUniform;
-import io.github.trimax.venta.engine.enums.ShaderWaveUniform;
+import io.github.trimax.venta.engine.enums.*;
 import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
@@ -71,6 +68,13 @@ public final class ProgramRegistryImplementation
         for (int i = 0; i < Definitions.WAVE_MAX; i++)
             for (final var field : ShaderWaveUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
+
+        for (final var field : ShaderWaveUniform.values())
+            program.addUniformID(field.getUniformName(), glGetUniformLocation(program.getInternalID(), field.getUniformName()));
+
+        for (final var field : ShaderGridMeshUniform.values())
+            for (final var subField : ShaderSurfaceUniform.values())
+                program.addUniformID(subField.getUniformName(field.getUniformName()), glGetUniformLocation(program.getInternalID(), subField.getUniformName(field.getUniformName())));
 
         log.debug("{} uniforms found and registered for program {}", program.getUniformCount(), program.getID());
     }

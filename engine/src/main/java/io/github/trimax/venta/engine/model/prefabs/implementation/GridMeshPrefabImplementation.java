@@ -1,9 +1,8 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
-import java.util.List;
-
-import io.github.trimax.venta.engine.model.common.geo.Grid;
+import io.github.trimax.venta.engine.model.common.geo.Surface;
 import io.github.trimax.venta.engine.model.common.geo.Wave;
+import io.github.trimax.venta.engine.model.common.math.Fresnel;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.prefabs.GridMeshPrefab;
 import lombok.AccessLevel;
@@ -14,8 +13,11 @@ import lombok.Value;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class GridMeshPrefabImplementation extends AbstractPrefabImplementation implements GridMeshPrefab {
     ProgramEntity program;
-    List<Wave> waves;
     Wave wave;
+    Surface surface;
+    Surface trough;
+    Surface peak;
+    Fresnel fresnel;
 
     int verticesCount;
     int facetsCount;
@@ -23,7 +25,4 @@ public class GridMeshPrefabImplementation extends AbstractPrefabImplementation i
     int vertexArrayObjectID;
     int verticesBufferID;
     int facetsBufferID;
-
-    //TODO: Temporary
-    public Grid grid;
 }

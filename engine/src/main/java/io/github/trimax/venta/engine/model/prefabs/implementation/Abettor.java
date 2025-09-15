@@ -2,9 +2,10 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
-import io.github.trimax.venta.engine.model.common.geo.Grid;
+import io.github.trimax.venta.engine.model.common.geo.Surface;
 import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.math.Fresnel;
 import io.github.trimax.venta.engine.model.dto.EmitterDTO;
 import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
@@ -15,8 +16,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.List;
-
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Abettor {
@@ -25,15 +24,17 @@ public final class Abettor {
     }
 
     public GridMeshPrefabImplementation createGridMesh(final ProgramEntity program,
-                                                       final List<Wave> waves,
+                                                       final Wave wave,
+                                                       final Surface surface,
+                                                       final Surface trough,
+                                                       final Surface peak,
+                                                       final Fresnel fresnel,
                                                        final int verticesCount,
                                                        final int facetsCount,
                                                        final int vertexArrayObjectID,
                                                        final int verticesBufferID,
-                                                       final int facetsBufferID,
-
-                                                       final Grid grid) {
-        return new GridMeshPrefabImplementation(program, waves, verticesCount, facetsCount, vertexArrayObjectID, verticesBufferID, facetsBufferID, grid);
+                                                       final int facetsBufferID) {
+        return new GridMeshPrefabImplementation(program, wave, surface, trough, peak, fresnel, verticesCount, facetsCount, vertexArrayObjectID, verticesBufferID, facetsBufferID);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntity program,
