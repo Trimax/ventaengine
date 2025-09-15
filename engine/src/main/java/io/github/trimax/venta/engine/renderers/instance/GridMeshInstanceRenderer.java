@@ -1,31 +1,24 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15C.glBindBuffer;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.binders.CameraBinder;
-import io.github.trimax.venta.engine.binders.LightBinder;
-import io.github.trimax.venta.engine.binders.MaterialBinder;
-import io.github.trimax.venta.engine.binders.MatrixBinder;
-import io.github.trimax.venta.engine.binders.TextureBinder;
-import io.github.trimax.venta.engine.binders.TimeBinder;
-import io.github.trimax.venta.engine.binders.WaveBinder;
+import io.github.trimax.venta.engine.binders.*;
 import io.github.trimax.venta.engine.model.instance.implementation.GridMeshInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,6 +31,7 @@ public final class GridMeshInstanceRenderer extends
     private final LightBinder lightBinder;
     private final WaveBinder waveBinder;
     private final TimeBinder timeBinder;
+    private final WaterBinder waterBinder;
 
     @Override
     protected GridMeshRenderContext createContext() {
@@ -63,6 +57,9 @@ public final class GridMeshInstanceRenderer extends
         materialBinder.bind(mesh.getProgram(), mesh.getMaterial());
 
         textureBinder.bind(mesh.getProgram(), getContext().getScene().getSkybox());
+
+
+        waterBinder.bind(mesh.getProgram());
 
         renderMesh(mesh);
 

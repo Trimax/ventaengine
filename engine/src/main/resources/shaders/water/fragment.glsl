@@ -71,6 +71,19 @@ uniform Material material;
 /* Camera */
 uniform vec3 cameraPosition;
 
+
+
+
+uniform vec3 uSurfaceColor;   // основной цвет воды
+uniform vec3 uDepthColor;     // более тёмный низ
+uniform vec3 uPeakColor;      // гребни / пенка
+uniform float uPeakThreshold;     // порог для гребней
+uniform float uPeakTransition;    // мягкость перехода
+uniform float uDepthThreshold;    // порог для глубины
+uniform float uDepthTransition;   // мягкость перехода
+
+
+
 /* Output color */
 out vec4 outputColor;
 
@@ -175,12 +188,57 @@ void main() {
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
     vec3 baseColor = getColor(textureCoordinates);
 
+
+
+
+
+    //float elevation = vertexPosition.y; // либо можно dot(N, vec3(0,1,0))
+    float elevation = dot(vertexNormal, vec3(0,1,0)); // либо можно dot(N, vec3(0,1,0))
+
+    float peakFactor = smoothstep(uPeakThreshold - uPeakTransition,
+                                  uPeakThreshold + uPeakTransition,
+                                  elevation);
+//    float depthFactor = smoothstep(uDepthThreshold - uDepthTransition,
+//                                   uDepthThreshold + uDepthTransition,
+//                                   elevation);
+
+
+    // Сначала смешиваем глубину с поверхностью
+   // vec3 mixedColor = mix(uDepthColor, uSurfaceColor, depthFactor);
+    // Потом добавляем гребни
+   // mixedColor = mix(mixedColor, uPeakColor, peakFactor);
+
+
+
+    //baseColor = mix(baseColor, mixedColor, 0.7); // коэффициент подбери
+//baseColor = mixedColor;
+
+
+
     float fresnel = pow(1.0 - max(dot(getNormal(textureCoordinates), cameraDirection), 0.0), 5.0);
     vec3 colorWithFresnel = mix(baseColor, vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
 
     vec3 color = computeLighting(colorWithFresnel, getNormal(textureCoordinates), cameraDirection);
 
-    vec3 colorWithReflections = applyReflections(color, cameraDirection, textureCoordinates);
+    float depthFactor = clamp(dot(vertexNormal, cameraDirection), 0.0, 1.0);
+
+    // поглощение (чем более острый угол, тем глубже цвет)
+    vec3 waterColor = mix(uDepthColor, uSurfaceColor, pow(depthFactor, 0.5));
+
+
+    vec3 colorWithReflections = applyReflections(waterColor, cameraDirection, textureCoordinates);
+
+
+
+
+   // float depthFactor = clamp(dot(vertexNormal, cameraDirection), 0.0, 1.0);
+
+    // поглощение (чем более острый угол, тем глубже цвет)
+  //  vec3 waterColor = mix(uDepthColor, uSurfaceColor, pow(depthFactor, 0.5));
+
+    // итоговый цвет
+    vec3 finalColor = mix(waterColor, colorWithReflections, 0.8); // 0.5 = сила отражений
+    outputColor = vec4(finalColor, 1.0);
 
     outputColor = vec4(colorWithReflections, 1.0);
 }

@@ -70,7 +70,16 @@ public enum ShaderUniform {
     /* Common model parameters transformation*/
     Position("position"),
     Scale("scale"),
-    Color("color");
+    Color("color"),
+
+
+    SurfaceColor("uSurfaceColor"),
+    DepthColor("uDepthColor"),
+    PeakColor("uPeakColor"),
+    PeakThreshold("uPeakThreshold"),
+    PeakTransition("uPeakTransition"),
+    DepthThreshold("uDepthThreshold"),
+    DepthTransition("uDepthTransition");
 
     private final String uniformName;
 }
