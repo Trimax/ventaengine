@@ -58,7 +58,8 @@ public final class GridMeshInstanceRenderer extends
         matrixBinder.bindViewProjectionMatrix(mesh.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
         timeBinder.bind(mesh.getProgram(), getContext().getParent().getTime());
-        waveBinder.bind(mesh.getProgram(), mesh.getMesh().getWaves());
+        //waveBinder.bind(mesh.getProgram(), mesh.getMesh().getWaves());
+        waveBinder.bind(mesh.getProgram(), mesh.getMesh().getWave());
 
         materialBinder.bind(mesh.getProgram(), mesh.getMaterial());
 

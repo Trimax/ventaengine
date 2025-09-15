@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "water2/vertex.glsl",
+  "shaderFragment": "water2/fragment.glsl"
+}

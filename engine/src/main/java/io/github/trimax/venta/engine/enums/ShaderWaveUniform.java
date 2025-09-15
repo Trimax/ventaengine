@@ -1,24 +1,34 @@
 package io.github.trimax.venta.engine.enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.github.trimax.venta.engine.definitions.Definitions;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ShaderWaveUniform {
     Direction("direction"),
-    Amplitude("amplitude"),
     Steepness("steepness"),
     Length("l"),
+
+
+    Amplitude("amplitude"),
+    Frequency("frequency"),
+    Persistence("persistence"),
+    Lacunarity("lacunarity"),
+    Iterations("iterations"),
     Speed("speed");
 
     private final String uniformName;
 
     public String getUniformName(final int waveID) {
         return uniformNames.get(this).get(waveID);
+    }
+
+    public String getUniformName() {
+        return "wave." + uniformName;
     }
 
     private static final Map<ShaderWaveUniform, Map<Integer, String>> uniformNames = new HashMap<>();

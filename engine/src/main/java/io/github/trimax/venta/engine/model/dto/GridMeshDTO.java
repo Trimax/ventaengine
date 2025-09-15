@@ -11,5 +11,6 @@ public record GridMeshDTO(@NonNull Vector2i size,
                           @NonNull Vector2i segments,
                           List<Wave> waves,
                           String program,
-                          String heightmap) {
+                          String heightmap,
+                          @NonNull Wave wave) {
 }

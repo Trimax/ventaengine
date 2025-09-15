@@ -1,0 +1,30 @@
+{
+  "program": "water2.json",
+  "size": {"x": 500.0, "y": 500.0},
+  "segments": {"x": 256, "y": 256},
+  "wave": {
+      "amplitude": 0.025,
+      "frequency": 1.07,
+      "persistence": 0.3,
+      "lacunarity": 2.18,
+      "iterations": 8,
+      "speed": 0.4
+  },
+  "surface": {
+    "color":{"r": 0.608, "g": 0.847, "b": 0.753, "a": 0.8}
+  },
+  "trough": {
+    "color":{"r": 0.094, "g": 0.4, "b": 0.569, "a": 1.0},
+    "threshold": -0.01,
+    "transition": 0.15
+  },
+  "peak": {
+    "color":{"r": 0.733, "g": 0.847, "b": 0.878, "a": 1.0},
+    "threshold": 0.08,
+    "transition": 0.05
+  },
+  "fresnel": {
+    "scale": 0.8,
+    "power": 0.5
+  }
+}

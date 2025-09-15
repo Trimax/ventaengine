@@ -1,26 +1,26 @@
 {
   "program": "water.json",
   "size": {"x": 500.0, "y": 500.0},
-  "segments": {"x": 128, "y": 128},
+  "segments": {"x": 256, "y": 256},
   "waves": [
     {
       "direction": {"x": 1.0, "y": 1.0},
       "amplitude": 0.2,
-      "length": 15,
-      "steepness": 0.2,
+      "length": 16,
+      "steepness": 0.5,
       "speed": 1
     },
     {
       "direction": {"x": 0.5, "y": 0.5},
       "amplitude": 0.05,
-      "length": 10,
+      "length": 8,
       "steepness": 0.1,
       "speed": 1.2
     },
     {
       "direction": {"x": -0.5, "y": 1},
       "amplitude": 0.025,
-      "length": 5,
+      "length": 4,
       "steepness": 0.15,
       "speed": 0.8
     },

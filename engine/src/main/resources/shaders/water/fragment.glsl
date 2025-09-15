@@ -101,7 +101,7 @@ vec3 getColor(vec2 textureCoordinates) {
     if (!isSet(useTextureDiffuse))
         return getMaterialColor();
 
-    return mix(getMaterialColor(), texture(textureDiffuse, textureCoordinates).rgb, 0.5);
+    return mix(getMaterialColor(), texture(textureDiffuse, textureCoordinates).rgb, 0.1);
 }
 
 /* Gets normal (either face or from normal map) */
@@ -176,7 +176,8 @@ void main() {
     vec3 baseColor = getColor(textureCoordinates);
 
     float fresnel = pow(1.0 - max(dot(getNormal(textureCoordinates), cameraDirection), 0.0), 5.0);
-    vec3 colorWithFresnel = mix(baseColor, vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
+    //vec3 colorWithFresnel = mix(baseColor, vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
+    vec3 colorWithFresnel = mix(baseColor, vec3(0.1, 0.1, 0.7), fresnel); //TODO: Use mix of directional lights
 
     vec3 color = computeLighting(colorWithFresnel, getNormal(textureCoordinates), cameraDirection);
 
