@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 
 import java.nio.FloatBuffer;
 
+import io.github.trimax.venta.engine.model.prefabs.implementation.SoundSourcePrefabImplementation;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -73,6 +74,12 @@ public final class Abettor {
                 particleVertexArrayObjectID, particleVerticesBufferID, particleInstanceBufferID, particleFacesBufferID,
                 particleColorBufferID);
     }
+
+    public SoundSourceInstanceImplementation createSound(@NonNull final String name,
+                                                         @NonNull final SoundSourcePrefabImplementation prefab) {
+        return new SoundSourceInstanceImplementation(name, prefab);
+    }
+
 
     public SceneInstanceImplementation createScene(@NonNull final String name) {
         return new SceneInstanceImplementation(name);
