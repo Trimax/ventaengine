@@ -1,11 +1,13 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.stb.STBVorbis.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import io.github.trimax.venta.engine.definitions.Definitions;
 import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -40,9 +42,13 @@ public final class SoundRegistryImplementation
             final ShortBuffer buffer = readVorbis(data, info);
             final float duration = getDuration(buffer, info);
 
+            int bufferId = alGenBuffers();
+            int format = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+            alBufferData(bufferId, format, buffer, Definitions.SOUND_FREQUENCY);
+
             log.debug("Loaded sound: ({}s, {} channels, {} Hz)", duration, info.channels(), info.sample_rate());
 
-            return abettor.createSound(buffer, duration);
+            return abettor.createSound(bufferId, buffer, duration, format);
         } catch (final Exception e) {
             throw new RuntimeException("Failed to load sound: " + e);
         }

@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.memory;
 import java.util.function.Supplier;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.GL30C;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -19,6 +20,8 @@ public final class Memory {
     private final AnnotatedCache<Integer> programs = new AnnotatedCache<>(GL30C::glCreateProgram, GL30C::glDeleteProgram);
     private final AnnotatedCache<Integer> buffers = new AnnotatedCache<>(GL30C::glGenBuffers, GL30C::glDeleteBuffers);
     private final AnnotatedCache<Long> windows = new AnnotatedCache<>(new DefaultSupplier<>(), GLFW::glfwDestroyWindow);
+    private final AnnotatedCache<Integer> audioBuffers = new AnnotatedCache<>(AL10::alGenBuffers, AL10::alDeleteBuffers);
+    private final AnnotatedCache<Integer> audioSources = new AnnotatedCache<>(AL10::alGenSources, AL10::alDeleteSources);
 
     public void cleanup() {
         this.vertexArrays.cleanup();
@@ -26,6 +29,8 @@ public final class Memory {
         this.textures.cleanup();
         this.buffers.cleanup();
         this.windows.cleanup();
+        this.audioBuffers.cleanup();
+        this.audioSources.cleanup();
     }
 
     private static final class DefaultSupplier<T> implements Supplier<T> {

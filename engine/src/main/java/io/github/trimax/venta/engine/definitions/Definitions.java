@@ -98,4 +98,7 @@ public final class Definitions {
 
     /* Vertical scale factor */
     public static final float CONSOLE_SCALE_VERTICAL = 0.0015f * 600;
+
+    /*** Sound ***/
+    public static final int SOUND_FREQUENCY = 44100;
 }

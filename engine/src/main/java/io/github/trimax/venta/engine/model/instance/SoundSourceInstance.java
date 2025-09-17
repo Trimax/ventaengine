@@ -10,9 +10,9 @@ public interface SoundSourceInstance extends AbstractInstance {
 
     Vector3fc getPosition();
 
-    void setVolume(float volume);
+    void setVolume(final float volume);
 
-    void setPitch(float pitch);
+    void setPitch(final float pitch);
 
     void setPosition(@NonNull final Vector3fc position);
 
