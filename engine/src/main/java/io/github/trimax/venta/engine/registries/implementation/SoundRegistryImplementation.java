@@ -42,8 +42,8 @@ public final class SoundRegistryImplementation
             final ShortBuffer buffer = readVorbis(data, info);
             final float duration = getDuration(buffer, info);
 
-            int bufferId = alGenBuffers();
-            int format = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+            final int bufferId = alGenBuffers();
+            final int format = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
             alBufferData(bufferId, format, buffer, Definitions.SOUND_FREQUENCY);
 
             log.debug("Loaded sound: ({}s, {} channels, {} Hz)", duration, info.channels(), info.sample_rate());

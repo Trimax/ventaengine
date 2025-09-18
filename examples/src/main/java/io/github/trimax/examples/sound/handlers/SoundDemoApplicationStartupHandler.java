@@ -10,9 +10,9 @@ public final class SoundDemoApplicationStartupHandler implements VentaEngineStar
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
 
-        final var sound = context.getSoundSourceManager().create("water", context.getSoundSourceRepository().get("default.json"));
-        sound.setVolume(0.1f);
-        sound.setPitch(0.5f);
+        final var sound = context.getSoundSourceManager().create("engine", context.getSoundSourceRepository().get("default.json"));
+        sound.setVolume(1f);
+        sound.setPitch(1f);
         sound.play();
         scene.add(sound);
     }

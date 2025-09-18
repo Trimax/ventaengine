@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.SoundSourceInstance;
-import io.github.trimax.venta.engine.model.prefabs.implementation.SoundSourcePrefabImplementation;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +21,16 @@ public final class SoundSourceInstanceImplementation extends AbstractInstanceImp
     private boolean looping;
 
     SoundSourceInstanceImplementation(@NonNull final String name,
-                                      @NonNull final SoundSourcePrefabImplementation prefab) {
+                                      @NonNull final SoundEntityImplementation sound,
+                                      final float volume,
+                                      final float pitch,
+                                      final boolean looping) {
         super(null, name);
 
-        this.soundEntity = prefab.getSound();
-        this.volume = prefab.getVolume();
-        this.pitch = prefab.getPitch();
-        this.looping = prefab.isLooping();
+        this.soundEntity = sound;
+        this.volume = volume;
+        this.pitch = pitch;
+        this.looping = looping;
 
         this.sourceId = alGenSources();
 

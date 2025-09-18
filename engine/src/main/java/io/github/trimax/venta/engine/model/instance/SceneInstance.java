@@ -34,6 +34,8 @@ public interface SceneInstance extends AbstractInstance {
 
     List<? extends GridMeshInstance> getGridMeshes();
 
+    List<? extends SoundSourceInstance> getSoundSources();
+
     void setFog(final Fog fog);
 
     Fog getFog();

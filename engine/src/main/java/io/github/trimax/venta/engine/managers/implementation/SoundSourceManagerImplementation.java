@@ -32,7 +32,7 @@ public final class SoundSourceManagerImplementation
     private SoundSourceInstanceImplementation create(@NonNull final String name, @NonNull final SoundSourcePrefabImplementation prefab) {
         log.info("Loading sound {}", name);
 
-        return store(abettor.createSound(name, prefab));
+        return store(abettor.createSound(name, prefab.getSound(), prefab.getVolume(), prefab.getPitch(), prefab.isLooping()));
     }
 
     @Override
