@@ -8,6 +8,8 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.memory.Memory;
+
 import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -31,6 +33,7 @@ public final class SoundRegistryImplementation
         implements SoundRegistry {
     private final ResourceService resourceService;
     private final Abettor abettor;
+    private final Memory memory; 
 
     @Override
     protected SoundEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
@@ -48,7 +51,9 @@ public final class SoundRegistryImplementation
 
             log.debug("Loaded sound: ({}s, {} channels, {} Hz)", duration, info.channels(), info.sample_rate());
 
-            return abettor.createSound(bufferId, buffer, duration, format);
+            MemoryUtil.memFree(buffer);
+
+            return abettor.createSound(bufferId, duration);
         } catch (final Exception e) {
             throw new RuntimeException("Failed to load sound: " + e);
         }
@@ -95,7 +100,10 @@ public final class SoundRegistryImplementation
     @Override
     protected void unload(@NonNull final SoundEntityImplementation entity) {
         log.info("Unloading sound {}", entity.getID());
-
-        MemoryUtil.memFree(entity.getBuffer());
+        
+        if (entity.getBufferID() != 0) {
+            memory.getAudioBuffers().delete(entity.getBufferID());
+            log.debug("Deleted OpenAL buffer: {}", entity.getBufferID());
+        }
     }
 }

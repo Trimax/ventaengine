@@ -23,4 +23,6 @@ public interface SoundSourceInstance extends AbstractInstance {
     void play();
 
     void stop();
+
+    boolean isPlaying();
 }
