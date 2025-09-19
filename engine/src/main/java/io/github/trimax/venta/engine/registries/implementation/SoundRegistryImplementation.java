@@ -1,20 +1,8 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
-import static org.lwjgl.openal.AL10.*;
-import static org.lwjgl.stb.STBVorbis.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.memory.Memory;
-
-import org.lwjgl.stb.STBVorbisInfo;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
-
-import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.entity.SoundEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
@@ -24,6 +12,16 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.stb.STBVorbisInfo;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+
+import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.stb.STBVorbis.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
@@ -42,15 +40,13 @@ public final class SoundRegistryImplementation
 
     private SoundEntityImplementation load(final byte[] data) {
         try (final var info = STBVorbisInfo.malloc()) {
-            final ShortBuffer buffer = readVorbis(data, info);
-            final float duration = getDuration(buffer, info);
+            final var buffer = readVorbis(data, info);
+            final var duration = getDuration(buffer, info);
 
-            final int bufferId = alGenBuffers();
-            final int format = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+            final var bufferId = alGenBuffers();
+            final var format = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+
             alBufferData(bufferId, format, buffer, Definitions.SOUND_FREQUENCY);
-
-            log.debug("Loaded sound: ({}s, {} channels, {} Hz)", duration, info.channels(), info.sample_rate());
-
             MemoryUtil.memFree(buffer);
 
             return abettor.createSound(bufferId, duration);
@@ -60,8 +56,7 @@ public final class SoundRegistryImplementation
     }
 
     private static float getDuration(final ShortBuffer buffer, final STBVorbisInfo info) {
-        final int samples = buffer.limit() / info.channels();
-        return (float) samples / info.sample_rate();
+        return (float) (buffer.limit() / info.channels()) / info.sample_rate();
     }
 
     private ShortBuffer readVorbis(@NonNull final byte[] data, @NonNull final STBVorbisInfo info) {
@@ -69,41 +64,46 @@ public final class SoundRegistryImplementation
             final var audioBuffer = MemoryUtil.memAlloc(data.length);
             audioBuffer.put(data).flip();
 
-            try {
-                final IntBuffer error = stack.mallocInt(1);
-                final long decoder = stb_vorbis_open_memory(audioBuffer, error, null);
+            return getBuffer(info, stack, audioBuffer);
+        }
+    }
 
-                if (decoder == NULL)
-                    throw new RuntimeException("Failed to open Ogg Vorbis data. Error: " + error.get(0));
+    private ShortBuffer getBuffer(final STBVorbisInfo info, final MemoryStack stack, final ByteBuffer audioBuffer) {
+        try {
+            final var error = stack.mallocInt(1);
+            final var decoder = stb_vorbis_open_memory(audioBuffer, error, null);
 
-                try {
-                    stb_vorbis_get_info(decoder, info);
+            if (decoder == NULL)
+                throw new RuntimeException("Failed to open Ogg Vorbis data. Error: " + error.get(0));
 
-                    final int channels = info.channels();
-                    final int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
+            return getBuffer(info, decoder);
+        } finally {
+            MemoryUtil.memFree(audioBuffer);
+        }
+    }
 
-                    final ShortBuffer buffer = MemoryUtil.memAllocShort(lengthSamples * channels);
+    private ShortBuffer getBuffer(final STBVorbisInfo info, final long decoder) {
+        try {
+            stb_vorbis_get_info(decoder, info);
 
-                    final int samplesRead = stb_vorbis_get_samples_short_interleaved(decoder, channels, buffer);
-                    buffer.limit(samplesRead * channels);
+            final var channels = info.channels();
+            final var lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
 
-                    return buffer;
-                } finally {
-                    stb_vorbis_close(decoder);
-                }
-            } finally {
-                MemoryUtil.memFree(audioBuffer);
-            }
+            final var buffer = MemoryUtil.memAllocShort(lengthSamples * channels);
+
+            final var samplesRead = stb_vorbis_get_samples_short_interleaved(decoder, channels, buffer);
+            buffer.limit(samplesRead * channels);
+
+            return buffer;
+        } finally {
+            stb_vorbis_close(decoder);
         }
     }
 
     @Override
     protected void unload(@NonNull final SoundEntityImplementation entity) {
         log.info("Unloading sound {}", entity.getID());
-        
-        if (entity.getBufferID() != 0) {
-            memory.getAudioBuffers().delete(entity.getBufferID());
-            log.debug("Deleted OpenAL buffer: {}", entity.getBufferID());
-        }
+
+        memory.getAudioBuffers().delete(entity.getBufferID());
     }
 }
