@@ -1,10 +1,14 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.stb.STBVorbis.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
+
+import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.memory.Memory;
 
 import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
@@ -29,6 +33,7 @@ public final class SoundRegistryImplementation
         implements SoundRegistry {
     private final ResourceService resourceService;
     private final Abettor abettor;
+    private final Memory memory; 
 
     @Override
     protected SoundEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
@@ -40,9 +45,15 @@ public final class SoundRegistryImplementation
             final ShortBuffer buffer = readVorbis(data, info);
             final float duration = getDuration(buffer, info);
 
+            final int bufferId = alGenBuffers();
+            final int format = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+            alBufferData(bufferId, format, buffer, Definitions.SOUND_FREQUENCY);
+
             log.debug("Loaded sound: ({}s, {} channels, {} Hz)", duration, info.channels(), info.sample_rate());
 
-            return abettor.createSound(buffer, duration);
+            MemoryUtil.memFree(buffer);
+
+            return abettor.createSound(bufferId, duration);
         } catch (final Exception e) {
             throw new RuntimeException("Failed to load sound: " + e);
         }
@@ -89,7 +100,10 @@ public final class SoundRegistryImplementation
     @Override
     protected void unload(@NonNull final SoundEntityImplementation entity) {
         log.info("Unloading sound {}", entity.getID());
-
-        MemoryUtil.memFree(entity.getBuffer());
+        
+        if (entity.getBufferID() != 0) {
+            memory.getAudioBuffers().delete(entity.getBufferID());
+            log.debug("Deleted OpenAL buffer: {}", entity.getBufferID());
+        }
     }
 }
