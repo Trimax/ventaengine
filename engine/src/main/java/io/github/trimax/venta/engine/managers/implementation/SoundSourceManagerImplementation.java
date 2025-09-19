@@ -35,15 +35,14 @@ public final class SoundSourceManagerImplementation
 
     private SoundSourceInstanceImplementation create(@NonNull final String name, @NonNull final SoundSourcePrefabImplementation prefab) {
         log.info("Loading sound {}", name);
-        final int sourceID = memory.getAudioSources().create("SoundSource-" + name);
+
         return store(abettor.createSound(
                 name,
                 prefab.getSound(),
                 Optional.of(prefab.getVolume()).orElse(1.0f),
                 Optional.of(prefab.getPitch()).orElse(1.0f),
                 Optional.of(prefab.isLooping()).orElse(false),
-                sourceID
-        ));
+                memory.getAudioSources().create("Sound source %s", name)));
     }
 
     @Override
@@ -59,8 +58,6 @@ public final class SoundSourceManagerImplementation
         if (sound.isPlaying())
             sound.stop();
 
-        final int sourceID = sound.getSourceID();
-        if (sourceID != 0)
-            memory.getAudioSources().delete(sourceID);
+        memory.getAudioSources().delete(sound.getSourceID());
     }
 }
