@@ -79,8 +79,9 @@ public final class Abettor {
                                                          final float volume,
                                                          final float pitch,
                                                          final boolean looping,
-                                                         final int sourceID) {
-        return new SoundSourceInstanceImplementation(name, sound, volume, pitch, looping, sourceID);
+                                                         final int sourceID,
+                                                         @NonNull final GizmoInstanceImplementation gizmo) {
+        return new SoundSourceInstanceImplementation(name, sound, volume, pitch, looping, sourceID, gizmo);
     }
 
 

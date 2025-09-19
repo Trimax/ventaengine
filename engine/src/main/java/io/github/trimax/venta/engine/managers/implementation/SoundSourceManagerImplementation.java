@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.SoundSourceManager;
 import io.github.trimax.venta.engine.memory.Memory;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public final class SoundSourceManagerImplementation
         extends AbstractManagerImplementation<SoundSourceInstanceImplementation, SoundSourceInstance>
         implements SoundSourceManager {
+    private final GizmoManagerImplementation gizmoManager;
     private final Abettor abettor;
     private final Memory memory;
 
@@ -33,7 +35,8 @@ public final class SoundSourceManagerImplementation
         throw new UnknownInstanceException(prefab.getClass());
     }
 
-    private SoundSourceInstanceImplementation create(@NonNull final String name, @NonNull final SoundSourcePrefabImplementation prefab) {
+    private SoundSourceInstanceImplementation create(@NonNull final String name,
+                                                     @NonNull final SoundSourcePrefabImplementation prefab) {
         log.info("Loading sound {}", name);
 
         return store(abettor.createSound(
@@ -42,7 +45,9 @@ public final class SoundSourceManagerImplementation
                 Optional.of(prefab.getVolume()).orElse(1.0f),
                 Optional.of(prefab.getPitch()).orElse(1.0f),
                 Optional.of(prefab.isLooping()).orElse(false),
-                memory.getAudioSources().create("Sound source %s", name)));
+                memory.getAudioSources().create("Sound source %s", name),
+                gizmoManager.create("Sound box", GizmoType.Light)
+        ));
     }
 
     @Override
