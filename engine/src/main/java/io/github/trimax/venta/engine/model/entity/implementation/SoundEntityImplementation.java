@@ -5,11 +5,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.nio.ShortBuffer;
-
 @Getter
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class SoundEntityImplementation extends AbstractEntityImplementation implements SoundEntity {
-    private final ShortBuffer buffer;
+    private final int bufferID;
     private final float duration;
 }

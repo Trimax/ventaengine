@@ -1,9 +1,5 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import java.nio.FloatBuffer;
-
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
@@ -11,6 +7,7 @@ import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
@@ -18,6 +15,9 @@ import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImp
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.joml.Vector3f;
+
+import java.nio.FloatBuffer;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -73,6 +73,16 @@ public final class Abettor {
                 particleVertexArrayObjectID, particleVerticesBufferID, particleInstanceBufferID, particleFacesBufferID,
                 particleColorBufferID);
     }
+
+    public SoundSourceInstanceImplementation createSound(@NonNull final String name,
+                                                         @NonNull final SoundEntityImplementation sound,
+                                                         final float volume,
+                                                         final float pitch,
+                                                         final boolean looping,
+                                                         final int sourceID) {
+        return new SoundSourceInstanceImplementation(name, sound, volume, pitch, looping, sourceID);
+    }
+
 
     public SceneInstanceImplementation createScene(@NonNull final String name) {
         return new SceneInstanceImplementation(name);

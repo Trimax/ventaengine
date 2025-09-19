@@ -6,18 +6,8 @@ import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.factories.ManagerFactory;
 import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.factories.RepositoryFactory;
-import io.github.trimax.venta.engine.managers.CameraManager;
-import io.github.trimax.venta.engine.managers.EmitterManager;
-import io.github.trimax.venta.engine.managers.GridMeshManager;
-import io.github.trimax.venta.engine.managers.LightManager;
-import io.github.trimax.venta.engine.managers.ObjectManager;
-import io.github.trimax.venta.engine.managers.SceneManager;
-import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.GridMeshManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.LightManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.managers.*;
+import io.github.trimax.venta.engine.managers.implementation.*;
 import io.github.trimax.venta.engine.registries.*;
 import io.github.trimax.venta.engine.registries.implementation.*;
 import io.github.trimax.venta.engine.repositories.*;
@@ -62,6 +52,10 @@ public final class VentaContext {
 
     public GridMeshManager getGridMeshManager() {
         return managerFactory.get(GridMeshManagerImplementation.class);
+    }
+
+    public SoundSourceManager getSoundSourceManager() {
+        return managerFactory.get(SoundSourceManagerImplementation.class);
     }
 
     /*** Registries ***/
