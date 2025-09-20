@@ -46,7 +46,7 @@ public final class SoundSourceManagerImplementation
                 Optional.of(prefab.getPitch()).orElse(1.0f),
                 Optional.of(prefab.isLooping()).orElse(false),
                 memory.getAudioSources().create("Sound source %s", name),
-                gizmoManager.create("Sound box", GizmoType.Light)
+                gizmoManager.create("Sound source", GizmoType.Light)
         ));
     }
 
