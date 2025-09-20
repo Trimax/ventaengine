@@ -43,6 +43,7 @@ public final class DebugRenderer extends AbstractRenderer<SceneInstanceImplement
         StreamEx.of(scene.getLights()).forEach(this::render);
         StreamEx.of(scene.getObjects()).forEach(this::render);
         StreamEx.of(scene.getEmitters()).forEach(this::render);
+        StreamEx.of(scene.getSoundSources()).forEach(this::render);
 
         StreamEx.of(cameraManager.instanceIterator()).forEach(this::render);
     }
@@ -65,6 +66,13 @@ public final class DebugRenderer extends AbstractRenderer<SceneInstanceImplement
         try (final var _ = gizmoRenderer.withContext(getContext())
                 .withModelMatrix(light.getPosition(), VECTOR_ZERO, VECTOR_ONE)) {
             gizmoRenderer.render(light.getGizmo());
+        }
+    }
+
+    private void render(final SoundSourceInstanceImplementation sound) {
+        try (final var _ = gizmoRenderer.withContext(getContext())
+                .withModelMatrix(sound.getPosition(), VECTOR_ZERO, VECTOR_ONE)) {
+            gizmoRenderer.render(sound.getGizmo());
         }
     }
 
