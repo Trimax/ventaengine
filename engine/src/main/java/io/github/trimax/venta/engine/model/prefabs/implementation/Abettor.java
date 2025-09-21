@@ -11,9 +11,11 @@ import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.joml.Vector2f;
 
 import java.util.List;
 
@@ -55,5 +57,10 @@ public final class Abettor {
                                                        final float pitch,
                                                        final boolean looping) {
         return new SoundSourcePrefabImplementation(sound, volume, pitch, looping);
+    }
+
+    public BillboardPrefabImplementation createBillboard(@NonNull final SpriteEntityImplementation sprite,
+                                                         @NonNull final Vector2f size) {
+        return new BillboardPrefabImplementation(sprite, size);
     }
 }
