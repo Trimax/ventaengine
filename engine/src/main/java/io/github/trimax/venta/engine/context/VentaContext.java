@@ -122,6 +122,10 @@ public final class VentaContext {
         return repositoryFactory.get(SoundSourceRepositoryImplementation.class);
     }
 
+    public BillboardRepository getBillboardRepository() {
+        return repositoryFactory.get(BillboardRepositoryImplementation.class);
+    }
+
     /*** Keyboard ***/
 
     public boolean isButtonPushed(final int key) {
