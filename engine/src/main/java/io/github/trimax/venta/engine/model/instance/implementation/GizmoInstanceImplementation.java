@@ -17,11 +17,11 @@ public final class GizmoInstanceImplementation extends AbstractInstanceImplement
     private final MeshEntityImplementation mesh;
 
     GizmoInstanceImplementation(final String name,
-                                       final ProgramEntityImplementation program,
-                                       final MeshEntityImplementation mesh,
-                                       final Vector3f position,
-                                       final Vector3f rotation,
-                                       final Vector3f scale) {
+                                final ProgramEntityImplementation program,
+                                final MeshEntityImplementation mesh,
+                                final Vector3f position,
+                                final Vector3f rotation,
+                                final Vector3f scale) {
         super(name);
 
         this.mesh = mesh;
