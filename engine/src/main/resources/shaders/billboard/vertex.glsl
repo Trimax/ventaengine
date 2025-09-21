@@ -18,7 +18,7 @@ uniform vec4 color;
 
 /* Frames */
 uniform vec4 frames[MAX_FRAMES];
-uniform int indexFrame;
+uniform int frameIndex;
 
 /* Parameters going to fragment shader */
 out vec2 vertexTextureCoordinates;
@@ -26,10 +26,11 @@ out vec4 vertexColor;
 
 void main() {
     vec2 baseUV = position + 0.5; // Position is in [-0.5; 0.5] range (see GeometryDefinitions.PARTICLE_VERTICES)
-    vec4 uvRect = frames[indexFrame];
+    vec4 subTextureCoordinates = frames[frameIndex];
 
     vertexColor = color;
-    vertexTextureCoordinates = uvRect.xy + baseUV * uvRect.zw;
+    vertexTextureCoordinates = subTextureCoordinates.xy + baseUV * subTextureCoordinates.zw;
+    vertexTextureCoordinates.y = 1.0 - vertexTextureCoordinates.y;
 
     gl_Position = matrixViewProjection * matrixModel * vec4(position, 0.0, 1.0);
 }

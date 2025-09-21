@@ -24,6 +24,7 @@ public final class SceneInstanceRenderer
     private final GridMeshManagerImplementation gridMeshManager;
     private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
+    private final BillboardInstanceRenderer billboardRenderer;
     private final GridMeshInstanceRenderer gridMeshRenderer;
     private final EmitterInstanceRenderer emitterRenderer;
     private final ObjectInstanceRenderer objectRenderer;
@@ -58,6 +59,12 @@ public final class SceneInstanceRenderer
             try (final var _ = objectRenderer.withContext(getContext())
                     .withScene(scene)) {
                 objectRenderer.render(objectManager.getInstance(object.getID()));
+            }
+
+        for (final var billboard : scene.getBillboards())
+            try (final var _ = billboardRenderer.withContext(getContext())
+                    .withModelMatrix(billboard.getTransform().getMatrix())) {
+                billboardRenderer.render(billboard);
             }
 
         glEnable(GL_BLEND);

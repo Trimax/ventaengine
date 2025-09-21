@@ -30,7 +30,7 @@ public final class BillboardManagerImplementation
     }
 
     private BillboardInstance create(final String name, final BillboardPrefabImplementation prefab) {
-        return store(abettor.createBillboard(name, prefab.getProgram(), prefab.getSprite(), prefab.getSize()));
+        return store(abettor.createBillboard(name, prefab, prefab.getProgram(), prefab.getSprite(), prefab.getSize()));
     }
 
     @Override
