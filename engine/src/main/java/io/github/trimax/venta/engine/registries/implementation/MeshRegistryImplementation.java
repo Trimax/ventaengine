@@ -12,7 +12,7 @@ import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.registries.MeshRegistry;
-import io.github.trimax.venta.engine.utils.LayoutUtil;
+import io.github.trimax.venta.engine.utils.VertexLayoutUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -85,7 +85,7 @@ public final class MeshRegistryImplementation
             memFree(indexBuffer);
         }
 
-        LayoutUtil.bind(MeshVertexLayout.class);
+        VertexLayoutUtil.bind(MeshVertexLayout.class);
 
         glBindVertexArray(0);
 

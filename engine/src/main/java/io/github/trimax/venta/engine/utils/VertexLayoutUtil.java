@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 
 @Slf4j
 @UtilityClass
-public final class LayoutUtil {
+public final class VertexLayoutUtil {
     public <E extends Enum<E> & AbstractVertexLayout> void bind(@NonNull final Class<E> layout) {
         log.debug("Binding layout {}", layout.getSimpleName());
         final var stride = Float.BYTES * calculateTotalFloats(layout.getEnumConstants());

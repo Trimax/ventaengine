@@ -13,10 +13,6 @@ public enum BillboardVertexLayout implements AbstractVertexLayout {
     private final int locationID;
     private final int size;
 
-    public static int getStride() {
-        return Float.BYTES * getFloatsCount();
-    }
-
     public static int getFloatsCount() {
         return EnumUtil.sum(BillboardVertexLayout.class, BillboardVertexLayout::getSize);
     }

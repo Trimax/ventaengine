@@ -11,7 +11,7 @@ import org.joml.Vector3f;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ConsoleItemBinder extends AbstractBinder {
+public final class TextBinder extends AbstractBinder {
     private static final Vector2f ZERO = new Vector2f();
 
     public void bind(final ProgramEntityImplementation program, final Vector3f color) {
@@ -20,6 +20,5 @@ public final class ConsoleItemBinder extends AbstractBinder {
 
         bind(program.getUniformID("position"), ZERO);
         bind(program.getUniformID("scale"), 1f);
-
     }
 }

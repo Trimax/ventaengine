@@ -13,7 +13,7 @@ import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryIm
 import io.github.trimax.venta.engine.registries.implementation.SpriteRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.BillboardRepository;
 import io.github.trimax.venta.engine.services.ResourceService;
-import io.github.trimax.venta.engine.utils.LayoutUtil;
+import io.github.trimax.venta.engine.utils.VertexLayoutUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -53,7 +53,7 @@ public final class BillboardRepositoryImplementation
         glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
         glBufferData(GL_ARRAY_BUFFER, PARTICLE_VERTICES, GL_STATIC_DRAW);
 
-        LayoutUtil.bind(BillboardVertexLayout.class);
+        VertexLayoutUtil.bind(BillboardVertexLayout.class);
 
         // index buffer
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);

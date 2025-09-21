@@ -14,7 +14,7 @@ import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.registries.CubemapRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
-import io.github.trimax.venta.engine.utils.LayoutUtil;
+import io.github.trimax.venta.engine.utils.VertexLayoutUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -85,7 +85,7 @@ public final class CubemapRegistryImplementation
             glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
             glBufferData(GL_ARRAY_BUFFER, SKYBOX_VERTICES, GL_STATIC_DRAW);
 
-            LayoutUtil.bind(CubemapVertexLayout.class);
+            VertexLayoutUtil.bind(CubemapVertexLayout.class);
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);

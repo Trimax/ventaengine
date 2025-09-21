@@ -4,9 +4,11 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.enums.ProgramType;
+import io.github.trimax.venta.engine.layouts.ConsoleVertexLayout;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
+import io.github.trimax.venta.engine.utils.VertexLayoutUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -16,10 +18,7 @@ import java.util.function.Consumer;
 
 import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.CONSOLE_VERTICES;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Slf4j
@@ -41,9 +40,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
 
         glBufferData(GL_ARRAY_BUFFER, CONSOLE_VERTICES, GL_STATIC_DRAW);
 
-        //TODO: Create layout
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+        VertexLayoutUtil.bind(ConsoleVertexLayout.class);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);

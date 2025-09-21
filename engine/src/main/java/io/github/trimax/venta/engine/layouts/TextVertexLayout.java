@@ -7,14 +7,14 @@ import lombok.Getter;
 
 @Getter(onMethod_ = @__(@Override))
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum GridMeshVertexLayout implements AbstractVertexLayout {
-    Position(0, 3),
+public enum TextVertexLayout implements AbstractVertexLayout {
+    Position(0, 2),
     TextureCoordinates(1, 2);
 
     private final int locationID;
     private final int size;
 
     public static int getFloatsCount() {
-        return EnumUtil.sum(GridMeshVertexLayout.class, GridMeshVertexLayout::getSize);
+        return EnumUtil.sum(TextVertexLayout.class, TextVertexLayout::getSize);
     }
 }

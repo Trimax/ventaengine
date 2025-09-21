@@ -13,7 +13,7 @@ import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryIm
 import io.github.trimax.venta.engine.repositories.GridMeshRepository;
 import io.github.trimax.venta.engine.services.ResourceService;
 import io.github.trimax.venta.engine.utils.GeometryUtil;
-import io.github.trimax.venta.engine.utils.LayoutUtil;
+import io.github.trimax.venta.engine.utils.VertexLayoutUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -62,7 +62,7 @@ public final class GridMeshRepositoryImplementation
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 
-        LayoutUtil.bind(GridMeshVertexLayout.class);
+        VertexLayoutUtil.bind(GridMeshVertexLayout.class);
 
         glBindVertexArray(0);
 

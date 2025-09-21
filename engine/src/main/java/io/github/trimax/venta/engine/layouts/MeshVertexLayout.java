@@ -18,10 +18,6 @@ public enum MeshVertexLayout implements AbstractVertexLayout {
     private final int locationID;
     private final int size;
 
-    public static int getStride() {
-        return Float.BYTES * getFloatsCount();
-    }
-
     public static int getFloatsCount() {
         return EnumUtil.sum(MeshVertexLayout.class, MeshVertexLayout::getSize);
     }
