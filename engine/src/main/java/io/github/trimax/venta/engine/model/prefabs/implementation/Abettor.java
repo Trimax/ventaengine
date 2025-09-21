@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import lombok.AccessLevel;
@@ -59,8 +60,13 @@ public final class Abettor {
         return new SoundSourcePrefabImplementation(sound, volume, pitch, looping);
     }
 
-    public BillboardPrefabImplementation createBillboard(@NonNull final SpriteEntityImplementation sprite,
-                                                         @NonNull final Vector2f size) {
-        return new BillboardPrefabImplementation(sprite, size);
+    public BillboardPrefabImplementation createBillboard(@NonNull final ProgramEntityImplementation program,
+                                                         @NonNull final SpriteEntityImplementation sprite,
+                                                         @NonNull final Vector2f size,
+                                                         final int vertexArrayObjectID,
+                                                         final int verticesBufferID,
+                                                         final int facetsBufferID) {
+        return new BillboardPrefabImplementation(program, sprite, size,
+                vertexArrayObjectID, verticesBufferID, facetsBufferID);
     }
 }

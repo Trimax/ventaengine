@@ -9,14 +9,14 @@ import lombok.Value;
 @Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class MeshEntityImplementation extends AbstractEntityImplementation implements MeshEntity {
-    private final int verticesCount;
-    private final int facetsCount;
-    private final int edgesCount;
+    int verticesCount;
+    int facetsCount;
+    int edgesCount;
 
-    private final int vertexArrayObjectID;
-    private final int verticesBufferID;
-    private final int facetsBufferID;
-    private final int edgesBufferID;
+    int vertexArrayObjectID;
+    int verticesBufferID;
+    int facetsBufferID;
+    int edgesBufferID;
 
-    private final BoundingBox boundingBox;
+    BoundingBox boundingBox;
 }

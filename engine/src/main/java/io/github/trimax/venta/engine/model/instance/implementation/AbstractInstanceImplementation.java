@@ -28,4 +28,9 @@ public abstract class AbstractInstanceImplementation implements AbstractInstance
     public final GizmoInstanceImplementation getGizmo() {
         return gizmo;
     }
+
+    @Override
+    public final String toString() {
+        return String.format("%s-%s-%s", getClass().getSimpleName(), id, name);
+    }
 }

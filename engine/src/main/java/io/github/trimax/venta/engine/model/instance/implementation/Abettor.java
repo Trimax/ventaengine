@@ -5,6 +5,7 @@ import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.SpriteEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
@@ -15,6 +16,7 @@ import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImp
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.joml.Vector2fc;
 import org.joml.Vector3f;
 
 import java.nio.FloatBuffer;
@@ -86,5 +88,12 @@ public final class Abettor {
 
     public SceneInstanceImplementation createScene(@NonNull final String name) {
         return new SceneInstanceImplementation(name);
+    }
+
+    public BillboardInstanceImplementation createBillboard(@NonNull final String name,
+                                                           @NonNull final ProgramEntity program,
+                                                           @NonNull final SpriteEntity sprite,
+                                                           @NonNull final Vector2fc size) {
+        return new BillboardInstanceImplementation(name, program, sprite, size);
     }
 }
