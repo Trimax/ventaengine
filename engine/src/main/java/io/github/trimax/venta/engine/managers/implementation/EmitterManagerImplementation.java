@@ -3,9 +3,9 @@ package io.github.trimax.venta.engine.managers.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
 import io.github.trimax.venta.engine.enums.GizmoType;
-import io.github.trimax.venta.engine.enums.LayoutParticle;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
+import io.github.trimax.venta.engine.layouts.ParticleVertexLayout;
 import io.github.trimax.venta.engine.managers.EmitterManager;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.instance.EmitterInstance;
@@ -62,8 +62,8 @@ public final class EmitterManagerImplementation
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, particleFacesBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, GeometryDefinitions.PARTICLE_INDICES, GL_STATIC_DRAW);
 
-        glEnableVertexAttribArray(LayoutParticle.Position.getLocationID());
-        glVertexAttribPointer(LayoutParticle.Position.getLocationID(), LayoutParticle.Position.getSize(), GL_FLOAT, false, LayoutParticle.Position.getStride(), 0);
+        glEnableVertexAttribArray(ParticleVertexLayout.Position.getLocationID());
+        glVertexAttribPointer(ParticleVertexLayout.Position.getLocationID(), ParticleVertexLayout.Position.getSize(), GL_FLOAT, false, ParticleVertexLayout.Position.getStride(), 0);
 
         final int particleColorBufferID = createBufferColor(name, prefab);
         final int particleInstanceBufferID = createBufferMatrixModel(name, prefab);
@@ -81,10 +81,10 @@ public final class EmitterManagerImplementation
     private int createBufferColor(final String name, final EmitterPrefabImplementation prefab) {
         final int particleColorBufferID = memory.getBuffers().create("Emitter %s color buffer", name);
         glBindBuffer(GL_ARRAY_BUFFER, particleColorBufferID);
-        glBufferData(GL_ARRAY_BUFFER, (long) prefab.getDto().particlesCount() * LayoutParticle.Color.getStride(), GL_DYNAMIC_DRAW);
-        glEnableVertexAttribArray(LayoutParticle.Color.getLocationID());
-        glVertexAttribPointer(LayoutParticle.Color.getLocationID(), LayoutParticle.Color.getSize(), GL_FLOAT, false, LayoutParticle.Color.getStride(), 0);
-        glVertexAttribDivisor(LayoutParticle.Color.getLocationID(), 1);
+        glBufferData(GL_ARRAY_BUFFER, (long) prefab.getDto().particlesCount() * ParticleVertexLayout.Color.getStride(), GL_DYNAMIC_DRAW);
+        glEnableVertexAttribArray(ParticleVertexLayout.Color.getLocationID());
+        glVertexAttribPointer(ParticleVertexLayout.Color.getLocationID(), ParticleVertexLayout.Color.getSize(), GL_FLOAT, false, ParticleVertexLayout.Color.getStride(), 0);
+        glVertexAttribDivisor(ParticleVertexLayout.Color.getLocationID(), 1);
 
         return particleColorBufferID;
     }
@@ -92,11 +92,11 @@ public final class EmitterManagerImplementation
     private int createBufferMatrixModel(final String name, final EmitterPrefabImplementation prefab) {
         final int particleInstanceBufferID = memory.getBuffers().create("Emitter %s instance buffer", name);
         glBindBuffer(GL_ARRAY_BUFFER, particleInstanceBufferID);
-        glBufferData(GL_ARRAY_BUFFER, (long) prefab.getDto().particlesCount() * LayoutParticle.MatrixModel.getStride(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long) prefab.getDto().particlesCount() * ParticleVertexLayout.MatrixModel.getStride(), GL_DYNAMIC_DRAW);
         for (int i = 0; i < 4; i++) {
-            glEnableVertexAttribArray(LayoutParticle.MatrixModel.getLocationID() + i);
-            glVertexAttribPointer(LayoutParticle.MatrixModel.getLocationID() + i, 4, GL_FLOAT, false, LayoutParticle.MatrixModel.getStride(), (long) i * 4 * Float.BYTES);
-            glVertexAttribDivisor(LayoutParticle.MatrixModel.getLocationID() + i, 1);
+            glEnableVertexAttribArray(ParticleVertexLayout.MatrixModel.getLocationID() + i);
+            glVertexAttribPointer(ParticleVertexLayout.MatrixModel.getLocationID() + i, 4, GL_FLOAT, false, ParticleVertexLayout.MatrixModel.getStride(), (long) i * 4 * Float.BYTES);
+            glVertexAttribDivisor(ParticleVertexLayout.MatrixModel.getLocationID() + i, 1);
         }
 
         return particleInstanceBufferID;

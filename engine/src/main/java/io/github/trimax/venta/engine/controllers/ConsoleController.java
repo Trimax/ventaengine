@@ -41,6 +41,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
 
         glBufferData(GL_ARRAY_BUFFER, CONSOLE_VERTICES, GL_STATIC_DRAW);
 
+        //TODO: Create layout
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
 

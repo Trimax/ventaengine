@@ -36,6 +36,7 @@ public final class TextController extends AbstractController<TextState, Void> {
         glBindVertexArray(vertexArrayObjectID);
         glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
 
+        //TODO: Create layout
         // layout(location=0): vec2 aPos; layout(location=1): vec2 textureCoordinates;
         glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
         glEnableVertexAttribArray(0);

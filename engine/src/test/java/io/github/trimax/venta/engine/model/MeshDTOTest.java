@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.model;
 
-import io.github.trimax.venta.engine.enums.LayoutMesh;
+import io.github.trimax.venta.engine.layouts.MeshVertexLayout;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import lombok.NonNull;
 import org.joml.Vector2f;
@@ -19,7 +19,7 @@ public final class MeshDTOTest {
 
         final var verticesArray = triangle.getVerticesArray();
         assertNotNull(verticesArray, "Vertices array should not be null");
-        assertEquals(LayoutMesh.getFloatsCount() * triangle.vertices().size(), verticesArray.length, "The number of vertices must be correct");
+        assertEquals(MeshVertexLayout.getFloatsCount() * triangle.vertices().size(), verticesArray.length, "The number of vertices must be correct");
 
         /* Checking backed vertices positions */
         verifyPosition(0, verticesArray, new Vector3f(0.f, 0.f, 0.f));
@@ -28,18 +28,18 @@ public final class MeshDTOTest {
 
         /* Checking backed normals */
         for (int i = 0; i < triangle.vertices().size(); i++) {
-            assertEquals(0f, verticesArray[i * LayoutMesh.getFloatsCount() + VERTEX_OFFSET_NORMAL_X], 1e-5, "Vertex " + i + " normal x must be correct");
-            assertEquals(0f, verticesArray[i * LayoutMesh.getFloatsCount() + VERTEX_OFFSET_NORMAL_Y], 1e-5, "Vertex " + i + " normal y must be correct");
-            assertEquals(1f, verticesArray[i * LayoutMesh.getFloatsCount() + VERTEX_OFFSET_NORMAL_Z], 1e-5, "Vertex " + i + " normal z must be correct");
+            assertEquals(0f, verticesArray[i * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_NORMAL_X], 1e-5, "Vertex " + i + " normal x must be correct");
+            assertEquals(0f, verticesArray[i * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_NORMAL_Y], 1e-5, "Vertex " + i + " normal y must be correct");
+            assertEquals(1f, verticesArray[i * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_NORMAL_Z], 1e-5, "Vertex " + i + " normal z must be correct");
         }
 
         /* Checking backed tangents */
         for (int i = 0; i < triangle.vertices().size(); i++)
-            assertTrue(verticesArray[i * LayoutMesh.getFloatsCount() + VERTEX_OFFSET_TANGENT_X] > 0, "Vertex " + i + " tangent direction should be correct");
+            assertTrue(verticesArray[i * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_TANGENT_X] > 0, "Vertex " + i + " tangent direction should be correct");
 
         /* Checking backed bitangents */
         for (int i = 0; i < triangle.vertices().size(); i++)
-            assertTrue(verticesArray[i * LayoutMesh.getFloatsCount() + VERTEX_OFFSET_BITANGENT_Y] > 0, "Vertex " + i + " bitangent direction should be correct");
+            assertTrue(verticesArray[i * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_BITANGENT_Y] > 0, "Vertex " + i + " bitangent direction should be correct");
 
         final var facesArray = triangle.getFacesArray();
         assertNotNull(verticesArray, "Faces array should not be null");
@@ -54,9 +54,9 @@ public final class MeshDTOTest {
     }
 
     private void verifyPosition(final int vertexID, final float[] verticesArray, final Vector3f expected) {
-        verifyValue(vertexID, verticesArray[vertexID * LayoutMesh.getFloatsCount() + VERTEX_OFFSET_POSITION_X], expected.x);
-        verifyValue(vertexID, verticesArray[vertexID * LayoutMesh.getFloatsCount() + VERTEX_OFFSET_POSITION_Y], expected.y);
-        verifyValue(vertexID, verticesArray[vertexID * LayoutMesh.getFloatsCount() + VERTEX_OFFSET_POSITION_Z], expected.z);
+        verifyValue(vertexID, verticesArray[vertexID * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_POSITION_X], expected.x);
+        verifyValue(vertexID, verticesArray[vertexID * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_POSITION_Y], expected.y);
+        verifyValue(vertexID, verticesArray[vertexID * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_POSITION_Z], expected.z);
     }
 
     private void verifyValue(final int vertexID, final float actual, final float expected) {

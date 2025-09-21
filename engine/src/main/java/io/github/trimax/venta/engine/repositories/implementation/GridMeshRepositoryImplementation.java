@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.LayoutGridMesh;
+import io.github.trimax.venta.engine.layouts.GridMeshVertexLayout;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.Buffer;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
@@ -13,6 +13,7 @@ import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryIm
 import io.github.trimax.venta.engine.repositories.GridMeshRepository;
 import io.github.trimax.venta.engine.services.ResourceService;
 import io.github.trimax.venta.engine.utils.GeometryUtil;
+import io.github.trimax.venta.engine.utils.LayoutUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -21,8 +22,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_VERTICES_PER_FACET;
 import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Slf4j
@@ -63,13 +62,7 @@ public final class GridMeshRepositoryImplementation
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 
-        // layout(location = 0) -> position
-        glEnableVertexAttribArray(LayoutGridMesh.Position.getLocationID());
-        glVertexAttribPointer(LayoutGridMesh.Position.getLocationID(), LayoutGridMesh.Position.getSize(), GL_FLOAT, false, LayoutGridMesh.getStride(), 0);
-
-        // layout(location = 1) -> texture coordinates
-        glEnableVertexAttribArray(LayoutGridMesh.TextureCoordinates.getLocationID());
-        glVertexAttribPointer(LayoutGridMesh.TextureCoordinates.getLocationID(), LayoutGridMesh.TextureCoordinates.getSize(), GL_FLOAT, false, LayoutGridMesh.getStride(), 3 * Float.BYTES);
+        LayoutUtil.bind(GridMeshVertexLayout.class);
 
         glBindVertexArray(0);
 
@@ -78,7 +71,7 @@ public final class GridMeshRepositoryImplementation
 
         return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()),
                 new Geometry(vertexArrayObjectID,
-                        new Buffer(verticesBufferID, grid.vertices().length / LayoutGridMesh.getFloatsCount(), grid.vertices().length),
+                        new Buffer(verticesBufferID, grid.vertices().length / GridMeshVertexLayout.getFloatsCount(), grid.vertices().length),
                         new Buffer(facetsBufferID, grid.indices().length / COUNT_VERTICES_PER_FACET, grid.indices().length),
                         null),
                 gridMeshDTO.waves());
