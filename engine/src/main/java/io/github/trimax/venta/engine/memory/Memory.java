@@ -32,8 +32,6 @@ public final class Memory {
         this.audioSources.cleanup();
     }
 
-    //TODO: Create geometry, clean geometry (using memory). Use separate class
-
     private static final class DefaultSupplier<T> implements Supplier<T> {
         @Override
         public T get() {
