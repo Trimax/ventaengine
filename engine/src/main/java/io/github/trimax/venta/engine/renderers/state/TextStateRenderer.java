@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.renderers.state;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.binders.ConsoleItemBinder;
+import io.github.trimax.venta.engine.binders.TextBinder;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.model.states.TextState;
 import lombok.AccessLevel;
@@ -23,19 +23,19 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TextStateRenderer extends AbstractStateRenderer<TextState, TextStateRenderer.ConsoleItemRenderContext, ConsoleStateRenderer.ConsoleRenderContext> {
-    private final ConsoleItemBinder consoleItemBinder;
+public final class TextStateRenderer extends AbstractStateRenderer<TextState, TextStateRenderer.TextRenderContext, ConsoleStateRenderer.ConsoleRenderContext> {
+    private final TextBinder textBinder;
 
     @Override
-    protected ConsoleItemRenderContext createContext() {
-        return new ConsoleItemRenderContext();
+    protected TextRenderContext createContext() {
+        return new TextRenderContext();
     }
 
     @Override
     public void render(final TextState state) {
         glUseProgram(state.getProgram().getInternalID());
         glBindVertexArray(state.getVertexArrayObjectID());
-        consoleItemBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
+        textBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
 
         float penX = getContext().x;
         final float penY = getContext().y;
@@ -100,7 +100,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    public static final class ConsoleItemRenderContext extends AbstractRenderContext<ConsoleStateRenderer.ConsoleRenderContext> {
+    public static final class TextRenderContext extends AbstractRenderContext<ConsoleStateRenderer.ConsoleRenderContext> {
         private final FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4);
 
         private float x;
@@ -109,19 +109,19 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
         private float scaleY;
         private ConsoleController.ConsoleMessage message;
 
-        public ConsoleItemRenderContext withPosition(final float x, final float y) {
+        public TextRenderContext withPosition(final float x, final float y) {
             this.x = x;
             this.y = y;
             return this;
         }
 
-        public ConsoleItemRenderContext withScale(final float scaleX, final float scaleY) {
+        public TextRenderContext withScale(final float scaleX, final float scaleY) {
             this.scaleX = scaleX;
             this.scaleY = scaleY;
             return this;
         }
 
-        public ConsoleItemRenderContext withText(final ConsoleController.ConsoleMessage message) {
+        public TextRenderContext withText(final ConsoleController.ConsoleMessage message) {
             this.message = message;
             return this;
         }
