@@ -33,14 +33,13 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
                                 @NonNull final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
-        final var lightDto = prefab.getDto();
-        this.type = lightDto.type();
+        this.type = prefab.getType();
 
-        setAttenuation(Optional.ofNullable(lightDto.attenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
-        Optional.ofNullable(lightDto.direction()).ifPresent(this::setDirection);
-        setCastShadows(lightDto.castShadows());
-        setIntensity(lightDto.intensity());
-        setColor(lightDto.color().toVector3f());
+        setAttenuation(Optional.ofNullable(prefab.getAttenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
+        Optional.ofNullable(prefab.getDirection()).ifPresent(this::setDirection);
+        setCastShadows(prefab.isCastShadows());
+        setIntensity(prefab.getIntensity());
+        setColor(prefab.getColor());
     }
 
     @Override

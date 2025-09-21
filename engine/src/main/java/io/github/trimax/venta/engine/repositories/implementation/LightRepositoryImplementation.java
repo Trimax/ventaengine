@@ -11,6 +11,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -25,7 +28,14 @@ public final class LightRepositoryImplementation
     protected LightPrefabImplementation load(@NonNull final String resourcePath) {
         log.info("Loading light {}", resourcePath);
 
-        return abettor.createLight(resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightPrefabDTO.class));
+        final var lightDTO = resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightPrefabDTO.class);
+        return abettor.createLight(lightDTO.type(),
+                lightDTO.color().toVector3f(),
+                Optional.ofNullable(lightDTO.direction()).orElse(new Vector3f()),
+                lightDTO.attenuation(),
+                lightDTO.intensity(),
+                lightDTO.range(),
+                lightDTO.castShadows());
     }
 
     @Override

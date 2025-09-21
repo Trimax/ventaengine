@@ -2,11 +2,12 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.geo.Grid;
 import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import io.github.trimax.venta.engine.model.dto.EmitterDTO;
-import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
@@ -16,14 +17,21 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.List;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Abettor {
-    public LightPrefabImplementation createLight(@NonNull final LightPrefabDTO dto) {
-        return new LightPrefabImplementation(dto);
+    public LightPrefabImplementation createLight(@NonNull final LightType type,
+                                                 @NonNull final Vector3f color,
+                                                 @NonNull final Vector3f direction,
+                                                 @NonNull final Attenuation attenuation,
+                                                 final float intensity,
+                                                 final float range,
+                                                 final boolean castShadows) {
+        return new LightPrefabImplementation(type, color, direction, attenuation, intensity, range, castShadows);
     }
 
     public GridMeshPrefabImplementation createGridMesh(final ProgramEntityImplementation program,
