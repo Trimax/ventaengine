@@ -1,10 +1,12 @@
 package io.github.trimax.venta.engine.binders;
 
-import static org.lwjgl.opengl.GL20C.*;
+import org.joml.Vector2fc;
+import org.joml.Vector3fc;
+import org.joml.Vector4fc;
 
 import java.nio.FloatBuffer;
 
-import org.joml.*;
+import static org.lwjgl.opengl.GL20C.*;
 
 abstract class AbstractBinder {
     protected final void bind(final int uniformID, final boolean value) {
@@ -35,6 +37,11 @@ abstract class AbstractBinder {
     protected final void bind(final int uniformID, final Vector2fc vector) {
         if (uniformID >= 0)
             glUniform2f(uniformID, vector.x(), vector.y());
+    }
+
+    protected final void bind(final int uniformID, final FloatBuffer buffer) {
+        if (uniformID >= 0)
+            glUniform4fv(uniformID, buffer);
     }
 
     protected final void bindMatrix3(final int uniformID, final FloatBuffer buffer) {

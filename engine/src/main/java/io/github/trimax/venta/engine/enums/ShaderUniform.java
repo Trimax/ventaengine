@@ -67,6 +67,10 @@ public enum ShaderUniform {
     /* Fog flag */
     UseFogFlag("useFog"),
 
+    /* Billboard parameters */
+    Frames("frames"),
+    FrameIndex("frameIndex"),
+
     /* Common model parameters transformation*/
     Position("position"),
     Scale("scale"),

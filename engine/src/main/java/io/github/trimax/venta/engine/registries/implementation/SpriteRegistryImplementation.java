@@ -12,9 +12,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import one.util.streamex.StreamEx;
-
-import java.util.List;
+import org.lwjgl.system.MemoryUtil;
 
 @Slf4j
 @Component
@@ -33,20 +31,27 @@ public final class SpriteRegistryImplementation
         final var spriteDTO = resourceService.getAsObject(String.format("/sprites/%s", resourcePath), SpriteDTO.class);
         final var texture = textureRegistry.get(spriteDTO.texture());
 
-        return abettor.createSprite(texture,
-                normalizeFrames(spriteDTO.frames(), texture.getWidth(), texture.getHeight()),
+        final var framesBuffer = MemoryUtil.memAllocFloat(spriteDTO.frames().size() * 4);
+        for (final Frame frame : spriteDTO.frames()) {
+            final var normalizedFrame = frame.normalize(texture.getWidth(), texture.getHeight());
+            framesBuffer.put(normalizedFrame.x());
+            framesBuffer.put(normalizedFrame.y());
+            framesBuffer.put(normalizedFrame.width());
+            framesBuffer.put(normalizedFrame.height());
+        }
+
+        framesBuffer.flip();
+
+        return abettor.createSprite(texture, framesBuffer,
                 spriteDTO.looping(),
+                spriteDTO.frames().size(),
                 spriteDTO.duration());
     }
 
-    private List<Frame> normalizeFrames(@NonNull final List<Frame> frames, final int textureWidth, final int textureHeight) {
-        return StreamEx.of(frames)
-                .map(frame -> frame.normalize(textureWidth, textureHeight))
-                .toList();
-    }
 
     @Override
     protected void unload(@NonNull final SpriteEntityImplementation entity) {
         log.info("Unloading sprite {}", entity.getID());
+        MemoryUtil.memFree(entity.getFramesBuffer());
     }
 }

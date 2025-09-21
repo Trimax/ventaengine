@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.BillboardDTO;
 import io.github.trimax.venta.engine.model.prefabs.BillboardPrefab;
@@ -45,12 +46,16 @@ public final class BillboardRepositoryImplementation
         final int facetsBufferID = memory.getBuffers().create("Billboard %s face buffer", resourcePath);
 
         glBindVertexArray(vertexArrayObjectID);
+
+        // vertex buffer
         glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
-
         glBufferData(GL_ARRAY_BUFFER, PARTICLE_VERTICES, GL_STATIC_DRAW);
-
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+
+        // index buffer
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, GeometryDefinitions.PARTICLE_INDICES, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);

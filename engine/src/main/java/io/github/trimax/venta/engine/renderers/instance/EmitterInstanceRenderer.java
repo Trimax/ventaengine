@@ -1,15 +1,5 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.opengl.GL31C.glDrawElementsInstanced;
-
-import org.joml.Matrix4f;
-import org.joml.Matrix4fc;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
@@ -24,6 +14,15 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
+
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL31C.glDrawElementsInstanced;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -91,7 +90,7 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
     }
 
     private void applyBillboard(final Matrix4f model, final Matrix4fc viewMatrix) {
-        final var billboardRotation = new Matrix4f(viewMatrix);
+        final var billboardRotation = new Matrix4f(viewMatrix); //TODO: Get rid of new matrix creation
         billboardRotation.m30(0);
         billboardRotation.m31(0);
         billboardRotation.m32(0);

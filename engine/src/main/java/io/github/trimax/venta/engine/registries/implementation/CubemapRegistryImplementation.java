@@ -47,7 +47,6 @@ public final class CubemapRegistryImplementation
     private final Abettor abettor;
     private final Memory memory;
 
-
     @Override
     protected CubemapEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         return load(resourcePath, resourceService.getAsObject(String.format("/cubemaps/%s", resourcePath), CubemapDTO.class));

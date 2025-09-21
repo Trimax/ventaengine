@@ -4,7 +4,6 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.enums.TextureFormat;
-import io.github.trimax.venta.engine.model.common.dto.Frame;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import lombok.AccessLevel;
@@ -13,7 +12,7 @@ import lombok.NonNull;
 import org.lwjgl.stb.STBTTBakedChar;
 
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.nio.FloatBuffer;
 import java.util.Map;
 
 @Component
@@ -76,9 +75,10 @@ public final class Abettor {
     }
 
     public SpriteEntityImplementation createSprite(@NonNull final TextureEntityImplementation texture,
-                                                   @NonNull final List<Frame> frames,
+                                                   @NonNull final FloatBuffer frames,
                                                    final boolean looping,
+                                                   final int frameCount,
                                                    final float duration) {
-        return new SpriteEntityImplementation(texture, frames, looping, duration);
+        return new SpriteEntityImplementation(texture, frames, looping, frameCount, duration);
     }
 }
