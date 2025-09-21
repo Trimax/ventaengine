@@ -11,7 +11,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
 import org.lwjgl.system.MemoryUtil;
@@ -22,7 +21,6 @@ import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
-@Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<BillboardInstanceImplementation, BillboardInstanceRenderer.BillboardRenderContext, SceneInstanceRenderer.SceneRenderContext> {
@@ -55,8 +53,8 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
 
     private int getFrameIndex(final SpriteEntityImplementation sprite) {
         final var time = getContext().getParent().getTime().getTimeElapsed();
-        log.info("Time elapsed: {}", time);
-        return  (int) ((time / sprite.getDuration()) % sprite.getFrameCount());
+
+        return (int) ((time / sprite.getDuration()) % sprite.getFrameCount());
     }
 
     @Getter(AccessLevel.PACKAGE)
@@ -68,11 +66,9 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
         public BillboardRenderContext withModelMatrix(final Matrix4f matrix) {
             modelMatrixBuffer.clear();
 
-            modelMatrix.identity()
-                    .set(matrix);
+            modelMatrix.identity().set(matrix);
+            applyBillboard(modelMatrix, getParent().getViewMatrix());
             modelMatrix.get(modelMatrixBuffer);
-
-           // applyBillboard(matrix, getParent().getViewMatrix());
 
             return this;
         }
