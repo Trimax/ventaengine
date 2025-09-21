@@ -1,17 +1,16 @@
-package io.github.trimax.examples.reflections.handlers;
+package io.github.trimax.examples.reflection.handlers;
 
-import org.joml.Vector3f;
-
-import io.github.trimax.examples.reflections.state.ReflectionsApplicationState;
+import io.github.trimax.examples.reflection.state.ReflectionApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 
 @Slf4j
 @AllArgsConstructor
-public final class ReflectionsApplicationStartupHandler implements VentaEngineStartupHandler {
-    private final ReflectionsApplicationState state;
+public final class ReflectionApplicationStartupHandler implements VentaEngineStartupHandler {
+    private final ReflectionApplicationState state;
 
     public void onStartup(final String[] args, final VentaContext context) {
         log.info("Reflections demo application started");

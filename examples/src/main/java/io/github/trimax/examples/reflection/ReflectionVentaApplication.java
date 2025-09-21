@@ -1,8 +1,8 @@
-package io.github.trimax.examples.reflections;
+package io.github.trimax.examples.reflection;
 
-import io.github.trimax.examples.reflections.handlers.ReflectionsApplicationStartupHandler;
-import io.github.trimax.examples.reflections.handlers.ReflectionsApplicationUpdateHandler;
-import io.github.trimax.examples.reflections.state.ReflectionsApplicationState;
+import io.github.trimax.examples.reflection.handlers.ReflectionApplicationStartupHandler;
+import io.github.trimax.examples.reflection.handlers.ReflectionApplicationUpdateHandler;
+import io.github.trimax.examples.reflection.state.ReflectionApplicationState;
 import io.github.trimax.venta.engine.VentaEngine;
 import io.github.trimax.venta.engine.enums.AntialiasingSamples;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
@@ -13,8 +13,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class ReflectionsVentaApplication implements VentaEngineApplication {
-    private final ReflectionsApplicationState state = new ReflectionsApplicationState();
+public final class ReflectionVentaApplication implements VentaEngineApplication {
+    private final ReflectionApplicationState state = new ReflectionApplicationState();
 
     @Override
     public @NonNull VentaEngineConfiguration getConfiguration() {
@@ -28,15 +28,15 @@ public final class ReflectionsVentaApplication implements VentaEngineApplication
 
     @Override
     public @NonNull VentaEngineStartupHandler getStartupHandler() {
-        return new ReflectionsApplicationStartupHandler(state);
+        return new ReflectionApplicationStartupHandler(state);
     }
 
     @Override
     public @NonNull VentaEngineUpdateHandler getUpdateHandler() {
-        return new ReflectionsApplicationUpdateHandler(state);
+        return new ReflectionApplicationUpdateHandler(state);
     }
 
     public static void main(final String[] args) {
-        VentaEngine.run(args, new ReflectionsVentaApplication());
+        VentaEngine.run(args, new ReflectionVentaApplication());
     }
 }
