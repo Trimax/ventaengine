@@ -29,7 +29,7 @@ public final class GizmoManagerImplementation
     public GizmoInstanceImplementation getOrigin() {
         if (origin == null) {
             this.origin = create("Origin", GizmoType.Origin);
-            this.origin.setScale(new Vector3f(100f));
+            this.origin.setScale(new Vector3f(Float.MAX_VALUE));
         }
 
         return origin;
