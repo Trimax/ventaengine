@@ -48,7 +48,7 @@ public final class SoundSourceInstanceImplementation extends AbstractInstanceImp
 
     @Override
     public void setVolume(final float volume) {
-        this.volume = Math.clamp(volume, 0.f, 1.f);;
+        this.volume = Math.clamp(volume, 0.f, 1.f);
         alSourcef(sourceID, AL_GAIN, this.volume);
     }
 
