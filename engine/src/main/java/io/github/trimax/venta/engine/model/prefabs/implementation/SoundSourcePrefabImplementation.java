@@ -12,6 +12,7 @@ import lombok.Value;
 public class SoundSourcePrefabImplementation extends AbstractPrefabImplementation implements SoundSourcePrefab {
     @NonNull
     SoundEntityImplementation sound;
+
     float volume;
     float pitch;
     boolean looping;

@@ -58,6 +58,10 @@ public final class VentaContext {
         return managerFactory.get(SoundSourceManagerImplementation.class);
     }
 
+    public BillboardManager getBillboardManager() {
+        return managerFactory.get(BillboardManagerImplementation.class);
+    }
+
     /*** Registries ***/
 
     public CubemapRegistry getCubemapRegistry() {

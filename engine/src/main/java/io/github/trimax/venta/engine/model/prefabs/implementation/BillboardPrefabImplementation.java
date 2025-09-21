@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.BillboardPrefab;
 import lombok.AccessLevel;
@@ -12,8 +13,15 @@ import org.joml.Vector2f;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class BillboardPrefabImplementation extends AbstractPrefabImplementation implements BillboardPrefab {
     @NonNull
+    ProgramEntityImplementation program;
+
+    @NonNull
     SpriteEntityImplementation sprite;
 
     @NonNull
     Vector2f size;
+
+    int vertexArrayObjectID;
+    int verticesBufferID;
+    int facetsBufferID;
 }
