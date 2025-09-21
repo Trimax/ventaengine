@@ -1,0 +1,11 @@
+{
+  "texture": "atlas/diffuse.png",
+  "duration": 250,
+  "looping": true,
+  "frames": [
+    {"x": 0,   "y": 0,   "width": 256, "height": 256},
+    {"x": 256, "y": 0,   "width": 256, "height": 256},
+    {"x": 0,   "y": 256, "width": 256, "height": 256},
+    {"x": 256, "y": 256, "width": 256, "height": 256}
+  ]
+}

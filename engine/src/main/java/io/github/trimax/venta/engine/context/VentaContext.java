@@ -92,6 +92,10 @@ public final class VentaContext {
         return registryFactory.get(SoundRegistryImplementation.class);
     }
 
+    public SpriteRegistry getSpriteRegistry() {
+        return registryFactory.get(SpriteRegistryImplementation.class);
+    }
+
     /*** Repositories ***/
 
     public ObjectRepository getObjectRepository() {
