@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.factories.MeshParserFactory;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.common.geo.Buffer;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
@@ -112,13 +113,10 @@ public final class MeshRegistryImplementation
         glBindVertexArray(0);
 
         return abettor.createMesh(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
-                new Geometry(vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID,
-                        vertices.length / stride,
-                        meshDTO.getFacetsArrayLength() / 3,
-                        meshDTO.getEdgesArrayLength() / 2,
-                        vertices.length,
-                        meshDTO.getFacetsArrayLength(),
-                        meshDTO.getEdgesArrayLength()),
+                new Geometry(vertexArrayObjectID,
+                        new Buffer(vertexBufferID, vertices.length / COUNT_FLOATS_PER_VERTEX, vertices.length),
+                        new Buffer(facetsBufferID, meshDTO.getFacetsArrayLength() / COUNT_VERTICES_PER_FACET, meshDTO.getFacetsArrayLength()),
+                        new Buffer(edgesBufferID, meshDTO.getEdgesArrayLength() / COUNT_VERTICES_PER_EDGE, meshDTO.getEdgesArrayLength())),
                 BoundingBox.of(meshDTO));
     }
 
@@ -127,8 +125,12 @@ public final class MeshRegistryImplementation
         log.info("Unloading mesh {}", entity.getID());
 
         memory.getVertexArrays().delete(entity.getGeometry().vertexArrayObjectID());
-        memory.getBuffers().delete(entity.getGeometry().verticesBufferID());
-        memory.getBuffers().delete(entity.getGeometry().facetsBufferID());
-        memory.getBuffers().delete(entity.getGeometry().edgesBufferID());
+        unload(entity.getGeometry().vertices());
+        unload(entity.getGeometry().facets());
+        unload(entity.getGeometry().edges());
+    }
+
+    private void unload(@NonNull final Buffer buffer) {
+        memory.getBuffers().delete(buffer.id());
     }
 }

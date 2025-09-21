@@ -31,9 +31,9 @@ public final class MeshDescribeExecutor extends AbstractMeshExecutor {
             }
 
             getConsole().header("Mesh <%s>:", command.asArgument().value());
-            getConsole().info("  Vertices: %s", mesh.getGeometry().countVertices());
-            getConsole().info("    Facets: %s", mesh.getGeometry().countFacets());
-            getConsole().info("     Edges: %s", mesh.getGeometry().countEdges());
+            getConsole().info("  Vertices: %s", mesh.getGeometry().vertices().count());
+            getConsole().info("    Facets: %s", mesh.getGeometry().facets().count());
+            getConsole().info("     Edges: %s", mesh.getGeometry().edges().count());
         } catch (final RuntimeException e) {
             getConsole().error("Mesh <%s> can't be described because it does not exist", command.asArgument().value());
         }

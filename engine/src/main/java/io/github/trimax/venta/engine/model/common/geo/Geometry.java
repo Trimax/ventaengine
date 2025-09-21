@@ -1,23 +1,25 @@
 package io.github.trimax.venta.engine.model.common.geo;
 
+import lombok.NonNull;
+
 public record Geometry(int vertexArrayObjectID,
 
-                       int verticesBufferID,
-                       int facetsBufferID,
-                       int edgesBufferID,
+                       @NonNull Buffer vertices,
+                       @NonNull Buffer facets,
+                       @NonNull Buffer edges) {
+    public boolean hasVertices() {
+        return hasSomething(vertices);
+    }
 
-                       int countVertices,
-                       int countFacets,
-                       int countEdges,
-
-                       int lengthArrayVertices,
-                       int lengthArrayFacets,
-                       int lengthArrayEdges) {
     public boolean hasFacets() {
-        return facetsBufferID > 0;
+        return hasSomething(facets);
     }
 
     public boolean hasEdges() {
-        return edgesBufferID > 0;
+        return hasSomething(edges);
+    }
+
+    private boolean hasSomething(final Buffer buffer) {
+        return buffer.isValid() && buffer.count() > 0;
     }
 }

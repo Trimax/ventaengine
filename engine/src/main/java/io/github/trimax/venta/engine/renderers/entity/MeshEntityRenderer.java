@@ -45,13 +45,13 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
         glBindVertexArray(geometry.vertexArrayObjectID());
 
         if (geometry.hasFacets()) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facetsBufferID());
-            glDrawElements(GL_TRIANGLES, geometry.lengthArrayFacets(), GL_UNSIGNED_INT, 0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
+            glDrawElements(GL_TRIANGLES, geometry.facets().length(), GL_UNSIGNED_INT, 0);
         }
 
         if (geometry.hasEdges()) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.edgesBufferID());
-            glDrawElements(GL_LINES, geometry.lengthArrayEdges(), GL_UNSIGNED_INT, 0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.edges().id());
+            glDrawElements(GL_LINES, geometry.edges().length(), GL_UNSIGNED_INT, 0);
         }
 
         glBindVertexArray(0);
