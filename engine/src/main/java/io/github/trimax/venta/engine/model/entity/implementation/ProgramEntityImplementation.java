@@ -5,17 +5,18 @@ import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Value;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
+@Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class ProgramEntityImplementation  extends AbstractEntityImplementation implements ProgramEntity {
-    private final int internalID;
+public class ProgramEntityImplementation  extends AbstractEntityImplementation implements ProgramEntity {
+    int internalID;
 
     @Getter(AccessLevel.NONE)
-    private final Map<String, Integer> uniforms = new HashMap<>();
+    Map<String, Integer> uniforms = new HashMap<>();
 
     public void addUniformID(final String name, final Integer uniformID) {
         if (uniformID >= 0)

@@ -4,17 +4,17 @@ import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.model.entity.ShaderEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
+import lombok.Value;
 
-@Getter
+@Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class ShaderEntityImplementation extends AbstractEntityImplementation implements ShaderEntity {
-    private final int internalID;
+public class ShaderEntityImplementation extends AbstractEntityImplementation implements ShaderEntity {
+    int internalID;
 
     @NonNull
-    private final ShaderType type;
+    ShaderType type;
 
     @NonNull
-    private final String code;
+    String code;
 }

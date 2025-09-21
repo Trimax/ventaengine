@@ -7,8 +7,8 @@ import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
+import lombok.Value;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.joml.Vector4f;
@@ -18,16 +18,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Getter
+@Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class MaterialEntityImplementation extends AbstractEntityImplementation implements MaterialEntity {
-    private final Map<TextureType, TextureEntityImplementation> textures = new HashMap<>();
-    private final float metalness;
-    private final float roughness;
-    private final float opacity;
-    private final Vector4f color;
-    private final Vector2f tiling;
-    private final Vector2f offset;
+public class MaterialEntityImplementation extends AbstractEntityImplementation implements MaterialEntity {
+    Map<TextureType, TextureEntityImplementation> textures = new HashMap<>();
+    float metalness;
+    float roughness;
+    float opacity;
+    Vector4f color;
+    Vector2f tiling;
+    Vector2f offset;
 
     MaterialEntityImplementation(@NonNull final MaterialDTO dto) {
         this(Optional.ofNullable(dto.metalness()).orElse(0.f),

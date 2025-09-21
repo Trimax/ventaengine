@@ -5,18 +5,26 @@ import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.NonNull;
+import lombok.Value;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
 
-@Getter
+@Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class CubemapEntityImplementation extends AbstractEntityImplementation implements CubemapEntity {
-    private final Map<CubemapFace, ByteBuffer> buffers;
-    private final ProgramEntityImplementation program;
-    private final int vertexArrayObjectID;
-    private final int verticesBufferID;
-    private final TextureFormat format;
-    private final int internalID;
+public class CubemapEntityImplementation extends AbstractEntityImplementation implements CubemapEntity {
+    @NonNull
+    Map<CubemapFace, ByteBuffer> buffers;
+
+    @NonNull
+    ProgramEntityImplementation program;
+
+    int vertexArrayObjectID;
+    int verticesBufferID;
+
+    @NonNull
+    TextureFormat format;
+
+    int internalID;
 }
