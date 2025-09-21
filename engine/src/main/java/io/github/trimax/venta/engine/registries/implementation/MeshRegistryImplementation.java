@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.factories.MeshParserFactory;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
@@ -111,16 +112,23 @@ public final class MeshRegistryImplementation
         glBindVertexArray(0);
 
         return abettor.createMesh(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
-                vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO));
+                new Geometry(vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID,
+                        vertices.length / stride,
+                        meshDTO.getFacetsArrayLength() / 3,
+                        meshDTO.getEdgesArrayLength() / 2,
+                        vertices.length,
+                        meshDTO.getFacetsArrayLength(),
+                        meshDTO.getEdgesArrayLength()),
+                BoundingBox.of(meshDTO));
     }
 
     @Override
     protected void unload(@NonNull final MeshEntityImplementation entity) {
         log.info("Unloading mesh {}", entity.getID());
 
-        memory.getVertexArrays().delete(entity.getVertexArrayObjectID());
-        memory.getBuffers().delete(entity.getVerticesBufferID());
-        memory.getBuffers().delete(entity.getFacetsBufferID());
-        memory.getBuffers().delete(entity.getEdgesBufferID());
+        memory.getVertexArrays().delete(entity.getGeometry().vertexArrayObjectID());
+        memory.getBuffers().delete(entity.getGeometry().verticesBufferID());
+        memory.getBuffers().delete(entity.getGeometry().facetsBufferID());
+        memory.getBuffers().delete(entity.getGeometry().edgesBufferID());
     }
 }

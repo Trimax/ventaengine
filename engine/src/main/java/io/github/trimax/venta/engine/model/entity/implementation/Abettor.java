@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -34,13 +35,9 @@ public final class Abettor {
     public MeshEntityImplementation createMesh(final int verticesCount,
                                                final int facetsCount,
                                                final int edgesCount,
-                                               final int vertexArrayObjectID,
-                                               final int vertexBufferID,
-                                               final int facetsBufferID,
-                                               final int edgesBufferID,
+                                               @NonNull final Geometry geometry,
                                                @NonNull final BoundingBox boundingBox) {
-        return new MeshEntityImplementation(verticesCount, facetsCount, edgesCount,
-                vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, boundingBox);
+        return new MeshEntityImplementation(verticesCount, facetsCount, edgesCount, geometry, boundingBox);
     }
 
     public ProgramEntityImplementation createProgram(final int internalID) {
