@@ -42,7 +42,7 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
     }
 
     private void render(@NonNull final Geometry geometry) {
-        glBindVertexArray(geometry.vertexArrayObjectID());
+        glBindVertexArray(geometry.objectID());
 
         if (geometry.hasFacets()) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());

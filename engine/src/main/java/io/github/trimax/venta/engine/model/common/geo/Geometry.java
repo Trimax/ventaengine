@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.model.common.geo;
 
 import lombok.NonNull;
 
-public record Geometry(int vertexArrayObjectID,
+public record Geometry(int objectID,
 
                        @NonNull Buffer vertices,
                        @NonNull Buffer facets,

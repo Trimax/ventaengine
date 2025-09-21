@@ -124,7 +124,7 @@ public final class MeshRegistryImplementation
     protected void unload(@NonNull final MeshEntityImplementation entity) {
         log.info("Unloading mesh {}", entity.getID());
 
-        memory.getVertexArrays().delete(entity.getGeometry().vertexArrayObjectID());
+        memory.getVertexArrays().delete(entity.getGeometry().objectID());
         unload(entity.getGeometry().vertices());
         unload(entity.getGeometry().facets());
         unload(entity.getGeometry().edges());
