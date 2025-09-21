@@ -8,6 +8,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
+import static org.lwjgl.openal.AL10.*;
+
 @Getter
 public final class CameraInstanceImplementation extends AbstractInstanceImplementation implements CameraInstance {
     private static final Vector3f worldUp = new Vector3f(0, 1, 0);
@@ -35,6 +37,16 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
         front.mul(rotationMatrix).normalize();
         up.mul(rotationMatrix).normalize();
         right.mul(rotationMatrix).normalize();
+
+        updateListener();
+    }
+
+    private void updateListener() {
+        alListener3f(AL_POSITION, position.x(), position.y(), position.z());
+        alListenerfv(AL_ORIENTATION, new float[] {
+                front.x(), front.y(), front.z(),
+                up.x(), up.y(), up.z()
+        });
     }
 
     public Matrix4f getViewMatrix() {
@@ -44,21 +56,25 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
     @Override
     public void move(@NonNull final Vector3fc direction) {
         position.add(direction);
+        updateListener();
     }
 
     @Override
     public void moveForward(final float distance) {
         position.fma(distance, front);
+        updateListener();
     }
 
     @Override
     public void moveRight(final float distance) {
         position.fma(distance, right);
+        updateListener();
     }
 
     @Override
     public void moveUp(final float distance) {
         position.fma(distance, worldUp);
+        updateListener();
     }
 
     @Override
@@ -77,13 +93,9 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
     }
 
     @Override
-    public Vector3fc getPosition() {
-        return position;
-    }
-
-    @Override
     public void setPosition(@NonNull final Vector3fc newPosition) {
         this.position.set(newPosition);
+        updateListener();
     }
 
     @Override
@@ -96,5 +108,7 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
 
         right.set(new Vector3f(front).cross(tempUp).normalize());
         up.set(new Vector3f(right).cross(front).normalize());
+
+        updateListener();
     }
 }
