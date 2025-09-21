@@ -25,8 +25,9 @@ public final class SoundSourceInstanceImplementation extends AbstractInstanceImp
                                       final float volume,
                                       final float pitch,
                                       final boolean looping,
-                                      final int sourceID) {
-        super(null, name);
+                                      final int sourceID,
+                                      @NonNull final GizmoInstanceImplementation gizmo) {
+        super(gizmo, name);
 
         this.soundEntity = sound;
         this.volume = volume;
