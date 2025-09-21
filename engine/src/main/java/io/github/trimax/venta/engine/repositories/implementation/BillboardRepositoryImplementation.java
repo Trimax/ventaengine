@@ -1,8 +1,9 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
 import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.common.geo.Buffer;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.dto.BillboardDTO;
 import io.github.trimax.venta.engine.model.prefabs.BillboardPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
@@ -16,6 +17,8 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_VERTICES_PER_FACET;
+import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.PARTICLE_INDICES;
 import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.PARTICLE_VERTICES;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
@@ -55,23 +58,30 @@ public final class BillboardRepositoryImplementation
 
         // index buffer
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, GeometryDefinitions.PARTICLE_INDICES, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, PARTICLE_INDICES, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
         return abettor.createBillboard(programRegistry.get(billboardDTO.program()),
                 spriteRegistry.get(billboardDTO.sprite()),
-                billboardDTO.scale(),
-                vertexArrayObjectID, verticesBufferID, facetsBufferID);
+                new Geometry(vertexArrayObjectID,
+                        new Buffer(verticesBufferID, PARTICLE_VERTICES.length / 2, PARTICLE_VERTICES.length),
+                        new Buffer(facetsBufferID, PARTICLE_INDICES.length / COUNT_VERTICES_PER_FACET, PARTICLE_INDICES.length),
+                        null),
+                billboardDTO.scale());
     }
 
     @Override
     protected void unload(@NonNull final BillboardPrefabImplementation entity) {
         log.info("Unloading billboard {}", entity.getID());
 
-        memory.getVertexArrays().delete(entity.getVertexArrayObjectID());
-        memory.getBuffers().delete(entity.getVerticesBufferID());
-        memory.getBuffers().delete(entity.getFacetsBufferID());
+        memory.getVertexArrays().delete(entity.getGeometry().objectID());
+        unload(entity.getGeometry().vertices());
+        unload(entity.getGeometry().facets());
+    }
+
+    private void unload(@NonNull final Buffer buffer) {
+        memory.getBuffers().delete(buffer.id());
     }
 }

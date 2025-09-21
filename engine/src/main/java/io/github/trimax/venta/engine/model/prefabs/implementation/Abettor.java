@@ -63,11 +63,8 @@ public final class Abettor {
 
     public BillboardPrefabImplementation createBillboard(@NonNull final ProgramEntityImplementation program,
                                                          @NonNull final SpriteEntityImplementation sprite,
-                                                         @NonNull final Vector2f size,
-                                                         final int vertexArrayObjectID,
-                                                         final int verticesBufferID,
-                                                         final int facetsBufferID) {
-        return new BillboardPrefabImplementation(program, sprite, size,
-                vertexArrayObjectID, verticesBufferID, facetsBufferID);
+                                                         @NonNull final Geometry geometry,
+                                                         @NonNull final Vector2f size) {
+        return new BillboardPrefabImplementation(program, sprite, geometry, size);
     }
 }
