@@ -7,8 +7,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum LayoutBillboard {
-    Position(0, 2);
+public enum LayoutMesh {
+    Position(0, 3),
+    Normal(1, 3),
+    Tangent(2, 3),
+    Bitangent(3, 3),
+    TextureCoordinates(4, 2),
+    Color(5, 4);
 
     private final int locationID;
     private final int size;
@@ -18,6 +23,6 @@ public enum LayoutBillboard {
     }
 
     public static int getFloatsCount() {
-        return EnumUtil.sum(LayoutBillboard.class, LayoutBillboard::getSize);
+        return EnumUtil.sum(LayoutMesh.class, LayoutMesh::getSize);
     }
 }

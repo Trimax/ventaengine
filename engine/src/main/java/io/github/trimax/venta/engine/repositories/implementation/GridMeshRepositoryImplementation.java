@@ -19,7 +19,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_FLOATS_PER_VERTEX_GRIDMESH;
 import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_VERTICES_PER_FACET;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
@@ -79,7 +78,7 @@ public final class GridMeshRepositoryImplementation
 
         return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()),
                 new Geometry(vertexArrayObjectID,
-                        new Buffer(verticesBufferID, grid.vertices().length / COUNT_FLOATS_PER_VERTEX_GRIDMESH, grid.vertices().length),
+                        new Buffer(verticesBufferID, grid.vertices().length / LayoutGridMesh.getFloatsCount(), grid.vertices().length),
                         new Buffer(facetsBufferID, grid.indices().length / COUNT_VERTICES_PER_FACET, grid.indices().length),
                         null),
                 gridMeshDTO.waves());
