@@ -7,12 +7,17 @@ import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityIm
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.Value;
 
 @Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class ObjectPrefabImplementation extends AbstractPrefabImplementation implements ObjectPrefab {
+    @NonNull
     ProgramEntityImplementation program;
+
     MaterialEntityImplementation material;
+
+    @NonNull
     Node<MeshReference> root;
 }

@@ -1,15 +1,14 @@
 package io.github.trimax.venta.engine.memory;
 
-import java.util.function.Supplier;
-
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.openal.AL10;
-import org.lwjgl.opengl.GL30C;
-
 import io.github.trimax.venta.container.annotations.Component;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.opengl.GL30C;
+
+import java.util.function.Supplier;
 
 @Getter
 @Component
@@ -32,6 +31,8 @@ public final class Memory {
         this.audioBuffers.cleanup();
         this.audioSources.cleanup();
     }
+
+    //TODO: Create geometry, clean geometry
 
     private static final class DefaultSupplier<T> implements Supplier<T> {
         @Override

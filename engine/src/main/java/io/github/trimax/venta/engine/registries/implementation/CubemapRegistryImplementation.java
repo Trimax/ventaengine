@@ -2,9 +2,12 @@ package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.CubemapFace;
+import io.github.trimax.venta.engine.enums.LayoutCubemap;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.CubemapBakeException;
 import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.common.geo.Buffer;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.dto.CubemapDTO;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
@@ -83,14 +86,18 @@ public final class CubemapRegistryImplementation
             glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
             glBufferData(GL_ARRAY_BUFFER, SKYBOX_VERTICES, GL_STATIC_DRAW);
 
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0L);
+            glEnableVertexAttribArray(LayoutCubemap.Position.getLocationID());
+            glVertexAttribPointer(0, LayoutCubemap.Position.getSize(), GL_FLOAT, false, LayoutCubemap.getStride(), 0L);
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
 
             return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB,
-                    vertexArrayObjectID, verticesBufferID, textureID);
+                    new Geometry(vertexArrayObjectID,
+                            new Buffer(verticesBufferID, SKYBOX_VERTICES.length / LayoutCubemap.getFloatsCount(), SKYBOX_VERTICES.length),
+                            null,
+                            null),
+                    textureID);
         });
     }
 
@@ -137,8 +144,8 @@ public final class CubemapRegistryImplementation
     protected void unload(@NonNull final CubemapEntityImplementation entity) {
         log.info("Unloading texture {}", entity.getID());
 
-        memory.getVertexArrays().delete(entity.getVertexArrayObjectID());
-        memory.getBuffers().delete(entity.getVerticesBufferID());
+        memory.getVertexArrays().delete(entity.getGeometry().objectID());
+        memory.getBuffers().delete(entity.getGeometry().vertices().id());
         memory.getTextures().delete(entity.getInternalID());
         StreamEx.ofValues(entity.getBuffers()).forEach(MemoryUtil::memFree);
     }

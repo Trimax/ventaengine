@@ -2,11 +2,9 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.entity.ProgramEntity;
-import io.github.trimax.venta.engine.model.entity.SpriteEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
-import io.github.trimax.venta.engine.model.prefabs.implementation.BillboardPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
@@ -89,10 +87,10 @@ public final class Abettor {
     }
 
     public BillboardInstanceImplementation createBillboard(@NonNull final String name,
-                                                           @NonNull final BillboardPrefabImplementation prefab,
-                                                           @NonNull final ProgramEntity program,
-                                                           @NonNull final SpriteEntity sprite,
+                                                           @NonNull final ProgramEntityImplementation program,
+                                                           @NonNull final SpriteEntityImplementation sprite,
+                                                           @NonNull final Geometry geometry,
                                                            @NonNull final Vector2fc size) {
-        return new BillboardInstanceImplementation(name, prefab, program, sprite, size);
+        return new BillboardInstanceImplementation(name, program, sprite, geometry, size);
     }
 }

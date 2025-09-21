@@ -3,8 +3,8 @@ package io.github.trimax.venta.engine.renderers.instance;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.SpriteBinder;
-import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.BillboardInstanceImplementation;
 import lombok.AccessLevel;
@@ -42,13 +42,19 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
 
         spriteBinder.bindSprite(billboard.getProgram(), billboard.getSprite(), getFrameIndex(billboard.getSprite()));
 
-        glBindVertexArray(billboard.getPrefab().getVertexArrayObjectID());
+        render(billboard.getGeometry());
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, billboard.getPrefab().getFacetsBufferID());
-        glDrawElements(GL_TRIANGLES, GeometryDefinitions.PARTICLE_INDICES.length, GL_UNSIGNED_INT, 0);
-        
-        glBindVertexArray(0);
         glUseProgram(0);
+    }
+
+    //TODO: Introduce geometry renderer, extract all similar method there, reuse them
+    private void render(final Geometry geometry) {
+        glBindVertexArray(geometry.objectID());
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
+        glDrawElements(GL_TRIANGLES, geometry.facets().length(), GL_UNSIGNED_INT, 0);
+
+        glBindVertexArray(0);
     }
 
     private int getFrameIndex(final SpriteEntityImplementation sprite) {

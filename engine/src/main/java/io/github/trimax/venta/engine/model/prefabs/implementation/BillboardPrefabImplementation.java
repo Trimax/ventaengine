@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.BillboardPrefab;
@@ -19,9 +20,8 @@ public class BillboardPrefabImplementation extends AbstractPrefabImplementation 
     SpriteEntityImplementation sprite;
 
     @NonNull
-    Vector2f size;
+    Geometry geometry;
 
-    int vertexArrayObjectID;
-    int verticesBufferID;
-    int facetsBufferID;
+    @NonNull
+    Vector2f size;
 }

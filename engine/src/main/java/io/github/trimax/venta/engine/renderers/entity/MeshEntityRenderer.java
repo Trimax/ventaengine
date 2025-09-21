@@ -3,14 +3,12 @@ package io.github.trimax.venta.engine.renderers.entity;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.renderers.instance.ObjectInstanceRenderer;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
@@ -40,16 +38,20 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
 
         materialBinder.bind(getContext().getProgram(), getContext().getMaterial());
 
-        glBindVertexArray(object.getVertexArrayObjectID());
+        render(object.getGeometry());
+    }
 
-        if (object.getFacetsCount() > 0) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getFacetsBufferID());
-            glDrawElements(GL_TRIANGLES, object.getFacetsCount(), GL_UNSIGNED_INT, 0);
+    private void render(@NonNull final Geometry geometry) {
+        glBindVertexArray(geometry.objectID());
+
+        if (geometry.hasFacets()) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
+            glDrawElements(GL_TRIANGLES, geometry.facets().length(), GL_UNSIGNED_INT, 0);
         }
 
-        if (object.getEdgesCount() > 0) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getEdgesBufferID());
-            glDrawElements(GL_LINES, object.getEdgesCount(), GL_UNSIGNED_INT, 0);
+        if (geometry.hasEdges()) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.edges().id());
+            glDrawElements(GL_LINES, geometry.edges().length(), GL_UNSIGNED_INT, 0);
         }
 
         glBindVertexArray(0);
