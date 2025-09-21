@@ -7,8 +7,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum LayoutCubemap {
-    Position(0, 3);
+public enum LayoutGridMesh {
+    Position(0, 3),
+    TextureCoordinates(1, 2);
 
     private final int locationID;
     private final int size;
@@ -18,6 +19,6 @@ public enum LayoutCubemap {
     }
 
     public static int getFloatsCount() {
-        return EnumUtil.sum(LayoutCubemap.class, LayoutCubemap::getSize);
+        return EnumUtil.sum(LayoutGridMesh.class, LayoutGridMesh::getSize);
     }
 }
