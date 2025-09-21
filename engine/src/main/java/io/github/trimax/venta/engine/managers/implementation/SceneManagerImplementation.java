@@ -8,6 +8,7 @@ import io.github.trimax.venta.engine.model.dto.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.SoundSourceInstanceImplementation;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ScenePrefabImplementation;
 import io.github.trimax.venta.engine.registries.implementation.CubemapRegistryImplementation;
@@ -85,8 +86,12 @@ public final class SceneManagerImplementation
 
     @Override
     public void setCurrent(@NonNull final SceneInstance scene) {
-        if (scene instanceof SceneInstanceImplementation entity)
+        if (scene instanceof SceneInstanceImplementation entity) {
+            if (this.current != null)
+                this.current.getSoundSources().forEach(SoundSourceInstanceImplementation::stop);
+
             this.current = entity;
+        }
     }
 
     @Override
