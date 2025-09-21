@@ -29,17 +29,16 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     private boolean isLit = true;
 
     ObjectInstanceImplementation(final String name,
-                                 final ProgramEntity program,
-                                 final MaterialEntity material,
+                                 final ProgramEntityImplementation program,
+                                 final MaterialEntityImplementation material,
                                  final Node<MeshReference> mesh,
                                  final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
-        this.mesh = mesh;
         this.box = GeometryUtil.computeBoundingBox(mesh);
-
-        setProgram(program);
-        setMaterial(material);
+        this.material = material;
+        this.program = program;
+        this.mesh = mesh;
     }
 
     @Override
