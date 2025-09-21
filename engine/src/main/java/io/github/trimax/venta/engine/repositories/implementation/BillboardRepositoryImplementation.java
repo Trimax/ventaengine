@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.LayoutBillboard;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.Buffer;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
@@ -54,8 +55,8 @@ public final class BillboardRepositoryImplementation
         // vertex buffer
         glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
         glBufferData(GL_ARRAY_BUFFER, PARTICLE_VERTICES, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+        glEnableVertexAttribArray(LayoutBillboard.Position.getLocationID());
+        glVertexAttribPointer(0, LayoutBillboard.Position.getSize(), GL_FLOAT, false, 0, 0);
 
         // index buffer
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);

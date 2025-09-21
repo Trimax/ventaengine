@@ -10,7 +10,6 @@ public final class Definitions {
     /*** Basic ***/
 
     public static final int COUNT_FLOATS_PER_VERTEX_MESH = 18;
-    public static final int COUNT_FLOATS_PER_VERTEX_CUBEMAP = 3;
     public static final int COUNT_FLOATS_PER_VERTEX_PARTICLE = 2;
     public static final int COUNT_FLOATS_PER_VERTEX_GRIDMESH = 5;
     public static final int COUNT_VERTICES_PER_FACET = 3;
