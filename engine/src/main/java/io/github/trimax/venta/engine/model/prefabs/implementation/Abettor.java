@@ -8,8 +8,7 @@ import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.dto.EmitterDTO;
 import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
-import io.github.trimax.venta.engine.model.entity.MaterialEntity;
-import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
@@ -27,7 +26,7 @@ public final class Abettor {
         return new LightPrefabImplementation(dto);
     }
 
-    public GridMeshPrefabImplementation createGridMesh(final ProgramEntity program,
+    public GridMeshPrefabImplementation createGridMesh(final ProgramEntityImplementation program,
                                                        final List<Wave> waves,
                                                        final int verticesCount,
                                                        final int facetsCount,
@@ -39,8 +38,8 @@ public final class Abettor {
         return new GridMeshPrefabImplementation(program, waves, verticesCount, facetsCount, vertexArrayObjectID, verticesBufferID, facetsBufferID, grid);
     }
 
-    public ObjectPrefabImplementation createObject(final ProgramEntity program,
-                                                   final MaterialEntity material,
+    public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
+                                                   final MaterialEntityImplementation material,
                                                    final Node<MeshReference> root) {
         return new ObjectPrefabImplementation(program, material, root);
     }

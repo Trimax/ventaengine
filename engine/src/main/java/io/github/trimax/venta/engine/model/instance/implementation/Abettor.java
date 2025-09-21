@@ -3,13 +3,9 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.SpriteEntity;
-import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.prefabs.implementation.BillboardPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
@@ -46,15 +42,15 @@ public final class Abettor {
     }
 
     public GridMeshInstanceImplementation createGridMesh(@NonNull final String name,
-                                                         @NonNull final ProgramEntity program,
-                                                         final MaterialEntity material, //TODO: Make it non-null
+                                                         @NonNull final ProgramEntityImplementation program,
+                                                         final MaterialEntityImplementation material, //TODO: Make it non-null
                                                          @NonNull final GridMeshPrefabImplementation mesh) {
         return new GridMeshInstanceImplementation(name, program, material, mesh);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,
-                                                     @NonNull final ProgramEntity program,
-                                                     final MaterialEntity material,
+                                                     @NonNull final ProgramEntityImplementation program,
+                                                     final MaterialEntityImplementation material,
                                                      @NonNull final Node<MeshReference> mesh,
                                                      @NonNull final GizmoInstanceImplementation gizmo) {
         return new ObjectInstanceImplementation(name, program, material, mesh, gizmo);
