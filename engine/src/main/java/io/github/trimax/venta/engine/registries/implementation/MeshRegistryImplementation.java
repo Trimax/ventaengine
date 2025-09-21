@@ -85,37 +85,37 @@ public final class MeshRegistryImplementation
             memFree(indexBuffer);
         }
 
-        final int stride = COUNT_FLOATS_PER_VERTEX * Float.BYTES;
+        final int stride = COUNT_FLOATS_PER_VERTEX_MESH * Float.BYTES;
 
         // layout(location = 0) -> position
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_POSITION, 3, GL_FLOAT, false, stride, 0);
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_POSITION, COUNT_FLOATS_PER_POSITION, GL_FLOAT, false, stride, 0);
         glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_POSITION);
 
         // layout(location = 1) -> normal
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_NORMAL, 3, GL_FLOAT, false, stride, 3 * Float.BYTES);
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_NORMAL, COUNT_FLOATS_PER_NORMAL, GL_FLOAT, false, stride, 3 * Float.BYTES);
         glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_NORMAL);
 
         // layout(location = 2) -> tangent
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_TANGENT, 3, GL_FLOAT, false, stride, 6 * Float.BYTES);
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_TANGENT, COUNT_FLOATS_PER_TANGENT, GL_FLOAT, false, stride, 6 * Float.BYTES);
         glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_TANGENT);
 
         // layout(location = 3) -> bitangent
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_BITANGENT, 3, GL_FLOAT, false, stride, 9 * Float.BYTES);
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_BITANGENT, COUNT_FLOATS_PER_BITANGENT, GL_FLOAT, false, stride, 9 * Float.BYTES);
         glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_BITANGENT);
 
         // layout(location = 4) -> texture coordinates
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_TEXTURE_COORDINATES, 2, GL_FLOAT, false, stride, 12 * Float.BYTES);
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_TEXTURE_COORDINATES, COUNT_FLOATS_PER_TEXTURE_COORDINATES, GL_FLOAT, false, stride, 12 * Float.BYTES);
         glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_TEXTURE_COORDINATES);
 
         // layout(location = 5) -> color
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_COLOR, 4, GL_FLOAT, false, stride, 14 * Float.BYTES);
+        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_COLOR, COUNT_FLOATS_PER_COLOR, GL_FLOAT, false, stride, 14 * Float.BYTES);
         glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_COLOR);
 
         glBindVertexArray(0);
 
         return abettor.createMesh(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
                 new Geometry(vertexArrayObjectID,
-                        new Buffer(vertexBufferID, vertices.length / COUNT_FLOATS_PER_VERTEX, vertices.length),
+                        new Buffer(vertexBufferID, vertices.length / COUNT_FLOATS_PER_VERTEX_MESH, vertices.length),
                         new Buffer(facetsBufferID, meshDTO.getFacetsArrayLength() / COUNT_VERTICES_PER_FACET, meshDTO.getFacetsArrayLength()),
                         new Buffer(edgesBufferID, meshDTO.getEdgesArrayLength() / COUNT_VERTICES_PER_EDGE, meshDTO.getEdgesArrayLength())),
                 BoundingBox.of(meshDTO));

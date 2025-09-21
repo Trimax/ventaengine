@@ -26,6 +26,7 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_FLOATS_PER_VERTEX_CUBEMAP;
 import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.SKYBOX_VERTICES;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
@@ -85,15 +86,17 @@ public final class CubemapRegistryImplementation
             glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
             glBufferData(GL_ARRAY_BUFFER, SKYBOX_VERTICES, GL_STATIC_DRAW);
 
+            final var stride = COUNT_FLOATS_PER_VERTEX_CUBEMAP * Float.BYTES;
+
             glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0L);
+            glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
 
             return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB,
                     new Geometry(vertexArrayObjectID,
-                            new Buffer(verticesBufferID, SKYBOX_VERTICES.length / 3, SKYBOX_VERTICES.length),
+                            new Buffer(verticesBufferID, SKYBOX_VERTICES.length / COUNT_FLOATS_PER_VERTEX_CUBEMAP, SKYBOX_VERTICES.length),
                             null,
                             null),
                     textureID);

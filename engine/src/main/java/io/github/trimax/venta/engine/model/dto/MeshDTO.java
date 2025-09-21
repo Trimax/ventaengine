@@ -43,45 +43,45 @@ public record MeshDTO(List<Vertex> vertices,
             final var bitangent = Optional.ofNullable(tbnVectors.get(vertexID)).map(Triple::getRight).orElse(null);
 
             if (vertex.hasPosition()) {
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_POSITION_X] = vertex.position().x();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_POSITION_Y] = vertex.position().y();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_POSITION_Z] = vertex.position().z();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_POSITION_X] = vertex.position().x();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_POSITION_Y] = vertex.position().y();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_POSITION_Z] = vertex.position().z();
             }
 
             if (vertex.hasNormal()) {
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_X] = vertex.normal.x();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_Y] = vertex.normal.y();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_Z] = vertex.normal.z();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_NORMAL_X] = vertex.normal.x();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_NORMAL_Y] = vertex.normal.y();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_NORMAL_Z] = vertex.normal.z();
             }
 
             if (normal != null) {
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_X] = normal.x();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_Y] = normal.y();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_NORMAL_Z] = normal.z();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_NORMAL_X] = normal.x();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_NORMAL_Y] = normal.y();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_NORMAL_Z] = normal.z();
             }
 
             if (tangent != null) {
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TANGENT_X] = tangent.x();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TANGENT_Y] = tangent.y();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TANGENT_Z] = tangent.z();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_TANGENT_X] = tangent.x();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_TANGENT_Y] = tangent.y();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_TANGENT_Z] = tangent.z();
             }
 
             if (bitangent != null) {
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_BITANGENT_X] = bitangent.x();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_BITANGENT_Y] = bitangent.y();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_BITANGENT_Z] = bitangent.z();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_BITANGENT_X] = bitangent.x();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_BITANGENT_Y] = bitangent.y();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_BITANGENT_Z] = bitangent.z();
             }
 
             if (vertex.hasTextureCoordinates()) {
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_U] = vertex.textureCoordinates().x();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_V] = vertex.textureCoordinates().y();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_U] = vertex.textureCoordinates().x();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_V] = vertex.textureCoordinates().y();
             }
 
             if (vertex.hasColor()) {
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_R] = vertex.color().r();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_G] = vertex.color().g();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_B] = vertex.color().b();
-                packedArray[COUNT_FLOATS_PER_VERTEX * vertexID + VERTEX_OFFSET_COLOR_A] = vertex.color().a();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_COLOR_R] = vertex.color().r();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_COLOR_G] = vertex.color().g();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_COLOR_B] = vertex.color().b();
+                packedArray[COUNT_FLOATS_PER_VERTEX_MESH * vertexID + VERTEX_OFFSET_COLOR_A] = vertex.color().a();
             }
         }
 

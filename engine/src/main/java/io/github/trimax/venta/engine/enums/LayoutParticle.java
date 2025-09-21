@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum ParticleLayout {
+public enum LayoutParticle {
     Position(0, 2),
     Color(1, 4),
     MatrixModel(2, 16);

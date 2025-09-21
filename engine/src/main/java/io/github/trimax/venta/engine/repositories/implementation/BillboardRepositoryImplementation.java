@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_FLOATS_PER_VERTEX_PARTICLE;
 import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_VERTICES_PER_FACET;
 import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.PARTICLE_INDICES;
 import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.PARTICLE_VERTICES;
@@ -66,7 +67,7 @@ public final class BillboardRepositoryImplementation
         return abettor.createBillboard(programRegistry.get(billboardDTO.program()),
                 spriteRegistry.get(billboardDTO.sprite()),
                 new Geometry(vertexArrayObjectID,
-                        new Buffer(verticesBufferID, PARTICLE_VERTICES.length / 2, PARTICLE_VERTICES.length),
+                        new Buffer(verticesBufferID, PARTICLE_VERTICES.length / COUNT_FLOATS_PER_VERTEX_PARTICLE, PARTICLE_VERTICES.length),
                         new Buffer(facetsBufferID, PARTICLE_INDICES.length / COUNT_VERTICES_PER_FACET, PARTICLE_INDICES.length),
                         null),
                 billboardDTO.scale());

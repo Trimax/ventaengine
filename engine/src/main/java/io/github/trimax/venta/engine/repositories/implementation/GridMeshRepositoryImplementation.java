@@ -18,7 +18,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_VERTICES_PER_FACET;
+import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
@@ -62,15 +62,15 @@ public final class GridMeshRepositoryImplementation
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, facetsBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 
-        final var stride = 5 * Float.BYTES;
+        final var stride = COUNT_FLOATS_PER_VERTEX_GRIDMESH * Float.BYTES;
 
         // layout(location = 0) -> position
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0);
+        glVertexAttribPointer(0, COUNT_FLOATS_PER_POSITION, GL_FLOAT, false, stride, 0);
 
         // layout(location = 1) -> texture coordinates
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, stride, 3 * Float.BYTES);
+        glVertexAttribPointer(1, COUNT_FLOATS_PER_TEXTURE_COORDINATES, GL_FLOAT, false, stride, 3 * Float.BYTES);
 
         glBindVertexArray(0);
 
@@ -79,7 +79,7 @@ public final class GridMeshRepositoryImplementation
 
         return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()),
                 new Geometry(vertexArrayObjectID,
-                        new Buffer(verticesBufferID, grid.vertices().length / 5, grid.vertices().length),
+                        new Buffer(verticesBufferID, grid.vertices().length / COUNT_FLOATS_PER_VERTEX_GRIDMESH, grid.vertices().length),
                         new Buffer(facetsBufferID, grid.indices().length / COUNT_VERTICES_PER_FACET, grid.indices().length),
                         null),
                 gridMeshDTO.waves());

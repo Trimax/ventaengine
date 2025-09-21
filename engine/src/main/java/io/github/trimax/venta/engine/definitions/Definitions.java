@@ -9,9 +9,20 @@ public final class Definitions {
 
     /*** Basic ***/
 
-    public static final int COUNT_FLOATS_PER_VERTEX = 18;
+    public static final int COUNT_FLOATS_PER_VERTEX_MESH = 18;
+    public static final int COUNT_FLOATS_PER_VERTEX_CUBEMAP = 3;
+    public static final int COUNT_FLOATS_PER_VERTEX_PARTICLE = 2;
+    public static final int COUNT_FLOATS_PER_VERTEX_GRIDMESH = 5;
     public static final int COUNT_VERTICES_PER_FACET = 3;
     public static final int COUNT_VERTICES_PER_EDGE = 2;
+
+    /* Granular */
+    public static final int COUNT_FLOATS_PER_POSITION = 3;
+    public static final int COUNT_FLOATS_PER_NORMAL = 3;
+    public static final int COUNT_FLOATS_PER_TANGENT = 3;
+    public static final int COUNT_FLOATS_PER_BITANGENT = 3;
+    public static final int COUNT_FLOATS_PER_COLOR = 4;
+    public static final int COUNT_FLOATS_PER_TEXTURE_COORDINATES = 2;
 
     /*** Vertex buffer ***/
 
