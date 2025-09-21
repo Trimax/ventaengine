@@ -48,6 +48,9 @@ public final class SceneInstanceRenderer
                 cubemapRenderer.render(cubemap);
             }
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         for (final var gridMesh : scene.getGridMeshes())
             try (final var _ = gridMeshRenderer.withContext(getContext())
                     .withModelMatrix(gridMesh.getTransform().getMatrix())
@@ -67,9 +70,7 @@ public final class SceneInstanceRenderer
                 billboardRenderer.render(billboard);
             }
 
-        glEnable(GL_BLEND);
         glDepthMask(false);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         for (final var emitter : scene.getEmitters())
             try (final var _ = emitterRenderer.withContext(getContext())) {
                 emitterRenderer.render(emitterManager.getInstance(emitter.getID()));

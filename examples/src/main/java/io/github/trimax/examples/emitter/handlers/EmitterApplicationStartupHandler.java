@@ -9,6 +9,7 @@ import org.joml.Vector3f;
 public final class EmitterApplicationStartupHandler implements VentaEngineStartupHandler {
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
+        scene.setSkybox(context.getCubemapRegistry().get("clouds.json"));
         scene.setAmbientLight(new Vector3f(0.9f));
 
         final var emitterPrefab = context.getEmitterRepository().get("smoke.json");
