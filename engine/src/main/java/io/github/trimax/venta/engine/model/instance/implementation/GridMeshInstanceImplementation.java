@@ -15,7 +15,7 @@ import org.joml.Vector3fc;
 @Getter
 public final class GridMeshInstanceImplementation extends AbstractInstanceImplementation implements GridMeshInstance {
     private final Transform transform = new Transform();
-    private final GridMeshPrefabImplementation mesh;
+    private final GridMeshPrefabImplementation mesh; //TODO: remove prefab. Use Geometry + program directly
 
     private MaterialEntityImplementation material;
     private ProgramEntityImplementation program;

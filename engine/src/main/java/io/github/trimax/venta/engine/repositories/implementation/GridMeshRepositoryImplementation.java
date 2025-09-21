@@ -2,6 +2,8 @@ package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.common.geo.Buffer;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.dto.GridMeshDTO;
 import io.github.trimax.venta.engine.model.prefabs.GridMeshPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
@@ -16,6 +18,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 
+import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_VERTICES_PER_FACET;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
@@ -74,16 +77,20 @@ public final class GridMeshRepositoryImplementation
         MemoryUtil.memFree(vertexBuffer);
         MemoryUtil.memFree(indexBuffer);
 
-        return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()), gridMeshDTO.waves(),
-                grid.verticesCount(), grid.facetsCount(), vertexArrayObjectID, verticesBufferID, facetsBufferID, grid);
+        return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()),
+                new Geometry(vertexArrayObjectID,
+                        new Buffer(verticesBufferID, grid.vertices().length / 5, grid.vertices().length),
+                        new Buffer(facetsBufferID, grid.indices().length / COUNT_VERTICES_PER_FACET, grid.indices().length),
+                        null),
+                gridMeshDTO.waves());
     }
 
     @Override
     protected void unload(@NonNull final GridMeshPrefabImplementation entity) {
         log.info("Unloading grid mesh {}", entity.getID());
 
-        memory.getBuffers().delete(entity.getFacetsBufferID());
-        memory.getBuffers().delete(entity.getVerticesBufferID());
-        memory.getVertexArrays().delete(entity.getVertexArrayObjectID());
+        memory.getBuffers().delete(entity.getGeometry().facets().id());
+        memory.getBuffers().delete(entity.getGeometry().vertices().id());
+        memory.getVertexArrays().delete(entity.getGeometry().objectID());
     }
 }
