@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.binders;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,9 +17,9 @@ public final class TextBinder extends AbstractBinder {
 
     public void bind(final ProgramEntityImplementation program, final Vector3f color) {
         if (color != null)
-            bind(program.getUniformID("color"), color);
+            bind(program.getUniformID(ShaderUniform.Color), color);
 
-        bind(program.getUniformID("position"), ZERO);
-        bind(program.getUniformID("scale"), 1f);
+        bind(program.getUniformID(ShaderUniform.Position), ZERO);
+        bind(program.getUniformID(ShaderUniform.Scale), 1f);
     }
 }
