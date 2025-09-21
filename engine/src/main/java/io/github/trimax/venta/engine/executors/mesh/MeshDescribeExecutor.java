@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.executors.mesh;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.registries.implementation.MeshRegistryImplementation;
 import lombok.NonNull;
@@ -32,9 +31,9 @@ public final class MeshDescribeExecutor extends AbstractMeshExecutor {
             }
 
             getConsole().header("Mesh <%s>:", command.asArgument().value());
-            getConsole().info("  Vertices: %s", mesh.getVerticesCount() / Definitions.COUNT_FLOATS_PER_VERTEX);
-            getConsole().info("    Facets: %s", mesh.getFacetsCount() / Definitions.COUNT_VERTICES_PER_FACET);
-            getConsole().info("     Edges: %s", mesh.getEdgesCount() / Definitions.COUNT_VERTICES_PER_EDGE);
+            getConsole().info("  Vertices: %s", mesh.getGeometry().vertices().count());
+            getConsole().info("    Facets: %s", mesh.getGeometry().facets().count());
+            getConsole().info("     Edges: %s", mesh.getGeometry().edges().count());
         } catch (final RuntimeException e) {
             getConsole().error("Mesh <%s> can't be described because it does not exist", command.asArgument().value());
         }

@@ -1,9 +1,11 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.Value;
 
 @Value
@@ -13,10 +15,9 @@ public class MeshEntityImplementation extends AbstractEntityImplementation imple
     int facetsCount;
     int edgesCount;
 
-    int vertexArrayObjectID;
-    int verticesBufferID;
-    int facetsBufferID;
-    int edgesBufferID;
+    @NonNull
+    Geometry geometry;
 
+    @NonNull
     BoundingBox boundingBox;
 }

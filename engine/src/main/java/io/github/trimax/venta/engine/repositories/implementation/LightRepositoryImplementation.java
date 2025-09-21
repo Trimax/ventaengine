@@ -1,6 +1,8 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.model.common.dto.Color;
+import io.github.trimax.venta.engine.model.common.light.Attenuation;
 import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
 import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
@@ -30,9 +32,9 @@ public final class LightRepositoryImplementation
 
         final var lightDTO = resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightPrefabDTO.class);
         return abettor.createLight(lightDTO.type(),
-                lightDTO.color().toVector3f(),
+                Optional.ofNullable(lightDTO.color()).map(Color::toVector3f).orElse(new Vector3f(1.f)),
                 Optional.ofNullable(lightDTO.direction()).orElse(new Vector3f()),
-                lightDTO.attenuation(),
+                Optional.ofNullable(lightDTO.attenuation()).orElse(new Attenuation(0, 0, 0)),
                 lightDTO.intensity(),
                 lightDTO.range(),
                 lightDTO.castShadows());

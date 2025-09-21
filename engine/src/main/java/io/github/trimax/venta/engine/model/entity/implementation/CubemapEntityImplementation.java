@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,11 +21,11 @@ public class CubemapEntityImplementation extends AbstractEntityImplementation im
     @NonNull
     ProgramEntityImplementation program;
 
-    int vertexArrayObjectID;
-    int verticesBufferID;
-
     @NonNull
     TextureFormat format;
+
+    @NonNull
+    Geometry geometry;
 
     int internalID;
 }

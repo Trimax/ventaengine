@@ -1,9 +1,12 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.LayoutMesh;
 import io.github.trimax.venta.engine.factories.MeshParserFactory;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
+import io.github.trimax.venta.engine.model.common.geo.Buffer;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
@@ -16,8 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.*;
+import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_VERTICES_PER_EDGE;
+import static io.github.trimax.venta.engine.definitions.Definitions.COUNT_VERTICES_PER_FACET;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
@@ -82,45 +87,53 @@ public final class MeshRegistryImplementation
             memFree(indexBuffer);
         }
 
-        final int stride = COUNT_FLOATS_PER_VERTEX * Float.BYTES;
+        //TODO: Make following binding automatic BindUtil(enumClass). Iterate, extract, apply
 
         // layout(location = 0) -> position
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_POSITION, 3, GL_FLOAT, false, stride, 0);
-        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_POSITION);
+        glEnableVertexAttribArray(LayoutMesh.Position.getLocationID());
+        glVertexAttribPointer(LayoutMesh.Position.getLocationID(), LayoutMesh.Position.getSize(), GL_FLOAT, false, LayoutMesh.getStride(), 0);
 
         // layout(location = 1) -> normal
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_NORMAL, 3, GL_FLOAT, false, stride, 3 * Float.BYTES);
-        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_NORMAL);
+        glEnableVertexAttribArray(LayoutMesh.Normal.getLocationID());
+        glVertexAttribPointer(LayoutMesh.Normal.getLocationID(), LayoutMesh.Normal.getSize(), GL_FLOAT, false, LayoutMesh.getStride(), 3 * Float.BYTES);
 
         // layout(location = 2) -> tangent
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_TANGENT, 3, GL_FLOAT, false, stride, 6 * Float.BYTES);
-        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_TANGENT);
+        glEnableVertexAttribArray(LayoutMesh.Tangent.getLocationID());
+        glVertexAttribPointer(LayoutMesh.Tangent.getLocationID(), LayoutMesh.Tangent.getSize(), GL_FLOAT, false, LayoutMesh.getStride(), 6 * Float.BYTES);
 
         // layout(location = 3) -> bitangent
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_BITANGENT, 3, GL_FLOAT, false, stride, 9 * Float.BYTES);
-        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_BITANGENT);
+        glEnableVertexAttribArray(LayoutMesh.Bitangent.getLocationID());
+        glVertexAttribPointer(LayoutMesh.Bitangent.getLocationID(), LayoutMesh.Bitangent.getSize(), GL_FLOAT, false, LayoutMesh.getStride(), 9 * Float.BYTES);
 
         // layout(location = 4) -> texture coordinates
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_TEXTURE_COORDINATES, 2, GL_FLOAT, false, stride, 12 * Float.BYTES);
-        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_TEXTURE_COORDINATES);
+        glEnableVertexAttribArray(LayoutMesh.TextureCoordinates.getLocationID());
+        glVertexAttribPointer(LayoutMesh.TextureCoordinates.getLocationID(), LayoutMesh.TextureCoordinates.getSize(), GL_FLOAT, false, LayoutMesh.getStride(), 12 * Float.BYTES);
 
         // layout(location = 5) -> color
-        glVertexAttribPointer(VERTEX_ATTRIBUTE_INDEX_COLOR, 4, GL_FLOAT, false, stride, 14 * Float.BYTES);
-        glEnableVertexAttribArray(VERTEX_ATTRIBUTE_INDEX_COLOR);
+        glEnableVertexAttribArray(LayoutMesh.Color.getLocationID());
+        glVertexAttribPointer(LayoutMesh.Color.getLocationID(), LayoutMesh.Color.getSize(), GL_FLOAT, false, LayoutMesh.getStride(), 14 * Float.BYTES);
 
         glBindVertexArray(0);
 
         return abettor.createMesh(vertices.length, meshDTO.getFacetsArrayLength(), meshDTO.getEdgesArrayLength(),
-                vertexArrayObjectID, vertexBufferID, facetsBufferID, edgesBufferID, BoundingBox.of(meshDTO));
+                new Geometry(vertexArrayObjectID,
+                        new Buffer(vertexBufferID, vertices.length / LayoutMesh.getFloatsCount(), vertices.length),
+                        new Buffer(facetsBufferID, meshDTO.getFacetsArrayLength() / COUNT_VERTICES_PER_FACET, meshDTO.getFacetsArrayLength()),
+                        new Buffer(edgesBufferID, meshDTO.getEdgesArrayLength() / COUNT_VERTICES_PER_EDGE, meshDTO.getEdgesArrayLength())),
+                BoundingBox.of(meshDTO));
     }
 
     @Override
     protected void unload(@NonNull final MeshEntityImplementation entity) {
         log.info("Unloading mesh {}", entity.getID());
 
-        memory.getVertexArrays().delete(entity.getVertexArrayObjectID());
-        memory.getBuffers().delete(entity.getVerticesBufferID());
-        memory.getBuffers().delete(entity.getFacetsBufferID());
-        memory.getBuffers().delete(entity.getEdgesBufferID());
+        memory.getVertexArrays().delete(entity.getGeometry().objectID());
+        unload(entity.getGeometry().vertices());
+        unload(entity.getGeometry().facets());
+        unload(entity.getGeometry().edges());
+    }
+
+    private void unload(final Buffer buffer) {
+        Optional.ofNullable(buffer).map(Buffer::id).ifPresent(memory.getBuffers()::delete);
     }
 }

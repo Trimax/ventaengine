@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.LightType;
-import io.github.trimax.venta.engine.model.common.geo.Grid;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.light.Attenuation;
@@ -34,16 +34,10 @@ public final class Abettor {
         return new LightPrefabImplementation(type, color, direction, attenuation, intensity, range, castShadows);
     }
 
-    public GridMeshPrefabImplementation createGridMesh(final ProgramEntityImplementation program,
-                                                       final List<Wave> waves,
-                                                       final int verticesCount,
-                                                       final int facetsCount,
-                                                       final int vertexArrayObjectID,
-                                                       final int verticesBufferID,
-                                                       final int facetsBufferID,
-
-                                                       final Grid grid) {
-        return new GridMeshPrefabImplementation(program, waves, verticesCount, facetsCount, vertexArrayObjectID, verticesBufferID, facetsBufferID, grid);
+    public GridMeshPrefabImplementation createGridMesh(@NonNull final ProgramEntityImplementation program,
+                                                       @NonNull final Geometry geometry,
+                                                       final List<Wave> waves) {
+        return new GridMeshPrefabImplementation(program, geometry, waves);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
@@ -69,11 +63,8 @@ public final class Abettor {
 
     public BillboardPrefabImplementation createBillboard(@NonNull final ProgramEntityImplementation program,
                                                          @NonNull final SpriteEntityImplementation sprite,
-                                                         @NonNull final Vector2f size,
-                                                         final int vertexArrayObjectID,
-                                                         final int verticesBufferID,
-                                                         final int facetsBufferID) {
-        return new BillboardPrefabImplementation(program, sprite, size,
-                vertexArrayObjectID, verticesBufferID, facetsBufferID);
+                                                         @NonNull final Geometry geometry,
+                                                         @NonNull final Vector2f size) {
+        return new BillboardPrefabImplementation(program, sprite, geometry, size);
     }
 }

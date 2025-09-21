@@ -11,5 +11,5 @@ import lombok.Value;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class ScenePrefabImplementation extends AbstractPrefabImplementation implements ScenePrefab {
     @NonNull
-    SceneDTO dto;
+    SceneDTO dto; //TODO: Remove DTO from here
 }

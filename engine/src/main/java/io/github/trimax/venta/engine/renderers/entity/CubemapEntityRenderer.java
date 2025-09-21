@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.renderers.instance.SceneInstanceRenderer;
@@ -59,9 +60,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
         fogBinder.bind(program, getContext().getScene().getFog());
         textureBinder.bind(program, cubemap);
 
-        glBindVertexArray(cubemap.getVertexArrayObjectID());
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+        render(cubemap.getGeometry());
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
@@ -69,6 +68,12 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
 
         glDepthMask(true);
         glDepthFunc(GL_LESS);
+    }
+
+    private void render(final Geometry geometry) {
+        glBindVertexArray(geometry.objectID());
+        glDrawArrays(GL_TRIANGLES, 0, geometry.vertices().count());
+        glBindVertexArray(0);
     }
 
     @Getter(AccessLevel.PACKAGE)
