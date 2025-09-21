@@ -1,14 +1,13 @@
 package io.github.trimax.venta.engine.utils;
 
-import org.joml.Vector2ic;
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.geo.Grid;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import org.joml.Vector2ic;
+import org.joml.Vector3f;
 
 @UtilityClass
 public final class GeometryUtil {
@@ -70,15 +69,13 @@ public final class GeometryUtil {
         if (reference != null && reference.hasMesh()) {
             final var boundingBox = reference.mesh().getBoundingBox();
 
-            if (boundingBox != null) {
-                min.x = Math.min(min.x, boundingBox.min().x);
-                min.y = Math.min(min.y, boundingBox.min().y);
-                min.z = Math.min(min.z, boundingBox.min().z);
+            min.x = Math.min(min.x, boundingBox.min().x);
+            min.y = Math.min(min.y, boundingBox.min().y);
+            min.z = Math.min(min.z, boundingBox.min().z);
 
-                max.x = Math.max(max.x, boundingBox.max().x);
-                max.y = Math.max(max.y, boundingBox.max().y);
-                max.z = Math.max(max.z, boundingBox.max().z);
-            }
+            max.x = Math.max(max.x, boundingBox.max().x);
+            max.y = Math.max(max.y, boundingBox.max().y);
+            max.z = Math.max(max.z, boundingBox.max().z);
         }
 
         if (node.hasChildren())

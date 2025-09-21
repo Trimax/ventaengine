@@ -2,9 +2,9 @@ package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.CubemapFace;
-import io.github.trimax.venta.engine.enums.LayoutCubemap;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.CubemapBakeException;
+import io.github.trimax.venta.engine.layouts.CubemapVertexLayout;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.Buffer;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
@@ -14,6 +14,7 @@ import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.registries.CubemapRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
+import io.github.trimax.venta.engine.utils.LayoutUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -34,8 +35,6 @@ import static org.lwjgl.opengl.GL12C.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
@@ -86,15 +85,14 @@ public final class CubemapRegistryImplementation
             glBindBuffer(GL_ARRAY_BUFFER, verticesBufferID);
             glBufferData(GL_ARRAY_BUFFER, SKYBOX_VERTICES, GL_STATIC_DRAW);
 
-            glEnableVertexAttribArray(LayoutCubemap.Position.getLocationID());
-            glVertexAttribPointer(0, LayoutCubemap.Position.getSize(), GL_FLOAT, false, LayoutCubemap.getStride(), 0L);
+            LayoutUtil.bind(CubemapVertexLayout.class);
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
 
             return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB,
                     new Geometry(vertexArrayObjectID,
-                            new Buffer(verticesBufferID, SKYBOX_VERTICES.length / LayoutCubemap.getFloatsCount(), SKYBOX_VERTICES.length),
+                            new Buffer(verticesBufferID, SKYBOX_VERTICES.length / CubemapVertexLayout.getFloatsCount(), SKYBOX_VERTICES.length),
                             null,
                             null),
                     textureID);

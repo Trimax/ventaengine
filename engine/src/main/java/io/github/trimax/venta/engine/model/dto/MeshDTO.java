@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.model.dto;
 
-import io.github.trimax.venta.engine.enums.LayoutMesh;
+import io.github.trimax.venta.engine.layouts.MeshVertexLayout;
 import io.github.trimax.venta.engine.model.common.dto.Color;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
@@ -44,45 +44,45 @@ public record MeshDTO(List<Vertex> vertices,
             final var bitangent = Optional.ofNullable(tbnVectors.get(vertexID)).map(Triple::getRight).orElse(null);
 
             if (vertex.hasPosition()) {
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_POSITION_X] = vertex.position().x();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_POSITION_Y] = vertex.position().y();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_POSITION_Z] = vertex.position().z();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_POSITION_X] = vertex.position().x();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_POSITION_Y] = vertex.position().y();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_POSITION_Z] = vertex.position().z();
             }
 
             if (vertex.hasNormal()) {
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_X] = vertex.normal.x();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Y] = vertex.normal.y();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Z] = vertex.normal.z();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_X] = vertex.normal.x();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Y] = vertex.normal.y();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Z] = vertex.normal.z();
             }
 
             if (normal != null) {
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_X] = normal.x();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Y] = normal.y();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Z] = normal.z();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_X] = normal.x();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Y] = normal.y();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Z] = normal.z();
             }
 
             if (tangent != null) {
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_TANGENT_X] = tangent.x();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_TANGENT_Y] = tangent.y();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_TANGENT_Z] = tangent.z();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_TANGENT_X] = tangent.x();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_TANGENT_Y] = tangent.y();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_TANGENT_Z] = tangent.z();
             }
 
             if (bitangent != null) {
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_BITANGENT_X] = bitangent.x();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_BITANGENT_Y] = bitangent.y();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_BITANGENT_Z] = bitangent.z();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_BITANGENT_X] = bitangent.x();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_BITANGENT_Y] = bitangent.y();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_BITANGENT_Z] = bitangent.z();
             }
 
             if (vertex.hasTextureCoordinates()) {
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_U] = vertex.textureCoordinates().x();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_V] = vertex.textureCoordinates().y();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_U] = vertex.textureCoordinates().x();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_TEXTURE_COORDINATES_V] = vertex.textureCoordinates().y();
             }
 
             if (vertex.hasColor()) {
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_R] = vertex.color().r();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_G] = vertex.color().g();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_B] = vertex.color().b();
-                packedArray[LayoutMesh.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_A] = vertex.color().a();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_R] = vertex.color().r();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_G] = vertex.color().g();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_B] = vertex.color().b();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_A] = vertex.color().a();
             }
         }
 
