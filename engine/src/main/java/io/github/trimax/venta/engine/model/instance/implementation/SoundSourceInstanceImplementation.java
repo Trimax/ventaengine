@@ -13,7 +13,7 @@ import static org.lwjgl.openal.AL10.*;
 @Slf4j
 @Getter
 public final class SoundSourceInstanceImplementation extends AbstractInstanceImplementation implements SoundSourceInstance {
-    private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
+    private final Vector3f position = new Vector3f(0.f);
     private final SoundEntityImplementation soundEntity;
     private final int sourceID;
     private float volume;
@@ -30,10 +30,10 @@ public final class SoundSourceInstanceImplementation extends AbstractInstanceImp
         super(gizmo, name);
 
         this.soundEntity = sound;
+        this.sourceID = sourceID;
+        this.looping = looping;
         this.volume = volume;
         this.pitch = pitch;
-        this.looping = looping;
-        this.sourceID = sourceID;
 
         setupAudioSource();
     }

@@ -52,13 +52,13 @@ public final class GridMeshInstanceRenderer extends
         matrixBinder.bindViewProjectionMatrix(mesh.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
         timeBinder.bind(mesh.getProgram(), getContext().getParent().getTime());
-        waveBinder.bind(mesh.getProgram(), mesh.getMesh().getWaves());
+        waveBinder.bind(mesh.getProgram(), mesh.getWaves());
 
         materialBinder.bind(mesh.getProgram(), mesh.getMaterial());
 
         textureBinder.bind(mesh.getProgram(), getContext().getScene().getSkybox());
 
-        render(mesh.getMesh().getGeometry());
+        render(mesh.getGeometry());
 
         glUseProgram(0);
     }

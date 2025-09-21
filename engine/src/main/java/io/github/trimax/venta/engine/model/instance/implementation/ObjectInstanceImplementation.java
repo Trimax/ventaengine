@@ -28,11 +28,11 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     private boolean isVisible = true;
     private boolean isLit = true;
 
-    ObjectInstanceImplementation(final String name,
-                                 final ProgramEntityImplementation program,
-                                 final MaterialEntityImplementation material,
-                                 final Node<MeshReference> mesh,
-                                 final GizmoInstanceImplementation gizmo) {
+    ObjectInstanceImplementation(@NonNull final String name,
+                                 @NonNull final ProgramEntityImplementation program,
+                                 @NonNull final MaterialEntityImplementation material,
+                                 @NonNull final Node<MeshReference> mesh,
+                                 @NonNull final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
         this.box = GeometryUtil.computeBoundingBox(mesh);
