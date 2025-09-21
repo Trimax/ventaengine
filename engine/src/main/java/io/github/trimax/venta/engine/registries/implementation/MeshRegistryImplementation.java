@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.GL_FLOAT;
@@ -130,7 +131,7 @@ public final class MeshRegistryImplementation
         unload(entity.getGeometry().edges());
     }
 
-    private void unload(@NonNull final Buffer buffer) {
-        memory.getBuffers().delete(buffer.id());
+    private void unload(final Buffer buffer) {
+        Optional.ofNullable(buffer).map(Buffer::id).ifPresent(memory.getBuffers()::delete);
     }
 }

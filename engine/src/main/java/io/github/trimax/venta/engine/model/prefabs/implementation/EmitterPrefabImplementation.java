@@ -11,5 +11,5 @@ import lombok.Value;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class EmitterPrefabImplementation extends AbstractPrefabImplementation implements EmitterPrefab {
     @NonNull
-    EmitterDTO dto;
+    EmitterDTO dto; //TODO: Remove DTO from here
 }

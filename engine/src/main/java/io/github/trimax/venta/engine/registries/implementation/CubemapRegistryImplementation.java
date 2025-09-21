@@ -5,6 +5,8 @@ import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.CubemapBakeException;
 import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.common.geo.Buffer;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.dto.CubemapDTO;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
@@ -90,7 +92,11 @@ public final class CubemapRegistryImplementation
             glBindVertexArray(0);
 
             return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB,
-                    vertexArrayObjectID, verticesBufferID, textureID);
+                    new Geometry(vertexArrayObjectID,
+                            new Buffer(verticesBufferID, SKYBOX_VERTICES.length / 3, SKYBOX_VERTICES.length),
+                            null,
+                            null),
+                    textureID);
         });
     }
 
@@ -137,8 +143,8 @@ public final class CubemapRegistryImplementation
     protected void unload(@NonNull final CubemapEntityImplementation entity) {
         log.info("Unloading texture {}", entity.getID());
 
-        memory.getVertexArrays().delete(entity.getVertexArrayObjectID());
-        memory.getBuffers().delete(entity.getVerticesBufferID());
+        memory.getVertexArrays().delete(entity.getGeometry().objectID());
+        memory.getBuffers().delete(entity.getGeometry().vertices().id());
         memory.getTextures().delete(entity.getInternalID());
         StreamEx.ofValues(entity.getBuffers()).forEach(MemoryUtil::memFree);
     }
