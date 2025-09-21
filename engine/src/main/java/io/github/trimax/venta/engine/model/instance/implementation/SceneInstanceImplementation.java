@@ -23,6 +23,7 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     private final List<LightInstanceImplementation> lights = new ArrayList<>();
     private final List<EmitterInstanceImplementation> emitters = new ArrayList<>();
     private final List<GridMeshInstanceImplementation> gridMeshes = new ArrayList<>();
+    private final List<BillboardInstanceImplementation> billboards = new ArrayList<>();
     private final List<SoundSourceInstanceImplementation> soundSources = new ArrayList<>();
 
     private CubemapEntityImplementation skybox;
@@ -52,8 +53,8 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
 
     @Override
     public void add(final ObjectInstance object) {
-        if (object instanceof ObjectInstanceImplementation entity)
-            objects.add(entity);
+        if (object instanceof ObjectInstanceImplementation instance)
+            objects.add(instance);
     }
 
     @Override
@@ -63,25 +64,31 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
             return;
         }
 
-        if (light instanceof LightInstanceImplementation entity)
-            lights.add(entity);
+        if (light instanceof LightInstanceImplementation instance)
+            lights.add(instance);
     }
 
     @Override
     public void add(@NonNull final EmitterInstance emitter) {
-        if (emitter instanceof EmitterInstanceImplementation entity)
-            emitters.add(entity);
+        if (emitter instanceof EmitterInstanceImplementation instance)
+            emitters.add(instance);
     }
 
     @Override
     public void add(@NonNull final GridMeshInstance gridMesh) {
-        if (gridMesh instanceof GridMeshInstanceImplementation entity)
-            gridMeshes.add(entity);
+        if (gridMesh instanceof GridMeshInstanceImplementation instance)
+            gridMeshes.add(instance);
     }
 
     @Override
     public void add(@NonNull final SoundSourceInstance soundSource) {
-        if (soundSource instanceof SoundSourceInstanceImplementation entity)
-            soundSources.add(entity);
+        if (soundSource instanceof SoundSourceInstanceImplementation instance)
+            soundSources.add(instance);
+    }
+
+    @Override
+    public void add(@NonNull final BillboardInstance billboard) {
+        if (billboard instanceof BillboardInstanceImplementation instance)
+            billboards.add(instance);
     }
 }

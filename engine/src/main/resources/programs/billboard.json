@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "billboard/vertex.glsl",
+  "shaderFragment": "billboard/fragment.glsl"
+}

@@ -26,6 +26,8 @@ public interface SceneInstance extends AbstractInstance {
 
     void add(@NonNull final SoundSourceInstance sound);
 
+    void add(@NonNull final BillboardInstance billboard);
+
     List<? extends EmitterInstance> getEmitters();
 
     List<? extends ObjectInstance> getObjects();
@@ -35,6 +37,8 @@ public interface SceneInstance extends AbstractInstance {
     List<? extends GridMeshInstance> getGridMeshes();
 
     List<? extends SoundSourceInstance> getSoundSources();
+
+    List<? extends BillboardInstance> getBillboards();
 
     void setFog(final Fog fog);
 
