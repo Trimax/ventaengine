@@ -30,7 +30,7 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
 
     ObjectInstanceImplementation(@NonNull final String name,
                                  @NonNull final ProgramEntityImplementation program,
-                                 @NonNull final MaterialEntityImplementation material,
+                                 final MaterialEntityImplementation material,
                                  @NonNull final Node<MeshReference> mesh,
                                  @NonNull final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);

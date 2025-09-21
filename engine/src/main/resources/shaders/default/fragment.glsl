@@ -256,7 +256,7 @@ vec4 applyReflections(vec4 color, vec2 textureCoordinates) {
     vec3 V = normalize(vertexViewDirectionWorldSpace);
     vec4 skyboxColor = vec4(texture(textureSkybox, reflect(-V, N)).rgb, 1.0);
 
-    return mix(color, skyboxColor, getMetalness(textureCoordinates));
+    return vec4(mix(color.rgb, skyboxColor.rgb, getMetalness(textureCoordinates)), color.a);
 }
 
 /***
@@ -271,7 +271,7 @@ vec4 applyFog(vec4 color) {
     if (!isSet(useFog))
         return color;
 
-    return mix(color, vec4(fog.color, 1.0), computeFogFactor(length(vertexCameraPosition - vertexPosition)));
+    return vec4(mix(color.rgb, fog.color.rgb, computeFogFactor(length(vertexCameraPosition - vertexPosition))), color.a);
 }
 
 void main() {
