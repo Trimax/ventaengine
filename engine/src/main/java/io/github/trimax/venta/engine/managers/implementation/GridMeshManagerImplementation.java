@@ -23,14 +23,14 @@ public final class GridMeshManagerImplementation
 
     @Override
     public GridMeshInstance create(@NonNull final String name, @NonNull final GridMeshPrefab prefab) {
-        if (prefab instanceof GridMeshPrefabImplementation gridmesh)
-            return create(name, gridmesh);
+        if (prefab instanceof GridMeshPrefabImplementation gridMesh)
+            return create(name, gridMesh);
 
         throw new UnknownInstanceException(prefab.getClass());
     }
 
     private GridMeshInstance create(final String name, final GridMeshPrefabImplementation prefab) {
-        return store(abettor.createGridMesh(name, prefab.getProgram(), null, prefab));
+        return store(abettor.createGridMesh(name, prefab.getProgram(), prefab.getMaterial(), prefab.getGeometry(), prefab.getWaves()));
     }
 
     @Override

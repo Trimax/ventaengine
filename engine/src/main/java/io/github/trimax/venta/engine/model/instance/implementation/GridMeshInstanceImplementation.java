@@ -1,21 +1,26 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
+import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.GridMeshInstance;
-import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
 import lombok.Getter;
 import lombok.NonNull;
 import org.joml.Vector3fc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 public final class GridMeshInstanceImplementation extends AbstractInstanceImplementation implements GridMeshInstance {
     private final Transform transform = new Transform();
-    private final GridMeshPrefabImplementation mesh; //TODO: remove prefab. Use Geometry + program directly
+    private final List<Wave> waves = new ArrayList<>();
+    private final Geometry geometry;
 
     private MaterialEntityImplementation material;
     private ProgramEntityImplementation program;
@@ -24,16 +29,17 @@ public final class GridMeshInstanceImplementation extends AbstractInstanceImplem
     private boolean isVisible = true;
     private boolean isLit = true;
 
-    GridMeshInstanceImplementation(final String name,
-                                   final ProgramEntity program,
-                                   final MaterialEntity material,
-                                   final GridMeshPrefabImplementation mesh) {
+    GridMeshInstanceImplementation(@NonNull final String name,
+                                   @NonNull final ProgramEntityImplementation program,
+                                   @NonNull final MaterialEntityImplementation material,
+                                   @NonNull final Geometry geometry,
+                                   @NonNull final List<Wave> waves) {
         super(null, name);
 
-        this.mesh = mesh;
-
-        setProgram(program);
-        setMaterial(material);
+        this.program = program;
+        this.material = material;
+        this.geometry = geometry;
+        this.waves.addAll(waves);
     }
 
     @Override

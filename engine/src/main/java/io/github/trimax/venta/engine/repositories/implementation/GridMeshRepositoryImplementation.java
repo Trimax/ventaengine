@@ -9,6 +9,7 @@ import io.github.trimax.venta.engine.model.dto.GridMeshDTO;
 import io.github.trimax.venta.engine.model.prefabs.GridMeshPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
+import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.GridMeshRepository;
 import io.github.trimax.venta.engine.services.ResourceService;
@@ -30,6 +31,7 @@ import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 public final class GridMeshRepositoryImplementation
         extends AbstractRepositoryImplementation<GridMeshPrefabImplementation, GridMeshPrefab>
         implements GridMeshRepository {
+    private final MaterialRegistryImplementation materialRegistry;
     private final ProgramRegistryImplementation programRegistry;
     private final ResourceService resourceService;
     private final Abettor abettor;
@@ -69,7 +71,7 @@ public final class GridMeshRepositoryImplementation
         MemoryUtil.memFree(vertexBuffer);
         MemoryUtil.memFree(indexBuffer);
 
-        return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()),
+        return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()), materialRegistry.get(gridMeshDTO.material()),
                 new Geometry(vertexArrayObjectID,
                         new Buffer(verticesBufferID, grid.vertices().length / GridMeshVertexLayout.getFloatsCount(), grid.vertices().length),
                         new Buffer(facetsBufferID, grid.indices().length / COUNT_VERTICES_PER_FACET, grid.indices().length),

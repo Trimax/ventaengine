@@ -3,10 +3,10 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
+import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
-import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -15,6 +15,7 @@ import org.joml.Vector2fc;
 import org.joml.Vector3f;
 
 import java.nio.FloatBuffer;
+import java.util.List;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -41,9 +42,10 @@ public final class Abettor {
 
     public GridMeshInstanceImplementation createGridMesh(@NonNull final String name,
                                                          @NonNull final ProgramEntityImplementation program,
-                                                         final MaterialEntityImplementation material, //TODO: Make it non-null
-                                                         @NonNull final GridMeshPrefabImplementation mesh) {
-        return new GridMeshInstanceImplementation(name, program, material, mesh);
+                                                         @NonNull final MaterialEntityImplementation material,
+                                                         @NonNull final Geometry geometry,
+                                                         @NonNull final List<Wave> waves) {
+        return new GridMeshInstanceImplementation(name, program, material, geometry, waves);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,

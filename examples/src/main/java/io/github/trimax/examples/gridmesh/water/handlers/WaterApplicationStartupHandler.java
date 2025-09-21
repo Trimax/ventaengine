@@ -21,7 +21,6 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         scene.setAmbientLight(new Vector3f(0.6f, 0.6f, 0.6f));
 
         final var water = context.getGridMeshManager().create("Water", context.getGridMeshRepository().get("water.json"));
-        water.setMaterial(context.getMaterialRegistry().get("water.json"));
         water.setPosition(new Vector3f(0f, 1.5f, 0f));
         scene.add(water);
 

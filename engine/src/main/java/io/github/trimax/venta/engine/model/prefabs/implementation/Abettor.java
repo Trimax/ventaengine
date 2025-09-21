@@ -35,9 +35,10 @@ public final class Abettor {
     }
 
     public GridMeshPrefabImplementation createGridMesh(@NonNull final ProgramEntityImplementation program,
+                                                       @NonNull final MaterialEntityImplementation material,
                                                        @NonNull final Geometry geometry,
                                                        final List<Wave> waves) {
-        return new GridMeshPrefabImplementation(program, geometry, waves);
+        return new GridMeshPrefabImplementation(program, material, geometry, waves);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
