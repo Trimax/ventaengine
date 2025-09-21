@@ -1,12 +1,12 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.SpriteEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.BillboardInstance;
-import io.github.trimax.venta.engine.model.prefabs.implementation.BillboardPrefabImplementation;
 import lombok.Getter;
 import lombok.NonNull;
 import org.joml.Vector2f;
@@ -19,23 +19,26 @@ public final class BillboardInstanceImplementation extends AbstractInstanceImple
     private final Transform transform = new Transform();
     private final Vector2f size = new Vector2f();
 
-    //TODO: Rethink. Prefab shouldn't be a part of instance
-    private final BillboardPrefabImplementation prefab;
+    @NonNull
+    private final Geometry geometry;
 
+    @NonNull
     private ProgramEntityImplementation program;
+
+    @NonNull
     private SpriteEntityImplementation sprite;
 
     BillboardInstanceImplementation(@NonNull final String name,
-                                    @NonNull final BillboardPrefabImplementation prefab,
-                                    @NonNull final ProgramEntity program,
-                                    @NonNull final SpriteEntity sprite,
+                                    @NonNull final ProgramEntityImplementation program,
+                                    @NonNull final SpriteEntityImplementation sprite,
+                                    @NonNull final Geometry geometry,
                                     @NonNull final Vector2fc size) {
         super(name);
 
-        this.prefab = prefab;
+        this.geometry = geometry;
+        this.program = program;
+        this.sprite = sprite;
 
-        setProgram(program);
-        setSprite(sprite);
         setSize(size);
     }
 

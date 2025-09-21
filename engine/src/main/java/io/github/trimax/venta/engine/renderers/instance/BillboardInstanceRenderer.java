@@ -42,11 +42,12 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
 
         spriteBinder.bindSprite(billboard.getProgram(), billboard.getSprite(), getFrameIndex(billboard.getSprite()));
 
-        render(billboard.getPrefab().getGeometry());
+        render(billboard.getGeometry());
 
         glUseProgram(0);
     }
 
+    //TODO: Introduce geometry renderer, extract all similar method there, reuse them
     private void render(final Geometry geometry) {
         glBindVertexArray(geometry.objectID());
 
