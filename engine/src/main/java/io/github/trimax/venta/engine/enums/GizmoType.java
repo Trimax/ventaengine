@@ -11,7 +11,8 @@ public enum GizmoType {
     Object("box.json"),
     Camera("frustum.json"),
     Emitter("bipyramid.json"),
-    Light("light.json");
+    Light("light.json"),
+    SoundSource("light.json");
 
     private final String mesh;
 }
