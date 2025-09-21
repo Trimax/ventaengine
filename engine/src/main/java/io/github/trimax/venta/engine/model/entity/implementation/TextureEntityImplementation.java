@@ -4,16 +4,21 @@ import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.NonNull;
+import lombok.Value;
 
 import java.nio.ByteBuffer;
 
-@Getter
+@Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class TextureEntityImplementation extends AbstractEntityImplementation implements TextureEntity {
-    private final ByteBuffer buffer;
-    private final TextureFormat format;
-    private final int internalID;
-    private final int width;
-    private final int height;
+public class TextureEntityImplementation extends AbstractEntityImplementation implements TextureEntity {
+    @NonNull
+    ByteBuffer buffer;
+
+    @NonNull
+    TextureFormat format;
+
+    int internalID;
+    int width;
+    int height;
 }

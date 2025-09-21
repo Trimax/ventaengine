@@ -1,18 +1,21 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.model.entity.AtlasEntity;
-import lombok.Getter;
 import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.stb.STBTTBakedChar;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 
 @Slf4j
-@Getter
-public final class AtlasEntityImplementation extends AbstractEntityImplementation implements AtlasEntity {
-    private final TextureEntityImplementation texture;
-    private final STBTTBakedChar.Buffer buffer;
+@Value
+public class AtlasEntityImplementation extends AbstractEntityImplementation implements AtlasEntity {
+    @NonNull
+    TextureEntityImplementation texture;
+
+    @NonNull
+    STBTTBakedChar.Buffer buffer;
 
     AtlasEntityImplementation(@NonNull final TextureEntityImplementation texture,
                               @NonNull final STBTTBakedChar.Buffer buffer) {

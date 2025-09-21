@@ -3,11 +3,11 @@ package io.github.trimax.venta.engine.model.entity.implementation;
 import io.github.trimax.venta.engine.model.entity.SoundEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
-@Getter
+@Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class SoundEntityImplementation extends AbstractEntityImplementation implements SoundEntity {
-    private final int bufferID;
-    private final float duration;
+public class SoundEntityImplementation extends AbstractEntityImplementation implements SoundEntity {
+    int bufferID;
+    float duration;
 }
