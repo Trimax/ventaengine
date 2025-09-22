@@ -34,7 +34,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
     @Override
     public void render(final TextState state) {
         glUseProgram(state.getProgram().getInternalID());
-        glBindVertexArray(state.getVertexArrayObjectID());
+        glBindVertexArray(state.getGeometry().objectID());
         textBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
 
         float penX = getContext().x;
@@ -84,7 +84,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternalID());
 
-            glBindBuffer(GL_ARRAY_BUFFER, state.getVerticesBufferID());
+            glBindBuffer(GL_ARRAY_BUFFER, state.getGeometry().vertices().id());
             glBufferData(GL_ARRAY_BUFFER, getContext().vertices, GL_DYNAMIC_DRAW);
 
             glDrawArrays(GL_TRIANGLES, 0, 6);

@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.model.states;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,7 @@ public final class ConsoleState extends AbstractState {
     private final List<String> commands = new ArrayList<>();
 
     private final ProgramEntityImplementation program;
-    private final int vertexArrayObjectID;
-    private final int verticesBufferID;
+    private final Geometry geometry;
 
     private int historyIndex = -1;
 

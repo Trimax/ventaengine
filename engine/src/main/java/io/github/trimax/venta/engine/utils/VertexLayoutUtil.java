@@ -31,6 +31,10 @@ public final class VertexLayoutUtil {
                 attribute.name(), attribute.getLocationID(), offset, stride);
     }
 
+    public <E extends Enum<E> & AbstractVertexLayout> int calculateTotalFloats(@NonNull final Class<E> layout) {
+        return calculateTotalFloats(layout.getEnumConstants());
+    }
+
     private <E extends Enum<E> & AbstractVertexLayout> int calculateTotalFloats(final E[] constants) {
         return StreamEx.of(constants).mapToInt(AbstractVertexLayout::getSize).sum();
     }

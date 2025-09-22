@@ -30,5 +30,5 @@ public abstract class AbstractController<S extends AbstractState, A> {
 
     protected abstract S create(final A argument);
 
-    protected abstract void destroy(@NonNull final S object);
+    protected abstract void destroy(@NonNull final S state);
 }
