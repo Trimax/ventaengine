@@ -78,19 +78,19 @@ public final class Definitions {
     public static final float CONSOLE_LINE_INTERVAL = 1.2f;
 
     /* The height of the line (px) */
-    public static final float CONSOLE_LINE_HEIGHT = 21f;
+    public static final int CONSOLE_LINE_HEIGHT = 21;
 
     /* Width of the character */
-    public static final float CONSOLE_CHARACTER_WIDTH = 16f;
+    public static final int CONSOLE_CHARACTER_WIDTH = 16;
 
     /* Command line prefix */
     public static final String CONSOLE_WELCOME_SYMBOL = "> ";
 
     /* Horizontal scale factor */
-    public static final float CONSOLE_SCALE_HORIZONTAL = 0.0015f * 800;
+    public static final float CONSOLE_SCALE_HORIZONTAL = 0.15f * 800;
 
     /* Vertical scale factor */
-    public static final float CONSOLE_SCALE_VERTICAL = 0.0015f * 600;
+    public static final float CONSOLE_SCALE_VERTICAL = 0.15f * 600;
 
     /*** Sound ***/
     public static final int SOUND_FREQUENCY = 44100;

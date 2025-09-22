@@ -3,27 +3,28 @@ package io.github.trimax.venta.engine.renderers.state;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.TextBinder;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.states.TextState;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
+import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
-import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11C.glBindTexture;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
-import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextStateRenderer extends AbstractStateRenderer<TextState, TextStateRenderer.TextRenderContext, ConsoleStateRenderer.ConsoleRenderContext> {
+    private final GeometryHelper geometryHelper;
     private final TextBinder textBinder;
 
     @Override
@@ -34,16 +35,17 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
     @Override
     public void render(final TextState state) {
         glUseProgram(state.getProgram().getInternalID());
-        glBindVertexArray(state.getGeometry().objectID());
-        textBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
 
-        float penX = getContext().x;
-        final float penY = getContext().y;
+        float penX = getContext().linePosition.x;
+        final float penY = getContext().linePosition.y;
+        float baselineY = penY;
 
         // Iterate through each character in the text
         final var message = getContext().message;
         final var text = message.text();
         final var font = state.getFont();
+
+        log.info("Rendering line at {}x{} ({})", penX, penY, message);
 
         for (int i = 0; i < text.length(); i++) {
             final var codepoint = text.codePointAt(i);
@@ -59,41 +61,53 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
             final var backedCharacter = font.getAtlases().get(atlasIndex).getBuffer().get(charIndex);
 
-            final var x0 = penX + backedCharacter.xoff() * getContext().scaleX;
-            final var x1 = x0 + (backedCharacter.x1() - backedCharacter.x0()) * getContext().scaleX;
+            final var charWidth = backedCharacter.x1() - backedCharacter.x0();
+            final var charHeight = backedCharacter.y1() - backedCharacter.y0();
 
-            final var y0 = penY - (backedCharacter.y1() - backedCharacter.y0()) * getContext().scaleY - backedCharacter.yoff() * getContext().scaleY;
-            final var y1 = y0 + (backedCharacter.y1() - backedCharacter.y0()) * getContext().scaleY;
+            log.info("Char size px: {}x{}, offset: {}x{}",
+                    backedCharacter.x1()-backedCharacter.x0(),
+                    backedCharacter.y1()-backedCharacter.y0(),
+                    backedCharacter.xoff(),
+                    backedCharacter.yoff());
 
             final var s0 = backedCharacter.x0() / (float) FONT_ATLAS_WIDTH;
             final var t0 = backedCharacter.y0() / (float) FONT_ATLAS_HEIGHT;
             final var s1 = backedCharacter.x1() / (float) FONT_ATLAS_WIDTH;
             final var t1 = backedCharacter.y1() / (float) FONT_ATLAS_HEIGHT;
 
-            getContext().vertices.put(new float[]{
-                    x0, y0, s0, t1,
-                    x1, y0, s1, t1,
-                    x1, y1, s1, t0,
+            // Пиксельные координаты на экране
+            float x0px = penX + backedCharacter.xoff();
+            //float y0px = penY - backedCharacter.yoff();
 
-                    x0, y0, s0, t1,
-                    x1, y1, s1, t0,
-                    x0, y1, s0, t0
-            });
-            getContext().vertices.flip();
+            float y0px = baselineY - charHeight;
+
+            float x1px = x0px + charWidth;
+            //float y1px = y0px + (backedCharacter.y1() - backedCharacter.y0());
+            float y1px = baselineY;
+
+            log.info("xy0: {}x{}; xy1: {}x{}", x0px, y0px, x1px, y1px);
+
+            // Перевод в NDC [-1;1]
+            float x0NDC = (x0px / getContext().windowSize.x) * 2f - 1f;
+            float x1NDC = (x1px / getContext().windowSize.x) * 2f - 1f;
+            float y0NDC = 1f - (y0px / getContext().windowSize.y) * 2f;
+            float y1NDC = 1f - (y1px / getContext().windowSize.y) * 2f;
+
+            log.info("xyNDC0: {}x{}; xyNDC1: {}x{}", x0NDC, y0NDC, x1NDC, y1NDC);
+
+
+            textBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
+            textBinder.bind1(state.getProgram(), x0NDC, y0NDC, x1NDC, y1NDC);
+            textBinder.bind2(state.getProgram(), s0, t0, s1, t1);
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternalID());
 
-            glBindBuffer(GL_ARRAY_BUFFER, state.getGeometry().vertices().id());
-            glBufferData(GL_ARRAY_BUFFER, getContext().vertices, GL_DYNAMIC_DRAW);
+            geometryHelper.render(state.getGeometry());
 
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-
-            penX += backedCharacter.xadvance() * getContext().scaleX;
+            penX += backedCharacter.xadvance();
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
     }
@@ -101,23 +115,20 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class TextRenderContext extends AbstractRenderContext<ConsoleStateRenderer.ConsoleRenderContext> {
-        private final FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 4);
+        private final Vector2f windowSize = new Vector2f();
+        private final Vector2i linePosition = new Vector2i();
 
-        private float x;
-        private float y;
-        private float scaleX;
-        private float scaleY;
         private ConsoleController.ConsoleMessage message;
 
-        public TextRenderContext withPosition(final float x, final float y) {
-            this.x = x;
-            this.y = y;
+        public TextRenderContext withWindow(final int width, final int height) {
+            windowSize.set(width, height);
+
             return this;
         }
 
-        public TextRenderContext withScale(final float scaleX, final float scaleY) {
-            this.scaleX = scaleX;
-            this.scaleY = scaleY;
+        public TextRenderContext withPosition(final int x, final int y) {
+            linePosition.set(x, y);
+
             return this;
         }
 
@@ -128,17 +139,13 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
         @Override
         public void close() {
-            vertices.rewind();
             this.message = null;
-            this.scaleX = 0.f;
-            this.scaleY = 0.f;
-            this.x = 0.f;
-            this.y = 0.f;
+            this.linePosition.set(0);
+            this.windowSize.set(0);
         }
 
         @Override
         public void destroy() {
-            MemoryUtil.memFree(vertices);
         }
     }
 }
