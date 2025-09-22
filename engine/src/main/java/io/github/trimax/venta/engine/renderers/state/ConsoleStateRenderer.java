@@ -91,7 +91,7 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
     }
 
     private float getScaledLineHeight() {
-        return Definitions.CONSOLE_LINE_HEIGHT * Definitions.CONSOLE_TEXT_SCALE;
+        return Definitions.CONSOLE_LINE_HEIGHT * Definitions.CONSOLE_TEXT_SCALE * Definitions.CONSOLE_LINE_INTERVAL;
     }
 
     private float getScaledMarginLeft() {
