@@ -6,27 +6,20 @@ import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityIm
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextBinder extends AbstractBinder {
-    private static final Vector4f BUFFER = new Vector4f();
-
     public void bind(final ProgramEntityImplementation program, final Vector3f color) {
         if (color != null)
             bind(program.getUniformID(ShaderUniform.Color), color);
     }
 
-    public void bind1(final ProgramEntityImplementation program, final float x0, final float y0, final float x1, final float y1) {
-        BUFFER.set(x0, y0, x1, y1);
-
-        bind(program.getUniformID(ShaderUniform.BoundsPosition), BUFFER);
+    public void bindPosition(final ProgramEntityImplementation program, final float x0, final float y0, final float x1, final float y1) {
+        bind(program.getUniformID(ShaderUniform.BoundsPosition), x0, y0, x1, y1);
     }
 
-    public void bind2(final ProgramEntityImplementation program, final float x0, final float y0, final float x1, final float y1) {
-        BUFFER.set(x0, y0, x1, y1);
-
-        bind(program.getUniformID(ShaderUniform.BoundsTextureCoordinates), BUFFER);
+    public void bindTextureCoordinates(final ProgramEntityImplementation program, final float s0, final float t0, final float s1, final float t1) {
+        bind(program.getUniformID(ShaderUniform.BoundsTextureCoordinates), s0, t0, s1, t1);
     }
 }

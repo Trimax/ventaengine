@@ -81,8 +81,8 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
             final float y1NDC = 1f - (y1px / getContext().windowSize.y) * 2f;
 
             textBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
-            textBinder.bind1(state.getProgram(), x0NDC, y0NDC, x1NDC, y1NDC);
-            textBinder.bind2(state.getProgram(), s0, t0, s1, t1);
+            textBinder.bindPosition(state.getProgram(), x0NDC, y0NDC, x1NDC, y1NDC);
+            textBinder.bindTextureCoordinates(state.getProgram(), s0, t0, s1, t1);
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, font.getAtlases().get(atlasIndex).getTexture().getInternalID());
