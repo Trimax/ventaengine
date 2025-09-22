@@ -36,7 +36,7 @@ public final class EngineController extends AbstractController<EngineState, Vent
     }
 
     @Override
-    protected void destroy(@NonNull final EngineState object) {
+    protected void destroy(@NonNull final EngineState state) {
         log.debug("Deinitializing engine state");
 
         repositoryFactory.cleanup();

@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.*;
-import io.github.trimax.venta.engine.model.common.geo.Geometry;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.GridMeshInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import lombok.AccessLevel;
@@ -15,16 +15,15 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GridMeshInstanceRenderer extends
         AbstractInstanceRenderer<GridMeshInstanceImplementation, GridMeshInstanceRenderer.GridMeshRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final GeometryHelper geometryHelper;
     private final MaterialBinder materialBinder;
     private final TextureBinder textureBinder;
     private final CameraBinder cameraBinder;
@@ -39,39 +38,27 @@ public final class GridMeshInstanceRenderer extends
     }
 
     @Override
-    public void render(final GridMeshInstanceImplementation mesh) {
-        glUseProgram(mesh.getProgram().getInternalID());
-        glPolygonMode(GL_FRONT_AND_BACK, mesh.getDrawMode().getMode());
+    public void render(final GridMeshInstanceImplementation gridMesh) {
+        glUseProgram(gridMesh.getProgram().getInternalID());
+        glPolygonMode(GL_FRONT_AND_BACK, gridMesh.getDrawMode().getMode());
 
-        lightBinder.bind(mesh.getProgram(), getContext().getScene().getAmbientLight());
-        lightBinder.bind(mesh.getProgram(), getContext().getScene().getLights());
+        lightBinder.bind(gridMesh.getProgram(), getContext().getScene().getAmbientLight());
+        lightBinder.bind(gridMesh.getProgram(), getContext().getScene().getLights());
 
-        cameraBinder.bind(mesh.getProgram(), getContext().getParent().getCamera());
+        cameraBinder.bind(gridMesh.getProgram(), getContext().getParent().getCamera());
 
-        matrixBinder.bindModelMatrix(mesh.getProgram(), getContext().getModelMatrixBuffer());
-        matrixBinder.bindViewProjectionMatrix(mesh.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
+        matrixBinder.bindModelMatrix(gridMesh.getProgram(), getContext().getModelMatrixBuffer());
+        matrixBinder.bindViewProjectionMatrix(gridMesh.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
-        timeBinder.bind(mesh.getProgram(), getContext().getParent().getTime());
-        waveBinder.bind(mesh.getProgram(), mesh.getWaves());
+        timeBinder.bind(gridMesh.getProgram(), getContext().getParent().getTime());
+        waveBinder.bind(gridMesh.getProgram(), gridMesh.getWaves());
 
-        materialBinder.bind(mesh.getProgram(), mesh.getMaterial());
+        materialBinder.bind(gridMesh.getProgram(), gridMesh.getMaterial());
+        textureBinder.bind(gridMesh.getProgram(), getContext().getScene().getSkybox());
 
-        textureBinder.bind(mesh.getProgram(), getContext().getScene().getSkybox());
-
-        render(mesh.getGeometry());
+        geometryHelper.render(gridMesh.getGeometry());
 
         glUseProgram(0);
-    }
-
-    private void render(final Geometry geometry) {
-        glBindVertexArray(geometry.objectID());
-
-        if (geometry.hasFacets()) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
-            glDrawElements(GL_TRIANGLES, geometry.facets().length(), GL_UNSIGNED_INT, 0);
-        }
-
-        glBindVertexArray(0);
     }
 
     @Getter(AccessLevel.PACKAGE)

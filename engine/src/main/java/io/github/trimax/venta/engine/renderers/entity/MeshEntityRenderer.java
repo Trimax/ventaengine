@@ -3,26 +3,25 @@ package io.github.trimax.venta.engine.renderers.entity;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
-import io.github.trimax.venta.engine.model.common.geo.Geometry;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.renderers.instance.ObjectInstanceRenderer;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL20C.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL20C.glBindBuffer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityImplementation, MeshEntityRenderer.MeshRenderContext, ObjectInstanceRenderer.ObjectRenderContext> {
+    private final GeometryHelper geometryHelper;
     private final MaterialBinder materialBinder;
     private final MatrixBinder matrixBinder;
 
@@ -38,23 +37,7 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
 
         materialBinder.bind(getContext().getProgram(), getContext().getMaterial());
 
-        render(object.getGeometry());
-    }
-
-    private void render(@NonNull final Geometry geometry) {
-        glBindVertexArray(geometry.objectID());
-
-        if (geometry.hasFacets()) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
-            glDrawElements(GL_TRIANGLES, geometry.facets().length(), GL_UNSIGNED_INT, 0);
-        }
-
-        if (geometry.hasEdges()) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.edges().id());
-            glDrawElements(GL_LINES, geometry.edges().length(), GL_UNSIGNED_INT, 0);
-        }
-
-        glBindVertexArray(0);
+        geometryHelper.render(object.getGeometry());
     }
 
     @Getter(AccessLevel.PACKAGE)

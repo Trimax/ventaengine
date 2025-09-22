@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.controllers.TextController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -22,6 +22,7 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
     private final TextStateRenderer textStateRenderer;
     private final WindowController windowController;
     private final TextController textController;
+    private final GeometryHelper geometryHelper;
 
     @Override
     protected ConsoleRenderContext createContext() {
@@ -38,18 +39,12 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
 
     private void renderBackground(final ConsoleState console) {
         glDisable(GL_DEPTH_TEST);
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glUseProgram(console.getProgram().getInternalID());
-        glBindVertexArray(console.getVertexArrayObjectID());
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-        glBindVertexArray(0);
+        geometryHelper.render(console.getGeometry());
         glUseProgram(0);
 
         glDisable(GL_BLEND);
