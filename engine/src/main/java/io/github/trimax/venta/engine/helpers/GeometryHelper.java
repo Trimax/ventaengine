@@ -27,6 +27,25 @@ import static org.lwjgl.system.MemoryUtil.*;
 public final class GeometryHelper {
     private final Memory memory;
 
+    public void render(@NonNull final Geometry geometry) {
+        if (!geometry.isRenderable())
+            return;
+
+        glBindVertexArray(geometry.objectID());
+
+        if (geometry.hasFacets()) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
+            glDrawElements(GL_TRIANGLES, geometry.facets().length(), GL_UNSIGNED_INT, 0);
+        }
+
+        if (geometry.hasEdges()) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.edges().id());
+            glDrawElements(GL_LINES, geometry.edges().length(), GL_UNSIGNED_INT, 0);
+        }
+
+        glBindVertexArray(0);
+    }
+
     public <E extends Enum<E> & AbstractVertexLayout> Geometry create(@NonNull final String name,
                                                                       @NonNull final Class<E> layout,
                                                                       final float[] vertices,

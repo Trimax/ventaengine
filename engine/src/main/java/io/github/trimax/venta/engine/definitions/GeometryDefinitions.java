@@ -2,6 +2,8 @@ package io.github.trimax.venta.engine.definitions;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.stream.IntStream;
+
 @UtilityClass
 public final class GeometryDefinitions {
     public static final float[] SKYBOX_VERTICES = {
@@ -63,4 +65,6 @@ public final class GeometryDefinitions {
     };
 
     public static final int[] PARTICLE_INDICES = { 0, 1, 2, 2, 3, 0 };
+
+    public static final int[] SKYBOX_INDICES = IntStream.range(0, SKYBOX_VERTICES.length).toArray();
 }

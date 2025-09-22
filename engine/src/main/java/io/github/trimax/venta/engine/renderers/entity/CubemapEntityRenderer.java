@@ -5,7 +5,7 @@ import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
-import io.github.trimax.venta.engine.model.common.geo.Geometry;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.renderers.instance.SceneInstanceRenderer;
@@ -21,7 +21,6 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -29,6 +28,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
     private final FloatBuffer viewMatrixWithoutTranslationBuffer = MemoryUtil.memAllocFloat(16);
     private final Matrix4f viewMatrixWithoutTranslation = new Matrix4f();
 
+    private final GeometryHelper geometryHelper;
     private final TextureBinder textureBinder;
     private final MatrixBinder matrixBinder;
     private final FogBinder fogBinder;
@@ -60,7 +60,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
         fogBinder.bind(program, getContext().getScene().getFog());
         textureBinder.bind(program, cubemap);
 
-        render(cubemap.getGeometry());
+        geometryHelper.render(cubemap.getGeometry());
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
@@ -68,13 +68,6 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
 
         glDepthMask(true);
         glDepthFunc(GL_LESS);
-    }
-
-    //TODO: Reimplement like mesh
-    private void render(final Geometry geometry) {
-        glBindVertexArray(geometry.objectID());
-        glDrawArrays(GL_TRIANGLES, 0, geometry.vertices().count());
-        glBindVertexArray(0);
     }
 
     @Getter(AccessLevel.PACKAGE)
