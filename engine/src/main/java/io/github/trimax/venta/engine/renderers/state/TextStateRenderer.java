@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.renderers.state;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.TextBinder;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
+import io.github.trimax.venta.engine.definitions.Definitions;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.states.TextState;
 import lombok.AccessLevel;
@@ -69,9 +70,9 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
             /* Compute character position in screen space */
             final float x0px = penX + getContext().scale * backedCharacter.xoff();
-            final float y0px = penY + getContext().scale * backedCharacter.yoff();
+            final float y0px = penY + getContext().scale * backedCharacter.yoff() * Definitions.CONSOLE_LINE_HEIGHT_SCALE;
             final float x1px = x0px + getContext().scale * charWidth;
-            final float y1px = y0px + getContext().scale * charHeight;
+            final float y1px = y0px + getContext().scale * charHeight * Definitions.CONSOLE_LINE_HEIGHT_SCALE;
 
             /* Translating screen coordinates into NDC */
             final float x0NDC = (x0px / getContext().windowSize.x) * 2f - 1f;

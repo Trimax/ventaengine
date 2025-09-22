@@ -80,6 +80,9 @@ public final class Definitions {
     /* Text scale */
     public static final float CONSOLE_TEXT_SCALE = 0.48f;
 
+    /* Line height scale */
+    public static final float CONSOLE_LINE_HEIGHT_SCALE = 0.8f;
+
     /* The height of the line (px) */
     public static final int CONSOLE_LINE_HEIGHT = 24;
 

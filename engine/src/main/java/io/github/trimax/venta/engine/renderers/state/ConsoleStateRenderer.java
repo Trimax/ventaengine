@@ -85,7 +85,7 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
                 .withText(message)
                 .withScale(Definitions.CONSOLE_TEXT_SCALE)
                 .withWindow(window.getWidth(), window.getHeight())
-                .withPosition(getScaledMarginLeft(), consoleHeight - getScaledMarginBottom() - (line + 2) * getScaledLineHeight())) {
+                .withPosition(getScaledMarginLeft(), consoleHeight - getScaledMarginBottom() - (line + 1) * getScaledLineHeight())) {
             textStateRenderer.render(textController.get());
         }
     }
