@@ -43,6 +43,7 @@ public final class SpriteRegistryImplementation
         framesBuffer.flip();
 
         return abettor.createSprite(texture, framesBuffer,
+                spriteDTO.color().toVector4f(),
                 spriteDTO.looping(),
                 spriteDTO.frames().size(),
                 spriteDTO.duration());

@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
+import org.joml.Vector4f;
 
 import java.nio.FloatBuffer;
 
@@ -16,6 +17,9 @@ public class SpriteEntityImplementation extends AbstractEntityImplementation imp
 
     @NonNull
     FloatBuffer framesBuffer;
+
+    @NonNull
+    Vector4f color;
 
     boolean looping;
     int frameCount;
