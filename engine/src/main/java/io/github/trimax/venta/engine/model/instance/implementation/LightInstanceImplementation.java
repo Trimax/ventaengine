@@ -35,8 +35,8 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
 
         this.type = prefab.getType();
 
-        setAttenuation(Optional.ofNullable(prefab.getAttenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
-        Optional.ofNullable(prefab.getDirection()).ifPresent(this::setDirection);
+        setAttenuation(Optional.of(prefab.getAttenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
+        Optional.of(prefab.getDirection()).ifPresent(this::setDirection);
         setCastShadows(prefab.isCastShadows());
         setIntensity(prefab.getIntensity());
         setColor(prefab.getColor());
