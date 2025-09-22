@@ -6,67 +6,76 @@ import java.util.stream.IntStream;
 
 @UtilityClass
 public final class GeometryDefinitions {
-    public static final float[] SKYBOX_VERTICES = {
-            -1.0f,  1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
+    @UtilityClass
+    public static final class Skybox {
+        public static final float[] VERTICES = {
+                -1.0f,  1.0f, -1.0f,
+                -1.0f, -1.0f, -1.0f,
+                1.0f, -1.0f, -1.0f,
+                1.0f, -1.0f, -1.0f,
+                1.0f,  1.0f, -1.0f,
+                -1.0f,  1.0f, -1.0f,
 
-            -1.0f, -1.0f,  1.0f,
-            -1.0f, -1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f,  1.0f,
-            -1.0f, -1.0f,  1.0f,
+                -1.0f, -1.0f,  1.0f,
+                -1.0f, -1.0f, -1.0f,
+                -1.0f,  1.0f, -1.0f,
+                -1.0f,  1.0f, -1.0f,
+                -1.0f,  1.0f,  1.0f,
+                -1.0f, -1.0f,  1.0f,
 
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
+                1.0f, -1.0f, -1.0f,
+                1.0f, -1.0f,  1.0f,
+                1.0f,  1.0f,  1.0f,
+                1.0f,  1.0f,  1.0f,
+                1.0f,  1.0f, -1.0f,
+                1.0f, -1.0f, -1.0f,
 
-            -1.0f, -1.0f,  1.0f,
-            -1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f, -1.0f,  1.0f,
-            -1.0f, -1.0f,  1.0f,
+                -1.0f, -1.0f,  1.0f,
+                -1.0f,  1.0f,  1.0f,
+                1.0f,  1.0f,  1.0f,
+                1.0f,  1.0f,  1.0f,
+                1.0f, -1.0f,  1.0f,
+                -1.0f, -1.0f,  1.0f,
 
-            -1.0f,  1.0f, -1.0f,
-            1.0f,  1.0f, -1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            -1.0f,  1.0f,  1.0f,
-            -1.0f,  1.0f, -1.0f,
+                -1.0f,  1.0f, -1.0f,
+                1.0f,  1.0f, -1.0f,
+                1.0f,  1.0f,  1.0f,
+                1.0f,  1.0f,  1.0f,
+                -1.0f,  1.0f,  1.0f,
+                -1.0f,  1.0f, -1.0f,
 
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f,  1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f,  1.0f,
-            1.0f, -1.0f,  1.0f
-    };
+                -1.0f, -1.0f, -1.0f,
+                -1.0f, -1.0f,  1.0f,
+                1.0f, -1.0f, -1.0f,
+                1.0f, -1.0f, -1.0f,
+                -1.0f, -1.0f,  1.0f,
+                1.0f, -1.0f,  1.0f
+        };
 
-    public static final float[] CONSOLE_VERTICES = {
-            /* Top-left */    -1.0f, 1.0f,
-            /* Top-right */    1.0f, 1.0f,
-            /* Bottom-right */ 1.0f, 0.0f,
-            /* Bottom-left */ -1.0f, 0.0f};
+        public static final int[] FACETS = IntStream.range(0, VERTICES.length).toArray();
+    }
 
-    public static final float[] PARTICLE_VERTICES = {
-            // posX, posY
-            -0.5f, -0.5f,
-            0.5f, -0.5f,
-            0.5f,  0.5f,
-            -0.5f,  0.5f
-    };
+    @UtilityClass
+    public static final class Console {
+        public static final float[] VERTICES = {
+                /* Top-left */    -1.0f, 1.0f,
+                /* Top-right */    1.0f, 1.0f,
+                /* Bottom-right */ 1.0f, 0.0f,
+                /* Bottom-left */ -1.0f, 0.0f};
 
-    public static final int[] PARTICLE_INDICES = { 0, 1, 2, 2, 3, 0 };
+        public static final int[] FACETS = {0, 1, 2, 0, 2, 3};
+    }
 
-    public static final int[] SKYBOX_INDICES = IntStream.range(0, SKYBOX_VERTICES.length).toArray();
+    @UtilityClass
+    public static final class Particle {
+        public static final float[] VERTICES = {
+                // posX, posY
+                -0.5f, -0.5f,
+                0.5f, -0.5f,
+                0.5f,  0.5f,
+                -0.5f,  0.5f
+        };
 
-    public static final int[] CONSOLE_INDICES = {0, 1, 2, 0, 2, 3};
+        public static final int[] FACETS = {0, 1, 2, 2, 3, 0};
+    }
 }

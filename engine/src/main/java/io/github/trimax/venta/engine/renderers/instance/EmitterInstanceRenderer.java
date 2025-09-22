@@ -61,7 +61,7 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
 
         glBindVertexArray(emitter.getParticleVertexArrayObjectID());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, emitter.getParticleFacesBufferID());
-        glDrawElementsInstanced(GL_TRIANGLES, GeometryDefinitions.PARTICLE_INDICES.length, GL_UNSIGNED_INT, 0, emitter.getParticles().size());
+        glDrawElementsInstanced(GL_TRIANGLES, GeometryDefinitions.Particle.FACETS.length, GL_UNSIGNED_INT, 0, emitter.getParticles().size());
         glBindVertexArray(0);
 
         glUseProgram(0);
