@@ -77,11 +77,15 @@ public final class Definitions {
     /* The vertical line interval */
     public static final float CONSOLE_LINE_INTERVAL = 1.2f;
 
+    /* Text scale */
+    public static final float CONSOLE_TEXT_SCALE = 0.48f;
+
     /* The height of the line (px) */
     public static final int CONSOLE_LINE_HEIGHT = 24;
 
     /* Console margins */
-    public static final int CONSOLE_MARGIN = 16;
+    public static final int CONSOLE_MARGIN_LEFT = 16;
+    public static final int CONSOLE_MARGIN_BOTTOM = 32;
 
     /* Command line prefix */
     public static final String CONSOLE_WELCOME_SYMBOL = "> ";

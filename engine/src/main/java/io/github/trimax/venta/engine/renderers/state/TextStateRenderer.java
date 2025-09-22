@@ -68,10 +68,10 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
             final var t1 = backedCharacter.y1() / (float) FONT_ATLAS_HEIGHT;
 
             /* Compute character position in screen space */
-            final float x0px = penX + backedCharacter.xoff();
-            final float y0px = penY + backedCharacter.yoff();
-            final float x1px = x0px + charWidth;
-            final float y1px = y0px + charHeight;
+            final float x0px = penX + getContext().scale * backedCharacter.xoff();
+            final float y0px = penY + getContext().scale * backedCharacter.yoff();
+            final float x1px = x0px + getContext().scale * charWidth;
+            final float y1px = y0px + getContext().scale * charHeight;
 
             /* Translating screen coordinates into NDC */
             final float x0NDC = (x0px / getContext().windowSize.x) * 2f - 1f;
@@ -88,7 +88,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
             geometryHelper.render(state.getGeometry());
 
-            penX += backedCharacter.xadvance();
+            penX += getContext().scale * backedCharacter.xadvance();
         }
 
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -102,6 +102,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
         private final Vector2f linePosition = new Vector2f();
 
         private ConsoleController.ConsoleMessage message;
+        private float scale;
 
         public TextRenderContext withWindow(final int width, final int height) {
             windowSize.set(width, height);
@@ -115,6 +116,12 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
             return this;
         }
 
+        public TextRenderContext withScale(final float scale) {
+            this.scale = scale;
+
+            return this;
+        }
+
         public TextRenderContext withText(final ConsoleController.ConsoleMessage message) {
             this.message = message;
             return this;
@@ -122,9 +129,10 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
         @Override
         public void close() {
+            this.scale = 1.f;
             this.message = null;
-            this.linePosition.set(0);
             this.windowSize.set(0);
+            this.linePosition.set(0);
         }
 
         @Override

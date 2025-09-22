@@ -57,13 +57,16 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (int line = 0; line < Math.min(windowController.get().getHeight() / Definitions.CONSOLE_LINE_HEIGHT, console.getHistory().size()); line++)
+        final var consoleHeight = windowController.get().getHeight() / 2;
+        final var countVisibleLines = Math.min(consoleHeight / getScaledLineHeight(), console.getHistory().size());
+        for (int line = 0; line < countVisibleLines; line++)
             renderItem(console, line, windowController.get());
 
         try (final var _ = textStateRenderer.withContext(getContext())
+                .withScale(Definitions.CONSOLE_TEXT_SCALE)
                 .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getBuffer()))
                 .withWindow(windowController.get().getWidth(), windowController.get().getHeight())
-                .withPosition(Definitions.CONSOLE_MARGIN, windowController.get().getHeight() / 2.f - Definitions.CONSOLE_MARGIN)) {
+                .withPosition(getScaledMarginLeft(), consoleHeight - getScaledMarginBottom() * Definitions.CONSOLE_TEXT_SCALE)) {
             textStateRenderer.render(textController.get());
         }
 
@@ -77,12 +80,26 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         if (message == null || StringUtils.isBlank(message.text()))
             return;
 
+        final var consoleHeight = window.getHeight() / 2;
         try (final var _ = textStateRenderer.withContext(getContext())
                 .withText(message)
+                .withScale(Definitions.CONSOLE_TEXT_SCALE)
                 .withWindow(window.getWidth(), window.getHeight())
-                .withPosition(Definitions.CONSOLE_MARGIN, window.getHeight() / 2.f - Definitions.CONSOLE_MARGIN - (line + 2) * Definitions.CONSOLE_LINE_HEIGHT)) {
+                .withPosition(getScaledMarginLeft(), consoleHeight - getScaledMarginBottom() - (line + 2) * getScaledLineHeight())) {
             textStateRenderer.render(textController.get());
         }
+    }
+
+    private float getScaledLineHeight() {
+        return Definitions.CONSOLE_LINE_HEIGHT * Definitions.CONSOLE_TEXT_SCALE;
+    }
+
+    private float getScaledMarginLeft() {
+        return Definitions.CONSOLE_MARGIN_LEFT * Definitions.CONSOLE_TEXT_SCALE;
+    }
+
+    private float getScaledMarginBottom() {
+        return Definitions.CONSOLE_MARGIN_BOTTOM * Definitions.CONSOLE_TEXT_SCALE;
     }
 
     @Getter(AccessLevel.PACKAGE)
