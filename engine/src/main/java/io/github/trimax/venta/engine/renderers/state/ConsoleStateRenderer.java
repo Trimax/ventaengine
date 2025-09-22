@@ -63,7 +63,7 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         try (final var _ = textStateRenderer.withContext(getContext())
                 .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getBuffer()))
                 .withWindow(windowController.get().getWidth(), windowController.get().getHeight())
-                .withPosition(Definitions.CONSOLE_CHARACTER_WIDTH, windowController.get().getHeight() / 2)) {
+                .withPosition(Definitions.CONSOLE_MARGIN, windowController.get().getHeight() / 2.f - Definitions.CONSOLE_MARGIN)) {
             textStateRenderer.render(textController.get());
         }
 
@@ -80,7 +80,7 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         try (final var _ = textStateRenderer.withContext(getContext())
                 .withText(message)
                 .withWindow(window.getWidth(), window.getHeight())
-                .withPosition(Definitions.CONSOLE_CHARACTER_WIDTH, window.getHeight() / 2 - line * Definitions.CONSOLE_LINE_HEIGHT)) {
+                .withPosition(Definitions.CONSOLE_MARGIN, window.getHeight() / 2.f - Definitions.CONSOLE_MARGIN - (line + 2) * Definitions.CONSOLE_LINE_HEIGHT)) {
             textStateRenderer.render(textController.get());
         }
     }

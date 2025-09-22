@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 
 import static io.github.trimax.venta.engine.definitions.Definitions.*;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
@@ -77,24 +76,15 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
             // Пиксельные координаты на экране
             float x0px = penX + backedCharacter.xoff();
-            //float y0px = penY - backedCharacter.yoff();
-
-            float y0px = baselineY - charHeight;
-
+            float y0px = baselineY + backedCharacter.yoff();
             float x1px = x0px + charWidth;
-            //float y1px = y0px + (backedCharacter.y1() - backedCharacter.y0());
-            float y1px = baselineY;
-
-            log.info("xy0: {}x{}; xy1: {}x{}", x0px, y0px, x1px, y1px);
+            float y1px = y0px + charHeight;
 
             // Перевод в NDC [-1;1]
             float x0NDC = (x0px / getContext().windowSize.x) * 2f - 1f;
             float x1NDC = (x1px / getContext().windowSize.x) * 2f - 1f;
             float y0NDC = 1f - (y0px / getContext().windowSize.y) * 2f;
             float y1NDC = 1f - (y1px / getContext().windowSize.y) * 2f;
-
-            log.info("xyNDC0: {}x{}; xyNDC1: {}x{}", x0NDC, y0NDC, x1NDC, y1NDC);
-
 
             textBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
             textBinder.bind1(state.getProgram(), x0NDC, y0NDC, x1NDC, y1NDC);
@@ -116,7 +106,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class TextRenderContext extends AbstractRenderContext<ConsoleStateRenderer.ConsoleRenderContext> {
         private final Vector2f windowSize = new Vector2f();
-        private final Vector2i linePosition = new Vector2i();
+        private final Vector2f linePosition = new Vector2f();
 
         private ConsoleController.ConsoleMessage message;
 
@@ -126,7 +116,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
             return this;
         }
 
-        public TextRenderContext withPosition(final int x, final int y) {
+        public TextRenderContext withPosition(final float x, final float y) {
             linePosition.set(x, y);
 
             return this;
