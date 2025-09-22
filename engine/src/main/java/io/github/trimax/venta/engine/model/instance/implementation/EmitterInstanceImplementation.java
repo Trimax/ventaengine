@@ -1,13 +1,5 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-
 import io.github.trimax.venta.engine.model.common.dto.Range;
 import io.github.trimax.venta.engine.model.common.dto.Variable;
 import io.github.trimax.venta.engine.model.common.effects.Particle;
@@ -20,6 +12,13 @@ import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabI
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Getter
 public final class EmitterInstanceImplementation extends AbstractInstanceImplementation implements EmitterInstance {
@@ -67,20 +66,19 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
         this.program = program;
         this.texture = texture;
         this.bufferColor = bufferColor;
-        this.emissionRate = Math.max(0.f, prefab.getDto().emissionRate());
-        this.particleSize = prefab.getDto().particleSize();
-        this.particleLifetime = prefab.getDto().particleLifetime();
-        this.particleAngularVelocity = prefab.getDto().particleAngularVelocity();
-        this.maximalParticlesCount = Math.max(1, prefab.getDto().particlesCount());
+        this.emissionRate = prefab.getEmissionRate();
+        this.particleSize = prefab.getParticleSize();
+        this.particleLifetime = prefab.getParticleLifetime();
+        this.particleAngularVelocity = prefab.getParticleAngularVelocity();
+        this.maximalParticlesCount = prefab.getParticlesCount();
         this.bufferMatrixModel = bufferMatrixModel;
         this.particleColorBufferID = particleColorBufferID;
         this.particleFacesBufferID = particleFacesBufferID;
         this.particleVerticesBufferID = particleVerticesBufferID;
         this.particleInstanceBufferID = particleInstanceBufferID;
         this.particleVertexArrayObjectID = particleVertexArrayObjectID;
-        Optional.ofNullable(prefab.getDto().particleVelocity()).map(Variable::deviation).ifPresent(
-                particleVelocityDeviation::set);
-        Optional.ofNullable(prefab.getDto().particleVelocity()).map(Variable::value).ifPresent(particleVelocity::set);
+        Optional.of(prefab.getParticleVelocity()).map(Variable::deviation).ifPresent(particleVelocityDeviation::set);
+        Optional.of(prefab.getParticleVelocity()).map(Variable::value).ifPresent(particleVelocity::set);
     }
 
     public void updateEmissionAccumulator(final float delta) {

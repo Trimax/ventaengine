@@ -14,7 +14,6 @@ import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstan
 import io.github.trimax.venta.engine.model.prefabs.EmitterPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -34,7 +33,6 @@ public final class EmitterManagerImplementation
         extends AbstractManagerImplementation<EmitterInstanceImplementation, EmitterInstance>
         implements EmitterManager {
     private final ProgramRegistryImplementation programRegistry;
-    private final TextureRegistryImplementation textureRegistry;
     private final GizmoManagerImplementation gizmoManager;
     private final Abettor abettor;
     private final Memory memory;
@@ -71,9 +69,9 @@ public final class EmitterManagerImplementation
         glBindVertexArray(0);
 
         return store(abettor.createEmitter(name, programRegistry.get(ProgramType.Particle.getProgramName()), prefab,
-                textureRegistry.get(prefab.getDto().texture()), gizmoManager.create("emitter", GizmoType.Emitter),
-                MemoryUtil.memAllocFloat(prefab.getDto().particlesCount() * 16),
-                MemoryUtil.memAllocFloat(prefab.getDto().particlesCount() * 4),
+                prefab.getTexture(), gizmoManager.create("emitter", GizmoType.Emitter),
+                MemoryUtil.memAllocFloat(prefab.getParticlesCount() * 16),
+                MemoryUtil.memAllocFloat(prefab.getParticlesCount() * 4),
                 particleVertexArrayObjectID, particleVerticesBufferID, particleInstanceBufferID, particleFacesBufferID,
                 particleColorBufferID));
     }
@@ -81,7 +79,7 @@ public final class EmitterManagerImplementation
     private int createBufferColor(final String name, final EmitterPrefabImplementation prefab) {
         final int particleColorBufferID = memory.getBuffers().create("Emitter %s color buffer", name);
         glBindBuffer(GL_ARRAY_BUFFER, particleColorBufferID);
-        glBufferData(GL_ARRAY_BUFFER, (long) prefab.getDto().particlesCount() * ParticleVertexLayout.Color.getStride(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long) prefab.getParticlesCount() * ParticleVertexLayout.Color.getStride(), GL_DYNAMIC_DRAW);
         glEnableVertexAttribArray(ParticleVertexLayout.Color.getLocationID());
         glVertexAttribPointer(ParticleVertexLayout.Color.getLocationID(), ParticleVertexLayout.Color.getSize(), GL_FLOAT, false, ParticleVertexLayout.Color.getStride(), 0);
         glVertexAttribDivisor(ParticleVertexLayout.Color.getLocationID(), 1);
@@ -92,7 +90,7 @@ public final class EmitterManagerImplementation
     private int createBufferMatrixModel(final String name, final EmitterPrefabImplementation prefab) {
         final int particleInstanceBufferID = memory.getBuffers().create("Emitter %s instance buffer", name);
         glBindBuffer(GL_ARRAY_BUFFER, particleInstanceBufferID);
-        glBufferData(GL_ARRAY_BUFFER, (long) prefab.getDto().particlesCount() * ParticleVertexLayout.MatrixModel.getStride(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long) prefab.getParticlesCount() * ParticleVertexLayout.MatrixModel.getStride(), GL_DYNAMIC_DRAW);
         for (int i = 0; i < 4; i++) {
             glEnableVertexAttribArray(ParticleVertexLayout.MatrixModel.getLocationID() + i);
             glVertexAttribPointer(ParticleVertexLayout.MatrixModel.getLocationID() + i, 4, GL_FLOAT, false, ParticleVertexLayout.MatrixModel.getStride(), (long) i * 4 * Float.BYTES);

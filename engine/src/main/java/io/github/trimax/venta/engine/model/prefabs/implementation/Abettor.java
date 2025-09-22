@@ -3,16 +3,14 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.LightType;
+import io.github.trimax.venta.engine.model.common.dto.Range;
+import io.github.trimax.venta.engine.model.common.dto.Variable;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.light.Attenuation;
-import io.github.trimax.venta.engine.model.dto.EmitterDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
-import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -47,8 +45,15 @@ public final class Abettor {
         return new ObjectPrefabImplementation(program, material, root);
     }
 
-    public EmitterPrefabImplementation createEmitter(@NonNull final EmitterDTO dto) {
-        return new EmitterPrefabImplementation(dto);
+    public EmitterPrefabImplementation createEmitter(@NonNull final TextureEntityImplementation texture,
+                                                     @NonNull final Range<Float> particleSize,
+                                                     @NonNull final Variable<Float> particleLifetime,
+                                                     @NonNull final Variable<Vector3f> particleVelocity,
+                                                     @NonNull final Variable<Float> particleAngularVelocity,
+                                                     final int particlesCount,
+                                                     final float emissionRate) {
+        return new EmitterPrefabImplementation(texture,
+                particleSize, particleLifetime, particleVelocity, particleAngularVelocity, particlesCount, emissionRate);
     }
 
     public ScenePrefabImplementation createScene(@NonNull final SceneDTO dto) {
