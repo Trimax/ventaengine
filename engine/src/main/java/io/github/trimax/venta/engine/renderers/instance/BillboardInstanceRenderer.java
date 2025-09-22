@@ -58,6 +58,7 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class BillboardRenderContext extends AbstractRenderContext<SceneInstanceRenderer.SceneRenderContext> {
         private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
+        private final Matrix4f viewMatrix = new Matrix4f();
         private final Matrix4f modelMatrix = new Matrix4f();
 
         public BillboardRenderContext withModelMatrix(final Matrix4f matrix) {
@@ -70,14 +71,14 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
             return this;
         }
 
-        private void applyBillboard(final Matrix4f model, final Matrix4fc viewMatrix) {
-            final var billboardRotation = new Matrix4f(viewMatrix);
-            billboardRotation.m30(0);
-            billboardRotation.m31(0);
-            billboardRotation.m32(0);
+        private void applyBillboard(final Matrix4f model, final Matrix4fc view) {
+            viewMatrix.set(view);
+            viewMatrix.m30(0);
+            viewMatrix.m31(0);
+            viewMatrix.m32(0);
 
-            billboardRotation.invert();
-            model.mul(billboardRotation);
+            viewMatrix.invert();
+            model.mul(viewMatrix);
         }
 
         @Override
