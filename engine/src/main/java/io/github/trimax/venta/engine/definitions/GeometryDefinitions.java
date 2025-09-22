@@ -67,4 +67,6 @@ public final class GeometryDefinitions {
     public static final int[] PARTICLE_INDICES = { 0, 1, 2, 2, 3, 0 };
 
     public static final int[] SKYBOX_INDICES = IntStream.range(0, SKYBOX_VERTICES.length).toArray();
+
+    public static final int[] CONSOLE_INDICES = {0, 1, 2, 0, 2, 3};
 }

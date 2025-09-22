@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Consumer;
 
+import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.CONSOLE_INDICES;
 import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.CONSOLE_VERTICES;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -30,7 +31,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
         log.debug("Initializing console");
 
         return new ConsoleState(programRegistry.get(ProgramType.Console.getProgramName()),
-                geometryHelper.create("Console", ConsoleVertexLayout.class, CONSOLE_VERTICES, null, null));
+                geometryHelper.create("Console", ConsoleVertexLayout.class, CONSOLE_VERTICES, CONSOLE_INDICES, null));
     }
 
     @Override
