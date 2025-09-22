@@ -5,21 +5,21 @@ import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
-@Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextBinder extends AbstractBinder {
-    private static final Vector2f ZERO = new Vector2f();
-
-    public void bind(final ProgramEntityImplementation program, final Vector3f color) {
+    public void bindColor(final ProgramEntityImplementation program, final Vector3fc color) {
         if (color != null)
             bind(program.getUniformID(ShaderUniform.Color), color);
+    }
 
-        bind(program.getUniformID(ShaderUniform.Position), ZERO);
-        bind(program.getUniformID(ShaderUniform.Scale), 1f);
+    public void bindPosition(final ProgramEntityImplementation program, final float x0, final float y0, final float x1, final float y1) {
+        bind(program.getUniformID(ShaderUniform.BoundsPosition), x0, y0, x1, y1);
+    }
+
+    public void bindTextureCoordinates(final ProgramEntityImplementation program, final float s0, final float t0, final float s1, final float t1) {
+        bind(program.getUniformID(ShaderUniform.BoundsTextureCoordinates), s0, t0, s1, t1);
     }
 }

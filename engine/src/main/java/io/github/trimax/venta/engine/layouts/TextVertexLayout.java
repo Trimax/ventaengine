@@ -1,6 +1,5 @@
 package io.github.trimax.venta.engine.layouts;
 
-import io.github.trimax.venta.engine.utils.EnumUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,13 +7,8 @@ import lombok.Getter;
 @Getter(onMethod_ = @__(@Override))
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum TextVertexLayout implements AbstractVertexLayout {
-    Position(0, 2),
-    TextureCoordinates(1, 2);
+    Position(0, 2);
 
     private final int locationID;
     private final int size;
-
-    public static int getFloatsCount() {
-        return EnumUtil.sum(TextVertexLayout.class, TextVertexLayout::getSize);
-    }
 }
