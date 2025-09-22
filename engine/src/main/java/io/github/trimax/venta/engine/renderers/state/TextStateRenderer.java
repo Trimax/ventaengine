@@ -37,7 +37,6 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
         float penX = getContext().linePosition.x;
         final float penY = getContext().linePosition.y;
-        float baselineY = penY;
 
         // Iterate through each character in the text
         final var message = getContext().message;
@@ -60,31 +59,27 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
 
             final var backedCharacter = font.getAtlases().get(atlasIndex).getBuffer().get(charIndex);
 
+            /* Compute character size in atlas  */
             final var charWidth = backedCharacter.x1() - backedCharacter.x0();
             final var charHeight = backedCharacter.y1() - backedCharacter.y0();
 
-            log.info("Char size px: {}x{}, offset: {}x{}",
-                    backedCharacter.x1()-backedCharacter.x0(),
-                    backedCharacter.y1()-backedCharacter.y0(),
-                    backedCharacter.xoff(),
-                    backedCharacter.yoff());
-
+            /* Compute texture coordinates */
             final var s0 = backedCharacter.x0() / (float) FONT_ATLAS_WIDTH;
             final var t0 = backedCharacter.y0() / (float) FONT_ATLAS_HEIGHT;
             final var s1 = backedCharacter.x1() / (float) FONT_ATLAS_WIDTH;
             final var t1 = backedCharacter.y1() / (float) FONT_ATLAS_HEIGHT;
 
-            // Пиксельные координаты на экране
-            float x0px = penX + backedCharacter.xoff();
-            float y0px = baselineY + backedCharacter.yoff();
-            float x1px = x0px + charWidth;
-            float y1px = y0px + charHeight;
+            /* Compute character position in screen space */
+            final float x0px = penX + backedCharacter.xoff();
+            final float y0px = penY + backedCharacter.yoff();
+            final float x1px = x0px + charWidth;
+            final float y1px = y0px + charHeight;
 
-            // Перевод в NDC [-1;1]
-            float x0NDC = (x0px / getContext().windowSize.x) * 2f - 1f;
-            float x1NDC = (x1px / getContext().windowSize.x) * 2f - 1f;
-            float y0NDC = 1f - (y0px / getContext().windowSize.y) * 2f;
-            float y1NDC = 1f - (y1px / getContext().windowSize.y) * 2f;
+            /* Translating screen coordinates into NDC */
+            final float x0NDC = (x0px / getContext().windowSize.x) * 2f - 1f;
+            final float x1NDC = (x1px / getContext().windowSize.x) * 2f - 1f;
+            final float y0NDC = 1f - (y0px / getContext().windowSize.y) * 2f;
+            final float y1NDC = 1f - (y1px / getContext().windowSize.y) * 2f;
 
             textBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
             textBinder.bind1(state.getProgram(), x0NDC, y0NDC, x1NDC, y1NDC);
