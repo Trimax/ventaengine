@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.BillboardVertexLayout;
 import io.github.trimax.venta.engine.model.dto.BillboardDTO;
@@ -15,9 +16,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.PARTICLE_INDICES;
-import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.PARTICLE_VERTICES;
 
 @Slf4j
 @Component
@@ -41,7 +39,8 @@ public final class BillboardRepositoryImplementation
     private BillboardPrefabImplementation create(final String resourcePath, final BillboardDTO billboardDTO) {
         return abettor.createBillboard(programRegistry.get(billboardDTO.program()),
                 spriteRegistry.get(billboardDTO.sprite()),
-                geometryHelper.create(resourcePath, BillboardVertexLayout.class, PARTICLE_VERTICES, PARTICLE_INDICES, null),
+                geometryHelper.create(resourcePath, BillboardVertexLayout.class,
+                        GeometryDefinitions.Particle.VERTICES, GeometryDefinitions.Particle.FACETS, null),
                 billboardDTO.scale());
     }
 

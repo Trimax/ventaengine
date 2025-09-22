@@ -57,10 +57,10 @@ public final class EmitterManagerImplementation
         glBindVertexArray(particleVertexArrayObjectID);
 
         glBindBuffer(GL_ARRAY_BUFFER, particleVerticesBufferID);
-        glBufferData(GL_ARRAY_BUFFER, GeometryDefinitions.PARTICLE_VERTICES, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, GeometryDefinitions.Particle.VERTICES, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, particleFacesBufferID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, GeometryDefinitions.PARTICLE_INDICES, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, GeometryDefinitions.Particle.FACETS, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(ParticleVertexLayout.Position.getLocationID());
         glVertexAttribPointer(ParticleVertexLayout.Position.getLocationID(), ParticleVertexLayout.Position.getSize(), GL_FLOAT, false, ParticleVertexLayout.Position.getStride(), 0);
