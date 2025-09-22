@@ -27,7 +27,8 @@ import static org.lwjgl.opengl.GL31C.glDrawElementsInstanced;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<EmitterInstanceImplementation, EmitterInstanceRenderer.EmitterRenderContext, SceneInstanceRenderer.SceneRenderContext> {
-    private final Matrix4f matrix = new Matrix4f();
+    private final Matrix4f matrixTemporaryModel = new Matrix4f();
+    private final Matrix4f matrixTemporaryView = new Matrix4f();
 
     private final TextureBinder textureBinder;
     private final MatrixBinder matrixBinder;
@@ -77,12 +78,12 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         for (final var particle : emitter.getParticles()) {
             BufferUtil.write(particle.getColor(), bufferColor);
 
-            matrix.identity().translate(particle.getPosition());
-            applyBillboard(matrix, getContext().getParent().getViewMatrix());
-            matrix.rotateZ(particle.getRotation());
-            matrix.scale(particle.getSize());
+            matrixTemporaryModel.identity().translate(particle.getPosition());
+            applyBillboard(matrixTemporaryModel, getContext().getParent().getViewMatrix());
+            matrixTemporaryModel.rotateZ(particle.getRotation());
+            matrixTemporaryModel.scale(particle.getSize());
 
-            BufferUtil.write(matrix, bufferMatrixModel);
+            BufferUtil.write(matrixTemporaryModel, bufferMatrixModel);
         }
 
         bufferMatrixModel.flip();
@@ -90,13 +91,13 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
     }
 
     private void applyBillboard(final Matrix4f model, final Matrix4fc viewMatrix) {
-        final var billboardRotation = new Matrix4f(viewMatrix); //TODO: Get rid of new matrix creation
-        billboardRotation.m30(0);
-        billboardRotation.m31(0);
-        billboardRotation.m32(0);
+        matrixTemporaryView.set(viewMatrix);
+        matrixTemporaryView.m30(0);
+        matrixTemporaryView.m31(0);
+        matrixTemporaryView.m32(0);
 
-        billboardRotation.invert();
-        model.mul(billboardRotation);
+        matrixTemporaryView.invert();
+        model.mul(matrixTemporaryView);
     }
 
     @Getter(AccessLevel.PACKAGE)
