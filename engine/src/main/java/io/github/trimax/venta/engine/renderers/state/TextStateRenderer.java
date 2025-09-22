@@ -80,7 +80,7 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
             final float y0NDC = 1f - (y0px / getContext().windowSize.y) * 2f;
             final float y1NDC = 1f - (y1px / getContext().windowSize.y) * 2f;
 
-            textBinder.bind(state.getProgram(), getContext().getMessage().type().getColor());
+            textBinder.bindColor(state.getProgram(), getContext().getMessage().type().getColor());
             textBinder.bindPosition(state.getProgram(), x0NDC, y0NDC, x1NDC, y1NDC);
             textBinder.bindTextureCoordinates(state.getProgram(), s0, t0, s1, t1);
 

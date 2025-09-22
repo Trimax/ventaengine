@@ -5,12 +5,12 @@ import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextBinder extends AbstractBinder {
-    public void bind(final ProgramEntityImplementation program, final Vector3f color) {
+    public void bindColor(final ProgramEntityImplementation program, final Vector3fc color) {
         if (color != null)
             bind(program.getUniformID(ShaderUniform.Color), color);
     }
