@@ -43,8 +43,6 @@ public final class TextStateRenderer extends AbstractStateRenderer<TextState, Te
         final var text = message.text();
         final var font = state.getFont();
 
-        log.info("Rendering line at {}x{} ({})", penX, penY, message);
-
         for (int i = 0; i < text.length(); i++) {
             final var codepoint = text.codePointAt(i);
 
