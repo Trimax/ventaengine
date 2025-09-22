@@ -32,12 +32,9 @@ public final class Abettor {
         return new MaterialEntityImplementation(materialDTO);
     }
 
-    public MeshEntityImplementation createMesh(final int verticesCount,
-                                               final int facetsCount,
-                                               final int edgesCount,
-                                               @NonNull final Geometry geometry,
+    public MeshEntityImplementation createMesh(@NonNull final Geometry geometry,
                                                @NonNull final BoundingBox boundingBox) {
-        return new MeshEntityImplementation(verticesCount, facetsCount, edgesCount, geometry, boundingBox);
+        return new MeshEntityImplementation(geometry, boundingBox);
     }
 
     public ProgramEntityImplementation createProgram(final int internalID) {

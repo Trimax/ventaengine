@@ -70,6 +70,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
         glDepthFunc(GL_LESS);
     }
 
+    //TODO: Reimplement like mesh
     private void render(final Geometry geometry) {
         glBindVertexArray(geometry.objectID());
         glDrawArrays(GL_TRIANGLES, 0, geometry.vertices().count());

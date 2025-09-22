@@ -4,11 +4,11 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.enums.ProgramType;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.ConsoleVertexLayout;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
-import io.github.trimax.venta.engine.utils.VertexLayoutUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -18,43 +18,28 @@ import java.util.function.Consumer;
 
 import static io.github.trimax.venta.engine.definitions.GeometryDefinitions.CONSOLE_VERTICES;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ConsoleController extends AbstractController<ConsoleState, Void> {
     private final ProgramRegistryImplementation programRegistry;
+    private final GeometryHelper geometryHelper;
     private final Memory memory;
 
     @Override
     protected ConsoleState create(final Void argument) {
         log.debug("Initializing console");
 
-        final int consoleVertexArrayObjectID = memory.getVertexArrays().create("Console VAO");
-        final int consoleVerticesBufferID = memory.getBuffers().create("Console vertex buffer");
-
-        glBindVertexArray(consoleVertexArrayObjectID);
-        glBindBuffer(GL_ARRAY_BUFFER, consoleVerticesBufferID);
-
-        glBufferData(GL_ARRAY_BUFFER, CONSOLE_VERTICES, GL_STATIC_DRAW);
-
-        VertexLayoutUtil.bind(ConsoleVertexLayout.class);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-
         return new ConsoleState(programRegistry.get(ProgramType.Console.getProgramName()),
-                consoleVertexArrayObjectID, consoleVerticesBufferID);
+                geometryHelper.create("Console", ConsoleVertexLayout.class, CONSOLE_VERTICES, null, null));
     }
 
     @Override
-    protected void destroy(@NonNull final ConsoleState object) {
+    protected void destroy(@NonNull final ConsoleState state) {
         log.debug("Deinitializing console");
 
-        memory.getVertexArrays().delete(object.getVertexArrayObjectID());
-        memory.getBuffers().delete(object.getVerticesBufferID());
+        geometryHelper.delete(state.getGeometry());
     }
 
     public boolean isVisible() {

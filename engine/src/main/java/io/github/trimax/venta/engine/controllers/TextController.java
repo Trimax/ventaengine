@@ -46,10 +46,10 @@ public final class TextController extends AbstractController<TextState, Void> {
     }
 
     @Override
-    protected void destroy(@NonNull final TextState text) {
+    protected void destroy(@NonNull final TextState state) {
         log.debug("Deinitializing text");
 
-        memory.getVertexArrays().delete(text.getVertexArrayObjectID());
-        memory.getBuffers().delete(text.getVerticesBufferID());
+        memory.getVertexArrays().delete(state.getVertexArrayObjectID());
+        memory.getBuffers().delete(state.getVerticesBufferID());
     }
 }

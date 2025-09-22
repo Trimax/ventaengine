@@ -11,10 +11,6 @@ import lombok.Value;
 @Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class MeshEntityImplementation extends AbstractEntityImplementation implements MeshEntity {
-    int verticesCount;
-    int facetsCount;
-    int edgesCount;
-
     @NonNull
     Geometry geometry;
 

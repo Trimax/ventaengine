@@ -19,7 +19,7 @@ public final class KeyboardController extends AbstractController<KeyboardState, 
     }
 
     @Override
-    protected void destroy(@NonNull final KeyboardState object) {
+    protected void destroy(@NonNull final KeyboardState state) {
         log.info("Deinitializing keyboard");
     }
 }

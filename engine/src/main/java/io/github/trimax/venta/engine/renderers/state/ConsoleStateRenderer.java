@@ -42,7 +42,7 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glUseProgram(console.getProgram().getInternalID());
-        glBindVertexArray(console.getVertexArrayObjectID());
+        glBindVertexArray(console.getGeometry().objectID());
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
