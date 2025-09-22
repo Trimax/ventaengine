@@ -71,9 +71,11 @@ public enum ShaderUniform {
     Frames("frames"),
     FrameIndex("frameIndex"),
 
-    /* Common model parameters transformation*/
-    Position("position"),
-    Scale("scale"),
+    /* Bounds for offsets */
+    BoundsPosition("boundsPosition"),
+    BoundsTextureCoordinates("boundsTextureCoordinates"),
+
+    /* Common model parameters transformation */
     Color("color");
 
     private final String uniformName;

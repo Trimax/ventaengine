@@ -78,4 +78,17 @@ public final class GeometryDefinitions {
 
         public static final int[] FACETS = {0, 1, 2, 2, 3, 0};
     }
+
+    @UtilityClass
+    public static final class Text {
+        public static final float[] VERTICES = {
+                // posX, posY
+                0.f, 0.f,
+                1.f, 0.f,
+                1.f, 1.f,
+                0.f, 1.f
+        };
+
+        public static final int[] FACETS = {0, 1, 2, 2, 3, 0};
+    }
 }

@@ -24,19 +24,31 @@ abstract class AbstractBinder {
             glUniform1f(uniformID, value);
     }
 
-    protected final void bind(final int uniformID, final Vector4fc vector) {
+    protected final void bind(final int uniformID, final float x, final float y, final float z, final float w) {
         if (uniformID >= 0)
-            glUniform4f(uniformID, vector.x(), vector.y(), vector.z(), vector.w());
+            glUniform4f(uniformID, x, y, z, w);
+    }
+
+    protected final void bind(final int uniformID, final float x, final float y, final float z) {
+        if (uniformID >= 0)
+            glUniform3f(uniformID, x, y, z);
+    }
+
+    protected final void bind(final int uniformID, final float x, final float y) {
+        if (uniformID >= 0)
+            glUniform2f(uniformID, x, y);
+    }
+
+    protected final void bind(final int uniformID, final Vector4fc vector) {
+        bind(uniformID, vector.x(), vector.y(), vector.z(), vector.w());
     }
 
     protected final void bind(final int uniformID, final Vector3fc vector) {
-        if (uniformID >= 0)
-            glUniform3f(uniformID, vector.x(), vector.y(), vector.z());
+        bind(uniformID, vector.x(), vector.y(), vector.z());
     }
 
     protected final void bind(final int uniformID, final Vector2fc vector) {
-        if (uniformID >= 0)
-            glUniform2f(uniformID, vector.x(), vector.y());
+        bind(uniformID, vector.x(), vector.y());
     }
 
     protected final void bind(final int uniformID, final FloatBuffer buffer) {

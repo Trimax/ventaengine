@@ -1,6 +1,5 @@
 package io.github.trimax.venta.engine.layouts;
 
-import io.github.trimax.venta.engine.utils.EnumUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,9 +11,4 @@ public enum CubemapVertexLayout implements AbstractVertexLayout {
 
     private final int locationID;
     private final int size;
-
-
-    public static int getFloatsCount() {
-        return EnumUtil.sum(CubemapVertexLayout.class, CubemapVertexLayout::getSize);
-    }
 }
