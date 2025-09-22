@@ -1,0 +1,5 @@
+{
+  "program": "billboard.json",
+  "sprite": "fire.json",
+  "scale": {"x": 10.0, "y": 10.0}
+}
