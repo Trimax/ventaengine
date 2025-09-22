@@ -6,7 +6,6 @@ import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.ConsoleVertexLayout;
-import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import lombok.AccessLevel;
@@ -25,7 +24,6 @@ import static org.lwjgl.glfw.GLFW.*;
 public final class ConsoleController extends AbstractController<ConsoleState, Void> {
     private final ProgramRegistryImplementation programRegistry;
     private final GeometryHelper geometryHelper;
-    private final Memory memory;
 
     @Override
     protected ConsoleState create(final Void argument) {

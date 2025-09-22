@@ -37,13 +37,17 @@ public final class GeometryHelper {
         glBindVertexArray(objectID);
 
         // Vertices
-        final FloatBuffer vertexBuffer = memAllocFloat(vertices.length);
-        vertexBuffer.put(vertices).flip();
+        Buffer bufferVertices = null;
+        if (ArrayUtils.isNotEmpty(vertices)) {
+            final FloatBuffer vertexBuffer = memAllocFloat(vertices.length);
+            vertexBuffer.put(vertices).flip();
 
-        final var bufferVertices = allocateBuffer(String.format("Vertices buffer `%s`", name), vertices.length, VertexLayoutUtil.calculateTotalFloats(layout));
-        glBindBuffer(GL_ARRAY_BUFFER, bufferVertices.id());
-        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
-        memFree(vertexBuffer);
+            bufferVertices = allocateBuffer(String.format("Vertices buffer `%s`", name), vertices.length, VertexLayoutUtil.calculateTotalFloats(layout));
+
+            glBindBuffer(GL_ARRAY_BUFFER, bufferVertices.id());
+            glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
+            memFree(vertexBuffer);
+        }
 
         // Facets
         Buffer bufferFacets = null;
@@ -67,6 +71,7 @@ public final class GeometryHelper {
 
             bufferEdges = allocateBuffer(String.format("Edges buffer `%s` (%s)", name, layout.getSimpleName()),
                     edges.length, Definitions.COUNT_VERTICES_PER_EDGE);
+
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferEdges.id());
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
             memFree(indexBuffer);
