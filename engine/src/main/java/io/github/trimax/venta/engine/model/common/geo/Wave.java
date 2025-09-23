@@ -7,5 +7,4 @@ public record Wave(Vector2f direction,
                    float steepness,
                    float length,
                    float speed) {
-
 }
