@@ -5,6 +5,7 @@ import java.util.Optional;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.SceneManager;
+import io.github.trimax.venta.engine.model.common.effects.Fog;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
@@ -108,7 +109,7 @@ public final class SceneManagerImplementation
 
         Optional.ofNullable(sceneDTO.ambientLight()).ifPresent(scene::setAmbientLight);
 
-        Optional.ofNullable(sceneDTO.fog()).ifPresent(scene::setFog);
+        Optional.ofNullable(sceneDTO.fog()).map(Fog::new).ifPresent(scene::setFog);
         Optional.ofNullable(sceneDTO.skybox()).map(cubemapRegistry::get).ifPresent(scene::setSkybox);
 
         return store(scene);

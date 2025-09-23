@@ -1,9 +1,10 @@
 package io.github.trimax.venta.engine.model.instance;
 
-import io.github.trimax.venta.engine.enums.LightType;
-import io.github.trimax.venta.engine.model.common.light.Attenuation;
-import lombok.NonNull;
 import org.joml.Vector3fc;
+
+import io.github.trimax.venta.engine.enums.LightType;
+import io.github.trimax.venta.engine.model.dto.common.Attenuation;
+import lombok.NonNull;
 
 public interface LightInstance extends AbstractInstance {
     LightType getType();

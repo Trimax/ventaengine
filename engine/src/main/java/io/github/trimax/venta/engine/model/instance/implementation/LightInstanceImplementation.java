@@ -1,16 +1,17 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.util.Optional;
+
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.enums.LightType;
-import io.github.trimax.venta.engine.model.common.light.Attenuation;
+import io.github.trimax.venta.engine.model.dto.common.Attenuation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-
-import java.util.Optional;
 
 @Getter
 public final class LightInstanceImplementation extends AbstractInstanceImplementation implements LightInstance {

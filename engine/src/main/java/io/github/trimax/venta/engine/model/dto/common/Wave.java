@@ -1,8 +1,10 @@
-package io.github.trimax.venta.engine.model.common.geo;
+package io.github.trimax.venta.engine.model.dto.common;
 
 import org.joml.Vector2f;
 
-public record Wave(Vector2f direction,
+import lombok.NonNull;
+
+public record Wave(@NonNull Vector2f direction,
                    float amplitude,
                    float steepness,
                    float length,

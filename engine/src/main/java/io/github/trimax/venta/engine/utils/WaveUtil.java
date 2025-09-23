@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.utils;
 
 import java.util.List;
 
-import io.github.trimax.venta.engine.model.common.geo.Wave;
+import io.github.trimax.venta.engine.model.dto.common.Wave;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import one.util.streamex.StreamEx;

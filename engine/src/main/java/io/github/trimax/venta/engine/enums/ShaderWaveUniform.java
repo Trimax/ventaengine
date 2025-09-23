@@ -26,7 +26,7 @@ public enum ShaderWaveUniform {
     static {
         for (final ShaderWaveUniform uniform : ShaderWaveUniform.values()) {
             uniformNames.putIfAbsent(uniform, new HashMap<>());
-            for (int waveID = 0; waveID < DefinitionsCommon.WAVE_MAX; waveID++)
+            for (int waveID = 0; waveID < DefinitionsCommon.MAX_WAVES; waveID++)
                 uniformNames.get(uniform).put(waveID, String.format("waves[%d].%s", waveID, uniform.uniformName));
         }
     }

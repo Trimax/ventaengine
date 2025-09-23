@@ -1,6 +1,11 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
+import java.util.Optional;
+
+import org.joml.Vector2f;
+
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.BillboardVertexLayout;
@@ -41,7 +46,7 @@ public final class BillboardRepositoryImplementation
                 spriteRegistry.get(billboardDTO.sprite()),
                 geometryHelper.create(resourcePath, BillboardVertexLayout.class,
                         DefinitionsGeometry.Particle.VERTICES, DefinitionsGeometry.Particle.FACETS, null),
-                billboardDTO.scale());
+                Optional.ofNullable(billboardDTO.scale()).orElse(new Vector2f(DefinitionsCommon.DEFAULT_SCALE_2D)));
     }
 
     @Override

@@ -1,14 +1,15 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
-import io.github.trimax.venta.engine.model.common.dto.Range;
-import io.github.trimax.venta.engine.model.common.dto.Variable;
+import org.joml.Vector3f;
+
+import io.github.trimax.venta.engine.model.dto.common.Range;
+import io.github.trimax.venta.engine.model.dto.common.Variable;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.EmitterPrefab;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
-import org.joml.Vector3f;
 
 @Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)

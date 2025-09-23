@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.ArrayUtils;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
+import io.github.trimax.venta.engine.definitions.DefinitionsBuffer;
 import io.github.trimax.venta.engine.layouts.AbstractVertexLayout;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.Buffer;
@@ -76,7 +76,7 @@ public final class GeometryHelper {
             indexBuffer.put(facets).flip();
 
             bufferFacets = allocateBuffer(String.format("Facets buffer `%s` (%s)", name, layout.getSimpleName()),
-                    facets.length, DefinitionsCommon.COUNT_VERTICES_PER_FACET);
+                    facets.length, DefinitionsBuffer.COUNT_VERTICES_PER_FACET);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferFacets.id());
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
@@ -90,7 +90,7 @@ public final class GeometryHelper {
             indexBuffer.put(edges).flip();
 
             bufferEdges = allocateBuffer(String.format("Edges buffer `%s` (%s)", name, layout.getSimpleName()),
-                    edges.length, DefinitionsCommon.COUNT_VERTICES_PER_EDGE);
+                    edges.length, DefinitionsBuffer.COUNT_VERTICES_PER_EDGE);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferEdges.id());
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);

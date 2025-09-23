@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.common.dto;
+package io.github.trimax.venta.engine.model.dto.common;
 
 public record Frame(float x, float y, float width, float height) {
     public Frame normalize(final int textureWidth, final int textureHeight) {

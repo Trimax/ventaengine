@@ -15,7 +15,7 @@ import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.MeshFormat;
-import io.github.trimax.venta.engine.model.common.dto.Color;
+import io.github.trimax.venta.engine.model.dto.common.Color;
 import io.github.trimax.venta.engine.model.dto.common.Mesh;
 import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;

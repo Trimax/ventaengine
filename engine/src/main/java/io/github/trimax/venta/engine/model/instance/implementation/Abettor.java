@@ -1,21 +1,27 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.nio.FloatBuffer;
+import java.util.List;
+
+import org.joml.Vector2fc;
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
-import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.entity.implementation.*;
+import io.github.trimax.venta.engine.model.dto.common.Wave;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.joml.Vector2fc;
-import org.joml.Vector3f;
-
-import java.nio.FloatBuffer;
-import java.util.List;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
