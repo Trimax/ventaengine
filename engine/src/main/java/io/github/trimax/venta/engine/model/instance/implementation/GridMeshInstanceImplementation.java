@@ -7,8 +7,8 @@ import org.joml.Vector3fc;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
-import io.github.trimax.venta.engine.model.common.geo.Wave;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.dto.common.Wave;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;

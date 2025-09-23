@@ -7,7 +7,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
-import io.github.trimax.venta.engine.model.common.scene.Fog;
+import io.github.trimax.venta.engine.model.common.effects.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.BillboardInstance;
@@ -66,8 +66,8 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
 
     @Override
     public void add(@NonNull final LightInstance light) {
-        if (this.lights.size() >= DefinitionsCommon.LIGHT_MAX) {
-            log.warn("There are maximum amount of lights ({}) in the scene {}", DefinitionsCommon.LIGHT_MAX, this.lights.size());
+        if (this.lights.size() >= DefinitionsCommon.MAX_LIGHTS) {
+            log.warn("There are maximum amount of lights ({}) in the scene {}", DefinitionsCommon.MAX_LIGHTS, this.lights.size());
             return;
         }
 

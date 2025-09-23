@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.model;
 
-import static io.github.trimax.venta.engine.definitions.DefinitionsCommon.*;
+import static io.github.trimax.venta.engine.definitions.DefinitionsBuffer.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;

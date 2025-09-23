@@ -5,7 +5,7 @@ import java.util.List;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.ShaderWaveUniform;
-import io.github.trimax.venta.engine.model.common.geo.Wave;
+import io.github.trimax.venta.engine.model.dto.common.Wave;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

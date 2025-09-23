@@ -36,7 +36,7 @@ public enum ShaderLightUniform {
     static {
         for (final ShaderLightUniform uniform : ShaderLightUniform.values()) {
             uniformNames.putIfAbsent(uniform, new HashMap<>());
-            for (int lightID = 0; lightID < DefinitionsCommon.LIGHT_MAX; lightID++)
+            for (int lightID = 0; lightID < DefinitionsCommon.MAX_LIGHTS; lightID++)
                 uniformNames.get(uniform).put(lightID, String.format("lights[%d].%s", lightID, uniform.uniformName));
         }
     }

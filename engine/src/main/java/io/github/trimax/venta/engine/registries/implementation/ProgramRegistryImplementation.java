@@ -63,11 +63,11 @@ public final class ProgramRegistryImplementation
         for (final var field : ShaderUniform.values())
             program.addUniformID(field.getUniformName(), glGetUniformLocation(program.getInternalID(), field.getUniformName()));
 
-        for (int i = 0; i < DefinitionsCommon.LIGHT_MAX; i++)
+        for (int i = 0; i < DefinitionsCommon.MAX_LIGHTS; i++)
             for (final var field : ShaderLightUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 
-        for (int i = 0; i < DefinitionsCommon.WAVE_MAX; i++)
+        for (int i = 0; i < DefinitionsCommon.MAX_WAVES; i++)
             for (final var field : ShaderWaveUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 

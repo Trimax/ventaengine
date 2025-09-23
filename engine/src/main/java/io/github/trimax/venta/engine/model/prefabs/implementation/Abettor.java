@@ -1,23 +1,28 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
-import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.container.tree.Node;
-import io.github.trimax.venta.engine.enums.LightType;
-import io.github.trimax.venta.engine.model.common.dto.Range;
-import io.github.trimax.venta.engine.model.common.dto.Variable;
-import io.github.trimax.venta.engine.model.common.geo.Geometry;
-import io.github.trimax.venta.engine.model.common.geo.Wave;
-import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.common.light.Attenuation;
-import io.github.trimax.venta.engine.model.dto.SceneDTO;
-import io.github.trimax.venta.engine.model.entity.implementation.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import java.util.List;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.util.List;
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.enums.LightType;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
+import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.dto.SceneDTO;
+import io.github.trimax.venta.engine.model.dto.common.Attenuation;
+import io.github.trimax.venta.engine.model.dto.common.Range;
+import io.github.trimax.venta.engine.model.dto.common.Variable;
+import io.github.trimax.venta.engine.model.dto.common.Wave;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

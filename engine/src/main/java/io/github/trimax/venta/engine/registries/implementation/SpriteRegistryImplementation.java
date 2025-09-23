@@ -1,8 +1,10 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.model.common.dto.Frame;
 import io.github.trimax.venta.engine.model.dto.SpriteDTO;
+import io.github.trimax.venta.engine.model.dto.common.Frame;
 import io.github.trimax.venta.engine.model.entity.SpriteEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
@@ -12,7 +14,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.system.MemoryUtil;
 
 @Slf4j
 @Component

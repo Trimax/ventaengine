@@ -5,27 +5,27 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.joml.Vector3f;
 
-import io.github.trimax.venta.engine.model.common.scene.Fog;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneFogDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneSoundSourceDTO;
 
-public record SceneDTO(List<SceneObjectDTO> objects,
-                       List<SceneLightDTO> lights,
+public record SceneDTO(List<SceneLightDTO> lights,
+                       List<SceneObjectDTO> objects,
                        List<SceneEmitterDTO> emitters,
                        List<SceneBillboardDTO> billboards,
                        List<SceneSoundSourceDTO> soundSources,
-                       String skybox,
-                       Fog fog,
-                       Vector3f ambientLight) {
-    public boolean hasObjects() {
-        return CollectionUtils.isNotEmpty(objects);
-    }
-
+                       Vector3f ambientLight,
+                       SceneFogDTO fog,
+                       String skybox) {
     public boolean hasLights() {
         return CollectionUtils.isNotEmpty(lights);
+    }
+
+    public boolean hasObjects() {
+        return CollectionUtils.isNotEmpty(objects);
     }
 
     public boolean hasEmitters() {

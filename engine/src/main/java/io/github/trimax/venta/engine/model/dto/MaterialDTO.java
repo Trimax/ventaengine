@@ -1,10 +1,11 @@
 package io.github.trimax.venta.engine.model.dto;
 
-import io.github.trimax.venta.engine.enums.TextureType;
-import io.github.trimax.venta.engine.model.common.dto.Color;
+import java.util.Map;
+
 import org.joml.Vector2f;
 
-import java.util.Map;
+import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.model.dto.common.Color;
 
 public record MaterialDTO(Float metalness,
                           Float roughness,

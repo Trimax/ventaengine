@@ -1,14 +1,15 @@
 package io.github.trimax.examples.fog.handlers;
 
+import static io.github.trimax.examples.fog.definitions.Definitions.CIRCLE_RADIUS;
+import static io.github.trimax.examples.fog.definitions.Definitions.CUBE_COUNT;
+
+import org.joml.Vector3f;
+
 import io.github.trimax.examples.fog.state.FogApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
-import io.github.trimax.venta.engine.model.common.scene.Fog;
+import io.github.trimax.venta.engine.model.common.effects.Fog;
 import lombok.AllArgsConstructor;
-import org.joml.Vector3f;
-
-import static io.github.trimax.examples.fog.definitions.Definitions.CIRCLE_RADIUS;
-import static io.github.trimax.examples.fog.definitions.Definitions.CUBE_COUNT;
 
 @AllArgsConstructor
 public final class FogApplicationStartupHandler implements VentaEngineStartupHandler {

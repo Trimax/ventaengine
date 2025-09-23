@@ -1,9 +1,17 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import io.github.trimax.venta.engine.model.common.dto.Range;
-import io.github.trimax.venta.engine.model.common.dto.Variable;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.model.common.effects.Particle;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.dto.common.Range;
+import io.github.trimax.venta.engine.model.dto.common.Variable;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
@@ -12,13 +20,6 @@ import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabI
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Getter
 public final class EmitterInstanceImplementation extends AbstractInstanceImplementation implements EmitterInstance {

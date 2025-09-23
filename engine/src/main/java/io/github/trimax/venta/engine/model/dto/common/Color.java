@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.common.dto;
+package io.github.trimax.venta.engine.model.dto.common;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;

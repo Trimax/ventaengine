@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.model.dto.common;
 
-import static io.github.trimax.venta.engine.definitions.DefinitionsCommon.*;
+import static io.github.trimax.venta.engine.definitions.DefinitionsBuffer.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.engine.layouts.MeshVertexLayout;
-import io.github.trimax.venta.engine.model.common.dto.Color;
 import lombok.NonNull;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;

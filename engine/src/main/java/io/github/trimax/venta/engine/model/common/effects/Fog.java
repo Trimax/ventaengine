@@ -1,14 +1,21 @@
-package io.github.trimax.venta.engine.model.common.scene;
+package io.github.trimax.venta.engine.model.common.effects;
 
-import lombok.Data;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
+
+import io.github.trimax.venta.engine.model.dto.scene.SceneFogDTO;
+import lombok.Data;
+import lombok.NonNull;
 
 @Data
 public final class Fog {
     private float minimalDistance;
     private float maximalDistance;
     private Vector3f color;
+
+    public Fog(@NonNull final SceneFogDTO dto) {
+        this(dto.distance().min(), dto.distance().max(), dto.color().toVector3f());
+    }
 
     public Fog(final float minimalDistance, final float maximalDistance, final Vector3fc color) {
         if (minimalDistance < 0.0f)
