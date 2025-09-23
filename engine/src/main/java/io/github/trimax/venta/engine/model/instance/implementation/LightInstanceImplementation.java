@@ -5,8 +5,9 @@ import java.util.Optional;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.enums.LightType;
-import io.github.trimax.venta.engine.model.dto.common.Attenuation;
+import io.github.trimax.venta.engine.model.common.effects.Attenuation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.Getter;
@@ -15,9 +16,9 @@ import lombok.Setter;
 
 @Getter
 public final class LightInstanceImplementation extends AbstractInstanceImplementation implements LightInstance {
-    private final Vector3f position = new Vector3f(0.f, 0.f, 0.f);
-    private final Vector3f direction = new Vector3f(0.f, 0.f, 0.f);
-    private final Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
+    private final Vector3f position = new Vector3f(DefinitionsCommon.VECTOR3F_ZERO);
+    private final Vector3f direction = new Vector3f(DefinitionsCommon.VECTOR3F_ZERO);
+    private final Vector3f color = new Vector3f(DefinitionsCommon.VECTOR3F_ONE);
 
     private final LightType type;
     private Attenuation attenuation = new Attenuation(0f, 0f, 0f);

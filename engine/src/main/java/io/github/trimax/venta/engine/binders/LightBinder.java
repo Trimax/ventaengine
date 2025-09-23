@@ -49,8 +49,8 @@ public final class LightBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderLightUniform.Intensity.getUniformName(lightIndex)), light.getIntensity());
 
         /* Attenuation */
-        bind(program.getUniformID(ShaderLightUniform.AttenuationLinear.getUniformName(lightIndex)), light.getAttenuation().linear());
-        bind(program.getUniformID(ShaderLightUniform.AttenuationConstant.getUniformName(lightIndex)), light.getAttenuation().constant());
-        bind(program.getUniformID(ShaderLightUniform.AttenuationQuadratic.getUniformName(lightIndex)), light.getAttenuation().quadratic());
+        bind(program.getUniformID(ShaderLightUniform.AttenuationLinear.getUniformName(lightIndex)), light.getAttenuation().getLinear());
+        bind(program.getUniformID(ShaderLightUniform.AttenuationConstant.getUniformName(lightIndex)), light.getAttenuation().getConstant());
+        bind(program.getUniformID(ShaderLightUniform.AttenuationQuadratic.getUniformName(lightIndex)), light.getAttenuation().getQuadratic());
     }
 }
