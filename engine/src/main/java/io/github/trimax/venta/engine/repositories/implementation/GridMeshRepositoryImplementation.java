@@ -37,7 +37,7 @@ public final class GridMeshRepositoryImplementation
         final var grid = GeometryUtil.createGrid(gridMeshDTO.size(), gridMeshDTO.segments());
 
         return abettor.createGridMesh(programRegistry.get(gridMeshDTO.program()), materialRegistry.get(gridMeshDTO.material()),
-                geometryHelper.create(resourcePath, GridMeshVertexLayout.class, grid.vertices(), grid.indices(), null),
+                geometryHelper.create(resourcePath, GridMeshVertexLayout.class, grid.vertices(), grid.facets(), null),
                 gridMeshDTO.waves());
     }
 
