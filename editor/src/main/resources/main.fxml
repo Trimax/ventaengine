@@ -102,8 +102,12 @@
     </left>
 
     <center>
-        <VBox fx:id="info" spacing="10" style="-fx-padding:10;-fx-border-color: lightgray; -fx-border-width:1"/>
+        <VBox fx:id="info" spacing="10" style="-fx-padding:10;-fx-border-color: lightgray; -fx-background-color: black; -fx-border-width:1"/>
     </center>
+
+    <right>
+        <VBox prefWidth="250" />
+    </right>
 
     <bottom>
         <HBox>
