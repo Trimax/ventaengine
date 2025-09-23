@@ -9,9 +9,11 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Group {
     Materials("/icons/group/material.png"),
+    Billboards("/icons/group/billboard.png"),
     Textures("/icons/group/texture.png"),
     Programs("/icons/group/program.png"),
     Shaders("/icons/group/shader.png"),
+    Sprites("/icons/group/sprite.png"),
     Objects("/icons/group/object.png"),
     Scenes("/icons/group/scene.png"),
     Lights("/icons/group/light.png"),
