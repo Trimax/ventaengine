@@ -54,6 +54,7 @@ public enum ShaderUniform {
 
     /* Waves */
     WaveCount("waveCount"),
+    WaveAmplitude("waveAmplitude"),
 
     /* Time */
     TimeElapsed("timeElapsed"),

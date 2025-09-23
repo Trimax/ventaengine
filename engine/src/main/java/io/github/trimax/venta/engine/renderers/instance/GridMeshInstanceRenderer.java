@@ -1,7 +1,23 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.binders.*;
+import io.github.trimax.venta.engine.binders.CameraBinder;
+import io.github.trimax.venta.engine.binders.LightBinder;
+import io.github.trimax.venta.engine.binders.MaterialBinder;
+import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.TextureBinder;
+import io.github.trimax.venta.engine.binders.TimeBinder;
+import io.github.trimax.venta.engine.binders.WaveBinder;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.GridMeshInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
@@ -9,15 +25,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,6 +58,7 @@ public final class GridMeshInstanceRenderer extends
         matrixBinder.bindViewProjectionMatrix(gridMesh.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
         timeBinder.bind(gridMesh.getProgram(), getContext().getParent().getTime());
+        waveBinder.bind(gridMesh.getProgram(), gridMesh.getWaveAmplitude());
         waveBinder.bind(gridMesh.getProgram(), gridMesh.getWaves());
 
         materialBinder.bind(gridMesh.getProgram(), gridMesh.getMaterial());

@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.binders;
 
+import java.util.List;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.ShaderWaveUniform;
@@ -9,12 +11,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
-
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WaveBinder extends AbstractBinder {
+    public void bind(final ProgramEntityImplementation program, final float amplitude) {
+        bind(program.getUniformID(ShaderUniform.WaveAmplitude), amplitude);
+    }
+
     public void bind(final ProgramEntityImplementation program, final List<Wave> waves) {
         final var wavesCount = waves != null ? waves.size() : 0;
 
