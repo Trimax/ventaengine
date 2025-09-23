@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.dto;
+package io.github.trimax.venta.engine.model.dto.scene;
 
 import org.joml.Vector3f;
 

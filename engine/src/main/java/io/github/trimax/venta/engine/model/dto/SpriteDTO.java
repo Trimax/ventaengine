@@ -1,8 +1,12 @@
 package io.github.trimax.venta.engine.model.dto;
 
-import io.github.trimax.venta.engine.model.common.dto.Frame;
-
 import java.util.List;
 
-public record SpriteDTO(String texture, List<Frame> frames, float duration, boolean looping) {
+import io.github.trimax.venta.engine.model.common.dto.Frame;
+import lombok.NonNull;
+
+public record SpriteDTO(@NonNull String texture,
+                        @NonNull List<Frame> frames,
+                        float duration,
+                        boolean looping) {
 }

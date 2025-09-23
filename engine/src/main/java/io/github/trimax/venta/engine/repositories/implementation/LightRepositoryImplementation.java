@@ -1,9 +1,13 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
+import java.util.Optional;
+
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.common.dto.Color;
 import io.github.trimax.venta.engine.model.common.light.Attenuation;
-import io.github.trimax.venta.engine.model.dto.LightPrefabDTO;
+import io.github.trimax.venta.engine.model.dto.LightDTO;
 import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
@@ -13,9 +17,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -30,7 +31,7 @@ public final class LightRepositoryImplementation
     protected LightPrefabImplementation load(@NonNull final String resourcePath) {
         log.info("Loading light {}", resourcePath);
 
-        final var lightDTO = resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightPrefabDTO.class);
+        final var lightDTO = resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightDTO.class);
         return abettor.createLight(lightDTO.type(),
                 Optional.ofNullable(lightDTO.color()).map(Color::toVector3f).orElse(new Vector3f(1.f)),
                 Optional.ofNullable(lightDTO.direction()).orElse(new Vector3f()),

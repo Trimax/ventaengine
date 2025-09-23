@@ -1,15 +1,16 @@
 package io.github.trimax.venta.engine.model.dto;
 
-import io.github.trimax.venta.engine.model.common.geo.Wave;
-import lombok.NonNull;
+import java.util.List;
+
 import org.joml.Vector2i;
 
-import java.util.List;
+import io.github.trimax.venta.engine.model.common.geo.Wave;
+import lombok.NonNull;
 
 public record GridMeshDTO(@NonNull Vector2i size,
                           @NonNull Vector2i segments,
+                          @NonNull String program,
+                          @NonNull String material,
                           List<Wave> waves,
-                          String program,
-                          String material,
                           String heightmap) {
 }
