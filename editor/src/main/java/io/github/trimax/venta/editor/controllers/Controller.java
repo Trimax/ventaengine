@@ -77,10 +77,10 @@ public final class Controller {
     }
 
     private void bindToolBar() {
-        btnToolBarArchiveNew.setOnAction(new ArchiveNewHandler(tree, createListener()));
-        btnToolBarArchiveSave.setOnAction(new ArchiveSaveHandler(tree, status));
-        btnToolBarArchiveLoad.setOnAction(new ArchiveLoadHandler(tree, createListener(), status));
-        btnToolBarArchiveBuild.setOnAction(new ArchiveBuildHandler(tree, status));
+//        btnToolBarArchiveNew.setOnAction(new ArchiveNewHandler(tree, createListener()));
+//        btnToolBarArchiveSave.setOnAction(new ArchiveSaveHandler(tree, status));
+//        btnToolBarArchiveLoad.setOnAction(new ArchiveLoadHandler(tree, createListener(), status));
+//        btnToolBarArchiveBuild.setOnAction(new ArchiveBuildHandler(tree, status));
 
         btnTreeResourceAdd.setOnAction(new ResourceAddHandler(tree, status));
         btnTreeResourceRemove.setOnAction(new ResourceRemoveHandler(tree, status));

@@ -1,5 +1,12 @@
 package io.github.trimax.venta.editor.tree;
 
+import java.io.File;
+import java.util.function.Consumer;
+
+import org.apache.commons.collections4.CollectionUtils;
+
+import io.github.trimax.venta.editor.events.EventBus;
+import io.github.trimax.venta.editor.events.ItemSelectedEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ResourceType;
 import io.github.trimax.venta.editor.model.ui.Menu;
@@ -10,10 +17,6 @@ import javafx.scene.layout.VBox;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import one.util.streamex.StreamEx;
-import org.apache.commons.collections4.CollectionUtils;
-
-import java.io.File;
-import java.util.function.Consumer;
 
 
 @AllArgsConstructor
@@ -26,6 +29,9 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
     public void accept(final TreeItem<Item> selected) {
         if (selected == null)
             return;
+
+        System.out.println("Item selected!!!");
+        EventBus.getInstance().post(new ItemSelectedEvent(selected));
 
         toolBar.update(selected.getValue());
         menu.update(selected.getValue());
