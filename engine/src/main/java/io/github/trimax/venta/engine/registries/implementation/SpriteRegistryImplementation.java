@@ -51,7 +51,7 @@ public final class SpriteRegistryImplementation
         return abettor.createSprite(texture, framesBuffer,
                 Optional.ofNullable(spriteDTO.color()).map(Color::toVector4f).orElse(Definitions.COLOR_WHITE),
                 spriteDTO.looping(),
-                Optional.ofNullable(spriteDTO.frames()).filter(frames -> !frames.isEmpty()).orElse(Definitions.DEFAULT_FRAMES).size(),
+                Optional.ofNullable(spriteDTO.frames()).orElse(Definitions.DEFAULT_FRAMES).size(),
                 spriteDTO.duration());
     }
 
