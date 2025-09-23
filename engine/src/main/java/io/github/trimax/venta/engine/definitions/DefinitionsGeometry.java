@@ -1,11 +1,11 @@
 package io.github.trimax.venta.engine.definitions;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.stream.IntStream;
 
+import lombok.experimental.UtilityClass;
+
 @UtilityClass
-public final class GeometryDefinitions {
+public final class DefinitionsGeometry {
     @UtilityClass
     public static final class Skybox {
         public static final float[] VERTICES = {

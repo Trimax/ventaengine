@@ -1,7 +1,22 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL12C.GL_TEXTURE_WRAP_R;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+import static org.lwjgl.system.MemoryStack.stackPush;
+
+import java.nio.ByteBuffer;
+import java.util.Objects;
+import java.util.function.Function;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
 import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.CubemapBakeException;
@@ -19,20 +34,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-import java.util.Objects;
-import java.util.function.Function;
-
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL12C.GL_TEXTURE_WRAP_R;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-import static org.lwjgl.system.MemoryStack.stackPush;
 
 @Slf4j
 @Component
@@ -76,7 +77,7 @@ public final class CubemapRegistryImplementation
 
             return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB,
                     geometryHelper.create(resourcePath, CubemapVertexLayout.class,
-                            GeometryDefinitions.Skybox.VERTICES, GeometryDefinitions.Skybox.FACETS, null),
+                            DefinitionsGeometry.Skybox.VERTICES, DefinitionsGeometry.Skybox.FACETS, null),
                     textureID);
         });
     }
