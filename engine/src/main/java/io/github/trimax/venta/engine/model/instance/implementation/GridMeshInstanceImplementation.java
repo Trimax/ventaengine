@@ -1,5 +1,10 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.geo.Wave;
@@ -9,17 +14,15 @@ import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.GridMeshInstance;
+import io.github.trimax.venta.engine.utils.WaveUtil;
 import lombok.Getter;
 import lombok.NonNull;
-import org.joml.Vector3fc;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public final class GridMeshInstanceImplementation extends AbstractInstanceImplementation implements GridMeshInstance {
     private final Transform transform = new Transform();
     private final List<Wave> waves = new ArrayList<>();
+    private final float waveAmplitude;
     private final Geometry geometry;
 
     private MaterialEntityImplementation material;
@@ -40,6 +43,8 @@ public final class GridMeshInstanceImplementation extends AbstractInstanceImplem
         this.material = material;
         this.geometry = geometry;
         this.waves.addAll(waves);
+
+        this.waveAmplitude = WaveUtil.getAmplitude(waves);
     }
 
     @Override
