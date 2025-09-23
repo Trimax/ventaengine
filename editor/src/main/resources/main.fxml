@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -115,7 +123,50 @@
     </top>
 
     <left>
-        <TreeView fx:id="tree" prefWidth="250"/>
+        <VBox>
+            <TreeView fx:id="tree" prefWidth="250" VBox.vgrow="ALWAYS"/>
+            <ToolBar>
+                <Button disable="true" fx:id="btnTreeResourceAdd">
+                    <graphic>
+                        <ImageView>
+                            <fitWidth>16</fitWidth>
+                            <fitHeight>16</fitHeight>
+                            <Image url="@/icons/common/file-add.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button disable="true" fx:id="btnTreeResourceRemove">
+                    <graphic>
+                        <ImageView>
+                            <fitWidth>16</fitWidth>
+                            <fitHeight>16</fitHeight>
+                            <Image url="@/icons/common/file-remove.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Separator/>
+
+                <Button disable="true" fx:id="btnTreeFolderAdd">
+                    <graphic>
+                        <ImageView>
+                            <fitWidth>16</fitWidth>
+                            <fitHeight>16</fitHeight>
+                            <Image url="@/icons/common/folder-add.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button disable="true" fx:id="btnTreeFolderRemove">
+                    <graphic>
+                        <ImageView>
+                            <fitWidth>16</fitWidth>
+                            <fitHeight>16</fitHeight>
+                            <Image url="@/icons/common/folder-remove.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </ToolBar>
+        </VBox>
     </left>
 
     <center>
