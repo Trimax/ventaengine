@@ -1,6 +1,10 @@
 package io.github.trimax.venta.engine.definitions;
 
+import io.github.trimax.venta.engine.model.common.dto.Frame;
 import lombok.experimental.UtilityClass;
+import org.joml.Vector4f;
+
+import java.util.List;
 
 @UtilityClass
 public final class Definitions {
@@ -95,4 +99,12 @@ public final class Definitions {
 
     /*** Sound ***/
     public static final int SOUND_FREQUENCY = 44100;
+
+    /*** Colors ***/
+    public static final Vector4f COLOR_WHITE = new Vector4f(1.f, 1.f, 1.f, 1.f);
+
+    /** Frames **/
+    public static final List<Frame> DEFAULT_FRAMES = List.of(
+            new Frame(0, 0, 1, 1)
+    );
 }
