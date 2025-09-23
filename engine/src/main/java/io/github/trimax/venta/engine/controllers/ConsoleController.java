@@ -1,8 +1,12 @@
 package io.github.trimax.venta.engine.controllers;
 
+import static org.lwjgl.glfw.GLFW.*;
+
+import java.util.function.Consumer;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
-import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
@@ -13,10 +17,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.function.Consumer;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 @Slf4j
 @Component
@@ -31,7 +31,7 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
 
         return new ConsoleState(programRegistry.get(ProgramType.Console.getProgramName()),
                 geometryHelper.create("Console", ConsoleVertexLayout.class,
-                        GeometryDefinitions.Console.VERTICES, GeometryDefinitions.Console.FACETS, null));
+                        DefinitionsGeometry.Console.VERTICES, DefinitionsGeometry.Console.FACETS, null));
     }
 
     @Override

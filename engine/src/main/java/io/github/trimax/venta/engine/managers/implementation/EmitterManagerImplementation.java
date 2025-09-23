@@ -1,7 +1,15 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL33C.glVertexAttribDivisor;
+
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
@@ -18,13 +26,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.system.MemoryUtil;
-
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.opengl.GL33C.glVertexAttribDivisor;
 
 @Slf4j
 @Component
@@ -55,10 +56,10 @@ public final class EmitterManagerImplementation
         glBindVertexArray(particleVertexArrayObjectID);
 
         glBindBuffer(GL_ARRAY_BUFFER, particleVerticesBufferID);
-        glBufferData(GL_ARRAY_BUFFER, GeometryDefinitions.Particle.VERTICES, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, DefinitionsGeometry.Particle.VERTICES, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, particleFacesBufferID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, GeometryDefinitions.Particle.FACETS, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, DefinitionsGeometry.Particle.FACETS, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(ParticleVertexLayout.Position.getLocationID());
         glVertexAttribPointer(ParticleVertexLayout.Position.getLocationID(), ParticleVertexLayout.Position.getSize(), GL_FLOAT, false, ParticleVertexLayout.Position.getStride(), 0);

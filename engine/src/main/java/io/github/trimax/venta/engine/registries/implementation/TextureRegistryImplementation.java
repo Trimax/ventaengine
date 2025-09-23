@@ -1,7 +1,5 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_HEIGHT;
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_WIDTH;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11C.*;
@@ -16,7 +14,8 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.TextureDefinitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsFont;
+import io.github.trimax.venta.engine.definitions.DefinitionsTexture;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.memory.Memory;
@@ -41,7 +40,7 @@ public final class TextureRegistryImplementation
     private final Memory memory;
 
     public TextureEntityImplementation getDefaultTexture() {
-        return get(TextureDefinitions.TEXTURE_DEFAULT);
+        return get(DefinitionsTexture.TEXTURE_DEFAULT);
     }
 
     public TextureEntityImplementation create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {
@@ -50,14 +49,14 @@ public final class TextureRegistryImplementation
 
             glBindTexture(GL_TEXTURE_2D, textureID);
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, DefinitionsFont.ATLAS_WIDTH, DefinitionsFont.ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            return abettor.createTexture(bitmap, TextureFormat.Grayscale, textureID, FONT_ATLAS_WIDTH, FONT_ATLAS_HEIGHT);
+            return abettor.createTexture(bitmap, TextureFormat.Grayscale, textureID, DefinitionsFont.ATLAS_WIDTH, DefinitionsFont.ATLAS_HEIGHT);
         });
     }
 

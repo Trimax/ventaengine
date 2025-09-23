@@ -1,8 +1,10 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static org.lwjgl.opengl.GL11C.GL_FALSE;
+import static org.lwjgl.opengl.GL20C.*;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
@@ -19,9 +21,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static org.lwjgl.opengl.GL11C.GL_FALSE;
-import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
@@ -64,11 +63,11 @@ public final class ProgramRegistryImplementation
         for (final var field : ShaderUniform.values())
             program.addUniformID(field.getUniformName(), glGetUniformLocation(program.getInternalID(), field.getUniformName()));
 
-        for (int i = 0; i < Definitions.LIGHT_MAX; i++)
+        for (int i = 0; i < DefinitionsCommon.LIGHT_MAX; i++)
             for (final var field : ShaderLightUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 
-        for (int i = 0; i < Definitions.WAVE_MAX; i++)
+        for (int i = 0; i < DefinitionsCommon.WAVE_MAX; i++)
             for (final var field : ShaderWaveUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 

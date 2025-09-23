@@ -1,11 +1,11 @@
 package io.github.trimax.venta.engine.enums;
 
-import io.github.trimax.venta.engine.definitions.Definitions;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ShaderWaveUniform {
@@ -26,7 +26,7 @@ public enum ShaderWaveUniform {
     static {
         for (final ShaderWaveUniform uniform : ShaderWaveUniform.values()) {
             uniformNames.putIfAbsent(uniform, new HashMap<>());
-            for (int waveID = 0; waveID < Definitions.WAVE_MAX; waveID++)
+            for (int waveID = 0; waveID < DefinitionsCommon.WAVE_MAX; waveID++)
                 uniformNames.get(uniform).put(waveID, String.format("waves[%d].%s", waveID, uniform.uniformName));
         }
     }

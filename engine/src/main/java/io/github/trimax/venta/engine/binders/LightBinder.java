@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.binders;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.joml.Vector3fc;
 
@@ -22,10 +22,12 @@ public final class LightBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.AmbientLight), ambientLight);
     }
 
-    public void bind(final ProgramEntityImplementation program, final List<? extends LightInstance> lights) {
+    public void bind(final ProgramEntityImplementation program, final Collection<? extends LightInstance> lights) {
         bind(program.getUniformID(ShaderUniform.LightCount), lights.size());
-        for (int lightID = 0; lightID < lights.size(); lightID++)
-            bind(program, lights.get(lightID), lightID);
+
+        int lightID = 0;
+        for (final var light : lights)
+            bind(program, light, lightID++);
     }
 
     private void bind(final ProgramEntityImplementation program, final LightInstance light, final int lightIndex) {

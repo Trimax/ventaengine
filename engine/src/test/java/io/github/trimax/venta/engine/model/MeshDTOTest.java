@@ -1,16 +1,17 @@
 package io.github.trimax.venta.engine.model;
 
-import io.github.trimax.venta.engine.layouts.MeshVertexLayout;
-import io.github.trimax.venta.engine.model.dto.MeshDTO;
-import lombok.NonNull;
+import static io.github.trimax.venta.engine.definitions.DefinitionsCommon.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static io.github.trimax.venta.engine.definitions.Definitions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import io.github.trimax.venta.engine.layouts.MeshVertexLayout;
+import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import lombok.NonNull;
 
 public final class MeshDTOTest {
     @Test

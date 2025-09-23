@@ -1,20 +1,37 @@
 package io.github.trimax.venta.engine.model.instance;
 
+import java.util.Collection;
+
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.model.common.scene.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import lombok.NonNull;
-import org.joml.Vector3fc;
-
-import java.util.List;
 
 public interface SceneInstance extends AbstractInstance {
+    Collection<? extends SoundSourceInstance> getSoundSources();
+
+    Collection<? extends GridMeshInstance> getGridMeshes();
+
+    Collection<? extends BillboardInstance> getBillboards();
+
+    Collection<? extends EmitterInstance> getEmitters();
+
+    Collection<? extends ObjectInstance> getObjects();
+
+    Collection<? extends LightInstance> getLights();
+
     Vector3fc getAmbientLight();
 
     CubemapEntity getSkybox();
 
+    Fog getFog();
+
     void setAmbientLight(@NonNull final Vector3fc ambientLight);
 
     void setSkybox(final CubemapEntity skybox);
+
+    void setFog(final Fog fog);
 
     void add(@NonNull final ObjectInstance object);
 
@@ -27,20 +44,4 @@ public interface SceneInstance extends AbstractInstance {
     void add(@NonNull final SoundSourceInstance sound);
 
     void add(@NonNull final BillboardInstance billboard);
-
-    List<? extends EmitterInstance> getEmitters();
-
-    List<? extends ObjectInstance> getObjects();
-
-    List<? extends LightInstance> getLights();
-
-    List<? extends GridMeshInstance> getGridMeshes();
-
-    List<? extends SoundSourceInstance> getSoundSources();
-
-    List<? extends BillboardInstance> getBillboards();
-
-    void setFog(final Fog fog);
-
-    Fog getFog();
 }

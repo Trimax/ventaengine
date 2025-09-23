@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.BillboardVertexLayout;
 import io.github.trimax.venta.engine.model.dto.BillboardDTO;
@@ -40,7 +40,7 @@ public final class BillboardRepositoryImplementation
         return abettor.createBillboard(programRegistry.get(billboardDTO.program()),
                 spriteRegistry.get(billboardDTO.sprite()),
                 geometryHelper.create(resourcePath, BillboardVertexLayout.class,
-                        GeometryDefinitions.Particle.VERTICES, GeometryDefinitions.Particle.FACETS, null),
+                        DefinitionsGeometry.Particle.VERTICES, DefinitionsGeometry.Particle.FACETS, null),
                 billboardDTO.scale());
     }
 

@@ -1,6 +1,12 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import java.nio.ByteBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.DefinitionsFont;
 import io.github.trimax.venta.engine.model.entity.FontEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.FontEntityImplementation;
@@ -10,12 +16,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-
-import static io.github.trimax.venta.engine.definitions.Definitions.FONT_ATLAS_COUNT;
 
 @Slf4j
 @Component
@@ -32,7 +32,7 @@ public final class FontRegistryImplementation
         final var buffer = toBuffer(resourceService.getAsBytes(String.format("/fonts/%s.ttf", resourcePath)));
 
         final var font = abettor.createFont(buffer);
-        for (int i = 0; i < FONT_ATLAS_COUNT; i++)
+        for (int i = 0; i < DefinitionsFont.ATLAS_COUNT; i++)
             font.add(atlasRepository.create(String.format("%s-%d", resourcePath, i), i, buffer));
 
         return font;

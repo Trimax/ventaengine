@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
@@ -36,7 +36,7 @@ public enum ShaderLightUniform {
     static {
         for (final ShaderLightUniform uniform : ShaderLightUniform.values()) {
             uniformNames.putIfAbsent(uniform, new HashMap<>());
-            for (int lightID = 0; lightID < Definitions.LIGHT_MAX; lightID++)
+            for (int lightID = 0; lightID < DefinitionsCommon.LIGHT_MAX; lightID++)
                 uniformNames.get(uniform).put(lightID, String.format("lights[%d].%s", lightID, uniform.uniformName));
         }
     }

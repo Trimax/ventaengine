@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.controllers;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.TextVertexLayout;
@@ -28,7 +28,7 @@ public final class TextController extends AbstractController<TextState, Void> {
         return new TextState(programRegistry.get(ProgramType.Text.getProgramName()),
                 fontRegistry.get("DejaVuSansMono"),
                 geometryHelper.create("Text", TextVertexLayout.class,
-                        GeometryDefinitions.Text.VERTICES, GeometryDefinitions.Text.FACETS, null));
+                        DefinitionsGeometry.Text.VERTICES, DefinitionsGeometry.Text.FACETS, null));
     }
 
     @Override

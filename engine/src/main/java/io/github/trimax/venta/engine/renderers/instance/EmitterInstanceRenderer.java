@@ -1,10 +1,20 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL31C.glDrawElementsInstanced;
+
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
-import io.github.trimax.venta.engine.definitions.GeometryDefinitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
@@ -14,15 +24,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.joml.Matrix4f;
-import org.joml.Matrix4fc;
-
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.opengl.GL31C.glDrawElementsInstanced;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -62,7 +63,7 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
 
         glBindVertexArray(emitter.getParticleVertexArrayObjectID());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, emitter.getParticleFacesBufferID());
-        glDrawElementsInstanced(GL_TRIANGLES, GeometryDefinitions.Particle.FACETS.length, GL_UNSIGNED_INT, 0, emitter.getParticles().size());
+        glDrawElementsInstanced(GL_TRIANGLES, DefinitionsGeometry.Particle.FACETS.length, GL_UNSIGNED_INT, 0, emitter.getParticles().size());
         glBindVertexArray(0);
 
         glUseProgram(0);

@@ -1,10 +1,15 @@
 package io.github.trimax.venta.engine.renderers.state;
 
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+
+import org.apache.commons.lang3.StringUtils;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.controllers.TextController;
 import io.github.trimax.venta.engine.controllers.WindowController;
-import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsConsole;
 import io.github.trimax.venta.engine.enums.ConsoleMessageType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.states.ConsoleState;
@@ -12,10 +17,6 @@ import io.github.trimax.venta.engine.model.states.WindowState;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
-
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -63,10 +64,10 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
             renderItem(console, line, windowController.get());
 
         try (final var _ = textStateRenderer.withContext(getContext())
-                .withScale(Definitions.CONSOLE_TEXT_SCALE)
+                .withScale(DefinitionsConsole.CONSOLE_TEXT_SCALE)
                 .withText(new ConsoleController.ConsoleMessage(ConsoleMessageType.Command, console.getBuffer()))
                 .withWindow(windowController.get().getWidth(), windowController.get().getHeight())
-                .withPosition(getScaledMarginLeft(), consoleHeight - getScaledMarginBottom() * Definitions.CONSOLE_TEXT_SCALE)) {
+                .withPosition(getScaledMarginLeft(), consoleHeight - getScaledMarginBottom() * DefinitionsConsole.CONSOLE_TEXT_SCALE)) {
             textStateRenderer.render(textController.get());
         }
 
@@ -83,7 +84,7 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
         final var consoleHeight = window.getHeight() / 2;
         try (final var _ = textStateRenderer.withContext(getContext())
                 .withText(message)
-                .withScale(Definitions.CONSOLE_TEXT_SCALE)
+                .withScale(DefinitionsConsole.CONSOLE_TEXT_SCALE)
                 .withWindow(window.getWidth(), window.getHeight())
                 .withPosition(getScaledMarginLeft(), consoleHeight - getScaledMarginBottom() - (line + 1) * getScaledLineHeight())) {
             textStateRenderer.render(textController.get());
@@ -91,15 +92,15 @@ public final class ConsoleStateRenderer extends AbstractStateRenderer<ConsoleSta
     }
 
     private float getScaledLineHeight() {
-        return Definitions.CONSOLE_LINE_HEIGHT * Definitions.CONSOLE_TEXT_SCALE * Definitions.CONSOLE_LINE_INTERVAL;
+        return DefinitionsConsole.CONSOLE_LINE_HEIGHT * DefinitionsConsole.CONSOLE_TEXT_SCALE * DefinitionsConsole.CONSOLE_LINE_INTERVAL;
     }
 
     private float getScaledMarginLeft() {
-        return Definitions.CONSOLE_MARGIN_LEFT * Definitions.CONSOLE_TEXT_SCALE;
+        return DefinitionsConsole.CONSOLE_MARGIN_LEFT * DefinitionsConsole.CONSOLE_TEXT_SCALE;
     }
 
     private float getScaledMarginBottom() {
-        return Definitions.CONSOLE_MARGIN_BOTTOM * Definitions.CONSOLE_TEXT_SCALE;
+        return DefinitionsConsole.CONSOLE_MARGIN_BOTTOM * DefinitionsConsole.CONSOLE_TEXT_SCALE;
     }
 
     @Getter(AccessLevel.PACKAGE)
