@@ -1,7 +1,17 @@
 package io.github.trimax.venta.engine.helpers;
 
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.system.MemoryUtil.*;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.Optional;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.layouts.AbstractVertexLayout;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.Buffer;
@@ -11,15 +21,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.Optional;
-
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
-import static org.lwjgl.system.MemoryUtil.*;
 
 @Slf4j
 @Component
@@ -75,7 +76,7 @@ public final class GeometryHelper {
             indexBuffer.put(facets).flip();
 
             bufferFacets = allocateBuffer(String.format("Facets buffer `%s` (%s)", name, layout.getSimpleName()),
-                    facets.length, Definitions.COUNT_VERTICES_PER_FACET);
+                    facets.length, DefinitionsCommon.COUNT_VERTICES_PER_FACET);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferFacets.id());
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
@@ -89,7 +90,7 @@ public final class GeometryHelper {
             indexBuffer.put(edges).flip();
 
             bufferEdges = allocateBuffer(String.format("Edges buffer `%s` (%s)", name, layout.getSimpleName()),
-                    edges.length, Definitions.COUNT_VERTICES_PER_EDGE);
+                    edges.length, DefinitionsCommon.COUNT_VERTICES_PER_EDGE);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferEdges.id());
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);

@@ -1,7 +1,18 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.stb.STBVorbis.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+
+import org.lwjgl.stb.STBVorbisInfo;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.Definitions;
+import io.github.trimax.venta.engine.definitions.DefinitionsSound;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.SoundEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
@@ -12,16 +23,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.stb.STBVorbisInfo;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
-
-import static org.lwjgl.openal.AL10.*;
-import static org.lwjgl.stb.STBVorbis.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
@@ -35,24 +36,27 @@ public final class SoundRegistryImplementation
 
     @Override
     protected SoundEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
-        return load(resourceService.getAsBytes(String.format("/sounds/%s", resourcePath)));
+        return load(resourcePath, resourceService.getAsBytes(String.format("/sounds/%s", resourcePath)));
     }
 
-    private SoundEntityImplementation load(final byte[] data) {
+    private SoundEntityImplementation load(final String name, final byte[] data) {
         try (final var info = STBVorbisInfo.malloc()) {
             final var buffer = readVorbis(data, info);
             final var duration = getDuration(buffer, info);
 
-            final var bufferId = alGenBuffers();
-            final var format = info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+            final var id = memory.getAudioBuffers().create("Sound %s", name);
 
-            alBufferData(bufferId, format, buffer, Definitions.SOUND_FREQUENCY);
+            alBufferData(id, getFormat(info), buffer, DefinitionsSound.FREQUENCY);
             MemoryUtil.memFree(buffer);
 
-            return abettor.createSound(bufferId, duration);
+            return abettor.createSound(id, duration);
         } catch (final Exception e) {
             throw new RuntimeException("Failed to load sound: " + e);
         }
+    }
+
+    private int getFormat(final STBVorbisInfo info) {
+        return info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
     }
 
     private static float getDuration(final ShortBuffer buffer, final STBVorbisInfo info) {
