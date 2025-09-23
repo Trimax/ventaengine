@@ -6,21 +6,21 @@ import org.apache.commons.io.FilenameUtils;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.MeshFormat;
-import io.github.trimax.venta.engine.model.dto.common.Mesh;
+import io.github.trimax.venta.engine.model.dto.common.MeshDTO;
 import io.github.trimax.venta.engine.parsers.AbstractParser;
 import lombok.NonNull;
 
 @Component
-public final class MeshParserFactory extends AbstractFactory<AbstractParser<Mesh>> {
-    private MeshParserFactory(@NonNull final List<AbstractParser<Mesh>> parsers) {
+public final class MeshParserFactory extends AbstractFactory<AbstractParser<MeshDTO>> {
+    private MeshParserFactory(@NonNull final List<AbstractParser<MeshDTO>> parsers) {
         super(parsers, MeshParserFactory::clean);
     }
 
-    private static void clean(final AbstractParser<Mesh> mesh) {
+    private static void clean(final AbstractParser<MeshDTO> mesh) {
 
     }
 
-    public AbstractParser<Mesh> get(@NonNull final String path) {
+    public AbstractParser<MeshDTO> get(@NonNull final String path) {
         return getBy(AbstractParser::format, MeshFormat.of(FilenameUtils.getExtension(path).toLowerCase()));
     }
 }

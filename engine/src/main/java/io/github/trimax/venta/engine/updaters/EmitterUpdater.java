@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.updaters;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.model.common.effects.Particle;
+import io.github.trimax.venta.engine.model.common.shared.Particle;
 import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

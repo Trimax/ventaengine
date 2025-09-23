@@ -8,7 +8,7 @@ import org.joml.Vector3f;
 import io.github.trimax.examples.fog.state.FogApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
-import io.github.trimax.venta.engine.model.common.effects.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

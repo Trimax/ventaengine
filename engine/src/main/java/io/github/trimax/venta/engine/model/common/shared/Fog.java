@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.common.effects;
+package io.github.trimax.venta.engine.model.common.shared;
 
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -11,13 +11,15 @@ import lombok.NonNull;
 public final class Fog {
     private float minimalDistance;
     private float maximalDistance;
+
+    @NonNull
     private Vector3f color;
 
     public Fog(@NonNull final SceneFogDTO dto) {
         this(dto.distance().min(), dto.distance().max(), dto.color().toVector3f());
     }
 
-    public Fog(final float minimalDistance, final float maximalDistance, final Vector3fc color) {
+    public Fog(final float minimalDistance, final float maximalDistance, @NonNull final Vector3fc color) {
         if (minimalDistance < 0.0f)
             throw new IllegalArgumentException("Minimal distance must be greater than or equal to 0.0f");
 

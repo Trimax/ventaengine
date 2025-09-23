@@ -5,7 +5,7 @@ import java.util.Optional;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.SceneManager;
-import io.github.trimax.venta.engine.model.common.effects.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;

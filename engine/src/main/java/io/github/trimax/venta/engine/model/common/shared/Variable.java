@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.dto.common;
+package io.github.trimax.venta.engine.model.common.shared;
 
 import lombok.NonNull;
 

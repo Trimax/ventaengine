@@ -7,7 +7,7 @@ import org.joml.Vector3fc;
 
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.enums.LightType;
-import io.github.trimax.venta.engine.model.common.effects.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Attenuation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.Getter;

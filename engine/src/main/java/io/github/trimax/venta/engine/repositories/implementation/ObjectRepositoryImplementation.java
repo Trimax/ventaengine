@@ -6,8 +6,8 @@ import java.util.UUID;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import io.github.trimax.venta.engine.model.dto.ObjectDTO;
+import io.github.trimax.venta.engine.model.dto.object.ObjectMeshDTO;
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ObjectPrefabImplementation;
@@ -45,13 +45,13 @@ public final class ObjectRepositoryImplementation
                 MeshUtil.normalize(loadMeshHierarchy(objectDTO.root())));
     }
     
-    private Node<MeshReference> loadMeshHierarchy(@NonNull final Node<MeshDTO> node) {
+    private Node<MeshReference> loadMeshHierarchy(@NonNull final Node<ObjectMeshDTO> node) {
         return new Node<>(Optional.ofNullable(node.name()).orElse(UUID.randomUUID().toString()),
                 Optional.ofNullable(node.value()).map(this::convert).orElse(null),
                 node.hasChildren() ? StreamEx.of(node.children()).map(this::loadMeshHierarchy).toList() : null);
     }
 
-    private MeshReference convert(@NonNull final MeshDTO value) {
+    private MeshReference convert(@NonNull final ObjectMeshDTO value) {
         return new MeshReference(
                 Optional.ofNullable(value.mesh()).map(meshRegistry::get).orElse(null),
                 Optional.ofNullable(value.material()).map(materialRegistry::get).orElse(null),

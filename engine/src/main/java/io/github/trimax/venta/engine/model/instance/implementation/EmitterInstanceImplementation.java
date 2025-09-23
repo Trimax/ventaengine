@@ -8,10 +8,10 @@ import java.util.Optional;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
-import io.github.trimax.venta.engine.model.common.effects.Particle;
 import io.github.trimax.venta.engine.model.common.math.Transform;
-import io.github.trimax.venta.engine.model.dto.common.Range;
-import io.github.trimax.venta.engine.model.dto.common.Variable;
+import io.github.trimax.venta.engine.model.common.shared.Particle;
+import io.github.trimax.venta.engine.model.common.shared.Range;
+import io.github.trimax.venta.engine.model.common.shared.Variable;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;

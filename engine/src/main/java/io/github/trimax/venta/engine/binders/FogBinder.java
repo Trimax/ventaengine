@@ -2,7 +2,7 @@ package io.github.trimax.venta.engine.binders;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
-import io.github.trimax.venta.engine.model.common.effects.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -5,7 +5,7 @@ import java.util.List;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.ShaderWaveUniform;
-import io.github.trimax.venta.engine.model.dto.common.Wave;
+import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,10 +28,10 @@ public final class WaveBinder extends AbstractBinder {
     }
 
     private void bind(final ProgramEntityImplementation program, final Wave wave, final int waveIndex) {
-        bind(program.getUniformID(ShaderWaveUniform.Direction.getUniformName(waveIndex)), wave.direction());
-        bind(program.getUniformID(ShaderWaveUniform.Amplitude.getUniformName(waveIndex)), wave.amplitude());
-        bind(program.getUniformID(ShaderWaveUniform.Steepness.getUniformName(waveIndex)), wave.steepness());
-        bind(program.getUniformID(ShaderWaveUniform.Length.getUniformName(waveIndex)), wave.length());
-        bind(program.getUniformID(ShaderWaveUniform.Speed.getUniformName(waveIndex)), wave.speed());
+        bind(program.getUniformID(ShaderWaveUniform.Direction.getUniformName(waveIndex)), wave.getDirection());
+        bind(program.getUniformID(ShaderWaveUniform.Amplitude.getUniformName(waveIndex)), wave.getAmplitude());
+        bind(program.getUniformID(ShaderWaveUniform.Steepness.getUniformName(waveIndex)), wave.getSteepness());
+        bind(program.getUniformID(ShaderWaveUniform.Length.getUniformName(waveIndex)), wave.getLength());
+        bind(program.getUniformID(ShaderWaveUniform.Speed.getUniformName(waveIndex)), wave.getSpeed());
     }
 }

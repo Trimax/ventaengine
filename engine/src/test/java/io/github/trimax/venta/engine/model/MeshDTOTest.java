@@ -10,7 +10,7 @@ import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
 import io.github.trimax.venta.engine.layouts.MeshVertexLayout;
-import io.github.trimax.venta.engine.model.dto.common.Mesh;
+import io.github.trimax.venta.engine.model.dto.common.MeshDTO;
 import lombok.NonNull;
 
 public final class MeshDTOTest {
@@ -44,6 +44,7 @@ public final class MeshDTOTest {
 
         final var facesArray = triangle.getFacesArray();
         assertNotNull(verticesArray, "Faces array should not be null");
+        assertEquals(COUNT_VERTICES_PER_FACET * triangle.facets().size(), triangle.getFacetsArrayLength(), "The number of faces must be correct");
         assertEquals(COUNT_VERTICES_PER_FACET * triangle.facets().size(), facesArray.length, "The number of faces must be correct");
 
         for (int i = 0; i < triangle.facets().size(); i++)
@@ -51,6 +52,7 @@ public final class MeshDTOTest {
 
         final var edgesArray = triangle.getEdgesArray();
         assertNotNull(edgesArray, "Edges array should not be null");
+        assertEquals(0, triangle.getEdgesArrayLength(), "The number of edges must be correct");
         assertEquals(0, edgesArray.length, "The number of edges must be correct");
     }
 
@@ -64,20 +66,20 @@ public final class MeshDTOTest {
         assertEquals(expected, actual, 1e-6, "Vertex " + vertexID + " position z must be correct");
     }
 
-    private static Mesh createTriangleDTO() {
+    private static MeshDTO createTriangleDTO() {
         final var vertex0 = createVertex(new Vector3f(0, 0, 0), new Vector2f(0, 0));
         final var vertex1 = createVertex(new Vector3f(1, 0, 0), new Vector2f(1, 0));
         final var vertex2 = createVertex(new Vector3f(0, 1, 0), new Vector2f(0, 1));
 
-        return new Mesh(
+        return new MeshDTO(
                 List.of(vertex0, vertex1, vertex2),
-                List.of(new Mesh.Facet(0, 1, 2)),
+                List.of(new MeshDTO.Facet(0, 1, 2)),
                 List.of()
         );
     }
 
-    private static Mesh.Vertex createVertex(@NonNull final Vector3f position, @NonNull final Vector2f textureCoordinates) {
-        return new Mesh.Vertex(position, null, textureCoordinates, null);
+    private static MeshDTO.Vertex createVertex(@NonNull final Vector3f position, @NonNull final Vector2f textureCoordinates) {
+        return new MeshDTO.Vertex(position, null, textureCoordinates, null);
     }
 }
 

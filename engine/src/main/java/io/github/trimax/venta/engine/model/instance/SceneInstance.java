@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.joml.Vector3fc;
 
-import io.github.trimax.venta.engine.model.common.effects.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import lombok.NonNull;
 
