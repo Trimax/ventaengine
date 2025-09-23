@@ -1,13 +1,14 @@
 package io.github.trimax.venta.engine.utils;
 
+import org.joml.Vector2ic;
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.geo.Grid;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.joml.Vector2ic;
-import org.joml.Vector3f;
 
 @UtilityClass
 public final class GeometryUtil {
@@ -17,7 +18,7 @@ public final class GeometryUtil {
 
         final var vertexCount = vertexCountX * vertexCountZ;
         final var vertices = new float[vertexCount * 5];
-        final var indices = new int[segments.x() * segments.y() * 6];
+        final var facets = new int[segments.x() * segments.y() * 6];
 
         int vertexIndex = 0;
         for (int z = 0; z < vertexCountZ; z++) {
@@ -41,17 +42,17 @@ public final class GeometryUtil {
                 final var bottomLeft = (z + 1) * vertexCountX + x;
                 final var bottomRight = bottomLeft + 1;
 
-                indices[facetIndex++] = topLeft;
-                indices[facetIndex++] = bottomLeft;
-                indices[facetIndex++] = topRight;
+                facets[facetIndex++] = topLeft;
+                facets[facetIndex++] = bottomLeft;
+                facets[facetIndex++] = topRight;
 
-                indices[facetIndex++] = topRight;
-                indices[facetIndex++] = bottomLeft;
-                indices[facetIndex++] = bottomRight;
+                facets[facetIndex++] = topRight;
+                facets[facetIndex++] = bottomLeft;
+                facets[facetIndex++] = bottomRight;
             }
         }
 
-        return new Grid(vertices, indices, vertexCount, indices.length);
+        return new Grid(vertices, facets, vertexCount, facets.length);
     }
 
     public BoundingBox computeBoundingBox(final Node<MeshReference> node) {

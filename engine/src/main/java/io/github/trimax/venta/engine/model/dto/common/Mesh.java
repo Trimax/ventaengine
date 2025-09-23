@@ -223,8 +223,7 @@ public record Mesh(@NonNull List<Vertex> vertices,
         final var deltaU2 = uv3.x - uv1.x;
         final var deltaV2 = uv3.y - uv1.y;
 
-        final var f = safeInverse(deltaU1 * deltaV2 - deltaU2 * deltaV1);
-        return new TBData(edge1, edge2, deltaU1, deltaV1, deltaU2, deltaV2, f);
+        return new TBData(edge1, edge2, deltaU1, deltaV1, deltaU2, deltaV2, safeInverse(deltaU1 * deltaV2 - deltaU2 * deltaV1));
     }
 
     private boolean hasTextureCoordinates(final Vertex... vertices) {
