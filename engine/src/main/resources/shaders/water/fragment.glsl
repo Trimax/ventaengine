@@ -197,7 +197,10 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec2 textureCoordinates)
     vec3 normal = normalize(getNormal(textureCoordinates));
     vec3 skyboxColor = texture(textureSkybox, reflect(-cameraDirection, normal)).rgb;
 
-    return mix(color, skyboxColor, getMaterialMetalness());
+    float cosTheta = dot(normal, cameraDirection);
+    float factor = pow(1.0 - cosTheta, 3.0);
+
+    return mix(color, skyboxColor, factor * getMaterialMetalness());
 }
 
 void main() {
