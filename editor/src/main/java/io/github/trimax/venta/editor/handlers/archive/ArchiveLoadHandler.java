@@ -1,5 +1,13 @@
 package io.github.trimax.venta.editor.handlers.archive;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import io.github.trimax.venta.container.tree.Node;
@@ -17,14 +25,6 @@ import javafx.scene.control.TreeView;
 import lombok.AllArgsConstructor;
 import one.util.streamex.StreamEx;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 @AllArgsConstructor
 public final class ArchiveLoadHandler implements EventHandler<ActionEvent> {
     private final TreeView<Item> tree;
@@ -33,7 +33,7 @@ public final class ArchiveLoadHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(final ActionEvent event) {
-        DialogUtil.showFileOpen("Please choose a resource to add", this::load, tree.getScene().getWindow(),
+        DialogUtil.showFileOpen("Please choose a resource to add", this::load,
                 Map.of("Archive files (*.json)", List.of("*.json")));
     }
 

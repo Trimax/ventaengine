@@ -1,15 +1,5 @@
 package io.github.trimax.venta.editor.handlers.archive;
 
-import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.editor.utils.DialogUtil;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -20,6 +10,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
+import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.editor.utils.DialogUtil;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+
 @AllArgsConstructor
 public final class ArchiveBuildHandler implements EventHandler<ActionEvent> {
     private final TreeView<Item> tree;
@@ -28,7 +28,7 @@ public final class ArchiveBuildHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(final ActionEvent event) {
         DialogUtil.showFileSave("Please choose a file to save built archive", this::build,
-                tree.getScene().getWindow(), Map.of("Binary archive files (*.vea)", List.of("*.vea")));
+                Map.of("Binary archive files (*.vea)", List.of("*.vea")));
     }
 
     @SneakyThrows
