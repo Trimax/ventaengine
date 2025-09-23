@@ -32,10 +32,10 @@ public final class Controller {
     @FXML private Button btnToolBarArchiveLoad;
     @FXML private Button btnToolBarArchiveBuild;
 
-    @FXML private Button btnToolBarResourceAdd;
-    @FXML private Button btnToolBarResourceRemove;
-    @FXML private Button btnToolBarGroupAdd;
-    @FXML private Button btnToolBarGroupRemove;
+    @FXML private Button btnTreeResourceAdd;
+    @FXML private Button btnTreeResourceRemove;
+    @FXML private Button btnTreeFolderAdd;
+    @FXML private Button btnTreeFolderRemove;
 
     @FXML private MenuItem btnMenuEditorAbout;
     @FXML private MenuItem btnMenuEditorQuit;
@@ -82,20 +82,20 @@ public final class Controller {
         btnToolBarArchiveLoad.setOnAction(new ArchiveLoadHandler(tree, createListener(), status));
         btnToolBarArchiveBuild.setOnAction(new ArchiveBuildHandler(tree, status));
 
-        btnToolBarResourceAdd.setOnAction(new ResourceAddHandler(tree, status));
-        btnToolBarResourceRemove.setOnAction(new ResourceRemoveHandler(tree, status));
+        btnTreeResourceAdd.setOnAction(new ResourceAddHandler(tree, status));
+        btnTreeResourceRemove.setOnAction(new ResourceRemoveHandler(tree, status));
 
-        btnToolBarGroupAdd.setOnAction(new GroupAddHandler(tree, status));
-        btnToolBarGroupRemove.setOnAction(new GroupRemoveHandler(tree, status));
+        btnTreeFolderAdd.setOnAction(new GroupAddHandler(tree, status));
+        btnTreeFolderRemove.setOnAction(new GroupRemoveHandler(tree, status));
     }
 
     private TreeItemListener createListener() {
         return new TreeItemListener(
                 ToolBar.builder()
-                        .btnToolBarResourceAdd(btnToolBarResourceAdd)
-                        .btnToolBarResourceRemove(btnToolBarResourceRemove)
-                        .btnToolBarGroupAdd(btnToolBarGroupAdd)
-                        .btnToolBarGroupRemove(btnToolBarGroupRemove)
+                        .btnTreeResourceAdd(btnTreeResourceAdd)
+                        .btnTreeResourceRemove(btnTreeResourceRemove)
+                        .btnTreeFolderAdd(btnTreeFolderAdd)
+                        .btnTreeFolderRemove(btnTreeFolderRemove)
                         .build(),
                 Menu.builder()
                         .btnMenuResourceAdd(btnMenuResourceAdd)

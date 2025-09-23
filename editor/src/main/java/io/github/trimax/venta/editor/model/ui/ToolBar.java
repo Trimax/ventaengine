@@ -8,22 +8,22 @@ import lombok.NonNull;
 @Builder
 public final class ToolBar {
     @NonNull
-    private final Button btnToolBarResourceAdd;
+    private final Button btnTreeResourceAdd;
 
     @NonNull
-    private Button btnToolBarResourceRemove;
+    private Button btnTreeResourceRemove;
 
     @NonNull
-    private Button btnToolBarGroupAdd;
+    private Button btnTreeFolderAdd;
 
     @NonNull
-    private Button btnToolBarGroupRemove;
+    private Button btnTreeFolderRemove;
 
     public void update(final Item selected) {
-        btnToolBarResourceAdd.setDisable(selected == null || !selected.type().isContainer());
-        btnToolBarResourceRemove.setDisable(selected == null || selected.type().isContainer());
+        btnTreeResourceAdd.setDisable(selected == null || !selected.type().isContainer());
+        btnTreeResourceRemove.setDisable(selected == null || selected.type().isContainer());
 
-        btnToolBarGroupAdd.setDisable(selected == null || !selected.type().isContainer());
-        btnToolBarGroupRemove.setDisable(selected == null || !selected.type().isContainer() || !selected.deletable());
+        btnTreeFolderAdd.setDisable(selected == null || !selected.type().isContainer());
+        btnTreeFolderRemove.setDisable(selected == null || !selected.type().isContainer() || !selected.deletable());
     }
 }
