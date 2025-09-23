@@ -5,8 +5,9 @@ import java.util.Optional;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
+import io.github.trimax.venta.engine.model.common.effects.Attenuation;
 import io.github.trimax.venta.engine.model.dto.LightDTO;
-import io.github.trimax.venta.engine.model.dto.common.Attenuation;
 import io.github.trimax.venta.engine.model.dto.common.Color;
 import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
@@ -33,9 +34,9 @@ public final class LightRepositoryImplementation
 
         final var lightDTO = resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightDTO.class);
         return abettor.createLight(lightDTO.type(),
-                Optional.ofNullable(lightDTO.color()).map(Color::toVector3f).orElse(new Vector3f(1.f)),
+                Optional.of(lightDTO.color()).map(Color::toVector3f).orElse(new Vector3f(DefinitionsCommon.VECTOR3F_ONE)),
                 Optional.ofNullable(lightDTO.direction()).orElse(new Vector3f()),
-                Optional.ofNullable(lightDTO.attenuation()).orElse(new Attenuation(0, 0, 0)),
+                Optional.ofNullable(lightDTO.attenuation()).map(Attenuation::new).orElse(new Attenuation()),
                 lightDTO.intensity(),
                 lightDTO.range(),
                 lightDTO.castShadows());

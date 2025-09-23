@@ -13,7 +13,11 @@ public final class DefinitionsCommon {
     public static final int MAX_LIGHTS = 64;
     public static final int MAX_WAVES = 16;
 
-    /* Default values */
-    public static Vector3fc DEFAULT_SCALE_3D = new Vector3f(1.f);
-    public static Vector2fc DEFAULT_SCALE_2D = new Vector2f(1.f);
+    /* Vectors 3D */
+    public static final Vector3fc VECTOR3F_ZERO = new Vector3f(0.f);
+    public static final Vector3fc VECTOR3F_ONE = new Vector3f(1.f);
+
+    /* Vectors 2D */
+    public static final Vector2fc VECTOR2F_ZERO = new Vector2f(0.f);
+    public static final Vector2fc VECTOR2F_ONE = new Vector2f(1.f);
 }

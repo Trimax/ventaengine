@@ -46,7 +46,7 @@ public final class BillboardRepositoryImplementation
                 spriteRegistry.get(billboardDTO.sprite()),
                 geometryHelper.create(resourcePath, BillboardVertexLayout.class,
                         DefinitionsGeometry.Particle.VERTICES, DefinitionsGeometry.Particle.FACETS, null),
-                Optional.ofNullable(billboardDTO.scale()).orElse(new Vector2f(DefinitionsCommon.DEFAULT_SCALE_2D)));
+                Optional.ofNullable(billboardDTO.scale()).orElse(new Vector2f(DefinitionsCommon.VECTOR2F_ONE)));
     }
 
     @Override
