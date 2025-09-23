@@ -6,6 +6,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.engine.model.common.scene.Fog;
+import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneObjectDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneSoundSourceDTO;
 
 public record SceneDTO(List<SceneObjectDTO> objects,
                        List<SceneLightDTO> lights,

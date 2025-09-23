@@ -1,13 +1,14 @@
 package io.github.trimax.venta.engine.model.common.geo;
 
-import io.github.trimax.venta.engine.model.dto.MeshDTO;
 import org.joml.Vector3f;
 
+import io.github.trimax.venta.engine.model.dto.common.Mesh;
+
 public record BoundingBox(Vector3f min, Vector3f max) {
-    public static BoundingBox of(final MeshDTO mesh) {
+    public static BoundingBox of(final Mesh mesh) {
         final var min = new Vector3f(Float.POSITIVE_INFINITY);
         final var max = new Vector3f(Float.NEGATIVE_INFINITY);
-        for (final MeshDTO.Vertex v : mesh.vertices()) {
+        for (final Mesh.Vertex v : mesh.vertices()) {
             min.min(v.position());
             max.max(v.position());
         }

@@ -1,10 +1,11 @@
 package io.github.trimax.examples.skybox.handlers;
 
+import org.joml.Vector3f;
+
 import io.github.trimax.examples.skybox.state.SkyboxApplicationState;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public final class SkyboxApplicationInputHandler implements VentaEngineInputHand
         lastY = mouseY;
 
         yaw += deltaX * sensitivity;
-        pitch = Math.clamp(pitch - deltaY * sensitivity, -89, 89);
+        pitch = Math.clamp(pitch - deltaY * sensitivity, -85, 85);
 
         final var front = new Vector3f();
         front.x = (float) (Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));

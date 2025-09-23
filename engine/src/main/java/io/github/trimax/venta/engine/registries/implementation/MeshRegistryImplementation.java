@@ -5,7 +5,7 @@ import io.github.trimax.venta.engine.factories.MeshParserFactory;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.MeshVertexLayout;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
-import io.github.trimax.venta.engine.model.dto.MeshDTO;
+import io.github.trimax.venta.engine.model.dto.common.Mesh;
 import io.github.trimax.venta.engine.model.entity.MeshEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
@@ -32,11 +32,11 @@ public final class MeshRegistryImplementation
         return createMesh(resourcePath, meshParserFactory.get(resourcePath).parse(String.format("/meshes/%s", resourcePath)));
     }
 
-    private MeshEntityImplementation createMesh(final String resourcePath, final MeshDTO meshDTO) {
-        return abettor.createMesh(geometryHelper.create(resourcePath, MeshVertexLayout.class, meshDTO.getVerticesArray(),
-                        meshDTO.hasFacets() ? meshDTO.getFacesArray() : null,
-                        meshDTO.hasEdges() ? meshDTO.getEdgesArray() : null),
-                BoundingBox.of(meshDTO));
+    private MeshEntityImplementation createMesh(final String resourcePath, final Mesh mesh) {
+        return abettor.createMesh(geometryHelper.create(resourcePath, MeshVertexLayout.class, mesh.getVerticesArray(),
+                        mesh.hasFacets() ? mesh.getFacesArray() : null,
+                        mesh.hasEdges() ? mesh.getEdgesArray() : null),
+                BoundingBox.of(mesh));
     }
 
     @Override
