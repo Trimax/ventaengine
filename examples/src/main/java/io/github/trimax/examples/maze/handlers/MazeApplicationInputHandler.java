@@ -1,9 +1,13 @@
 package io.github.trimax.examples.maze.handlers;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+
 import org.joml.Vector3f;
 
 import io.github.trimax.examples.maze.state.MazeApplicationState;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
+import io.github.trimax.venta.engine.utils.RandomUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,5 +53,11 @@ public final class MazeApplicationInputHandler implements VentaEngineInputHandle
         front.normalize();
 
         state.getCamera().lookAt(new Vector3f(state.getCamera().getPosition()).add(front));
+    }
+
+    @Override
+    public void onKey(final int key, final int scancode, final int action, final int mods) {
+        if (action == GLFW_PRESS && key == GLFW_KEY_SPACE)
+            state.getLight().setColor(RandomUtil.vector3());
     }
 }
