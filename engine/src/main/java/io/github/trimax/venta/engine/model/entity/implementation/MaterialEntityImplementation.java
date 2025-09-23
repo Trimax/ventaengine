@@ -11,7 +11,7 @@ import org.joml.Vector4fc;
 
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
-import io.github.trimax.venta.engine.model.dto.common.Color;
+import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import lombok.AccessLevel;
@@ -34,7 +34,7 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
         this(Optional.ofNullable(dto.metalness()).orElse(0.f),
                 Optional.ofNullable(dto.roughness()).orElse(0.f),
                 Optional.ofNullable(dto.opacity()).orElse(0.f),
-                Optional.ofNullable(dto.color()).map(Color::toVector4f).orElse(new Vector4f(1.f)),
+                Optional.ofNullable(dto.color()).map(ColorDTO::toVector4f).orElse(new Vector4f(1.f)),
                 Optional.ofNullable(dto.tiling()).orElse(new Vector2f(1.f)),
                 Optional.ofNullable(dto.offset()).orElse(new Vector2f(0.f)));
     }

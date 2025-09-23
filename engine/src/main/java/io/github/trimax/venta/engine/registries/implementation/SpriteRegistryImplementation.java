@@ -4,7 +4,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.dto.SpriteDTO;
-import io.github.trimax.venta.engine.model.dto.common.Frame;
+import io.github.trimax.venta.engine.model.dto.common.FrameDTO;
 import io.github.trimax.venta.engine.model.entity.SpriteEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
@@ -33,7 +33,7 @@ public final class SpriteRegistryImplementation
         final var texture = textureRegistry.get(spriteDTO.texture());
 
         final var framesBuffer = MemoryUtil.memAllocFloat(spriteDTO.frames().size() * 4);
-        for (final Frame frame : spriteDTO.frames()) {
+        for (final FrameDTO frame : spriteDTO.frames()) {
             final var normalizedFrame = frame.normalize(texture.getWidth(), texture.getHeight());
             framesBuffer.put(normalizedFrame.x());
             framesBuffer.put(normalizedFrame.y());

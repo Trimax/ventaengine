@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 import io.github.trimax.examples.maze.state.MazeApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
-import io.github.trimax.venta.engine.model.common.effects.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Attenuation;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
 import lombok.AllArgsConstructor;

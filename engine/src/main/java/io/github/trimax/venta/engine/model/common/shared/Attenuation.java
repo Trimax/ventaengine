@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.common.effects;
+package io.github.trimax.venta.engine.model.common.shared;
 
 import io.github.trimax.venta.engine.model.dto.common.AttenuationDTO;
 import lombok.AllArgsConstructor;

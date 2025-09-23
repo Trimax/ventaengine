@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 import io.github.trimax.examples.gridmesh.water.state.WaterApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
-import io.github.trimax.venta.engine.model.common.effects.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Attenuation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

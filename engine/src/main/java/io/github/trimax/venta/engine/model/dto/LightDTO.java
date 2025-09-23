@@ -4,11 +4,11 @@ import org.joml.Vector3f;
 
 import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.dto.common.AttenuationDTO;
-import io.github.trimax.venta.engine.model.dto.common.Color;
+import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import lombok.NonNull;
 
 public record LightDTO(@NonNull LightType type,
-                       @NonNull Color color,
+                       @NonNull ColorDTO color,
                        AttenuationDTO attenuation,
                        Vector3f direction,
                        boolean castShadows,

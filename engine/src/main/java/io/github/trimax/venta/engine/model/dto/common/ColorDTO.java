@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.model.dto.common;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public record Color(float r, float g, float b, float a) {
+public record ColorDTO(float r, float g, float b, float a) {
     public Vector3f toVector3f() {
         return new Vector3f(r, g, b);
     }

@@ -7,7 +7,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
-import io.github.trimax.venta.engine.model.common.effects.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.BillboardInstance;

@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.model.common.effects;
+package io.github.trimax.venta.engine.model.common.shared;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;

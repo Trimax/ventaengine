@@ -18,9 +18,9 @@ import lombok.NonNull;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
 
-public record Mesh(@NonNull List<Vertex> vertices,
-                   List<Facet> facets,
-                   List<Edge> edges) {
+public record MeshDTO(@NonNull List<Vertex> vertices,
+                      List<Facet> facets,
+                      List<Edge> edges) {
     public boolean hasFacets() {
         return CollectionUtils.isNotEmpty(facets);
     }
@@ -260,7 +260,7 @@ public record Mesh(@NonNull List<Vertex> vertices,
     public record Vertex(Vector3f position,
                          Vector3f normal,
                          Vector2f textureCoordinates,
-                         Color color) {
+                         ColorDTO color) {
         public boolean hasPosition() {
             return position != null;
         }
