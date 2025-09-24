@@ -13,19 +13,28 @@ import io.github.trimax.venta.editor.handlers.group.GroupAddHandler;
 import io.github.trimax.venta.editor.handlers.group.GroupRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
-import io.github.trimax.venta.editor.utils.EventUtil;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MenuController {
-    @FXML private MenuItem btnMenuEditorAbout;
-    @FXML private MenuItem btnMenuEditorQuit;
+    private final ArchiveNewHandler archiveNewHandler;
+    private final ArchiveSaveHandler archiveSaveHandler;
+    private final ArchiveLoadHandler archiveLoadHandler;
+    private final ArchiveBuildHandler archiveBuildHandler;
 
-    @FXML private MenuItem btnMenuArchiveNew;
-    @FXML private MenuItem btnMenuArchiveSave;
-    @FXML private MenuItem btnMenuArchiveLoad;
-    @FXML private MenuItem btnMenuArchiveBuild;
+    private final EditorAboutHandler editorAboutHandler;
+    private final EditorQuitHandler editorQuitHandler;
+
+    private final GroupAddHandler groupAddHandler;
+    private final GroupRemoveHandler groupRemoveHandler;
+
+    private final ResourceAddHandler resourceAddHandler;
+    private final ResourceRemoveHandler resourceRemoveHandler;
 
     @FXML private MenuItem btnMenuGroupAdd;
     @FXML private MenuItem btnMenuGroupRemove;
@@ -34,22 +43,53 @@ public final class MenuController {
     @FXML private MenuItem btnMenuResourceRemove;
 
     @FXML
-    public void initialize() {
-        EventUtil.register(this);
+    public void onArchiveNew(final ActionEvent event) {
+        archiveNewHandler.handle(event);
+    }
 
-        btnMenuEditorAbout.setOnAction(new EditorAboutHandler());
-        btnMenuEditorQuit.setOnAction(new EditorQuitHandler());
+    @FXML
+    public void onArchiveSave(final ActionEvent event) {
+        archiveSaveHandler.handle(event);
+    }
 
-        btnMenuArchiveNew.setOnAction(new ArchiveNewHandler());
-        btnMenuArchiveSave.setOnAction(new ArchiveSaveHandler());
-        btnMenuArchiveLoad.setOnAction(new ArchiveLoadHandler());
-        btnMenuArchiveBuild.setOnAction(new ArchiveBuildHandler());
+    @FXML
+    public void onArchiveLoad(final ActionEvent event) {
+        archiveLoadHandler.handle(event);
+    }
 
-        btnMenuGroupAdd.setOnAction(new GroupAddHandler());
-        btnMenuGroupRemove.setOnAction(new GroupRemoveHandler());
+    @FXML
+    public void onArchiveBuild(final ActionEvent event) {
+        archiveBuildHandler.handle(event);
+    }
 
-        btnMenuResourceAdd.setOnAction(new ResourceAddHandler());
-        btnMenuResourceRemove.setOnAction(new ResourceRemoveHandler());
+    @FXML
+    public void onEditorAbout(final ActionEvent event) {
+        editorAboutHandler.handle(event);
+    }
+
+    @FXML
+    public void onEditorQuit(final ActionEvent event) {
+        editorQuitHandler.handle(event);
+    }
+
+    @FXML
+    public void onGroupAdd(final ActionEvent event) {
+        groupAddHandler.handle(event);
+    }
+
+    @FXML
+    public void onGroupRemove(final ActionEvent event) {
+        groupRemoveHandler.handle(event);
+    }
+
+    @FXML
+    public void onResourceAdd(final ActionEvent event) {
+        resourceAddHandler.handle(event);
+    }
+
+    @FXML
+    public void onResourceRemove(final ActionEvent event) {
+        resourceRemoveHandler.handle(event);
     }
 
     @Subscribe

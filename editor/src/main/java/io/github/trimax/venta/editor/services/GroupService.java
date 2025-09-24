@@ -1,9 +1,9 @@
 package io.github.trimax.venta.editor.services;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.events.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.editor.utils.EventUtil;
 import io.github.trimax.venta.editor.utils.NameUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.scene.control.TreeItem;
