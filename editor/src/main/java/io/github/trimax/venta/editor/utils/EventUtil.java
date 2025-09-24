@@ -11,7 +11,7 @@ public final class EventUtil {
     private final EventBus bus = new com.google.common.eventbus.EventBus();
 
     public void post(@NonNull final Object event) {
-        log.info("Posting event: {}", event.getClass().getSimpleName());
+        log.info("Posting event: {}", event);
         bus.post(event);
     }
 

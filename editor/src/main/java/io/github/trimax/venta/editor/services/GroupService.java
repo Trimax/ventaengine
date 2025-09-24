@@ -28,4 +28,10 @@ public final class GroupService {
 
         EventUtil.post(new StatusSetEvent("Group `%s` created", name));
     }
+
+    public void remove(@NonNull final TreeItem<Item> node) {
+        node.getParent().getChildren().remove(node);
+
+        EventUtil.post(new StatusSetEvent("Group `%s` removed", node.getValue().name()));
+    }
 }

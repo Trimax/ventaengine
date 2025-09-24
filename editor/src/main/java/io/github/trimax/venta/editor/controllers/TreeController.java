@@ -8,7 +8,6 @@ import io.github.trimax.venta.editor.events.group.GroupAddEvent;
 import io.github.trimax.venta.editor.events.group.GroupRemoveEvent;
 import io.github.trimax.venta.editor.events.resource.ResourceAddEvent;
 import io.github.trimax.venta.editor.events.resource.ResourceRemoveEvent;
-import io.github.trimax.venta.editor.events.status.StatusSetEvent;
 import io.github.trimax.venta.editor.events.tree.TreeResetEvent;
 import io.github.trimax.venta.editor.events.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.handlers.group.GroupAddHandler;
@@ -18,11 +17,11 @@ import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.services.ArchiveService;
 import io.github.trimax.venta.editor.services.GroupService;
+import io.github.trimax.venta.editor.services.ResourceService;
 import io.github.trimax.venta.editor.utils.EventUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import lombok.SneakyThrows;
 
@@ -75,28 +74,17 @@ public final class TreeController {
 
     @Subscribe
     public void onGroupRemove(final GroupRemoveEvent event) {
-        final var selected = tree.getSelectionModel().getSelectedItem();
-        selected.getParent().getChildren().remove(selected);
-
-        EventUtil.post(new StatusSetEvent("Group `%s` removed", selected.getValue().name()));
+        new GroupService().remove(tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
     public void onResourceAdd(final ResourceAddEvent event) {
-        final var selected = tree.getSelectionModel().getSelectedItem();
-        final var resource = new TreeItem<>(Item.asResource(event.file().getName(), event.file().getAbsolutePath()));
-        selected.getChildren().add(resource);
-        selected.setExpanded(true);
-
-        EventUtil.post(new StatusSetEvent("Resource `%s` added", event.file().getAbsolutePath()));
+        new ResourceService().add(event.file(), tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
     public void onResourceRemove(final ResourceRemoveEvent event) {
-        final var selected = tree.getSelectionModel().getSelectedItem();
-        selected.getParent().getChildren().remove(selected);
-
-        EventUtil.post(new StatusSetEvent("Resource `%s` removed", selected.getValue().name()));
+        new ResourceService().remove(tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
