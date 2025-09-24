@@ -1,18 +1,7 @@
 package io.github.trimax.venta.editor.services;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.zip.GZIPOutputStream;
-
 import com.google.gson.Gson;
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.editor.definitions.Group;
 import io.github.trimax.venta.editor.events.status.StatusSetEvent;
@@ -22,10 +11,22 @@ import io.github.trimax.venta.editor.utils.EventUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import one.util.streamex.StreamEx;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.zip.GZIPOutputStream;
+
+@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArchiveService {
     public void reset(@NonNull final TreeView<Item> tree) {
         TreeUtil.initialize(tree);

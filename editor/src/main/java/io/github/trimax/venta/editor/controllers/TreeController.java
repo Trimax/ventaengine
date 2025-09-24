@@ -1,6 +1,7 @@
 package io.github.trimax.venta.editor.controllers;
 
 import com.google.common.eventbus.Subscribe;
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.editor.events.archive.ArchiveBuildEvent;
 import io.github.trimax.venta.editor.events.archive.ArchiveLoadEvent;
 import io.github.trimax.venta.editor.events.archive.ArchiveSaveEvent;
@@ -23,9 +24,16 @@ import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeView;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+@Component
+@RequiredArgsConstructor
 public final class TreeController {
+    private final ResourceService resourceService;
+    private final ArchiveService archiveService;
+    private final GroupService groupService;
+
     @FXML private TreeView<Item> tree;
 
     @FXML private Button btnTreeResourceAdd;
@@ -46,45 +54,45 @@ public final class TreeController {
 
     @Subscribe
     public void onTreeReset(final TreeResetEvent ignored) {
-        new ArchiveService().reset(tree);
+        archiveService.reset(tree);
     }
 
     @Subscribe
     @SneakyThrows
     public void onArchiveSave(final ArchiveSaveEvent event) {
-        new ArchiveService().save(event.file(), tree.getRoot());
+        archiveService.save(event.file(), tree.getRoot());
     }
 
     @Subscribe
     public void onArchiveLoad(final ArchiveLoadEvent event) {
         TreeUtil.initialize(tree);
-        new ArchiveService().load(event.file(), tree.getRoot());
+        archiveService.load(event.file(), tree.getRoot());
     }
 
     @Subscribe
     @SneakyThrows
     public void onArchiveBuild(final ArchiveBuildEvent event) {
-        new ArchiveService().build(event.file(), tree.getRoot());
+        archiveService.build(event.file(), tree.getRoot());
     }
 
     @Subscribe
     public void onGroupAdd(final GroupAddEvent event) {
-        new GroupService().add(event.name(), tree.getSelectionModel().getSelectedItem());
+        groupService.add(event.name(), tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
     public void onGroupRemove(final GroupRemoveEvent event) {
-        new GroupService().remove(tree.getSelectionModel().getSelectedItem());
+        groupService.remove(tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
     public void onResourceAdd(final ResourceAddEvent event) {
-        new ResourceService().add(event.file(), tree.getSelectionModel().getSelectedItem());
+        resourceService.add(event.file(), tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
     public void onResourceRemove(final ResourceRemoveEvent event) {
-        new ResourceService().remove(tree.getSelectionModel().getSelectedItem());
+        resourceService.remove(tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe

@@ -1,5 +1,6 @@
 package io.github.trimax.venta.editor.controllers;
 
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveBuildHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveLoadHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveNewHandler;
@@ -7,9 +8,8 @@ import io.github.trimax.venta.editor.handlers.archive.ArchiveSaveHandler;
 import io.github.trimax.venta.editor.utils.EventUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+@Component
 public final class ToolbarController {
     @FXML private Button btnToolBarArchiveNew;
     @FXML private Button btnToolBarArchiveSave;
