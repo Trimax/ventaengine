@@ -1,29 +1,17 @@
 package io.github.trimax.venta.editor.handlers.archive;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import com.google.gson.Gson;
-import io.github.trimax.venta.container.tree.Node;
-import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
-import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.editor.events.archive.ArchiveSaveEvent;
 import io.github.trimax.venta.editor.utils.DialogUtil;
+import io.github.trimax.venta.editor.utils.EventUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
-@AllArgsConstructor
 public final class ArchiveSaveHandler implements EventHandler<ActionEvent> {
-    private final TreeView<Item> tree;
-    private final Label status;
-
     @Override
     public void handle(final ActionEvent event) {
         DialogUtil.showFileSave("Please choose a file to save an archive", this::save,
@@ -32,15 +20,6 @@ public final class ArchiveSaveHandler implements EventHandler<ActionEvent> {
 
     @SneakyThrows
     private void save(final File file) {
-        try (final var writer = new FileWriter(file)) {
-            new Gson().toJson(new ArchiveDTO(UUID.randomUUID().toString(), createTreeNode(tree.getRoot())), writer);
-        }
-
-        status.setText("Archive saved to " + file.getAbsoluteFile());
-    }
-
-    private Node<String> createTreeNode(final TreeItem<Item> node) {
-        return new Node<>(node.getValue().name(), node.getValue().reference(),
-                node.getChildren().stream().map(this::createTreeNode).toList());
+        EventUtil.post(new ArchiveSaveEvent(file));
     }
 }
