@@ -1,6 +1,7 @@
 package io.github.trimax.venta.editor.controllers;
 
 import com.google.common.eventbus.Subscribe;
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.editor.events.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveBuildHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveLoadHandler;
@@ -16,6 +17,7 @@ import io.github.trimax.venta.editor.utils.EventUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 
+@Component
 public final class MenuController {
     @FXML private MenuItem btnMenuEditorAbout;
     @FXML private MenuItem btnMenuEditorQuit;

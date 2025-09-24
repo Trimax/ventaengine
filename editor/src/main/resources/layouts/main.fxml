@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <VBox>
+            <fx:include source="menubar.fxml" />
+            <fx:include source="toolbar.fxml" />
+        </VBox>
+    </top>
+
+    <left>
+        <fx:include source="tree.fxml"/>
+    </left>
+
+    <center>
+        <VBox style="-fx-background-color: black;"/>
+    </center>
+
+    <right>
+        <fx:include source="properties.fxml" />
+    </right>
+
+    <bottom>
+        <fx:include source="status.fxml" />
+    </bottom>
+</BorderPane>

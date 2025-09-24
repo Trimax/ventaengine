@@ -1,15 +1,19 @@
 package io.github.trimax.venta.editor.services;
 
-import org.apache.commons.lang3.StringUtils;
-
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.editor.events.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.EventUtil;
 import io.github.trimax.venta.editor.utils.NameUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.scene.control.TreeItem;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 
+@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GroupService {
     public void add(@NonNull final String name, @NonNull final TreeItem<Item> node) {
         if (StringUtils.isBlank(name) || !NameUtil.isValidName(name)) {

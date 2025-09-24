@@ -1,13 +1,18 @@
 package io.github.trimax.venta.editor.services;
 
-import java.io.File;
-
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.editor.events.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.EventUtil;
 import javafx.scene.control.TreeItem;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.io.File;
+
+@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ResourceService {
     public void add(@NonNull final File file, @NonNull final TreeItem<Item> node) {
         final var resource = new TreeItem<>(Item.asResource(file.getName(), file.getAbsolutePath()));

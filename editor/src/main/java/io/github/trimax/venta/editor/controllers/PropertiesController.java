@@ -1,10 +1,7 @@
 package io.github.trimax.venta.editor.controllers;
 
-import java.io.File;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 import com.google.common.eventbus.Subscribe;
+import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.editor.events.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ResourceType;
@@ -15,7 +12,11 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
 import lombok.SneakyThrows;
 import one.util.streamex.StreamEx;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.io.File;
+
+@Component
 public final class PropertiesController {
     @FXML private VBox properties;
 

@@ -45,7 +45,7 @@ public final class VentaApplication {
         log.info("{} components found and loaded", components.size());
     }
 
-    private static <C> C getComponent(final Class<C> componentClass) {
+    public static <C> C getComponent(final Class<C> componentClass) {
         return componentClass.cast(components.get(componentClass));
     }
 
