@@ -69,16 +69,6 @@ public final class TreeController {
     }
 
     @Subscribe
-    public void onTreeItemSelected(final TreeSelectEvent event) {
-        final var item = event.node().getValue();
-        btnTreeResourceAdd.setDisable(item == null || !item.type().isContainer());
-        btnTreeResourceRemove.setDisable(item == null || item.type().isContainer());
-
-        btnTreeFolderAdd.setDisable(item == null || !item.type().isContainer());
-        btnTreeFolderRemove.setDisable(item == null || !item.type().isContainer() || !item.deletable());
-    }
-
-    @Subscribe
     public void onGroupAdd(final GroupAddEvent event) {
         new GroupService().add(event.name(), tree.getSelectionModel().getSelectedItem());
     }
@@ -107,5 +97,14 @@ public final class TreeController {
         selected.getParent().getChildren().remove(selected);
 
         EventUtil.post(new StatusSetEvent("Resource `%s` removed", selected.getValue().name()));
+    }
+
+    @Subscribe
+    public void onTreeItemSelected(final TreeSelectEvent event) {
+        btnTreeResourceAdd.setDisable(!event.hasSelected()  || !event.getItem().type().isContainer());
+        btnTreeResourceRemove.setDisable(!event.hasSelected() || event.getItem().type().isContainer());
+
+        btnTreeFolderAdd.setDisable(!event.hasSelected() || !event.getItem().type().isContainer());
+        btnTreeFolderRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || !event.getItem().deletable());
     }
 }

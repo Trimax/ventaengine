@@ -26,11 +26,13 @@ public final class PropertiesController {
 
     @Subscribe
     public void onTreeSelect(final TreeSelectEvent event) {
-        updateInfoPanel(event.node());
+        properties.getChildren().clear();
+
+        if (event.hasSelected())
+            updateInfoPanel(event.node());
     }
 
     private void updateInfoPanel(final TreeItem<Item> selected) {
-        properties.getChildren().clear();
         if (!selected.getValue().deletable() || !selected.getValue().hasExistingReference())
             showGroupInformation(selected);
         else

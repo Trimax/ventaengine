@@ -56,11 +56,10 @@ public final class MenuController {
 
     @Subscribe
     public void onTreeItemSelected(final TreeSelectEvent event) {
-        final var selected = event.node().getValue();
-        btnMenuResourceAdd.setDisable(selected == null || !selected.type().isContainer());
-        btnMenuResourceRemove.setDisable(selected == null || selected.type().isContainer());
+        btnMenuResourceAdd.setDisable(!event.hasSelected() || !event.getItem().type().isContainer());
+        btnMenuResourceRemove.setDisable(!event.hasSelected() || event.getItem().type().isContainer());
 
-        btnMenuGroupAdd.setDisable(selected == null || !selected.type().isContainer());
-        btnMenuGroupRemove.setDisable(selected == null || !selected.type().isContainer() || !selected.deletable());
+        btnMenuGroupAdd.setDisable(!event.hasSelected() || !event.getItem().type().isContainer());
+        btnMenuGroupRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || !event.getItem().deletable());
     }
 }
