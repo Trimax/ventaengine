@@ -35,10 +35,6 @@ public final class MenuController {
     public void initialize() {
         EventUtil.register(this);
 
-        bindMenu();
-    }
-
-    private void bindMenu() {
         btnMenuEditorAbout.setOnAction(new EditorAboutHandler());
         btnMenuEditorQuit.setOnAction(new EditorQuitHandler());
 
