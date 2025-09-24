@@ -1,28 +1,37 @@
 package io.github.trimax.venta.editor.services;
 
+import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
+import io.github.trimax.venta.editor.controllers.TreeController;
+import io.github.trimax.venta.editor.events.resource.ResourceAddEvent;
+import io.github.trimax.venta.editor.events.resource.ResourceRemoveEvent;
 import io.github.trimax.venta.editor.events.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-import java.io.File;
-
+//TODO: Replace with listeners
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ResourceService {
-    public void add(@NonNull final File file, @NonNull final TreeItem<Item> node) {
-        final var resource = new TreeItem<>(Item.asResource(file.getName(), file.getAbsolutePath()));
+    private final TreeController treeController;
+
+    @Subscribe
+    public void onResourceAdd(final ResourceAddEvent event) {
+        final var node = treeController.getSelectedNode();
+
+        final var resource = new TreeItem<>(Item.asResource(event.file().getName(), event.file().getAbsolutePath()));
         node.getChildren().add(resource);
         node.setExpanded(true);
 
-        EventUtil.post(new StatusSetEvent("Resource `%s` added", file.getAbsolutePath()));
+        EventUtil.post(new StatusSetEvent("Resource `%s` added", event.file().getAbsolutePath()));
     }
 
-    public void remove(@NonNull final TreeItem<Item> node) {
+    @Subscribe
+    public void onResourceRemove(final ResourceRemoveEvent event) {
+        final var node = treeController.getSelectedNode();
         node.getParent().getChildren().remove(node);
 
         EventUtil.post(new StatusSetEvent("Resource `%s` removed", node.getValue().name()));

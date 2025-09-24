@@ -1,4 +1,6 @@
 package io.github.trimax.venta.editor.events.group;
 
-public record GroupRemoveEvent() {
+import io.github.trimax.venta.editor.events.AbstractEvent;
+
+public record GroupRemoveEvent() implements AbstractEvent {
 }

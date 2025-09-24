@@ -1,8 +1,9 @@
 package io.github.trimax.venta.editor.events.archive;
 
-import java.io.File;
-
+import io.github.trimax.venta.editor.events.AbstractEvent;
 import lombok.NonNull;
 
-public record ArchiveLoadEvent(@NonNull File file) {
+import java.io.File;
+
+public record ArchiveLoadEvent(@NonNull File file) implements AbstractEvent {
 }

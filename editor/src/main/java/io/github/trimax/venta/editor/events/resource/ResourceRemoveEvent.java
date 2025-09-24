@@ -1,4 +1,6 @@
 package io.github.trimax.venta.editor.events.resource;
 
-public record ResourceRemoveEvent() {
+import io.github.trimax.venta.editor.events.AbstractEvent;
+
+public record ResourceRemoveEvent() implements AbstractEvent {
 }
