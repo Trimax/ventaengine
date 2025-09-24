@@ -1,9 +1,10 @@
 package io.github.trimax.venta.editor.events.tree;
 
+import io.github.trimax.venta.editor.events.AbstractEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import javafx.scene.control.TreeItem;
 
-public record TreeSelectEvent(TreeItem<Item> node) {
+public record TreeSelectEvent(TreeItem<Item> node) implements AbstractEvent {
     public boolean hasSelected() {
         return node != null;
     }

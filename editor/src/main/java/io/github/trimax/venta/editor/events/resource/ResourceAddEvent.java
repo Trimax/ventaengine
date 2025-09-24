@@ -1,8 +1,9 @@
 package io.github.trimax.venta.editor.events.resource;
 
-import java.io.File;
-
+import io.github.trimax.venta.editor.events.AbstractEvent;
 import lombok.NonNull;
 
-public record ResourceAddEvent(@NonNull File file) {
+import java.io.File;
+
+public record ResourceAddEvent(@NonNull File file) implements AbstractEvent {
 }
