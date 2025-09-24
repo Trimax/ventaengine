@@ -4,8 +4,6 @@ import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.stage.Window;
-import one.util.streamex.StreamEx;
 
 public final class EditorQuitHandler implements EventHandler<ActionEvent> {
     @Override
@@ -14,7 +12,6 @@ public final class EditorQuitHandler implements EventHandler<ActionEvent> {
     }
 
     private void exit() {
-        StreamEx.of(Window.getWindows()).forEach(Window::hide);
         Platform.runLater(Platform::exit);
     }
 }
