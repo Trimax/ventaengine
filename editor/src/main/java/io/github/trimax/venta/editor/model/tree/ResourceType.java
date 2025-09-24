@@ -1,5 +1,8 @@
 package io.github.trimax.venta.editor.model.tree;
 
+import java.io.File;
+import java.util.function.BiFunction;
+
 import io.github.trimax.venta.editor.renderers.AbstractFileRenderer;
 import io.github.trimax.venta.editor.renderers.ImageFileRenderer;
 import io.github.trimax.venta.editor.renderers.TextFileRenderer;
@@ -8,9 +11,6 @@ import javafx.scene.layout.VBox;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.io.File;
-import java.util.function.BiFunction;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ResourceType {
@@ -22,7 +22,9 @@ public enum ResourceType {
     Objects("Object", TextFileRenderer::new),
     Scenes("Scene", TextFileRenderer::new),
     Lights("Light", TextFileRenderer::new),
-    Meshes("Mesh", TextFileRenderer::new);
+    Meshes("Mesh", TextFileRenderer::new),
+    Audios("Audio", TextFileRenderer::new),
+    Sprites("Sprite", ImageFileRenderer::new);
 
     @Getter
     private final String displayName;

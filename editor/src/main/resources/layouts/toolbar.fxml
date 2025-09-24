@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<ToolBar xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.ToolbarController">
+    <!-- Archive section -->
+    <Button fx:id="btnToolBarArchiveNew">
+        <tooltip>
+            <Tooltip text="Create a new archive" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/archive/archive-new.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+    <Button fx:id="btnToolBarArchiveSave">
+        <tooltip>
+            <Tooltip text="Save an archive" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/archive/archive-save.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+    <Button fx:id="btnToolBarArchiveLoad">
+        <tooltip>
+            <Tooltip text="Load an archive" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/archive/archive-load.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+    <Button fx:id="btnToolBarArchiveBuild">
+        <tooltip>
+            <Tooltip text="Build an archive" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/archive/archive-build.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Separator/>
+
+    <!-- Groups section -->
+    <Button fx:id="btnToolBarGroupAudio">
+        <tooltip>
+            <Tooltip text="Open audio section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/audio.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupBillboard">
+        <tooltip>
+            <Tooltip text="Open billboard section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/billboard.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupCamera">
+        <tooltip>
+            <Tooltip text="Open camera section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/camera.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupCubeMap">
+        <tooltip>
+            <Tooltip text="Open cube map section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/cube.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupEmitter">
+        <tooltip>
+            <Tooltip text="Open emitter section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/emitter.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupLight">
+        <tooltip>
+            <Tooltip text="Open light section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/light.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupMaterial">
+        <tooltip>
+            <Tooltip text="Open material section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/material.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupMesh">
+        <tooltip>
+            <Tooltip text="Open mesh section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/mesh.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupObject">
+        <tooltip>
+            <Tooltip text="Open object section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/object.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupProgram">
+        <tooltip>
+            <Tooltip text="Open program section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/program.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupScene">
+        <tooltip>
+            <Tooltip text="Open scene section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/scene.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupShader">
+        <tooltip>
+            <Tooltip text="Open shader section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/shader.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupSprite">
+        <tooltip>
+            <Tooltip text="Open sprite section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/sprite.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupGridMesh">
+        <tooltip>
+            <Tooltip text="Open grid mesh section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/terrain.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnToolBarGroupTexture">
+        <tooltip>
+            <Tooltip text="Open texture section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/texture.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+</ToolBar>

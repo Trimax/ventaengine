@@ -1,39 +1,38 @@
-package io.github.trimax.venta.editor.tree;
+package io.github.trimax.venta.editor.controllers;
 
+import java.io.File;
+
+import org.apache.commons.collections4.CollectionUtils;
+
+import com.google.common.eventbus.Subscribe;
+import io.github.trimax.venta.editor.events.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ResourceType;
-import io.github.trimax.venta.editor.model.ui.Menu;
-import io.github.trimax.venta.editor.model.ui.ToolBar;
+import io.github.trimax.venta.editor.utils.EventUtil;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
-import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import one.util.streamex.StreamEx;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.io.File;
-import java.util.function.Consumer;
+public final class PropertiesController {
+    @FXML private VBox properties;
 
+    @FXML
+    public void initialize() {
+        EventUtil.register(this);
+    }
 
-@AllArgsConstructor
-public final class TreeItemListener implements Consumer<TreeItem<Item>> {
-    private final ToolBar toolBar;
-    private final Menu menu;
-    private final VBox info;
+    @Subscribe
+    public void onTreeSelect(final TreeSelectEvent event) {
+        properties.getChildren().clear();
 
-    @Override
-    public void accept(final TreeItem<Item> selected) {
-        if (selected == null)
-            return;
-
-        toolBar.update(selected.getValue());
-        menu.update(selected.getValue());
-        updateInfoPanel(selected);
+        if (event.hasSelected())
+            updateInfoPanel(event.node());
     }
 
     private void updateInfoPanel(final TreeItem<Item> selected) {
-        info.getChildren().clear();
         if (!selected.getValue().deletable() || !selected.getValue().hasExistingReference())
             showGroupInformation(selected);
         else
@@ -46,7 +45,7 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
         final var labelCountResources = new Label("Resources: " + StreamEx.of(node.getChildren()).remove(this::isGroup).count());
 
         labelGroupName.setStyle("-fx-font-weight: bold;");
-        info.getChildren().addAll(labelGroupName, labelCountGroups, labelCountResources);
+        properties.getChildren().addAll(labelGroupName, labelCountGroups, labelCountResources);
     }
 
     @SneakyThrows
@@ -57,15 +56,15 @@ public final class TreeItemListener implements Consumer<TreeItem<Item>> {
         final var labelResourceType = new Label("Type: " + type.getDisplayName());
 
         labelResourceName.setStyle("-fx-font-weight: bold;");
-        info.getChildren().addAll(labelResourceName, labelResourceType);
+        properties.getChildren().addAll(labelResourceName, labelResourceType);
 
         final var file = new File(node.getValue().reference());
         if (!file.exists()) {
-            info.getChildren().add(new Label(String.format("Resource file `%s` is not found", file.getAbsoluteFile())));
+            properties.getChildren().add(new Label(String.format("Resource file `%s` is not found", file.getAbsoluteFile())));
             return;
         }
 
-        type.render(node, info, file);
+        type.render(node, properties, file);
     }
 
     private boolean isGroup(final TreeItem<Item> node) {

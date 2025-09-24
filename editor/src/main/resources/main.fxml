@@ -1,130 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.Controller">
     <top>
         <VBox>
-            <MenuBar>
-                <Menu text="Editor">
-                    <MenuItem text="About" accelerator="Ctrl+H" fx:id="btnMenuEditorAbout" />
-                    <MenuItem text="Exit"  accelerator="Ctrl+Q" fx:id="btnMenuEditorQuit" />
-                </Menu>
-                <Menu text="Archive">
-                    <MenuItem text="New"   accelerator="Ctrl+N" fx:id="btnMenuArchiveNew" />
-                    <MenuItem text="Save"  accelerator="Ctrl+S" fx:id="btnMenuArchiveSave"/>
-                    <MenuItem text="Open"  accelerator="Ctrl+O" fx:id="btnMenuArchiveLoad" />
-                    <MenuItem text="Build" accelerator="Ctrl+B" fx:id="btnMenuArchiveBuild" />
-                </Menu>
-                <Menu text="Group">
-                    <MenuItem text="Add Group"    accelerator="Ctrl+G"       disable="true" fx:id="btnMenuGroupAdd" />
-                    <MenuItem text="Remove Group" accelerator="Ctrl+Shift+G" disable="true" fx:id="btnMenuGroupRemove" />
-                </Menu>
-                <Menu text="Resource">
-                    <MenuItem text="Add Resource"    accelerator="Ctrl+R"       disable="true" fx:id="btnMenuResourceAdd" />
-                    <MenuItem text="Remove Resource" accelerator="Ctrl+Shift+R" disable="true" fx:id="btnMenuResourceRemove" />
-                </Menu>
-            </MenuBar>
-            <ToolBar>
-                <!-- Archive section -->
-                <Button text="New" fx:id="btnToolBarArchiveNew">
-                    <graphic>
-                        <ImageView>
-                            <fitWidth>16</fitWidth>
-                            <fitHeight>16</fitHeight>
-                            <Image url="@/icons/common/archive.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button text="Save"  fx:id="btnToolBarArchiveSave">
-                    <graphic>
-                        <ImageView>
-                            <fitWidth>16</fitWidth>
-                            <fitHeight>16</fitHeight>
-                            <Image url="@/icons/common/archive.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button text="Load"  fx:id="btnToolBarArchiveLoad">
-                    <graphic>
-                        <ImageView>
-                            <fitWidth>16</fitWidth>
-                            <fitHeight>16</fitHeight>
-                            <Image url="@/icons/common/archive.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button text="Build" fx:id="btnToolBarArchiveBuild">
-                    <graphic>
-                        <ImageView>
-                            <fitWidth>16</fitWidth>
-                            <fitHeight>16</fitHeight>
-                            <Image url="@/icons/common/archive.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
-
-                <Separator/>
-
-                <!-- Group section -->
-                <Button text="Add" disable="true" fx:id="btnToolBarGroupAdd">
-                    <graphic>
-                        <ImageView>
-                            <fitWidth>16</fitWidth>
-                            <fitHeight>16</fitHeight>
-                            <Image url="@/icons/common/group.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button text="Remove" disable="true" fx:id="btnToolBarGroupRemove">
-                    <graphic>
-                        <ImageView>
-                            <fitWidth>16</fitWidth>
-                            <fitHeight>16</fitHeight>
-                            <Image url="@/icons/common/group.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
-
-                <Separator/>
-
-                <!-- Resource section -->
-                <Button text="Add" disable="true" fx:id="btnToolBarResourceAdd">
-                    <graphic>
-                        <ImageView>
-                            <fitWidth>16</fitWidth>
-                            <fitHeight>16</fitHeight>
-                            <Image url="@/icons/common/resource.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button text="Remove" disable="true" fx:id="btnToolBarResourceRemove">
-                    <graphic>
-                        <ImageView>
-                            <fitWidth>16</fitWidth>
-                            <fitHeight>16</fitHeight>
-                            <Image url="@/icons/common/resource.png" />
-                        </ImageView>
-                    </graphic>
-                </Button>
-            </ToolBar>
+            <fx:include source="layouts/menubar.fxml" />
+            <fx:include source="layouts/toolbar.fxml" />
         </VBox>
     </top>
 
     <left>
-        <TreeView fx:id="tree" prefWidth="250"/>
+        <fx:include source="layouts/tree.fxml"/>
     </left>
 
     <center>
-        <VBox fx:id="info" spacing="10" style="-fx-padding:10;-fx-border-color: lightgray; -fx-border-width:1"/>
+        <VBox style="-fx-padding:10;-fx-border-color: lightgray; -fx-background-color: black; -fx-border-width:1"/>
     </center>
 
+    <right>
+        <fx:include source="layouts/properties.fxml" />
+    </right>
+
     <bottom>
-        <HBox>
-            <Label fx:id="status" text="Ready"/>
-        </HBox>
+        <fx:include source="layouts/status.fxml" />
     </bottom>
 </BorderPane>
