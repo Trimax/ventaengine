@@ -3,6 +3,7 @@ package io.github.trimax.venta.container;
 import io.github.trimax.venta.container.exceptions.CyclicDependencyException;
 import io.github.trimax.venta.container.exceptions.InjectionConstructorNotFoundException;
 import io.github.trimax.venta.container.utils.ComponentUtil;
+import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.container.utils.MeasurementUtil;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -64,6 +65,7 @@ public final class VentaApplication {
 
         final var instance = constructor.newInstance(resolveParameters(constructor));
         components.put(clazz, instance);
+        EventUtil.register(instance);
         creationStack.remove(clazz);
 
         log.debug("Component {} was created successfully", clazz.getSimpleName());

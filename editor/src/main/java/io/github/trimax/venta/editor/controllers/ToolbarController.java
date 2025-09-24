@@ -5,24 +5,58 @@ import io.github.trimax.venta.editor.handlers.archive.ArchiveBuildHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveLoadHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveNewHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveSaveHandler;
-import io.github.trimax.venta.editor.utils.EventUtil;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ToolbarController {
-    @FXML private Button btnToolBarArchiveNew;
-    @FXML private Button btnToolBarArchiveSave;
-    @FXML private Button btnToolBarArchiveLoad;
-    @FXML private Button btnToolBarArchiveBuild;
+    private final ArchiveNewHandler archiveNewHandler;
+    private final ArchiveSaveHandler archiveSaveHandler;
+    private final ArchiveLoadHandler archiveLoadHandler;
+    private final ArchiveBuildHandler archiveBuildHandler;
+
+    @FXML private Button btnToolBarGroupAudio;
+    @FXML private Button btnToolBarGroupBillboard;
+    @FXML private Button btnToolBarGroupCamera;
+    @FXML private Button btnToolBarGroupCubeMap;
+    @FXML private Button btnToolBarGroupEmitter;
+    @FXML private Button btnToolBarGroupLight;
+    @FXML private Button btnToolBarGroupMaterial;
+    @FXML private Button btnToolBarGroupMesh;
+    @FXML private Button btnToolBarGroupObject;
+    @FXML private Button btnToolBarGroupProgram;
+    @FXML private Button btnToolBarGroupScene;
+    @FXML private Button btnToolBarGroupShader;
+    @FXML private Button btnToolBarGroupSprite;
+    @FXML private Button btnToolBarGroupGridMesh;
+    @FXML private Button btnToolBarGroupTexture;
 
     @FXML
-    public void initialize() {
-        EventUtil.register(this);
+    public void onArchiveNew(final ActionEvent event) {
+        archiveNewHandler.handle(event);
+    }
 
-        btnToolBarArchiveNew.setOnAction(new ArchiveNewHandler());
-        btnToolBarArchiveSave.setOnAction(new ArchiveSaveHandler());
-        btnToolBarArchiveLoad.setOnAction(new ArchiveLoadHandler());
-        btnToolBarArchiveBuild.setOnAction(new ArchiveBuildHandler());
+    @FXML
+    public void onArchiveSave(final ActionEvent event) {
+        archiveSaveHandler.handle(event);
+    }
+
+    @FXML
+    public void onArchiveLoad(final ActionEvent event) {
+        archiveLoadHandler.handle(event);
+    }
+
+    @FXML
+    public void onArchiveBuild(final ActionEvent event) {
+        archiveBuildHandler.handle(event);
+    }
+
+    @FXML
+    public void onGroupAudio(final ActionEvent event) {
+
     }
 }

@@ -19,8 +19,8 @@ import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.services.ArchiveService;
 import io.github.trimax.venta.editor.services.GroupService;
 import io.github.trimax.venta.editor.services.ResourceService;
-import io.github.trimax.venta.editor.utils.EventUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeView;
@@ -34,6 +34,12 @@ public final class TreeController {
     private final ArchiveService archiveService;
     private final GroupService groupService;
 
+    private final GroupAddHandler groupAddHandler;
+    private final GroupRemoveHandler groupRemoveHandler;
+
+    private final ResourceAddHandler resourceAddHandler;
+    private final ResourceRemoveHandler resourceRemoveHandler;
+
     @FXML private TreeView<Item> tree;
 
     @FXML private Button btnTreeResourceAdd;
@@ -43,13 +49,7 @@ public final class TreeController {
 
     @FXML
     public void initialize() {
-        EventUtil.register(this);
         TreeUtil.initialize(tree);
-
-        btnTreeResourceAdd.setOnAction(new ResourceAddHandler());
-        btnTreeResourceRemove.setOnAction(new ResourceRemoveHandler());
-        btnTreeFolderAdd.setOnAction(new GroupAddHandler());
-        btnTreeFolderRemove.setOnAction(new GroupRemoveHandler());
     }
 
     @Subscribe
@@ -75,23 +75,43 @@ public final class TreeController {
         archiveService.build(event.file(), tree.getRoot());
     }
 
+    @FXML
+    public void onGroupAdd(final ActionEvent event) {
+        groupAddHandler.handle(event);
+    }
+
+    @FXML
+    public void onGroupRemove(final ActionEvent event) {
+        groupRemoveHandler.handle(event);
+    }
+
+    @FXML
+    public void onResourceAdd(final ActionEvent event) {
+        resourceAddHandler.handle(event);
+    }
+
+    @FXML
+    public void onResourceRemove(final ActionEvent event) {
+        resourceRemoveHandler.handle(event);
+    }
+
     @Subscribe
-    public void onGroupAdd(final GroupAddEvent event) {
+    public void handleGroupAdd(final GroupAddEvent event) {
         groupService.add(event.name(), tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
-    public void onGroupRemove(final GroupRemoveEvent event) {
+    public void handleGroupRemove(final GroupRemoveEvent event) {
         groupService.remove(tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
-    public void onResourceAdd(final ResourceAddEvent event) {
+    public void handleResourceAdd(final ResourceAddEvent event) {
         resourceService.add(event.file(), tree.getSelectionModel().getSelectedItem());
     }
 
     @Subscribe
-    public void onResourceRemove(final ResourceRemoveEvent event) {
+    public void handleResourceRemove(final ResourceRemoveEvent event) {
         resourceService.remove(tree.getSelectionModel().getSelectedItem());
     }
 

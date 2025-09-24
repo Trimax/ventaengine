@@ -1,7 +1,6 @@
-package io.github.trimax.venta.editor.handlers.editor;
+package io.github.trimax.venta.editor.handlers.group;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import lombok.AccessLevel;
@@ -9,9 +8,9 @@ import lombok.NoArgsConstructor;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class EditorAboutHandler implements EventHandler<ActionEvent> {
+public final class GroupSelectHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(final ActionEvent event) {
-        DialogUtil.showInfo("Resource archive editor for Venta Engine");
+
     }
 }

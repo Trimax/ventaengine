@@ -1,6 +1,7 @@
 package io.github.trimax.venta.editor.utils;
 
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.definitions.Group;
 import io.github.trimax.venta.editor.events.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
@@ -14,10 +15,14 @@ import one.util.streamex.StreamEx;
 
 @UtilityClass
 public final class TreeUtil {
+    public void set(@NonNull final Node<Item> tree) {
+
+    }
+
+
     public void initialize(@NonNull final TreeView<Item> tree) {
         final var root = new TreeItem<>(new Item());
         tree.setCellFactory(_ -> new TreeCellRenderer());
-        tree.setShowRoot(false);
         tree.setRoot(root);
 
         tree.getSelectionModel().selectedItemProperty()

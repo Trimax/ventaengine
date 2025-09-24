@@ -2,10 +2,11 @@ package io.github.trimax.venta.editor.controllers;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.container.utils.EventUtil;
+import io.github.trimax.venta.editor.events.status.StatusSetEvent;
 import io.github.trimax.venta.editor.events.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.model.tree.ResourceType;
-import io.github.trimax.venta.editor.utils.EventUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
@@ -20,11 +21,6 @@ import java.io.File;
 public final class PropertiesController {
     @FXML private VBox properties;
 
-    @FXML
-    public void initialize() {
-        EventUtil.register(this);
-    }
-
     @Subscribe
     public void onTreeSelect(final TreeSelectEvent event) {
         properties.getChildren().clear();
@@ -38,6 +34,8 @@ public final class PropertiesController {
             showGroupInformation(selected);
         else
             showResourceInformation(selected);
+
+        EventUtil.post(new StatusSetEvent("Item `%s` selected", selected.getValue().name()));
     }
 
     private void showGroupInformation(final TreeItem<Item> node) {
