@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
-<ToolBar xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.ToolbarController">
+<ToolBar xmlns:fx="http://javafx.com/fxml" stylesheets="@styles/toolbar.css" fx:controller="io.github.trimax.venta.editor.controllers.ToolbarController">
     <!-- Archive section -->
     <Button onAction="#onArchiveNew">
         <tooltip>
@@ -60,7 +60,7 @@
         <ToggleGroup fx:id="groupSelector"/>
     </fx:define>
 
-    <ToggleButton toggleGroup="$groupSelector" userData="AudioSource">
+    <ToggleButton toggleGroup="$groupSelector" userData="AudioSource" selected="true">
         <tooltip>
             <Tooltip text="Open audio section" />
         </tooltip>
@@ -254,4 +254,59 @@
             </ImageView>
         </graphic>
     </ToggleButton>
+
+    <Separator />
+
+    <!-- Camera section -->
+    <Button>
+        <tooltip>
+            <Tooltip text="Point camera to origin" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/camera/camera_zero.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button>
+        <tooltip>
+            <Tooltip text="XY projection" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/camera/camera_xy.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button>
+        <tooltip>
+            <Tooltip text="XZ projection" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/camera/camera_xz.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button>
+        <tooltip>
+            <Tooltip text="YZ projection" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/camera/camera_yz.png" />
+            </ImageView>
+        </graphic>
+    </Button>
 </ToolBar>
