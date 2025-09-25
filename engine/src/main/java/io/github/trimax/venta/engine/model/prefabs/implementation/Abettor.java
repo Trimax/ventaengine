@@ -32,17 +32,11 @@ public final class Abettor {
         return new LightPrefabImplementation(type, color, direction, attenuation, intensity, range, castShadows);
     }
 
-
-    //TODO: Move to registry
-    public GridMeshPrefabImplementation createGridMesh(@NonNull final Geometry geometry) {
-        return new GridMeshPrefabImplementation(geometry);
-    }
-
-    public WaterSurfacePrefabImplementation createWaterSurface(@NonNull final GridMeshPrefabImplementation gridMesh,
+    public WaterSurfacePrefabImplementation createWaterSurface(@NonNull final GridMeshEntityImplementation gridMesh,
                                                                @NonNull final MaterialEntityImplementation material,
                                                                @NonNull final ProgramEntityImplementation program,
                                                                final List<Wave> waves) {
-        return new WaterSurfacePrefabImplementation(gridMesh, program, material, waves);
+        return new WaterSurfacePrefabImplementation(gridMesh, material, program, waves);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,

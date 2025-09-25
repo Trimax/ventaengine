@@ -1,13 +1,13 @@
-package io.github.trimax.venta.engine.repositories.implementation;
+package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.GridMeshVertexLayout;
 import io.github.trimax.venta.engine.model.dto.GridMeshDTO;
-import io.github.trimax.venta.engine.model.prefabs.GridMeshPrefab;
-import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
-import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
-import io.github.trimax.venta.engine.repositories.GridMeshRepository;
+import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
+import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
+import io.github.trimax.venta.engine.registries.GridMeshRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
 import io.github.trimax.venta.engine.utils.GeometryUtil;
 import lombok.AccessLevel;
@@ -18,15 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GridMeshRepositoryImplementation
-        extends AbstractRepositoryImplementation<GridMeshPrefabImplementation, GridMeshPrefab>
-        implements GridMeshRepository {
+public final class GridMeshRegistryImplementation
+        extends AbstractRegistryImplementation<GridMeshEntityImplementation, GridMeshEntity, Void>
+        implements GridMeshRegistry {
     private final ResourceService resourceService;
     private final GeometryHelper geometryHelper;
     private final Abettor abettor;
 
     @Override
-    protected GridMeshPrefabImplementation load(@NonNull final String resourcePath) {
+    protected GridMeshEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
         log.info("Loading grid mesh {}", resourcePath);
 
         final var gridMeshDTO = resourceService.getAsObject(String.format("/gridmeshes/%s", resourcePath), GridMeshDTO.class);
@@ -36,7 +36,7 @@ public final class GridMeshRepositoryImplementation
     }
 
     @Override
-    protected void unload(@NonNull final GridMeshPrefabImplementation entity) {
+    protected void unload(@NonNull final GridMeshEntityImplementation entity) {
         log.info("Unloading grid mesh {}", entity.getID());
 
         geometryHelper.delete(entity.getGeometry());

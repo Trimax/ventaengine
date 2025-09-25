@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import io.github.trimax.venta.engine.model.common.shared.Wave;
+import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.WaterSurfacePrefab;
@@ -15,13 +16,13 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class WaterSurfacePrefabImplementation extends AbstractPrefabImplementation implements WaterSurfacePrefab {
     @NonNull
-    GridMeshPrefabImplementation gridMesh; //TODO: Should be entity
-
-    @NonNull
-    ProgramEntityImplementation program;
+    GridMeshEntityImplementation gridMesh;
 
     @NonNull
     MaterialEntityImplementation material;
+
+    @NonNull
+    ProgramEntityImplementation program;
 
     List<Wave> waves;
 }

@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.model.dto.WaterSurfaceDTO;
 import io.github.trimax.venta.engine.model.prefabs.WaterSurfacePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.WaterSurfacePrefabImplementation;
+import io.github.trimax.venta.engine.registries.implementation.GridMeshRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.WaterSurfaceRepository;
@@ -22,7 +23,7 @@ import one.util.streamex.StreamEx;
 public final class WaterSurfaceRepositoryImplementation
         extends AbstractRepositoryImplementation<WaterSurfacePrefabImplementation, WaterSurfacePrefab>
         implements WaterSurfaceRepository {
-    private final GridMeshRepositoryImplementation gridMeshRegistry;
+    private final GridMeshRegistryImplementation gridMeshRegistry;
     private final MaterialRegistryImplementation materialRegistry;
     private final ProgramRegistryImplementation programRegistry;
     private final ResourceService resourceService;

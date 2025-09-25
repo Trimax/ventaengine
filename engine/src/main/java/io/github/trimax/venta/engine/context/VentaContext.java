@@ -118,8 +118,8 @@ public final class VentaContext {
         return repositoryFactory.get(EmitterRepositoryImplementation.class);
     }
 
-    public GridMeshRepository getGridMeshRepository() {
-        return repositoryFactory.get(GridMeshRepositoryImplementation.class);
+    public GridMeshRegistry getGridMeshRepository() {
+        return registryFactory.get(GridMeshRegistryImplementation.class);
     }
 
     public SoundSourceRepository getSoundSourceRepository() {

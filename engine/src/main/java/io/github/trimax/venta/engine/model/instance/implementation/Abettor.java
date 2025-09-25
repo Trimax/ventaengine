@@ -7,7 +7,6 @@ import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
-import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -42,7 +41,7 @@ public final class Abettor {
     }
 
     public WaterSurfaceInstanceImplementation createWaterSurface(@NonNull final String name,
-                                                                 @NonNull final GridMeshPrefabImplementation gridMesh,
+                                                                 @NonNull final GridMeshEntityImplementation gridMesh,
                                                                  @NonNull final MaterialEntityImplementation material,
                                                                  @NonNull final ProgramEntityImplementation program,
                                                                  @NonNull final List<Wave> waves) {

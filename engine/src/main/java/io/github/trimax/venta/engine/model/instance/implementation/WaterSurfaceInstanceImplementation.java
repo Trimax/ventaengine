@@ -5,10 +5,10 @@ import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
+import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.WaterSurfaceInstance;
-import io.github.trimax.venta.engine.model.prefabs.implementation.GridMeshPrefabImplementation;
 import io.github.trimax.venta.engine.utils.WaveUtil;
 import lombok.Getter;
 import lombok.NonNull;
@@ -23,7 +23,7 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
     private final List<Wave> waves = new ArrayList<>();
     private final float waveAmplitude;
 
-    private GridMeshPrefabImplementation gridMesh;
+    private GridMeshEntityImplementation gridMesh;
     private MaterialEntityImplementation material;
     private ProgramEntityImplementation program;
 
@@ -32,7 +32,7 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
     private boolean isLit = true;
 
     WaterSurfaceInstanceImplementation(@NonNull final String name,
-                                       @NonNull final GridMeshPrefabImplementation gridMesh,
+                                       @NonNull final GridMeshEntityImplementation gridMesh,
                                        @NonNull final MaterialEntityImplementation material,
                                        @NonNull final ProgramEntityImplementation program,
                                        @NonNull final List<Wave> waves) {
