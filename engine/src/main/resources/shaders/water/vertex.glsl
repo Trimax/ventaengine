@@ -2,6 +2,8 @@
 
 #define MAX_WAVES 16
 
+#define PI 3.14159
+
 /***
  * Structures
  ***/
@@ -36,7 +38,7 @@ out float vertexTimeElapsed;
 out vec2 vertexTextureCoordinates;
 
 vec3 gerstnerWave(vec3 pos, Wave wave, out vec3 outNormal) {
-    float k = 2.0 * 3.14159 / wave.l;
+    float k = 2.0 * PI / wave.l;
     float f = k * dot(wave.direction, pos.xz) - wave.speed * timeElapsed;
 
     float a = wave.amplitude;
