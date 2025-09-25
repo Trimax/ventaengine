@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ItemType {
-    Root(true),
     Group(true),
+    Folder(true),
     Resource(false);
 
     private final boolean isContainer;

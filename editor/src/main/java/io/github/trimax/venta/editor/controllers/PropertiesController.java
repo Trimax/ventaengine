@@ -6,7 +6,8 @@ import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.editor.model.tree.ResourceType;
+import io.github.trimax.venta.editor.model.tree.ItemType;
+import io.github.trimax.venta.editor.model.tree.ResourceType2;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
@@ -30,7 +31,7 @@ public final class PropertiesController {
     }
 
     private void updateInfoPanel(final TreeItem<Item> selected) {
-        if (!selected.getValue().deletable() || !selected.getValue().hasExistingReference())
+        if (selected.getValue().type() == ItemType.Group || !selected.getValue().hasExistingReference())
             showGroupInformation(selected);
         else
             showResourceInformation(selected);
@@ -70,9 +71,9 @@ public final class PropertiesController {
         return CollectionUtils.isNotEmpty(node.getChildren()) || !node.getValue().hasExistingReference();
     }
 
-    private ResourceType getResourceType(final TreeItem<Item> node) {
-        if (!node.getValue().deletable())
-            return ResourceType.valueOf(node.getValue().name());
+    private ResourceType2 getResourceType(final TreeItem<Item> node) {
+        if (node.getValue().type() == ItemType.Group)
+            return ResourceType2.valueOf(node.getValue().name());
 
         return getResourceType(node.getParent());
     }

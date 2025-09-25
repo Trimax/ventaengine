@@ -8,6 +8,7 @@ import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.event.archive.ArchiveBuildEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.editor.model.tree.ItemType;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -58,6 +59,6 @@ public final class ArchiveBuildListener implements AbstractListener<ArchiveBuild
     }
 
     private String getType(final String currentType, final Item item) {
-        return !item.deletable() ? item.name() : currentType;
+        return item.type() == ItemType.Group ? item.name() : currentType;
     }
 }

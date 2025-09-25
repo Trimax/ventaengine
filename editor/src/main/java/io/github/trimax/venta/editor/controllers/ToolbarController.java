@@ -1,13 +1,16 @@
 package io.github.trimax.venta.editor.controllers;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveBuildHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveLoadHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveNewHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveSaveHandler;
+import io.github.trimax.venta.editor.model.event.group.GroupSelectEvent;
+import io.github.trimax.venta.engine.enums.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.ToggleGroup;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
@@ -19,21 +22,7 @@ public final class ToolbarController {
     private final ArchiveLoadHandler archiveLoadHandler;
     private final ArchiveBuildHandler archiveBuildHandler;
 
-    @FXML private Button btnToolBarGroupAudio;
-    @FXML private Button btnToolBarGroupBillboard;
-    @FXML private Button btnToolBarGroupCamera;
-    @FXML private Button btnToolBarGroupCubeMap;
-    @FXML private Button btnToolBarGroupEmitter;
-    @FXML private Button btnToolBarGroupLight;
-    @FXML private Button btnToolBarGroupMaterial;
-    @FXML private Button btnToolBarGroupMesh;
-    @FXML private Button btnToolBarGroupObject;
-    @FXML private Button btnToolBarGroupProgram;
-    @FXML private Button btnToolBarGroupScene;
-    @FXML private Button btnToolBarGroupShader;
-    @FXML private Button btnToolBarGroupSprite;
-    @FXML private Button btnToolBarGroupGridMesh;
-    @FXML private Button btnToolBarGroupTexture;
+    @FXML private ToggleGroup groupSelector;
 
     @FXML
     public void onArchiveNew(final ActionEvent event) {
@@ -56,7 +45,15 @@ public final class ToolbarController {
     }
 
     @FXML
-    public void onGroupAudio(final ActionEvent event) {
+    public void initialize() {
+        groupSelector.selectedToggleProperty().addListener((_, oldToggle, newToggle) -> {
+            if (newToggle == null && oldToggle != null) {
+                groupSelector.selectToggle(oldToggle);
+                return;
+            }
 
+            if (newToggle != null)
+                EventUtil.post(new GroupSelectEvent(ResourceType.valueOf((String) newToggle.getUserData())));
+        });
     }
 }

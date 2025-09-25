@@ -2,10 +2,10 @@ package io.github.trimax.venta.editor.utils;
 
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.container.utils.EventUtil;
-import io.github.trimax.venta.editor.definitions.Group;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.tree.TreeCellRenderer;
+import io.github.trimax.venta.engine.enums.ResourceType;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -19,20 +19,13 @@ public final class TreeUtil {
 
     }
 
-
     public void initialize(@NonNull final TreeView<Item> tree) {
-        final var root = new TreeItem<>(new Item());
+        final var root = new TreeItem<>(Item.asGroup(ResourceType.AudioSource));
         tree.setCellFactory(_ -> new TreeCellRenderer());
         tree.setRoot(root);
 
         tree.getSelectionModel().selectedItemProperty()
                 .addListener((_, _, newSel) -> EventUtil.post(new TreeSelectEvent(newSel)));
-
-        StreamEx.of(Group.values())
-                .sorted()
-                .map(Item::asGroup)
-                .map(TreeItem::new)
-                .forEach(root.getChildren()::add);
 
         enableAutoSort(root);
         sort(root);
@@ -44,11 +37,6 @@ public final class TreeUtil {
                 .filterBy(Item::name, name)
                 .findAny()
                 .isPresent();
-    }
-
-    public Node<String> createNode(final TreeItem<Item> node) {
-        return new Node<>(node.getValue().name(), node.getValue().reference(),
-                node.getChildren().stream().map(TreeUtil::createNode).toList());
     }
 
     private void enableAutoSort(final TreeItem<Item> parent) {

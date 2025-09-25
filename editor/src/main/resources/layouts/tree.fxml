@@ -33,7 +33,7 @@
 
         <Separator/>
 
-        <Button disable="true" fx:id="btnTreeFolderAdd" onAction="#onGroupAdd">
+        <Button disable="true" fx:id="btnTreeFolderAdd" onAction="#onFolderAdd">
             <tooltip>
                 <Tooltip text="Add folder" />
             </tooltip>
@@ -45,7 +45,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button disable="true" fx:id="btnTreeFolderRemove" onAction="#onGroupRemove">
+        <Button disable="true" fx:id="btnTreeFolderRemove" onAction="#onFolderRemove">
             <tooltip>
                 <Tooltip text="Remove folder" />
             </tooltip>

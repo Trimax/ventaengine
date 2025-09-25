@@ -56,7 +56,11 @@
     <Separator/>
 
     <!-- Groups section -->
-    <Button fx:id="btnToolBarGroupAudio">
+    <fx:define>
+        <ToggleGroup fx:id="groupSelector"/>
+    </fx:define>
+
+    <ToggleButton toggleGroup="$groupSelector" userData="AudioSource">
         <tooltip>
             <Tooltip text="Open audio section" />
         </tooltip>
@@ -67,9 +71,9 @@
                 <Image url="@/icons/group/audio.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupBillboard">
+    <ToggleButton toggleGroup="$groupSelector" userData="Billboard">
         <tooltip>
             <Tooltip text="Open billboard section" />
         </tooltip>
@@ -80,9 +84,9 @@
                 <Image url="@/icons/group/billboard.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupCamera">
+    <ToggleButton toggleGroup="$groupSelector" userData="Camera">
         <tooltip>
             <Tooltip text="Open camera section" />
         </tooltip>
@@ -93,9 +97,9 @@
                 <Image url="@/icons/group/camera.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupCubeMap">
+    <ToggleButton toggleGroup="$groupSelector" userData="CubeMap">
         <tooltip>
             <Tooltip text="Open cube map section" />
         </tooltip>
@@ -106,9 +110,9 @@
                 <Image url="@/icons/group/cube.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupEmitter">
+    <ToggleButton toggleGroup="$groupSelector" userData="Emitter">
         <tooltip>
             <Tooltip text="Open emitter section" />
         </tooltip>
@@ -119,9 +123,9 @@
                 <Image url="@/icons/group/emitter.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupLight">
+    <ToggleButton toggleGroup="$groupSelector" userData="Light">
         <tooltip>
             <Tooltip text="Open light section" />
         </tooltip>
@@ -132,9 +136,9 @@
                 <Image url="@/icons/group/light.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupMaterial">
+    <ToggleButton toggleGroup="$groupSelector" userData="Material">
         <tooltip>
             <Tooltip text="Open material section" />
         </tooltip>
@@ -145,9 +149,9 @@
                 <Image url="@/icons/group/material.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupMesh">
+    <ToggleButton toggleGroup="$groupSelector" userData="Mesh">
         <tooltip>
             <Tooltip text="Open mesh section" />
         </tooltip>
@@ -158,9 +162,9 @@
                 <Image url="@/icons/group/mesh.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupObject">
+    <ToggleButton toggleGroup="$groupSelector" userData="Object">
         <tooltip>
             <Tooltip text="Open object section" />
         </tooltip>
@@ -171,9 +175,9 @@
                 <Image url="@/icons/group/object.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupProgram">
+    <ToggleButton toggleGroup="$groupSelector" userData="Program">
         <tooltip>
             <Tooltip text="Open program section" />
         </tooltip>
@@ -184,9 +188,9 @@
                 <Image url="@/icons/group/program.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupScene">
+    <ToggleButton toggleGroup="$groupSelector" userData="Scene">
         <tooltip>
             <Tooltip text="Open scene section" />
         </tooltip>
@@ -197,9 +201,9 @@
                 <Image url="@/icons/group/scene.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupShader">
+    <ToggleButton toggleGroup="$groupSelector" userData="Shader">
         <tooltip>
             <Tooltip text="Open shader section" />
         </tooltip>
@@ -210,9 +214,9 @@
                 <Image url="@/icons/group/shader.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupSprite">
+    <ToggleButton toggleGroup="$groupSelector" userData="Sprite">
         <tooltip>
             <Tooltip text="Open sprite section" />
         </tooltip>
@@ -223,9 +227,9 @@
                 <Image url="@/icons/group/sprite.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupGridMesh">
+    <ToggleButton toggleGroup="$groupSelector" userData="Terrain">
         <tooltip>
             <Tooltip text="Open grid mesh section" />
         </tooltip>
@@ -236,9 +240,9 @@
                 <Image url="@/icons/group/terrain.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 
-    <Button fx:id="btnToolBarGroupTexture">
+    <ToggleButton toggleGroup="$groupSelector" userData="Texture">
         <tooltip>
             <Tooltip text="Open texture section" />
         </tooltip>
@@ -249,5 +253,5 @@
                 <Image url="@/icons/group/texture.png" />
             </ImageView>
         </graphic>
-    </Button>
+    </ToggleButton>
 </ToolBar>
