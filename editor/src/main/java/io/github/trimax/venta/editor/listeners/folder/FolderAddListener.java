@@ -36,8 +36,8 @@ public final class FolderAddListener implements AbstractListener<FolderAddEvent>
             return;
         }
 
-        final var group = new TreeItem<>(Resource.asFolder(event.name()));
-        node.getChildren().add(group);
+        final var folder = new TreeItem<>(Resource.asFolder(event.name()));
+        node.getChildren().add(folder);
         node.setExpanded(true);
 
         EventUtil.post(new StatusSetEvent("Folder `%s` created", event.name()));
