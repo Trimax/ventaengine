@@ -1,18 +1,5 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
-import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_REPEAT;
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
-import static org.lwjgl.system.MemoryStack.stackPush;
-
-import java.nio.ByteBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsFont;
 import io.github.trimax.venta.engine.definitions.DefinitionsTexture;
@@ -28,6 +15,18 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.ByteBuffer;
+
+import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
+import static org.lwjgl.system.MemoryStack.stackPush;
 
 @Slf4j
 @Component
@@ -40,7 +39,7 @@ public final class TextureRegistryImplementation
     private final Memory memory;
 
     public TextureEntityImplementation getDefaultTexture() {
-        return get(DefinitionsTexture.TEXTURE_DEFAULT);
+        return get(DefinitionsTexture.DEFAULT);
     }
 
     public TextureEntityImplementation create(@NonNull final String name, @NonNull final ByteBuffer bitmap) {

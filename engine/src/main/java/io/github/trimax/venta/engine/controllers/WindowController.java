@@ -3,12 +3,15 @@ package io.github.trimax.venta.engine.controllers;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.callbacks.*;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
+import io.github.trimax.venta.engine.definitions.DefinitionsIcon;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.WindowState;
+import io.github.trimax.venta.engine.services.ResourceService;
+import io.github.trimax.venta.engine.utils.IconUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -24,6 +27,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
     private final ConsoleCommandQueue consoleCommandQueue;
     private final KeyboardController keyboardController;
     private final ConsoleController consoleController;
+    private final ResourceService resourceService;
     private final Memory memory;
 
     @Override
@@ -64,6 +68,8 @@ public final class WindowController extends AbstractController<WindowState, Vent
         glfwShowWindow(id);
         glfwRestoreWindow(id);
         glfwFocusWindow(id);
+
+        IconUtil.setIcon(id, resourceService.getAsBytes(DefinitionsIcon.DEFAULT));
 
         final var window = new WindowState(handler, id, title, width, height);
         glfwSetFramebufferSizeCallback(id, new FramebufferSizeCallback(this));
