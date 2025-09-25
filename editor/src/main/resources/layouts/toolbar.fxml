@@ -229,7 +229,7 @@
         </graphic>
     </ToggleButton>
 
-    <ToggleButton toggleGroup="$groupSelector" userData="Terrain">
+    <ToggleButton toggleGroup="$groupSelector" userData="GridMesh">
         <tooltip>
             <Tooltip text="Open grid mesh section" />
         </tooltip>
@@ -237,7 +237,7 @@
             <ImageView>
                 <fitWidth>24</fitWidth>
                 <fitHeight>24</fitHeight>
-                <Image url="@/icons/group/terrain.png" />
+                <Image url="@/icons/group/grid.png" />
             </ImageView>
         </graphic>
     </ToggleButton>

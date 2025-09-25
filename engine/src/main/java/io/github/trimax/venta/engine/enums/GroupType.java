@@ -10,7 +10,7 @@ public enum GroupType {
     AudioSource("Audio sources", "/icons/group/audio.png"),
     Billboard("Billboards", "/icons/group/billboard.png"),
     Camera("Cameras", "/icons/group/camera.png"),
-    CubeMap("Cube maps", "/icons/group/cubemap.png"),
+    CubeMap("Cube maps", "/icons/group/cube.png"),
     Emitter("Emitters", "/icons/group/emitter.png"),
     GridMesh("Grid meshes", "/icons/group/grid.png"),
     Light("Lights", "/icons/group/light.png"),
