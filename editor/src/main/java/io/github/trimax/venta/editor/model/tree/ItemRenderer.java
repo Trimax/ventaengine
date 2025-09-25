@@ -4,7 +4,7 @@ import io.github.trimax.venta.editor.renderers.AbstractFileRenderer;
 import io.github.trimax.venta.editor.renderers.ImageFileRenderer;
 import io.github.trimax.venta.editor.renderers.TextFileRenderer;
 import io.github.trimax.venta.engine.enums.GroupType;
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
 import lombok.AccessLevel;
@@ -37,9 +37,9 @@ public enum ItemRenderer {
 
     @Getter
     private final GroupType groupType;
-    private final BiFunction<TreeItem<Item>, VBox, AbstractFileRenderer> constructor;
+    private final BiFunction<TreeItem<Resource>, VBox, AbstractFileRenderer> constructor;
 
-    public void render(final TreeItem<Item> node, final VBox info, final File file) {
+    public void render(final TreeItem<Resource> node, final VBox info, final File file) {
         constructor.apply(node, info).render(file);
     }
 

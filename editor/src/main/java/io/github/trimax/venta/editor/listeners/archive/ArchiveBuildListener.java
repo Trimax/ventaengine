@@ -10,7 +10,7 @@ import io.github.trimax.venta.editor.model.event.archive.ArchiveBuildEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.engine.enums.GroupType;
 import io.github.trimax.venta.engine.enums.ResourceType;
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -51,7 +51,7 @@ public final class ArchiveBuildListener implements AbstractListener<ArchiveBuild
     }
 
     @SneakyThrows
-    private void writeNode(@NonNull final DataOutputStream out, final TreeItem<Item> node, final String type) {
+    private void writeNode(@NonNull final DataOutputStream out, final TreeItem<Resource> node, final String type) {
         final var item = node.getValue();
         out.writeUTF(item.name().toLowerCase());
 
@@ -70,7 +70,7 @@ public final class ArchiveBuildListener implements AbstractListener<ArchiveBuild
             writeNode(out, child, currentType);
     }
 
-    private String getType(final String currentType, final Item item) {
-        return item.type() == ResourceType.Group ? item.name() : currentType;
+    private String getType(final String currentType, final Resource resource) {
+        return resource.type() == ResourceType.Group ? resource.name() : currentType;
     }
 }

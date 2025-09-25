@@ -9,7 +9,7 @@ import io.github.trimax.venta.editor.model.event.folder.FolderAddEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.editor.utils.NameUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -36,7 +36,7 @@ public final class FolderAddListener implements AbstractListener<FolderAddEvent>
             return;
         }
 
-        final var group = new TreeItem<>(Item.asFolder(event.name()));
+        final var group = new TreeItem<>(Resource.asFolder(event.name()));
         node.getChildren().add(group);
         node.setExpanded(true);
 

@@ -12,7 +12,7 @@ import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
 import io.github.trimax.venta.editor.model.event.archive.ArchiveSaveEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.engine.enums.GroupType;
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -44,11 +44,11 @@ public final class ArchiveSaveListener implements AbstractListener<ArchiveSaveEv
         EventUtil.post(new StatusSetEvent("Archive saved to %s", event.file().getAbsoluteFile()));
     }
 
-    private Node<Item> transform(@NonNull final GroupType type) {
+    private Node<Resource> transform(@NonNull final GroupType type) {
         return transform(context.getTree(type));
     }
 
-    private Node<Item> transform(final TreeItem<Item> node) {
+    private Node<Resource> transform(final TreeItem<Resource> node) {
         return new Node<>(node.getValue().name(), node.getValue(), StreamEx.of(node.getChildren()).map(this::transform).toList());
     }
 }

@@ -13,7 +13,7 @@ import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
 import io.github.trimax.venta.editor.model.event.archive.ArchiveLoadEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.engine.enums.GroupType;
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -48,7 +48,7 @@ public final class ArchiveLoadListener implements AbstractListener<ArchiveLoadEv
         EventUtil.post(new StatusSetEvent("Archive loaded from %s", event.file().getAbsolutePath()));
     }
 
-    public TreeItem<Item> convert(@NonNull final Node<Item> node) {
+    public TreeItem<Resource> convert(@NonNull final Node<Resource> node) {
         final var vertex = new TreeItem<>(node.value());
         vertex.getChildren().addAll(StreamEx.of(node.children()).map(this::convert).toList());
 

@@ -8,7 +8,7 @@ import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.ItemRenderer;
 import io.github.trimax.venta.engine.enums.GroupType;
 import io.github.trimax.venta.engine.enums.ResourceType;
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
@@ -31,7 +31,7 @@ public final class PropertiesController {
             updateInfoPanel(event.node());
     }
 
-    private void updateInfoPanel(final TreeItem<Item> selected) {
+    private void updateInfoPanel(final TreeItem<Resource> selected) {
         if (selected.getValue().type() == ResourceType.File)
             showResourceInformation(selected);
         else
@@ -40,7 +40,7 @@ public final class PropertiesController {
         EventUtil.post(new StatusSetEvent("Item `%s` selected", selected.getValue().name()));
     }
 
-    private void showGroupInformation(final TreeItem<Item> node) {
+    private void showGroupInformation(final TreeItem<Resource> node) {
         final var labelGroupName = new Label("Group: " + node.getValue().name());
         final var labelCountGroups = new Label("Groups: " + StreamEx.of(node.getChildren()).filter(this::isGroup).count());
         final var labelCountResources = new Label("Resources: " + StreamEx.of(node.getChildren()).remove(this::isGroup).count());
@@ -50,7 +50,7 @@ public final class PropertiesController {
     }
 
     @SneakyThrows
-    private void showResourceInformation(final TreeItem<Item> node) {
+    private void showResourceInformation(final TreeItem<Resource> node) {
         final var type = getRenderer(node);
 
         final var labelResourceName = new Label("Resource: " + node.getValue().name());
@@ -68,11 +68,11 @@ public final class PropertiesController {
         type.render(node, properties, file);
     }
 
-    private boolean isGroup(final TreeItem<Item> node) {
+    private boolean isGroup(final TreeItem<Resource> node) {
         return CollectionUtils.isNotEmpty(node.getChildren()) || !node.getValue().hasExistingReference();
     }
 
-    private ItemRenderer getRenderer(final TreeItem<Item> node) {
+    private ItemRenderer getRenderer(final TreeItem<Resource> node) {
         if (node.getValue().type() == ResourceType.Group)
             return ItemRenderer.of(GroupType.valueOf(node.getValue().reference()));
 
