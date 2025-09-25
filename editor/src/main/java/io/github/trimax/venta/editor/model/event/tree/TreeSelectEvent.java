@@ -1,6 +1,6 @@
-package io.github.trimax.venta.editor.events.tree;
+package io.github.trimax.venta.editor.model.event.tree;
 
-import io.github.trimax.venta.editor.events.AbstractEvent;
+import io.github.trimax.venta.editor.model.event.AbstractEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import javafx.scene.control.TreeItem;
 
