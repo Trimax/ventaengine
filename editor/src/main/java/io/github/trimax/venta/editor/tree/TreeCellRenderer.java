@@ -2,7 +2,7 @@ package io.github.trimax.venta.editor.tree;
 
 import io.github.trimax.venta.editor.utils.IconUtil;
 import io.github.trimax.venta.engine.enums.GroupType;
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,23 +11,23 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public final class TreeCellRenderer extends TreeCell<Item> {
+public final class TreeCellRenderer extends TreeCell<Resource> {
     @Override
-    protected void updateItem(final Item item, final boolean empty) {
-        super.updateItem(item, empty);
-        if (item == null) {
+    protected void updateItem(final Resource resource, final boolean empty) {
+        super.updateItem(resource, empty);
+        if (resource == null) {
             setGraphic(null);
             setText(null);
             return;
         }
 
-        switch (item.type()) {
-            case Group -> setGraphic(getIcon(IconUtil.getResourceImage(GroupType.valueOf(item.reference()))));
-            case Folder, File -> setGraphic(getIcon(IconUtil.getTypeImage(item.type())));
-            default -> log.warn("The icon hasn't been set for item type {}", item.type());
+        switch (resource.type()) {
+            case Group -> setGraphic(getIcon(IconUtil.getResourceImage(GroupType.valueOf(resource.reference()))));
+            case Folder, File -> setGraphic(getIcon(IconUtil.getTypeImage(resource.type())));
+            default -> log.warn("The icon hasn't been set for item type {}", resource.type());
         }
 
-        setText(item.name());
+        setText(resource.name());
     }
 
     private ImageView getIcon(@NonNull final Image image) {

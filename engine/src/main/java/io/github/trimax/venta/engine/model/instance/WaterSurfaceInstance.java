@@ -1,13 +1,13 @@
 package io.github.trimax.venta.engine.model.instance;
 
-import org.joml.Vector3fc;
-
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.NonNull;
+import org.joml.Vector3fc;
 
-public interface GridMeshInstance extends AbstractInstance {
+public interface WaterSurfaceInstance extends AbstractInstance {
     Vector3fc getPosition();
 
     Vector3fc getRotation();
@@ -49,4 +49,6 @@ public interface GridMeshInstance extends AbstractInstance {
     void setProgram(@NonNull final ProgramEntity program);
 
     void setMaterial(@NonNull final MaterialEntity material);
+
+    void setGridMesh(@NonNull final GridMeshEntity gridMesh);
 }

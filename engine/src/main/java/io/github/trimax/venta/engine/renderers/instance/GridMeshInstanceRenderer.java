@@ -1,35 +1,28 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.binders.CameraBinder;
-import io.github.trimax.venta.engine.binders.LightBinder;
-import io.github.trimax.venta.engine.binders.MaterialBinder;
-import io.github.trimax.venta.engine.binders.MatrixBinder;
-import io.github.trimax.venta.engine.binders.TextureBinder;
-import io.github.trimax.venta.engine.binders.TimeBinder;
-import io.github.trimax.venta.engine.binders.WaveBinder;
+import io.github.trimax.venta.engine.binders.*;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
-import io.github.trimax.venta.engine.model.instance.implementation.GridMeshInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.WaterSurfaceInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GridMeshInstanceRenderer extends
-        AbstractInstanceRenderer<GridMeshInstanceImplementation, GridMeshInstanceRenderer.GridMeshRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+        AbstractInstanceRenderer<WaterSurfaceInstanceImplementation, GridMeshInstanceRenderer.GridMeshRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final GeometryHelper geometryHelper;
     private final MaterialBinder materialBinder;
     private final TextureBinder textureBinder;
@@ -45,7 +38,7 @@ public final class GridMeshInstanceRenderer extends
     }
 
     @Override
-    public void render(final GridMeshInstanceImplementation gridMesh) {
+    public void render(final WaterSurfaceInstanceImplementation gridMesh) {
         glUseProgram(gridMesh.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, gridMesh.getDrawMode().getMode());
 
@@ -64,7 +57,7 @@ public final class GridMeshInstanceRenderer extends
         materialBinder.bind(gridMesh.getProgram(), gridMesh.getMaterial());
         textureBinder.bind(gridMesh.getProgram(), getContext().getScene().getSkybox());
 
-        geometryHelper.render(gridMesh.getGeometry());
+        geometryHelper.render(gridMesh.getGridMesh().getGeometry());
 
         glUseProgram(0);
     }
