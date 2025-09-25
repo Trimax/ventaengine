@@ -19,7 +19,7 @@ public final class ImageFileRenderer extends AbstractFileRenderer {
         final var imageView = new ImageView(file.toURI().toString());
         imageView.setFitWidth(imageView.getImage().getWidth());
         imageView.setPreserveRatio(true);
-        imageView.setFitWidth(Math.min(imageView.getImage().getWidth(), 1024));
+        imageView.setFitWidth(Math.min(imageView.getImage().getWidth(), 256));
 
         final var image = imageView.getImage();
         final var labelTextureParameters = new Label(String.format("Width: %d; Height: %d", (int) image.getWidth(), (int) image.getHeight()));

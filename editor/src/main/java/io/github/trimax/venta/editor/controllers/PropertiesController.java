@@ -6,6 +6,7 @@ import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.ItemRenderer;
+import io.github.trimax.venta.engine.enums.GroupType;
 import io.github.trimax.venta.engine.enums.ResourceType;
 import io.github.trimax.venta.engine.model.common.resource.Item;
 import javafx.fxml.FXML;
@@ -31,10 +32,10 @@ public final class PropertiesController {
     }
 
     private void updateInfoPanel(final TreeItem<Item> selected) {
-        if (selected.getValue().type() == ResourceType.Group || !selected.getValue().hasExistingReference())
-            showGroupInformation(selected);
-        else
+        if (selected.getValue().type() == ResourceType.File)
             showResourceInformation(selected);
+        else
+            showGroupInformation(selected);
 
         EventUtil.post(new StatusSetEvent("Item `%s` selected", selected.getValue().name()));
     }
@@ -50,7 +51,7 @@ public final class PropertiesController {
 
     @SneakyThrows
     private void showResourceInformation(final TreeItem<Item> node) {
-        final var type = getResourceType(node);
+        final var type = getRenderer(node);
 
         final var labelResourceName = new Label("Resource: " + node.getValue().name());
         final var labelResourceType = new Label("Type: " + type.getDisplayName());
@@ -71,10 +72,10 @@ public final class PropertiesController {
         return CollectionUtils.isNotEmpty(node.getChildren()) || !node.getValue().hasExistingReference();
     }
 
-    private ItemRenderer getResourceType(final TreeItem<Item> node) {
+    private ItemRenderer getRenderer(final TreeItem<Item> node) {
         if (node.getValue().type() == ResourceType.Group)
-            return ItemRenderer.valueOf(node.getValue().name());
+            return ItemRenderer.of(GroupType.valueOf(node.getValue().reference()));
 
-        return getResourceType(node.getParent());
+        return getRenderer(node.getParent());
     }
 }
