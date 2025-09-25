@@ -133,7 +133,10 @@ float noise(vec2 p) {
 vec3 getNormal(vec2 textureCoordinates) {
     vec2 noiseUV = vertexPosition.xz * 0.2 + timeElapsed * 0.6;
 
-    return normalize(vec3(vertexNormal.x, vertexNormal.y + (noise(noiseUV) - 0.5) * 0.1, vertexNormal.z));
+    vec3 normal = vertexNormal;
+    normal += (vec3(noise(noiseUV + 1.0), noise(noiseUV + 2.0), noise(noiseUV + 3.0)) - 0.5) * 0.1;
+
+    return normalize(normal);
 }
 
 /***
