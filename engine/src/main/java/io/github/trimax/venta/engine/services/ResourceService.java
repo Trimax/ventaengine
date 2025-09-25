@@ -1,7 +1,7 @@
 package io.github.trimax.venta.engine.services;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.enums.ResourceType;
+import io.github.trimax.venta.engine.enums.GroupType;
 import io.github.trimax.venta.engine.utils.ArchiveUtil;
 import io.github.trimax.venta.engine.utils.ParsingUtil;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
@@ -54,6 +54,6 @@ public final class ResourceService {
                 .orElseGet(alternative);
     }
 
-    public record Resource(File archiveFile, String resourcePath, ResourceType type, byte[] data) {
+    public record Resource(File archiveFile, String resourcePath, GroupType type, byte[] data) {
     }
 }

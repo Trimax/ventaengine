@@ -13,7 +13,7 @@ import io.github.trimax.venta.editor.handlers.folder.FolderRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
-import io.github.trimax.venta.editor.model.tree.ItemType;
+import io.github.trimax.venta.engine.enums.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
@@ -99,6 +99,6 @@ public final class MenuController {
         btnMenuResourceRemove.setDisable(!event.hasSelected() || event.getItem().type().isContainer());
 
         btnMenuGroupAdd.setDisable(!event.hasSelected() || !event.getItem().type().isContainer());
-        btnMenuGroupRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || event.getItem().type() == ItemType.Group);
+        btnMenuGroupRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || event.getItem().type() == ResourceType.Group);
     }
 }

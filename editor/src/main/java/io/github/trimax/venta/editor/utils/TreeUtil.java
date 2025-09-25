@@ -1,11 +1,10 @@
 package io.github.trimax.venta.editor.utils;
 
-import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
-import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.tree.TreeCellRenderer;
-import io.github.trimax.venta.engine.enums.ResourceType;
+import io.github.trimax.venta.engine.enums.GroupType;
+import io.github.trimax.venta.engine.model.common.resource.Item;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -15,12 +14,8 @@ import one.util.streamex.StreamEx;
 
 @UtilityClass
 public final class TreeUtil {
-    public void set(@NonNull final Node<Item> tree) {
-
-    }
-
     public void initialize(@NonNull final TreeView<Item> tree) {
-        final var root = new TreeItem<>(Item.asGroup(ResourceType.AudioSource));
+        final var root = new TreeItem<>(Item.asGroup(GroupType.AudioSource));
         tree.setCellFactory(_ -> new TreeCellRenderer());
         tree.setRoot(root);
 

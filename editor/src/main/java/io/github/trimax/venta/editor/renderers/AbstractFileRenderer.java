@@ -1,6 +1,6 @@
 package io.github.trimax.venta.editor.renderers;
 
-import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.engine.model.common.resource.Item;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;

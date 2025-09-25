@@ -1,6 +1,6 @@
 package io.github.trimax.venta.engine.utils;
 
-import io.github.trimax.venta.engine.enums.ResourceType;
+import io.github.trimax.venta.engine.enums.GroupType;
 import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -30,16 +30,16 @@ public final class ArchiveUtil {
     }
 
     @SneakyThrows
-    private void load(@NonNull final File archive, @NonNull final TriConsumer<String, ResourceType, byte[]> resourceLoader) {
+    private void load(@NonNull final File archive, @NonNull final TriConsumer<String, GroupType, byte[]> resourceLoader) {
         try (var in = new DataInputStream(new GZIPInputStream(new BufferedInputStream(new FileInputStream(archive))))) {
             loadNode(in, resourceLoader, "");
         }
     }
 
     @SneakyThrows
-    private void loadNode(final DataInputStream in, final TriConsumer<String, ResourceType, byte[]> resourceLoader, @NonNull final String path) {
+    private void loadNode(final DataInputStream in, final TriConsumer<String, GroupType, byte[]> resourceLoader, @NonNull final String path) {
         final var name = in.readUTF();
-        final var type = ResourceType.of(in.readUTF());
+        final var type = GroupType.of(in.readUTF());
 
         final var hasReference = in.readBoolean();
         if (hasReference) {

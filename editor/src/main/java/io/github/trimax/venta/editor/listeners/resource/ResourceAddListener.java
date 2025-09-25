@@ -7,7 +7,7 @@ import io.github.trimax.venta.editor.controllers.TreeController;
 import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.event.resource.ResourceAddEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
-import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.engine.model.common.resource.Item;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
 import lombok.NonNull;

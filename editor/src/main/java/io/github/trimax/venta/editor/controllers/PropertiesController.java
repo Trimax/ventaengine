@@ -5,9 +5,9 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
-import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.editor.model.tree.ItemType;
-import io.github.trimax.venta.editor.model.tree.ResourceType2;
+import io.github.trimax.venta.editor.model.tree.ItemRenderer;
+import io.github.trimax.venta.engine.enums.ResourceType;
+import io.github.trimax.venta.engine.model.common.resource.Item;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
@@ -31,7 +31,7 @@ public final class PropertiesController {
     }
 
     private void updateInfoPanel(final TreeItem<Item> selected) {
-        if (selected.getValue().type() == ItemType.Group || !selected.getValue().hasExistingReference())
+        if (selected.getValue().type() == ResourceType.Group || !selected.getValue().hasExistingReference())
             showGroupInformation(selected);
         else
             showResourceInformation(selected);
@@ -71,9 +71,9 @@ public final class PropertiesController {
         return CollectionUtils.isNotEmpty(node.getChildren()) || !node.getValue().hasExistingReference();
     }
 
-    private ResourceType2 getResourceType(final TreeItem<Item> node) {
-        if (node.getValue().type() == ItemType.Group)
-            return ResourceType2.valueOf(node.getValue().name());
+    private ItemRenderer getResourceType(final TreeItem<Item> node) {
+        if (node.getValue().type() == ResourceType.Group)
+            return ItemRenderer.valueOf(node.getValue().name());
 
         return getResourceType(node.getParent());
     }
