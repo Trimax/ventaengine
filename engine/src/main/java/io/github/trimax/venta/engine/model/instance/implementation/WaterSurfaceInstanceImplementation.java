@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
+import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
@@ -126,5 +127,11 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
     public void setMaterial(@NonNull final MaterialEntity material) {
         if (material instanceof MaterialEntityImplementation entity)
             this.material = entity;
+    }
+
+    @Override
+    public void setGridMesh(@NonNull final GridMeshEntity gridMesh) {
+        if (gridMesh instanceof GridMeshEntityImplementation entity)
+            this.gridMesh = entity;
     }
 }

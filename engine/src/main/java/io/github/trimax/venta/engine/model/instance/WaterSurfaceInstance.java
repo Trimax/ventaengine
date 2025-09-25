@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.model.instance;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.NonNull;
@@ -48,4 +49,6 @@ public interface WaterSurfaceInstance extends AbstractInstance {
     void setProgram(@NonNull final ProgramEntity program);
 
     void setMaterial(@NonNull final MaterialEntity material);
+
+    void setGridMesh(@NonNull final GridMeshEntity gridMesh);
 }
