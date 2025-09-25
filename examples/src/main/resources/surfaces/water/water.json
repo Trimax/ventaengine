@@ -1,0 +1,51 @@
+{
+  "gridMesh": "default.json",
+  "material": "water.json",
+  "program": "water.json",
+  "waves": [
+    {
+      "direction": {"x": 1.0, "y": 0.0},
+      "amplitude": 0.1,
+      "length": 25,
+      "steepness": 0.2,
+      "speed": 0.5
+    },
+    {
+      "direction": {"x": 0.0, "y": 1.0},
+      "amplitude": 0.1,
+      "length": 25,
+      "steepness": 0.2,
+      "speed": 0.5
+    },
+
+    {
+      "direction": {"x": 1.0, "y": 1.0},
+      "amplitude": 0.05,
+      "length": 5,
+      "steepness": 0.4,
+      "speed": 1.0
+    },
+    {
+      "direction": {"x": -1.0, "y": 1.0},
+      "amplitude": 0.05,
+      "length": 5,
+      "steepness": 0.4,
+      "speed": 1.0
+    },
+
+    {
+      "direction": {"x": 0.6, "y": 0.4},
+      "amplitude": 0.005,
+      "length": 0.5,
+      "steepness": 0.8,
+      "speed": 1.2
+    },
+    {
+      "direction": {"x": 0.4, "y": 0.6},
+      "amplitude": 0.005,
+      "length": 0.5,
+      "steepness": 0.8,
+      "speed": 1.2
+    }
+  ]
+}

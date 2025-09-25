@@ -50,8 +50,8 @@ public final class VentaContext {
         return managerFactory.get(EmitterManagerImplementation.class);
     }
 
-    public GridMeshManager getGridMeshManager() {
-        return managerFactory.get(GridMeshManagerImplementation.class);
+    public WaterSurfaceManager getWaterSurfaceManager() {
+        return managerFactory.get(WaterSurfaceManagerImplementation.class);
     }
 
     public SoundSourceManager getSoundSourceManager() {
@@ -128,6 +128,10 @@ public final class VentaContext {
 
     public BillboardRepository getBillboardRepository() {
         return repositoryFactory.get(BillboardRepositoryImplementation.class);
+    }
+
+    public WaterSurfaceRepository getWaterSurfaceRepository() {
+        return repositoryFactory.get(WaterSurfaceRepositoryImplementation.class);
     }
 
     /*** Keyboard ***/

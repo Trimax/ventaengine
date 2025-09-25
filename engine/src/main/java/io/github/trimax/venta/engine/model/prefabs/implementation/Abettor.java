@@ -1,10 +1,5 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
-import java.util.List;
-
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.LightType;
@@ -15,14 +10,14 @@ import io.github.trimax.venta.engine.model.common.shared.Range;
 import io.github.trimax.venta.engine.model.common.shared.Variable;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
-import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
+import java.util.List;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,11 +32,17 @@ public final class Abettor {
         return new LightPrefabImplementation(type, color, direction, attenuation, intensity, range, castShadows);
     }
 
-    public GridMeshPrefabImplementation createGridMesh(@NonNull final ProgramEntityImplementation program,
-                                                       @NonNull final MaterialEntityImplementation material,
-                                                       @NonNull final Geometry geometry,
-                                                       final List<Wave> waves) {
-        return new GridMeshPrefabImplementation(program, material, geometry, waves);
+
+    //TODO: Move to registry
+    public GridMeshPrefabImplementation createGridMesh(@NonNull final Geometry geometry) {
+        return new GridMeshPrefabImplementation(geometry);
+    }
+
+    public WaterSurfacePrefabImplementation createWaterSurface(@NonNull final GridMeshPrefabImplementation gridMesh,
+                                                               @NonNull final MaterialEntityImplementation material,
+                                                               @NonNull final ProgramEntityImplementation program,
+                                                               final List<Wave> waves) {
+        return new WaterSurfacePrefabImplementation(gridMesh, program, material, waves);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
