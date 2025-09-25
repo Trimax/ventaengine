@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox>
-            <fx:include source="menubar.fxml" />
-            <fx:include source="toolbar.fxml" />
+            <fx:include source="menubar.fxml"/>
+            <fx:include source="toolbar.fxml"/>
         </VBox>
     </top>
 
-    <left>
-        <fx:include source="tree.fxml"/>
-    </left>
-
     <center>
-        <VBox style="-fx-background-color: black;"/>
+        <SplitPane>
+            <fx:include source="tree.fxml"/>
+
+            <VBox style="-fx-background-color: black;"/>
+
+            <fx:include source="properties.fxml"/>
+        </SplitPane>
     </center>
 
-    <right>
-        <fx:include source="properties.fxml" />
-    </right>
-
     <bottom>
-        <fx:include source="status.fxml" />
+        <fx:include source="status.fxml"/>
     </bottom>
 </BorderPane>
