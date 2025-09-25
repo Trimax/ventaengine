@@ -2,7 +2,7 @@ package io.github.trimax.venta.editor.handlers.archive;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
-import io.github.trimax.venta.editor.events.archive.ArchiveNewEvent;
+import io.github.trimax.venta.editor.model.event.archive.ArchiveNewEvent;
 import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

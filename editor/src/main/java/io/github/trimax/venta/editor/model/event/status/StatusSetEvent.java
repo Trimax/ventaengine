@@ -1,6 +1,6 @@
-package io.github.trimax.venta.editor.events.status;
+package io.github.trimax.venta.editor.model.event.status;
 
-import io.github.trimax.venta.editor.events.AbstractEvent;
+import io.github.trimax.venta.editor.model.event.AbstractEvent;
 import lombok.NonNull;
 
 public record StatusSetEvent(@NonNull String status) implements AbstractEvent {

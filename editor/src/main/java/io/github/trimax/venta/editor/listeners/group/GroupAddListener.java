@@ -1,28 +1,29 @@
-package io.github.trimax.venta.editor.services;
+package io.github.trimax.venta.editor.listeners.group;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.controllers.TreeController;
-import io.github.trimax.venta.editor.events.group.GroupAddEvent;
-import io.github.trimax.venta.editor.events.group.GroupRemoveEvent;
-import io.github.trimax.venta.editor.events.status.StatusSetEvent;
+import io.github.trimax.venta.editor.listeners.AbstractListener;
+import io.github.trimax.venta.editor.model.event.group.GroupAddEvent;
+import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.NameUtil;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-//TODO: Replace with listeners
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GroupService {
+public final class GroupAddListener implements AbstractListener<GroupAddEvent> {
     private final TreeController treeController;
 
+    @Override
     @Subscribe
-    public void handleGroupAdd(final GroupAddEvent event) {
+    public void handle(@NonNull final GroupAddEvent event) {
         final var node = treeController.getSelectedNode();
 
         if (StringUtils.isBlank(event.name()) || !NameUtil.isValidName(event.name())) {
@@ -40,13 +41,5 @@ public final class GroupService {
         node.setExpanded(true);
 
         EventUtil.post(new StatusSetEvent("Group `%s` created", event.name()));
-    }
-
-    @Subscribe
-    public void handleGroupRemove(final GroupRemoveEvent event) {
-        final var node = treeController.getSelectedNode();
-        node.getParent().getChildren().remove(node);
-
-        EventUtil.post(new StatusSetEvent("Group `%s` removed", node.getValue().name()));
     }
 }

@@ -2,11 +2,11 @@ package io.github.trimax.venta.editor.controllers;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.editor.events.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.handlers.group.GroupAddHandler;
 import io.github.trimax.venta.editor.handlers.group.GroupRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
+import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.event.ActionEvent;

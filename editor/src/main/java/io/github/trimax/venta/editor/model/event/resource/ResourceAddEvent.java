@@ -1,6 +1,6 @@
-package io.github.trimax.venta.editor.events.resource;
+package io.github.trimax.venta.editor.model.event.resource;
 
-import io.github.trimax.venta.editor.events.AbstractEvent;
+import io.github.trimax.venta.editor.model.event.AbstractEvent;
 import lombok.NonNull;
 
 import java.io.File;

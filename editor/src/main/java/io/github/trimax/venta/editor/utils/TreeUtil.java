@@ -3,7 +3,7 @@ package io.github.trimax.venta.editor.utils;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.definitions.Group;
-import io.github.trimax.venta.editor.events.tree.TreeSelectEvent;
+import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
 import io.github.trimax.venta.editor.tree.TreeCellRenderer;
 import javafx.collections.ListChangeListener;
