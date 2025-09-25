@@ -1,9 +1,18 @@
 package io.github.trimax.venta.engine.controllers;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.callbacks.*;
+import io.github.trimax.venta.engine.callbacks.FramebufferSizeCallback;
+import io.github.trimax.venta.engine.callbacks.KeyboardCharCallback;
+import io.github.trimax.venta.engine.callbacks.KeyboardKeyCallback;
+import io.github.trimax.venta.engine.callbacks.MouseButtonCallback;
+import io.github.trimax.venta.engine.callbacks.MouseCursorCallback;
+import io.github.trimax.venta.engine.callbacks.WindowSizeCallback;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.definitions.DefinitionsIcon;
+import io.github.trimax.venta.engine.enums.OperationalSystem;
 import io.github.trimax.venta.engine.exceptions.WindowCreationException;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration;
@@ -16,9 +25,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 @Component
@@ -69,7 +75,8 @@ public final class WindowController extends AbstractController<WindowState, Vent
         glfwRestoreWindow(id);
         glfwFocusWindow(id);
 
-        IconUtil.setIcon(id, resourceService.getAsBytes(DefinitionsIcon.DEFAULT));
+        if (OperationalSystem.detect() != OperationalSystem.MacOS)
+            IconUtil.setIcon(id, resourceService.getAsBytes(DefinitionsIcon.DEFAULT));
 
         final var window = new WindowState(handler, id, title, width, height);
         glfwSetFramebufferSizeCallback(id, new FramebufferSizeCallback(this));

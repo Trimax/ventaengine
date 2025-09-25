@@ -129,18 +129,11 @@ float noise(vec2 p) {
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
-/* Gets normal (either face or from normal map) */
+/* Computes normal  */
 vec3 getNormal(vec2 textureCoordinates) {
-    //TODO: Temporary
-    vec3 normal = vertexNormal;
-    vec2 noiseUV = vertexPosition.xz * 0.2 + timeElapsed * 0.1;
-    normal.y += (noise(noiseUV) - 0.5) * 0.1;
-    return normalize(normal);
+    vec2 noiseUV = vertexPosition.xz * 0.2 + timeElapsed * 0.6;
 
-    if (!isSet(useTextureNormal))
-        return vertexNormal;
-
-    return normalize(vertexNormal + normalize(texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0) * 0.2);
+    return normalize(vec3(vertexNormal.x, vertexNormal.y + (noise(noiseUV) - 0.5) * 0.1, vertexNormal.z));
 }
 
 /***
