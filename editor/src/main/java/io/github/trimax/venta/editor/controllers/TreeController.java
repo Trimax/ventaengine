@@ -7,9 +7,9 @@ import io.github.trimax.venta.editor.handlers.folder.FolderRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
-import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.editor.model.tree.ItemType;
 import io.github.trimax.venta.editor.utils.TreeUtil;
+import io.github.trimax.venta.engine.enums.ResourceType;
+import io.github.trimax.venta.engine.model.common.resource.Item;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -67,7 +67,7 @@ public final class TreeController {
         btnTreeResourceRemove.setDisable(!event.hasSelected() || event.getItem().type().isContainer());
 
         btnTreeFolderAdd.setDisable(!event.hasSelected() || !event.getItem().type().isContainer());
-        btnTreeFolderRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || event.getItem().type() == ItemType.Group);
+        btnTreeFolderRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || event.getItem().type() == ResourceType.Group);
     }
 
     public TreeItem<Item> getSelectedNode() {

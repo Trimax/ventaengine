@@ -1,7 +1,7 @@
 package io.github.trimax.venta.editor.model.event.group;
 
 import io.github.trimax.venta.editor.model.event.AbstractEvent;
-import io.github.trimax.venta.engine.enums.ResourceType;
+import io.github.trimax.venta.engine.enums.GroupType;
 
-public record GroupSelectEvent(ResourceType type) implements AbstractEvent {
+public record GroupSelectEvent(GroupType type) implements AbstractEvent {
 }

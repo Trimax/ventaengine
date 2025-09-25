@@ -7,11 +7,12 @@ import io.github.trimax.venta.editor.handlers.archive.ArchiveLoadHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveNewHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveSaveHandler;
 import io.github.trimax.venta.editor.model.event.group.GroupSelectEvent;
-import io.github.trimax.venta.engine.enums.ResourceType;
+import io.github.trimax.venta.engine.enums.GroupType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ToggleGroup;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -53,7 +54,15 @@ public final class ToolbarController {
             }
 
             if (newToggle != null)
-                EventUtil.post(new GroupSelectEvent(ResourceType.valueOf((String) newToggle.getUserData())));
+                EventUtil.post(new GroupSelectEvent(GroupType.valueOf((String) newToggle.getUserData())));
         });
+    }
+
+    public void selectGroup(@NonNull final GroupType type) {
+        for (final var toggle : groupSelector.getToggles())
+            if (type.name().equalsIgnoreCase((String) toggle.getUserData())) {
+                groupSelector.selectToggle(toggle);
+                break;
+            }
     }
 }

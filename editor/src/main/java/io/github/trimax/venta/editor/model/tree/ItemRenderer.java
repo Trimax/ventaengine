@@ -3,6 +3,7 @@ package io.github.trimax.venta.editor.model.tree;
 import io.github.trimax.venta.editor.renderers.AbstractFileRenderer;
 import io.github.trimax.venta.editor.renderers.ImageFileRenderer;
 import io.github.trimax.venta.editor.renderers.TextFileRenderer;
+import io.github.trimax.venta.engine.model.common.resource.Item;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
 import lombok.AccessLevel;
@@ -13,18 +14,18 @@ import java.io.File;
 import java.util.function.BiFunction;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum ResourceType2 {
-    Materials("Material", TextFileRenderer::new),
-    Textures("Texture", ImageFileRenderer::new),
-    Cubemaps("Cubemap", TextFileRenderer::new),
-    Programs("Program", TextFileRenderer::new),
-    Shaders("Shader", TextFileRenderer::new),
-    Objects("Object", TextFileRenderer::new),
-    Scenes("Scene", TextFileRenderer::new),
-    Lights("Light", TextFileRenderer::new),
-    Meshes("Mesh", TextFileRenderer::new),
-    Audios("Audio", TextFileRenderer::new),
-    Sprites("Sprite", ImageFileRenderer::new);
+public enum ItemRenderer {
+    AudioSource("Audio", TextFileRenderer::new),
+    CubeMap("Cubemap", TextFileRenderer::new),
+    Light("Light", TextFileRenderer::new),
+    Material("Material", TextFileRenderer::new),
+    Mesh("Mesh", TextFileRenderer::new),
+    Object("Object", TextFileRenderer::new),
+    Program("Program", TextFileRenderer::new),
+    Scene("Scene", TextFileRenderer::new),
+    Shader("Shader", TextFileRenderer::new),
+    Sprite("Sprite", ImageFileRenderer::new),
+    Texture("Texture", ImageFileRenderer::new);
 
     @Getter
     private final String displayName;

@@ -11,8 +11,8 @@ import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
 import io.github.trimax.venta.editor.model.event.archive.ArchiveSaveEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
-import io.github.trimax.venta.editor.model.tree.Item;
-import io.github.trimax.venta.engine.enums.ResourceType;
+import io.github.trimax.venta.engine.enums.GroupType;
+import io.github.trimax.venta.engine.model.common.resource.Item;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -37,19 +37,18 @@ public final class ArchiveSaveListener implements AbstractListener<ArchiveSaveEv
         context.setTree(context.getGroupSelected(), treeController.getRoot());
 
         try (final var writer = new FileWriter(event.file())) {
-            final var groups = StreamEx.of(ResourceType.values()).toMap(Function.identity(), this::transform);
+            final var groups = StreamEx.of(GroupType.values()).toMap(Function.identity(), this::transform);
             new Gson().toJson(new ArchiveDTO(UUID.randomUUID().toString(), groups), writer);
         }
 
         EventUtil.post(new StatusSetEvent("Archive saved to %s", event.file().getAbsoluteFile()));
     }
 
-    private Node<String> transform(@NonNull final ResourceType type) {
+    private Node<Item> transform(@NonNull final GroupType type) {
         return transform(context.getTree(type));
     }
 
-    private Node<String> transform(final TreeItem<Item> node) {
-        return new Node<>(node.getValue().name(), node.getValue().reference(),
-                StreamEx.of(node.getChildren()).map(this::transform).toList());
+    private Node<Item> transform(final TreeItem<Item> node) {
+        return new Node<>(node.getValue().name(), node.getValue(), StreamEx.of(node.getChildren()).map(this::transform).toList());
     }
 }
