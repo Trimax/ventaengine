@@ -52,12 +52,10 @@ in float vertexTimeElapsed;
 /* Textures */
 uniform samplerCube textureSkybox;
 uniform sampler2D textureDiffuse;
-uniform sampler2D textureNormal;
 
 /* Feature flags */
 uniform int useTextureSkybox;
 uniform int useTextureDiffuse;
-uniform int useTextureNormal;
 uniform int useMaterial;
 
 /* Lighting */
@@ -130,7 +128,7 @@ float noise(vec2 p) {
 }
 
 /* Computes normal  */
-vec3 getNormal(vec2 textureCoordinates) {
+vec3 calculateNormal() {
     vec2 noiseUV = vertexPosition.xz * 0.2 + timeElapsed * 0.6;
 
     vec3 normal = vertexNormal;
@@ -190,7 +188,7 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec2 textureCoordinates)
     if (!isSet(useTextureSkybox))
         return color;
 
-    vec3 normal = normalize(getNormal(textureCoordinates));
+    vec3 normal = normalize(calculateNormal());
     vec3 skyboxColor = texture(textureSkybox, reflect(-cameraDirection, normal)).rgb;
 
     float cosTheta = dot(normal, cameraDirection);
@@ -202,25 +200,28 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec2 textureCoordinates)
 void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
+    //TODO: Get from water parameters
     vec3 surfaceColor = vec3(0.12f, 0.52f, 0.65f);
     vec3 depthColor = vec3(0.01f, 0.13f, 0.28f);
     vec3 peakColor = vec3(0.95f, 0.97f, 1.f);
 
+    vec3 normal = calculateNormal();
+
     float heightFactor = clamp((vertexPosition.y + waveAmplitude) / (2.0 * waveAmplitude), 0.0, 1.0);
     vec3 waterColor = mix(depthColor, surfaceColor, heightFactor);
 
+    //TODO: Get from water parameters
     float foamThreshold = 0.85;
     float foamAmount = smoothstep(foamThreshold, 1.0, heightFactor);
 
     vec3 finalColor = mix(waterColor, peakColor, foamAmount);
 
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
-    vec3 baseColor = getColor(textureCoordinates);
 
-    float fresnel = pow(1.0 - max(dot(getNormal(textureCoordinates), cameraDirection), 0.0), 5.0);
+    float fresnel = pow(1.0 - max(dot(normal, cameraDirection), 0.0), 5.0);
     vec3 colorWithFresnel = mix(finalColor, 0.8 * vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
 
-    vec3 color = computeLighting(colorWithFresnel, getNormal(textureCoordinates), cameraDirection);
+    vec3 color = computeLighting(colorWithFresnel, normal, cameraDirection);
 
     vec3 colorWithReflections = applyReflections(colorWithFresnel, cameraDirection, textureCoordinates);
 
