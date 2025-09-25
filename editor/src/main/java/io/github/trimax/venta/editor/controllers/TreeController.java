@@ -2,12 +2,13 @@ package io.github.trimax.venta.editor.controllers;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.editor.handlers.group.GroupAddHandler;
-import io.github.trimax.venta.editor.handlers.group.GroupRemoveHandler;
+import io.github.trimax.venta.editor.handlers.folder.FolderAddHandler;
+import io.github.trimax.venta.editor.handlers.folder.FolderRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
 import io.github.trimax.venta.editor.model.tree.Item;
+import io.github.trimax.venta.editor.model.tree.ItemType;
 import io.github.trimax.venta.editor.utils.TreeUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TreeController {
-    private final GroupAddHandler groupAddHandler;
-    private final GroupRemoveHandler groupRemoveHandler;
+    private final FolderAddHandler folderAddHandler;
+    private final FolderRemoveHandler folderRemoveHandler;
 
     private final ResourceAddHandler resourceAddHandler;
     private final ResourceRemoveHandler resourceRemoveHandler;
@@ -41,13 +42,13 @@ public final class TreeController {
     }
 
     @FXML
-    public void onGroupAdd(final ActionEvent event) {
-        groupAddHandler.handle(event);
+    public void onFolderAdd(final ActionEvent event) {
+        folderAddHandler.handle(event);
     }
 
     @FXML
-    public void onGroupRemove(final ActionEvent event) {
-        groupRemoveHandler.handle(event);
+    public void onFolderRemove(final ActionEvent event) {
+        folderRemoveHandler.handle(event);
     }
 
     @FXML
@@ -66,7 +67,7 @@ public final class TreeController {
         btnTreeResourceRemove.setDisable(!event.hasSelected() || event.getItem().type().isContainer());
 
         btnTreeFolderAdd.setDisable(!event.hasSelected() || !event.getItem().type().isContainer());
-        btnTreeFolderRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || !event.getItem().deletable());
+        btnTreeFolderRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || event.getItem().type() == ItemType.Group);
     }
 
     public TreeItem<Item> getSelectedNode() {

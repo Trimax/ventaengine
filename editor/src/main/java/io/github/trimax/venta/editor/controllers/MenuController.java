@@ -8,11 +8,12 @@ import io.github.trimax.venta.editor.handlers.archive.ArchiveNewHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveSaveHandler;
 import io.github.trimax.venta.editor.handlers.editor.EditorAboutHandler;
 import io.github.trimax.venta.editor.handlers.editor.EditorQuitHandler;
-import io.github.trimax.venta.editor.handlers.group.GroupAddHandler;
-import io.github.trimax.venta.editor.handlers.group.GroupRemoveHandler;
+import io.github.trimax.venta.editor.handlers.folder.FolderAddHandler;
+import io.github.trimax.venta.editor.handlers.folder.FolderRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
+import io.github.trimax.venta.editor.model.tree.ItemType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
@@ -30,8 +31,8 @@ public final class MenuController {
     private final EditorAboutHandler editorAboutHandler;
     private final EditorQuitHandler editorQuitHandler;
 
-    private final GroupAddHandler groupAddHandler;
-    private final GroupRemoveHandler groupRemoveHandler;
+    private final FolderAddHandler folderAddHandler;
+    private final FolderRemoveHandler folderRemoveHandler;
 
     private final ResourceAddHandler resourceAddHandler;
     private final ResourceRemoveHandler resourceRemoveHandler;
@@ -74,12 +75,12 @@ public final class MenuController {
 
     @FXML
     public void onGroupAdd(final ActionEvent event) {
-        groupAddHandler.handle(event);
+        folderAddHandler.handle(event);
     }
 
     @FXML
     public void onGroupRemove(final ActionEvent event) {
-        groupRemoveHandler.handle(event);
+        folderRemoveHandler.handle(event);
     }
 
     @FXML
@@ -98,6 +99,6 @@ public final class MenuController {
         btnMenuResourceRemove.setDisable(!event.hasSelected() || event.getItem().type().isContainer());
 
         btnMenuGroupAdd.setDisable(!event.hasSelected() || !event.getItem().type().isContainer());
-        btnMenuGroupRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || !event.getItem().deletable());
+        btnMenuGroupRemove.setDisable(!event.hasSelected() || !event.getItem().type().isContainer() || event.getItem().type() == ItemType.Group);
     }
 }

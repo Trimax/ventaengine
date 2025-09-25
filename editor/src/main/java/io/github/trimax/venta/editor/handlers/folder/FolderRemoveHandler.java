@@ -1,8 +1,8 @@
-package io.github.trimax.venta.editor.handlers.group;
+package io.github.trimax.venta.editor.handlers.folder;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
-import io.github.trimax.venta.editor.model.event.group.GroupAddEvent;
+import io.github.trimax.venta.editor.model.event.folder.FolderRemoveEvent;
 import io.github.trimax.venta.editor.utils.DialogUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class GroupAddHandler implements EventHandler<ActionEvent> {
+public final class FolderRemoveHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(final ActionEvent event) {
-        DialogUtil.showInput("Enter group name:", "Create group", "Name", this::addGroup);
+        DialogUtil.showConfirm("Are you sure you want to delete folder and all its contents?", this::groupRemove);
     }
 
-    private void addGroup(final String name) {
-        EventUtil.post(new GroupAddEvent(name));
+    private void groupRemove() {
+        EventUtil.post(new FolderRemoveEvent());
     }
 }

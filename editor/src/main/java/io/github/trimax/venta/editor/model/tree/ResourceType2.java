@@ -1,8 +1,5 @@
 package io.github.trimax.venta.editor.model.tree;
 
-import java.io.File;
-import java.util.function.BiFunction;
-
 import io.github.trimax.venta.editor.renderers.AbstractFileRenderer;
 import io.github.trimax.venta.editor.renderers.ImageFileRenderer;
 import io.github.trimax.venta.editor.renderers.TextFileRenderer;
@@ -12,8 +9,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.File;
+import java.util.function.BiFunction;
+
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum ResourceType {
+public enum ResourceType2 {
     Materials("Material", TextFileRenderer::new),
     Textures("Texture", ImageFileRenderer::new),
     Cubemaps("Cubemap", TextFileRenderer::new),
