@@ -1,17 +1,16 @@
 package io.github.trimax.venta.engine.model.instance;
 
-import java.util.Collection;
-
-import org.joml.Vector3fc;
-
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import lombok.NonNull;
+import org.joml.Vector3fc;
+
+import java.util.Collection;
 
 public interface SceneInstance extends AbstractInstance {
-    Collection<? extends SoundSourceInstance> getSoundSources();
+    Collection<? extends WaterSurfaceInstance> getWaterSurfaces();
 
-    Collection<? extends GridMeshInstance> getGridMeshes();
+    Collection<? extends SoundSourceInstance> getSoundSources();
 
     Collection<? extends BillboardInstance> getBillboards();
 
@@ -39,7 +38,7 @@ public interface SceneInstance extends AbstractInstance {
 
     void add(@NonNull final EmitterInstance emitter);
 
-    void add(@NonNull final GridMeshInstance gridMesh);
+    void add(@NonNull final WaterSurfaceInstance gridMesh);
 
     void add(@NonNull final SoundSourceInstance sound);
 

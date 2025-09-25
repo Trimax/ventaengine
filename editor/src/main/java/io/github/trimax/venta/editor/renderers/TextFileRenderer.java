@@ -1,6 +1,6 @@
 package io.github.trimax.venta.editor.renderers;
 
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
@@ -12,7 +12,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 public final class TextFileRenderer extends AbstractFileRenderer {
-    public TextFileRenderer(@NonNull final TreeItem<Item> node, @NonNull final VBox panel) {
+    public TextFileRenderer(@NonNull final TreeItem<Resource> node, @NonNull final VBox panel) {
         super(node, panel);
     }
 

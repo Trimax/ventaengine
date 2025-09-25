@@ -2,7 +2,7 @@ package io.github.trimax.venta.editor.context;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.GroupType;
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeItem;
 import lombok.*;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Context {
-    private final Map<GroupType, TreeItem<Item>> groups = new ConcurrentHashMap<>();
+    private final Map<GroupType, TreeItem<Resource>> groups = new ConcurrentHashMap<>();
 
     @Getter
     @Setter
@@ -23,13 +23,13 @@ public final class Context {
         groups.clear();
     }
     
-    public void setTree(@NonNull final GroupType type, @NonNull final TreeItem<Item> tree) {
+    public void setTree(@NonNull final GroupType type, @NonNull final TreeItem<Resource> tree) {
         groups.put(type, tree);
     }
 
-    public TreeItem<Item> getTree(@NonNull final GroupType type) {
+    public TreeItem<Resource> getTree(@NonNull final GroupType type) {
         if (!groups.containsKey(type))
-            groups.put(type, new TreeItem<>(Item.asGroup(type)));
+            groups.put(type, new TreeItem<>(Resource.asGroup(type)));
 
         return groups.get(type);
     }

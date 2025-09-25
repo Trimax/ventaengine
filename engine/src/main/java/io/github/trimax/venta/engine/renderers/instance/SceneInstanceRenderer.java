@@ -3,8 +3,8 @@ package io.github.trimax.venta.engine.renderers.instance;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
-import io.github.trimax.venta.engine.managers.implementation.GridMeshManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.WaterSurfaceManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
@@ -21,7 +21,7 @@ import static org.lwjgl.opengl.GL11C.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneInstanceRenderer
         extends AbstractInstanceRenderer<SceneInstanceImplementation, SceneInstanceRenderer.SceneRenderContext, SceneInstanceRenderer.SceneRenderContext> {
-    private final GridMeshManagerImplementation gridMeshManager;
+    private final WaterSurfaceManagerImplementation gridMeshManager;
     private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
     private final BillboardInstanceRenderer billboardRenderer;
@@ -51,7 +51,7 @@ public final class SceneInstanceRenderer
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (final var gridMesh : scene.getGridMeshes())
+        for (final var gridMesh : scene.getWaterSurfaces())
             try (final var _ = gridMeshRenderer.withContext(getContext())
                     .withModelMatrix(gridMesh.getTransform().getMatrix())
                     .withScene(scene)) {

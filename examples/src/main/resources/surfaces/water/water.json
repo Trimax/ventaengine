@@ -1,8 +1,7 @@
 {
-  "program": "water.json",
+  "gridMesh": "default.json",
   "material": "water.json",
-  "size": {"x": 500.0, "y": 500.0},
-  "segments": {"x": 256, "y": 256},
+  "program": "water.json",
   "waves": [
     {
       "direction": {"x": 1.0, "y": 0.0},

@@ -32,6 +32,10 @@ public final class Abettor {
         return new MaterialEntityImplementation(materialDTO);
     }
 
+    public GridMeshEntityImplementation createGridMesh(@NonNull final Geometry geometry) {
+        return new GridMeshEntityImplementation(geometry);
+    }
+
     public MeshEntityImplementation createMesh(@NonNull final Geometry geometry,
                                                @NonNull final BoundingBox boundingBox) {
         return new MeshEntityImplementation(geometry, boundingBox);

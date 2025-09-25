@@ -1,6 +1,6 @@
 package io.github.trimax.venta.editor.renderers;
 
-import io.github.trimax.venta.engine.model.common.resource.Item;
+import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
@@ -10,7 +10,7 @@ import lombok.NonNull;
 import java.io.File;
 
 public final class ImageFileRenderer extends AbstractFileRenderer {
-    public ImageFileRenderer(final TreeItem<Item> node, final VBox panel) {
+    public ImageFileRenderer(final TreeItem<Resource> node, final VBox panel) {
         super(node, panel);
     }
 
