@@ -1,7 +1,13 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
@@ -13,14 +19,11 @@ import io.github.trimax.venta.engine.model.instance.WaterSurfaceInstance;
 import io.github.trimax.venta.engine.utils.WaveUtil;
 import lombok.Getter;
 import lombok.NonNull;
-import org.joml.Vector3fc;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public final class WaterSurfaceInstanceImplementation extends AbstractInstanceImplementation implements WaterSurfaceInstance {
     private final Transform transform = new Transform();
+    private final List<Noise> noises = new ArrayList<>();
     private final List<Wave> waves = new ArrayList<>();
     private final float waveAmplitude;
 
@@ -36,12 +39,14 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
                                        @NonNull final GridMeshEntityImplementation gridMesh,
                                        @NonNull final MaterialEntityImplementation material,
                                        @NonNull final ProgramEntityImplementation program,
+                                       @NonNull final List<Noise> noises,
                                        @NonNull final List<Wave> waves) {
         super(null, name);
 
         this.gridMesh = gridMesh;
         this.material = material;
         this.program = program;
+        this.noises.addAll(noises);
         this.waves.addAll(waves);
 
         this.waveAmplitude = WaveUtil.getAmplitude(waves);

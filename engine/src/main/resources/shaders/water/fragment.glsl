@@ -6,6 +6,7 @@
 
 /* Light specific */
 const int MAX_LIGHTS = 64;
+const int MAX_NOISES = 16;
 const int LIGHT_TYPE_POINT = 0;
 const int LIGHT_TYPE_DIRECTIONAL = 1;
 const int LIGHT_TYPE_SPOT = 2;
@@ -39,6 +40,13 @@ struct Material {
     float roughness;
 };
 
+struct Noise {
+    float scale;
+    float speed;
+    float strength;
+    float offset;
+};
+
 /***
  * Input variables and uniforms
  ***/
@@ -62,6 +70,10 @@ uniform int useMaterial;
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 ambientLight;
 uniform int lightCount;
+
+/* Noise */
+uniform Noise noises[MAX_NOISES];
+uniform int noiseCount;
 
 /* Material */
 uniform Material material;
@@ -87,25 +99,8 @@ bool isSet(int value) {
     return value != 0;
 }
 
-/* Gets preprocessed texture coordinates */
-vec2 getTextureCoordinates() {
-    return isSet(useMaterial) ? (vertexTextureCoordinates * material.tiling + material.offset) : vertexTextureCoordinates;
-}
-
-vec3 getMaterialColor() {
-    return isSet(useMaterial) ? material.color.rgb : vec3(1.0);
-}
-
 float getMaterialMetalness() {
     return isSet(useMaterial) ? material.metalness : 0.0;
-}
-
-/* Gets diffuse texture color */
-vec3 getColor(vec2 textureCoordinates) {
-    if (!isSet(useTextureDiffuse))
-        return getMaterialColor();
-
-    return mix(getMaterialColor(), texture(textureDiffuse, textureCoordinates).rgb, 0.5);
 }
 
 /* Perlin noise */
@@ -129,10 +124,16 @@ float noise(vec2 p) {
 
 /* Computes normal  */
 vec3 calculateNormal() {
-    vec2 noiseUV = vertexPosition.xz * 0.2 + timeElapsed * 0.6;
-
     vec3 normal = vertexNormal;
-    normal += (vec3(noise(noiseUV + 1.0), noise(noiseUV + 2.0), noise(noiseUV + 3.0)) - 0.5) * 0.1;
+
+    for (int i = 0; i < noiseCount; i++) {
+        vec2 uv = vertexPosition.xz * noises[i].scale + timeElapsed * noises[i].speed + noises[i].offset;
+
+        float noiseLevel = noise(uv);
+        vec3 gradNormal = normalize(vec3(-dFdx(noiseLevel), 1.0, -dFdy(noiseLevel)));
+
+        normal += (gradNormal - vertexNormal) * noises[i].strength;
+    }
 
     return normalize(normal);
 }
@@ -184,11 +185,10 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     return result;
 }
 
-vec3 applyReflections(vec3 color, vec3 cameraDirection, vec2 textureCoordinates) {
+vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
     if (!isSet(useTextureSkybox))
         return color;
 
-    vec3 normal = normalize(calculateNormal());
     vec3 skyboxColor = texture(textureSkybox, reflect(-cameraDirection, normal)).rgb;
 
     float cosTheta = dot(normal, cameraDirection);
@@ -198,8 +198,6 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec2 textureCoordinates)
 }
 
 void main() {
-    vec2 textureCoordinates = getTextureCoordinates();
-
     //TODO: Get from water parameters
     vec3 surfaceColor = vec3(0.12f, 0.52f, 0.65f);
     vec3 depthColor = vec3(0.01f, 0.13f, 0.28f);
@@ -223,7 +221,7 @@ void main() {
 
     vec3 color = computeLighting(colorWithFresnel, normal, cameraDirection);
 
-    vec3 colorWithReflections = applyReflections(colorWithFresnel, cameraDirection, textureCoordinates);
+    vec3 colorWithReflections = applyReflections(colorWithFresnel, cameraDirection, normal);
 
     outputColor = vec4(colorWithReflections, 1.0);
 }

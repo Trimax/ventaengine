@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.dto.WaterSurfaceDTO;
 import io.github.trimax.venta.engine.model.prefabs.WaterSurfacePrefab;
@@ -38,6 +39,7 @@ public final class WaterSurfaceRepositoryImplementation
         return abettor.createWaterSurface(gridMeshRegistry.get(waterSurfaceDTO.gridMesh()),
                 materialRegistry.get(waterSurfaceDTO.material()),
                 programRegistry.get(waterSurfaceDTO.program()),
+                StreamEx.of(waterSurfaceDTO.noises()).map(Noise::new).toList(),
                 StreamEx.of(waterSurfaceDTO.waves()).map(Wave::new).toList());
     }
 

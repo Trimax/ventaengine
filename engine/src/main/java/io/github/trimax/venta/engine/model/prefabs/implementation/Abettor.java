@@ -1,23 +1,30 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
+import java.util.List;
+
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.shared.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Range;
 import io.github.trimax.venta.engine.model.common.shared.Variable;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
-import io.github.trimax.venta.engine.model.entity.implementation.*;
+import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import java.util.List;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -35,8 +42,9 @@ public final class Abettor {
     public WaterSurfacePrefabImplementation createWaterSurface(@NonNull final GridMeshEntityImplementation gridMesh,
                                                                @NonNull final MaterialEntityImplementation material,
                                                                @NonNull final ProgramEntityImplementation program,
+                                                               final List<Noise> noises,
                                                                final List<Wave> waves) {
-        return new WaterSurfacePrefabImplementation(gridMesh, material, program, waves);
+        return new WaterSurfacePrefabImplementation(gridMesh, material, program, noises, waves);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
