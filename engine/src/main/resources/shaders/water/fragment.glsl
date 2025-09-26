@@ -103,8 +103,11 @@ bool isSet(int value) {
     return value != 0;
 }
 
-float getMaterialMetalness() {
-    return isSet(useMaterial) ? material.metalness : 0.0;
+vec3 calculateColor() {
+    float heightFactor = clamp((vertexPosition.y + waveAmplitude) / (2.0 * waveAmplitude), 0.0, 1.0);
+    vec3 waterColor = mix(material.colorDepth, material.colorSurface, heightFactor);
+
+    return mix(waterColor, material.colorPeak, smoothstep(foam.threshold, 1.0, heightFactor) * foam.intensity);
 }
 
 /* Perlin noise */
@@ -198,22 +201,17 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
     float cosTheta = dot(normal, cameraDirection);
     float factor = pow(1.0 - cosTheta, 3.0);
 
-    return mix(color, skyboxColor, factor * getMaterialMetalness());
+    return mix(color, skyboxColor, factor * material.metalness);
 }
 
-vec3 calculateColor() {
-    float heightFactor = clamp((vertexPosition.y + waveAmplitude) / (2.0 * waveAmplitude), 0.0, 1.0);
-    vec3 waterColor = mix(material.colorDepth, material.colorSurface, heightFactor);
-
-    return mix(waterColor, material.colorPeak, smoothstep(foam.threshold, 1.0, heightFactor) * foam.intensity);
-}
-
+/* Reflections */
 void main() {
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
     vec3 normal = calculateNormal();
 
+    //TODO: The color here should be a mix of directional color and skybox reflection color
     float fresnel = pow(1.0 - max(dot(normal, cameraDirection), 0.0), 5.0);
-    vec3 colorWithFresnel = mix(calculateColor(), 0.8 * vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
+    vec3 colorWithFresnel = mix(calculateColor(), 0.8 * vec3(1.0, 0.6, 0.4), fresnel);
 
     vec3 color = computeLighting(colorWithFresnel, normal, cameraDirection);
 
