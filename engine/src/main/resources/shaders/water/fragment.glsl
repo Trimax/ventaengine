@@ -33,11 +33,11 @@ struct Light {
 };
 
 struct Material {
-    vec3 color;
-    vec2 tiling;
-    vec2 offset;
+    vec3 colorSurface;
+    vec3 colorDepth;
+    vec3 colorPeak;
     float metalness;
-    float roughness;
+    float opacity;
 };
 
 struct Noise {
@@ -59,11 +59,9 @@ in float vertexTimeElapsed;
 
 /* Textures */
 uniform samplerCube textureSkybox;
-uniform sampler2D textureDiffuse;
 
 /* Feature flags */
 uniform int useTextureSkybox;
-uniform int useTextureDiffuse;
 uniform int useMaterial;
 
 /* Lighting */
@@ -198,21 +196,16 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
 }
 
 void main() {
-    //TODO: Get from water parameters
-    vec3 surfaceColor = vec3(0.12f, 0.52f, 0.65f);
-    vec3 depthColor = vec3(0.01f, 0.13f, 0.28f);
-    vec3 peakColor = vec3(0.95f, 0.97f, 1.f);
-
     vec3 normal = calculateNormal();
 
     float heightFactor = clamp((vertexPosition.y + waveAmplitude) / (2.0 * waveAmplitude), 0.0, 1.0);
-    vec3 waterColor = mix(depthColor, surfaceColor, heightFactor);
+    vec3 waterColor = mix(material.colorDepth, material.colorSurface, heightFactor);
 
     //TODO: Get from water parameters
     float foamThreshold = 0.85;
     float foamAmount = smoothstep(foamThreshold, 1.0, heightFactor);
 
-    vec3 finalColor = mix(waterColor, peakColor, foamAmount);
+    vec3 finalColor = mix(waterColor, material.colorPeak, foamAmount);
 
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
 

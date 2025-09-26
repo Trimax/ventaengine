@@ -34,6 +34,8 @@ public final class WaterSurfaceManagerImplementation
                 prefab.getGridMesh(),
                 prefab.getMaterial(),
                 prefab.getProgram(),
+                prefab.getM(),
+                prefab.getFoam(),
                 prefab.getNoises(),
                 prefab.getWaves()));
     }
