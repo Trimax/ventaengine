@@ -66,7 +66,7 @@ public final class WaterSurfaceInstanceRenderer extends
         noiseBinder.bind(surface.getProgram(), surface.getNoises());
         waveBinder.bind(surface.getProgram(), surface.getWaves());
 
-        waterMaterialBinder.bind(surface.getProgram(), surface.getM());
+        waterMaterialBinder.bind(surface.getProgram(), surface.getMaterial());
         //materialBinder.bind(surface.getProgram(), surface.getMaterial());
         textureBinder.bind(surface.getProgram(), getContext().getScene().getSkybox());
 

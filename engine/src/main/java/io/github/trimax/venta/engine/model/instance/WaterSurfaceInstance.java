@@ -1,11 +1,13 @@
 package io.github.trimax.venta.engine.model.instance;
 
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.model.common.water.WaterFoam;
+import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
-import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import lombok.NonNull;
-import org.joml.Vector3fc;
 
 public interface WaterSurfaceInstance extends AbstractInstance {
     Vector3fc getPosition();
@@ -24,7 +26,7 @@ public interface WaterSurfaceInstance extends AbstractInstance {
 
     ProgramEntity getProgram();
 
-    MaterialEntity getMaterial();
+    WaterMaterial getMaterial();
 
     void setPosition(@NonNull final Vector3fc position);
 
@@ -46,9 +48,11 @@ public interface WaterSurfaceInstance extends AbstractInstance {
 
     void setVisible(final boolean visible);
 
+    void setGridMesh(@NonNull final GridMeshEntity gridMesh);
+
+    void setMaterial(@NonNull final WaterMaterial material);
+
     void setProgram(@NonNull final ProgramEntity program);
 
-    void setMaterial(@NonNull final MaterialEntity material);
-
-    void setGridMesh(@NonNull final GridMeshEntity gridMesh);
+    void setFoam(@NonNull final WaterFoam foam);
 }

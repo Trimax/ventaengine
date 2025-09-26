@@ -38,7 +38,7 @@ public final class WaterSurfaceRepositoryImplementation
 
         return abettor.createWaterSurface(gridMeshRegistry.get(waterSurfaceDTO.gridMesh()),
                 programRegistry.get(waterSurfaceDTO.program()),
-                new WaterMaterial(waterSurfaceDTO.color()),
+                new WaterMaterial(waterSurfaceDTO.material()),
                 new WaterFoam(waterSurfaceDTO.foam()),
                 StreamEx.of(waterSurfaceDTO.noises()).map(Noise::new).toList(),
                 StreamEx.of(waterSurfaceDTO.waves()).map(Wave::new).toList());

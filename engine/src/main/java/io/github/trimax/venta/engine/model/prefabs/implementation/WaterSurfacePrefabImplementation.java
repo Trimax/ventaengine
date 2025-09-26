@@ -24,7 +24,7 @@ public class WaterSurfacePrefabImplementation extends AbstractPrefabImplementati
     ProgramEntityImplementation program;
 
     @NonNull
-    WaterMaterial m; //TODO: Rename to material
+    WaterMaterial material;
 
     @NonNull
     WaterFoam foam;

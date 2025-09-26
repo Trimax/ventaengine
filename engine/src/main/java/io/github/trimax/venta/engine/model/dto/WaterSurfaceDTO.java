@@ -10,7 +10,7 @@ import lombok.NonNull;
 
 public record WaterSurfaceDTO(@NonNull String gridMesh,
                               @NonNull String program,
-                              @NonNull WaterMaterialDTO color,
+                              @NonNull WaterMaterialDTO material,
                               @NonNull WaterFoamDTO foam,
                               List<NoiseDTO> noises,
                               List<WaveDTO> waves) {
