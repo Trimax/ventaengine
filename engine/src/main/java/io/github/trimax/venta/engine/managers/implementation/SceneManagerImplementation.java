@@ -5,23 +5,19 @@ import java.util.Optional;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.SceneManager;
-import io.github.trimax.venta.engine.model.common.shared.Fog;
-import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
-import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
-import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
-import io.github.trimax.venta.engine.model.dto.scene.SceneObjectDTO;
-import io.github.trimax.venta.engine.model.dto.scene.SceneSoundSourceDTO;
+import io.github.trimax.venta.engine.model.common.scene.SceneBillboard;
+import io.github.trimax.venta.engine.model.common.scene.SceneEmitter;
+import io.github.trimax.venta.engine.model.common.scene.SceneLight;
+import io.github.trimax.venta.engine.model.common.scene.SceneObject;
+import io.github.trimax.venta.engine.model.common.scene.SceneSoundSource;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SoundSourceInstanceImplementation;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ScenePrefabImplementation;
-import io.github.trimax.venta.engine.registries.implementation.CubemapRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.BillboardRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.EmitterRepositoryImplementation;
-import io.github.trimax.venta.engine.repositories.implementation.LightRepositoryImplementation;
-import io.github.trimax.venta.engine.repositories.implementation.ObjectRepositoryImplementation;
 import io.github.trimax.venta.engine.repositories.implementation.SoundSourceRepositoryImplementation;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,10 +35,7 @@ public final class SceneManagerImplementation
     private final BillboardRepositoryImplementation billboardRepository;
     private final SoundSourceManagerImplementation soundSourceManager;
     private final EmitterRepositoryImplementation emitterRepository;
-    private final ObjectRepositoryImplementation objectRepository;
     private final BillboardManagerImplementation billboardManager;
-    private final LightRepositoryImplementation lightRepository;
-    private final CubemapRegistryImplementation cubemapRegistry;
     private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
     private final LightManagerImplementation lightManager;
@@ -62,55 +55,47 @@ public final class SceneManagerImplementation
     private SceneInstanceImplementation create(@NonNull final String name, @NonNull final ScenePrefabImplementation prefab) {
         final var scene = create(name);
 
-        final var sceneDTO = prefab.getDto();
-        if (sceneDTO.hasObjects())
-            for (final var dto : sceneDTO.objects()) {
-                final var object = objectManager.create(dto.name(), objectRepository.get(dto.object()));
-                Optional.of(dto).map(SceneObjectDTO::position).ifPresent(object::setPosition);
-                Optional.of(dto).map(SceneObjectDTO::angles).ifPresent(object::setRotation);
-                Optional.of(dto).map(SceneObjectDTO::scale).ifPresent(object::setScale);
+        for (final var objectPrefab : prefab.getObjects()) {
+            final var object = objectManager.create(String.format("%s-%s", name, objectPrefab.getName()), objectPrefab.getPrefab());
+            Optional.of(objectPrefab).map(SceneObject::getPosition).ifPresent(object::setPosition);
+            Optional.of(objectPrefab).map(SceneObject::getAngles).ifPresent(object::setRotation);
+            Optional.of(objectPrefab).map(SceneObject::getScale).ifPresent(object::setScale);
 
-                scene.add(object);
-            }
+            scene.add(object);
+        }
 
-        if (sceneDTO.hasLights())
-            for (final var dto : sceneDTO.lights()) {
-                final var light = lightManager.create(dto.name(), lightRepository.get(dto.light()));
-                Optional.of(dto).map(SceneLightDTO::position).ifPresent(light::setPosition);
-                Optional.of(dto).map(SceneLightDTO::direction).ifPresent(light::setDirection);
+        for (final var sceneLight : prefab.getLights()) {
+            final var light = lightManager.create(String.format("%s-%s", name, sceneLight.getName()), sceneLight.getPrefab());
+            Optional.of(sceneLight).map(SceneLight::getPosition).ifPresent(light::setPosition);
+            Optional.of(sceneLight).map(SceneLight::getDirection).ifPresent(light::setDirection);
 
-                scene.add(light);
-            }
+            scene.add(light);
+        }
 
-        if (sceneDTO.hasEmitters())
-            for (final var dto : sceneDTO.emitters()) {
-                final var emitter = emitterManager.create(dto.name(), emitterRepository.get(dto.emitter()));
-                Optional.of(dto).map(SceneEmitterDTO::position).ifPresent(emitter::setPosition);
+        for (final var emitterPrefab : prefab.getEmitters()) {
+            final var emitter = emitterManager.create(String.format("%s-%s", name, emitterPrefab.getName()), emitterPrefab.getPrefab());
+            Optional.of(emitterPrefab).map(SceneEmitter::getPosition).ifPresent(emitter::setPosition);
 
-                scene.add(emitter);
-            }
+            scene.add(emitter);
+        }
 
-        if (sceneDTO.hasBillboards())
-            for (final var dto : sceneDTO.billboards()) {
-                final var billboard = billboardManager.create(dto.name(), billboardRepository.get(dto.billboard()));
-                Optional.of(dto).map(SceneBillboardDTO::position).ifPresent(billboard::setPosition);
-                Optional.of(dto).map(SceneBillboardDTO::size).ifPresent(billboard::setSize);
+        for (final var dto : prefab.getBillboards()) {
+            final var billboard = billboardManager.create(String.format("%s-%s", name, dto.getName()), dto.getPrefab());
+            Optional.of(dto).map(SceneBillboard::getPosition).ifPresent(billboard::setPosition);
+            Optional.of(dto).map(SceneBillboard::getSize).ifPresent(billboard::setSize);
 
-                scene.add(billboard);
-            }
+            scene.add(billboard);
+        }
 
-        if (sceneDTO.hasSoundSources())
-            for (final var dto : sceneDTO.soundSources()) {
-                final var soundSource = soundSourceManager.create(dto.name(), soundSourceRepository.get(dto.sourceSource()));
-                Optional.of(dto).map(SceneSoundSourceDTO::position).ifPresent(soundSource::setPosition);
+        for (final var dto : prefab.getSoundSources()) {
+            final var soundSource = soundSourceManager.create(String.format("%s-%s", name, dto.getName()), dto.getPrefab());
+            Optional.of(dto).map(SceneSoundSource::getPosition).ifPresent(soundSource::setPosition);
 
-                scene.add(soundSource);
-            }
-
-        Optional.ofNullable(sceneDTO.ambientLight()).ifPresent(scene::setAmbientLight);
-
-        Optional.ofNullable(sceneDTO.fog()).map(Fog::new).ifPresent(scene::setFog);
-        Optional.ofNullable(sceneDTO.skybox()).map(cubemapRegistry::get).ifPresent(scene::setSkybox);
+            scene.add(soundSource);
+        }
+        Optional.ofNullable(prefab.getAmbientLight()).ifPresent(scene::setAmbientLight);
+        Optional.ofNullable(prefab.getFog()).ifPresent(scene::setFog);
+        Optional.ofNullable(prefab.getSkybox()).ifPresent(scene::setSkybox);
 
         return store(scene);
     }

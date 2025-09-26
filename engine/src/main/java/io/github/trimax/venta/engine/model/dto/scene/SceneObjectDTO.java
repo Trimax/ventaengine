@@ -7,6 +7,6 @@ import lombok.NonNull;
 public record SceneObjectDTO(@NonNull String name,
                              @NonNull String object,
                              @NonNull Vector3f position,
-                             Vector3f angles,
-                             Vector3f scale) {
+                             @NonNull Vector3f angles,
+                             @NonNull Vector3f scale) {
 }

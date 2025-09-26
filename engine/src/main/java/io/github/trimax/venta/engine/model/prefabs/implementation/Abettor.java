@@ -10,14 +10,20 @@ import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.scene.SceneBillboard;
+import io.github.trimax.venta.engine.model.common.scene.SceneEmitter;
+import io.github.trimax.venta.engine.model.common.scene.SceneLight;
+import io.github.trimax.venta.engine.model.common.scene.SceneObject;
+import io.github.trimax.venta.engine.model.common.scene.SceneSoundSource;
 import io.github.trimax.venta.engine.model.common.shared.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Range;
 import io.github.trimax.venta.engine.model.common.shared.Variable;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.common.water.WaterFoam;
 import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
-import io.github.trimax.venta.engine.model.dto.SceneDTO;
+import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
@@ -67,8 +73,15 @@ public final class Abettor {
                 particleSize, particleLifetime, particleVelocity, particleAngularVelocity, particlesCount, emissionRate);
     }
 
-    public ScenePrefabImplementation createScene(@NonNull final SceneDTO dto) {
-        return new ScenePrefabImplementation(dto);
+    public ScenePrefabImplementation createScene(@NonNull final List<SceneLight> lights,
+                                                 @NonNull final List<SceneObject> objects,
+                                                 @NonNull final List<SceneEmitter> emitters,
+                                                 @NonNull final List<SceneBillboard> billboards,
+                                                 @NonNull final List<SceneSoundSource> soundSources,
+                                                 final CubemapEntityImplementation skybox,
+                                                 final Vector3f ambientLight,
+                                                 final Fog fog) {
+        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, skybox, ambientLight, fog);
     }
 
     public SoundSourcePrefabImplementation createSound(@NonNull final SoundEntityImplementation sound,
