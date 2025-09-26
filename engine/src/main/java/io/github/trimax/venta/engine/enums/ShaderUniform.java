@@ -85,6 +85,13 @@ public enum ShaderUniform {
     BoundsPosition("boundsPosition"),
     BoundsTextureCoordinates("boundsTextureCoordinates"),
 
+    /* Foam */
+    FoamThreshold("foam.threshold"),
+    FoamIntensity("foam.intensity"),
+
+    /* Foam flags */
+    UseFoam("useFoam"),
+
     /* Common model parameters transformation */
     Color("color");
 

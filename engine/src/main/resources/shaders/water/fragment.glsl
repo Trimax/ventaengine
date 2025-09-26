@@ -47,6 +47,11 @@ struct Noise {
     float offset;
 };
 
+struct Foam {
+    float threshold;
+    float intensity;
+};
+
 /***
  * Input variables and uniforms
  ***/
@@ -75,6 +80,7 @@ uniform int noiseCount;
 
 /* Material */
 uniform Material material;
+uniform Foam foam;
 
 /* Camera */
 uniform vec3 cameraPosition;
@@ -195,22 +201,19 @@ vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
     return mix(color, skyboxColor, factor * getMaterialMetalness());
 }
 
-void main() {
-    vec3 normal = calculateNormal();
-
+vec3 calculateColor() {
     float heightFactor = clamp((vertexPosition.y + waveAmplitude) / (2.0 * waveAmplitude), 0.0, 1.0);
     vec3 waterColor = mix(material.colorDepth, material.colorSurface, heightFactor);
 
-    //TODO: Get from water parameters
-    float foamThreshold = 0.85;
-    float foamAmount = smoothstep(foamThreshold, 1.0, heightFactor);
+    return mix(waterColor, material.colorPeak, smoothstep(foam.threshold, 1.0, heightFactor) * foam.intensity);
+}
 
-    vec3 finalColor = mix(waterColor, material.colorPeak, foamAmount);
-
+void main() {
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
+    vec3 normal = calculateNormal();
 
     float fresnel = pow(1.0 - max(dot(normal, cameraDirection), 0.0), 5.0);
-    vec3 colorWithFresnel = mix(finalColor, 0.8 * vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
+    vec3 colorWithFresnel = mix(calculateColor(), 0.8 * vec3(1.0, 0.6, 0.4), fresnel); //TODO: Use mix of directional lights
 
     vec3 color = computeLighting(colorWithFresnel, normal, cameraDirection);
 
