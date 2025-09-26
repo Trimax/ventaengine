@@ -2,8 +2,7 @@ package io.github.trimax.venta.engine.model.dto;
 
 import java.util.List;
 
-import org.joml.Vector3f;
-
+import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneFogDTO;
@@ -16,7 +15,7 @@ public record SceneDTO(List<SceneLightDTO> lights,
                        List<SceneEmitterDTO> emitters,
                        List<SceneBillboardDTO> billboards,
                        List<SceneSoundSourceDTO> soundSources,
-                       Vector3f ambientLight, //TODO: Must be color
+                       ColorDTO ambientLight,
                        SceneFogDTO fog,
                        String skybox) {
 }
