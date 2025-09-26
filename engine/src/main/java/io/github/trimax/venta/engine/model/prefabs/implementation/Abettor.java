@@ -15,6 +15,8 @@ import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Range;
 import io.github.trimax.venta.engine.model.common.shared.Variable;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
+import io.github.trimax.venta.engine.model.common.water.WaterFoam;
+import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
@@ -40,11 +42,12 @@ public final class Abettor {
     }
 
     public WaterSurfacePrefabImplementation createWaterSurface(@NonNull final GridMeshEntityImplementation gridMesh,
-                                                               @NonNull final MaterialEntityImplementation material,
                                                                @NonNull final ProgramEntityImplementation program,
+                                                               @NonNull final WaterMaterial waterMaterial,
+                                                               @NonNull final WaterFoam foam,
                                                                final List<Noise> noises,
                                                                final List<Wave> waves) {
-        return new WaterSurfacePrefabImplementation(gridMesh, material, program, noises, waves);
+        return new WaterSurfacePrefabImplementation(gridMesh, program, waterMaterial, foam, noises, waves);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,

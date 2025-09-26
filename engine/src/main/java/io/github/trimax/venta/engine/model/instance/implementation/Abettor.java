@@ -12,6 +12,8 @@ import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
+import io.github.trimax.venta.engine.model.common.water.WaterFoam;
+import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
 import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
@@ -50,11 +52,12 @@ public final class Abettor {
 
     public WaterSurfaceInstanceImplementation createWaterSurface(@NonNull final String name,
                                                                  @NonNull final GridMeshEntityImplementation gridMesh,
-                                                                 @NonNull final MaterialEntityImplementation material,
                                                                  @NonNull final ProgramEntityImplementation program,
+                                                                 @NonNull final WaterMaterial m,
+                                                                 @NonNull final WaterFoam foam,
                                                                  @NonNull final List<Noise> noises,
                                                                  @NonNull final List<Wave> waves) {
-        return new WaterSurfaceInstanceImplementation(name, gridMesh, material, program, noises, waves);
+        return new WaterSurfaceInstanceImplementation(name, gridMesh, program, m, foam, noises, waves);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,

@@ -37,9 +37,15 @@ public enum ShaderUniform {
     /* Materials */
     MaterialMetalness("material.metalness"),
     MaterialRoughness("material.roughness"),
+    MaterialOpacity("material.opacity"),
     MaterialTiling("material.tiling"),
     MaterialOffset("material.offset"),
     MaterialColor("material.color"),
+
+    /* Water material parameters */
+    MaterialColorSurface("material.colorSurface"),
+    MaterialColorDepth("material.colorDepth"),
+    MaterialColorPeak("material.colorPeak"),
 
     /* Material flags */
     UseMaterial("useMaterial"),
@@ -78,6 +84,13 @@ public enum ShaderUniform {
     /* Bounds for offsets */
     BoundsPosition("boundsPosition"),
     BoundsTextureCoordinates("boundsTextureCoordinates"),
+
+    /* Foam */
+    FoamThreshold("foam.threshold"),
+    FoamIntensity("foam.intensity"),
+
+    /* Foam flags */
+    UseFoam("useFoam"),
 
     /* Common model parameters transformation */
     Color("color");

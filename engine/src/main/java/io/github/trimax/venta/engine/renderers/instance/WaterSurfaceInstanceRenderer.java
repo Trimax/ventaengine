@@ -13,11 +13,12 @@ import org.lwjgl.system.MemoryUtil;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.LightBinder;
-import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.NoiseBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.binders.TimeBinder;
+import io.github.trimax.venta.engine.binders.WaterFoamBinder;
+import io.github.trimax.venta.engine.binders.WaterMaterialBinder;
 import io.github.trimax.venta.engine.binders.WaveBinder;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
@@ -31,8 +32,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WaterSurfaceInstanceRenderer extends
         AbstractInstanceRenderer<WaterSurfaceInstanceImplementation, WaterSurfaceInstanceRenderer.WaterSurfaceRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final WaterMaterialBinder waterMaterialBinder;
+    private final WaterFoamBinder waterFoamBinder;
     private final GeometryHelper geometryHelper;
-    private final MaterialBinder materialBinder;
     private final TextureBinder textureBinder;
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
@@ -64,8 +66,10 @@ public final class WaterSurfaceInstanceRenderer extends
         noiseBinder.bind(surface.getProgram(), surface.getNoises());
         waveBinder.bind(surface.getProgram(), surface.getWaves());
 
-        materialBinder.bind(surface.getProgram(), surface.getMaterial());
         textureBinder.bind(surface.getProgram(), getContext().getScene().getSkybox());
+
+        waterMaterialBinder.bind(surface.getProgram(), surface.getMaterial());
+        waterFoamBinder.bind(surface.getProgram(), surface.getFoam());
 
         geometryHelper.render(surface.getGridMesh().getGeometry());
 
