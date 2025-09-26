@@ -9,16 +9,17 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
+import io.github.trimax.venta.engine.model.common.water.WaterFoam;
+import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
-import io.github.trimax.venta.engine.model.entity.MaterialEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.WaterSurfaceInstance;
 import io.github.trimax.venta.engine.utils.WaveUtil;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
 public final class WaterSurfaceInstanceImplementation extends AbstractInstanceImplementation implements WaterSurfaceInstance {
@@ -28,8 +29,13 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
     private final float waveAmplitude;
 
     private GridMeshEntityImplementation gridMesh;
-    private MaterialEntityImplementation material;
     private ProgramEntityImplementation program;
+
+    @Setter
+    private WaterMaterial material;
+
+    @Setter
+    private WaterFoam foam;
 
     private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
@@ -37,17 +43,19 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
 
     WaterSurfaceInstanceImplementation(@NonNull final String name,
                                        @NonNull final GridMeshEntityImplementation gridMesh,
-                                       @NonNull final MaterialEntityImplementation material,
                                        @NonNull final ProgramEntityImplementation program,
+                                       @NonNull final WaterMaterial material,
+                                       @NonNull final WaterFoam foam,
                                        @NonNull final List<Noise> noises,
                                        @NonNull final List<Wave> waves) {
         super(null, name);
 
         this.gridMesh = gridMesh;
-        this.material = material;
         this.program = program;
         this.noises.addAll(noises);
         this.waves.addAll(waves);
+        this.material = new WaterMaterial(material);
+        this.foam = new WaterFoam(foam);
 
         this.waveAmplitude = WaveUtil.getAmplitude(waves);
     }
@@ -126,12 +134,6 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
     public void setProgram(@NonNull final ProgramEntity program) {
         if (program instanceof ProgramEntityImplementation entity)
             this.program = entity;
-    }
-
-    @Override
-    public void setMaterial(@NonNull final MaterialEntity material) {
-        if (material instanceof MaterialEntityImplementation entity)
-            this.material = entity;
     }
 
     @Override

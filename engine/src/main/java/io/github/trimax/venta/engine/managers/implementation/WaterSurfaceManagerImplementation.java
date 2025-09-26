@@ -32,8 +32,9 @@ public final class WaterSurfaceManagerImplementation
     private WaterSurfaceInstance create(final String name, final WaterSurfacePrefabImplementation prefab) {
         return store(abettor.createWaterSurface(name,
                 prefab.getGridMesh(),
-                prefab.getMaterial(),
                 prefab.getProgram(),
+                prefab.getMaterial(),
+                prefab.getFoam(),
                 prefab.getNoises(),
                 prefab.getWaves()));
     }

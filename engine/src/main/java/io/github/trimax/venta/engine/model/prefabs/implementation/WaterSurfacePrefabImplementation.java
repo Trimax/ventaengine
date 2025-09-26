@@ -4,8 +4,9 @@ import java.util.List;
 
 import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
+import io.github.trimax.venta.engine.model.common.water.WaterFoam;
+import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
 import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.WaterSurfacePrefab;
 import lombok.AccessLevel;
@@ -20,10 +21,13 @@ public class WaterSurfacePrefabImplementation extends AbstractPrefabImplementati
     GridMeshEntityImplementation gridMesh;
 
     @NonNull
-    MaterialEntityImplementation material;
+    ProgramEntityImplementation program;
 
     @NonNull
-    ProgramEntityImplementation program;
+    WaterMaterial material;
+
+    @NonNull
+    WaterFoam foam;
 
     List<Noise> noises;
 
