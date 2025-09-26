@@ -1,19 +1,17 @@
 package io.github.trimax.venta.engine.core;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL33C.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL33C.glEnable;
 
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
 import org.lwjgl.opengl.GL;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.callbacks.ErrorCallback;
 import io.github.trimax.venta.engine.console.ConsoleCommandExecutor;
 import io.github.trimax.venta.engine.context.VentaContext;
+import io.github.trimax.venta.engine.controllers.AudioController;
 import io.github.trimax.venta.engine.controllers.ConsoleController;
 import io.github.trimax.venta.engine.controllers.EngineController;
 import io.github.trimax.venta.engine.controllers.KeyboardController;
@@ -43,11 +41,6 @@ public final class Engine implements Runnable {
     private final Memory memory;
 
     public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
-        initializeOpenAL();
-        initializeOpenGL(ventaEngineApplication);
-    }
-
-    private void initializeOpenGL(final VentaEngineApplication ventaEngineApplication) {
         glfwSetErrorCallback(new ErrorCallback());
         if (!glfwInit())
             throw new EngineInitializationException("GLFW init failed");
@@ -56,6 +49,7 @@ public final class Engine implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+        controllerFactory.get(AudioController.class).initialize();
         controllerFactory.get(KeyboardController.class).initialize();
         controllerFactory.get(EngineController.class).initialize(ventaEngineApplication);
         controllerFactory.get(WindowController.class).initialize(ventaEngineApplication);
@@ -67,23 +61,6 @@ public final class Engine implements Runnable {
 
         context.getCameraManager().setCurrent(context.getCameraManager().create("Default camera"));
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
-    }
-
-    @SuppressWarnings("all")
-    private void initializeOpenAL() {
-        final var device = alcOpenDevice((String) null);
-        if (device == 0)
-            throw new RuntimeException("Failed to open OpenAL device");
-
-        final var context = alcCreateContext(device, (int[]) null);
-        if (context == 0) {
-            alcCloseDevice(device);
-            throw new RuntimeException("Failed to create OpenAL context");
-        }
-
-        alcMakeContextCurrent(context);
-        ALC.createCapabilities(device);
-        AL.createCapabilities(ALC.createCapabilities(device));
     }
 
     @Override
