@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL20C.*;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
+import io.github.trimax.venta.engine.enums.ShaderNoiseUniform;
 import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.ShaderWaveUniform;
@@ -69,6 +70,10 @@ public final class ProgramRegistryImplementation
 
         for (int i = 0; i < DefinitionsCommon.MAX_WAVES; i++)
             for (final var field : ShaderWaveUniform.values())
+                program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
+
+        for (int i = 0; i < DefinitionsCommon.MAX_NOISES; i++)
+            for (final var field : ShaderNoiseUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 
         log.debug("{} uniforms found and registered for program {}", program.getUniformCount(), program.getID());

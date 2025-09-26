@@ -11,6 +11,7 @@ import lombok.experimental.UtilityClass;
 public final class DefinitionsCommon {
     /* Limitations */
     public static final int MAX_LIGHTS = 64;
+    public static final int MAX_NOISES = 16;
     public static final int MAX_WAVES = 16;
 
     /* Vectors 3D */

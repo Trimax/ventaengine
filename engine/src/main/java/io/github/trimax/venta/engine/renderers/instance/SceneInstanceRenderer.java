@@ -1,5 +1,12 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import static org.lwjgl.opengl.GL11C.*;
+
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
@@ -9,13 +16,11 @@ import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanc
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
-import lombok.*;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.opengl.GL11C.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,7 +30,7 @@ public final class SceneInstanceRenderer
     private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
     private final BillboardInstanceRenderer billboardRenderer;
-    private final GridMeshInstanceRenderer gridMeshRenderer;
+    private final WaterSurfaceInstanceRenderer gridMeshRenderer;
     private final EmitterInstanceRenderer emitterRenderer;
     private final ObjectInstanceRenderer objectRenderer;
     private final CubemapEntityRenderer cubemapRenderer;

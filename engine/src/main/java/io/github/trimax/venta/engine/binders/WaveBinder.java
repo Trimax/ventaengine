@@ -27,11 +27,11 @@ public final class WaveBinder extends AbstractBinder {
             bind(program, waves.get(waveID), waveID);
     }
 
-    private void bind(final ProgramEntityImplementation program, final Wave wave, final int waveIndex) {
-        bind(program.getUniformID(ShaderWaveUniform.Direction.getUniformName(waveIndex)), wave.getDirection());
-        bind(program.getUniformID(ShaderWaveUniform.Amplitude.getUniformName(waveIndex)), wave.getAmplitude());
-        bind(program.getUniformID(ShaderWaveUniform.Steepness.getUniformName(waveIndex)), wave.getSteepness());
-        bind(program.getUniformID(ShaderWaveUniform.Length.getUniformName(waveIndex)), wave.getLength());
-        bind(program.getUniformID(ShaderWaveUniform.Speed.getUniformName(waveIndex)), wave.getSpeed());
+    private void bind(final ProgramEntityImplementation program, final Wave wave, final int index) {
+        bind(program.getUniformID(ShaderWaveUniform.Direction.getUniformName(index)), wave.getDirection());
+        bind(program.getUniformID(ShaderWaveUniform.Amplitude.getUniformName(index)), wave.getAmplitude());
+        bind(program.getUniformID(ShaderWaveUniform.Steepness.getUniformName(index)), wave.getSteepness());
+        bind(program.getUniformID(ShaderWaveUniform.Length.getUniformName(index)), wave.getLength());
+        bind(program.getUniformID(ShaderWaveUniform.Speed.getUniformName(index)), wave.getSpeed());
     }
 }

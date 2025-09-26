@@ -47,5 +47,25 @@
       "steepness": 0.8,
       "speed": 1.2
     }
+  ],
+  "noises": [
+    {
+      "scale": 0.2,
+      "speed": 0.6,
+      "offset": 1.0,
+      "strength": 0.1
+    },
+    {
+      "scale": 0.4,
+      "speed": 0.6,
+      "offset": 2.0,
+      "strength": 0.1
+    },
+    {
+      "scale": 0.8,
+      "speed": 0.6,
+      "offset": 3.0,
+      "strength": 0.1
+    }
   ]
 }
