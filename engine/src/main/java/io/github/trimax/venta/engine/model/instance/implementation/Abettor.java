@@ -52,13 +52,12 @@ public final class Abettor {
 
     public WaterSurfaceInstanceImplementation createWaterSurface(@NonNull final String name,
                                                                  @NonNull final GridMeshEntityImplementation gridMesh,
-                                                                 @NonNull final MaterialEntityImplementation material,
                                                                  @NonNull final ProgramEntityImplementation program,
                                                                  @NonNull final WaterMaterial m,
                                                                  @NonNull final WaterFoam foam,
                                                                  @NonNull final List<Noise> noises,
                                                                  @NonNull final List<Wave> waves) {
-        return new WaterSurfaceInstanceImplementation(name, gridMesh, material, program, m, foam, noises, waves);
+        return new WaterSurfaceInstanceImplementation(name, gridMesh, program, m, foam, noises, waves);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,

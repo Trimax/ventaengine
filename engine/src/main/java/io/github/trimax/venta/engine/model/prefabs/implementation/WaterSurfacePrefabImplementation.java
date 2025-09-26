@@ -7,7 +7,6 @@ import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.common.water.WaterFoam;
 import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
 import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.WaterSurfacePrefab;
 import lombok.AccessLevel;
@@ -20,9 +19,6 @@ import lombok.Value;
 public class WaterSurfacePrefabImplementation extends AbstractPrefabImplementation implements WaterSurfacePrefab {
     @NonNull
     GridMeshEntityImplementation gridMesh;
-
-    @NonNull
-    MaterialEntityImplementation material;
 
     @NonNull
     ProgramEntityImplementation program;

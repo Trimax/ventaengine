@@ -42,7 +42,6 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
 
     WaterSurfaceInstanceImplementation(@NonNull final String name,
                                        @NonNull final GridMeshEntityImplementation gridMesh,
-                                       @NonNull final MaterialEntityImplementation material,
                                        @NonNull final ProgramEntityImplementation program,
                                        @NonNull final WaterMaterial m,
                                        @NonNull final WaterFoam foam,
@@ -51,7 +50,6 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
         super(null, name);
 
         this.gridMesh = gridMesh;
-        this.material = material;
         this.program = program;
         this.noises.addAll(noises);
         this.waves.addAll(waves);

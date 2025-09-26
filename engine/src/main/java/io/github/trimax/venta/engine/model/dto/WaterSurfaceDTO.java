@@ -9,7 +9,6 @@ import io.github.trimax.venta.engine.model.dto.water.WaterMaterialDTO;
 import lombok.NonNull;
 
 public record WaterSurfaceDTO(@NonNull String gridMesh,
-                              @NonNull String material,
                               @NonNull String program,
                               @NonNull WaterMaterialDTO color,
                               @NonNull WaterFoamDTO foam,

@@ -10,7 +10,6 @@ import io.github.trimax.venta.engine.model.prefabs.WaterSurfacePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.WaterSurfacePrefabImplementation;
 import io.github.trimax.venta.engine.registries.implementation.GridMeshRegistryImplementation;
-import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.WaterSurfaceRepository;
 import io.github.trimax.venta.engine.services.ResourceService;
@@ -27,7 +26,6 @@ public final class WaterSurfaceRepositoryImplementation
         extends AbstractRepositoryImplementation<WaterSurfacePrefabImplementation, WaterSurfacePrefab>
         implements WaterSurfaceRepository {
     private final GridMeshRegistryImplementation gridMeshRegistry;
-    private final MaterialRegistryImplementation materialRegistry;
     private final ProgramRegistryImplementation programRegistry;
     private final ResourceService resourceService;
     private final Abettor abettor;
@@ -39,7 +37,6 @@ public final class WaterSurfaceRepositoryImplementation
         final var waterSurfaceDTO = resourceService.getAsObject(String.format("/surfaces/water/%s", resourcePath), WaterSurfaceDTO.class);
 
         return abettor.createWaterSurface(gridMeshRegistry.get(waterSurfaceDTO.gridMesh()),
-                materialRegistry.get(waterSurfaceDTO.material()),
                 programRegistry.get(waterSurfaceDTO.program()),
                 new WaterMaterial(waterSurfaceDTO.color()),
                 new WaterFoam(waterSurfaceDTO.foam()),

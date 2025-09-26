@@ -42,13 +42,12 @@ public final class Abettor {
     }
 
     public WaterSurfacePrefabImplementation createWaterSurface(@NonNull final GridMeshEntityImplementation gridMesh,
-                                                               @NonNull final MaterialEntityImplementation material,
                                                                @NonNull final ProgramEntityImplementation program,
                                                                @NonNull final WaterMaterial waterMaterial,
                                                                @NonNull final WaterFoam foam,
                                                                final List<Noise> noises,
                                                                final List<Wave> waves) {
-        return new WaterSurfacePrefabImplementation(gridMesh, material, program, waterMaterial, foam, noises, waves);
+        return new WaterSurfacePrefabImplementation(gridMesh, program, waterMaterial, foam, noises, waves);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
