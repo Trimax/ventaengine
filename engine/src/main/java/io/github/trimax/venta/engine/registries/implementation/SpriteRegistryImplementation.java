@@ -1,11 +1,11 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import io.github.trimax.venta.engine.definitions.DefinitionsColor;
+import io.github.trimax.venta.engine.definitions.DefinitionsSprite;
+import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.definitions.Definitions;
-import io.github.trimax.venta.engine.model.common.dto.Color;
-import io.github.trimax.venta.engine.model.common.dto.Frame;
 import io.github.trimax.venta.engine.model.dto.SpriteDTO;
 import io.github.trimax.venta.engine.model.dto.common.FrameDTO;
 import io.github.trimax.venta.engine.model.entity.SpriteEntity;
@@ -49,9 +49,9 @@ public final class SpriteRegistryImplementation
         framesBuffer.flip();
 
         return abettor.createSprite(texture, framesBuffer,
-                Optional.ofNullable(spriteDTO.color()).map(Color::toVector4f).orElse(Definitions.COLOR_WHITE),
+                Optional.ofNullable(spriteDTO.color()).map(ColorDTO::toVector4f).orElse(DefinitionsColor.COLOR_WHITE),
                 spriteDTO.looping(),
-                Optional.ofNullable(spriteDTO.frames()).orElse(Definitions.DEFAULT_FRAMES).size(),
+                Optional.ofNullable(spriteDTO.frames()).orElse(DefinitionsSprite.DEFAULT_FRAMES).size(),
                 spriteDTO.duration());
     }
 

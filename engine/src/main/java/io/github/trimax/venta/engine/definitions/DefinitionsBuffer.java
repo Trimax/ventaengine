@@ -1,11 +1,6 @@
 package io.github.trimax.venta.engine.definitions;
 
-import io.github.trimax.venta.engine.model.common.dto.Frame;
 import lombok.experimental.UtilityClass;
-import org.joml.Vector4f;
-
-import java.util.Collections;
-import java.util.List;
 
 @UtilityClass
 public final class DefinitionsBuffer {
@@ -58,10 +53,4 @@ public final class DefinitionsBuffer {
     /* Position components offset */
     public static final int EDGE_OFFSET_VERTEX_1 = 0;
     public static final int EDGE_OFFSET_VERTEX_2 = 1;
-
-    /*** Colors ***/
-    public static final Vector4f COLOR_WHITE = new Vector4f(1.f, 1.f, 1.f, 1.f);
-
-    /** Frames **/
-    public static final List<Frame> DEFAULT_FRAMES = Collections.emptyList();
 }
