@@ -7,9 +7,6 @@
 /* Light specific */
 const int MAX_LIGHTS = 64;
 const int MAX_NOISES = 16;
-const int LIGHT_TYPE_POINT = 0;
-const int LIGHT_TYPE_DIRECTIONAL = 1;
-const int LIGHT_TYPE_SPOT = 2;
 
 /***
  * Structures
@@ -158,23 +155,8 @@ vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
     if (light.enabled == 0)
         vec3(0.0);
 
-    vec3 lightDirection = vec3(0.0);
-    float attenuation = 1.0;
-
-    switch (light.type) {
-        case LIGHT_TYPE_POINT:
-        case LIGHT_TYPE_SPOT:
-            lightDirection = normalize(light.position - vertexPosition);
-            attenuation = getAttenuation(light.attenuation, length(light.position - vertexPosition));
-            break;
-
-        case LIGHT_TYPE_DIRECTIONAL:
-            lightDirection = normalize(-light.direction);
-            break;
-
-        default:
-            return vec3(0.0);
-    }
+    vec3 lightDirection = normalize(light.position - vertexPosition);
+    float attenuation = getAttenuation(light.attenuation, length(light.position - vertexPosition));
 
     float diff = max(dot(normal, lightDirection), 0.0);
     vec3 R = reflect(-lightDirection, normal);

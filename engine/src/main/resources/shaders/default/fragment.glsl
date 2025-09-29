@@ -9,9 +9,6 @@ const float METALNESS_MINIMAL = 0.04;
 
 /* Light specific */
 const int MAX_LIGHTS = 64;
-const int LIGHT_TYPE_POINT = 0;
-const int LIGHT_TYPE_DIRECTIONAL = 1;
-const int LIGHT_TYPE_SPOT = 2;
 
 /***
  * Structures
