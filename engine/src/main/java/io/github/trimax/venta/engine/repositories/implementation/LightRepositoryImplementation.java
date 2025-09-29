@@ -33,13 +33,12 @@ public final class LightRepositoryImplementation
         log.info("Loading light {}", resourcePath);
 
         final var lightDTO = resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightDTO.class);
-        return abettor.createLight(lightDTO.type(),
+        return abettor.createLight(
                 Optional.of(lightDTO.color()).map(ColorDTO::toVector3f).orElse(new Vector3f(DefinitionsCommon.VECTOR3F_ONE)),
-                Optional.ofNullable(lightDTO.direction()).orElse(new Vector3f()),
                 Optional.ofNullable(lightDTO.attenuation()).map(Attenuation::new).orElse(new Attenuation()),
+                lightDTO.castShadows(),
                 lightDTO.intensity(),
-                lightDTO.range(),
-                lightDTO.castShadows());
+                lightDTO.range());
     }
 
     @Override

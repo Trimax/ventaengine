@@ -47,13 +47,11 @@ public final class LightBinder extends AbstractBinder {
     }
 
     private void bind(final ProgramEntityImplementation program, final LightInstanceImplementation light, final int lightIndex) {
-        bind(program.getUniformID(ShaderLightUniform.Type.getUniformName(lightIndex)), light.getType().getValue());
         bind(program.getUniformID(ShaderLightUniform.Enabled.getUniformName(lightIndex)), light.isEnabled());
         bind(program.getUniformID(ShaderLightUniform.CastShadows.getUniformName(lightIndex)), light.isCastShadows());
 
-        /* Position and direction */
+        /* Position */
         bind(program.getUniformID(ShaderLightUniform.Position.getUniformName(lightIndex)), light.getPosition());
-        bind(program.getUniformID(ShaderLightUniform.Direction.getUniformName(lightIndex)), light.getDirection());
 
         /* Color and intensity */
         bind(program.getUniformID(ShaderLightUniform.Color.getUniformName(lightIndex)), light.getColor());

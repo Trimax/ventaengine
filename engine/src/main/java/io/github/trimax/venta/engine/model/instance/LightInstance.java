@@ -2,16 +2,11 @@ package io.github.trimax.venta.engine.model.instance;
 
 import org.joml.Vector3fc;
 
-import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.shared.Attenuation;
 import lombok.NonNull;
 
 public interface LightInstance extends AbstractInstance {
-    LightType getType();
-
     Vector3fc getPosition();
-
-    Vector3fc getDirection();
 
     float getIntensity();
 
@@ -20,8 +15,6 @@ public interface LightInstance extends AbstractInstance {
     Attenuation getAttenuation();
 
     void setPosition(@NonNull final Vector3fc position);
-
-    void setDirection(@NonNull final Vector3fc direction);
 
     void setIntensity(float intensity);
 
