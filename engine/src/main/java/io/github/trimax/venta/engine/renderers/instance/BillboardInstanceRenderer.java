@@ -1,5 +1,15 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.SpriteBinder;
@@ -11,15 +21,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.joml.Matrix4f;
-import org.joml.Matrix4fc;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -49,9 +50,11 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
     }
 
     private int getFrameIndex(final SpriteEntityImplementation sprite) {
-        final var time = getContext().getParent().getTime().getTimeElapsed();
+        final double time = getContext().getParent().getTime().getTimeElapsed();
+        int frameCount = sprite.getFrameCount();
 
-        return (int) ((time / sprite.getDuration()) % sprite.getFrameCount());
+        double frame = Math.floor(time / sprite.getDuration()) % frameCount;
+        return (int) frame;
     }
 
     @Getter(AccessLevel.PACKAGE)

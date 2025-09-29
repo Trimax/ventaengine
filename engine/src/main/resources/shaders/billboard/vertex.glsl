@@ -5,7 +5,7 @@
  ***/
 
 /* Common */
-const int MAX_FRAMES = 64;
+const int MAX_FRAMES = 128;
 
 /* Vertex attributes */
 layout(location = 0) in vec2 position;
