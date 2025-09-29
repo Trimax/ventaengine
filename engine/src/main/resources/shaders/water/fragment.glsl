@@ -19,14 +19,18 @@ struct Attenuation {
 };
 
 struct Light {
-    int type;
     vec3 position;
-    vec3 direction;
     vec3 color;
     float intensity;
     Attenuation attenuation;
     int castShadows;
     int enabled;
+};
+
+struct DirectionalLight {
+    vec3 color;
+    vec3 direction;
+    float intensity;
 };
 
 struct Material {
@@ -63,10 +67,12 @@ in float vertexTimeElapsed;
 uniform samplerCube textureSkybox;
 
 /* Feature flags */
+uniform int useDirectionalLight;
 uniform int useTextureSkybox;
 uniform int useMaterial;
 
 /* Lighting */
+uniform DirectionalLight directionalLight;
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 ambientLight;
 uniform int lightCount;
@@ -165,6 +171,20 @@ vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
     return (diff + spec * 0.3) * light.color * light.intensity * attenuation;
 }
 
+/* Computes directional light */
+vec3 computeDirectionalLight(vec3 normal, vec3 cameraDirection) {
+    if (!isSet(useDirectionalLight))
+        return vec3(0.0);
+
+    vec3 lightDirection = normalize(-directionalLight.direction);
+
+    float diff = max(dot(normal, lightDirection), 0.0);
+    vec3 R = reflect(-lightDirection, normal);
+    float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
+
+    return (diff + spec * 0.3) * directionalLight.color * directionalLight.intensity;
+}
+
 vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     vec3 result = ambientLight * baseColor;
 
@@ -175,15 +195,21 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
 }
 
 vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
-    if (!isSet(useTextureSkybox))
-        return color;
+    vec3 environmentColor = vec3(0.0);
 
-    vec3 skyboxColor = texture(textureSkybox, reflect(-cameraDirection, normal)).rgb;
+    if (isSet(useTextureSkybox))
+        environmentColor += texture(textureSkybox, reflect(-cameraDirection, normal)).rgb;
 
-    float cosTheta = dot(normal, cameraDirection);
-    float factor = pow(1.0 - cosTheta, 3.0);
+    if (isSet(useDirectionalLight))
+        environmentColor += directionalLight.color * directionalLight.intensity;
 
-    return mix(color, skyboxColor, factor * material.metalness);
+    if (!isSet(useTextureSkybox) && !isSet(useDirectionalLight))
+        environmentColor = color;
+
+    // Schlick Fresnel
+    float factor = pow(1.0 - dot(normal, cameraDirection), 3.0);
+
+    return mix(color, environmentColor, factor * material.metalness);
 }
 
 /* Reflections */
@@ -191,13 +217,8 @@ void main() {
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
     vec3 normal = calculateNormal();
 
-    //TODO: The color here should be a mix of directional color and skybox reflection color
-    float fresnel = pow(1.0 - max(dot(normal, cameraDirection), 0.0), 5.0);
-    vec3 colorWithFresnel = mix(calculateColor(), 0.8 * vec3(1.0, 0.6, 0.4), fresnel);
+    vec3 colorWithLighting = computeLighting(calculateColor(), normal, cameraDirection);
+    vec3 colorWithReflections = applyReflections(colorWithLighting, cameraDirection, normal);
 
-    vec3 color = computeLighting(colorWithFresnel, normal, cameraDirection);
-
-    vec3 colorWithReflections = applyReflections(colorWithFresnel, cameraDirection, normal);
-
-    outputColor = vec4(colorWithReflections, 1.0);
+    outputColor = vec4(clamp(colorWithReflections, 0.0, 1.0), material.opacity);
 }
