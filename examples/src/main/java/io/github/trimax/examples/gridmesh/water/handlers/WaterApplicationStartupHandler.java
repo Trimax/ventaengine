@@ -33,7 +33,7 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         final var sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-5f, -6.5f, -3f));
         sun.setColor(new Vector3f(1.0f, 0.6f, 0.4f));
-        sun.setIntensity(1.f);
+        sun.setIntensity(0.5f);
         scene.setDirectionalLight(sun);
     }
 }
