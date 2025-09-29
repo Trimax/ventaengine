@@ -10,11 +10,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ShaderLightUniform {
     /* Basic parameters  */
-    Type("type"),
     Color("color"),
     Enabled("enabled"),
     Position("position"),
-    Direction("direction"),
     Intensity("intensity"),
 
     /* Attenuation */

@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import org.joml.Vector3f;
 
-import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.shared.Attenuation;
 import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
 import lombok.AccessLevel;
@@ -14,18 +13,12 @@ import lombok.Value;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class LightPrefabImplementation extends AbstractPrefabImplementation implements LightPrefab {
     @NonNull
-    LightType type;
-
-    @NonNull
     Vector3f color;
-
-    @NonNull
-    Vector3f direction;
 
     @NonNull
     Attenuation attenuation;
 
+    boolean castShadows;
     float intensity;
     float range;
-    boolean castShadows;
 }

@@ -109,12 +109,9 @@ public final class SceneManagerImplementation
     private LightInstanceImplementation createLight(@NonNull final SceneLight sceneLight) {
         final var light = lightManager.create(sceneLight.getName(), sceneLight.getPrefab());
         Optional.of(sceneLight).map(SceneLight::getPosition).ifPresent(light::setPosition);
-        Optional.of(sceneLight).map(SceneLight::getDirection).ifPresent(light::setDirection);
 
         return light;
     }
-
-
 
     @Override
     public void setCurrent(@NonNull final SceneInstance scene) {

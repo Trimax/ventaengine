@@ -31,9 +31,7 @@ public final class LightDescribeExecutor extends AbstractLightExecutor {
 
         getConsole().header("Light <%s>:", light.getID());
         getConsole().info("          Name: %s", light.getName());
-        getConsole().info("          Type: %s", light.getType().name());
         getConsole().info("      Position: %s", light.getPosition());
-        getConsole().info("     Direction: %s", light.getDirection());
         getConsole().info("     Intensity: %.2f", light.getIntensity());
         getConsole().info("       Enabled: %b", light.isEnabled());
         getConsole().info("  Cast shadows: %b", light.isCastShadows());

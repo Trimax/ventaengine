@@ -30,10 +30,18 @@ public final class SceneDescribeExecutor extends AbstractSceneExecutor {
         }
 
         getConsole().header("Scene <%s>:", scene.getID());
-        getConsole().info("             ID: %s", scene.getID());
-        getConsole().info("           Name: %s", scene.getName());
-        getConsole().info("  Objects count: %s", scene.getObjects().size());
-        getConsole().info("   Lights count: %s", scene.getLights().size());
-        getConsole().info("        Ambient: %s", scene.getAmbientLight());
+        getConsole().info("                           ID: %s", scene.getID());
+        getConsole().info("                         Name: %s", scene.getName());
+        getConsole().info("                Objects count: %s", scene.getObjects().size());
+        getConsole().info("                 Lights count: %s", scene.getLights().size());
+        getConsole().info("                Ambient light: %s", scene.getAmbientLight());
+        getConsole().info("            Directional light: %s", scene.getDirectionalLight() != null);
+
+        final var directionalLight = scene.getDirectionalLight();
+        if (directionalLight != null) {
+            getConsole().info("  Directional light color: %s", directionalLight.getColor());
+            getConsole().info("  Directional light direction: %s", directionalLight.getDirection());
+            getConsole().info("  Directional light intensity: %s", directionalLight.getIntensity());
+        }
     }
 }

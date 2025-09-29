@@ -7,7 +7,6 @@ import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
-import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.scene.SceneBillboard;
@@ -38,14 +37,12 @@ import lombok.NonNull;
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Abettor {
-    public LightPrefabImplementation createLight(@NonNull final LightType type,
-                                                 @NonNull final Vector3f color,
-                                                 @NonNull final Vector3f direction,
+    public LightPrefabImplementation createLight(@NonNull final Vector3f color,
                                                  @NonNull final Attenuation attenuation,
+                                                 final boolean castShadows,
                                                  final float intensity,
-                                                 final float range,
-                                                 final boolean castShadows) {
-        return new LightPrefabImplementation(type, color, direction, attenuation, intensity, range, castShadows);
+                                                 final float range) {
+        return new LightPrefabImplementation(color, attenuation, castShadows, intensity, range);
     }
 
     public WaterSurfacePrefabImplementation createWaterSurface(@NonNull final GridMeshEntityImplementation gridMesh,
