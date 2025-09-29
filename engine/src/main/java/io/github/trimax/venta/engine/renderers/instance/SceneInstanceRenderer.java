@@ -68,14 +68,14 @@ public final class SceneInstanceRenderer
                     .withScene(scene)) {
                 objectRenderer.render(objectManager.getInstance(object.getID()));
             }
-
+            
+        glDepthMask(false);
         for (final var billboard : scene.getBillboards())
             try (final var _ = billboardRenderer.withContext(getContext())
                     .withModelMatrix(billboard.getTransform().getMatrix())) {
                 billboardRenderer.render(billboard);
             }
 
-        glDepthMask(false);
         for (final var emitter : scene.getEmitters())
             try (final var _ = emitterRenderer.withContext(getContext())) {
                 emitterRenderer.render(emitterManager.getInstance(emitter.getID()));

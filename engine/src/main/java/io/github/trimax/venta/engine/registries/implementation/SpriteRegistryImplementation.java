@@ -1,9 +1,14 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import java.util.Optional;
+
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.model.dto.SpriteDTO;
+import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import io.github.trimax.venta.engine.model.dto.common.FrameDTO;
 import io.github.trimax.venta.engine.model.entity.SpriteEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
@@ -44,11 +49,11 @@ public final class SpriteRegistryImplementation
         framesBuffer.flip();
 
         return abettor.createSprite(texture, framesBuffer,
+                Optional.ofNullable(spriteDTO.color()).map(ColorDTO::toVector4f).orElse(new Vector4f(DefinitionsCommon.VECTOR4F_ONE)),
                 spriteDTO.looping(),
                 spriteDTO.frames().size(),
                 spriteDTO.duration());
     }
-
 
     @Override
     protected void unload(@NonNull final SpriteEntityImplementation entity) {

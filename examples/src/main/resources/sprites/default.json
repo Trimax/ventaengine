@@ -2,6 +2,7 @@
   "texture": "atlas/diffuse.png",
   "duration": 0.25,
   "looping": true,
+  "color": {"r": 1.0, "g": 1.0, "b": 1.0, "a": 1.0},
   "frames": [
     {"x": 0,   "y": 0,   "width": 512, "height": 512},
     {"x": 512, "y": 0,   "width": 512, "height": 512},

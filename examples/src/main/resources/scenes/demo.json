@@ -42,5 +42,20 @@
       "angles": {"x": 0.0, "y": 0.0, "z": 0.0},
       "scale": {"x": 0.3, "y": 0.3, "z": 0.3}
     }
+  ],
+  "billboards": [
+    {
+      "name": "Fire",
+      "billboard": "fire.json",
+      "position": {"x": 0.0, "y": 0.0, "z": -0.5},
+      "size": {"x": 1.0, "y": 0.3}
+    }
+  ],
+  "emitters": [
+    {
+      "name": "Smoke",
+      "emitter": "smoke.json",
+      "position": {"x": 0.0, "y": 0.0, "z": -0.5}
+    }
   ]
 }

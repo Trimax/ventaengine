@@ -4,6 +4,8 @@ import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
+import org.joml.Vector4f;
+import org.joml.Vector4fc;
 
 import lombok.experimental.UtilityClass;
 
@@ -13,6 +15,10 @@ public final class DefinitionsCommon {
     public static final int MAX_LIGHTS = 64;
     public static final int MAX_NOISES = 16;
     public static final int MAX_WAVES = 16;
+
+    /* Vectors 4D */
+    public static final Vector4fc VECTOR4F_ZERO = new Vector4f(0.f);
+    public static final Vector4fc VECTOR4F_ONE = new Vector4f(1.f);
 
     /* Vectors 3D */
     public static final Vector3fc VECTOR3F_ZERO = new Vector3f(0.f);
