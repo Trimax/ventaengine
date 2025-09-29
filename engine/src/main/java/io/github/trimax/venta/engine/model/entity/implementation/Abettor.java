@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.joml.Vector4f;
 import org.lwjgl.stb.STBTTBakedChar;
 
 import java.nio.ByteBuffer;
@@ -73,9 +74,10 @@ public final class Abettor {
 
     public SpriteEntityImplementation createSprite(@NonNull final TextureEntityImplementation texture,
                                                    @NonNull final FloatBuffer frames,
+                                                   @NonNull final Vector4f color,
                                                    final boolean looping,
                                                    final int frameCount,
                                                    final float duration) {
-        return new SpriteEntityImplementation(texture, frames, looping, frameCount, duration);
+        return new SpriteEntityImplementation(texture, frames, color, looping, frameCount, duration);
     }
 }

@@ -7,7 +7,6 @@ import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityIm
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.joml.Vector4f;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -18,7 +17,7 @@ public final class SpriteBinder extends AbstractBinder {
         textureBinder.bind(TextureType.Diffuse, program, sprite.getTexture());
 
         bind(program.getUniformID(ShaderUniform.FrameIndex), frameIndex);
-        bind(program.getUniformID(ShaderUniform.Color), new Vector4f(1.f));
+        bind(program.getUniformID(ShaderUniform.Color), sprite.getColor());
         bind(program.getUniformID(ShaderUniform.Frames), sprite.getFramesBuffer());
     }
 }
