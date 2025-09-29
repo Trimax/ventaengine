@@ -16,6 +16,7 @@ import io.github.trimax.venta.engine.model.common.scene.SceneLight;
 import io.github.trimax.venta.engine.model.common.scene.SceneObject;
 import io.github.trimax.venta.engine.model.common.scene.SceneSoundSource;
 import io.github.trimax.venta.engine.model.common.shared.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Range;
@@ -79,9 +80,10 @@ public final class Abettor {
                                                  @NonNull final List<SceneBillboard> billboards,
                                                  @NonNull final List<SceneSoundSource> soundSources,
                                                  final CubemapEntityImplementation skybox,
+                                                 final DirectionalLight directionalLight,
                                                  final Vector3f ambientLight,
                                                  final Fog fog) {
-        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, skybox, ambientLight, fog);
+        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, skybox, directionalLight, ambientLight, fog);
     }
 
     public SoundSourcePrefabImplementation createSound(@NonNull final SoundEntityImplementation sound,

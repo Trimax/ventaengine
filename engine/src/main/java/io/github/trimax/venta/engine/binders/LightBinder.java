@@ -7,6 +7,7 @@ import org.joml.Vector3fc;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderLightUniform;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
+import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.LightInstanceImplementation;
@@ -20,6 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 public final class LightBinder extends AbstractBinder {
     public void bind(final ProgramEntityImplementation program, final Vector3fc ambientLight) {
         bind(program.getUniformID(ShaderUniform.AmbientLight), ambientLight);
+    }
+
+    public void bind(final ProgramEntityImplementation program, final DirectionalLight light) {
+        bind(program.getUniformID(ShaderUniform.UseLightDirectionalFlag), light != null);
+        if (light == null)
+            return;
+
+        bind(program.getUniformID(ShaderUniform.LightDirectionalColor), light.getColor());
+        bind(program.getUniformID(ShaderUniform.LightDirectionalIntensity), light.getIntensity());
+        bind(program.getUniformID(ShaderUniform.LightDirectionalDirection), light.getDirection());
     }
 
     public void bind(final ProgramEntityImplementation program, final Collection<? extends LightInstance> lights) {

@@ -61,6 +61,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         objectBinder.bind(object.getProgram(), object);
         matrixBinder.bindViewProjectionMatrix(object.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
 
+        lightBinder.bind(object.getProgram(), context.getScene().getDirectionalLight());
         lightBinder.bind(object.getProgram(), context.getScene().getAmbientLight());
         lightBinder.bind(object.getProgram(), context.getScene().getLights());
 
