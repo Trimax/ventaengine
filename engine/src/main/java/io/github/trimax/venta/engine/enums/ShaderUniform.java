@@ -58,6 +58,14 @@ public enum ShaderUniform {
     UseLighting("useLighting"),
     LightCount("lightCount"),
 
+    /* Directional light */
+    LightDirectionalDirection("directionalLight.direction"),
+    LightDirectionalIntensity("directionalLight.intensity"),
+    LightDirectionalColor("directionalLight.color"),
+
+    /* Use directional light flag */
+    UseLightDirectionalFlag("useDirectionalLight"),
+
     /* Waves */
     WaveCount("waveCount"),
     WaveAmplitude("waveAmplitude"),

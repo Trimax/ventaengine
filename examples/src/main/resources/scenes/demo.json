@@ -1,5 +1,10 @@
 {
-  "ambientLight": {"r": 0.7, "g": 0.7, "b": 0.7, "a": 1.0},
+  "ambientLight": {"r": 0.2, "g": 0.2, "b": 0.2, "a": 1.0},
+  "directionalLight": {
+    "color": {"r": 1.0, "g": 0.8, "b": 0.6, "a": 1.0},
+    "direction": {"x": -1.0, "y": -1.0, "z": 0.0},
+    "intensity": 1.0
+  },
   "skybox": "stars.json",
   "objects": [
     {
@@ -36,13 +41,6 @@
       "position": {"x": 0.0, "y": 0.0, "z": -1.0},
       "angles": {"x": 0.0, "y": 0.0, "z": 0.0},
       "scale": {"x": 0.3, "y": 0.3, "z": 0.3}
-    }
-  ],
-  "lights": [
-    {
-      "name": "Sun",
-      "light": "point.json",
-      "position": {"x": 0.0, "y": 2.0, "z": 2.0}
     }
   ]
 }

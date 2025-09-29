@@ -67,9 +67,10 @@ public final class SceneManagerImplementation
         StreamEx.of(prefab.getBillboards()).map(this::createBillboard).forEach(scene::add);
         StreamEx.of(prefab.getSoundSources()).map(this::createSoundSource).forEach(scene::add);
 
+        Optional.ofNullable(prefab.getDirectionalLight()).ifPresent(scene::setDirectionalLight);
         Optional.ofNullable(prefab.getAmbientLight()).ifPresent(scene::setAmbientLight);
-        Optional.ofNullable(prefab.getFog()).ifPresent(scene::setFog);
         Optional.ofNullable(prefab.getSkybox()).ifPresent(scene::setSkybox);
+        Optional.ofNullable(prefab.getFog()).ifPresent(scene::setFog);
 
         return store(scene);
     }

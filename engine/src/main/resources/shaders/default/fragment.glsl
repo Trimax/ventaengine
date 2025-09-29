@@ -34,6 +34,12 @@ struct Light {
     int enabled;
 };
 
+struct DirectionalLight {
+    vec3 color;
+    vec3 direction;
+    float intensity;
+};
+
 struct Material {
     vec4 color;
     vec2 tiling;
@@ -73,6 +79,7 @@ uniform sampler2D textureAmbientOcclusion;
 uniform sampler2D textureDebug;
 
 /* Feature flags */
+uniform int useTextureDebug;
 uniform int useTextureSkybox;
 uniform int useTextureDiffuse;
 uniform int useTextureHeight;
@@ -80,7 +87,7 @@ uniform int useTextureNormal;
 uniform int useTextureRoughness;
 uniform int useTextureMetalness;
 uniform int useTextureAmbientOcclusion;
-uniform int useTextureDebug;
+uniform int useDirectionalLight;
 uniform int useLighting;
 uniform int useMaterial;
 uniform int useFog;
@@ -89,6 +96,8 @@ uniform int useFog;
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 ambientLight;
 uniform int lightCount;
+
+uniform DirectionalLight directionalLight;
 
 /* Material */
 uniform Material material;
@@ -225,6 +234,18 @@ vec3 calculateLight(vec4 color, Light light, vec3 normal, vec3 fragmentPosition,
     return (colorDiffuse + colorSpecular) * light.intensity * attenuation;
 }
 
+/* Calculates effect of directional light if present */
+vec3 calculateDirectionalLight(vec4 color, vec3 normal, vec2 textureCoordinates) {
+    if (!isSet(useDirectionalLight))
+        return vec3(0.0);
+
+    vec3 lightDirection = normalize(-directionalLight.direction);
+    vec3 colorDiffuse = calculateLightDiffuse(directionalLight.color, normal, lightDirection);
+    vec3 colorSpecular = calculateLightSpecular(color, directionalLight.color, normal, lightDirection, vertexViewDirectionWorldSpace, textureCoordinates);
+
+    return (colorDiffuse + colorSpecular) * directionalLight.intensity;
+}
+
 vec3 calculateLighting(vec4 color, vec2 textureCoordinates) {
     if (!isSet(useLighting))
         return vec3(1.0);
@@ -235,7 +256,7 @@ vec3 calculateLighting(vec4 color, vec2 textureCoordinates) {
     for (int i = 0; i < lightCount; i++)
         lighting += calculateLight(color, lights[i], normal, vertexPosition, textureCoordinates);
 
-    return lighting;
+    return lighting + calculateDirectionalLight(color, normal, textureCoordinates);
 }
 
 vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
