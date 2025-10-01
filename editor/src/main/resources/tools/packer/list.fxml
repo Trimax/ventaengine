@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" style="-fx-border-color: gray; -fx-border-width: 0; -fx-padding: 4;" fx:controller="io.github.trimax.venta.editor.controllers.packer.ListController" maxWidth="280">
+    <ListView fx:id="list" VBox.vgrow="ALWAYS"/>
+    <ToolBar>
+        <Button fx:id="btnListTextureAdd" onAction="#onTextureAdd">
+            <tooltip>
+                <Tooltip text="Add resource" />
+            </tooltip>
+            <graphic>
+                <ImageView>
+                    <fitWidth>16</fitWidth>
+                    <fitHeight>16</fitHeight>
+                    <Image url="@/icons/file/file-add.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button disable="true" fx:id="btnListTextureRemove" onAction="#onTextureRemove">
+            <tooltip>
+                <Tooltip text="Remove texture" />
+            </tooltip>
+            <graphic>
+                <ImageView>
+                    <fitWidth>16</fitWidth>
+                    <fitHeight>16</fitHeight>
+                    <Image url="@/icons/file/file-remove.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </ToolBar>
+
+    <Separator />
+
+    <ImageView style="-fx-padding: 2;" preserveRatio="true" fitHeight="256">
+        <Image url="@/images/default.png"/>
+    </ImageView>
+</VBox>
