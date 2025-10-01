@@ -2,7 +2,7 @@
   "gridMesh": "default.json",
   "program": "terrain.json",
   "elevation": {
-    "heightmap": "heightmaps/mountains.png",
+    "heightmap": "heightmaps/erangel.png",
     "factor": 100.0
   },
   "materials": [
