@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.mixer.SelectorController" spacing="5">
+    <Button fx:id="btnSelect" text="Select Texture"/>
+    <ImageView fx:id="imgTexture" fitWidth="256" fitHeight="256" preserveRatio="true" />
+    <HBox spacing="2" alignment="CENTER_LEFT">
+        <fx:define>
+            <ToggleGroup fx:id="grpChannel"/>
+        </fx:define>
+
+        <ToggleButton toggleGroup="$grpChannel" userData="Red" selected="true">
+            <tooltip>
+                <Tooltip text="Use red channel" />
+            </tooltip>
+
+            <graphic>
+                <ImageView>
+                    <fitWidth>24</fitWidth>
+                    <fitHeight>24</fitHeight>
+                    <Image url="@/icons/channel/channel-red.png" />
+                </ImageView>
+            </graphic>
+        </ToggleButton>
+
+        <ToggleButton toggleGroup="$grpChannel" userData="Green">
+            <tooltip>
+                <Tooltip text="Use green channel" />
+            </tooltip>
+
+            <graphic>
+                <ImageView>
+                    <fitWidth>24</fitWidth>
+                    <fitHeight>24</fitHeight>
+                    <Image url="@/icons/channel/channel-green.png" />
+                </ImageView>
+            </graphic>
+        </ToggleButton>
+
+        <ToggleButton toggleGroup="$grpChannel" userData="Blue">
+            <tooltip>
+                <Tooltip text="Use blue channel" />
+            </tooltip>
+
+            <graphic>
+                <ImageView>
+                    <fitWidth>24</fitWidth>
+                    <fitHeight>24</fitHeight>
+                    <Image url="@/icons/channel/channel-blue.png" />
+                </ImageView>
+            </graphic>
+        </ToggleButton>
+
+        <ToggleButton toggleGroup="$grpChannel" userData="Alpha">
+            <tooltip>
+                <Tooltip text="Use alpha channel" />
+            </tooltip>
+
+            <graphic>
+                <ImageView>
+                    <fitWidth>24</fitWidth>
+                    <fitHeight>24</fitHeight>
+                    <Image url="@/icons/channel/channel-alpha.png" />
+                </ImageView>
+            </graphic>
+        </ToggleButton>
+
+        <ToggleButton toggleGroup="$grpChannel" userData="Value">
+            <tooltip>
+                <Tooltip text="Use exact value"/>
+            </tooltip>
+
+            <graphic>
+                <ImageView>
+                    <fitWidth>24</fitWidth>
+                    <fitHeight>24</fitHeight>
+                    <Image url="@/icons/channel/channel-value.png" />
+                </ImageView>
+            </graphic>
+        </ToggleButton>
+
+        <TextField fx:id="txtValue" promptText="Value" disable="true" />
+    </HBox>
+    <Separator style="-fx-padding: 5 0 5 0;"/>
+    <ImageView fx:id="imgChannel" fitWidth="256" fitHeight="256" preserveRatio="true"/>
+</VBox>
