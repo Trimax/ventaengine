@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.*?>
 <MenuBar xmlns:fx="http://javafx.com/fxml" stylesheets="@styles/menubar.css" fx:controller="io.github.trimax.venta.editor.controllers.MenuController">
     <Menu text="Editor">
         <MenuItem text="About" accelerator="Ctrl+H" onAction="#onEditorAbout" />
@@ -24,7 +22,6 @@
     </Menu>
     <Menu text="Tools">
         <MenuItem text="Heightmap generator" onAction="#onToolHeightmapGenerator" fx:id="btnMenuToolHeightmapGenerator" />
-        <MenuItem text="Texture packer"      onAction="#onToolTexturePacker"      fx:id="btnMenuToolTexturePacker" />
         <MenuItem text="Texture mixer"       onAction="#onToolTextureMixer"       fx:id="btnMenuToolTextureMixer" />
     </Menu>
 </MenuBar>
