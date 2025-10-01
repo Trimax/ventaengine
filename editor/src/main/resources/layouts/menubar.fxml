@@ -21,7 +21,8 @@
         <MenuItem text="Remove Resource" accelerator="Ctrl+Shift+R" onAction="#onResourceRemove" disable="true" fx:id="btnMenuResourceRemove" />
     </Menu>
     <Menu text="Tools">
-        <MenuItem text="Heightmap generator" onAction="#onToolHeightmapGenerator" fx:id="btnMenuToolHeightmapGenerator" />
-        <MenuItem text="Texture mixer"       onAction="#onToolTextureMixer"       fx:id="btnMenuToolTextureMixer" />
+        <MenuItem text="Heightmap generator" onAction="#onToolHeightmapGenerator" />
+        <MenuItem text="Texture packer"      onAction="#onToolTexturePacker" />
+        <MenuItem text="Texture mixer"       onAction="#onToolTextureMixer" />
     </Menu>
 </MenuBar>
