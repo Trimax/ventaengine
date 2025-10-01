@@ -32,7 +32,11 @@ public final class ArchiveUtil {
     @SneakyThrows
     private void load(@NonNull final File archive, @NonNull final TriConsumer<String, GroupType, byte[]> resourceLoader) {
         try (var in = new DataInputStream(new GZIPInputStream(new BufferedInputStream(new FileInputStream(archive))))) {
-            loadNode(in, resourceLoader, "");
+            while (in.available() > 0) {
+                final var groupName = in.readUTF();
+                log.info("Loading group: {}", groupName);
+                loadNode(in, resourceLoader, "");
+            }
         }
     }
 
@@ -44,7 +48,7 @@ public final class ArchiveUtil {
         final var hasReference = in.readBoolean();
         if (hasReference) {
             final var length = in.readInt();
-            resourceLoader.accept(String.format("%s/%s", path, name).substring("/Root".length()), type, in.readNBytes(length));
+            resourceLoader.accept(String.format("%s/%s", path, name), type, in.readNBytes(length));
         }
 
         final var childrenCount = in.readInt();
