@@ -5,22 +5,17 @@
 <?import javafx.scene.layout.VBox?>
 <BorderPane xmlns:fx="http://javafx.com/fxml">
     <top>
-        <VBox>
-
-        </VBox>
+        <fx:include source="toolbar.fxml"/>
     </top>
+    <left>
+        <SplitPane>
+            <fx:include source="list.fxml"/>
+        </SplitPane>
+    </left>
 
     <center>
-        <SplitPane>
-
-
-            <VBox style="-fx-background-color: gray;"/>
-
-
-        </SplitPane>
+        <VBox>
+            <fx:include source="atlas.fxml"/>
+        </VBox>
     </center>
-
-    <bottom>
-
-    </bottom>
 </BorderPane>

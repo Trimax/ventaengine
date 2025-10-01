@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<ToolBar xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.packer.ToolbarController">
+    <Button onAction="#onAtlasBuild">
+        <tooltip>
+            <Tooltip text="Build atlas" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/archive/archive-build.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+    <Button onAction="#onAtlasSave">
+        <tooltip>
+            <Tooltip text="Save atlas" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/archive/archive-save.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+</ToolBar>
