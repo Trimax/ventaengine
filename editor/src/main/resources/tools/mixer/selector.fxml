@@ -3,16 +3,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.mixer.SelectorController" spacing="5">
-    <Button fx:id="btnSelect" text="Select Texture"/>
-    <ImageView fx:id="imgTexture" fitWidth="256" fitHeight="256" preserveRatio="true" />
+    <Button text="Select Texture" onAction="#onTextureSelect" />
+    <StackPane minWidth="256" minHeight="256" maxWidth="256" maxHeight="256">
+        <ImageView fx:id="imgTexture" fitWidth="256" fitHeight="256" preserveRatio="true" />
+    </StackPane>
     <HBox spacing="2" alignment="CENTER_LEFT">
         <fx:define>
-            <ToggleGroup fx:id="grpChannel"/>
+            <ToggleGroup fx:id="grpChannel" />
         </fx:define>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Red" selected="true">
+        <ToggleButton toggleGroup="$grpChannel" userData="Red" selected="true" onAction="#onChannelSelectRed">
             <tooltip>
                 <Tooltip text="Use red channel" />
             </tooltip>
@@ -26,7 +29,7 @@
             </graphic>
         </ToggleButton>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Green">
+        <ToggleButton toggleGroup="$grpChannel" userData="Green" onAction="#onChannelSelectGreen">
             <tooltip>
                 <Tooltip text="Use green channel" />
             </tooltip>
@@ -40,7 +43,7 @@
             </graphic>
         </ToggleButton>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Blue">
+        <ToggleButton toggleGroup="$grpChannel" userData="Blue" onAction="#onChannelSelectBlue">
             <tooltip>
                 <Tooltip text="Use blue channel" />
             </tooltip>
@@ -54,7 +57,7 @@
             </graphic>
         </ToggleButton>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Alpha">
+        <ToggleButton toggleGroup="$grpChannel" userData="Alpha" onAction="#onChannelSelectAlpha">
             <tooltip>
                 <Tooltip text="Use alpha channel" />
             </tooltip>
@@ -68,7 +71,7 @@
             </graphic>
         </ToggleButton>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Value">
+        <ToggleButton toggleGroup="$grpChannel" userData="Value" onAction="#onChannelSelectValue">
             <tooltip>
                 <Tooltip text="Use exact value"/>
             </tooltip>
@@ -82,7 +85,11 @@
             </graphic>
         </ToggleButton>
 
-        <TextField fx:id="txtValue" promptText="Value" disable="true" />
+        <Spinner fx:id="txtValue" editable="true" disable="true" minWidth="60" maxWidth="60">
+            <valueFactory>
+                <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="255" initialValue="0"/>
+            </valueFactory>
+        </Spinner>
     </HBox>
     <Separator style="-fx-padding: 5 0 5 0;"/>
     <ImageView fx:id="imgChannel" fitWidth="256" fitHeight="256" preserveRatio="true"/>
