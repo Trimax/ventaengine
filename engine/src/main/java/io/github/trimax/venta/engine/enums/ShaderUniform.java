@@ -101,6 +101,7 @@ public enum ShaderUniform {
     UseFoam("useFoam"),
 
     /* Common model parameters transformation */
+    Factor("factor"),
     Color("color");
 
     private final String uniformName;

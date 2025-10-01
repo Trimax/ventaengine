@@ -1,11 +1,5 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import java.nio.FloatBuffer;
-import java.util.List;
-
-import org.joml.Vector2fc;
-import org.joml.Vector3f;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
@@ -14,18 +8,17 @@ import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.common.water.WaterFoam;
 import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
-import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.joml.Vector2fc;
+import org.joml.Vector3f;
+
+import java.nio.FloatBuffer;
+import java.util.List;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -53,11 +46,19 @@ public final class Abettor {
     public WaterSurfaceInstanceImplementation createWaterSurface(@NonNull final String name,
                                                                  @NonNull final GridMeshEntityImplementation gridMesh,
                                                                  @NonNull final ProgramEntityImplementation program,
-                                                                 @NonNull final WaterMaterial m,
+                                                                 @NonNull final WaterMaterial material,
                                                                  @NonNull final WaterFoam foam,
                                                                  @NonNull final List<Noise> noises,
                                                                  @NonNull final List<Wave> waves) {
-        return new WaterSurfaceInstanceImplementation(name, gridMesh, program, m, foam, noises, waves);
+        return new WaterSurfaceInstanceImplementation(name, gridMesh, program, material, foam, noises, waves);
+    }
+
+    public TerrainSurfaceInstanceImplementation createTerrainSurface(@NonNull final String name,
+                                                                     @NonNull final GridMeshEntityImplementation gridMesh,
+                                                                     @NonNull final ProgramEntityImplementation program,
+                                                                     @NonNull final TextureEntityImplementation heightmap,
+                                                                     final float factor) {
+        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, heightmap, factor);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,

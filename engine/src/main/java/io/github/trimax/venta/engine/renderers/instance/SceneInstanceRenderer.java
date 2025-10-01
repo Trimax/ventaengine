@@ -1,36 +1,34 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import static org.lwjgl.opengl.GL11C.*;
-
-import java.nio.FloatBuffer;
-
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.TerrainSurfaceManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.WaterSurfaceManagerImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.FloatBuffer;
+
+import static org.lwjgl.opengl.GL11C.*;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SceneInstanceRenderer
         extends AbstractInstanceRenderer<SceneInstanceImplementation, SceneInstanceRenderer.SceneRenderContext, SceneInstanceRenderer.SceneRenderContext> {
-    private final WaterSurfaceManagerImplementation gridMeshManager;
+    private final TerrainSurfaceManagerImplementation terrainSurfaceManager;
+    private final WaterSurfaceManagerImplementation waterSurfaceManager;
     private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
+    private final TerrainSurfaceInstanceRenderer terrainSurfaceRenderer;
+    private final WaterSurfaceInstanceRenderer waterSurfaceRenderer;
     private final BillboardInstanceRenderer billboardRenderer;
-    private final WaterSurfaceInstanceRenderer gridMeshRenderer;
     private final EmitterInstanceRenderer emitterRenderer;
     private final ObjectInstanceRenderer objectRenderer;
     private final CubemapEntityRenderer cubemapRenderer;
@@ -56,11 +54,18 @@ public final class SceneInstanceRenderer
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (final var gridMesh : scene.getWaterSurfaces())
-            try (final var _ = gridMeshRenderer.withContext(getContext())
-                    .withModelMatrix(gridMesh.getTransform().getMatrix())
+        for (final var surface : scene.getWaterSurfaces())
+            try (final var _ = waterSurfaceRenderer.withContext(getContext())
+                    .withModelMatrix(surface.getTransform().getMatrix())
                     .withScene(scene)) {
-                gridMeshRenderer.render(gridMeshManager.getInstance(gridMesh.getID()));
+                waterSurfaceRenderer.render(waterSurfaceManager.getInstance(surface.getID()));
+            }
+
+        for (final var surface : scene.getTerrainSurfaces())
+            try (final var _ = terrainSurfaceRenderer.withContext(getContext())
+                    .withModelMatrix(surface.getTransform().getMatrix())
+                    .withScene(scene)) {
+                terrainSurfaceRenderer.render(terrainSurfaceManager.getInstance(surface.getID()));
             }
 
         for (final var object : scene.getObjects())

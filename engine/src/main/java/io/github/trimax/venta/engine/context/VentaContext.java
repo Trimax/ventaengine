@@ -50,6 +50,10 @@ public final class VentaContext {
         return managerFactory.get(EmitterManagerImplementation.class);
     }
 
+    public TerrainSurfaceManager getTerrainSurfaceManager() {
+        return managerFactory.get(TerrainSurfaceManagerImplementation.class);
+    }
+
     public WaterSurfaceManager getWaterSurfaceManager() {
         return managerFactory.get(WaterSurfaceManagerImplementation.class);
     }
@@ -132,6 +136,10 @@ public final class VentaContext {
 
     public WaterSurfaceRepository getWaterSurfaceRepository() {
         return repositoryFactory.get(WaterSurfaceRepositoryImplementation.class);
+    }
+
+    public TerrainSurfaceRepository getTerrainSurfaceRepository() {
+        return repositoryFactory.get(TerrainSurfaceRepositoryImplementation.class);
     }
 
     /*** Keyboard ***/

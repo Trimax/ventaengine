@@ -19,7 +19,7 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
 
         final var scene = context.getSceneManager().getCurrent();
         scene.setSkybox(context.getCubemapRegistry().get("sunset.json"));
-        scene.setAmbientLight(new Vector3f(1.f));
+        scene.setAmbientLight(new Vector3f(0.5f));
 
         final var water = context.getWaterSurfaceManager().create("Water", context.getWaterSurfaceRepository().get("water.json"));
         water.setPosition(new Vector3f(0f, 1.5f, 0f));

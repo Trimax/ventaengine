@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "terrain/vertex.glsl",
+  "shaderFragment": "terrain/fragment.glsl"
+}
