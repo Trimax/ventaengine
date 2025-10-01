@@ -1,5 +1,4 @@
 {
-  "program": "water.json",
   "size": {"x": 500.0, "y": 500.0},
   "segments": {"x": 256, "y": 256}
 }

@@ -32,7 +32,7 @@ public final class WaterSurfaceRepositoryImplementation
 
     @Override
     protected WaterSurfacePrefabImplementation load(@NonNull final String resourcePath) {
-        log.info("Loading grid mesh {}", resourcePath);
+        log.info("Loading water surface {}", resourcePath);
 
         final var waterSurfaceDTO = resourceService.getAsObject(String.format("/surfaces/water/%s", resourcePath), WaterSurfaceDTO.class);
 

@@ -1,32 +1,26 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
-import io.github.trimax.venta.engine.model.instance.BillboardInstance;
-import io.github.trimax.venta.engine.model.instance.EmitterInstance;
-import io.github.trimax.venta.engine.model.instance.LightInstance;
-import io.github.trimax.venta.engine.model.instance.ObjectInstance;
-import io.github.trimax.venta.engine.model.instance.SceneInstance;
-import io.github.trimax.venta.engine.model.instance.SoundSourceInstance;
-import io.github.trimax.venta.engine.model.instance.WaterSurfaceInstance;
+import io.github.trimax.venta.engine.model.instance.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 @Getter
 public final class SceneInstanceImplementation extends AbstractInstanceImplementation implements SceneInstance {
     private final Vector3f ambientLight = new Vector3f(0.3f);
+    private final Set<TerrainSurfaceInstanceImplementation> terrainSurfaces = new HashSet<>();
     private final Set<WaterSurfaceInstanceImplementation> waterSurfaces = new HashSet<>();
     private final Set<SoundSourceInstanceImplementation> soundSources = new HashSet<>();
     private final Set<BillboardInstanceImplementation> billboards = new HashSet<>();
@@ -86,9 +80,15 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     }
 
     @Override
-    public void add(@NonNull final WaterSurfaceInstance gridMesh) {
-        if (gridMesh instanceof WaterSurfaceInstanceImplementation instance)
+    public void add(@NonNull final WaterSurfaceInstance surface) {
+        if (surface instanceof WaterSurfaceInstanceImplementation instance)
             waterSurfaces.add(instance);
+    }
+
+    @Override
+    public void add(@NonNull final TerrainSurfaceInstance surface) {
+        if (surface instanceof TerrainSurfaceInstanceImplementation instance)
+            terrainSurfaces.add(instance);
     }
 
     @Override

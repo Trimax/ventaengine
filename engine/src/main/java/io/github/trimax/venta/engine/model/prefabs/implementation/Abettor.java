@@ -54,6 +54,12 @@ public final class Abettor {
         return new WaterSurfacePrefabImplementation(gridMesh, program, waterMaterial, foam, noises, waves);
     }
 
+    public TerrainSurfacePrefabImplementation createTerrainSurface(@NonNull final GridMeshEntityImplementation gridMesh,
+                                                                   @NonNull final MaterialEntityImplementation material,
+                                                                   @NonNull final ProgramEntityImplementation program) {
+        return new TerrainSurfacePrefabImplementation(gridMesh, material, program);
+    }
+
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
                                                    final MaterialEntityImplementation material,
                                                    final Node<MeshReference> root) {

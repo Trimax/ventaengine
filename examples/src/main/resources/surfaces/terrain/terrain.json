@@ -1,5 +1,5 @@
 {
   "gridMesh": "default.json",
-  "material": "water.json",
-  "program": "water.json"
+  "material": "concrete.json",
+  "program": "default.json"
 }

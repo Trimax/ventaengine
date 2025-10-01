@@ -47,6 +47,6 @@ public final class WaterSurfaceManagerImplementation
 
     @Override
     protected void destroy(final WaterSurfaceInstanceImplementation object) {
-        log.info("Destroying grid mesh {} ({})", object.getID(), object.getName());
+        log.info("Destroying water surface {} ({})", object.getID(), object.getName());
     }
 }
