@@ -40,6 +40,7 @@ public final class WindowUtil {
 
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(VentaEditor.getStage());
+        stage.sizeToScene();
 
         stage.showAndWait();
     }
