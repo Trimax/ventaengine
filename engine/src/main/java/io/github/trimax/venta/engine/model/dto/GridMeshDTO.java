@@ -1,11 +1,8 @@
 package io.github.trimax.venta.engine.model.dto;
 
+import lombok.NonNull;
 import org.joml.Vector2i;
 
-import io.github.trimax.venta.engine.model.dto.gridmesh.ElevationDTO;
-import lombok.NonNull;
-
 public record GridMeshDTO(@NonNull Vector2i size,
-                          @NonNull Vector2i segments,
-                          ElevationDTO elevation) {
+                          @NonNull Vector2i segments) {
 }

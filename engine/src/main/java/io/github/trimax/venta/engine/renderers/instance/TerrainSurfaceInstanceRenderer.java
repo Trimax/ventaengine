@@ -23,10 +23,8 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TerrainSurfaceInstanceRenderer extends
         AbstractInstanceRenderer<TerrainSurfaceInstanceImplementation, TerrainSurfaceInstanceRenderer.TerrainSurfaceRenderContext, SceneInstanceRenderer.SceneRenderContext> {
-    private final WaterMaterialBinder waterMaterialBinder;
-    private final MaterialBinder materialBinder;
     private final GeometryHelper geometryHelper;
-    private final TextureBinder textureBinder;
+    private final ElevationBinder elevationBinder;
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
     private final LightBinder lightBinder;
@@ -51,7 +49,7 @@ public final class TerrainSurfaceInstanceRenderer extends
         matrixBinder.bindModelMatrix(surface.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(surface.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
-        materialBinder.bind(surface.getProgram(), surface.getMaterial());
+        elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getFactor());
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
 
         geometryHelper.render(surface.getGridMesh().getGeometry()); //TODO: should be a separate shader. Or a separate format

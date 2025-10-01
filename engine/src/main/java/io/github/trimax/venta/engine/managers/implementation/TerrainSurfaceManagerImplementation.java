@@ -33,7 +33,8 @@ public final class TerrainSurfaceManagerImplementation
         return store(abettor.createTerrainSurface(name,
                 prefab.getGridMesh(),
                 prefab.getProgram(),
-                prefab.getMaterial()));
+                prefab.getHeightmap(),
+                prefab.getFactor()));
     }
 
     @Override

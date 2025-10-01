@@ -1,5 +1,26 @@
 {
   "gridMesh": "default.json",
-  "material": "concrete.json",
-  "program": "terrain.json"
+  "program": "terrain.json",
+  "elevation": {
+    "heightmap": "heightmaps/mountains.png",
+    "factor": 100.0
+  },
+  "materials": [
+    {
+      "elevation": 0.1,
+      "material": "sand.json"
+    },
+    {
+      "elevation": 0.7,
+      "material": "grass.json"
+    },
+    {
+      "elevation": 0.8,
+      "material": "rock.json"
+    },
+    {
+      "elevation": 1.0,
+      "material": "snow.json"
+    }
+  ]
 }

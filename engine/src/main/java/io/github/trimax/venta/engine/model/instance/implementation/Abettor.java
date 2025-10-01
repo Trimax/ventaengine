@@ -56,8 +56,9 @@ public final class Abettor {
     public TerrainSurfaceInstanceImplementation createTerrainSurface(@NonNull final String name,
                                                                      @NonNull final GridMeshEntityImplementation gridMesh,
                                                                      @NonNull final ProgramEntityImplementation program,
-                                                                     @NonNull final MaterialEntityImplementation material) {
-        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, material);
+                                                                     @NonNull final TextureEntityImplementation heightmap,
+                                                                     final float factor) {
+        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, heightmap, factor);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,

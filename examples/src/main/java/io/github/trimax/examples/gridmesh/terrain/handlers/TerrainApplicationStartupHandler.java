@@ -21,7 +21,7 @@ public final class TerrainApplicationStartupHandler implements VentaEngineStartu
         scene.add(terrain);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(5f, 5f, 5f));
+        camera.setPosition(new Vector3f(100f));
         camera.lookAt(new Vector3f(0f));
     }
 }

@@ -1,8 +1,4 @@
 {
   "size": {"x": 100.0, "y": 100.0},
-  "segments": {"x": 256, "y": 256},
-  "elevation": {
-    "heightmap": "heightmaps/mountains.png",
-    "scale": 10.0
-  }
+  "segments": {"x": 256, "y": 256}
 }
