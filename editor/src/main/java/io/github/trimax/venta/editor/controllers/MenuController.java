@@ -2,7 +2,7 @@ package io.github.trimax.venta.editor.controllers;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.container.utils.EventUtil;
+import io.github.trimax.venta.editor.enums.Layout;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveBuildHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveLoadHandler;
 import io.github.trimax.venta.editor.handlers.archive.ArchiveNewHandler;
@@ -13,8 +13,8 @@ import io.github.trimax.venta.editor.handlers.folder.FolderAddHandler;
 import io.github.trimax.venta.editor.handlers.folder.FolderRemoveHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceAddHandler;
 import io.github.trimax.venta.editor.handlers.resource.ResourceRemoveHandler;
-import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.editor.model.event.tree.TreeSelectEvent;
+import io.github.trimax.venta.editor.utils.WindowUtil;
 import io.github.trimax.venta.engine.enums.ResourceType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -96,18 +96,13 @@ public final class MenuController {
     }
 
     @FXML
-    public void onToolHeightmapGenerator(final ActionEvent event) {
-        EventUtil.post(new StatusSetEvent("TODO: Heightmap generator"));
+    public void onToolHeightmapGenerator(final ActionEvent ignored) {
+        WindowUtil.createModal(Layout.Generator);
     }
 
     @FXML
-    public void onToolTexturePacker(final ActionEvent event) {
-        EventUtil.post(new StatusSetEvent("TODO: Texture packer"));
-    }
-
-    @FXML
-    public void onToolTextureMixer(final  ActionEvent event) {
-        EventUtil.post(new StatusSetEvent("TODO: Texture mixer"));
+    public void onToolTextureMixer(final  ActionEvent ignored) {
+        WindowUtil.createModal(Layout.Mixer);
     }
 
     @Subscribe
