@@ -101,6 +101,11 @@ public final class MenuController {
     }
 
     @FXML
+    public void onToolTexturePacker(final ActionEvent ignored) {
+        WindowUtil.createModal(Layout.Packer);
+    }
+
+    @FXML
     public void onToolTextureMixer(final  ActionEvent ignored) {
         WindowUtil.createModal(Layout.Mixer);
     }
