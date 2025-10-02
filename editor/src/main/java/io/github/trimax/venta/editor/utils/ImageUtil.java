@@ -50,7 +50,7 @@ public final class ImageUtil {
     public void copyChannel(@NonNull final ImageView source,
                             @NonNull final ImageView destination,
                             @NonNull final Channel channel,
-                            int value) {
+                            final int value) {
         final var sourceImage = source.getImage();
         if (sourceImage == null)
             return;
@@ -67,15 +67,13 @@ public final class ImageUtil {
             for (int x = 0; x < width; x++) {
                 final var color = reader.getColor(x, y);
 
-                double v;
-                switch (channel) {
-                    case Red   -> v = color.getRed();
-                    case Green -> v = color.getGreen();
-                    case Blue  -> v = color.getBlue();
-                    case Alpha -> v = color.getOpacity();
-                    case Value -> v = value / 255.0;
-                    default    -> v = 0.0;
-                }
+                final var v = switch (channel) {
+                    case Red   -> color.getRed();
+                    case Green -> color.getGreen();
+                    case Blue  -> color.getBlue();
+                    case Alpha -> color.getOpacity();
+                    case Value -> value / 255.0;
+                };
 
                 writer.setColor(x, y, new Color(v, v, v, 1.0));
             }
