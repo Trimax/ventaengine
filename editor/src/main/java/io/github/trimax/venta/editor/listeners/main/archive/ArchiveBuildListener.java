@@ -47,16 +47,13 @@ public final class ArchiveBuildListener implements AbstractListener<ArchiveBuild
     @SneakyThrows
     private void writeGroup(@NonNull final DataOutputStream out, @NonNull final GroupType type) {
         out.writeUTF(type.name());
-        writeNode(out, context.getTree(type), null);
+        writeNode(out, context.getTree(type));
     }
 
     @SneakyThrows
-    private void writeNode(@NonNull final DataOutputStream out, final TreeItem<Resource> node, final String type) {
+    private void writeNode(@NonNull final DataOutputStream out, final TreeItem<Resource> node) {
         final var item = node.getValue();
         out.writeUTF(item.name().toLowerCase());
-
-        final String currentType = getType(type, item);
-        out.writeUTF(currentType);
 
         out.writeBoolean(item.hasExistingReference());
         if (item.hasExistingReference()) {
@@ -67,10 +64,6 @@ public final class ArchiveBuildListener implements AbstractListener<ArchiveBuild
 
         out.writeInt(node.getChildren().size());
         for (final var child : node.getChildren())
-            writeNode(out, child, currentType);
-    }
-
-    private String getType(final String currentType, final Resource resource) {
-        return resource.type() == ResourceType.Group ? resource.name() : currentType;
+            writeNode(out, child);
     }
 }
