@@ -9,7 +9,6 @@ import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.event.archive.ArchiveBuildEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.engine.enums.GroupType;
-import io.github.trimax.venta.engine.enums.ResourceType;
 import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeItem;
 import lombok.AccessLevel;
