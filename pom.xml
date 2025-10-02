@@ -47,7 +47,6 @@
         <module>container</module>
         <module>editor</module>
         <module>engine</module>
-        <module>packer</module>
         <module>examples</module>
     </modules>
 
