@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.listeners.archive;
+package io.github.trimax.venta.editor.listeners.main.archive;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
@@ -6,7 +6,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.context.Context;
-import io.github.trimax.venta.editor.controllers.TreeController;
+import io.github.trimax.venta.editor.controllers.main.TreeController;
 import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
 import io.github.trimax.venta.editor.model.event.archive.ArchiveSaveEvent;

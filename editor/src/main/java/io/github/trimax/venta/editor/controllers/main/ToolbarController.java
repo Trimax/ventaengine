@@ -1,4 +1,4 @@
-package io.github.trimax.venta.editor.controllers;
+package io.github.trimax.venta.editor.controllers.main;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;

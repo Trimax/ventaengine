@@ -1,10 +1,10 @@
-package io.github.trimax.venta.editor.listeners.group;
+package io.github.trimax.venta.editor.listeners.main.group;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.context.Context;
-import io.github.trimax.venta.editor.controllers.TreeController;
+import io.github.trimax.venta.editor.controllers.main.TreeController;
 import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.event.group.GroupSelectEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;

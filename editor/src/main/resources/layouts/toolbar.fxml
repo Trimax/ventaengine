@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
-<ToolBar xmlns:fx="http://javafx.com/fxml" stylesheets="@styles/toolbar.css" fx:controller="io.github.trimax.venta.editor.controllers.ToolbarController">
+<ToolBar xmlns:fx="http://javafx.com/fxml" stylesheets="@styles/toolbar.css" fx:controller="io.github.trimax.venta.editor.controllers.main.ToolbarController">
     <!-- Archive section -->
     <Button onAction="#onArchiveNew">
         <tooltip>

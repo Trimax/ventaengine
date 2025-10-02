@@ -16,7 +16,7 @@
         <Separator orientation="VERTICAL" style="-fx-padding: 0 5 0 5;" maxHeight="600"/>
 
         <VBox spacing="5">
-            <Button fx:id="btnSave" text="Save Texture" onAction="#onTextureSave"/>
+            <Button text="Save Texture" onAction="#onTextureSave"/>
             <ImageView fx:id="imgMix" fitWidth="512" fitHeight="512" preserveRatio="true"/>
         </VBox>
     </HBox>
