@@ -49,6 +49,6 @@ public final class WindowUtil {
         final var loader = new FXMLLoader(WindowUtil.class.getResource(layout.getPath()));
         loader.setControllerFactory(VentaApplication::getComponent);
 
-        return new Scene(loader.load(), 800, 600);
+        return new Scene(loader.load(), 1280, 720);
     }
 }

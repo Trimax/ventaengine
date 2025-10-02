@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<MenuBar xmlns:fx="http://javafx.com/fxml" stylesheets="@styles/menubar.css" fx:controller="io.github.trimax.venta.editor.controllers.MenuController">
+<MenuBar xmlns:fx="http://javafx.com/fxml" stylesheets="@styles/menubar.css" fx:controller="io.github.trimax.venta.editor.controllers.main.MenuController">
     <Menu text="Editor">
         <MenuItem text="About" accelerator="Ctrl+H" onAction="#onEditorAbout" />
         <MenuItem text="Exit"  accelerator="Ctrl+Q" onAction="#onEditorQuit" />

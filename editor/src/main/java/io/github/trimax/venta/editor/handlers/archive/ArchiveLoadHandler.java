@@ -24,6 +24,5 @@ public final class ArchiveLoadHandler implements EventHandler<ActionEvent> {
 
     private void load(final File file) {
         EventUtil.post(new ArchiveLoadEvent(file));
-
     }
 }

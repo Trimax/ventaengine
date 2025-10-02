@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.trimax.venta.editor.controls.SelectorControl?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml" spacing="10">
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="10" fx:controller="io.github.trimax.venta.editor.controllers.mixer.MixerController">
     <HBox alignment="CENTER_LEFT" style="-fx-padding: 10 15 10 15;">
-        <fx:include source="selector.fxml" fx:id="picker1" />
+        <SelectorControl fx:id="picker1" />
         <Separator orientation="VERTICAL" style="-fx-padding: 0 5 0 5;" maxHeight="600"/>
-        <fx:include source="selector.fxml" fx:id="picker2" />
+        <SelectorControl fx:id="picker2" />
         <Separator orientation="VERTICAL" style="-fx-padding: 0 5 0 5;" maxHeight="600"/>
-        <fx:include source="selector.fxml" fx:id="picker3" />
+        <SelectorControl fx:id="picker3" />
         <Separator orientation="VERTICAL" style="-fx-padding: 0 5 0 5;" maxHeight="600"/>
-        <fx:include source="selector.fxml" fx:id="picker4" />
+        <SelectorControl fx:id="picker4" />
         <Separator orientation="VERTICAL" style="-fx-padding: 0 5 0 5;" maxHeight="600"/>
 
         <VBox spacing="5">
-            <Button fx:id="btnSave" text="Save Texture"/>
-            <ImageView fx:id="imgBlended" fitWidth="256" fitHeight="256" preserveRatio="true"/>
+            <Button text="Save Texture" onAction="#onTextureSave"/>
+            <ImageView fx:id="imgMix" fitWidth="512" fitHeight="512" preserveRatio="true"/>
         </VBox>
     </HBox>
     <Pane VBox.vgrow="ALWAYS"/>

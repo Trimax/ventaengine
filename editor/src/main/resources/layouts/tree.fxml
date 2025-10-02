@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.TreeController" maxWidth="280">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.main.TreeController" maxWidth="280">
     <TreeView fx:id="tree" VBox.vgrow="ALWAYS"/>
     <ToolBar>
         <Button disable="true" fx:id="btnTreeResourceAdd" onAction="#onResourceAdd">

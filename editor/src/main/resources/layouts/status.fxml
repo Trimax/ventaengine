@@ -2,6 +2,6 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
-<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.StatusController">
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.main.StatusController">
     <Label fx:id="lblStatus" text="Ready"/>
 </HBox>

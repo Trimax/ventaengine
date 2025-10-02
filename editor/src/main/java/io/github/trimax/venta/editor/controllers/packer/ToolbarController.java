@@ -15,7 +15,7 @@ public final class ToolbarController {
     }
 
     @FXML
-    public void onAtlasSave(final  ActionEvent ignored) {
+    public void onAtlasSave(final ActionEvent ignored) {
 
     }
 }
