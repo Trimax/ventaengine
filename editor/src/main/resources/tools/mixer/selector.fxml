@@ -1,96 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.trimax.venta.editor.controls.SelectorControl?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.editor.controllers.mixer.SelectorController" spacing="5">
-    <Button text="Select Texture" onAction="#onTextureSelect" />
-    <StackPane minWidth="256" minHeight="256" maxWidth="256" maxHeight="256">
-        <ImageView fx:id="imgTexture" fitWidth="256" fitHeight="256" preserveRatio="true" />
-    </StackPane>
-    <HBox spacing="2" alignment="CENTER_LEFT">
-        <fx:define>
-            <ToggleGroup fx:id="grpChannel" />
-        </fx:define>
+<fx:root type="io.github.trimax.venta.editor.controls.SelectorControl" xmlns:fx="http://javafx.com/fxml" spacing="5">
+    <VBox xmlns:fx="http://javafx.com/fxml" spacing="5">
+        <Button text="Select Texture" onAction="#onTextureSelect"/>
+        <StackPane minWidth="256" minHeight="256" maxWidth="256" maxHeight="256">
+            <ImageView fx:id="imgTexture" fitWidth="256" fitHeight="256" preserveRatio="true"/>
+        </StackPane>
+        <HBox spacing="2" alignment="CENTER_LEFT">
+            <fx:define>
+                <ToggleGroup fx:id="grpChannel"/>
+            </fx:define>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Red" selected="true" onAction="#onChannelSelectRed">
-            <tooltip>
-                <Tooltip text="Use red channel" />
-            </tooltip>
+            <ToggleButton toggleGroup="$grpChannel" userData="Red" selected="true" onAction="#onChannelSelectRed">
+                <tooltip>
+                    <Tooltip text="Use red channel"/>
+                </tooltip>
 
-            <graphic>
-                <ImageView>
-                    <fitWidth>24</fitWidth>
-                    <fitHeight>24</fitHeight>
-                    <Image url="@/icons/channel/channel-red.png" />
-                </ImageView>
-            </graphic>
-        </ToggleButton>
+                <graphic>
+                    <ImageView>
+                        <fitWidth>24</fitWidth>
+                        <fitHeight>24</fitHeight>
+                        <Image url="@/icons/channel/channel-red.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Green" onAction="#onChannelSelectGreen">
-            <tooltip>
-                <Tooltip text="Use green channel" />
-            </tooltip>
+            <ToggleButton toggleGroup="$grpChannel" userData="Green" onAction="#onChannelSelectGreen">
+                <tooltip>
+                    <Tooltip text="Use green channel"/>
+                </tooltip>
 
-            <graphic>
-                <ImageView>
-                    <fitWidth>24</fitWidth>
-                    <fitHeight>24</fitHeight>
-                    <Image url="@/icons/channel/channel-green.png" />
-                </ImageView>
-            </graphic>
-        </ToggleButton>
+                <graphic>
+                    <ImageView>
+                        <fitWidth>24</fitWidth>
+                        <fitHeight>24</fitHeight>
+                        <Image url="@/icons/channel/channel-green.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Blue" onAction="#onChannelSelectBlue">
-            <tooltip>
-                <Tooltip text="Use blue channel" />
-            </tooltip>
+            <ToggleButton toggleGroup="$grpChannel" userData="Blue" onAction="#onChannelSelectBlue">
+                <tooltip>
+                    <Tooltip text="Use blue channel"/>
+                </tooltip>
 
-            <graphic>
-                <ImageView>
-                    <fitWidth>24</fitWidth>
-                    <fitHeight>24</fitHeight>
-                    <Image url="@/icons/channel/channel-blue.png" />
-                </ImageView>
-            </graphic>
-        </ToggleButton>
+                <graphic>
+                    <ImageView>
+                        <fitWidth>24</fitWidth>
+                        <fitHeight>24</fitHeight>
+                        <Image url="@/icons/channel/channel-blue.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Alpha" onAction="#onChannelSelectAlpha">
-            <tooltip>
-                <Tooltip text="Use alpha channel" />
-            </tooltip>
+            <ToggleButton toggleGroup="$grpChannel" userData="Alpha" onAction="#onChannelSelectAlpha">
+                <tooltip>
+                    <Tooltip text="Use alpha channel"/>
+                </tooltip>
 
-            <graphic>
-                <ImageView>
-                    <fitWidth>24</fitWidth>
-                    <fitHeight>24</fitHeight>
-                    <Image url="@/icons/channel/channel-alpha.png" />
-                </ImageView>
-            </graphic>
-        </ToggleButton>
+                <graphic>
+                    <ImageView>
+                        <fitWidth>24</fitWidth>
+                        <fitHeight>24</fitHeight>
+                        <Image url="@/icons/channel/channel-alpha.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
 
-        <ToggleButton toggleGroup="$grpChannel" userData="Value" onAction="#onChannelSelectValue">
-            <tooltip>
-                <Tooltip text="Use exact value"/>
-            </tooltip>
+            <ToggleButton toggleGroup="$grpChannel" userData="Value" onAction="#onChannelSelectValue">
+                <tooltip>
+                    <Tooltip text="Use exact value"/>
+                </tooltip>
 
-            <graphic>
-                <ImageView>
-                    <fitWidth>24</fitWidth>
-                    <fitHeight>24</fitHeight>
-                    <Image url="@/icons/channel/channel-value.png" />
-                </ImageView>
-            </graphic>
-        </ToggleButton>
+                <graphic>
+                    <ImageView>
+                        <fitWidth>24</fitWidth>
+                        <fitHeight>24</fitHeight>
+                        <Image url="@/icons/channel/channel-value.png"/>
+                    </ImageView>
+                </graphic>
+            </ToggleButton>
 
-        <Spinner fx:id="txtValue" editable="true" disable="true" minWidth="60" maxWidth="60">
-            <valueFactory>
-                <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="255" initialValue="0"/>
-            </valueFactory>
-        </Spinner>
-    </HBox>
-    <Separator style="-fx-padding: 5 0 5 0;"/>
-    <ImageView fx:id="imgChannel" fitWidth="256" fitHeight="256" preserveRatio="true"/>
-</VBox>
+            <Spinner fx:id="txtValue" editable="true" disable="true" minWidth="60" maxWidth="60" onKeyReleased="#onSpinnerValueChanged" onMouseClicked="#onSpinnerValueChanged">
+                <valueFactory>
+                    <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="255" initialValue="0" />
+                </valueFactory>
+            </Spinner>
+        </HBox>
+        <Separator style="-fx-padding: 5 0 5 0;"/>
+        <ImageView fx:id="imgChannel" fitWidth="256" fitHeight="256" preserveRatio="true"/>
+    </VBox>
+</fx:root>

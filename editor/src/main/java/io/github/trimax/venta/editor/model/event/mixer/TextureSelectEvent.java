@@ -5,5 +5,5 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 
-public record TextureSelectEvent(File file, ImageView imageView, ImageView channelView) implements AbstractEvent {
+public record TextureSelectEvent(File file, ImageView imgTexture, ImageView imgChannel) implements AbstractEvent {
 }
