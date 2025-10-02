@@ -14,6 +14,7 @@ public final class ArchiveApplicationStartupHandler implements VentaEngineStartu
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector3f(0.f, 0.f, 0.15f));
         context.registerArchive(Paths.get("examples", "data", "example.vea").toString());
-        context.getTextureRegistry().get("1m.jpg");
+        context.getTextureRegistry().get("texture.png");
+        context.getTextureRegistry().get("group/texture.png");
     }
 }

@@ -28,7 +28,7 @@ public enum GroupType {
 
     public static GroupType of(final String value) {
         for (final var currentValue : values())
-            if (currentValue.displayName.equalsIgnoreCase(value))
+            if (currentValue.name().equalsIgnoreCase(value))
                 return currentValue;
 
         return null;
