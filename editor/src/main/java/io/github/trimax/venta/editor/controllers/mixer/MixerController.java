@@ -1,5 +1,8 @@
 package io.github.trimax.venta.editor.controllers.mixer;
 
+import java.util.List;
+import java.util.Map;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.editor.controls.SelectorControl;
 import io.github.trimax.venta.editor.utils.DialogUtil;
@@ -10,9 +13,6 @@ import javafx.scene.image.ImageView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Map;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -27,7 +27,8 @@ public final class MixerController {
 
     @FXML
     public void onTextureSave(final ActionEvent ignored) {
-        DialogUtil.showFileSave("Please choose a file to save texture", file -> ImageUtil.write(file, imgMix.getImage()),
+        DialogUtil.showFileSave("Please choose a file to save texture",
+                file -> ImageUtil.write(file, imgMix.getImage()),
                 Map.of("PNG files (*.png)", List.of("*.png")));
     }
 

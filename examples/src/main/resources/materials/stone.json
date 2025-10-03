@@ -10,6 +10,11 @@
     "diffuse": "stone/diffuse.png",
     "height": "stone/height.png",
     "normal": "stone/normal.png",
-    "roughness": "stone/roughness.png"
+    "roughness": "stone/roughness.png",
+
+
+    "color": "stone/color.png",
+    "nh": "stone/nh.png",
+    "arms": "stone/arms.png"
   }
 }

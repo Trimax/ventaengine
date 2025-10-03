@@ -1,5 +1,13 @@
 package io.github.trimax.venta.editor.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.lwjgl.stb.STBIWriteCallback;
+import org.lwjgl.stb.STBImageWrite;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.editor.enums.Channel;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -7,13 +15,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.lwjgl.stb.STBIWriteCallback;
-import org.lwjgl.stb.STBImageWrite;
-import org.lwjgl.system.MemoryUtil;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 @UtilityClass
 public final class ImageUtil {
@@ -31,16 +32,16 @@ public final class ImageUtil {
         final var readerRed   = sourceRed.getImage().getPixelReader();
         final var readerGreen = sourceGreen.getImage().getPixelReader();
         final var readerBlue  = sourceBlue.getImage().getPixelReader();
-        final var ReaderAlpha = sourceAlpha.getImage().getPixelReader();
+        final var readerAlpha = sourceAlpha.getImage().getPixelReader();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 final var r = readerRed.getColor(x, y);
                 final var g = readerGreen.getColor(x, y);
                 final var b = readerBlue.getColor(x, y);
-                final var a = ReaderAlpha.getColor(x, y);
+                final var a = readerAlpha.getColor(x, y);
 
-                writer.setColor(x, y, new Color(r.getRed(), g.getGreen(), b.getBlue(), a.getOpacity()));
+                writer.setColor(x, y, new Color(r.getRed(), g.getRed(), b.getRed(), a.getRed()));
             }
         }
 
@@ -82,7 +83,8 @@ public final class ImageUtil {
         destination.setImage(destinationImage);
     }
 
-    public void write(@NonNull final File file, @NonNull final Image image) {
+    public void write(@NonNull final File file,
+                      @NonNull final Image image) {
         final var width = (int) image.getWidth();
         final var height = (int) image.getHeight();
 

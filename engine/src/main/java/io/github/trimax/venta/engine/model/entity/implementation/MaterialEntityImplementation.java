@@ -61,7 +61,7 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
     }
 
     @Override
-    public TextureEntityImplementation getTexture(final TextureType texture) {
+    public TextureEntityImplementation getTexture(@NonNull final TextureType texture) {
         return this.textures.get(texture);
     }
 }

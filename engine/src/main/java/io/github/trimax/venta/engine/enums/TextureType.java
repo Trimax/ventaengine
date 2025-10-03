@@ -12,7 +12,12 @@ public enum TextureType {
     Height("height", TextureUnit.Height, ShaderUniform.TextureHeight, ShaderUniform.UseTextureHeight),
     Metalness("metalness", TextureUnit.Metalness, ShaderUniform.TextureMetalness, ShaderUniform.UseTextureMetalness),
     Normal("normal", TextureUnit.Normal, ShaderUniform.TextureNormal, ShaderUniform.UseTextureNormal),
-    Roughness("roughness", TextureUnit.Roughness, ShaderUniform.TextureRoughness, ShaderUniform.UseTextureRoughness);
+    Roughness("roughness", TextureUnit.Roughness, ShaderUniform.TextureRoughness, ShaderUniform.UseTextureRoughness),
+
+
+    Color("color", TextureUnit.Color, ShaderUniform.TextureColor, ShaderUniform.UseTextureColor),
+    ARMS("arms", TextureUnit.ARMS, ShaderUniform.TextureARMS, ShaderUniform.UseTextureARMS),
+    NH("nh", TextureUnit.NH, ShaderUniform.TextureNH, ShaderUniform.UseTextureNH);
 
     private final String fieldName;
     private final TextureUnit unit;
