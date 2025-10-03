@@ -24,6 +24,15 @@ public enum ShaderUniform {
     TextureAmbientOcclusion("textureAmbientOcclusion"),
     TextureDebug("textureDebug"),
 
+
+    TextureColor("textureColor"),
+    TextureNH("textureNH"),
+    TextureARMS("textureARMS"),
+
+    UseTextureColor("useTextureColor"),
+    UseTextureNH("useTextureNH"),
+    UseTextureARMS("useTextureARMS"),
+
     /* Texture flags */
     UseTextureSkybox("useTextureSkybox"),
     UseTextureDiffuse("useTextureDiffuse"),
