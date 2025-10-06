@@ -65,17 +65,17 @@ in mat3 vertexTBN;
 
 /* Textures */
 uniform samplerCube textureSkybox;
+uniform sampler2D textureDebug;
 uniform sampler2D textureColor;
 uniform sampler2D textureARMS;
 uniform sampler2D textureNH;
-uniform sampler2D textureDebug;
 
 /* Feature flags */
+uniform int useTextureSkybox;
+uniform int useTextureDebug;
 uniform int useTextureColor;
 uniform int useTextureARMS;
 uniform int useTextureNH;
-uniform int useTextureDebug;
-uniform int useTextureSkybox;
 uniform int useDirectionalLight;
 uniform int useLighting;
 uniform int useMaterial;
