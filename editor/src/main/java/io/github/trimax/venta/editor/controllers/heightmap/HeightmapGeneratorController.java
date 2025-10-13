@@ -215,7 +215,7 @@ public final class HeightmapGeneratorController implements Initializable {
 
     private void saveAsRaw(final @NonNull File file) throws Exception {
         try (final var fos = new FileOutputStream(file);
-             final var channel = fos.getChannel()) {
+                final var channel = fos.getChannel()) {
 
             final int width = currentHeightmap.length;
             final int height = currentHeightmap[0].length;
