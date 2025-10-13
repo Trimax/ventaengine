@@ -221,11 +221,9 @@ public final class HeightmapGeneratorController implements Initializable {
             final int height = currentHeightmap[0].length;
             final var buffer = ByteBuffer.allocate(width * height * 4);
 
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
                     buffer.putFloat(currentHeightmap[x][y]);
-                }
-            }
 
             buffer.flip();
             channel.write(buffer);
