@@ -1,18 +1,19 @@
 package io.github.trimax.examples.material.texture.handlers;
 
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
-import org.joml.Vector3f;
 
 @AllArgsConstructor
 public final class TexturedChestApplicationStartupHandler implements VentaEngineStartupHandler {
     public void onStartup(final String[] args, final VentaContext context) {
         final var scene = context.getSceneManager().getCurrent();
 
-        final var cube = context.getObjectManager().create("chest", context.getObjectRepository().get("chest.json"));
-        cube.setScale(new Vector3f(5.f));
-        scene.add(cube);
+        final var chest = context.getObjectManager().create("chest", context.getObjectRepository().get("chest.json"));
+        chest.setScale(new Vector3f(5.f));
+        scene.add(chest);
 
         final var lightXZ = context.getLightManager().create("XZ light", context.getLightRepository().get("point.json"));
         lightXZ.setPosition(new Vector3f(3.f, 3.f, 3.f));

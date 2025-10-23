@@ -1,10 +1,10 @@
 package io.github.trimax.venta.engine.enums;
 
+import static org.lwjgl.opengl.GL13C.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import static org.lwjgl.opengl.GL13C.*;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

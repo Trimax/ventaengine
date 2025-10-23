@@ -2,11 +2,13 @@ package io.github.trimax.venta.editor.listeners.mixer;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.editor.context.MixerContext;
 import io.github.trimax.venta.editor.controllers.mixer.MixerController;
+import io.github.trimax.venta.editor.enums.TextureSlot;
 import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.event.mixer.TextureMixEvent;
 import io.github.trimax.venta.editor.utils.ImageUtil;
-import javafx.scene.image.ImageView;
+import io.github.trimax.venta.editor.utils.ImageViewUtil;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,26 +17,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureMixListener implements AbstractListener<TextureMixEvent> {
     private final MixerController mixerController;
+    private final MixerContext mixerContext;
 
     @Override
     @Subscribe
     public void handle(@NonNull final TextureMixEvent event) {
-        if (!hasAllChannels())
+        if (!mixerContext.hasAllChannels())
             return;
 
-        ImageUtil.mix(mixerController.getRedChannel(),
-                mixerController.getGreenChannel(),
-                mixerController.getBlueChannel(),
-                mixerController.getAlphaChannel(),
-                mixerController.getImgMix());
-    }
+        final var mixedImage = ImageUtil.mix(mixerContext.getChannelImage(TextureSlot.Red),
+                mixerContext.getChannelImage(TextureSlot.Green),
+                mixerContext.getChannelImage(TextureSlot.Blue),
+                mixerContext.getChannelImage(TextureSlot.Alpha));
 
-    private boolean hasAllChannels() {
-        return hasImage(mixerController.getRedChannel()) && hasImage(mixerController.getGreenChannel())
-                && hasImage(mixerController.getBlueChannel()) && hasImage(mixerController.getAlphaChannel());
-    }
-
-    private boolean hasImage(@NonNull final ImageView view) {
-        return view.getImage() != null;
+        mixerContext.setMixedImage(mixedImage);
+        ImageViewUtil.setImage(mixedImage, mixerController.getImgMix());
     }
 }
