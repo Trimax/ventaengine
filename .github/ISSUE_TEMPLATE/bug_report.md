@@ -1,4 +1,5 @@
-name: Venta Engine Bug Report
+---
+name: Bug Report
 about: Report a bug, crash, or rendering issue in Venta Engine
 title: ''
 labels: 'bug'
