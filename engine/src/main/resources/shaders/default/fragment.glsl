@@ -65,17 +65,23 @@ in mat3 vertexTBN;
 
 /* Textures */
 uniform samplerCube textureSkybox;
+uniform sampler2D textureDiffuse;
+uniform sampler2D textureHeight;
+uniform sampler2D textureNormal;
+uniform sampler2D textureRoughness;
+uniform sampler2D textureMetalness;
+uniform sampler2D textureAmbientOcclusion;
 uniform sampler2D textureDebug;
-uniform sampler2D textureColor;
-uniform sampler2D textureARMS;
-uniform sampler2D textureNH;
 
 /* Feature flags */
-uniform int useTextureSkybox;
 uniform int useTextureDebug;
-uniform int useTextureColor;
-uniform int useTextureARMS;
-uniform int useTextureNH;
+uniform int useTextureSkybox;
+uniform int useTextureDiffuse;
+uniform int useTextureHeight;
+uniform int useTextureNormal;
+uniform int useTextureRoughness;
+uniform int useTextureMetalness;
+uniform int useTextureAmbientOcclusion;
 uniform int useDirectionalLight;
 uniform int useLighting;
 uniform int useMaterial;
@@ -108,23 +114,23 @@ bool isSet(int value) {
 
 /* Gets base color from the texture */
 vec4 getDiffuseColor(vec2 textureCoordinates) {
-    return isSet(useTextureColor) ? texture(textureColor, textureCoordinates) : vec4(1.0);
+    return isSet(useTextureDiffuse) ? texture(textureDiffuse, textureCoordinates) : vec4(1.0);
 }
 
 /* Gets ambient occlusion */
 float getAmbientOcclusion(vec2 textureCoordinates) {
-    return isSet(useTextureARMS) ? texture(textureARMS, textureCoordinates).r : 1.0;
+    return isSet(useTextureAmbientOcclusion) ? texture(textureAmbientOcclusion, textureCoordinates).r : 1.0;
 }
 
 /* Gets height */
 float getHeight(vec2 textureCoordinates) {
-    return isSet(useTextureNH) ? texture(textureNH, textureCoordinates).a : 1.0;
+    return isSet(useTextureHeight) ? texture(textureHeight, textureCoordinates).r : 1.0;
 }
 
 /* Gets roughness */
 float getRoughness(vec2 textureCoordinates) {
-    if (isSet(useTextureARMS))
-        return texture(textureARMS, textureCoordinates).g;
+    if (isSet(useTextureRoughness))
+        return texture(textureRoughness, textureCoordinates).r;
 
     if (isSet(useMaterial))
         return material.roughness;
@@ -134,8 +140,8 @@ float getRoughness(vec2 textureCoordinates) {
 
 /* Gets metalness */
 float getMetalness(vec2 textureCoordinates) {
-    if (isSet(useTextureARMS))
-        return texture(textureARMS, textureCoordinates).b;
+    if (isSet(useTextureMetalness))
+        return texture(textureMetalness, textureCoordinates).r;
 
     if (isSet(useMaterial))
         return material.metalness;
@@ -145,7 +151,7 @@ float getMetalness(vec2 textureCoordinates) {
 
 /* Translates texture coordinates according to parallax effect */
 vec2 parallaxMapping(vec2 textureCoordinates) {
-    if (!isSet(useTextureNH))
+    if (!isSet(useTextureHeight))
         return textureCoordinates;
 
     return textureCoordinates + vertexViewDirectionLocalSpace.xy * (getHeight(textureCoordinates) * 0.01);
@@ -153,18 +159,18 @@ vec2 parallaxMapping(vec2 textureCoordinates) {
 
 /* Gets normal (either face or from normal map) */
 vec3 getNormal(vec2 textureCoordinates) {
-    if (!isSet(useTextureNH))
+    if (!isSet(useTextureNormal))
         return vertexTBN[2];
 
     /* Normal mapping */
-    return normalize(vertexTBN * (texture(textureNH, textureCoordinates).rgb * 2.0 - 1.0));
+    return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0));
 }
 
 /* Gets preprocessed texture coordinates */
 vec2 getTextureCoordinates() {
     vec2 textureCoordinates = isSet(useMaterial) ? (vertexTextureCoordinates * material.tiling + material.offset) : vertexTextureCoordinates;
 
-    return isSet(useTextureNH) ? parallaxMapping(textureCoordinates) : textureCoordinates;
+    return isSet(useTextureHeight) ? parallaxMapping(textureCoordinates) : textureCoordinates;
 }
 
 /* Gets material color if set othewise white color */

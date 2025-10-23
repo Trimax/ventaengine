@@ -10,10 +10,6 @@
     "diffuse": "concrete/diffuse.png",
     "normal": "concrete/normal.png",
     "roughness": "concrete/roughness.png",
-    "metalness": "concrete/metalness.png",
-
-    "color": "concrete/color.png",
-    "nh": "concrete/nh.png",
-    "arms": "concrete/arms.png"
+    "metalness": "concrete/metalness.png"
   }
 }

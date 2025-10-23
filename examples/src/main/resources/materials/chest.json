@@ -8,10 +8,6 @@
   "textures": {
     "ambientOcclusion": "chest/specular.png",
     "diffuse": "chest/diffuse.png",
-    "normal": "chest/normal.png",
-
-    "color": "chest/color.png",
-    "nh": "chest/nh.png",
-    "arms": "chest/arms.png"
+    "normal": "chest/normal.png"
   }
 }

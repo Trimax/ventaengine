@@ -10,10 +10,6 @@
     "diffuse": "rust/diffuse.jpg",
     "normal": "rust/normal.jpg",
     "roughness": "rust/roughness.jpg",
-    "metalness": "rust/metalness.jpg",
-
-    "color": "rust/color.png",
-    "nh": "rust/nh.png",
-    "arms": "rust/arms.png"
+    "metalness": "rust/metalness.jpg"
   }
 }
