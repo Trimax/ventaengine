@@ -1,38 +1,55 @@
----
-name: Bug report
-about: Create a report to help us improve
+name: Venta Engine Bug Report
+about: Report a bug, crash, or rendering issue in Venta Engine
 title: ''
-labels: ''
+labels: 'bug'
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Describe the Bug**  
+Provide a clear and concise description of the issue — what happens, under what conditions, and how it affects the engine or scene.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Steps to Reproduce**
+1. Open project or scene `...`
+2. Perform action `...` (e.g., load asset, change material, start simulation)
+3. Observe issue `...`
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**Expected Behavior**  
+Describe what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Actual Behavior**  
+Describe what actually happens (e.g., crash, freeze, visual artifact, incorrect physics behavior).
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+**Logs / Console Output**  
+Attach any relevant output from the Venta Engine console or JVM:
+- Stack traces
+- `venta.log`
+- JVM exceptions or GC warnings
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**System Information**
+- OS: [e.g. Windows 11 / Ubuntu 24.04 / macOS 14]
+- Java Version: [e.g. OpenJDK 21, Oracle JDK 17]
+- Venta Engine Version / Commit: [e.g. 1.4.2, commit `abc123`]
+- Build Type: [Debug / Release / Editor / Standalone]
+- Graphics API: [OpenGL / Vulkan / LWJGL]
+- GPU: [e.g. NVIDIA RTX 4070 / AMD RX 6800]
+- CPU: [e.g. Intel i9-13900K]
+- RAM: [e.g. 32 GB]
 
-**Additional context**
-Add any other context about the problem here.
+**Scene / Asset Details**  
+If applicable, provide details about the scene or asset where the issue occurs:
+- Scene name or ID
+- Mesh / model / shader involved
+- Approximate asset complexity (poly count, texture size, etc.)
+- Any custom Java scripts or plugins used
+
+**Attachments**
+Include any relevant:
+- Screenshots or videos
+- Minimal reproducible test projects or code snippets
+
+**Additional Context**
+Add any extra details that could help investigate:
+- Related engine modules (e.g., Renderer, Physics, AssetManager)
+- Whether it happens consistently or intermittently
+- Recent code or scene changes before the issue appeared
