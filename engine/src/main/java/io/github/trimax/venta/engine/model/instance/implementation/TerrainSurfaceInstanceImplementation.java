@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainMaterial;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
@@ -14,6 +15,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.joml.Vector3fc;
 
+import java.util.List;
+
 @Getter
 public final class TerrainSurfaceInstanceImplementation extends AbstractInstanceImplementation implements TerrainSurfaceInstance {
     private final Transform transform = new Transform();
@@ -22,6 +25,8 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
     private ProgramEntityImplementation program;
 
     private TextureEntityImplementation heightmap;
+
+    private final List<TerrainMaterial> materials;
 
     private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
@@ -34,9 +39,11 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
                                          @NonNull final GridMeshEntityImplementation gridMesh,
                                          @NonNull final ProgramEntityImplementation program,
                                          @NonNull final TextureEntityImplementation heightmap,
+                                         @NonNull final List<TerrainMaterial> materials,
                                          final float factor) {
         super(null, name);
 
+        this.materials = materials;
         this.heightmap = heightmap;
         this.gridMesh = gridMesh;
         this.program = program;

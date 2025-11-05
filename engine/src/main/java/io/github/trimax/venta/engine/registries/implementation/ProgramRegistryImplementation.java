@@ -1,15 +1,8 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
-import static org.lwjgl.opengl.GL11C.GL_FALSE;
-import static org.lwjgl.opengl.GL20C.*;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
-import io.github.trimax.venta.engine.enums.ShaderLightUniform;
-import io.github.trimax.venta.engine.enums.ShaderNoiseUniform;
-import io.github.trimax.venta.engine.enums.ShaderType;
-import io.github.trimax.venta.engine.enums.ShaderUniform;
-import io.github.trimax.venta.engine.enums.ShaderWaveUniform;
+import io.github.trimax.venta.engine.enums.*;
 import io.github.trimax.venta.engine.exceptions.ProgramLinkException;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
@@ -22,6 +15,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.lwjgl.opengl.GL11C.GL_FALSE;
+import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
@@ -74,6 +70,14 @@ public final class ProgramRegistryImplementation
 
         for (int i = 0; i < DefinitionsCommon.MAX_NOISES; i++)
             for (final var field : ShaderNoiseUniform.values())
+                program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
+
+        for (int i = 0; i < DefinitionsCommon.MAX_MATERIALS; i++)
+            for (final var field : ShaderMaterialUniform.values())
+                program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
+
+        for (int i = 0; i < DefinitionsCommon.MAX_MATERIALS; i++)
+            for (final var field : ShaderTextureUniform.values())
                 program.addUniformID(field.getUniformName(i), glGetUniformLocation(program.getInternalID(), field.getUniformName(i)));
 
         log.debug("{} uniforms found and registered for program {}", program.getUniformCount(), program.getID());

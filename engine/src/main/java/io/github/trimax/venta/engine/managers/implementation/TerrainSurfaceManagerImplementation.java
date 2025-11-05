@@ -34,6 +34,7 @@ public final class TerrainSurfaceManagerImplementation
                 prefab.getGridMesh(),
                 prefab.getProgram(),
                 prefab.getHeightmap(),
+                prefab.getMaterials(),
                 prefab.getFactor()));
     }
 

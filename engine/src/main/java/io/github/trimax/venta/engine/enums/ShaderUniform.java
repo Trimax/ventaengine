@@ -42,6 +42,9 @@ public enum ShaderUniform {
     MaterialOffset("material.offset"),
     MaterialColor("material.color"),
 
+    /* Count of materials bound */
+    MaterialCount("materialCount"),
+
     /* Water material parameters */
     MaterialColorSurface("material.colorSurface"),
     MaterialColorDepth("material.colorDepth"),

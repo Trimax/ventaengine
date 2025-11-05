@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainMaterial;
 import io.github.trimax.venta.engine.model.common.water.WaterFoam;
 import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
@@ -57,8 +58,9 @@ public final class Abettor {
                                                                      @NonNull final GridMeshEntityImplementation gridMesh,
                                                                      @NonNull final ProgramEntityImplementation program,
                                                                      @NonNull final TextureEntityImplementation heightmap,
+                                                                     @NonNull final List<TerrainMaterial> materials,
                                                                      final float factor) {
-        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, heightmap, factor);
+        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, heightmap, materials, factor);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,

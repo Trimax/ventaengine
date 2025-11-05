@@ -9,5 +9,5 @@ import java.util.List;
 public record TerrainSurfaceDTO(@NonNull String gridMesh,
                                 @NonNull String program,
                                 @NonNull TerrainElevationDTO elevation,
-                                List<TerrainMaterialDTO> materials) {
+                                @NonNull List<TerrainMaterialDTO> materials) {
 }
