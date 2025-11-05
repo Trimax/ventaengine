@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
+import io.github.trimax.venta.engine.model.common.terrain.TerrainMaterial;
 import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
@@ -8,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
+
+import java.util.List;
 
 @Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
@@ -20,6 +23,9 @@ public class TerrainSurfacePrefabImplementation extends AbstractPrefabImplementa
 
     @NonNull
     TextureEntityImplementation heightmap;
+
+    @NonNull
+    List<TerrainMaterial> materials;
 
     float factor;
 }

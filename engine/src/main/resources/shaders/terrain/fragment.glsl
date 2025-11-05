@@ -4,8 +4,8 @@
  * Definitions
  ***/
 
-/* Light specific */
 const int MAX_LIGHTS = 64;
+const int MAX_MATERIALS = 8;
 
 /***
  * Structures
@@ -32,6 +32,14 @@ struct DirectionalLight {
     float intensity;
 };
 
+struct Material {
+    vec4 color;
+    vec2 tiling;
+    vec2 offset;
+    float metalness;
+    float roughness;
+};
+
 /***
  * Input variables and uniforms
  ***/
@@ -44,10 +52,22 @@ in float vertexTimeElapsed;
 
 /* Textures */
 uniform samplerCube textureSkybox;
+uniform sampler2D textureDiffuse[MAX_MATERIALS];
+uniform sampler2D textureHeight[MAX_MATERIALS];
+uniform sampler2D textureNormal[MAX_MATERIALS];
+uniform sampler2D textureRoughness[MAX_MATERIALS];
+uniform sampler2D textureMetalness[MAX_MATERIALS];
+uniform sampler2D textureAmbientOcclusion[MAX_MATERIALS];
+uniform sampler2D textureDebug;
 
 /* Feature flags */
 uniform int useDirectionalLight;
 uniform int useTextureSkybox;
+
+/* Materials */
+uniform Material materials[MAX_MATERIALS];
+uniform float elevations[MAX_MATERIALS];
+uniform int materialCount;
 
 /* Lighting */
 uniform DirectionalLight directionalLight;
@@ -121,5 +141,5 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
 
 /* Reflections */
 void main() {
-    outputColor = vec4(1.0);
+    outputColor = texture(textureDiffuse[0], vertexTextureCoordinates);
 }

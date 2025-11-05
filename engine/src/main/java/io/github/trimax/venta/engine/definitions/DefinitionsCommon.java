@@ -1,17 +1,12 @@
 package io.github.trimax.venta.engine.definitions;
 
-import org.joml.Vector2f;
-import org.joml.Vector2fc;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
-import org.joml.Vector4f;
-import org.joml.Vector4fc;
-
 import lombok.experimental.UtilityClass;
+import org.joml.*;
 
 @UtilityClass
 public final class DefinitionsCommon {
     /* Limitations */
+    public static final int MAX_MATERIALS = 8;
     public static final int MAX_LIGHTS = 64;
     public static final int MAX_NOISES = 16;
     public static final int MAX_WAVES = 16;

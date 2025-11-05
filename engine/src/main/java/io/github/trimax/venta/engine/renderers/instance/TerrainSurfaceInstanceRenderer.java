@@ -24,6 +24,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 public final class TerrainSurfaceInstanceRenderer extends
         AbstractInstanceRenderer<TerrainSurfaceInstanceImplementation, TerrainSurfaceInstanceRenderer.TerrainSurfaceRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final GeometryHelper geometryHelper;
+    private final TerrainMaterialBinder terrainMaterialBinder;
     private final ElevationBinder elevationBinder;
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
@@ -49,6 +50,7 @@ public final class TerrainSurfaceInstanceRenderer extends
         matrixBinder.bindModelMatrix(surface.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(surface.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
+        terrainMaterialBinder.bind(surface.getProgram(), surface.getMaterials());
         elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getFactor());
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
 
