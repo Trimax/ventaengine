@@ -35,6 +35,8 @@ public final class TerrainSurfaceManagerImplementation
                 prefab.getProgram(),
                 prefab.getHeightmap(),
                 prefab.getMaterials(),
+                prefab.getTextureArrays(),
+                prefab.getElevations(),
                 prefab.getFactor()));
     }
 

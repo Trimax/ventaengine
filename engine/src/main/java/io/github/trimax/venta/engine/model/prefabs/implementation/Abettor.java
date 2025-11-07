@@ -2,11 +2,11 @@ package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.scene.*;
 import io.github.trimax.venta.engine.model.common.shared.*;
-import io.github.trimax.venta.engine.model.common.terrain.TerrainMaterial;
 import io.github.trimax.venta.engine.model.common.water.WaterFoam;
 import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
@@ -17,6 +17,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -41,9 +42,11 @@ public final class Abettor {
     public TerrainSurfacePrefabImplementation createTerrainSurface(@NonNull final GridMeshEntityImplementation gridMesh,
                                                                    @NonNull final ProgramEntityImplementation program,
                                                                    @NonNull final TextureEntityImplementation heightmap,
-                                                                   @NonNull final List<TerrainMaterial> materials,
+                                                                   @NonNull final List<MaterialEntityImplementation> materials,
+                                                                   @NonNull final Map<TextureType, TextureArrayEntityImplementation> textureArrays,
+                                                                   final float[] elevations,
                                                                    final float factor) {
-        return new TerrainSurfacePrefabImplementation(gridMesh, program, heightmap, materials, factor);
+        return new TerrainSurfacePrefabImplementation(gridMesh, program, heightmap, materials, textureArrays, elevations, factor);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,

@@ -1,14 +1,12 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
 import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.math.Transform;
-import io.github.trimax.venta.engine.model.common.terrain.TerrainMaterial;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
-import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
-import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.instance.TerrainSurfaceInstance;
 import lombok.Getter;
 import lombok.NonNull;
@@ -16,6 +14,7 @@ import lombok.Setter;
 import org.joml.Vector3fc;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public final class TerrainSurfaceInstanceImplementation extends AbstractInstanceImplementation implements TerrainSurfaceInstance {
@@ -26,7 +25,13 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
 
     private TextureEntityImplementation heightmap;
 
-    private final List<TerrainMaterial> materials;
+    @NonNull
+    private final List<MaterialEntityImplementation> materials;
+
+    @NonNull
+    private final Map<TextureType, TextureArrayEntityImplementation> textureArrays;
+
+    private final float[] elevations;
 
     private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
@@ -39,10 +44,14 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
                                          @NonNull final GridMeshEntityImplementation gridMesh,
                                          @NonNull final ProgramEntityImplementation program,
                                          @NonNull final TextureEntityImplementation heightmap,
-                                         @NonNull final List<TerrainMaterial> materials,
+                                         @NonNull final List<MaterialEntityImplementation> materials,
+                                         @NonNull final Map<TextureType, TextureArrayEntityImplementation> textureArrays,
+                                         final float @NonNull [] elevations,
                                          final float factor) {
         super(null, name);
 
+        this.textureArrays = textureArrays;
+        this.elevations = elevations;
         this.materials = materials;
         this.heightmap = heightmap;
         this.gridMesh = gridMesh;
