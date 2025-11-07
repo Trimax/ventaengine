@@ -2,13 +2,16 @@ package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.*;
+import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
+import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import one.util.streamex.StreamEx;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
@@ -23,9 +26,11 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TerrainSurfaceInstanceRenderer extends
         AbstractInstanceRenderer<TerrainSurfaceInstanceImplementation, TerrainSurfaceInstanceRenderer.TerrainSurfaceRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final TextureRegistryImplementation textureRegistry;
     private final GeometryHelper geometryHelper;
     private final ElevationBinder elevationBinder;
     private final MaterialBinder materialBinder;
+    private final TextureBinder textureBinder;
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
     private final LightBinder lightBinder;
@@ -40,6 +45,7 @@ public final class TerrainSurfaceInstanceRenderer extends
     public void render(final TerrainSurfaceInstanceImplementation surface) {
         glUseProgram(surface.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, surface.getDrawMode().getMode());
+        textureBinder.bind(surface.getProgram(), textureRegistry.getDefaultTexture());
 
         lightBinder.bind(surface.getProgram(), getContext().getScene().getDirectionalLight());
         lightBinder.bind(surface.getProgram(), getContext().getScene().getAmbientLight());
@@ -53,6 +59,8 @@ public final class TerrainSurfaceInstanceRenderer extends
         materialBinder.bind(surface.getProgram(), surface.getMaterials());
         elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getFactor());
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
+
+        StreamEx.of(TextureType.values()).forEach(type -> textureBinder.bind(type, surface.getProgram(), surface.getTextureArrays().get(type)));
 
         geometryHelper.render(surface.getGridMesh().getGeometry()); //TODO: should be a separate shader. Or a separate format
 
