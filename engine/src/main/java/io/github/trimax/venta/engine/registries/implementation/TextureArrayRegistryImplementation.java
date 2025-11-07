@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.definitions.DefinitionsTextureArray;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.dto.TextureArrayDTO;
 import io.github.trimax.venta.engine.model.entity.TextureArrayEntity;
@@ -36,6 +37,10 @@ public final class TextureArrayRegistryImplementation
     private final ResourceService resourceService;
     private final Abettor abettor;
     private final Memory memory;
+
+    public TextureArrayEntityImplementation getDefaultTextureArray() {
+        return get(DefinitionsTextureArray.DEFAULT);
+    }
 
     public TextureArrayEntityImplementation create(@NonNull final String name, @NonNull final List<? extends TextureEntity> textures) {
         return get(name, () -> {

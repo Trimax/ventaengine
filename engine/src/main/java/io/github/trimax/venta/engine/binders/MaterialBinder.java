@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 
+import java.util.List;
+
 @Slf4j
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,7 +34,15 @@ public final class MaterialBinder extends AbstractBinder {
         StreamEx.of(TextureType.values()).forEach(type -> bind(type, program, material));
     }
 
-    public void bind(final ProgramEntityImplementation program, final MaterialEntityImplementation material, final int materialID) {
+    public void bind(final ProgramEntityImplementation program, final List<MaterialEntityImplementation> materials) {
+        bind(program.getUniformID(ShaderUniform.MaterialCount), materials.size());
+
+        int materialID = 0;
+        for (final var material : materials)
+            bind(program, material, materialID++);
+    }
+
+    private void bind(final ProgramEntityImplementation program, final MaterialEntityImplementation material, final int materialID) {
         bind(program.getUniformID(ShaderUniform.UseMaterial), material != null);
 
         if (material == null)
