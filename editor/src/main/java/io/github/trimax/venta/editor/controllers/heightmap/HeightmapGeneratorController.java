@@ -1,10 +1,7 @@
 package io.github.trimax.venta.editor.controllers.heightmap;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 
@@ -60,8 +57,6 @@ public final class HeightmapGeneratorController implements Initializable {
     @FXML
     private ImageView heightmapImageView;
     @FXML
-    private Label statusLabel;
-    @FXML
     private Label placeholderLabel;
 
     private float[][] currentHeightmap;
@@ -94,7 +89,6 @@ public final class HeightmapGeneratorController implements Initializable {
 
     private void onGenerateButtonClicked(final @NonNull ActionEvent event) {
         try {
-            statusLabel.setText("Generating heightmap...");
             generateButton.setDisable(true);
 
             currentHeightmap = PerlinNoise.generateHeightmap(
@@ -110,27 +104,21 @@ public final class HeightmapGeneratorController implements Initializable {
             heightmapImageView.setPreserveRatio(false);
             placeholderLabel.setVisible(false);
             saveButton.setDisable(false);
-            statusLabel.setText("Heightmap generated successfully");
 
         } catch (final Exception e) {
-            statusLabel.setText("Error: " + e.getMessage());
+            // Error handling without status display
         } finally {
             generateButton.setDisable(false);
         }
     }
 
     private void onSaveButtonClicked(final @NonNull ActionEvent event) {
-        final var filters = java.util.Map.of(
-                "PNG Image (*.png)", java.util.List.of("*.png"),
-                "Raw Height Data (*.raw)", java.util.List.of("*.raw"),
-                "Text Data (*.txt)", java.util.List.of("*.txt")
-        );
+        final var filters = java.util.Map.of("PNG Image (*.png)", java.util.List.of("*.png"));
         DialogUtil.showFileSave("Save Heightmap", this::saveHeightmapToFile, filters);
     }
 
     private void onResetButtonClicked(final @NonNull ActionEvent event) {
         resetParameters();
-        statusLabel.setText("Parameters reset to defaults");
     }
 
     private void resetParameters() {
@@ -169,29 +157,13 @@ public final class HeightmapGeneratorController implements Initializable {
     }
 
     private void saveHeightmapToFile(final @NonNull File file) {
-        if (currentHeightmap == null) {
-            statusLabel.setText("No heightmap to save");
+        if (currentHeightmap == null || !file.getName().toLowerCase().endsWith(".png"))
             return;
-        }
 
         try {
-            final String fileName = file.getName().toLowerCase();
-
-            if (fileName.endsWith(".png"))
-                saveAsPNG(file);
-            else if (fileName.endsWith(".raw"))
-                saveAsRaw(file);
-            else if (fileName.endsWith(".txt"))
-                saveAsText(file);
-            else {
-                statusLabel.setText("Unsupported file format");
-                return;
-            }
-
-            statusLabel.setText("Heightmap saved to: " + file.getName());
-
-        } catch (final Exception e) {
-            statusLabel.setText("Error saving file: " + e.getMessage());
+            saveAsPNG(file);
+        } catch (final Exception ignored) {
+            // Silent failure
         }
     }
 
@@ -211,42 +183,5 @@ public final class HeightmapGeneratorController implements Initializable {
         }
 
         ImageIO.write(bufferedImage, "PNG", file);
-    }
-
-    private void saveAsRaw(final @NonNull File file) throws Exception {
-        try (final var fos = new FileOutputStream(file);
-                final var channel = fos.getChannel()) {
-
-            final int width = currentHeightmap.length;
-            final int height = currentHeightmap[0].length;
-            final var buffer = ByteBuffer.allocate(width * height * 4);
-
-            for (int y = 0; y < height; y++)
-                for (int x = 0; x < width; x++)
-                    buffer.putFloat(currentHeightmap[x][y]);
-
-            buffer.flip();
-            channel.write(buffer);
-        }
-    }
-
-    private void saveAsText(final @NonNull File file) throws Exception {
-        try (final var writer = new PrintWriter(file)) {
-            final int width = currentHeightmap.length;
-            final int height = currentHeightmap[0].length;
-
-            writer.println("# VentaEngine Heightmap");
-            writer.println("# Width: " + width);
-            writer.println("# Height: " + height);
-            writer.println();
-
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    writer.printf("%.6f", currentHeightmap[x][y]);
-                    if (x < width - 1) writer.print(" ");
-                }
-                writer.println();
-            }
-        }
     }
 }
