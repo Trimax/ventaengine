@@ -103,6 +103,8 @@ public enum ShaderUniform {
     /* Foam flags */
     UseFoam("useFoam"),
 
+    Elevations("elevations"),
+
     /* Common model parameters transformation */
     Factor("factor"),
     Color("color");

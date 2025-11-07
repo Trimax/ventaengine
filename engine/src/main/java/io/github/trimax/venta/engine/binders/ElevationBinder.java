@@ -15,8 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 public final class ElevationBinder extends AbstractBinder {
     private final TextureBinder textureBinder;
 
-    public void bind(final ProgramEntityImplementation program, final TextureEntityImplementation heightmap, final float factor) {
+    public void bind(final ProgramEntityImplementation program, final TextureEntityImplementation heightmap, final float[] elevations, final float factor) {
         textureBinder.bind(TextureType.Height, program, heightmap);
         bind(program.getUniformID(ShaderUniform.Factor), factor);
+
+        bind(program.getUniformID(ShaderUniform.Elevations), elevations);
     }
 }
