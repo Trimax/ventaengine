@@ -1,19 +1,8 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
-
-import org.joml.Matrix4f;
-
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
-import io.github.trimax.venta.engine.binders.CameraBinder;
-import io.github.trimax.venta.engine.binders.FogBinder;
-import io.github.trimax.venta.engine.binders.LightBinder;
-import io.github.trimax.venta.engine.binders.MatrixBinder;
-import io.github.trimax.venta.engine.binders.ObjectBinder;
-import io.github.trimax.venta.engine.binders.TextureBinder;
+import io.github.trimax.venta.engine.binders.*;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.memory.MatrixCache;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
@@ -27,6 +16,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joml.Matrix4f;
+
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -55,7 +49,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         glUseProgram(object.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
-        textureBinder.bind(object.getProgram(), textureRegistry.get("debug/white.png"));
+        textureBinder.bind(object.getProgram(), textureRegistry.getDefaultTexture());
 
         cameraBinder.bind(object.getProgram(), getContext().getParent().getCamera());
         objectBinder.bind(object.getProgram(), object);

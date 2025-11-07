@@ -52,12 +52,12 @@ in float vertexTimeElapsed;
 
 /* Textures */
 uniform samplerCube textureSkybox;
-uniform sampler2D textureDiffuse[MAX_MATERIALS];
-uniform sampler2D textureHeight[MAX_MATERIALS];
-uniform sampler2D textureNormal[MAX_MATERIALS];
-uniform sampler2D textureRoughness[MAX_MATERIALS];
-uniform sampler2D textureMetalness[MAX_MATERIALS];
-uniform sampler2D textureAmbientOcclusion[MAX_MATERIALS];
+uniform sampler2DArray textureDiffuse;
+uniform sampler2DArray textureHeight;
+uniform sampler2DArray textureNormal;
+uniform sampler2DArray textureRoughness;
+uniform sampler2DArray textureMetalness;
+uniform sampler2DArray textureAmbientOcclusion;
 uniform sampler2D textureDebug;
 
 /* Feature flags */
@@ -141,5 +141,6 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
 
 /* Reflections */
 void main() {
-    outputColor = texture(textureDiffuse[0], vertexTextureCoordinates);
+    outputColor = texture(textureDiffuse, vec3(vertexTextureCoordinates, 0.0));
+    //outputColor = texture(textureDebug, vertexTextureCoordinates);
 }
