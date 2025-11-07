@@ -57,7 +57,7 @@ public final class TerrainSurfaceInstanceRenderer extends
         matrixBinder.bindViewProjectionMatrix(surface.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
         materialBinder.bind(surface.getProgram(), surface.getMaterials());
-        elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getFactor());
+        elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getElevations(), surface.getFactor());
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
 
         StreamEx.of(TextureType.values()).forEach(type -> textureBinder.bind(type, surface.getProgram(), surface.getTextureArrays().get(type)));

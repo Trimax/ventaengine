@@ -51,6 +51,11 @@ abstract class AbstractBinder {
         bind(uniformID, vector.x(), vector.y());
     }
 
+    protected final void bind(final int uniformID, final float[] array) {
+        if (uniformID >= 0)
+            glUniform1fv(uniformID, array);
+    }
+
     protected final void bind(final int uniformID, final FloatBuffer buffer) {
         if (uniformID >= 0)
             glUniform4fv(uniformID, buffer);

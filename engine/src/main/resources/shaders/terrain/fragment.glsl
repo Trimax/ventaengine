@@ -66,8 +66,11 @@ uniform int useTextureSkybox;
 
 /* Materials */
 uniform Material materials[MAX_MATERIALS];
-uniform float elevations[MAX_MATERIALS];
 uniform int materialCount;
+
+/* Elevations & height */
+uniform float elevations[MAX_MATERIALS];
+uniform float factor;
 
 /* Lighting */
 uniform DirectionalLight directionalLight;
@@ -139,8 +142,43 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     return result;
 }
 
-/* Reflections */
+vec2 getMaterialLayersAndBlend(float y) {
+    int lower = 0;
+    int upper = 0;
+    float blend = 0.0;
+
+    for (int i = 0; i < materialCount; i++) {
+        if (y < elevations[i]) {
+            upper = i;
+            lower = max(i - 1, 0);
+            float minElev = (lower == 0) ? 0.0 : elevations[lower];
+            float maxElev = elevations[upper];
+            blend = (y - minElev) / (maxElev - minElev);
+            break;
+        }
+    }
+
+    if (y >= elevations[materialCount - 1]) {
+        lower = materialCount - 1;
+        upper = materialCount - 1;
+        blend = 0.0;
+    }
+
+    return vec2(float(lower), blend);
+}
+
 void main() {
-    outputColor = texture(textureDiffuse, vec3(vertexTextureCoordinates, 0.0));
-    //outputColor = texture(textureDebug, vertexTextureCoordinates);
+    float minHeight = -0.5 * factor;
+    float maxHeight =  0.5 * factor;
+
+    float yNormalized = clamp((vertexPosition.y - minHeight) / (maxHeight - minHeight), 0.0, 1.0);
+    vec2 info = getMaterialLayersAndBlend(yNormalized);
+    int layer0 = int(info.x);
+    int layer1 = min(layer0 + 1, materialCount - 1);
+    float blend = info.y;
+
+    vec4 color0 = texture(textureDiffuse, vec3(vertexTextureCoordinates, float(layer0)));
+    vec4 color1 = texture(textureDiffuse, vec3(vertexTextureCoordinates, float(layer1)));
+
+    outputColor = mix(color0, color1, blend);
 }
