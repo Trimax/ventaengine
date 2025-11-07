@@ -142,7 +142,7 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     return result;
 }
 
-vec2 getMaterialLayersAndBlend(float y) {
+vec2 getMaterialLayersAndBlend(float y, float blendWidth) {
     int lower = 0;
     int upper = 0;
     float blend = 0.0;
@@ -151,9 +151,13 @@ vec2 getMaterialLayersAndBlend(float y) {
         if (y < elevations[i]) {
             upper = i;
             lower = max(i - 1, 0);
-            float minElev = (lower == 0) ? 0.0 : elevations[lower];
-            float maxElev = elevations[upper];
-            blend = (y - minElev) / (maxElev - minElev);
+
+            float upperBound = elevations[upper];
+            float lowerEdge = upperBound - blendWidth;
+
+            if (y < lowerEdge) blend = 0.0;
+            else blend = clamp((y - lowerEdge) / (upperBound - lowerEdge), 0.0, 1.0);
+
             break;
         }
     }
@@ -172,7 +176,7 @@ void main() {
     float maxHeight =  0.5 * factor;
 
     float yNormalized = clamp((vertexPosition.y - minHeight) / (maxHeight - minHeight), 0.0, 1.0);
-    vec2 info = getMaterialLayersAndBlend(yNormalized);
+    vec2 info = getMaterialLayersAndBlend(yNormalized, 0.05);
     int layer0 = int(info.x);
     int layer1 = min(layer0 + 1, materialCount - 1);
     float blend = info.y;
@@ -181,4 +185,12 @@ void main() {
     vec4 color1 = texture(textureDiffuse, vec3(vertexTextureCoordinates, float(layer1)));
 
     outputColor = mix(color0, color1, blend);
+
+//    if (yNormalized > 0.0)
+//        outputColor = vec4(yNormalized, yNormalized, yNormalized, 1.0);
+//    else
+//        outputColor = vec4(1.0, 0.0, 0.0, 1.0);
+//
+//    if (yNormalized <= 0.48)
+//        outputColor = vec4(0.0, 1.0, 0.0, 1.0);
 }

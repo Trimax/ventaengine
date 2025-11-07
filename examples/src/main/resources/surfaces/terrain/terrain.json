@@ -7,15 +7,15 @@
   },
   "materials": [
     {
-      "elevation": 0.1,
+      "elevation": 0.5,
       "material": "sand.json"
     },
     {
-      "elevation": 0.7,
+      "elevation": 0.8,
       "material": "grass.json"
     },
     {
-      "elevation": 0.8,
+      "elevation": 0.9,
       "material": "rock.json"
     },
     {
