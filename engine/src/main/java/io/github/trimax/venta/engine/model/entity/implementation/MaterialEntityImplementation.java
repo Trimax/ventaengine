@@ -1,14 +1,5 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.joml.Vector2f;
-import org.joml.Vector2fc;
-import org.joml.Vector4f;
-import org.joml.Vector4fc;
-
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
@@ -18,6 +9,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.joml.Vector4f;
+import org.joml.Vector4fc;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Value
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
@@ -40,7 +39,7 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
     }
 
     @Override
-    public void setTexture(final TextureType type, final TextureEntity texture) {
+    public void setTexture(final @NonNull TextureType type, final @NonNull TextureEntity texture) {
         if (texture instanceof TextureEntityImplementation t)
             this.textures.put(type, t);
     }

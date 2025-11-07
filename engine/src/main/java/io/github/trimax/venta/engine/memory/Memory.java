@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Memory {
     private final AnnotatedCache<Integer> vertexArrays = new AnnotatedCache<>(GL30C::glGenVertexArrays, GL30C::glDeleteVertexArrays);
+    private final AnnotatedCache<Integer> textureArrays = new AnnotatedCache<>(GL30C::glGenTextures, GL30C::glDeleteTextures);
     private final AnnotatedCache<Integer> textures = new AnnotatedCache<>(GL30C::glGenTextures, GL30C::glDeleteTextures);
     private final AnnotatedCache<Integer> programs = new AnnotatedCache<>(GL30C::glCreateProgram, GL30C::glDeleteProgram);
     private final AnnotatedCache<Integer> buffers = new AnnotatedCache<>(GL30C::glGenBuffers, GL30C::glDeleteBuffers);
@@ -25,6 +26,7 @@ public final class Memory {
     public void cleanup() {
         this.vertexArrays.cleanup();
         this.programs.cleanup();
+        this.textureArrays.cleanup();
         this.textures.cleanup();
         this.buffers.cleanup();
         this.windows.cleanup();
