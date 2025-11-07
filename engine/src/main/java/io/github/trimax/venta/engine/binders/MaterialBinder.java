@@ -43,15 +43,9 @@ public final class MaterialBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderMaterialUniform.Tiling.getUniformName(materialID)), material.getTiling());
         bind(program.getUniformID(ShaderMaterialUniform.Offset.getUniformName(materialID)), material.getOffset());
         bind(program.getUniformID(ShaderMaterialUniform.Color.getUniformName(materialID)), material.getColor());
-
-        StreamEx.of(TextureType.values()).forEach(type -> bind(type, program, material, materialID));
     }
 
     private void bind(final TextureType type, final ProgramEntityImplementation program, final MaterialEntityImplementation material) {
         textureBinder.bind(type, program, material.getTexture(type));
-    }
-
-    private void bind(final TextureType type, final ProgramEntityImplementation program, final MaterialEntityImplementation material, final int materialID) {
-        textureBinder.bind(type, program, material.getTexture(type), materialID);
     }
 }

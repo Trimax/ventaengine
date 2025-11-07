@@ -60,6 +60,13 @@ public final class Abettor {
         return new TextureEntityImplementation(buffer, format, internalID, width, height);
     }
 
+    public TextureArrayEntityImplementation createTextureArray(final int internalID,
+                                                               final int layersCount,
+                                                               final int width,
+                                                               final int height) {
+        return new TextureArrayEntityImplementation(internalID, layersCount, width, height);
+    }
+
     public CubemapEntityImplementation createCubemap(@NonNull final Map<CubemapFace, ByteBuffer> buffers,
                                                      @NonNull final ProgramEntityImplementation program,
                                                      @NonNull final TextureFormat format,

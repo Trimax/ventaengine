@@ -79,6 +79,10 @@ public final class VentaContext {
     public TextureRegistry getTextureRegistry() {
         return registryFactory.get(TextureRegistryImplementation.class);
     }
+    
+    public TextureArrayRegistry getTextureArrayRegistry() {
+        return registryFactory.get(TextureArrayRegistryImplementation.class);
+    }
 
     public ProgramRegistry getProgramRegistry() {
         return registryFactory.get(ProgramRegistryImplementation.class);

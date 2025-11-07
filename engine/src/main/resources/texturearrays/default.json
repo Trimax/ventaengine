@@ -1,0 +1,10 @@
+{
+  "textures": [
+    "debug/black.png",
+    "debug/blue.png",
+    "debug/orange.png",
+    "debug/purple.png",
+    "debug/red.png",
+    "debug/white.png"
+  ]
+}
