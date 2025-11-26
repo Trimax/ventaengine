@@ -27,81 +27,127 @@ public final class PerlinNoise {
     private static final int[] P = new int[512];
     
     static {
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < 256; i++)
             P[i] = P[i + 256] = PERMUTATION[i];
-        }
     }
-    
-    public static float[][] generateHeightmap(final int width, final int height,
-                                            final int octaves, final double amplitude,
-                                            final double persistence, final double weight,
-                                            final int minValue, final int maxValue) {
-        final long seed = System.currentTimeMillis();
-        
-        final float[][] heightmap = new float[width][height];
-        final java.util.Random random = new java.util.Random(seed);
-        final double offsetX = random.nextDouble() * 1000;
-        final double offsetY = random.nextDouble() * 1000;
-        
+
+    public static float[][] generateHeightmapWithParameters(final int width, final int height,
+                                                          final long seed, final double cellSize,
+                                                          final int levels, final double attenuation,
+                                                          final double groovy) {
+        final var heightmap = new float[width][height];
+        final var random = new java.util.Random(seed);
+        final var offsetX = random.nextDouble() * 1000;
+        final var offsetY = random.nextDouble() * 1000;
+
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                double noiseValue = 0.0;
-                double currentAmplitude = amplitude;
-                double frequency = 1.0 / (width * 0.1);
-                
-                for (int octave = 0; octave < octaves; octave++) {
-                    final double sampleX = (x + offsetX) * frequency;
-                    final double sampleY = (y + offsetY) * frequency;
-                    final double perlinValue = noise(sampleX, sampleY);
+                var noiseValue = 0.0;
+                var frequency = 1.0 / cellSize;
+                var amplitude = 1.0;
+                var maxValue = 0.0;
+
+                for (int level = 0; level < levels; level++) {
+                    final var sampleX = (x + offsetX) * frequency;
+                    final var sampleY = (y + offsetY) * frequency;
                     
-                    noiseValue += perlinValue * currentAmplitude;
-                    currentAmplitude *= persistence;
+                    var perlinValue = noise(sampleX, sampleY);
+
+                    if (groovy > 0.0) {
+                        final var turbulenceX = sampleX * groovy;
+                        final var turbulenceY = sampleY * groovy;
+                        final var turbulence = Math.abs(noise(turbulenceX, turbulenceY));
+                        perlinValue = Math.abs(perlinValue) * (1.0 + turbulence * groovy);
+                    }
+                    
+                    noiseValue += perlinValue * amplitude;
+                    maxValue += amplitude;
+                    amplitude *= attenuation;
                     frequency *= 2.0;
                 }
-                
+
+                noiseValue /= maxValue;
                 noiseValue = (noiseValue + 1.0) * 0.5;
                 noiseValue = Math.max(0.0, Math.min(1.0, noiseValue));
-                noiseValue = Math.pow(noiseValue, 1.0 / weight);
-                
-                final float scaledValue = (float) (minValue + noiseValue * (maxValue - minValue));
-                heightmap[x][y] = scaledValue;
+
+                heightmap[x][y] = (float) (noiseValue * 255.0);
             }
         }
 
         return heightmap;
     }
-    
-    public static double noise(final double x, final double y) {
-        final int X = (int) Math.floor(x) & 255;
-        final int Y = (int) Math.floor(y) & 255;
-        final double xf = x - Math.floor(x);
-        final double yf = y - Math.floor(y);
-        final double u = fade(xf);
-        final double v = fade(yf);
-        
-        final int aa = P[P[X] + Y];
-        final int ab = P[P[X] + Y + 1];
-        final int ba = P[P[X + 1] + Y];
-        final int bb = P[P[X + 1] + Y + 1];
 
-        return lerp(v,
-            lerp(u, grad(aa, xf, yf), grad(ba, xf - 1, yf)),
-            lerp(u, grad(ab, xf, yf - 1), grad(bb, xf - 1, yf - 1))
-        );
+    public static float[][] generateHeightmap(final int width, final int height,
+                                            final int octaves, final double amplitude,
+                                            final double persistence, final double weight,
+                                            final int minValue, final int maxValue) {
+        final var heightmap = new float[width][height];
+        final var random = new java.util.Random();
+        final var seed = random.nextDouble() * 1000;
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                var noiseValue = 0.0;
+                var frequency = 1.0;
+                var amp = 1.0;
+                var maxValue1 = 0.0;
+
+                for (int i = 0; i < octaves; i++) {
+                    noiseValue += noise((x + seed) * frequency * 0.01, (y + seed) * frequency * 0.01) * amp;
+                    maxValue1 += amp;
+                    amp *= persistence;
+                    frequency *= 2;
+                }
+
+                noiseValue /= maxValue1;
+                noiseValue = (noiseValue + 1.0) / 2.0;
+                noiseValue = Math.pow(noiseValue, weight);
+                noiseValue *= amplitude;
+
+                var finalValue = (float) (minValue + noiseValue * (maxValue - minValue));
+                finalValue = Math.max(minValue, Math.min(maxValue, finalValue));
+                heightmap[x][y] = finalValue;
+            }
+        }
+
+        return heightmap;
     }
-    
-    private static double fade(final double t) {
-        return t * t * t * (t * (t * 6 - 15) + 10);
+
+    private static double noise(final double x, final double y) {
+        final var X = (int) Math.floor(x) & 255;
+        final var Y = (int) Math.floor(y) & 255;
+        
+        final var xf = x - Math.floor(x);
+        final var yf = y - Math.floor(y);
+        
+        final var topRight = dotGridGradient(X + 1, Y, xf - 1, yf);
+        final var topLeft = dotGridGradient(X, Y, xf, yf);
+        final var bottomRight = dotGridGradient(X + 1, Y + 1, xf - 1, yf - 1);
+        final var bottomLeft = dotGridGradient(X, Y + 1, xf, yf - 1);
+        
+        final var xt = interpolate(topLeft, topRight, xf);
+        final var xb = interpolate(bottomLeft, bottomRight, xf);
+        
+        return interpolate(xt, xb, yf);
     }
-    
-    private static double lerp(final double t, final double a, final double b) {
-        return a + t * (b - a);
+
+    private static double dotGridGradient(final int ix, final int iy, final double x, final double y) {
+        final var gradient = randomGradient(ix, iy);
+        return gradient[0] * x + gradient[1] * y;
     }
-    
-    private static double grad(final int hash, final double x, final double y) {
-        final int h = hash & 3;
-        final double u = h < 2 ? x : y;
-        final double v = h < 2 ? y : x;
-        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+
+    private static double[] randomGradient(final int ix, final int iy) {
+        final var random = P[(ix + P[iy & 255]) & 255];
+        final var theta = random * 2.0 * Math.PI / 256.0;
+        return new double[]{Math.cos(theta), Math.sin(theta)};
+    }
+
+    private static double interpolate(final double a0, final double a1, final double w) {
+        final var weight = smootherstep(w);
+        return (a1 - a0) * weight + a0;
+    }
+
+    private static double smootherstep(final double x) {
+        return x * x * x * (x * (x * 6 - 15) + 10);
     }
 }

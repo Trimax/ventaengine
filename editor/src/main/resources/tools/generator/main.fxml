@@ -31,7 +31,7 @@
                         <Spinner fx:id="widthSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         
                         <Label text="Height:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <Spinner fx:id="heightSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Spinner fx:id="heightSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                      </children>
                   </GridPane>
                   
@@ -45,40 +45,31 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
                      </columnConstraints>
                      <children>
-                        <Label text="Octaves:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <Spinner fx:id="octaveCountSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Random Seed:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <Spinner fx:id="randomSeedSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         
-                        <Label text="Amplitude:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <Spinner fx:id="amplitudeSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Cell Size:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Spinner fx:id="cellSizeSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         
-                        <Label text="Persistence:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <Spinner fx:id="persistenceSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Levels:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Spinner fx:id="levelsSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         
-                        <Label text="Weight:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <Spinner fx:id="weightSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Attenuation:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Spinner fx:id="attenuationSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                   
                   <Separator prefWidth="200.0" />
                   
-                  <!-- Value Range -->
-                  <Label text="Value Range" style="-fx-font-weight: bold;" />
-                  <GridPane hgap="10.0" vgap="5.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
-                     </columnConstraints>
+                  <!-- Effects -->
+                  <Label text="Effects" style="-fx-font-weight: bold;" />
+                  <VBox spacing="5.0">
                      <children>
-                        <Label text="Min Value:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <Spinner fx:id="minValueSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                        
-                        <Label text="Max Value:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <Spinner fx:id="maxValueSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        
-                        <Label text="Thresholds:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <Spinner fx:id="thresholdsSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <CheckBox fx:id="groovyCheckBox" text="Groovy" />
+                        <CheckBox fx:id="colorCheckBox" text="Color" />
+                        <CheckBox fx:id="alphaCheckBox" text="Alpha" />
                      </children>
-                  </GridPane>
+                  </VBox>
                   
                   <Separator prefWidth="200.0" />
                   
@@ -94,9 +85,6 @@
                   
                   <!-- Spacer -->
                   <Region VBox.vgrow="ALWAYS" />
-                  
-                  <!-- Status -->
-                  <Label fx:id="statusLabel" text="Ready to generate heightmap" style="-fx-text-fill: gray;" />
                </children>
             </VBox>
             
