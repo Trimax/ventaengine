@@ -77,42 +77,6 @@ public final class PerlinNoise {
         return heightmap;
     }
 
-    public static float[][] generateHeightmap(final int width, final int height,
-                                            final int octaves, final double amplitude,
-                                            final double persistence, final double weight,
-                                            final int minValue, final int maxValue) {
-        final var heightmap = new float[width][height];
-        final var random = new java.util.Random();
-        final var seed = random.nextDouble() * 1000;
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                var noiseValue = 0.0;
-                var frequency = 1.0;
-                var amp = 1.0;
-                var maxValue1 = 0.0;
-
-                for (int i = 0; i < octaves; i++) {
-                    noiseValue += noise((x + seed) * frequency * 0.01, (y + seed) * frequency * 0.01) * amp;
-                    maxValue1 += amp;
-                    amp *= persistence;
-                    frequency *= 2;
-                }
-
-                noiseValue /= maxValue1;
-                noiseValue = (noiseValue + 1.0) / 2.0;
-                noiseValue = Math.pow(noiseValue, weight);
-                noiseValue *= amplitude;
-
-                var finalValue = (float) (minValue + noiseValue * (maxValue - minValue));
-                finalValue = Math.max(minValue, Math.min(maxValue, finalValue));
-                heightmap[x][y] = finalValue;
-            }
-        }
-
-        return heightmap;
-    }
-
     private static double noise(final double x, final double y) {
         final var X = (int) Math.floor(x) & 255;
         final var Y = (int) Math.floor(y) & 255;
