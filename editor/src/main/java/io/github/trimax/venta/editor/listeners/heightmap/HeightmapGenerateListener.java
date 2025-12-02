@@ -8,9 +8,6 @@ import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.event.heightmap.HeightmapGenerateEvent;
 import io.github.trimax.venta.editor.utils.ImageViewUtil;
 import io.github.trimax.venta.engine.utils.PerlinNoise;
-import javafx.application.Platform;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +33,8 @@ public final class HeightmapGenerateListener implements AbstractListener<Heightm
                 context.getLevels(), context.getAttenuation(),
                 context.isGroovy() ? 1 : 0); // TODO Change to spinner on UI
 
-        BufferedImage img = new BufferedImage(context.getWidth(), context.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = img.createGraphics();
+        final BufferedImage img = new BufferedImage(context.getWidth(), context.getHeight(), BufferedImage.TYPE_INT_RGB);
+        final Graphics2D g = img.createGraphics();
 
         for (int x = 0; x < context.getWidth(); x++)
             for (int y = 0; y < context.getHeight(); y++) {

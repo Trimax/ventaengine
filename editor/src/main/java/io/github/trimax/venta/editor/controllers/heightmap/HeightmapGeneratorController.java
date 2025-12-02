@@ -24,7 +24,7 @@ public final class HeightmapGeneratorController {
     public ImageView heightmapImageView;
 
     @FXML
-    private void onSaveButton(final ActionEvent event){
+    private void onSaveButton(final ActionEvent event) {
         saveHandler.handle(event);
     }
 
@@ -35,49 +35,49 @@ public final class HeightmapGeneratorController {
 
     @FXML
     private void onSeedChanged(final InputEvent event) {
-        Spinner<?> spinnerSeed = (Spinner<?>) event.getSource();
+        final Spinner<?> spinnerSeed = (Spinner<?>) event.getSource();
         context.setRandomSeed((int) spinnerSeed.getValue());
         EventUtil.post(new HeightmapGenerateEvent());
     }
 
     @FXML
     private void onAttenuationChanged(final InputEvent event) {
-        Spinner<?> spinnerAttenuation = (Spinner<?>) event.getSource();
+        final Spinner<?> spinnerAttenuation = (Spinner<?>) event.getSource();
         context.setAttenuation((double) spinnerAttenuation.getValue());
         EventUtil.post(new HeightmapGenerateEvent());
     }
 
     @FXML
     private void onLevelsChanged(final InputEvent event) {
-        Spinner<?> spinnerLevels = (Spinner<?>) event.getSource();
+        final Spinner<?> spinnerLevels = (Spinner<?>) event.getSource();
         context.setLevels((int) spinnerLevels.getValue());
         EventUtil.post(new HeightmapGenerateEvent());
     }
 
     @FXML
     public void onGroovyChanged(final ActionEvent event) {
-        CheckBox checkBox = (CheckBox) event.getSource();
+        final CheckBox checkBox = (CheckBox) event.getSource();
         context.setGroovy(checkBox.isSelected());
         EventUtil.post(new HeightmapGenerateEvent());        
     }
 
     @FXML
     public void onWidthChanged(final InputEvent event) {
-        Spinner<?> spinnerWidth = (Spinner<?>) event.getSource();
+        final Spinner<?> spinnerWidth = (Spinner<?>) event.getSource();
         context.setWidth((int) spinnerWidth.getValue());
         EventUtil.post(new HeightmapGenerateEvent());
     }
 
     @FXML
     public void onHeightChanged(final InputEvent event) {
-        Spinner<?> spinnerHeight = (Spinner<?>) event.getSource();
+        final Spinner<?> spinnerHeight = (Spinner<?>) event.getSource();
         context.setHeight((int) spinnerHeight.getValue());
         EventUtil.post(new HeightmapGenerateEvent());
     }
 
     @FXML
     public void onCellSizeChanged(final InputEvent event) {
-        Spinner<?> spinnerCellSize = (Spinner<?>) event.getSource();
+        final Spinner<?> spinnerCellSize = (Spinner<?>) event.getSource();
         context.setCellSize((double) spinnerCellSize.getValue());
         EventUtil.post(new HeightmapGenerateEvent());
     }

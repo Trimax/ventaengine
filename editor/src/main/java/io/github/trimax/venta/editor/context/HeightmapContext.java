@@ -20,8 +20,6 @@ public final class HeightmapContext {
     private int levels = 4;
     private double attenuation = 0.5;
     private boolean groovy = false;
-    private boolean useColor = false; // TODO REMOVE it
-    private boolean useAlpha = false; // TODO REMOVE it
     
-    private BufferedImage heightmap = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);;
+    private BufferedImage heightmap = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
 }
