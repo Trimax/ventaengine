@@ -132,7 +132,7 @@
                             <Insets bottom="10.0" left="10.0" right="10.0" top="0.0"/>
                         </VBox.margin>
                         <StackPane>
-                            <ImageView fx:id="heightmapImageView" fitHeight="400.0" fitWidth="400.0"
+                            <ImageView fx:id="imgHeightmap" fitHeight="400.0" fitWidth="400.0"
                                        pickOnBounds="true" preserveRatio="true"/>
                         </StackPane>
                     </ScrollPane>

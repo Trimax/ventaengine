@@ -21,8 +21,7 @@ public final class HeightmapSaveHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(final @NonNull ActionEvent event) {
-        final var filters = Map.of("PNG Image (*.png)", List.of("*.png"));
-        DialogUtil.showFileSave("Save Heightmap", this::save, filters);
+        DialogUtil.showFileSave("Save Heightmap", this::save, Map.of("PNG Image (*.png)", List.of("*.png")));
     }
 
     private void save(final @NonNull File file) {

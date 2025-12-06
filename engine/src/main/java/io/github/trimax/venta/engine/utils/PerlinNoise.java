@@ -31,10 +31,10 @@ public final class PerlinNoise {
             P[i] = P[i + 256] = PERMUTATION[i];
     }
 
-    public static float[][] generateHeightmapWithParameters(final int width, final int height,
-                                                          final long seed, final double cellSize,
-                                                          final int levels, final double attenuation,
-                                                          final double groovy) {
+    public float[][] generate(final int width, final int height,
+                              final long seed, final double cellSize,
+                              final int levels, final double attenuation,
+                              final double groovy) {
         final var heightmap = new float[width][height];
         final var random = new java.util.Random(seed);
         final var offsetX = random.nextDouble() * 1000;
@@ -77,7 +77,7 @@ public final class PerlinNoise {
         return heightmap;
     }
 
-    private static double noise(final double x, final double y) {
+    private double noise(final double x, final double y) {
         final var X = (int) Math.floor(x) & 255;
         final var Y = (int) Math.floor(y) & 255;
         
@@ -95,23 +95,23 @@ public final class PerlinNoise {
         return interpolate(xt, xb, yf);
     }
 
-    private static double dotGridGradient(final int ix, final int iy, final double x, final double y) {
+    private double dotGridGradient(final int ix, final int iy, final double x, final double y) {
         final var gradient = randomGradient(ix, iy);
         return gradient[0] * x + gradient[1] * y;
     }
 
-    private static double[] randomGradient(final int ix, final int iy) {
+    private double[] randomGradient(final int ix, final int iy) {
         final var random = P[(ix + P[iy & 255]) & 255];
         final var theta = random * 2.0 * Math.PI / 256.0;
         return new double[]{Math.cos(theta), Math.sin(theta)};
     }
 
-    private static double interpolate(final double a0, final double a1, final double w) {
+    private double interpolate(final double a0, final double a1, final double w) {
         final var weight = smootherstep(w);
         return (a1 - a0) * weight + a0;
     }
 
-    private static double smootherstep(final double x) {
+    private double smootherstep(final double x) {
         return x * x * x * (x * (x * 6 - 15) + 10);
     }
 }

@@ -13,7 +13,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 @Slf4j
@@ -27,14 +26,21 @@ public final class HeightmapGenerateListener implements AbstractListener<Heightm
     @Subscribe
     public void handle(final @NonNull HeightmapGenerateEvent event) {
         log.info("Generating image {}", context.getRandomSeed());
-        final var heightmap = PerlinNoise.generateHeightmapWithParameters(
+        final var heightmap = PerlinNoise.generate(
                 context.getWidth(), context.getHeight(),
                 context.getRandomSeed(), context.getCellSize(),
                 context.getLevels(), context.getAttenuation(),
                 context.isGroovy() ? 1 : 0); // TODO Change to spinner on UI
 
-        final BufferedImage img = new BufferedImage(context.getWidth(), context.getHeight(), BufferedImage.TYPE_INT_RGB);
-        final Graphics2D g = img.createGraphics();
+        final var img = generateHeightmapImage(heightmap);
+
+        context.setHeightmap(img);
+        ImageViewUtil.setImage(img, controller.imgHeightmap);
+    }
+
+    private BufferedImage generateHeightmapImage(final float[][] heightmap) {
+        final var img = new BufferedImage(context.getWidth(), context.getHeight(), BufferedImage.TYPE_INT_RGB);
+        final var g = img.createGraphics();
 
         for (int x = 0; x < context.getWidth(); x++)
             for (int y = 0; y < context.getHeight(); y++) {
@@ -43,7 +49,6 @@ public final class HeightmapGenerateListener implements AbstractListener<Heightm
                 g.drawLine(x, y, x, y);
             }
 
-        context.setHeightmap(img);
-        ImageViewUtil.setImage(img, controller.heightmapImageView);
+        return img;
     }
 }
