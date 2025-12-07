@@ -14,6 +14,8 @@ import javafx.scene.input.InputEvent;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.Consumer;
+
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HeightmapGeneratorController {
@@ -70,9 +72,8 @@ public final class HeightmapGeneratorController {
         updateSpinnerValue(event, context::setCellSize);
     }
 
-    private <T> void updateSpinnerValue(final InputEvent event, final java.util.function.Consumer<T> setter) {
-        final var spinner = (Spinner<T>) event.getSource();
-        setter.accept(spinner.getValue());
+    private <T> void updateSpinnerValue(final InputEvent event, final Consumer<T> setter) {
+        setter.accept(((Spinner<T>) event.getSource()).getValue());
         EventUtil.post(new HeightmapGenerateEvent());
     }
 }
