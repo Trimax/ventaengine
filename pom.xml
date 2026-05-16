@@ -39,7 +39,7 @@
 
     <properties>
         <java.version>22</java.version>
-        <lwjgl.version>3.3.6</lwjgl.version>
+        <lwjgl.version>3.4.1</lwjgl.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
