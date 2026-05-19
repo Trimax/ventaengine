@@ -3,9 +3,8 @@ package io.github.trimax.venta.engine.registries.implementation;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL12C.glTexSubImage3D;
-import static org.lwjgl.opengl.GL30C.GL_TEXTURE_2D_ARRAY;
-import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
+import static org.lwjgl.opengl.GL12C.glCopyTexSubImage3D;
+import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.opengl.GL42C.glTexStorage3D;
 
 import java.util.List;
@@ -57,11 +56,18 @@ public final class TextureArrayRegistryImplementation
             glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, format.getInternal(), width, height, layers);
 
             for (int i = 0; i < layers; i++) {
-                final var texture = textures.get(i);
-                texture.getBuffer().rewind();
-                glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
-                        width, height, 1,
-                        format.getExternal(), GL_UNSIGNED_BYTE, texture.getBuffer());
+                final var layerTextureInternalID = textures.get(i).getInternalID();
+
+                // Attach source texture to FBO and copy into the texture array layer
+                final var fbo = glGenFramebuffers();
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+                glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, layerTextureInternalID, 0);
+
+                glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayID);
+                glCopyTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, 0, 0, width, height);
+
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+                glDeleteFramebuffers(fbo);
             }
 
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
