@@ -77,7 +77,6 @@ uniform int useTextureNormal;
 uniform int useTextureRoughness;
 uniform int useTextureMetalness;
 uniform int useTextureAmbientOcclusion;
-uniform int useLighting;
 uniform int useFog;
 
 /* Materials */
@@ -348,12 +347,7 @@ void main() {
     float blendedAO = mix(ao0, ao1, blend);
 
     /* Apply PBR lighting or pass through unlit */
-    vec3 litColor;
-    if (isSet(useLighting)) {
-        litColor = computePBRLighting(blendedDiffuse, blendedNormal, blendedRoughness, blendedMetalness, blendedAO);
-    } else {
-        litColor = blendedDiffuse.rgb;
-    }
+    vec3 litColor = computePBRLighting(blendedDiffuse, blendedNormal, blendedRoughness, blendedMetalness, blendedAO);
 
     /* Apply skybox reflections (if skybox bound) */
     litColor = applyReflections(litColor, blendedNormal, blendedMetalness);

@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.renderers.instance;
 
 import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUniform1i;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 import java.nio.FloatBuffer;
@@ -18,28 +17,26 @@ import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.TextureArrayBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.binders.TimeBinder;
-import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
-import io.github.trimax.venta.engine.registries.implementation.TextureArrayRegistryImplementation;
 import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import one.util.streamex.StreamEx;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TerrainSurfaceInstanceRenderer extends
         AbstractInstanceRenderer<TerrainSurfaceInstanceImplementation, TerrainSurfaceInstanceRenderer.TerrainSurfaceRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final TextureRegistryImplementation textureRegistry;
-    private final TextureArrayRegistryImplementation textureArrayRegistry;
-    private final GeometryHelper geometryHelper;
+    private final TextureArrayBinder textureArrayBinder;
     private final ElevationBinder elevationBinder;
+    private final GeometryHelper geometryHelper;
     private final MaterialBinder materialBinder;
     private final TextureBinder textureBinder;
     private final CameraBinder cameraBinder;
@@ -57,7 +54,9 @@ public final class TerrainSurfaceInstanceRenderer extends
     public void render(final TerrainSurfaceInstanceImplementation surface) {
         glUseProgram(surface.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, surface.getDrawMode().getMode());
+
         textureBinder.bind(surface.getProgram(), textureRegistry.getDefaultTexture());
+        textureBinder.bind(surface.getProgram(), getContext().getScene().getSkybox());
 
         lightBinder.bind(surface.getProgram(), getContext().getScene().getDirectionalLight());
         lightBinder.bind(surface.getProgram(), getContext().getScene().getAmbientLight());
@@ -74,24 +73,11 @@ public final class TerrainSurfaceInstanceRenderer extends
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
         fogBinder.bind(surface.getProgram(), getContext().getScene().getFog());
 
-        StreamEx.of(TextureType.values()).forEach(type -> {
-            render(surface, type);
-        });
+        textureArrayBinder.bind(surface.getProgram(), surface.getTextureArrays());
 
         geometryHelper.render(surface.getGridMesh().getGeometry());
 
         glUseProgram(0);
-    }
-
-    private void render(final TerrainSurfaceInstanceImplementation surface, final TextureType type) {
-        final var array = surface.getTextureArrays().get(type);
-        textureBinder.bind(type, surface.getProgram(), array);
-
-        // Set useTexture* flag: true only if the array is NOT the default placeholder
-        final var useUniformId = surface.getProgram().getUniformID(type.getUseTextureUniform());
-        if (useUniformId >= 0) {
-            glUniform1i(useUniformId, (array != null && array != textureArrayRegistry.getDefaultTextureArray()) ? 1 : 0);
-        }
     }
 
     @Getter(AccessLevel.PACKAGE)
