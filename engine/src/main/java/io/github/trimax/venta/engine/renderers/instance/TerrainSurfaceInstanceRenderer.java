@@ -20,7 +20,6 @@ import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.binders.TimeBinder;
-import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
@@ -63,7 +62,6 @@ public final class TerrainSurfaceInstanceRenderer extends
         lightBinder.bind(surface.getProgram(), getContext().getScene().getDirectionalLight());
         lightBinder.bind(surface.getProgram(), getContext().getScene().getAmbientLight());
         lightBinder.bind(surface.getProgram(), getContext().getScene().getLights());
-        glUniform1i(surface.getProgram().getUniformID(ShaderUniform.UseLighting), 1);
 
         cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());
 
@@ -76,20 +74,24 @@ public final class TerrainSurfaceInstanceRenderer extends
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
         fogBinder.bind(surface.getProgram(), getContext().getScene().getFog());
 
-        final var defaultArray = textureArrayRegistry.getDefaultTextureArray();
         StreamEx.of(TextureType.values()).forEach(type -> {
-            final var array = surface.getTextureArrays().get(type);
-            textureBinder.bind(type, surface.getProgram(), array);
-            // Set useTexture* flag: true only if the array is NOT the default placeholder
-            final var useUniformId = surface.getProgram().getUniformID(type.getUseTextureUniform());
-            if (useUniformId >= 0) {
-                glUniform1i(useUniformId, (array != null && array != defaultArray) ? 1 : 0);
-            }
+            render(surface, type);
         });
 
-        geometryHelper.render(surface.getGridMesh().getGeometry()); //TODO: should be a separate shader. Or a separate format
+        geometryHelper.render(surface.getGridMesh().getGeometry());
 
         glUseProgram(0);
+    }
+
+    private void render(final TerrainSurfaceInstanceImplementation surface, final TextureType type) {
+        final var array = surface.getTextureArrays().get(type);
+        textureBinder.bind(type, surface.getProgram(), array);
+
+        // Set useTexture* flag: true only if the array is NOT the default placeholder
+        final var useUniformId = surface.getProgram().getUniformID(type.getUseTextureUniform());
+        if (useUniformId >= 0) {
+            glUniform1i(useUniformId, (array != null && array != textureArrayRegistry.getDefaultTextureArray()) ? 1 : 0);
+        }
     }
 
     @Getter(AccessLevel.PACKAGE)
