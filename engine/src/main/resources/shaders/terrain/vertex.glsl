@@ -22,10 +22,12 @@ out vec3 vertexPosition;
 out vec2 vertexTextureCoordinates;
 out vec3 vertexViewDirectionLocalSpace;
 out vec3 vertexViewDirectionWorldSpace;
+out float vertexHeightNormalized;
 
 void main() {
     /* Sample center height for displacement */
     float height = texture(textureElevation, textureCoordinates).r;
+    vertexHeightNormalized = height;
 
     /* Displace vertex along Y */
     vec3 displacedPosition = position;

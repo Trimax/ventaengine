@@ -18,12 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ElevationBinder extends AbstractBinder {
 
-    public void bind(final ProgramEntityImplementation program, final TextureEntityImplementation heightmap, final float[] elevations, final float factor) {
+    public void bind(final ProgramEntityImplementation program, final TextureEntityImplementation heightmap, final float[] elevations, final float factor, final float blendWidth) {
         glActiveTexture(TextureUnit.Elevation.getLocationID());
         bind(program.getUniformID(ShaderUniform.TextureElevation), TextureUnit.Elevation.getId());
         glBindTexture(GL_TEXTURE_2D, heightmap != null ? heightmap.getInternalID() : 0);
 
         bind(program.getUniformID(ShaderUniform.Factor), factor);
         bind(program.getUniformID(ShaderUniform.Elevations), elevations);
+        bind(program.getUniformID(ShaderUniform.BlendWidth), blendWidth);
     }
 }

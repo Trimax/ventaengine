@@ -3,11 +3,12 @@
   "program": "terrain.json",
   "elevation": {
     "heightmap": "heightmaps/erangel.png",
-    "factor": 100.0
+    "factor": 100.0,
+    "blendWidth": 0.02
   },
   "materials": [
     {
-      "elevation": 0.2,
+      "elevation": 0.0,
       "material": "sand.json"
     },
     {

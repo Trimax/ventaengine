@@ -1,23 +1,41 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
+import java.util.List;
+import java.util.Map;
+
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
-import io.github.trimax.venta.engine.model.common.scene.*;
-import io.github.trimax.venta.engine.model.common.shared.*;
+import io.github.trimax.venta.engine.model.common.scene.SceneBillboard;
+import io.github.trimax.venta.engine.model.common.scene.SceneEmitter;
+import io.github.trimax.venta.engine.model.common.scene.SceneLight;
+import io.github.trimax.venta.engine.model.common.scene.SceneObject;
+import io.github.trimax.venta.engine.model.common.scene.SceneSoundSource;
+import io.github.trimax.venta.engine.model.common.shared.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Noise;
+import io.github.trimax.venta.engine.model.common.shared.Range;
+import io.github.trimax.venta.engine.model.common.shared.Variable;
+import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.common.water.WaterFoam;
 import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
-import io.github.trimax.venta.engine.model.entity.implementation.*;
+import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureArrayEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import java.util.List;
-import java.util.Map;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -45,8 +63,9 @@ public final class Abettor {
                                                                    @NonNull final List<MaterialEntityImplementation> materials,
                                                                    @NonNull final Map<TextureType, TextureArrayEntityImplementation> textureArrays,
                                                                    final float[] elevations,
-                                                                   final float factor) {
-        return new TerrainSurfacePrefabImplementation(gridMesh, program, heightmap, materials, textureArrays, elevations, factor);
+                                                                   final float factor,
+                                                                   final float blendWidth) {
+        return new TerrainSurfacePrefabImplementation(gridMesh, program, heightmap, materials, textureArrays, elevations, factor, blendWidth);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,

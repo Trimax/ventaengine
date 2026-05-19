@@ -108,6 +108,7 @@ public enum ShaderUniform {
 
     /* Common model parameters transformation */
     Factor("factor"),
+    BlendWidth("blendWidth"),
     Color("color");
 
     private final String uniformName;

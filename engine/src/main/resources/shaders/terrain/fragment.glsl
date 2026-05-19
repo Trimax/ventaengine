@@ -56,6 +56,7 @@ in vec3 vertexPosition;
 in vec2 vertexTextureCoordinates;
 in vec3 vertexViewDirectionLocalSpace;
 in vec3 vertexViewDirectionWorldSpace;
+in float vertexHeightNormalized;
 
 /* Textures */
 uniform samplerCube textureSkybox;
@@ -71,6 +72,11 @@ uniform sampler2D textureDebug;
 uniform int useDirectionalLight;
 uniform int useTextureSkybox;
 uniform int useTextureHeight;
+uniform int useTextureDiffuse;
+uniform int useTextureNormal;
+uniform int useTextureRoughness;
+uniform int useTextureMetalness;
+uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
 uniform int useFog;
 
@@ -80,6 +86,7 @@ uniform int materialCount;
 
 /* Elevations & height */
 uniform float elevations[MAX_MATERIALS];
+uniform float blendWidth;
 uniform float factor;
 
 /* Lighting */
@@ -129,27 +136,37 @@ vec2 applyParallaxMapping(vec2 uv, int layerIndex) {
 
 /* Samples diffuse texture array for a layer, falls back to material color if not bound */
 vec4 sampleDiffuse(vec2 uv, int layerIndex) {
+    if (!isSet(useTextureDiffuse))
+        return vec4(1.0);
     return texture(textureDiffuse, vec3(uv, float(layerIndex)));
 }
 
 /* Samples normal texture array and transforms to world space via TBN */
 vec3 sampleNormal(vec2 uv, int layerIndex) {
+    if (!isSet(useTextureNormal))
+        return normalize(vertexTBN[2]); // Use geometric normal (TBN column 2 = N)
     vec3 normalSample = texture(textureNormal, vec3(uv, float(layerIndex))).rgb;
     return normalize(vertexTBN * (normalSample * 2.0 - 1.0));
 }
 
 /* Samples roughness texture array for a layer */
 float sampleRoughness(vec2 uv, int layerIndex) {
+    if (!isSet(useTextureRoughness))
+        return materials[layerIndex].roughness;
     return texture(textureRoughness, vec3(uv, float(layerIndex))).r;
 }
 
 /* Samples metalness texture array for a layer */
 float sampleMetalness(vec2 uv, int layerIndex) {
+    if (!isSet(useTextureMetalness))
+        return materials[layerIndex].metalness;
     return texture(textureMetalness, vec3(uv, float(layerIndex))).r;
 }
 
 /* Samples ambient occlusion texture array for a layer */
 float sampleAmbientOcclusion(vec2 uv, int layerIndex) {
+    if (!isSet(useTextureAmbientOcclusion))
+        return 1.0;
     return texture(textureAmbientOcclusion, vec3(uv, float(layerIndex))).r;
 }
 
@@ -158,35 +175,47 @@ float sampleAmbientOcclusion(vec2 uv, int layerIndex) {
  ***/
 
 vec2 getMaterialLayersAndBlend(float yNormalized) {
-    // Handle fewer than 2 layers - use single layer without blending
+    // Handle single layer
     if (materialCount < 2) {
         return vec2(0.0, 0.0);
     }
 
-    // Height below lowest threshold - use first layer only
-    if (yNormalized <= elevations[0]) {
-        return vec2(0.0, 0.0);
-    }
-
-    // Height above highest threshold - use last layer only
-    if (yNormalized >= elevations[materialCount - 1]) {
-        return vec2(float(materialCount - 1), 0.0);
-    }
-
-    // Find two adjacent layers whose elevation thresholds bracket the height
-    int lower = 0;
+    // Find which layer this height belongs to.
+    // elevation[i] means "from this height, use material i".
+    // So material i is active from elevations[i] to elevations[i+1].
+    int layer = 0;
     for (int i = 1; i < MAX_MATERIALS; i++) {
         if (i >= materialCount) break;
-        if (yNormalized < elevations[i]) {
-            lower = i - 1;
+        if (yNormalized >= elevations[i]) {
+            layer = i;
+        } else {
             break;
         }
     }
 
-    int upper = lower + 1;
-    float blend = smoothstep(elevations[lower], elevations[upper], yNormalized);
+    // Compute blend with the next layer at the boundary.
+    // Blending occurs in a narrow band (blendWidth) around each elevation threshold.
+    int nextLayer = min(layer + 1, materialCount - 1);
+    if (layer == nextLayer) {
+        // Top-most layer, no blending
+        return vec2(float(layer), 0.0);
+    }
 
-    return vec2(float(lower), blend);
+    float threshold = elevations[nextLayer];
+    float halfBlend = blendWidth * 0.5;
+    float blendStart = threshold - halfBlend;
+    float blendEnd = threshold + halfBlend;
+
+    if (yNormalized <= blendStart) {
+        return vec2(float(layer), 0.0);
+    }
+    if (yNormalized >= blendEnd) {
+        return vec2(float(nextLayer), 0.0);
+    }
+
+    // Within blend region: smoothstep between current and next layer
+    float blend = smoothstep(blendStart, blendEnd, yNormalized);
+    return vec2(float(layer), blend);
 }
 
 /***
@@ -283,10 +312,7 @@ vec3 applyFog(vec3 color) {
 }
 
 void main() {
-    float minHeight = -0.5 * factor;
-    float maxHeight =  0.5 * factor;
-
-    float yNormalized = clamp((vertexPosition.y - minHeight) / (maxHeight - minHeight), 0.0, 1.0);
+    float yNormalized = vertexHeightNormalized;
     vec2 info = getMaterialLayersAndBlend(yNormalized);
     int layer0 = int(info.x);
     int layer1 = min(layer0 + 1, materialCount - 1);

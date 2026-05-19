@@ -1,5 +1,12 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.nio.FloatBuffer;
+import java.util.List;
+import java.util.Map;
+
+import org.joml.Vector2fc;
+import org.joml.Vector3f;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.TextureType;
@@ -9,18 +16,19 @@ import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
 import io.github.trimax.venta.engine.model.common.water.WaterFoam;
 import io.github.trimax.venta.engine.model.common.water.WaterMaterial;
-import io.github.trimax.venta.engine.model.entity.implementation.*;
+import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SoundEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureArrayEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.EmitterPrefabImplementation;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.joml.Vector2fc;
-import org.joml.Vector3f;
-
-import java.nio.FloatBuffer;
-import java.util.List;
-import java.util.Map;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -62,8 +70,9 @@ public final class Abettor {
                                                                      @NonNull final List<MaterialEntityImplementation> materials,
                                                                      @NonNull final Map<TextureType, TextureArrayEntityImplementation> textureArrays,
                                                                      final float @NonNull [] elevations,
-                                                                     final float factor) {
-        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, heightmap, materials, textureArrays, elevations, factor);
+                                                                     final float factor,
+                                                                     final float blendWidth) {
+        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, heightmap, materials, textureArrays, elevations, factor, blendWidth);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,

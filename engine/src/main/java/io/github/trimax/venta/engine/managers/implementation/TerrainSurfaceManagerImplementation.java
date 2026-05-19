@@ -37,7 +37,8 @@ public final class TerrainSurfaceManagerImplementation
                 prefab.getMaterials(),
                 prefab.getTextureArrays(),
                 prefab.getElevations(),
-                prefab.getFactor()));
+                prefab.getFactor(),
+                prefab.getBlendWidth()));
     }
 
     @Override

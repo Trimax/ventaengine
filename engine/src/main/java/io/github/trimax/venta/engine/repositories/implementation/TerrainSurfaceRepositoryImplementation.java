@@ -1,5 +1,9 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.TerrainSurfaceDTO;
@@ -10,7 +14,11 @@ import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityIm
 import io.github.trimax.venta.engine.model.prefabs.TerrainSurfacePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.TerrainSurfacePrefabImplementation;
-import io.github.trimax.venta.engine.registries.implementation.*;
+import io.github.trimax.venta.engine.registries.implementation.GridMeshRegistryImplementation;
+import io.github.trimax.venta.engine.registries.implementation.MaterialRegistryImplementation;
+import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
+import io.github.trimax.venta.engine.registries.implementation.TextureArrayRegistryImplementation;
+import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import io.github.trimax.venta.engine.repositories.TerrainSurfaceRepository;
 import io.github.trimax.venta.engine.services.ResourceService;
 import lombok.AccessLevel;
@@ -18,10 +26,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 @Slf4j
 @Component
@@ -50,7 +54,8 @@ public final class TerrainSurfaceRepositoryImplementation
                 materials,
                 createTextureArrays(resourcePath, materials),
                 StreamEx.of(terrainSurfaceDTO.materials()).mapToDouble(TerrainMaterialDTO::elevation).toFloatArray(),
-                terrainSurfaceDTO.elevation().factor());
+                terrainSurfaceDTO.elevation().factor(),
+                terrainSurfaceDTO.elevation().blendWidth());
     }
 
     private Map<TextureType, TextureArrayEntityImplementation> createTextureArrays(@NonNull final String name, @NonNull final List<MaterialEntityImplementation> materials) {

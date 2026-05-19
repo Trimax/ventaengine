@@ -1,20 +1,25 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import java.util.List;
+import java.util.Map;
+
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
-import io.github.trimax.venta.engine.model.entity.implementation.*;
+import io.github.trimax.venta.engine.model.entity.implementation.GridMeshEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureArrayEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.TerrainSurfaceInstance;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.joml.Vector3fc;
-
-import java.util.List;
-import java.util.Map;
 
 @Getter
 public final class TerrainSurfaceInstanceImplementation extends AbstractInstanceImplementation implements TerrainSurfaceInstance {
@@ -40,6 +45,8 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
     @Setter
     private float factor;
 
+    private final float blendWidth;
+
     TerrainSurfaceInstanceImplementation(@NonNull final String name,
                                          @NonNull final GridMeshEntityImplementation gridMesh,
                                          @NonNull final ProgramEntityImplementation program,
@@ -47,7 +54,8 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
                                          @NonNull final List<MaterialEntityImplementation> materials,
                                          @NonNull final Map<TextureType, TextureArrayEntityImplementation> textureArrays,
                                          final float @NonNull [] elevations,
-                                         final float factor) {
+                                         final float factor,
+                                         final float blendWidth) {
         super(null, name);
 
         this.textureArrays = textureArrays;
@@ -57,6 +65,7 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
         this.gridMesh = gridMesh;
         this.program = program;
         this.factor = factor;
+        this.blendWidth = blendWidth;
     }
 
     @Override
