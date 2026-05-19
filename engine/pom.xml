@@ -87,6 +87,7 @@
             <classifier>natives-${os.detected.classifier}</classifier>
             <version>${lwjgl.version}</version>
         </dependency>
+
     </dependencies>
 
     <licenses>

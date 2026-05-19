@@ -1,5 +1,15 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL12C.glTexSubImage3D;
+import static org.lwjgl.opengl.GL30C.GL_TEXTURE_2D_ARRAY;
+import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
+import static org.lwjgl.opengl.GL42C.glTexStorage3D;
+
+import java.util.List;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsTextureArray;
 import io.github.trimax.venta.engine.enums.TextureFormat;
@@ -16,16 +26,6 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
-
-import java.util.List;
-
-import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_REPEAT;
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL30C.GL_TEXTURE_2D_ARRAY;
-import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
-import static org.lwjgl.opengl.GL42C.glTexStorage3D;
-import static org.lwjgl.opengl.GL43C.glCopyImageSubData;
 
 @Slf4j
 @Component
@@ -57,10 +57,11 @@ public final class TextureArrayRegistryImplementation
             glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, format.getInternal(), width, height, layers);
 
             for (int i = 0; i < layers; i++) {
-                final var layerTextureInternalID = textures.get(i).getInternalID();
-                glCopyImageSubData(layerTextureInternalID, GL_TEXTURE_2D, 0, 0, 0, 0,
-                        textureArrayID, GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
-                        width, height, 1);
+                final var texture = textures.get(i);
+                texture.getBuffer().rewind();
+                glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
+                        width, height, 1,
+                        format.getExternal(), GL_UNSIGNED_BYTE, texture.getBuffer());
             }
 
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

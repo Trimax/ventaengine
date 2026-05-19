@@ -34,3 +34,6 @@ target
 
 # POM files produced by the plugin
 dependency-reduced-pom.xml
+
+# MacOS
+.DS_Store

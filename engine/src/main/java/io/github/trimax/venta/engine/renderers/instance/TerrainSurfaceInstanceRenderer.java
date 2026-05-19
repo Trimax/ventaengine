@@ -1,7 +1,24 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11C.glPolygonMode;
+import static org.lwjgl.opengl.GL20C.glUseProgram;
+
+import java.nio.FloatBuffer;
+
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.binders.*;
+import io.github.trimax.venta.engine.binders.CameraBinder;
+import io.github.trimax.venta.engine.binders.ElevationBinder;
+import io.github.trimax.venta.engine.binders.FogBinder;
+import io.github.trimax.venta.engine.binders.LightBinder;
+import io.github.trimax.venta.engine.binders.MaterialBinder;
+import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.TextureBinder;
+import io.github.trimax.venta.engine.binders.TimeBinder;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
@@ -12,15 +29,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import one.util.streamex.StreamEx;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.opengl.GL11C.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11C.glPolygonMode;
-import static org.lwjgl.opengl.GL20C.glUseProgram;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -35,6 +43,7 @@ public final class TerrainSurfaceInstanceRenderer extends
     private final MatrixBinder matrixBinder;
     private final LightBinder lightBinder;
     private final TimeBinder timeBinder;
+    private final FogBinder fogBinder;
 
     @Override
     protected TerrainSurfaceRenderContext createContext() {
@@ -54,11 +63,13 @@ public final class TerrainSurfaceInstanceRenderer extends
         cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());
 
         matrixBinder.bindModelMatrix(surface.getProgram(), getContext().getModelMatrixBuffer());
+        matrixBinder.bindNormalMatrix(surface.getProgram(), getContext().getNormalMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(surface.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
         materialBinder.bind(surface.getProgram(), surface.getMaterials());
         elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getElevations(), surface.getFactor());
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
+        fogBinder.bind(surface.getProgram(), getContext().getScene().getFog());
 
         StreamEx.of(TextureType.values()).forEach(type -> textureBinder.bind(type, surface.getProgram(), surface.getTextureArrays().get(type)));
 

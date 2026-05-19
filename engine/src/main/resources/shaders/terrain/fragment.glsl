@@ -40,15 +40,22 @@ struct Material {
     float roughness;
 };
 
+struct Fog {
+    vec3 color;
+    float minimalDistance;
+    float maximalDistance;
+};
+
 /***
  * Input variables and uniforms
  ***/
 
 /* Vertex shader output */
-in vec3 vertexNormal;
+in mat3 vertexTBN;
 in vec3 vertexPosition;
 in vec2 vertexTextureCoordinates;
-in float vertexTimeElapsed;
+in vec3 vertexViewDirectionLocalSpace;
+in vec3 vertexViewDirectionWorldSpace;
 
 /* Textures */
 uniform samplerCube textureSkybox;
@@ -63,6 +70,9 @@ uniform sampler2D textureDebug;
 /* Feature flags */
 uniform int useDirectionalLight;
 uniform int useTextureSkybox;
+uniform int useTextureHeight;
+uniform int useLighting;
+uniform int useFog;
 
 /* Materials */
 uniform Material materials[MAX_MATERIALS];
@@ -77,6 +87,9 @@ uniform DirectionalLight directionalLight;
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 ambientLight;
 uniform int lightCount;
+
+/* Fog */
+uniform Fog fog;
 
 /* Camera */
 uniform vec3 cameraPosition;
@@ -97,6 +110,86 @@ bool isSet(int value) {
 }
 
 /***
+ * Texture sampling functions
+ ***/
+
+/* Computes per-material texture coordinates with tiling and offset */
+vec2 getMaterialTextureCoordinates(int layerIndex) {
+    return vertexTextureCoordinates * materials[layerIndex].tiling + materials[layerIndex].offset;
+}
+
+/* Applies parallax mapping offset to texture coordinates for a given layer */
+vec2 applyParallaxMapping(vec2 uv, int layerIndex) {
+    if (!isSet(useTextureHeight))
+        return uv;
+
+    float heightSample = texture(textureHeight, vec3(uv, float(layerIndex))).r;
+    return uv + vertexViewDirectionLocalSpace.xy * heightSample * 0.01;
+}
+
+/* Samples diffuse texture array for a layer, falls back to material color if not bound */
+vec4 sampleDiffuse(vec2 uv, int layerIndex) {
+    return texture(textureDiffuse, vec3(uv, float(layerIndex)));
+}
+
+/* Samples normal texture array and transforms to world space via TBN */
+vec3 sampleNormal(vec2 uv, int layerIndex) {
+    vec3 normalSample = texture(textureNormal, vec3(uv, float(layerIndex))).rgb;
+    return normalize(vertexTBN * (normalSample * 2.0 - 1.0));
+}
+
+/* Samples roughness texture array for a layer */
+float sampleRoughness(vec2 uv, int layerIndex) {
+    return texture(textureRoughness, vec3(uv, float(layerIndex))).r;
+}
+
+/* Samples metalness texture array for a layer */
+float sampleMetalness(vec2 uv, int layerIndex) {
+    return texture(textureMetalness, vec3(uv, float(layerIndex))).r;
+}
+
+/* Samples ambient occlusion texture array for a layer */
+float sampleAmbientOcclusion(vec2 uv, int layerIndex) {
+    return texture(textureAmbientOcclusion, vec3(uv, float(layerIndex))).r;
+}
+
+/***
+ * Material blending
+ ***/
+
+vec2 getMaterialLayersAndBlend(float yNormalized) {
+    // Handle fewer than 2 layers - use single layer without blending
+    if (materialCount < 2) {
+        return vec2(0.0, 0.0);
+    }
+
+    // Height below lowest threshold - use first layer only
+    if (yNormalized <= elevations[0]) {
+        return vec2(0.0, 0.0);
+    }
+
+    // Height above highest threshold - use last layer only
+    if (yNormalized >= elevations[materialCount - 1]) {
+        return vec2(float(materialCount - 1), 0.0);
+    }
+
+    // Find two adjacent layers whose elevation thresholds bracket the height
+    int lower = 0;
+    for (int i = 1; i < MAX_MATERIALS; i++) {
+        if (i >= materialCount) break;
+        if (yNormalized < elevations[i]) {
+            lower = i - 1;
+            break;
+        }
+    }
+
+    int upper = lower + 1;
+    float blend = smoothstep(elevations[lower], elevations[upper], yNormalized);
+
+    return vec2(float(lower), blend);
+}
+
+/***
  * Lighting functions
  ***/
 
@@ -104,71 +197,89 @@ float getAttenuation(Attenuation attenuation, float distance) {
     return 1.0 / (attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance);
 }
 
-/* Computes light */
-vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
-    if (light.enabled == 0)
-        vec3(0.0);
+/* Computes PBR lighting with ambient, directional, and point lights */
+vec3 computePBRLighting(vec4 color, vec3 N, float roughness, float metalness, float ao) {
+    vec3 V = normalize(vertexViewDirectionWorldSpace);
 
-    vec3 lightDirection = normalize(light.position - vertexPosition);
-    float attenuation = getAttenuation(light.attenuation, length(light.position - vertexPosition));
+    /* Derive PBR parameters */
+    vec3 F0 = mix(vec3(0.04), color.rgb, metalness);
+    float shininess = mix(1.0, 256.0, 1.0 - roughness);
 
-    float diff = max(dot(normal, lightDirection), 0.0);
-    vec3 R = reflect(-lightDirection, normal);
-    float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
+    /* Ambient contribution */
+    vec3 result = ambientLight * color.rgb;
 
-    return (diff + spec * 0.3) * light.color * light.intensity * attenuation;
-}
+    /* Directional light contribution */
+    if (isSet(useDirectionalLight)) {
+        vec3 lightDir = normalize(-directionalLight.direction);
 
-/* Computes directional light */
-vec3 computeDirectionalLight(vec3 normal, vec3 cameraDirection) {
-    if (!isSet(useDirectionalLight))
-        return vec3(0.0);
+        float diff = max(dot(N, lightDir), 0.0);
+        vec3 diffuse = diff * directionalLight.color * directionalLight.intensity * color.rgb;
 
-    vec3 lightDirection = normalize(-directionalLight.direction);
+        vec3 R = reflect(-lightDir, N);
+        float spec = pow(max(dot(V, R), 0.0), shininess);
+        vec3 specular = F0 * spec * directionalLight.color * directionalLight.intensity;
 
-    float diff = max(dot(normal, lightDirection), 0.0);
-    vec3 R = reflect(-lightDirection, normal);
-    float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
-
-    return (diff + spec * 0.3) * directionalLight.color * directionalLight.intensity;
-}
-
-vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
-    vec3 result = ambientLight * baseColor;
-
-    for (int i = 0; i < lightCount; i++)
-        result += calculateLight(lights[i], normal, cameraDirection);
-
-    return result;
-}
-
-vec2 getMaterialLayersAndBlend(float y, float blendWidth) {
-    int lower = 0;
-    int upper = 0;
-    float blend = 0.0;
-
-    for (int i = 0; i < materialCount; i++) {
-        if (y < elevations[i]) {
-            upper = i;
-            lower = max(i - 1, 0);
-
-            float upperBound = elevations[upper];
-            float lowerEdge = upperBound - blendWidth;
-
-            if (y < lowerEdge) blend = 0.0;
-            else blend = clamp((y - lowerEdge) / (upperBound - lowerEdge), 0.0, 1.0);
-
-            break;
-        }
+        result += diffuse + specular;
     }
 
-    if (y >= elevations[materialCount - 1]) {
-        lower = materialCount - 1;
-        upper = materialCount - 1;
-        blend = 0.0;
+    /* Point lights contribution */
+    for (int i = 0; i < lightCount; i++) {
+        if (lights[i].enabled == 0)
+            continue;
+
+        vec3 lightDir = normalize(lights[i].position - vertexPosition);
+        float dist = length(lights[i].position - vertexPosition);
+        float attenuation = getAttenuation(lights[i].attenuation, dist);
+
+        float diff = max(dot(N, lightDir), 0.0);
+        vec3 diffuse = diff * lights[i].color * lights[i].intensity * color.rgb;
+
+        vec3 R = reflect(-lightDir, N);
+        float spec = pow(max(dot(V, R), 0.0), shininess);
+        vec3 specular = F0 * spec * lights[i].color * lights[i].intensity;
+
+        result += (diffuse + specular) * attenuation;
     }
 
-    return vec2(float(lower), blend);
+    /* Apply ambient occlusion */
+    result *= ao;
+
+    /* Clamp final lit color */
+    return clamp(result, 0.0, 1.0);
+}
+
+/***
+ * Reflections
+ ***/
+
+/* Applies skybox reflections mixed with lit color by metalness */
+vec3 applyReflections(vec3 color, vec3 N, float metalness) {
+    if (!isSet(useTextureSkybox))
+        return color;
+
+    vec3 V = normalize(vertexViewDirectionWorldSpace);
+    vec3 reflectDir = reflect(-V, N);
+    vec3 skyboxColor = texture(textureSkybox, reflectDir).rgb;
+
+    return mix(color, skyboxColor, metalness);
+}
+
+/***
+ * Fog
+ ***/
+
+/* Computes distance-based fog factor */
+float computeFogFactor(float distance) {
+    return clamp((distance - fog.minimalDistance) / (fog.maximalDistance - fog.minimalDistance), 0.0, 1.0);
+}
+
+/* Applies fog to a color based on camera-to-fragment distance */
+vec3 applyFog(vec3 color) {
+    if (!isSet(useFog))
+        return color;
+
+    float dist = length(cameraPosition - vertexPosition);
+    return mix(color, fog.color, computeFogFactor(dist));
 }
 
 void main() {
@@ -176,21 +287,53 @@ void main() {
     float maxHeight =  0.5 * factor;
 
     float yNormalized = clamp((vertexPosition.y - minHeight) / (maxHeight - minHeight), 0.0, 1.0);
-    vec2 info = getMaterialLayersAndBlend(yNormalized, 0.05);
+    vec2 info = getMaterialLayersAndBlend(yNormalized);
     int layer0 = int(info.x);
     int layer1 = min(layer0 + 1, materialCount - 1);
     float blend = info.y;
 
-    vec4 color0 = texture(textureDiffuse, vec3(vertexTextureCoordinates, float(layer0)));
-    vec4 color1 = texture(textureDiffuse, vec3(vertexTextureCoordinates, float(layer1)));
+    /* Compute texture coordinates with tiling/offset for each layer */
+    vec2 uv0 = getMaterialTextureCoordinates(layer0);
+    vec2 uv1 = getMaterialTextureCoordinates(layer1);
 
-    outputColor = mix(color0, color1, blend);
+    /* Apply parallax mapping per layer */
+    uv0 = applyParallaxMapping(uv0, layer0);
+    uv1 = applyParallaxMapping(uv1, layer1);
 
-//    if (yNormalized > 0.0)
-//        outputColor = vec4(yNormalized, yNormalized, yNormalized, 1.0);
-//    else
-//        outputColor = vec4(1.0, 0.0, 0.0, 1.0);
-//
-//    if (yNormalized <= 0.48)
-//        outputColor = vec4(0.0, 1.0, 0.0, 1.0);
+    /* Sample all PBR channels for layer 0 */
+    vec4 diffuse0 = sampleDiffuse(uv0, layer0) * materials[layer0].color;
+    vec3 normal0 = sampleNormal(uv0, layer0);
+    float roughness0 = sampleRoughness(uv0, layer0);
+    float metalness0 = sampleMetalness(uv0, layer0);
+    float ao0 = sampleAmbientOcclusion(uv0, layer0);
+
+    /* Sample all PBR channels for layer 1 */
+    vec4 diffuse1 = sampleDiffuse(uv1, layer1) * materials[layer1].color;
+    vec3 normal1 = sampleNormal(uv1, layer1);
+    float roughness1 = sampleRoughness(uv1, layer1);
+    float metalness1 = sampleMetalness(uv1, layer1);
+    float ao1 = sampleAmbientOcclusion(uv1, layer1);
+
+    /* Blend all PBR channels between the two layers */
+    vec4 blendedDiffuse = mix(diffuse0, diffuse1, blend);
+    vec3 blendedNormal = normalize(mix(normal0, normal1, blend));
+    float blendedRoughness = mix(roughness0, roughness1, blend);
+    float blendedMetalness = mix(metalness0, metalness1, blend);
+    float blendedAO = mix(ao0, ao1, blend);
+
+    /* Apply PBR lighting or pass through unlit */
+    vec3 litColor;
+    if (isSet(useLighting)) {
+        litColor = computePBRLighting(blendedDiffuse, blendedNormal, blendedRoughness, blendedMetalness, blendedAO);
+    } else {
+        litColor = blendedDiffuse.rgb;
+    }
+
+    /* Apply skybox reflections (if skybox bound) */
+    litColor = applyReflections(litColor, blendedNormal, blendedMetalness);
+
+    /* Apply fog (if enabled) */
+    litColor = applyFog(litColor);
+
+    outputColor = vec4(litColor, blendedDiffuse.a);
 }

@@ -23,6 +23,7 @@ public enum ShaderUniform {
     TextureMetalness("textureMetalness"),
     TextureAmbientOcclusion("textureAmbientOcclusion"),
     TextureDebug("textureDebug"),
+    TextureElevation("textureElevation"),
 
     /* Texture flags */
     UseTextureSkybox("useTextureSkybox"),

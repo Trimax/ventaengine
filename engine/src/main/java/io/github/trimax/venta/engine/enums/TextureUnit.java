@@ -16,7 +16,8 @@ public enum TextureUnit {
     AmbientOcclusion(GL_TEXTURE4, 4),
     Roughness(GL_TEXTURE5, 5),
     Metalness(GL_TEXTURE6, 6),
-    Debug(GL_TEXTURE7, 7);
+    Debug(GL_TEXTURE7, 7),
+    Elevation(GL_TEXTURE8, 8);
 
     private final int locationID;
     private final int id;
