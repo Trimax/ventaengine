@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.binders;
 
+import io.github.trimax.venta.engine.utils.LimitUtil;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import java.util.List;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -16,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class NoiseBinder extends AbstractBinder {
     public void bind(final ProgramEntityImplementation program, final List<Noise> noises) {
-        final var noisesCount = noises != null ? noises.size() : 0;
+        final var noisesCount = LimitUtil.fit(noises != null ? noises.size() : 0, DefinitionsCommon.MAX_NOISES);
 
         bind(program.getUniformID(ShaderUniform.NoiseCount), noisesCount);
         for (int noiseID = 0; noiseID < noisesCount; noiseID++)

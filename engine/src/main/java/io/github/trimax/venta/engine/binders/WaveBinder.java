@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.binders;
 
+import io.github.trimax.venta.engine.utils.LimitUtil;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import java.util.List;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -20,7 +22,7 @@ public final class WaveBinder extends AbstractBinder {
     }
 
     public void bind(final ProgramEntityImplementation program, final List<Wave> waves) {
-        final var wavesCount = waves != null ? waves.size() : 0;
+        final var wavesCount = LimitUtil.fit(waves != null ? waves.size() : 0, DefinitionsCommon.MAX_WAVES);
 
         bind(program.getUniformID(ShaderUniform.WaveCount), wavesCount);
         for (int waveID = 0; waveID < wavesCount; waveID++)

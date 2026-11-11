@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
+import io.github.trimax.venta.engine.utils.LimitUtil;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.TerrainSurfaceDTO;
@@ -43,6 +45,8 @@ public final class TerrainSurfaceRepositoryImplementation
 
         final var terrainSurfaceDTO = resourceService.getAsObject(String.format("/surfaces/terrain/%s", resourcePath), TerrainSurfaceDTO.class);
 
+        LimitUtil.checkCount(resourcePath, "materials", terrainSurfaceDTO.materials() == null ? 0 : terrainSurfaceDTO.materials().size(),
+                1, DefinitionsCommon.MAX_MATERIALS);
         final var materials = StreamEx.of(terrainSurfaceDTO.materials()).map(TerrainMaterialDTO::material).map(materialRegistry::get).toList();
         return abettor.createTerrainSurface(gridMeshRegistry.get(terrainSurfaceDTO.gridMesh()),
                 programRegistry.get(terrainSurfaceDTO.program()),

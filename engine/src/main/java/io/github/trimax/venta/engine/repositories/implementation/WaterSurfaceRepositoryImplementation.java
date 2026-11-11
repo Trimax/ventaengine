@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
+import io.github.trimax.venta.engine.utils.LimitUtil;
+import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
@@ -35,6 +37,8 @@ public final class WaterSurfaceRepositoryImplementation
         log.info("Loading water surface {}", resourcePath);
 
         final var waterSurfaceDTO = resourceService.getAsObject(String.format("/surfaces/water/%s", resourcePath), WaterSurfaceDTO.class);
+        LimitUtil.checkCount(resourcePath, "waves", sizeOf(waterSurfaceDTO.waves()), 0, DefinitionsCommon.MAX_WAVES);
+        LimitUtil.checkCount(resourcePath, "noises", sizeOf(waterSurfaceDTO.noises()), 0, DefinitionsCommon.MAX_NOISES);
 
         return abettor.createWaterSurface(gridMeshRegistry.get(waterSurfaceDTO.gridMesh()),
                 programRegistry.get(waterSurfaceDTO.program()),
@@ -42,6 +46,10 @@ public final class WaterSurfaceRepositoryImplementation
                 new WaterFoam(waterSurfaceDTO.foam()),
                 StreamEx.of(waterSurfaceDTO.noises()).map(Noise::new).toList(),
                 StreamEx.of(waterSurfaceDTO.waves()).map(Wave::new).toList());
+    }
+
+    private static int sizeOf(final java.util.Collection<?> items) {
+        return items == null ? 0 : items.size();
     }
 
     @Override

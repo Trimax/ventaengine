@@ -10,7 +10,7 @@ struct Fog {
 in vec3 vertexPosition;
 
 /* Skybox texture */
-uniform samplerCube skybox;
+uniform samplerCube textureSkybox;
 
 /* Fog */
 uniform Fog fog;
@@ -27,5 +27,5 @@ bool isSet(int value) {
 }
 
 void main() {
-    outputColor = isSet(useFog) ? vec4(fog.color, 1.0) : texture(skybox, vertexPosition);
+    outputColor = isSet(useFog) ? vec4(fog.color, 1.0) : texture(textureSkybox, vertexPosition);
 }
