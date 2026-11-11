@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.function.Function;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
 
@@ -100,7 +99,7 @@ public final class CubemapRegistryImplementation
             final var heightBuffer = stack.mallocInt(1);
             final var channelsBuffer = stack.mallocInt(1);
 
-            final var imageBuffer = BufferUtils.createByteBuffer(data.length);
+            final var imageBuffer = MemoryUtil.memAlloc(data.length);
             imageBuffer.put(data).flip();
 
             final ByteBuffer pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 0);
