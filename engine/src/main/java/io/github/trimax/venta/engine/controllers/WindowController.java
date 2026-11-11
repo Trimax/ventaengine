@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.controllers;
 
+import org.lwjgl.glfw.Callbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -100,6 +101,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
         log.info("Deinitializing window");
 
         glfwMakeContextCurrent(NULL);
+        Callbacks.glfwFreeCallbacks(state.getInternalID());
         memory.getWindows().delete(state.getInternalID());
     }
 }

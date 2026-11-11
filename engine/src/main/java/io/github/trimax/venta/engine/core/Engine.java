@@ -47,6 +47,10 @@ public final class Engine {
         } finally {
             controllerFactory.cleanup();
             glfwTerminate();
+
+            final var errorCallback = glfwSetErrorCallback(null);
+            if (errorCallback != null)
+                errorCallback.free();
         }
     }
 

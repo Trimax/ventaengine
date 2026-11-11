@@ -42,16 +42,22 @@ public final class SoundRegistryImplementation
     private SoundEntityImplementation load(final String name, final byte[] data) {
         try (final var info = STBVorbisInfo.malloc()) {
             final var buffer = readVorbis(data, info);
-            final var duration = getDuration(buffer, info);
+            try {
+                final var duration = getDuration(buffer, info);
+                final var id = memory.getAudioBuffers().create("Sound %s", name);
+                try {
+                    alBufferData(id, getFormat(info), buffer, DefinitionsSound.FREQUENCY);
+                } catch (final RuntimeException e) {
+                    memory.getAudioBuffers().delete(id);
+                    throw e;
+                }
 
-            final var id = memory.getAudioBuffers().create("Sound %s", name);
-
-            alBufferData(id, getFormat(info), buffer, DefinitionsSound.FREQUENCY);
-            MemoryUtil.memFree(buffer);
-
-            return abettor.createSound(id, duration);
+                return abettor.createSound(id, duration);
+            } finally {
+                MemoryUtil.memFree(buffer);
+            }
         } catch (final Exception e) {
-            throw new RuntimeException("Failed to load sound: " + e);
+            throw new RuntimeException("Failed to load sound " + name, e);
         }
     }
 

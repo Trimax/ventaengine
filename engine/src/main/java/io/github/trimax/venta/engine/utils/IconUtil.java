@@ -21,7 +21,7 @@ public final class IconUtil {
             final var height = stack.mallocInt(1);
             final var channels = stack.mallocInt(1);
 
-            final var icon = stbi_load_from_memory(imageBuffer, width, height, channels, 0);
+            final var icon = stbi_load_from_memory(imageBuffer, width, height, channels, 4); // GLFW expects RGBA
             if (icon == null)
                 throw new RuntimeException("Failed to load icon: " + stbi_failure_reason());
 

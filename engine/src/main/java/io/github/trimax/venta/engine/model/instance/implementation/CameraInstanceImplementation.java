@@ -15,7 +15,6 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
     private static final Vector3f worldUp = new Vector3f(0, 1, 0);
 
     private final Vector3f position = new Vector3f(0.f);
-    private final Vector3f rotation = new Vector3f(0.f); // pitch (X), yaw (Y), roll (Z)
 
     private final Vector3f front = new Vector3f(0, 0, -1);
     private final Vector3f up = new Vector3f(0, 1, 0);
@@ -47,6 +46,29 @@ public final class CameraInstanceImplementation extends AbstractInstanceImplemen
                 front.x(), front.y(), front.z(),
                 up.x(), up.y(), up.z()
         });
+    }
+
+    /** Pitch (X), yaw (Y) and roll (Z) in radians, computed from the orientation */
+    @Override
+    public Vector3f getRotation() {
+        return anglesOf(front, up, right);
+    }
+
+    /** Angles of an orientation: front (0, 0, -1), up (0, 1, 0) is zero rotation */
+    static Vector3f anglesOf(@NonNull final Vector3fc front, @NonNull final Vector3fc up, @NonNull final Vector3fc right) {
+        final var pitch = (float) Math.asin(Math.clamp(front.y(), -1.f, 1.f));
+
+        // Looking straight up or down: yaw is defined by the right vector, roll is not distinguishable from yaw
+        if (Math.abs(front.y()) > 0.999f)
+            return new Vector3f(pitch, (float) Math.atan2(-right.z(), right.x()), 0.f);
+
+        final var yaw = (float) Math.atan2(-front.x(), -front.z());
+
+        final var levelRight = new Vector3f(front).cross(worldUp).normalize();
+        final var levelUp = new Vector3f(levelRight).cross(front).normalize();
+        final var roll = (float) Math.atan2(up.dot(levelRight), up.dot(levelUp));
+
+        return new Vector3f(pitch, yaw, roll);
     }
 
     public Matrix4f getViewMatrix() {

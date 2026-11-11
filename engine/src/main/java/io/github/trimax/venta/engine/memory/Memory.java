@@ -29,8 +29,9 @@ public final class Memory {
         this.textureArrays.cleanup();
         this.textures.cleanup();
         this.buffers.cleanup();
-        this.audioBuffers.cleanup();
+        // OpenAL refuses to delete a buffer that is still attached to a source
         this.audioSources.cleanup();
+        this.audioBuffers.cleanup();
     }
 
     private static final class DefaultSupplier<T> implements Supplier<T> {

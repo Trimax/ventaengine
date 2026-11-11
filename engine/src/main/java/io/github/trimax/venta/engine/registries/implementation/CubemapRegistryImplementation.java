@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import java.util.EnumMap;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL12C.GL_TEXTURE_WRAP_R;
@@ -8,8 +9,6 @@ import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
 import java.nio.ByteBuffer;
-import java.util.Objects;
-import java.util.function.Function;
 
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
@@ -56,14 +55,20 @@ public final class CubemapRegistryImplementation
             final int textureID = memory.getTextures().create("3D texture %s", resourcePath);
             glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
-            final var buffers = StreamEx.of(CubemapFace.values())
-                    .mapToEntry(Function.identity(), face -> loadTextureSafe(face, dto.getTexturePath(face)))
-                    .filterValues(Objects::nonNull)
-                    .toMap();
-
-            if (buffers.size() != CubemapFace.values().length) {
+            final var buffers = new EnumMap<CubemapFace, ByteBuffer>(CubemapFace.class);
+            TextureFormat format = null;
+            try {
+                for (final var face : CubemapFace.values()) {
+                    final var loaded = loadFace(face, dto.getTexturePath(face));
+                    buffers.put(face, loaded.buffer());
+                    if (format == null)
+                        format = loaded.format();
+                }
+            } catch (final RuntimeException e) {
                 StreamEx.ofValues(buffers).forEach(MemoryUtil::memFree);
-                throw new CubemapBakeException("Cubemap can't be constructed. Some textures can't be loaded");
+                glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+                memory.getTextures().delete(textureID);
+                throw new CubemapBakeException(String.format("Cubemap %s can't be constructed: %s", resourcePath, e.getMessage()), e);
             }
 
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -74,24 +79,15 @@ public final class CubemapRegistryImplementation
 
             glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-            return abettor.createCubemap(buffers, programRegistry.get(dto.program()), TextureFormat.RGB,
+            return abettor.createCubemap(buffers, programRegistry.get(dto.program()), format,
                     geometryHelper.create(resourcePath, CubemapVertexLayout.class,
                             DefinitionsGeometry.Skybox.VERTICES, DefinitionsGeometry.Skybox.FACETS, null),
                     textureID);
         });
     }
 
-    private ByteBuffer loadTextureSafe(final CubemapFace face, final String path) {
-        try {
-            return loadTexture(face, path);
-        } catch (final Exception ignored) {
-            log.warn("Can't load texture {}", path);
-        }
-
-        return null;
-    }
-
-    private ByteBuffer loadTexture(final CubemapFace face, final String path) {
+    /** Loads a face into the bound cube map; the encoded image is kept, the decoded pixels are released */
+    private LoadedFace loadFace(final CubemapFace face, final String path) {
         final byte[] data = resourceService.getAsBytes("/textures/" + path);
 
         try (var stack = stackPush()) {
@@ -105,20 +101,25 @@ public final class CubemapRegistryImplementation
             final ByteBuffer pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 0);
             if (pixels == null) {
                 MemoryUtil.memFree(imageBuffer);
-                return null;
+                throw new CubemapBakeException(String.format("%s face %s can't be decoded: %s", face, path, STBImage.stbi_failure_reason()));
             }
 
-            final var width = widthBuffer.get(0);
-            final var height = heightBuffer.get(0);
-
             final var format = TextureFormat.of(channelsBuffer.get(0));
+            if (format == null) {
+                STBImage.stbi_image_free(pixels);
+                MemoryUtil.memFree(imageBuffer);
+                throw new CubemapBakeException(String.format("%s face %s has unsupported channels count %d", face, path, channelsBuffer.get(0)));
+            }
 
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face.getIndex(), 0, format.getInternal(), width, height, 0, format.getExternal(), GL_UNSIGNED_BYTE, pixels);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face.getIndex(), 0, format.getInternal(), widthBuffer.get(0), heightBuffer.get(0),
+                    0, format.getExternal(), GL_UNSIGNED_BYTE, pixels);
             STBImage.stbi_image_free(pixels);
 
-            return imageBuffer;
+            return new LoadedFace(imageBuffer, format);
         }
     }
+
+    private record LoadedFace(ByteBuffer buffer, TextureFormat format) {}
 
     @Override
     protected void unload(@NonNull final CubemapEntityImplementation entity) {
