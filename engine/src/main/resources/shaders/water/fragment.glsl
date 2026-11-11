@@ -60,6 +60,7 @@ struct Foam {
 /* Vertex shader output */
 in vec3 vertexNormal;
 in vec3 vertexPosition;
+in float vertexHeight;
 in vec2 vertexTextureCoordinates;
 in float vertexTimeElapsed;
 
@@ -107,7 +108,9 @@ bool isSet(int value) {
 }
 
 vec3 calculateColor() {
-    float heightFactor = clamp((vertexPosition.y + waveAmplitude) / (2.0 * waveAmplitude), 0.0, 1.0);
+    // Height of the wave at this point relative to the calm surface; a calm surface is in the middle
+    float amplitude = max(waveAmplitude, 0.0001);
+    float heightFactor = clamp((vertexHeight + amplitude) / (2.0 * amplitude), 0.0, 1.0);
     vec3 waterColor = mix(material.colorDepth, material.colorSurface, heightFactor);
 
     return mix(waterColor, material.colorPeak, smoothstep(foam.threshold, 1.0, heightFactor) * foam.intensity);
@@ -156,8 +159,8 @@ float getAttenuation(Attenuation attenuation, float distance) {
     return 1.0 / (attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance);
 }
 
-/* Computes light */
-vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
+/* Computes light: diffuse light takes the water color, specular highlights keep the light color */
+vec3 calculateLight(Light light, vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     if (light.enabled == 0)
         return vec3(0.0);
 
@@ -168,11 +171,11 @@ vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
     vec3 R = reflect(-lightDirection, normal);
     float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
 
-    return (diff + spec * 0.3) * light.color * light.intensity * attenuation;
+    return (diff * baseColor + spec * 0.3) * light.color * light.intensity * attenuation;
 }
 
 /* Computes directional light */
-vec3 computeDirectionalLight(vec3 normal, vec3 cameraDirection) {
+vec3 computeDirectionalLight(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     if (!isSet(useDirectionalLight))
         return vec3(0.0);
 
@@ -182,14 +185,14 @@ vec3 computeDirectionalLight(vec3 normal, vec3 cameraDirection) {
     vec3 R = reflect(-lightDirection, normal);
     float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
 
-    return (diff + spec * 0.3) * directionalLight.color * directionalLight.intensity;
+    return (diff * baseColor + spec * 0.3) * directionalLight.color * directionalLight.intensity;
 }
 
 vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
-    vec3 result = ambientLight * baseColor;
+    vec3 result = ambientLight * baseColor + computeDirectionalLight(baseColor, normal, cameraDirection);
 
     for (int i = 0; i < lightCount; i++)
-        result += calculateLight(lights[i], normal, cameraDirection);
+        result += calculateLight(lights[i], baseColor, normal, cameraDirection);
 
     return result;
 }
