@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter(onMethod_ = @__(@Override))
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum BillboardVertexLayout implements AbstractVertexLayout {
     Position(0, 2);

@@ -43,7 +43,7 @@ public final class SceneManagerImplementation
     private final LightManagerImplementation lightManager;
     private final Abettor abettor;
 
-    @Getter(onMethod_ = @__(@Override))
+    @Getter
     private SceneInstanceImplementation current;
 
     @Override

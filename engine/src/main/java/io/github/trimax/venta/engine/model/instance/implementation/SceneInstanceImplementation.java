@@ -31,10 +31,10 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
 
     private CubemapEntityImplementation skybox;
 
-    @Setter(onMethod_ = @__(@Override))
+    @Setter
     private Fog fog;
 
-    @Setter(onMethod_ = @__(@Override))
+    @Setter
     private DirectionalLight directionalLight;
 
     SceneInstanceImplementation(@NonNull final String name) {

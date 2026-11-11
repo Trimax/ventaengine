@@ -21,7 +21,7 @@ public final class CameraManagerImplementation
     private final GizmoManagerImplementation gizmoManager;
     private final Abettor abettor;
 
-    @Getter(onMethod_ = @__(@Override))
+    @Getter
     private CameraInstanceImplementation current;
 
     @Override
