@@ -1,28 +1,22 @@
 package io.github.trimax.venta.editor.listeners.main.archive;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.gson.Gson;
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.context.Context;
+
 import io.github.trimax.venta.editor.controllers.main.TreeController;
 import io.github.trimax.venta.editor.listeners.AbstractListener;
-import io.github.trimax.venta.editor.model.dto.ArchiveDTO;
 import io.github.trimax.venta.editor.model.event.archive.ArchiveSaveEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
-import io.github.trimax.venta.engine.enums.GroupType;
-import io.github.trimax.venta.engine.model.common.resource.Resource;
-import javafx.scene.control.TreeItem;
+import io.github.trimax.venta.editor.utils.ArchiveFileUtil;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import one.util.streamex.StreamEx;
 
-import java.io.FileWriter;
-import java.util.UUID;
-import java.util.function.Function;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -36,19 +30,10 @@ public final class ArchiveSaveListener implements AbstractListener<ArchiveSaveEv
     public void handle(@NonNull final ArchiveSaveEvent event) {
         context.setTree(context.getGroupSelected(), treeController.getRoot());
 
-        try (final var writer = new FileWriter(event.file())) {
-            final var groups = StreamEx.of(GroupType.values()).toMap(Function.identity(), this::transform);
-            new Gson().toJson(new ArchiveDTO(UUID.randomUUID().toString(), groups), writer);
-        }
+        // Serialized before the file is opened, so a failure doesn't truncate the previous save
+        final var json = ArchiveFileUtil.toJson(context.getTrees());
+        Files.writeString(event.file().toPath(), json, StandardCharsets.UTF_8);
 
         EventUtil.post(new StatusSetEvent("Archive saved to %s", event.file().getAbsoluteFile()));
-    }
-
-    private Node<Resource> transform(@NonNull final GroupType type) {
-        return transform(context.getTree(type));
-    }
-
-    private Node<Resource> transform(final TreeItem<Resource> node) {
-        return new Node<>(node.getValue().name(), node.getValue(), StreamEx.of(node.getChildren()).map(this::transform).toList());
     }
 }
