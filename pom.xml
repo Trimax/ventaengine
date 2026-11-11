@@ -51,6 +51,19 @@
         <module>examples</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- Versions of all LWJGL modules and their natives -->
+            <dependency>
+                <groupId>org.lwjgl</groupId>
+                <artifactId>lwjgl-bom</artifactId>
+                <version>${lwjgl.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!-- Lombok -->
         <dependency>

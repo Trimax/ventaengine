@@ -57,14 +57,29 @@ The published `engine` artifact doesn't depend on LWJGL native libraries, so an 
 it runs on. The classifier is one of `natives-linux`, `natives-linux-arm64`, `natives-windows`, `natives-windows-arm64`,
 `natives-macos`, `natives-macos-arm64`, and it is needed for `lwjgl`, `lwjgl-opengl`, `lwjgl-glfw`, `lwjgl-stb` and `lwjgl-openal`:
 
+Importing `lwjgl-bom` of the same LWJGL version as the engine keeps the versions of all LWJGL artifacts aligned:
+
 ```xml
-<dependency>
-    <groupId>org.lwjgl</groupId>
-    <artifactId>lwjgl</artifactId>
-    <version>${lwjgl.version}</version>
-    <classifier>natives-macos-arm64</classifier>
-</dependency>
-<!-- the same for lwjgl-opengl, lwjgl-glfw, lwjgl-stb and lwjgl-openal -->
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-bom</artifactId>
+            <version>3.4.3</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+    <dependency>
+        <groupId>org.lwjgl</groupId>
+        <artifactId>lwjgl</artifactId>
+        <classifier>natives-macos-arm64</classifier>
+    </dependency>
+    <!-- the same for lwjgl-opengl, lwjgl-glfw, lwjgl-stb and lwjgl-openal -->
+</dependencies>
 ```
 
 See `examples/pom.xml` for a setup that picks the classifier of the current platform via Maven profiles.
