@@ -24,6 +24,11 @@ public final class MixerController {
 
     @FXML
     public void onTextureSave(final ActionEvent ignored) {
+        if (mixerContext.getMixedImage() == null) {
+            DialogUtil.showInfo("Select a texture for every channel before saving");
+            return;
+        }
+
         DialogUtil.showFileSave("Please choose a file to save texture",
                 file -> ImageUtil.write(file, mixerContext.getMixedImage()),
                 Map.of("PNG files (*.png)", List.of("*.png")));

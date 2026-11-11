@@ -5,6 +5,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.controllers.main.TreeController;
 import io.github.trimax.venta.editor.listeners.AbstractListener;
+import io.github.trimax.venta.editor.utils.TreeUtil;
 import io.github.trimax.venta.editor.model.event.resource.ResourceAddEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import io.github.trimax.venta.engine.model.common.resource.Resource;
@@ -22,6 +23,10 @@ public final class ResourceAddListener implements AbstractListener<ResourceAddEv
     @Subscribe
     public void handle(@NonNull final ResourceAddEvent event) {
         final var node = treeController.getSelectedNode();
+        if (TreeUtil.isItemExist(node, event.file().getName())) {
+            EventUtil.post(new StatusSetEvent("Resource `%s` already exists in this folder", event.file().getName()));
+            return;
+        }
 
         final var resource = new TreeItem<>(Resource.asResource(event.file().getName(), event.file().getAbsolutePath()));
         node.getChildren().add(resource);

@@ -12,6 +12,7 @@ public enum GroupType {
     Camera("Cameras", "cameras", "/icons/group/camera.png"),
     CubeMap("Cube maps", "cubemaps", "/icons/group/cube.png"),
     Emitter("Emitters", "emitters", "/icons/group/emitter.png"),
+    Font("Fonts", "fonts", "/icons/group/shader.png"),
     GridMesh("Grid meshes", "gridmeshes", "/icons/group/grid.png"),
     Light("Lights", "lights", "/icons/group/light.png"),
     Material("Materials", "materials", "/icons/group/material.png"),
@@ -20,8 +21,12 @@ public enum GroupType {
     Program("Programs", "programs", "/icons/group/program.png"),
     Scene("Scenes", "scenes", "/icons/group/scene.png"),
     Shader("Shaders", "shaders", "/icons/group/shader.png"),
+    Sound("Sounds", "sounds", "/icons/group/audio.png"),
     Sprite("Sprites", "sprites", "/icons/group/sprite.png"),
-    Texture("Textures", "textures", "/icons/group/texture.png");
+    TerrainSurface("Terrain surfaces", "surfaces/terrain", "/icons/group/grid.png"),
+    Texture("Textures", "textures", "/icons/group/texture.png"),
+    TextureArray("Texture arrays", "texturearrays", "/icons/group/texture.png"),
+    WaterSurface("Water surfaces", "surfaces/water", "/icons/group/grid.png");
 
     private final String displayName;
 

@@ -125,6 +125,19 @@
         </graphic>
     </ToggleButton>
 
+    <ToggleButton toggleGroup="$groupSelector" userData="Font">
+        <tooltip>
+            <Tooltip text="Open font section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/shader.png" />
+            </ImageView>
+        </graphic>
+    </ToggleButton>
+
     <ToggleButton toggleGroup="$groupSelector" userData="Light">
         <tooltip>
             <Tooltip text="Open light section" />
@@ -216,6 +229,19 @@
         </graphic>
     </ToggleButton>
 
+    <ToggleButton toggleGroup="$groupSelector" userData="Sound">
+        <tooltip>
+            <Tooltip text="Open sound section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/audio.png" />
+            </ImageView>
+        </graphic>
+    </ToggleButton>
+
     <ToggleButton toggleGroup="$groupSelector" userData="Sprite">
         <tooltip>
             <Tooltip text="Open sprite section" />
@@ -225,6 +251,19 @@
                 <fitWidth>24</fitWidth>
                 <fitHeight>24</fitHeight>
                 <Image url="@/icons/group/sprite.png" />
+            </ImageView>
+        </graphic>
+    </ToggleButton>
+
+    <ToggleButton toggleGroup="$groupSelector" userData="TerrainSurface">
+        <tooltip>
+            <Tooltip text="Open terrain surface section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/grid.png" />
             </ImageView>
         </graphic>
     </ToggleButton>
@@ -251,6 +290,32 @@
                 <fitWidth>24</fitWidth>
                 <fitHeight>24</fitHeight>
                 <Image url="@/icons/group/texture.png" />
+            </ImageView>
+        </graphic>
+    </ToggleButton>
+
+    <ToggleButton toggleGroup="$groupSelector" userData="TextureArray">
+        <tooltip>
+            <Tooltip text="Open texture array section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/texture.png" />
+            </ImageView>
+        </graphic>
+    </ToggleButton>
+
+    <ToggleButton toggleGroup="$groupSelector" userData="WaterSurface">
+        <tooltip>
+            <Tooltip text="Open water surface section" />
+        </tooltip>
+        <graphic>
+            <ImageView>
+                <fitWidth>24</fitWidth>
+                <fitHeight>24</fitHeight>
+                <Image url="@/icons/group/grid.png" />
             </ImageView>
         </graphic>
     </ToggleButton>

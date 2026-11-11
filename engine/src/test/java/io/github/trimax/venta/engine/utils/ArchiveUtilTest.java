@@ -20,9 +20,14 @@ final class ArchiveUtilTest {
         assertEquals("soundsources", GroupType.AudioSource.getArchiveFolder(), "Sound sources are loaded from /soundsources");
         assertEquals("cubemaps", GroupType.CubeMap.getArchiveFolder(), "Cube maps are loaded from /cubemaps");
         assertEquals("gridmeshes", GroupType.GridMesh.getArchiveFolder(), "Grid meshes are loaded from /gridmeshes");
+        assertEquals("sounds", GroupType.Sound.getArchiveFolder(), "Sounds are loaded from /sounds");
+        assertEquals("fonts", GroupType.Font.getArchiveFolder(), "Fonts are loaded from /fonts");
+        assertEquals("surfaces/terrain", GroupType.TerrainSurface.getArchiveFolder(), "Terrain surfaces are loaded from /surfaces/terrain");
+        assertEquals("surfaces/water", GroupType.WaterSurface.getArchiveFolder(), "Water surfaces are loaded from /surfaces/water");
+        assertEquals("texturearrays", GroupType.TextureArray.getArchiveFolder(), "Texture arrays are loaded from /texturearrays");
 
         for (final var type : GroupType.values())
-            assertTrue(type.getArchiveFolder().matches("[a-z]+"), type + " archive folder must be a lowercase word");
+            assertTrue(type.getArchiveFolder().matches("[a-z]+(/[a-z]+)?"), type + " archive folder must be a lowercase path");
     }
 
     @Test

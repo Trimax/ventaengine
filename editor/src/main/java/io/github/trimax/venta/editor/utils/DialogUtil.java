@@ -42,6 +42,14 @@ public final class DialogUtil {
         });
     }
 
+    public void showError(@NonNull final String message) {
+        final var dialog = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+        dialog.initOwner(VentaEditor.getStage());
+        dialog.setHeaderText(null);
+
+        dialog.showAndWait();
+    }
+
     public void showInfo(@NonNull final String message) {
         final var dialog = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
         dialog.initOwner(VentaEditor.getStage());
