@@ -107,7 +107,7 @@ float getAttenuation(Attenuation attenuation, float distance) {
 /* Computes light */
 vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
     if (light.enabled == 0)
-        vec3(0.0);
+        return vec3(0.0);
 
     vec3 lightDirection = normalize(light.position - vertexPosition);
     float attenuation = getAttenuation(light.attenuation, length(light.position - vertexPosition));
