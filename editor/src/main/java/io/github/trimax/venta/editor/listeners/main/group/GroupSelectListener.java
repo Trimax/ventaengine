@@ -6,6 +6,7 @@ import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.editor.context.Context;
 import io.github.trimax.venta.editor.controllers.main.TreeController;
 import io.github.trimax.venta.editor.listeners.AbstractListener;
+import io.github.trimax.venta.editor.utils.TreeUtil;
 import io.github.trimax.venta.editor.model.event.group.GroupSelectEvent;
 import io.github.trimax.venta.editor.model.event.status.StatusSetEvent;
 import lombok.AccessLevel;
@@ -23,7 +24,7 @@ public final class GroupSelectListener implements AbstractListener<GroupSelectEv
     public void handle(@NonNull final GroupSelectEvent event) {
         context.setTree(context.getGroupSelected(), treeController.getRoot());
 
-        treeController.getTree().setRoot(context.getTree(event.type()));
+        TreeUtil.setRoot(treeController.getTree(), context.getTree(event.type()));
         context.setGroupSelected(event.type());
 
         EventUtil.post(new StatusSetEvent("Group `%s` selected", event.type().name()));

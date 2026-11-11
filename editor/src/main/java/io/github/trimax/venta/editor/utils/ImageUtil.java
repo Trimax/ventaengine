@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.lwjgl.stb.STBIWriteCallback;
 import org.lwjgl.stb.STBImageWrite;
@@ -66,24 +67,33 @@ public final class ImageUtil {
             }
             buffer.flip();
 
+            // An exception must not leave the native callback, so the first failure is kept and rethrown afterwards
+            final var failure = new AtomicReference<IOException>();
             try (final var callback = STBIWriteCallback.create((_, dataPointer, size) -> {
-                final var chunkBuffer = MemoryUtil.memByteBuffer(dataPointer, size);
+                if (failure.get() != null)
+                    return;
+
                 final var chunk = new byte[size];
-                chunkBuffer.get(chunk);
+                MemoryUtil.memByteBuffer(dataPointer, size).get(chunk);
                 try {
                     out.write(chunk);
                 } catch (final IOException e) {
-                    throw new RuntimeException("Failed to write image: " + file.getAbsoluteFile());
+                    failure.set(e);
                 }
             })) {
-                if (!STBImageWrite.stbi_write_png_to_func(
+                final var written = STBImageWrite.stbi_write_png_to_func(
                         callback,
                         0,
                         image.getWidth(),
                         image.getHeight(),
                         4,
                         buffer,
-                        image.getWidth() * 4))
+                        image.getWidth() * 4);
+
+                if (failure.get() != null)
+                    throw failure.get();
+
+                if (!written)
                     throw new RuntimeException("Failed to write image: " + file.getAbsoluteFile());
 
             } finally {

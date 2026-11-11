@@ -26,8 +26,8 @@ public final class ArchiveNewListener implements AbstractListener<ArchiveNewEven
     @Subscribe
     public void handle(@NonNull final ArchiveNewEvent event) {
         toolbarController.selectGroup(GroupType.AudioSource);
-        TreeUtil.initialize(treeController.getTree());
         context.reset();
+        TreeUtil.setRoot(treeController.getTree(), context.getTree(GroupType.AudioSource));
 
         EventUtil.post(new StatusSetEvent("New archive created"));
     }

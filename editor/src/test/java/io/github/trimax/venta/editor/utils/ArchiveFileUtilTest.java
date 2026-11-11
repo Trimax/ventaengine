@@ -41,7 +41,7 @@ final class ArchiveFileUtilTest {
     void testProjectJsonRoundTrip(@TempDir final Path directory) throws IOException {
         final var groups = createGroups(directory);
 
-        final var loaded = ArchiveFileUtil.fromJson(ArchiveFileUtil.toJson(groups));
+        final var loaded = ArchiveFileUtil.fromJson(ArchiveFileUtil.toJson(groups, directory), directory);
 
         assertEquals(groups.keySet(), loaded.keySet(), "All groups must be saved and loaded");
         for (final var type : groups.keySet())
@@ -53,10 +53,52 @@ final class ArchiveFileUtilTest {
         final var json = "{\"id\": \"test\", \"groups\": {\"Texture\": {\"name\": \"Textures\", "
                 + "\"value\": {\"type\": \"Group\", \"name\": \"Textures\", \"reference\": \"Texture\"}, \"children\": []}}}";
 
-        final var loaded = ArchiveFileUtil.fromJson(json);
+        final var loaded = ArchiveFileUtil.fromJson(json, Path.of("."));
 
         assertEquals(1, loaded.size(), "Only the group present in the file must be loaded");
         assertTrue(loaded.containsKey(GroupType.Texture), "Texture group must be loaded");
+    }
+
+    @Test
+    void testProjectJsonStoresRelativePaths(@TempDir final Path directory) throws IOException {
+        final var groups = createGroups(directory);
+
+        final var json = ArchiveFileUtil.toJson(groups, directory);
+
+        assertFalse(json.contains(directory.toAbsolutePath().toString()), "Project directory must not be stored in the JSON");
+        assertTrue(json.contains("Grass.png"), "File references must be stored");
+    }
+
+    @Test
+    void testMovedProjectResolvesFilesInTheNewLocation(@TempDir final Path directory) throws IOException {
+        final var original = Files.createDirectories(directory.resolve("original"));
+        final var json = ArchiveFileUtil.toJson(createGroups(original), original);
+
+        final var moved = directory.resolve("moved");
+        Files.move(original, moved);
+        final var loaded = ArchiveFileUtil.fromJson(json, moved);
+
+        assertTrue(ArchiveFileUtil.findMissingFiles(loaded).isEmpty(), "All files must be found in the moved project");
+        final var grass = loaded.get(GroupType.Texture).getChildren().getFirst().getValue();
+        assertTrue(Path.of(grass.reference()).startsWith(moved), "Reference must point into the moved project, got " + grass.reference());
+    }
+
+    @Test
+    void testGroupReferencesAreNotChanged(@TempDir final Path directory) throws IOException {
+        final var loaded = ArchiveFileUtil.fromJson(ArchiveFileUtil.toJson(createGroups(directory), directory), directory);
+
+        assertEquals(GroupType.Texture.name(), loaded.get(GroupType.Texture).getValue().reference(), "Group reference is the group type, not a path");
+    }
+
+    @Test
+    void testMissingFilesAreReported(@TempDir final Path directory) throws IOException {
+        final var groups = createGroups(directory);
+        groups.get(GroupType.Texture).getChildren().add(new TreeItem<>(Resource.asResource("Lost.png", directory.resolve("lost.png").toString())));
+
+        final var missing = ArchiveFileUtil.findMissingFiles(groups);
+
+        assertEquals(1, missing.size(), "Only the missing file must be reported");
+        assertEquals("Lost.png", missing.getFirst().name(), "Missing file");
     }
 
     private static Map<GroupType, TreeItem<Resource>> createGroups(final Path directory) throws IOException {
