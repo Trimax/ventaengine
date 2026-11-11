@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import io.github.trimax.venta.engine.utils.LimitUtil;
 import java.util.Optional;
 
 import org.joml.Vector4f;
@@ -35,6 +36,7 @@ public final class SpriteRegistryImplementation
         log.info("Loading sprite {}", resourcePath);
 
         final var spriteDTO = resourceService.getAsObject(String.format("/sprites/%s", resourcePath), SpriteDTO.class);
+        LimitUtil.checkCount(resourcePath, "frames", spriteDTO.frames() == null ? 0 : spriteDTO.frames().size(), 1, DefinitionsCommon.MAX_FRAMES);
         final var texture = textureRegistry.get(spriteDTO.texture());
 
         final var framesBuffer = MemoryUtil.memAllocFloat(spriteDTO.frames().size() * 4);

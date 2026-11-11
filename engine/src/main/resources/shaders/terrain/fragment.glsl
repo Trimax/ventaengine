@@ -53,7 +53,6 @@ in float vertexTimeElapsed;
 /* Textures */
 uniform samplerCube textureSkybox;
 uniform sampler2DArray textureDiffuse;
-uniform sampler2DArray textureHeight;
 uniform sampler2DArray textureNormal;
 uniform sampler2DArray textureRoughness;
 uniform sampler2DArray textureMetalness;

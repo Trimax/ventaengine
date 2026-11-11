@@ -5,21 +5,11 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 
 ## Rendering and shaders
 
-- [ ] **No upper bound for waves, noises and terrain materials.** `binders/WaveBinder.java:25`, `binders/NoiseBinder.java:21`,
-  `binders/MaterialBinder.java:38` vs shader arrays of 16 / 16 / 8. More elements index uniform arrays out of bounds.
-  A terrain with 0 materials reads `elevations[-1]` (`terrain/fragment.glsl:165`). Validate counts on load.
-- [ ] **`textureHeight` has different types in terrain stages.** `terrain/vertex.glsl:15` (`sampler2D`) vs
-  `terrain/fragment.glsl:56` (`sampler2DArray`), both on texture unit 2. This is a link error by the spec and works only
-  because the fragment uniform is optimized out. The terrain fragment shader also ignores lights, normal/roughness arrays
-  and fog, so what is bound for them is unused.
-- [ ] **Billboard frames are not capped.** `renderers/instance/BillboardInstanceRenderer.java:54` vs `shaders/billboard/vertex.glsl`
-  `frames[64]`; sprites with more than 64 frames read out of bounds. `sprite.isLooping()` is ignored.
-- [ ] **`DebugRenderer` throws NPE without a current scene.** `renderers/common/DebugRenderer.java:43`.
+- [ ] **Terrain shading is incomplete.** `terrain/fragment.glsl` ignores lights, the normal and roughness texture arrays
+  and fog, so what `TerrainSurfaceInstanceRenderer` binds for them is unused.
 - [ ] **View direction is interpolated per vertex.** `shaders/default/vertex.glsl:35-36`: compute it in the fragment shader;
   normalize the interpolated TBN normal in `getNormal` (`default/fragment.glsl:163`).
 - [ ] **Division by zero in shaders.** Terrain `factor == 0` (`terrain/fragment.glsl:178`), all-zero attenuation in `getAttenuation`.
-- [ ] **Sky sampler name mismatch.** `shaders/sky/fragment.glsl:13` declares `skybox`, the binder sets `textureSkybox`
-  (`binders/TextureBinder.java:38`). Works only because unit 0 is the default.
 - [ ] Minor: `useTextureDebug` is always 1 (`ObjectInstanceRenderer:52`, `TerrainSurfaceInstanceRenderer:48`);
   `shaders/debug/vertex.glsl:11` ignores `matrixModel`; light uniforms are re-uploaded for every object every frame.
 

@@ -39,6 +39,8 @@ public final class DebugRenderer extends AbstractRenderer<SceneInstanceImplement
     @Override
     public void render(final SceneInstanceImplementation scene) {
         renderOrigin();
+        if (scene == null)
+            return;
 
         StreamEx.of(scene.getLights()).forEach(this::render);
         StreamEx.of(scene.getObjects()).forEach(this::render);

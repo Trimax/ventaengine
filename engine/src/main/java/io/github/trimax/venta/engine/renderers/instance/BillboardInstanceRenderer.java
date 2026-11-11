@@ -51,7 +51,9 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
     private int getFrameIndex(final SpriteEntityImplementation sprite) {
         final var time = getContext().getParent().getTime().getTimeElapsed();
 
-        return (int) ((time / sprite.getDuration()) % sprite.getFrameCount());
+        final var frame = (int) (time / sprite.getDuration());
+
+        return sprite.isLooping() ? frame % sprite.getFrameCount() : Math.min(frame, sprite.getFrameCount() - 1);
     }
 
     @Getter(AccessLevel.PACKAGE)
