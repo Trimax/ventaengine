@@ -14,7 +14,7 @@ jobs:
       TAG: ${{ github.event.release.tag_name }}
     steps:
       # Publish exactly the commit the release was created from, even if main has moved since then
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.release.tag_name }}
           fetch-depth: 0
