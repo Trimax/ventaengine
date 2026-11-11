@@ -5,10 +5,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -35,17 +36,18 @@ public final class ObjMeshParser implements AbstractParser<MeshDTO> {
     @SneakyThrows
     public MeshDTO parse(@NonNull final String resourcePath) {
         try (final var reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(resourceService.getAsBytes(resourcePath))))) {
-            return parse(reader);
+            return ObjMeshParser.parse(reader);
         }
     }
 
-    private MeshDTO parse(final BufferedReader reader) throws IOException {
+    /** Parses Wavefront OBJ text: positions, texture coordinates, normals and polygonal faces */
+    static MeshDTO parse(final BufferedReader reader) throws IOException {
         final List<Vector3f> positions = new ArrayList<>();
         final List<Vector3f> normals = new ArrayList<>();
         final List<Vector2f> textureCoordinates = new ArrayList<>();
         final List<MeshDTO.Vertex> vertices = new ArrayList<>();
         final List<MeshDTO.Facet> facets = new ArrayList<>();
-        final List<MeshDTO.Edge> edges = new ArrayList<>();
+        final Set<MeshDTO.Edge> edges = new LinkedHashSet<>();
 
         final Map<String, Integer> vertexCache = new HashMap<>();
 
@@ -72,68 +74,67 @@ public final class ObjMeshParser implements AbstractParser<MeshDTO> {
                         Float.parseFloat(tokens[3])
                 ));
                 case "f" -> {
-                    if (tokens.length == 4) {
-                        // The face is a triangle
-                        addFace(tokens[1], tokens[2], tokens[3],
-                                positions, textureCoordinates, normals,
-                                vertices, facets, edges, vertexCache);
-                    } else if (tokens.length == 5) {
-                        // The face is a square
-                        addFace(tokens[1], tokens[2], tokens[3],
-                                positions, textureCoordinates, normals,
-                                vertices, facets, edges, vertexCache);
-                        addFace(tokens[1], tokens[3], tokens[4],
-                                positions, textureCoordinates, normals,
-                                vertices, facets, edges, vertexCache);
-                    } else
-                        log.warn("Unsupported facet (ignored): {}", line);
+                    if (tokens.length < 4) {
+                        log.warn("Face with less than 3 vertices (ignored): {}", line);
+                        continue;
+                    }
+
+                    final var polygon = new int[tokens.length - 1];
+                    for (int i = 1; i < tokens.length; i++)
+                        polygon[i - 1] = addVertex(tokens[i], positions, textureCoordinates, normals, vertices, vertexCache);
+
+                    addPolygon(polygon, facets, edges);
                 }
-                default -> log.warn("Unsupported type: {}", line);
+                default -> log.debug("Unsupported OBJ statement (ignored): {}", line);
             }
         }
 
-        return new MeshDTO(vertices, facets, edges);
+        return new MeshDTO(vertices, facets, List.copyOf(edges));
     }
 
-    private static void addFace(final String a, final String b, final String c,
-                                final List<Vector3f> positions,
-                                final List<Vector2f> textureCoordinates,
-                                final List<Vector3f> normals,
-                                final List<MeshDTO.Vertex> vertices,
-                                final List<MeshDTO.Facet> facets,
-                                final List<MeshDTO.Edge> edges,
-                                final Map<String, Integer> vertexCache) {
-        final String[] arr = {a, b, c};
-        final var faceIndices = new int[3];
+    /** Triangulates a convex polygon as a fan; edges are the outline of the polygon */
+    private static void addPolygon(final int[] polygon, final List<MeshDTO.Facet> facets, final Set<MeshDTO.Edge> edges) {
+        for (int i = 1; i < polygon.length - 1; i++)
+            facets.add(new MeshDTO.Facet(polygon[0], polygon[i], polygon[i + 1]));
 
-        for (int i = 0; i < 3; i++) {
-            final var parts = arr[i].split("/");
-            final var vIdx = Integer.parseInt(parts[0]) - 1;
-
-            final var pos = positions.get(vIdx);
-
-            final var uv = (parts.length > 1 && !parts[1].isEmpty())
-                    ? textureCoordinates.get(Integer.parseInt(parts[1]) - 1)
-                    : null;
-
-            final var normal = (parts.length > 2 && !parts[2].isEmpty())
-                    ? normals.get(Integer.parseInt(parts[2]) - 1)
-                    : null;
-
-            final var key = Arrays.toString(parts);
-            final var vertexIndex = vertexCache.computeIfAbsent(key, _ -> {
-                vertices.add(new MeshDTO.Vertex(pos, normal, uv, new ColorDTO(1, 1, 1, 1)));
-                return vertices.size() - 1;
-            });
-
-            faceIndices[i] = vertexIndex;
+        for (int i = 0; i < polygon.length; i++) {
+            final var from = polygon[i];
+            final var to = polygon[(i + 1) % polygon.length];
+            edges.add(new MeshDTO.Edge(Math.min(from, to), Math.max(from, to)));
         }
+    }
 
-        facets.add(new MeshDTO.Facet(faceIndices[0], faceIndices[1], faceIndices[2]));
+    /** Resolves a "v/vt/vn" reference to a vertex index, creating the vertex on first use */
+    private static int addVertex(final String reference,
+                                 final List<Vector3f> positions,
+                                 final List<Vector2f> textureCoordinates,
+                                 final List<Vector3f> normals,
+                                 final List<MeshDTO.Vertex> vertices,
+                                 final Map<String, Integer> vertexCache) {
+        final var parts = reference.split("/");
+        final var positionIndex = resolveIndex(parts[0], positions.size());
+        final var textureIndex = parts.length > 1 && !parts[1].isEmpty() ? resolveIndex(parts[1], textureCoordinates.size()) : -1;
+        final var normalIndex = parts.length > 2 && !parts[2].isEmpty() ? resolveIndex(parts[2], normals.size()) : -1;
 
-        edges.add(new MeshDTO.Edge(faceIndices[0], faceIndices[1]));
-        edges.add(new MeshDTO.Edge(faceIndices[1], faceIndices[2]));
-        edges.add(new MeshDTO.Edge(faceIndices[2], faceIndices[0]));
+        // Absolute indices, so relative and absolute references to the same data share a vertex
+        final var key = positionIndex + "/" + textureIndex + "/" + normalIndex;
+        return vertexCache.computeIfAbsent(key, _ -> {
+            vertices.add(new MeshDTO.Vertex(positions.get(positionIndex),
+                    normalIndex >= 0 ? normals.get(normalIndex) : null,
+                    textureIndex >= 0 ? textureCoordinates.get(textureIndex) : null,
+                    new ColorDTO(1, 1, 1, 1)));
+            return vertices.size() - 1;
+        });
+    }
+
+    /** OBJ indices start at 1; negative indices count back from the last element defined so far */
+    private static int resolveIndex(final String value, final int count) {
+        final var index = Integer.parseInt(value);
+        final var resolved = index > 0 ? index - 1 : count + index;
+        if (index == 0 || resolved < 0 || resolved >= count)
+            throw new IllegalArgumentException(String.format("OBJ index %d is out of range [1, %d]", index, count));
+
+        return resolved;
     }
 
     @Override

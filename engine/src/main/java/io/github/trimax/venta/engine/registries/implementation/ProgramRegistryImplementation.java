@@ -36,7 +36,7 @@ public final class ProgramRegistryImplementation
 
         final var programDTO = resourceService.getAsObject(String.format("/programs/%s", resourcePath), ProgramDTO.class);
 
-        final var id = memory.getPrograms().create(resourcePath);
+        final var id = memory.getPrograms().create("Program %s", resourcePath);
         glAttachShader(id, shaderRegistry.get(programDTO.shaderVertex(), ShaderType.Vertex).getInternalID());
         glAttachShader(id, shaderRegistry.get(programDTO.shaderFragment(), ShaderType.Fragment).getInternalID());
 
