@@ -8,6 +8,6 @@ uniform mat4 matrixModel;
 out vec3 vertexColor;
 
 void main() {
-    gl_Position = matrixViewProjection * vec4(position, 1.0);
+    gl_Position = matrixViewProjection * matrixModel * vec4(position, 1.0);
     vertexColor = position;
 }

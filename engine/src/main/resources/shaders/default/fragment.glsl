@@ -58,8 +58,6 @@ in vec4 vertexColor;
 in vec3 vertexPosition;
 in vec3 vertexCameraPosition;
 in vec2 vertexTextureCoordinates;
-in vec3 vertexViewDirectionLocalSpace;
-in vec3 vertexViewDirectionWorldSpace;
 
 in mat3 vertexTBN;
 
@@ -71,10 +69,8 @@ uniform sampler2D textureNormal;
 uniform sampler2D textureRoughness;
 uniform sampler2D textureMetalness;
 uniform sampler2D textureAmbientOcclusion;
-uniform sampler2D textureDebug;
 
 /* Feature flags */
-uniform int useTextureDebug;
 uniform int useTextureSkybox;
 uniform int useTextureDiffuse;
 uniform int useTextureHeight;
@@ -111,6 +107,20 @@ out vec4 outputColor;
 bool isSet(int value) {
     return value != 0;
 }
+
+/***
+ * View direction
+ ***/
+
+/* Computed per fragment: interpolating a normalized per-vertex direction is wrong on large triangles */
+vec3 getViewDirectionWorldSpace() {
+    return normalize(vertexCameraPosition - vertexPosition);
+}
+
+vec3 getViewDirectionLocalSpace() {
+    return normalize(transpose(vertexTBN) * getViewDirectionWorldSpace());
+}
+
 
 /* Gets base color from the texture */
 vec4 getDiffuseColor(vec2 textureCoordinates) {
@@ -154,13 +164,13 @@ vec2 parallaxMapping(vec2 textureCoordinates) {
     if (!isSet(useTextureHeight))
         return textureCoordinates;
 
-    return textureCoordinates + vertexViewDirectionLocalSpace.xy * (getHeight(textureCoordinates) * 0.01);
+    return textureCoordinates + getViewDirectionLocalSpace().xy * (getHeight(textureCoordinates) * 0.01);
 }
 
 /* Gets normal (either face or from normal map) */
 vec3 getNormal(vec2 textureCoordinates) {
     if (!isSet(useTextureNormal))
-        return vertexTBN[2];
+        return normalize(vertexTBN[2]);
 
     /* Normal mapping */
     return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0));
@@ -183,7 +193,8 @@ vec4 getMaterialColor() {
  ***/
 
 float getAttenuation(Attenuation attenuation, float distance) {
-    return 1.0 / (attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance);
+    // An all-zero attenuation would divide by zero
+    return 1.0 / max(attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance, 0.0001);
 }
 
 /* Calculates diffuse light component */
@@ -195,7 +206,7 @@ vec3 calculateLightDiffuse(vec3 lightColor, vec3 normal, vec3 lightDirection) {
 vec3 calculateLightSpecular(vec4 color, vec3 lightColor, vec3 normal, vec3 lightDirection, vec3 viewDirection, vec2 textureCoordinates) {
     vec3 F0 = mix(vec3(METALNESS_MINIMAL), color.rgb, getMetalness(textureCoordinates));
     float shininess = mix(1.0, 256.0, 1.0 - getRoughness(textureCoordinates));
-    float factorSpecular = pow(max(dot(vertexViewDirectionWorldSpace, reflect(-lightDirection, normal)), 0.0), shininess);
+    float factorSpecular = pow(max(dot(getViewDirectionWorldSpace(), reflect(-lightDirection, normal)), 0.0), shininess);
 
     return F0 * factorSpecular * lightColor;
 }
@@ -207,7 +218,7 @@ vec3 calculateLight(vec4 color, Light light, vec3 normal, vec3 fragmentPosition,
 
     vec3 lightDirection = normalize(light.position - fragmentPosition);
     vec3 colorDiffuse = calculateLightDiffuse(light.color, normal, lightDirection);
-    vec3 colorSpecular = calculateLightSpecular(color, light.color, normal, lightDirection, vertexViewDirectionWorldSpace, textureCoordinates);
+    vec3 colorSpecular = calculateLightSpecular(color, light.color, normal, lightDirection, getViewDirectionWorldSpace(), textureCoordinates);
 
     float attenuation = getAttenuation(light.attenuation, length(light.position - fragmentPosition));
 
@@ -221,7 +232,7 @@ vec3 calculateDirectionalLight(vec4 color, vec3 normal, vec2 textureCoordinates)
 
     vec3 lightDirection = normalize(-directionalLight.direction);
     vec3 colorDiffuse = calculateLightDiffuse(directionalLight.color, normal, lightDirection);
-    vec3 colorSpecular = calculateLightSpecular(color, directionalLight.color, normal, lightDirection, vertexViewDirectionWorldSpace, textureCoordinates);
+    vec3 colorSpecular = calculateLightSpecular(color, directionalLight.color, normal, lightDirection, getViewDirectionWorldSpace(), textureCoordinates);
 
     return (colorDiffuse + colorSpecular) * directionalLight.intensity;
 }
@@ -254,7 +265,7 @@ vec4 applyReflections(vec4 color, vec2 textureCoordinates) {
         return color;
 
     vec3 N = normalize(getNormal(textureCoordinates));
-    vec3 V = normalize(vertexViewDirectionWorldSpace);
+    vec3 V = normalize(getViewDirectionWorldSpace());
     vec4 skyboxColor = vec4(texture(textureSkybox, reflect(-V, N)).rgb, 1.0);
 
     return vec4(mix(color.rgb, skyboxColor.rgb, getMetalness(textureCoordinates)), color.a);
