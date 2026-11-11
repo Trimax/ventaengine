@@ -54,13 +54,6 @@ public final class SceneInstanceRenderer
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (final var surface : scene.getWaterSurfaces())
-            try (final var _ = waterSurfaceRenderer.withContext(getContext())
-                    .withModelMatrix(surface.getTransform().getMatrix())
-                    .withScene(scene)) {
-                waterSurfaceRenderer.render(waterSurfaceManager.getInstance(surface.getID()));
-            }
-
         for (final var surface : scene.getTerrainSurfaces())
             try (final var _ = terrainSurfaceRenderer.withContext(getContext())
                     .withModelMatrix(surface.getTransform().getMatrix())
@@ -72,6 +65,14 @@ public final class SceneInstanceRenderer
             try (final var _ = objectRenderer.withContext(getContext())
                     .withScene(scene)) {
                 objectRenderer.render(objectManager.getInstance(object.getID()));
+            }
+
+        // Water is semi-transparent, so it is rendered after the geometry which can be seen through it
+        for (final var surface : scene.getWaterSurfaces())
+            try (final var _ = waterSurfaceRenderer.withContext(getContext())
+                    .withModelMatrix(surface.getTransform().getMatrix())
+                    .withScene(scene)) {
+                waterSurfaceRenderer.render(waterSurfaceManager.getInstance(surface.getID()));
             }
             
         glDepthMask(false);
