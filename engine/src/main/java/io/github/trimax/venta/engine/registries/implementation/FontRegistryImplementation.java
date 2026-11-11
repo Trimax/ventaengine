@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.registries.implementation;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -39,7 +38,7 @@ public final class FontRegistryImplementation
     }
 
     private ByteBuffer toBuffer(final byte[] bytes) {
-        final var buffer = BufferUtils.createByteBuffer(bytes.length);
+        final var buffer = MemoryUtil.memAlloc(bytes.length);
         buffer.put(bytes);
         buffer.flip();
 
