@@ -5,13 +5,6 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 
 ## Rendering and shaders
 
-- [ ] **Water lighting mixes model and world space.** `shaders/water/vertex.glsl:64,68`, `water/fragment.glsl:164-165,217`:
-  `vertexPosition` and the normal are not transformed by `matrixModel`, but are compared with world-space camera and
-  light positions. Water at y=1.5 (examples) gets wrong Fresnel, specular and attenuation.
-- [ ] **Gerstner wave sum is wrong.** `shaders/water/vertex.glsl:40-61`: `outNormal` is overwritten by each wave (only the
-  last wave's normal survives); each wave's phase uses the already displaced position.
-- [ ] **Water lighting details.** `water/fragment.glsl`: `computeDirectionalLight` (:175) is never called; point-light
-  contributions (:188-192) are not multiplied by `baseColor`.
 - [ ] **No upper bound for waves, noises and terrain materials.** `binders/WaveBinder.java:25`, `binders/NoiseBinder.java:21`,
   `binders/MaterialBinder.java:38` vs shader arrays of 16 / 16 / 8. More elements index uniform arrays out of bounds.
   A terrain with 0 materials reads `elevations[-1]` (`terrain/fragment.glsl:165`). Validate counts on load.
@@ -24,8 +17,7 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 - [ ] **`DebugRenderer` throws NPE without a current scene.** `renderers/common/DebugRenderer.java:43`.
 - [ ] **View direction is interpolated per vertex.** `shaders/default/vertex.glsl:35-36`: compute it in the fragment shader;
   normalize the interpolated TBN normal in `getNormal` (`default/fragment.glsl:163`).
-- [ ] **Division by zero in shaders.** `waveAmplitude == 0`
-  (`water/fragment.glsl:110`), terrain `factor == 0` (`terrain/fragment.glsl:178`), all-zero attenuation in `getAttenuation`.
+- [ ] **Division by zero in shaders.** Terrain `factor == 0` (`terrain/fragment.glsl:178`), all-zero attenuation in `getAttenuation`.
 - [ ] **Sky sampler name mismatch.** `shaders/sky/fragment.glsl:13` declares `skybox`, the binder sets `textureSkybox`
   (`binders/TextureBinder.java:38`). Works only because unit 0 is the default.
 - [ ] Minor: `useTextureDebug` is always 1 (`ObjectInstanceRenderer:52`, `TerrainSurfaceInstanceRenderer:48`);

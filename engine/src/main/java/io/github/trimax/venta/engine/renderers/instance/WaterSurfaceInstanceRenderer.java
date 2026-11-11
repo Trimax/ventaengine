@@ -60,6 +60,7 @@ public final class WaterSurfaceInstanceRenderer extends
         cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());
 
         matrixBinder.bindModelMatrix(surface.getProgram(), getContext().getModelMatrixBuffer());
+        matrixBinder.bindNormalMatrix(surface.getProgram(), getContext().getNormalMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(surface.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
