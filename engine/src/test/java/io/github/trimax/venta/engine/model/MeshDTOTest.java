@@ -56,6 +56,25 @@ public final class MeshDTOTest {
         assertEquals(0, edgesArray.length, "The number of edges must be correct");
     }
 
+    @Test
+    void testGetVerticesArray_authoredNormalsArePreserved() {
+        final var authoredNormal = new Vector3f(0.f, 0.6f, 0.8f);
+        final var triangle = new MeshDTO(
+                List.of(new MeshDTO.Vertex(new Vector3f(0, 0, 0), authoredNormal, new Vector2f(0, 0), null),
+                        new MeshDTO.Vertex(new Vector3f(1, 0, 0), authoredNormal, new Vector2f(1, 0), null),
+                        new MeshDTO.Vertex(new Vector3f(0, 1, 0), authoredNormal, new Vector2f(0, 1), null)),
+                List.of(new MeshDTO.Facet(0, 1, 2)),
+                List.of()
+        );
+
+        final var verticesArray = triangle.getVerticesArray();
+        for (int i = 0; i < triangle.vertices().size(); i++) {
+            assertEquals(authoredNormal.x, verticesArray[i * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_NORMAL_X], 1e-5, "Vertex " + i + " normal x must be authored");
+            assertEquals(authoredNormal.y, verticesArray[i * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_NORMAL_Y], 1e-5, "Vertex " + i + " normal y must be authored");
+            assertEquals(authoredNormal.z, verticesArray[i * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_NORMAL_Z], 1e-5, "Vertex " + i + " normal z must be authored");
+        }
+    }
+
     private void verifyPosition(final int vertexID, final float[] verticesArray, final Vector3f expected) {
         verifyValue(vertexID, verticesArray[vertexID * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_POSITION_X], expected.x);
         verifyValue(vertexID, verticesArray[vertexID * MeshVertexLayout.getFloatsCount() + VERTEX_OFFSET_POSITION_Y], expected.y);
