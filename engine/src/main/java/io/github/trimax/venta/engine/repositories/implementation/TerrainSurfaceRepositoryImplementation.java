@@ -57,11 +57,22 @@ public final class TerrainSurfaceRepositoryImplementation
         final var groupedTextures = StreamEx.of(TextureType.values()).toMap(Function.identity(), type -> getTexturesByType(materials, type));
 
         return StreamEx.ofKeys(groupedTextures).toMap(Function.identity(),
-                type -> createTextureArray(name, type, groupedTextures.get(type)));
+                type -> createTextureArray(name, type, groupedTextures.get(type), materials.size()));
     }
 
-    private TextureArrayEntityImplementation createTextureArray(@NonNull final String name, @NonNull final TextureType type, @NonNull final List<TextureEntityImplementation> textures) {
-        return textures.isEmpty() ? textureArrayRegistry.getDefaultTextureArray() : textureArrayRegistry.create(name, textures);
+    private TextureArrayEntityImplementation createTextureArray(@NonNull final String name, @NonNull final TextureType type,
+                                                                @NonNull final List<TextureEntityImplementation> textures, final int materialsCount) {
+        if (textures.isEmpty())
+            return textureArrayRegistry.getDefaultTextureArray();
+
+        // Layer index must match material index, so a texture type is used only if all the materials have it
+        if (textures.size() != materialsCount) {
+            log.warn("Terrain surface {}: only {} of {} materials have {} texture. Default texture array is used",
+                    name, textures.size(), materialsCount, type);
+            return textureArrayRegistry.getDefaultTextureArray();
+        }
+
+        return textureArrayRegistry.create(String.format("%s/%s", name, type.name()), textures);
     }
 
     private static List<TextureEntityImplementation> getTexturesByType(@NonNull final List<MaterialEntityImplementation> materials, @NonNull final TextureType type) {
