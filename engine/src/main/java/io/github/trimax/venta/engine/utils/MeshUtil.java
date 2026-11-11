@@ -1,35 +1,52 @@
 package io.github.trimax.venta.engine.utils;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
+import io.github.trimax.venta.engine.model.common.math.Transform;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class MeshUtil {
+    /**
+     * Centers the content of the hierarchy at the origin and scales it to fit a unit cube.
+     * The transform of the root (position, rotation, scale from the object file) is applied on top of the normalization.
+     * Child transforms are relative to their parents, so only the root transform is changed.
+     */
     public Node<MeshReference> normalize(@NonNull final Node<MeshReference> root) {
-        final var boundingBox = GeometryUtil.computeBoundingBox(root);
-        final var center = boundingBox.center();
+        final var boundingBox = GeometryUtil.computeBoundingBox(root, false);
         final var size = boundingBox.size();
-        final float scaleFactor = 1.0f / Math.max(size.x, Math.max(size.y, size.z));
+        final var maximalSize = Math.max(size.x, Math.max(size.y, size.z));
+        if (!Float.isFinite(maximalSize) || maximalSize <= 0.f)
+            return root;
 
-        normalizeNode(root, center, scaleFactor);
+        final var center = boundingBox.center();
+        final var scale = 1.0f / maximalSize;
 
-        return root;
-    }
-
-    private void normalizeNode(final Node<MeshReference> node, final Vector3f center, final float scale) {
-        final var reference = node.value();
+        final var reference = root.value();
         if (reference != null && reference.hasTransform()) {
-            final var transform = reference.transform();
-            transform.setPosition(new Vector3f(transform.getPosition()).sub(center).mul(scale));
-            transform.setScale(new Vector3f(transform.getScale()).mul(scale));
+            normalize(reference.transform(), center, scale);
+            return root;
         }
 
-        if (node.hasChildren())
-            for (Node<MeshReference> child : node.children())
-                normalizeNode(child, center, scale);
+        final var transform = new Transform();
+        normalize(transform, center, scale);
+
+        return new Node<>(root.name(),
+                new MeshReference(reference != null ? reference.mesh() : null, reference != null ? reference.material() : null, transform),
+                root.children());
+    }
+
+    /** Replaces the transform M with M * S(scale) * T(-center), decomposed back to position, rotation and scale */
+    private void normalize(final Transform transform, final Vector3f center, final float scale) {
+        final var newScale = new Vector3f(transform.getScale()).mul(scale);
+        final var offset = new Vector3f(center).mul(newScale);
+        new Matrix4f().rotateXYZ(transform.getRotation()).transformDirection(offset);
+
+        transform.setPosition(new Vector3f(transform.getPosition()).sub(offset));
+        transform.setScale(newScale);
     }
 }

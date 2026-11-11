@@ -9,6 +9,9 @@ import lombok.NonNull;
 
 @Data
 public final class Fog {
+    /** The shader divides by (maximal - minimal), so the distances are kept at least this far apart */
+    private static final float MINIMAL_RANGE = 0.001f;
+
     private float minimalDistance;
     private float maximalDistance;
 
@@ -31,11 +34,14 @@ public final class Fog {
         this.color = new Vector3f(color);
     }
 
+    /** Sets the minimal distance; the maximal distance is moved forward if it would not be greater anymore */
     public void setMinimalDistance(final float minimalDistance) {
         this.minimalDistance = Math.max(0, minimalDistance);
+        this.maximalDistance = Math.max(this.maximalDistance, this.minimalDistance + MINIMAL_RANGE);
     }
 
+    /** Sets the maximal distance; it is kept greater than the minimal distance */
     public void setMaximalDistance(final float maximalDistance) {
-        this.maximalDistance = Math.max(minimalDistance, maximalDistance);
+        this.maximalDistance = Math.max(maximalDistance, minimalDistance + MINIMAL_RANGE);
     }
 }

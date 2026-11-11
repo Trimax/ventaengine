@@ -21,6 +21,8 @@ import one.util.streamex.StreamEx;
 public record MeshDTO(@NonNull List<Vertex> vertices,
                       List<Facet> facets,
                       List<Edge> edges) {
+    private static final float EPSILON = 1e-12f;
+
     public boolean hasFacets() {
         return CollectionUtils.isNotEmpty(facets);
     }
@@ -132,7 +134,10 @@ public record MeshDTO(@NonNull List<Vertex> vertices,
             final var edge1 = vertex2.sub(vertex1, new Vector3f());
             final var edge2 = vertex3.sub(vertex1, new Vector3f());
 
-            faceNormals.put(i, edge1.cross(edge2, new Vector3f()).normalize());
+            // A zero-area face has no direction; normalizing it would produce NaN
+            final var normal = edge1.cross(edge2, new Vector3f());
+            if (normal.lengthSquared() > EPSILON)
+                faceNormals.put(i, normal.normalize());
         }
 
         return faceNormals;
@@ -156,6 +161,9 @@ public record MeshDTO(@NonNull List<Vertex> vertices,
             final Vertex vertex3 = vertices.get(facet.vertex3());
 
             final var normal = faceNormals.get(facetIndex);
+            if (normal == null)
+                continue;
+
             add(vertexNormals, normal, facet.vertex1);
             add(vertexNormals, normal, facet.vertex2);
             add(vertexNormals, normal, facet.vertex3);
@@ -164,6 +172,8 @@ public record MeshDTO(@NonNull List<Vertex> vertices,
                 continue;
 
             final var tangentBitangentData = prepareTangentBitangentData(vertex1, vertex2, vertex3);
+            if (tangentBitangentData == null)
+                continue;
 
             final var tangent = computeTangent(tangentBitangentData);
             add(vertexTangents, tangent, facet.vertex1);
@@ -176,9 +186,9 @@ public record MeshDTO(@NonNull List<Vertex> vertices,
             add(vertexBitangents, bitangent, facet.vertex3);
         }
 
-        final var normals = EntryStream.of(vertexNormals).mapValues(this::merge).toMap();
-        final var tangents = EntryStream.of(vertexTangents).mapValues(this::merge).toMap();
-        final var bitangents = EntryStream.of(vertexBitangents).mapValues(this::merge).toMap();
+        final var normals = EntryStream.of(vertexNormals).mapValues(this::merge).nonNullValues().toMap();
+        final var tangents = EntryStream.of(vertexTangents).mapValues(this::merge).nonNullValues().toMap();
+        final var bitangents = EntryStream.of(vertexBitangents).mapValues(this::merge).nonNullValues().toMap();
 
         final var tbnVectors = new HashMap<Integer, Triple<Vector3f, Vector3f, Vector3f>>();
         for (int vertexID = 0; vertexID < vertices.size(); vertexID++)
@@ -220,22 +230,24 @@ public record MeshDTO(@NonNull List<Vertex> vertices,
         final var deltaU2 = uv3.x - uv1.x;
         final var deltaV2 = uv3.y - uv1.y;
 
-        return new TBData(edge1, edge2, deltaU1, deltaV1, deltaU2, deltaV2, safeInverse(deltaU1 * deltaV2 - deltaU2 * deltaV1));
+        // Texture coordinates of the face are degenerate, so they don't define a tangent space
+        final var determinant = deltaU1 * deltaV2 - deltaU2 * deltaV1;
+        if (Math.abs(determinant) < EPSILON)
+            return null;
+
+        return new TBData(edge1, edge2, deltaU1, deltaV1, deltaU2, deltaV2, 1.0f / determinant);
     }
 
     private boolean hasTextureCoordinates(final Vertex... vertices) {
         return StreamEx.of(vertices).allMatch(Vertex::hasTextureCoordinates);
     }
 
-    private float safeInverse(final float value) {
-        return (value == 0.0f) ? 1.0f : 1.0f / value;
-    }
-
     private Vector3f merge(final List<Vector3f> vectors) {
         final var sum = new Vector3f();
         StreamEx.of(vectors).forEach(sum::add);
 
-        return sum.normalize();
+        // Opposite vectors cancel out and have no direction
+        return sum.lengthSquared() > EPSILON ? sum.normalize() : null;
     }
 
     private void add(final Map<Integer, List<Vector3f>> vertexNormals, final Vector3f normal, final int vertexID) {

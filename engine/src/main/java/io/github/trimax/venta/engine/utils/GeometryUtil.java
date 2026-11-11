@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.utils;
 
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Vector2ic;
 import org.joml.Vector3f;
 
@@ -13,6 +15,12 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class GeometryUtil {
     public Grid createGrid(@NonNull final Vector2ic size, @NonNull final Vector2ic segments) {
+        if (segments.x() < 1 || segments.y() < 1)
+            throw new IllegalArgumentException("Grid must have at least one segment in each direction, got " + segments);
+
+        if (size.x() <= 0 || size.y() <= 0)
+            throw new IllegalArgumentException("Grid size must be positive, got " + size);
+
         final var vertexCountX = segments.x() + 1;
         final var vertexCountZ = segments.y() + 1;
 
@@ -55,32 +63,43 @@ public final class GeometryUtil {
         return new Grid(vertices, facets, vertexCount, facets.length);
     }
 
-    public BoundingBox computeBoundingBox(final Node<MeshReference> node) {
-        final var min = new Vector3f(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
-        final var max = new Vector3f(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+    /** Bounding box of a mesh hierarchy, with node transforms applied as the renderer does */
+    public BoundingBox computeBoundingBox(@NonNull final Node<MeshReference> node) {
+        return computeBoundingBox(node, true);
+    }
 
-        collectBounds(node, min, max);
+    /** Bounding box of a mesh hierarchy; the transform of the root itself is applied only if requested */
+    BoundingBox computeBoundingBox(@NonNull final Node<MeshReference> node, final boolean includeRootTransform) {
+        final var min = new Vector3f(Float.POSITIVE_INFINITY);
+        final var max = new Vector3f(Float.NEGATIVE_INFINITY);
+
+        collectBounds(node, new Matrix4f(), includeRootTransform, min, max);
 
         return new BoundingBox(min, max);
     }
 
-    private void collectBounds(final Node<MeshReference> node, final Vector3f min, final Vector3f max) {
+    private void collectBounds(final Node<MeshReference> node, final Matrix4fc parentMatrix, final boolean applyTransform,
+                               final Vector3f min, final Vector3f max) {
+        final var matrix = new Matrix4f(parentMatrix);
         final var reference = node.value();
+        if (applyTransform && reference != null && reference.hasTransform())
+            matrix.mul(reference.transform().getMatrix());
 
         if (reference != null && reference.hasMesh()) {
-            final var boundingBox = reference.mesh().getBoundingBox();
-
-            min.x = Math.min(min.x, boundingBox.min().x);
-            min.y = Math.min(min.y, boundingBox.min().y);
-            min.z = Math.min(min.z, boundingBox.min().z);
-
-            max.x = Math.max(max.x, boundingBox.max().x);
-            max.y = Math.max(max.y, boundingBox.max().y);
-            max.z = Math.max(max.z, boundingBox.max().z);
+            final var box = reference.mesh().getBoundingBox();
+            final var corner = new Vector3f();
+            for (int i = 0; i < 8; i++) {
+                corner.set((i & 1) == 0 ? box.min().x : box.max().x,
+                        (i & 2) == 0 ? box.min().y : box.max().y,
+                        (i & 4) == 0 ? box.min().z : box.max().z);
+                matrix.transformPosition(corner);
+                min.min(corner);
+                max.max(corner);
+            }
         }
 
         if (node.hasChildren())
             for (final var child : node.children())
-                collectBounds(child, min, max);
+                collectBounds(child, matrix, true, min, max);
     }
 }
