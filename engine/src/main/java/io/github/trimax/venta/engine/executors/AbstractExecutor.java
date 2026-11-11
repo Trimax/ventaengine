@@ -77,7 +77,7 @@ public abstract class AbstractExecutor {
 
     protected final void delegateExecution(final ConsoleCommandQueue.Command command) {
         if (StringUtils.isBlank(command.getCommand())) {
-            getConsole().warning(String.format("The command is missing. Type '%s help' to see the options", getCommand()));
+            getConsole().warning("The command is missing. Type '%s help' to see the options", getCommand());
             return;
         }
 
@@ -88,8 +88,8 @@ public abstract class AbstractExecutor {
 
         final var executor = getExecutor(command.getCommand());
         if (executor == null) {
-            getConsole().error(String.format("Unknown command: '%s'. Type '%s help'",
-                    command.getFullPath(), command.parent().getFullPath()));
+            getConsole().error("Unknown command: '%s'. Type '%s help'",
+                    command.getFullPath(), command.parent().getFullPath());
             log.warn("Executor is not registered for command: {}", command.parent().getFullPath());
             return;
         }
