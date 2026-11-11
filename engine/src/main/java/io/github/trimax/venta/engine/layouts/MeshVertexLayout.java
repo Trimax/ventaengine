@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter(onMethod_ = @__(@Override))
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum MeshVertexLayout implements AbstractVertexLayout {
     Position(0, 3),
