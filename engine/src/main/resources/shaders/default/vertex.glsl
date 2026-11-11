@@ -22,8 +22,6 @@ out vec4 vertexColor;
 out vec3 vertexPosition;
 out vec3 vertexCameraPosition;
 out vec2 vertexTextureCoordinates;
-out vec3 vertexViewDirectionLocalSpace;
-out vec3 vertexViewDirectionWorldSpace;
 
 void main() {
     vec4 worldPos = matrixModel * vec4(position, 1.0);
@@ -31,9 +29,6 @@ void main() {
     vertexTBN = mat3(normalize(matrixNormal * tangent),
                      normalize(matrixNormal * bitangent),
                      normalize(matrixNormal * normal));
-
-    vertexViewDirectionWorldSpace = normalize(cameraPosition - worldPos.xyz);
-    vertexViewDirectionLocalSpace = normalize(transpose(vertexTBN) * vertexViewDirectionWorldSpace);
 
     vertexTextureCoordinates = textureCoordinates;
     vertexCameraPosition = cameraPosition;

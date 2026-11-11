@@ -7,11 +7,8 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 
 - [ ] **Terrain shading is incomplete.** `terrain/fragment.glsl` ignores lights, the normal and roughness texture arrays
   and fog, so what `TerrainSurfaceInstanceRenderer` binds for them is unused.
-- [ ] **View direction is interpolated per vertex.** `shaders/default/vertex.glsl:35-36`: compute it in the fragment shader;
-  normalize the interpolated TBN normal in `getNormal` (`default/fragment.glsl:163`).
-- [ ] **Division by zero in shaders.** Terrain `factor == 0` (`terrain/fragment.glsl:178`), all-zero attenuation in `getAttenuation`.
-- [ ] Minor: `useTextureDebug` is always 1 (`ObjectInstanceRenderer:52`, `TerrainSurfaceInstanceRenderer:48`);
-  `shaders/debug/vertex.glsl:11` ignores `matrixModel`; light uniforms are re-uploaded for every object every frame.
+- [ ] **Light uniforms are uploaded for every object.** The program is shared, but `LightBinder` uploads all lights again for each
+  object every frame; upload them once per program and frame.
 
 ## Resources and lifecycle
 

@@ -57,7 +57,6 @@ uniform sampler2DArray textureNormal;
 uniform sampler2DArray textureRoughness;
 uniform sampler2DArray textureMetalness;
 uniform sampler2DArray textureAmbientOcclusion;
-uniform sampler2D textureDebug;
 
 /* Feature flags */
 uniform int useDirectionalLight;
@@ -100,7 +99,8 @@ bool isSet(int value) {
  ***/
 
 float getAttenuation(Attenuation attenuation, float distance) {
-    return 1.0 / (attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance);
+    // An all-zero attenuation would divide by zero
+    return 1.0 / max(attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance, 0.0001);
 }
 
 /* Computes light */
@@ -171,8 +171,10 @@ vec2 getMaterialLayersAndBlend(float y, float blendWidth) {
 }
 
 void main() {
-    float minHeight = -0.5 * factor;
-    float maxHeight =  0.5 * factor;
+    // A flat terrain (factor 0) has no height range
+    float range = max(factor, 0.0001);
+    float minHeight = -0.5 * range;
+    float maxHeight =  0.5 * range;
 
     float yNormalized = clamp((vertexPosition.y - minHeight) / (maxHeight - minHeight), 0.0, 1.0);
     vec2 info = getMaterialLayersAndBlend(yNormalized, 0.05);

@@ -6,7 +6,6 @@ import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
-import io.github.trimax.venta.engine.registries.implementation.TextureRegistryImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +25,6 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TerrainSurfaceInstanceRenderer extends
         AbstractInstanceRenderer<TerrainSurfaceInstanceImplementation, TerrainSurfaceInstanceRenderer.TerrainSurfaceRenderContext, SceneInstanceRenderer.SceneRenderContext> {
-    private final TextureRegistryImplementation textureRegistry;
     private final GeometryHelper geometryHelper;
     private final ElevationBinder elevationBinder;
     private final MaterialBinder materialBinder;
@@ -45,7 +43,6 @@ public final class TerrainSurfaceInstanceRenderer extends
     public void render(final TerrainSurfaceInstanceImplementation surface) {
         glUseProgram(surface.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, surface.getDrawMode().getMode());
-        textureBinder.bind(surface.getProgram(), textureRegistry.getDefaultTexture());
 
         lightBinder.bind(surface.getProgram(), getContext().getScene().getDirectionalLight());
         lightBinder.bind(surface.getProgram(), getContext().getScene().getAmbientLight());

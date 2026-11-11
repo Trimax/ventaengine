@@ -156,7 +156,8 @@ vec3 calculateNormal() {
  ***/
 
 float getAttenuation(Attenuation attenuation, float distance) {
-    return 1.0 / (attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance);
+    // An all-zero attenuation would divide by zero
+    return 1.0 / max(attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance, 0.0001);
 }
 
 /* Computes light: diffuse light takes the water color, specular highlights keep the light color */
