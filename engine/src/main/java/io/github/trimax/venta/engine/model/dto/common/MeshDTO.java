@@ -58,9 +58,7 @@ public record MeshDTO(@NonNull List<Vertex> vertices,
                 packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_X] = vertex.normal.x();
                 packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Y] = vertex.normal.y();
                 packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Z] = vertex.normal.z();
-            }
-
-            if (normal != null) {
+            } else if (normal != null) {
                 packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_X] = normal.x();
                 packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Y] = normal.y();
                 packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_NORMAL_Z] = normal.z();
