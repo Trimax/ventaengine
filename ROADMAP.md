@@ -67,9 +67,6 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
   execution order and cycle detection can pass for the wrong reason.
 - [ ] **Injection order is random.** `container/.../VentaApplication.java:110-113` iterates a `HashSet`; `help` output and
   injected lists have a JVM-dependent order.
-- [ ] `executors/scene/SceneCreateExecutor.java:25` creates the scene from the untrimmed `command.value()`.
-- [ ] `model/states/ConsoleState.java:48-49` checks `history.isEmpty()` instead of `commands.isEmpty()` for up-arrow history.
-- [ ] `executors/camera/CameraDescribeExecutor.java:38` prints `Right: %b` for a vector (always `true`).
 
 ## Editor (`editor/src/main/java/io/github/trimax/venta/editor/`)
 

@@ -46,7 +46,7 @@ public final class ConsoleState extends AbstractState {
     }
 
     public void navigateHistory(final int direction) {
-        if (history.isEmpty())
+        if (commands.isEmpty())
             return;
 
         historyIndex += direction;
