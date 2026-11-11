@@ -3,7 +3,6 @@ package io.github.trimax.venta.engine;
 import io.github.trimax.venta.container.AbstractVentaApplication;
 import io.github.trimax.venta.container.VentaApplication;
 import io.github.trimax.venta.container.annotations.Component;
-import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.utils.ResourceUtil;
@@ -16,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VentaEngine implements AbstractVentaApplication<VentaEngineApplication> {
-    private final VentaContext context;
     private final Engine engine;
 
     public static void run(final String[] args, @NonNull final VentaEngineApplication application) {
@@ -26,9 +24,6 @@ public final class VentaEngine implements AbstractVentaApplication<VentaEngineAp
 
     @Override
     public void start(final String[] args, @NonNull final VentaEngineApplication venta) {
-        engine.initialize(venta);
-        venta.getStartupHandler().onStartup(args, context);
-
-        engine.run();
+        engine.start(args, venta);
     }
 }

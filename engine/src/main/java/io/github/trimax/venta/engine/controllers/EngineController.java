@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.factories.RegistryFactory;
 import io.github.trimax.venta.engine.factories.RepositoryFactory;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.managers.implementation.AbstractManagerImplementation;
+import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.entity.AbstractEntity;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import io.github.trimax.venta.engine.model.prefabs.AbstractPrefab;
@@ -24,6 +25,7 @@ public final class EngineController extends AbstractController<EngineState, Vent
     private final RepositoryFactory repositoryFactory;
     private final RegistryFactory registryFactory;
     private final ManagerFactory managerFactory;
+    private final Memory memory;
 
     @Override
     protected EngineState create(final VentaEngineApplication application) {
@@ -42,6 +44,7 @@ public final class EngineController extends AbstractController<EngineState, Vent
         repositoryFactory.cleanup();
         registryFactory.cleanup();
         managerFactory.cleanup();
+        memory.cleanup();
     }
 
     public <T extends P, P extends AbstractPrefab, R extends AbstractRepositoryImplementation<T, P>> R getRepository(@NonNull final Class<R> repositoryClass) {

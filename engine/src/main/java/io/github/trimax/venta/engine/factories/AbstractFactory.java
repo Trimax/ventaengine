@@ -1,9 +1,9 @@
 package io.github.trimax.venta.engine.factories;
 
-import io.github.trimax.venta.engine.utils.TransformationUtil;
 import lombok.NonNull;
 import one.util.streamex.StreamEx;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -15,7 +15,8 @@ public abstract class AbstractFactory<T> {
     private final Consumer<T> cleaner;
 
     protected AbstractFactory(@NonNull final List<T> instances, @NonNull final Consumer<T> cleaner) {
-        this.instances = TransformationUtil.toMap(instances, T::getClass);
+        this.instances = new LinkedHashMap<>();
+        instances.forEach(instance -> this.instances.put(instance.getClass(), instance));
         this.cleaner = cleaner;
     }
 
