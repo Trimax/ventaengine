@@ -83,7 +83,7 @@ public final class SceneRepositoryImplementation
     }
 
     private SceneSoundSource createSoundSource(@NonNull final SceneSoundSourceDTO dto) {
-        return new SceneSoundSource(dto, soundSourceRepository.get(dto.sourceSource()));
+        return new SceneSoundSource(dto, soundSourceRepository.get(dto.soundSource()));
     }
 
     @Override

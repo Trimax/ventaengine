@@ -5,6 +5,6 @@ import org.joml.Vector3f;
 import lombok.NonNull;
 
 public record SceneSoundSourceDTO(@NonNull String name,
-                                  @NonNull String sourceSource,
+                                  @NonNull String soundSource,
                                   @NonNull Vector3f position) {
 }
