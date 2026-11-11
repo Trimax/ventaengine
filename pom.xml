@@ -51,6 +51,19 @@
         <module>examples</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- Versions of all LWJGL modules and their natives -->
+            <dependency>
+                <groupId>org.lwjgl</groupId>
+                <artifactId>lwjgl-bom</artifactId>
+                <version>${lwjgl.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!-- Lombok -->
         <dependency>
@@ -157,6 +170,7 @@
             <activation>
                 <os>
                     <family>windows</family>
+                    <arch>amd64</arch>
                 </os>
             </activation>
             <properties>
@@ -168,10 +182,35 @@
             <activation>
                 <os>
                     <family>linux</family>
+                    <arch>amd64</arch>
                 </os>
             </activation>
             <properties>
                 <os.detected.classifier>linux</os.detected.classifier>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows-arm64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <os.detected.classifier>windows-arm64</os.detected.classifier>
+            </properties>
+        </profile>
+        <profile>
+            <id>linux-arm64</id>
+            <activation>
+                <os>
+                    <family>linux</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <os.detected.classifier>linux-arm64</os.detected.classifier>
             </properties>
         </profile>
         <profile>

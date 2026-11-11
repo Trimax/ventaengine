@@ -18,5 +18,33 @@
             <artifactId>engine</artifactId>
             <version>1.2.61</version>
         </dependency>
+
+        <!-- Native libraries (depends on the profile). The published engine doesn't depend on them,
+             so applications choose natives for their platforms -->
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <classifier>natives-${os.detected.classifier}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengl</artifactId>
+            <classifier>natives-${os.detected.classifier}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-glfw</artifactId>
+            <classifier>natives-${os.detected.classifier}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-stb</artifactId>
+            <classifier>natives-${os.detected.classifier}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-openal</artifactId>
+            <classifier>natives-${os.detected.classifier}</classifier>
+        </dependency>
     </dependencies>
 </project>

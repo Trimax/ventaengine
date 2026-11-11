@@ -33,59 +33,54 @@
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
-            <version>${lwjgl.version}</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-opengl</artifactId>
-            <version>${lwjgl.version}</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-glfw</artifactId>
-            <version>${lwjgl.version}</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-stb</artifactId>
-            <version>${lwjgl.version}</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-openal</artifactId>
-            <version>${lwjgl.version}</version>
         </dependency>
 
-        <!-- Native libraries (depends on the profile) -->
+        <!-- Native libraries are needed only by tests: applications choose natives for their platforms -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
             <classifier>natives-${os.detected.classifier}</classifier>
-            <version>${lwjgl.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-opengl</artifactId>
             <classifier>natives-${os.detected.classifier}</classifier>
-            <version>${lwjgl.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-glfw</artifactId>
             <classifier>natives-${os.detected.classifier}</classifier>
-            <version>${lwjgl.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-stb</artifactId>
             <classifier>natives-${os.detected.classifier}</classifier>
-            <version>${lwjgl.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-openal</artifactId>
             <classifier>natives-${os.detected.classifier}</classifier>
-            <version>${lwjgl.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
