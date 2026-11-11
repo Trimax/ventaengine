@@ -20,7 +20,6 @@ import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
-import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.renderers.common.EngineRenderer;
 import io.github.trimax.venta.engine.updaters.EngineUpdater;
 import lombok.AccessLevel;
@@ -32,15 +31,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class Engine implements Runnable {
+public final class Engine {
     private final ConsoleCommandExecutor consoleCommandExecutor;
     private final ControllerFactory controllerFactory;
     private final EngineRenderer engineRenderer;
     private final EngineUpdater engineUpdater;
     private final VentaContext context;
-    private final Memory memory;
 
-    public void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
+    public void start(final String[] args, @NonNull final VentaEngineApplication application) {
+        try {
+            initialize(application);
+            application.getStartupHandler().onStartup(args, context);
+
+            run();
+        } finally {
+            controllerFactory.cleanup();
+            glfwTerminate();
+        }
+    }
+
+    private void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         glfwSetErrorCallback(new ErrorCallback());
         if (!glfwInit())
             throw new EngineInitializationException("GLFW init failed");
@@ -63,8 +73,7 @@ public final class Engine implements Runnable {
         context.getSceneManager().setCurrent(context.getSceneManager().create("Default scene"));
     }
 
-    @Override
-    public void run() {
+    private void run() {
         controllerFactory.get(ConsoleController.class).info("Venta engine started");
         glEnable(GL_DEPTH_TEST);
 
@@ -82,11 +91,6 @@ public final class Engine implements Runnable {
 
             consoleCommandExecutor.execute();
         }
-
-        controllerFactory.cleanup();
-        memory.cleanup();
-
-        glfwTerminate();
     }
 
     @Getter
