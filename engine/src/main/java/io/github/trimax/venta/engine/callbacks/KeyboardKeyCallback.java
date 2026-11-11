@@ -15,10 +15,11 @@ public final class KeyboardKeyCallback extends GLFWKeyCallback implements Abstra
     private final KeyboardController keyboardController;
     private final ConsoleController consoleController;
     private final WindowController windowController;
+    private final boolean isConsoleEnabled;
 
     @Override
     public void invoke(final long windowID, final int key, final int scancode, final int action, final int mods) {
-        if (key == GLFW_KEY_F12 && action == GLFW_PRESS) {
+        if (isConsoleEnabled && key == GLFW_KEY_F12 && action == GLFW_PRESS) {
             keyboardController.get().clear();
             consoleController.toggle();
             return;

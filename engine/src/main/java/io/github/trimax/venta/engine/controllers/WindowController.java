@@ -84,7 +84,8 @@ public final class WindowController extends AbstractController<WindowState, Vent
         glfwSetMouseButtonCallback(id, new MouseButtonCallback(this));
         glfwSetCursorPosCallback(id, new MouseCursorCallback(this));
         glfwSetCharCallback(id, new KeyboardCharCallback(consoleController));
-        glfwSetKeyCallback(id, new KeyboardKeyCallback(consoleCommandQueue, keyboardController, consoleController, this));
+        glfwSetKeyCallback(id, new KeyboardKeyCallback(consoleCommandQueue, keyboardController, consoleController, this,
+                renderConfiguration.isConsoleEnabled()));
 
         glfwMakeContextCurrent(id);
 

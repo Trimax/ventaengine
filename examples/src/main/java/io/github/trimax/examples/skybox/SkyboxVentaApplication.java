@@ -19,7 +19,7 @@ public final class SkyboxVentaApplication implements VentaEngineApplication {
         return new VentaEngineConfiguration() {
             @Override
             public @NonNull RenderConfiguration getRenderConfiguration() {
-                return new RenderConfiguration(false, true, false, true, AntialiasingSamples.X2);
+                return new RenderConfiguration(true, true, false, true, AntialiasingSamples.X2);
             }
         };
     }
