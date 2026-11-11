@@ -59,6 +59,7 @@ public final class ConsoleCommandExecutor {
     private void printHelp() {
         consoleController.info("Available commands:");
         StreamEx.of(executors.values())
+                .sortedBy(AbstractExecutor::getCommand)
                 .map(AbstractExecutor::getPublicDescription)
                 .forEach(consoleController::info);
     }

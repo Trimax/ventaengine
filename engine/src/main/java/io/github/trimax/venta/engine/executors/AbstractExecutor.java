@@ -104,6 +104,7 @@ public abstract class AbstractExecutor {
     private void printHelp() {
         getConsole().info("Available commands:");
         StreamEx.of(executors.values())
+                .sortedBy(AbstractExecutor::getCommand)
                 .map(AbstractExecutor::getPublicDescription)
                 .forEach(getConsole()::info);
     }

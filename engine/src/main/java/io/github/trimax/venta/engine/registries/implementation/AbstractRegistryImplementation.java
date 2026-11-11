@@ -20,11 +20,13 @@ public abstract class AbstractRegistryImplementation<T extends E, E extends Abst
 
     @Override
     public final T get(@NonNull final String resourcePath, final A argument) {
-        if (!entities.containsKey(resourcePath))
-            MeasurementUtil.measure("Entity `" + resourcePath + "` loading",
-                    () -> entities.put(resourcePath, load(resourcePath, argument)));
+        // The argument changes what is loaded (e.g. the shader type), so it is a part of the key
+        final var key = argument == null ? resourcePath : resourcePath + "#" + argument;
+        if (!entities.containsKey(key))
+            MeasurementUtil.measure("Entity `" + key + "` loading",
+                    () -> entities.put(key, load(resourcePath, argument)));
 
-        return entities.get(resourcePath);
+        return entities.get(key);
     }
 
     @Override
