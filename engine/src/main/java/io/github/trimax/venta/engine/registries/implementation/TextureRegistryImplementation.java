@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
 
@@ -70,7 +69,7 @@ public final class TextureRegistryImplementation
             final var heightBuffer = stack.mallocInt(1);
             final var channelsBuffer = stack.mallocInt(1);
 
-            final var imageBuffer = BufferUtils.createByteBuffer(data.length);
+            final var imageBuffer = MemoryUtil.memAlloc(data.length);
             imageBuffer.put(data);
             imageBuffer.flip();
 
