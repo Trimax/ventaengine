@@ -116,6 +116,6 @@ public final class GeometryHelper {
         if (arrayLength % itemsPerElement != 0)
             log.warn("Buffer `{}` has incorrect length: {} (must be a product of {})", name, arrayLength, itemsPerElement);
 
-        return new Buffer(memory.getBuffers().create(name), arrayLength / itemsPerElement, arrayLength);
+        return new Buffer(memory.getBuffers().create("Buffer %s", name), arrayLength / itemsPerElement, arrayLength);
     }
 }

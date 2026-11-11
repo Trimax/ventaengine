@@ -43,8 +43,6 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
   creates the texture before faces are loaded and never deletes it on failure; `TextureFormat.of` can return null (:115),
   the NPE is swallowed by `loadTextureSafe` (:88-89) without the exception and leaks the image buffer; the format is always
   stored as `RGB` (:78).
-- [ ] **Resource names are used as format strings.** `ProgramRegistryImplementation.java:39`, `helpers/GeometryHelper.java:119`
-  pass names to `AnnotatedCache.create` (`memory/AnnotatedCache.java:29`), which formats them; `%` in a name throws.
 - [ ] **Gizmos are never removed.** `GizmoManagerImplementation` gets a gizmo for every object/light/emitter/sound/camera,
   but no `destroy()` removes it.
 - [ ] **Registry cache ignores the argument.** `registries/implementation/AbstractRegistryImplementation.java:22-28` keys
@@ -58,12 +56,9 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 
 ## Model, math and parsers
 
-- [ ] **OBJ parser.** `parsers/ObjMeshParser.java:111-121`: negative indices throw; faces with more than 4 vertices are
-  dropped (:88-89); quad diagonals and shared edges are emitted into the edge list.
 - [ ] **Minimized window.** `model/states/WindowState.java:23`: 0x0 size gives a NaN projection matrix;
   `callbacks/FramebufferSizeCallback.java:21-22` updates a matrix that is overwritten on the next `get` (dead code).
 - [ ] `CameraInstanceImplementation.rotation` is never updated, so `getRotation()` is always (0, 0, 0).
-- [ ] `engine/src/main/resources/meshes/pyramid.json` uses `x/y/z/w` for colors instead of `r/g/b/a`.
 
 ## Console, input and container
 

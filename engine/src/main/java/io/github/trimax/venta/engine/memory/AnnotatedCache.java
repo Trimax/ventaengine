@@ -26,7 +26,8 @@ public final class AnnotatedCache<T> {
 
     public T create(@NonNull final Supplier<T> creator, @NonNull final String format, final Object... arguments) {
         final var object = creator.get();
-        this.resources.put(object, String.format(format, arguments));
+        // Without arguments the text is used as is, so names containing '%' don't break formatting
+        this.resources.put(object, arguments.length == 0 ? format : String.format(format, arguments));
 
         return object;
     }
