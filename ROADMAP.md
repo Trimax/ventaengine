@@ -9,10 +9,7 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
   `vertexPosition` and the normal are not transformed by `matrixModel`, but are compared with world-space camera and
   light positions. Water at y=1.5 (examples) gets wrong Fresnel, specular and attenuation.
 - [ ] **Gerstner wave sum is wrong.** `shaders/water/vertex.glsl:40-61`: `outNormal` is overwritten by each wave (only the
-  last wave's normal survives); each wave's phase uses the already displaced position; `2π / length` divides by zero for
-  length 0.
-- [ ] **Wave directions are not normalized.** `model/common/shared/Wave.java:23-25`. The shader expects unit vectors;
-  directions like `(1, 1)` change the wavelength and break the steepness limit. Normalize in the constructor.
+  last wave's normal survives); each wave's phase uses the already displaced position.
 - [ ] **Water lighting details.** `water/fragment.glsl`: `computeDirectionalLight` (:175) is never called; point-light
   contributions (:188-192) are not multiplied by `baseColor`.
 - [ ] **No upper bound for waves, noises and terrain materials.** `binders/WaveBinder.java:25`, `binders/NoiseBinder.java:21`,
@@ -27,7 +24,7 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 - [ ] **`DebugRenderer` throws NPE without a current scene.** `renderers/common/DebugRenderer.java:43`.
 - [ ] **View direction is interpolated per vertex.** `shaders/default/vertex.glsl:35-36`: compute it in the fragment shader;
   normalize the interpolated TBN normal in `getNormal` (`default/fragment.glsl:163`).
-- [ ] **Division by zero in shaders.** Fog with `min == max` (`default/fragment.glsl:268`), `waveAmplitude == 0`
+- [ ] **Division by zero in shaders.** `waveAmplitude == 0`
   (`water/fragment.glsl:110`), terrain `factor == 0` (`terrain/fragment.glsl:178`), all-zero attenuation in `getAttenuation`.
 - [ ] **Sky sampler name mismatch.** `shaders/sky/fragment.glsl:13` declares `skybox`, the binder sets `textureSkybox`
   (`binders/TextureBinder.java:38`). Works only because unit 0 is the default.
@@ -61,15 +58,8 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 
 ## Model, math and parsers
 
-- [ ] **NaN from degenerate geometry.** `model/dto/common/MeshDTO.java:137,236-241`: `cross().normalize()` of a zero-area
-  triangle is NaN and spreads to neighbours; `safeInverse` returns 1 for a zero UV determinant instead of skipping the face.
-- [ ] **`MeshUtil.normalize` is wrong for hierarchies.** `utils/MeshUtil.java:12-34` + `utils/GeometryUtil.java:58-85`:
-  the bounding box ignores node transforms, children at depth d are scaled by s^(d+1), and a hierarchy without meshes
-  produces NaN positions.
 - [ ] **OBJ parser.** `parsers/ObjMeshParser.java:111-121`: negative indices throw; faces with more than 4 vertices are
   dropped (:88-89); quad diagonals and shared edges are emitted into the edge list.
-- [ ] **Fog and grid validation.** `model/common/shared/Fog.java` allows `min >= max`; `utils/GeometryUtil.java:27-33`
-  divides by zero for 0 segments.
 - [ ] **Minimized window.** `model/states/WindowState.java:23`: 0x0 size gives a NaN projection matrix;
   `callbacks/FramebufferSizeCallback.java:21-22` updates a matrix that is overwritten on the next `get` (dead code).
 - [ ] `CameraInstanceImplementation.rotation` is never updated, so `getRotation()` is always (0, 0, 0).
