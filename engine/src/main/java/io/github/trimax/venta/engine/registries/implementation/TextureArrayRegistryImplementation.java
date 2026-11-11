@@ -16,16 +16,18 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
+import org.lwjgl.system.MemoryUtil;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL12C.glTexImage3D;
+import static org.lwjgl.opengl.GL12C.glTexSubImage3D;
 import static org.lwjgl.opengl.GL30C.GL_TEXTURE_2D_ARRAY;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
-import static org.lwjgl.opengl.GL42C.glTexStorage3D;
-import static org.lwjgl.opengl.GL43C.glCopyImageSubData;
 
 @Slf4j
 @Component
@@ -52,15 +54,26 @@ public final class TextureArrayRegistryImplementation
             final var layers = textures.size();
 
             final var format = getTextureFormat(textures);
+            if (!StreamEx.of(textures).allMatch(texture -> texture.getWidth() == width && texture.getHeight() == height))
+                throw new IllegalArgumentException(String.format("Not all textures of the texture array %s have the same size %dx%d", name, width, height));
+
             final var textureArrayID = memory.getTextureArrays().create("Texture array %s", name);
             glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayID);
-            glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, format.getInternal(), width, height, layers);
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format.getInternal(), width, height, layers, 0, format.getExternal(), GL_UNSIGNED_BYTE, (ByteBuffer) null);
 
-            for (int i = 0; i < layers; i++) {
-                final var layerTextureInternalID = textures.get(i).getInternalID();
-                glCopyImageSubData(layerTextureInternalID, GL_TEXTURE_2D, 0, 0, 0, 0,
-                        textureArrayID, GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
-                        width, height, 1);
+            // Layers are copied through the client memory: glCopyImageSubData requires GL 4.3, which is not available on macOS (GL 4.1)
+            glPixelStorei(GL_PACK_ALIGNMENT, 1);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            final var pixels = MemoryUtil.memAlloc(width * height * format.getChannelsCount());
+            try {
+                for (int i = 0; i < layers; i++) {
+                    glBindTexture(GL_TEXTURE_2D, textures.get(i).getInternalID());
+                    glGetTexImage(GL_TEXTURE_2D, 0, format.getExternal(), GL_UNSIGNED_BYTE, pixels);
+                    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, format.getExternal(), GL_UNSIGNED_BYTE, pixels);
+                }
+            } finally {
+                MemoryUtil.memFree(pixels);
+                glBindTexture(GL_TEXTURE_2D, 0);
             }
 
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
