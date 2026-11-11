@@ -2,7 +2,6 @@ package io.github.trimax.venta.engine.utils;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -13,7 +12,7 @@ import static org.lwjgl.stb.STBImage.*;
 @UtilityClass
 public final class IconUtil {
     public void setIcon(final long windowID, @NonNull final byte[] data) {
-        final var imageBuffer = BufferUtils.createByteBuffer(data.length);
+        final var imageBuffer = MemoryUtil.memAlloc(data.length);
         imageBuffer.put(data);
         imageBuffer.flip();
 

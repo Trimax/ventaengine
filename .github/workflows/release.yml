@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           cache: maven
-          java-version: '22'
+          java-version: '25'
           distribution: temurin
           server-id: central
           server-username: CENTRAL_TOKEN_USERNAME

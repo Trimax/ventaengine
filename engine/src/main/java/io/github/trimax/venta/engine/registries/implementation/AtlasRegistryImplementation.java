@@ -3,9 +3,9 @@ package io.github.trimax.venta.engine.registries.implementation;
 import java.nio.ByteBuffer;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTBakedChar;
 import org.lwjgl.stb.STBTruetype;
+import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsFont;
@@ -30,14 +30,17 @@ public final class AtlasRegistryImplementation
 
     public AtlasEntityImplementation create(final String name, final int i, final ByteBuffer fontBuffer) {
         return get(name, () -> {
-            final var bitmap = BufferUtils.createByteBuffer(DefinitionsFont.ATLAS_WIDTH * DefinitionsFont.ATLAS_HEIGHT);
+            final var bitmap = MemoryUtil.memAlloc(DefinitionsFont.ATLAS_WIDTH * DefinitionsFont.ATLAS_HEIGHT);
             final var characterBuffer = STBTTBakedChar.malloc(DefinitionsFont.ATLAS_COUNT_CHARACTERS);
 
             final var firstChar = i * DefinitionsFont.ATLAS_COUNT_CHARACTERS;
 
             final var result = STBTruetype.stbtt_BakeFontBitmap(fontBuffer, DefinitionsFont.FONT_HEIGHT, bitmap, DefinitionsFont.ATLAS_WIDTH, DefinitionsFont.ATLAS_HEIGHT, firstChar, characterBuffer);
-            if (result <= 0)
+            if (result <= 0) {
+                MemoryUtil.memFree(bitmap);
+                characterBuffer.free();
                 throw new TextureBakeException("Failed to bake font bitmap atlas " + i);
+            }
 
             return abettor.createAtlas(textureRepository.create(name, bitmap), characterBuffer);
         });

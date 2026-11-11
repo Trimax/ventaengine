@@ -4,6 +4,8 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.function.Consumer;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
@@ -100,7 +102,8 @@ public final class ConsoleController extends AbstractController<ConsoleState, Vo
     }
 
     private void print(final ConsoleMessageType type, final String format, final Object... arguments) {
-        this.get().getHistory().add(new ConsoleController.ConsoleMessage(type, String.format(format, arguments)));
+        final var message = ArrayUtils.isEmpty(arguments) ? format : String.format(format, arguments);
+        this.get().getHistory().add(new ConsoleController.ConsoleMessage(type, message));
     }
 
     public record ConsoleMessage(ConsoleMessageType type, String text) {}
