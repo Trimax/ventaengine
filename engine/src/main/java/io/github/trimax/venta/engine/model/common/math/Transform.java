@@ -56,7 +56,7 @@ public final class Transform {
     }
 
     public void scale(@NonNull final Vector3fc factor) {
-        this.scale.add(factor, this.scale);
+        this.scale.mul(factor, this.scale);
         this.dirty = true;
     }
 
