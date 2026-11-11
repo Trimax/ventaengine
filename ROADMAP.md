@@ -103,14 +103,6 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 - [ ] `MixerController.java:28` passes a null image to `ImageUtil.write` when not all channels are set;
   `ImageUtil.java:69-77` throws from inside a native STB callback.
 
-## Build and release
-
-- [ ] **Release publishes `main`, not the release tag.** `.github/workflows/release.yml:16` checks out `main`; if `main`
-  moves during the deploy, the version bump push is rejected and the next release re-publishes an existing version.
-  Build from the tag and bump with `git pull --rebase` before pushing.
-- [ ] Add the `github-actions` ecosystem to `.github/dependabot.yml`; action versions are mixed (v4 / v5).
-- [ ] `examples/.../ArchiveApplicationStartupHandler.java:16` loads `examples/data/example.vea` relative to the working directory.
-
 ## Tests
 
 - [ ] An end-to-end test: build an archive with the editor and load it with the engine (would catch the path and duplicate issues).

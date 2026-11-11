@@ -216,8 +216,9 @@ Every example is a separate application in `examples` (`io.github.trimax.example
 ## Building and releasing
 * `mvn package` builds all modules, runs the tests and checkstyle. Use JDK 25.
 * Pushes and pull requests to `main` are built by the `Build` workflow.
-* Creating a GitHub release runs the `Release` workflow: it publishes `container` and `engine` (and the parent POM)
-  to Maven Central with the current version, then bumps the patch version in `main`.
+* Creating a GitHub release runs the `Release` workflow: it builds the commit of the release tag, checks that the tag
+  (with an optional `v` prefix) matches the project version, publishes `container` and `engine` (and the parent POM)
+  to Maven Central, then bumps the patch version in `main`.
 
 ## Contribution
 Contributions, issues, and feature requests are welcome! Feel free to fork the repository and submit pull requests.

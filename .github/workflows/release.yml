@@ -10,10 +10,13 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name }}
     steps:
+      # Publish exactly the commit the release was created from, even if main has moved since then
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.release.tag_name }}
           fetch-depth: 0
 
       - name: Set up Java
@@ -28,6 +31,15 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
 
+      - name: Check version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          if [ "${TAG#v}" != "$VERSION" ]; then
+            echo "::error::Release tag $TAG doesn't match the project version $VERSION"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
       - name: Build & publish
         run: set -o pipefail && mvn -P release --batch-mode clean deploy -pl '!editor,!examples' | tee maven-deploy.log
         env:
@@ -35,16 +47,30 @@ jobs:
           CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      # The next version is committed to the current main, not to the released commit
       - name: Bump version
         run: |
-          OLD=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD"
-          NEW="$MAJOR.$MINOR.$((PATCH + 1))"
-          mvn versions:set -DnewVersion=$NEW -DgenerateBackupPoms=false -DprocessAllModules=true
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout -B main origin/main
+
+          CURRENT=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          if [ "$CURRENT" != "$VERSION" ]; then
+            echo "main is already at $CURRENT, the version is not bumped"
+            exit 0
+          fi
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          NEW="$MAJOR.$MINOR.$((PATCH + 1))"
+          mvn versions:set -DnewVersion=$NEW -DgenerateBackupPoms=false -DprocessAllModules=true
           git commit -am "Bump version to $NEW"
-          git push
+
+          for attempt in 1 2 3; do
+            git push origin main && exit 0
+            git pull --rebase origin main
+          done
+          exit 1
 
       - name: Upload logs
         if: always()
