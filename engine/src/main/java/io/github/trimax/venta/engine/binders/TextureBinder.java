@@ -37,7 +37,8 @@ public final class TextureBinder extends AbstractBinder {
         glActiveTexture(TextureUnit.Skybox.getLocationID());
         bind(program.getUniformID(ShaderUniform.TextureSkybox), TextureUnit.Skybox.getId());
 
-        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox != null ? skybox.getInternalID() : textureRegistry.getDefaultTexture().getInternalID());
+        // The default texture is 2D and can't be bound to the cube map target; shaders check useTextureSkybox
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox != null ? skybox.getInternalID() : 0);
     }
 
     public void bind(final ProgramEntityImplementation program, final TextureEntityImplementation texture) {
