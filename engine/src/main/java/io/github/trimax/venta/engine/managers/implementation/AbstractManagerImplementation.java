@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.managers.implementation;
 
+import io.github.trimax.venta.container.utils.EventUtil;
+import io.github.trimax.venta.engine.events.InstanceDeletedEvent;
 import io.github.trimax.venta.engine.managers.AbstractManager;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import lombok.NonNull;
@@ -45,6 +47,7 @@ public abstract class AbstractManagerImplementation<T extends I, I extends Abstr
             return;
         }
 
+        EventUtil.post(new InstanceDeletedEvent(entity));
         destroy(entity);
         log.debug("{} {} deleted", entity.getClass().getSimpleName(), entity.getID());
     }

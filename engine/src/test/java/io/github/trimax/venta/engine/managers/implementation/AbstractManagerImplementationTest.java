@@ -7,6 +7,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.google.common.eventbus.Subscribe;
+
+import io.github.trimax.venta.container.utils.EventUtil;
+import io.github.trimax.venta.engine.events.InstanceDeletedEvent;
+
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 
 final class AbstractManagerImplementationTest {
@@ -32,6 +37,20 @@ final class AbstractManagerImplementationTest {
 
         assertTrue(manager.destroyed.isEmpty(), "Not registered instance must not be destroyed");
         assertSame(registered, manager.getInstance(registered.getID()), "Registered instance must be kept");
+    }
+
+    @Test
+    void testDeletePostsEventOnceBeforeDestroy() {
+        final var manager = new TestManager();
+        final var instance = manager.create("instance");
+        final var listener = new DeleteListener(manager, instance);
+        EventUtil.register(listener);
+
+        manager.remove(instance);
+        manager.remove(instance);
+
+        assertEquals(1, listener.events, "Event must be posted exactly once");
+        assertTrue(listener.postedBeforeDestroy, "Event must be posted before the instance is destroyed");
     }
 
     @Test
@@ -61,6 +80,27 @@ final class AbstractManagerImplementationTest {
         @Override
         public String getName() {
             return id;
+        }
+    }
+
+    private static final class DeleteListener {
+        private final TestManager manager;
+        private final TestInstance instance;
+        private boolean postedBeforeDestroy;
+        private int events;
+
+        private DeleteListener(final TestManager manager, final TestInstance instance) {
+            this.manager = manager;
+            this.instance = instance;
+        }
+
+        @Subscribe
+        public void onInstanceDeleted(final InstanceDeletedEvent event) {
+            if (event.instance() != instance)
+                return;
+
+            events++;
+            postedBeforeDestroy = manager.destroyed.isEmpty();
         }
     }
 
