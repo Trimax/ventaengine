@@ -19,7 +19,7 @@ public final class MazeVentaApplication implements VentaEngineApplication {
         return new VentaEngineConfiguration() {
             @Override
             public @NonNull RenderConfiguration getRenderConfiguration() {
-                return new RenderConfiguration(false, false, false, true, AntialiasingSamples.X8);
+                return new RenderConfiguration(true, false, false, true, AntialiasingSamples.X8);
             }
         };
     }

@@ -19,7 +19,7 @@ public final class SoundVentaApplication implements VentaEngineApplication {
         return new VentaEngineConfiguration() {
             @Override
             public @NonNull RenderConfiguration getRenderConfiguration() {
-                return new RenderConfiguration(false, true, true, false, AntialiasingSamples.X2);
+                return new RenderConfiguration(true, true, true, false, AntialiasingSamples.X2);
             }
         };
     }

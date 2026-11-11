@@ -21,7 +21,7 @@ public final class CameraVentaApplication implements VentaEngineApplication {
         return new VentaEngineConfiguration() {
             @Override
             public @NonNull RenderConfiguration getRenderConfiguration() {
-                return new RenderConfiguration(false, true, true, true, AntialiasingSamples.X8);
+                return new RenderConfiguration(true, true, true, true, AntialiasingSamples.X8);
             }
         };
     }
