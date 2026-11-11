@@ -47,7 +47,7 @@ public final class ConsoleCommandExecutor {
 
         final var executor = executors.get(command.getCommand());
         if (executor == null) {
-            consoleController.error(String.format("Unknown command '%s'. Type help", command.getCommand()));
+            consoleController.error("Unknown command '%s'. Type help", command.getCommand());
             log.warn("Executor is not registered for command: {}", command.getCommand());
             return;
         }
