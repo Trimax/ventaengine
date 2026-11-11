@@ -19,10 +19,10 @@ between minor versions. Known issues and planned work are listed in [ROADMAP.md]
 
 | | | |
 |:---:|:---:|:---:|
-| ![Water](docs/images/water.jpg)<br>Water with Gerstner waves | ![Scene](docs/images/scene.jpg)<br>Scene with models, skybox and particles | ![Dynamic light](docs/images/dynamic-light.jpg)<br>Dynamic point lights |
-| ![Textured chest](docs/images/textured-chest.jpg)<br>OBJ model with textures | ![Maze](docs/images/maze.jpg)<br>Maze | ![Terrain](docs/images/terrain.jpg)<br>Terrain from a heightmap (wireframe) |
-| ![Point light](docs/images/point-light.jpg)<br>Colored point lights | ![Colored cube](docs/images/colored-cube.jpg)<br>Material color and textures | ![Emitter](docs/images/emitter.jpg)<br>Particle emitters |
-| ![Reflection](docs/images/reflection.jpg)<br>Skybox reflections | ![Fog](docs/images/fog.jpg)<br>Fog | ![Moveable light](docs/images/moveable-light.jpg)<br>Moving light |
+| ![Water](examples/screenshots/water.jpg)<br>Water with Gerstner waves | ![Scene](examples/screenshots/scene.jpg)<br>Scene with models, skybox and particles | ![Dynamic light](examples/screenshots/dynamic-light.jpg)<br>Dynamic point lights |
+| ![Textured chest](examples/screenshots/textured-chest.jpg)<br>OBJ model with textures | ![Maze](examples/screenshots/maze.jpg)<br>Maze | ![Terrain](examples/screenshots/terrain.jpg)<br>Terrain from a heightmap (wireframe) |
+| ![Point light](examples/screenshots/point-light.jpg)<br>Colored point lights | ![Colored cube](examples/screenshots/colored-cube.jpg)<br>Material color and textures | ![Emitter](examples/screenshots/emitter.jpg)<br>Particle emitters |
+| ![Reflection](examples/screenshots/reflection.jpg)<br>Skybox reflections | ![Fog](examples/screenshots/fog.jpg)<br>Fog | ![Moveable light](examples/screenshots/moveable-light.jpg)<br>Moving light |
 
 More screenshots can be produced by running the [examples](#examples).
 
