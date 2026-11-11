@@ -22,6 +22,9 @@ public final class MaterialBinder extends AbstractBinder {
     public void bind(final ProgramEntityImplementation program, final MaterialEntityImplementation material) {
         bind(program.getUniformID(ShaderUniform.UseMaterial), material != null);
 
+        // Uniforms are per program state, so textures of a previously rendered material must be reset
+        StreamEx.of(TextureType.values()).forEach(type -> bind(type, program, material));
+
         if (material == null)
             return;
 
@@ -30,8 +33,6 @@ public final class MaterialBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.MaterialTiling), material.getTiling());
         bind(program.getUniformID(ShaderUniform.MaterialOffset), material.getOffset());
         bind(program.getUniformID(ShaderUniform.MaterialColor), material.getColor());
-
-        StreamEx.of(TextureType.values()).forEach(type -> bind(type, program, material));
     }
 
     public void bind(final ProgramEntityImplementation program, final List<MaterialEntityImplementation> materials) {
@@ -56,6 +57,6 @@ public final class MaterialBinder extends AbstractBinder {
     }
 
     private void bind(final TextureType type, final ProgramEntityImplementation program, final MaterialEntityImplementation material) {
-        textureBinder.bind(type, program, material.getTexture(type));
+        textureBinder.bind(type, program, material != null ? material.getTexture(type) : null);
     }
 }
