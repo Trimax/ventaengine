@@ -17,9 +17,12 @@ import java.util.*;
 
 @Slf4j
 public final class VentaApplication {
-    private static final Map<Class<?>, Object> components = new HashMap<>();
+    /** Components in creation order, so they are shut down in reverse order */
+    private static final Map<Class<?>, Object> components = new LinkedHashMap<>();
     private static final Deque<Class<?>> creationStack = new ArrayDeque<>();
-    private static final Set<Class<?>> knownComponents = new HashSet<>();
+
+    /** Sorted by class name, so components and injected lists are created in the same order on every run */
+    private static final Set<Class<?>> knownComponents = new TreeSet<>(Comparator.comparing(Class::getName));
 
     public static <T, A extends AbstractVentaApplication<T>> void run(final String[] args, @NonNull final Class<A> appClass, final T argument) {
         MeasurementUtil.measure("VentaApplication startup", () -> VentaApplication.createContext(appClass));
@@ -41,6 +44,10 @@ public final class VentaApplication {
     }
 
     private static void createContext(@NonNull final Class<?> appClass) {
+        // The state is static: a previous run (e.g. another test) must not leak components into this one
+        components.clear();
+        creationStack.clear();
+        knownComponents.clear();
         knownComponents.addAll(ComponentUtil.scan(appClass.getPackageName()));
 
         StreamEx.of(knownComponents).forEach(VentaApplication::createComponent);
@@ -61,14 +68,18 @@ public final class VentaApplication {
             throw new CyclicDependencyException(StreamEx.of(creationStack).append(clazz).joining(" -> "));
 
         creationStack.add(clazz);
+        try {
+            final var constructor = findConstructor(clazz);
+            constructor.setAccessible(true);
 
-        final var constructor = findConstructor(clazz);
-        constructor.setAccessible(true);
+            final var instance = constructor.newInstance(resolveParameters(constructor));
+            components.put(clazz, instance);
+            EventUtil.register(instance);
+        } finally {
+            creationStack.remove(clazz);
+        }
 
-        final var instance = constructor.newInstance(resolveParameters(constructor));
-        components.put(clazz, instance);
-        EventUtil.register(instance);
-        creationStack.remove(clazz);
+        final var instance = components.get(clazz);
 
         log.debug("Component {} was created successfully", clazz.getSimpleName());
         return instance;
@@ -116,7 +127,10 @@ public final class VentaApplication {
     }
 
     private static void shutdown() {
-        StreamEx.of(components.values()).forEach(VentaApplication::shutdownComponent);
+        // Dependents are created after their dependencies, so they are closed first
+        final var created = new ArrayList<>(components.values());
+        Collections.reverse(created);
+        created.forEach(VentaApplication::shutdownComponent);
         components.clear();
     }
 

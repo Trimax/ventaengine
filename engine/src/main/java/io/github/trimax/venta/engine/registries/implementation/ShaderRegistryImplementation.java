@@ -34,8 +34,11 @@ public final class ShaderRegistryImplementation
 
         glShaderSource(id, code);
         glCompileShader(id);
-        if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE)
-            throw new ShaderCompileException(glGetShaderInfoLog(id));
+        if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE) {
+            final var details = glGetShaderInfoLog(id);
+            glDeleteShader(id);
+            throw new ShaderCompileException(String.format("%s: %s", resourcePath, details));
+        }
 
         return abettor.createShader(id, type, code);
     }

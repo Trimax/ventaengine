@@ -43,11 +43,6 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
   creates the texture before faces are loaded and never deletes it on failure; `TextureFormat.of` can return null (:115),
   the NPE is swallowed by `loadTextureSafe` (:88-89) without the exception and leaks the image buffer; the format is always
   stored as `RGB` (:78).
-- [ ] **Gizmos are never removed.** `GizmoManagerImplementation` gets a gizmo for every object/light/emitter/sound/camera,
-  but no `destroy()` removes it.
-- [ ] **Registry cache ignores the argument.** `registries/implementation/AbstractRegistryImplementation.java:22-28` keys
-  only by path: `ShaderRegistry.get(path, Vertex)` then `get(path, Fragment)` returns the vertex shader; failed shaders are
-  not deleted (`ShaderRegistryImplementation.java:37-38`).
 - [ ] **Sound loading.** `SoundRegistryImplementation.java:53-54` drops the original exception; the AL buffer and decoded
   data leak if `alBufferData` throws.
 - [ ] **Window icon channels.** `utils/IconUtil.java`: `stbi_load_from_memory(..., 0)` keeps the source channel count, but
@@ -59,14 +54,6 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 - [ ] **Minimized window.** `model/states/WindowState.java:23`: 0x0 size gives a NaN projection matrix;
   `callbacks/FramebufferSizeCallback.java:21-22` updates a matrix that is overwritten on the next `get` (dead code).
 - [ ] `CameraInstanceImplementation.rotation` is never updated, so `getRotation()` is always (0, 0, 0).
-
-## Console, input and container
-
-- [ ] **Container static state is never reset.** `container/.../VentaApplication.java:20-22,58-69,116-119`:
-  `knownComponents` is never cleared and `creationStack` is not cleaned on exceptions, so container tests depend on the
-  execution order and cycle detection can pass for the wrong reason.
-- [ ] **Injection order is random.** `container/.../VentaApplication.java:110-113` iterates a `HashSet`; `help` output and
-  injected lists have a JVM-dependent order.
 
 ## Editor (`editor/src/main/java/io/github/trimax/venta/editor/`)
 
