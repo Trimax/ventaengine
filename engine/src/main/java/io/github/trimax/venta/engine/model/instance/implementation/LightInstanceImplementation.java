@@ -1,7 +1,5 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import java.util.Optional;
-
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -32,7 +30,8 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
                                 @NonNull final GizmoInstanceImplementation gizmo) {
         super(gizmo, name);
 
-        setAttenuation(Optional.of(prefab.getAttenuation()).orElse(new Attenuation(1.0f, 0.1f, 0.01f)));
+        // Each instance gets its own copy, otherwise changing one light would change all lights of the prefab
+        setAttenuation(new Attenuation(prefab.getAttenuation()));
         setCastShadows(prefab.isCastShadows());
         setIntensity(prefab.getIntensity());
         setColor(prefab.getColor());
