@@ -46,13 +46,13 @@ public final class ArchiveBuildListener implements AbstractListener<ArchiveBuild
     @SneakyThrows
     private void writeGroup(@NonNull final DataOutputStream out, @NonNull final GroupType type) {
         out.writeUTF(type.name());
-        writeNode(out, context.getTree(type));
+        writeNode(out, context.getTree(type), type.getArchiveFolder());
     }
 
     @SneakyThrows
-    private void writeNode(@NonNull final DataOutputStream out, final TreeItem<Resource> node) {
+    private void writeNode(@NonNull final DataOutputStream out, final TreeItem<Resource> node, @NonNull final String name) {
         final var item = node.getValue();
-        out.writeUTF(item.name().toLowerCase());
+        out.writeUTF(name);
 
         out.writeBoolean(item.hasExistingReference());
         if (item.hasExistingReference()) {
@@ -63,6 +63,6 @@ public final class ArchiveBuildListener implements AbstractListener<ArchiveBuild
 
         out.writeInt(node.getChildren().size());
         for (final var child : node.getChildren())
-            writeNode(out, child);
+            writeNode(out, child, child.getValue().name());
     }
 }

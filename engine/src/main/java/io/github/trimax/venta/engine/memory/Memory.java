@@ -29,7 +29,6 @@ public final class Memory {
         this.textureArrays.cleanup();
         this.textures.cleanup();
         this.buffers.cleanup();
-        this.windows.cleanup();
         this.audioBuffers.cleanup();
         this.audioSources.cleanup();
     }

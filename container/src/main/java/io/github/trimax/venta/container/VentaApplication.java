@@ -28,10 +28,12 @@ public final class VentaApplication {
         if (component == null)
             log.warn("The component {} wasn't found", appClass.getSimpleName());
 
-        if (component != null)
-            component.start(args, argument);
-
-        MeasurementUtil.measure("VentaApplication shutdown", VentaApplication::shutdown);
+        try {
+            if (component != null)
+                component.start(args, argument);
+        } finally {
+            MeasurementUtil.measure("VentaApplication shutdown", VentaApplication::shutdown);
+        }
     }
 
     public static <T, R extends AbstractVentaApplication<T>> void run(final String[] args, @NonNull final Class<R> appClass) {

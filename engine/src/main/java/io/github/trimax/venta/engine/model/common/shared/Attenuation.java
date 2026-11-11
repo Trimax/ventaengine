@@ -17,4 +17,13 @@ public final class Attenuation {
     public Attenuation(@NonNull final AttenuationDTO dto) {
         this(dto.constant(), dto.linear(), dto.quadratic());
     }
+
+    public Attenuation(@NonNull final Attenuation attenuation) {
+        this(attenuation.getConstant(), attenuation.getLinear(), attenuation.getQuadratic());
+    }
+
+    /** Attenuation used when a light doesn't define one. A zero attenuation would divide by zero in shaders */
+    public static Attenuation createDefault() {
+        return new Attenuation(1.0f, 0.1f, 0.01f);
+    }
 }
