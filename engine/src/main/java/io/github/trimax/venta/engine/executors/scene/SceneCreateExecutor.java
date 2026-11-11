@@ -22,7 +22,7 @@ public final class SceneCreateExecutor extends AbstractSceneExecutor {
             return;
         }
 
-        final var scene = getManager(SceneManagerImplementation.class).create(command.value());
+        final var scene = getManager(SceneManagerImplementation.class).create(command.asArgument().value());
         getConsole().info("Scene <%s> created", scene.getID());
     }
 }
