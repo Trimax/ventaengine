@@ -48,9 +48,26 @@ issues, or submit pull requests. Join us in building a powerful, extensible 3D e
 - **Renderer** — Performs the actual drawing of entities to the screen, coordinating with Managers and Binders to render scenes efficiently.
 
 ## Getting Started
-The engine requires Java 22+ and OpenGL 3.3+. To build and run, use your preferred Java IDE or build system.
+The engine requires Java 25+ and OpenGL 3.3+. To build and run, use your preferred Java IDE or build system.
 
 On macOS start with VM argument: `-XstartOnFirstThread`
+
+### Native libraries
+The published `engine` artifact doesn't depend on LWJGL native libraries, so an application adds them for the platforms
+it runs on. The classifier is one of `natives-linux`, `natives-linux-arm64`, `natives-windows`, `natives-windows-arm64`,
+`natives-macos`, `natives-macos-arm64`, and it is needed for `lwjgl`, `lwjgl-opengl`, `lwjgl-glfw`, `lwjgl-stb` and `lwjgl-openal`:
+
+```xml
+<dependency>
+    <groupId>org.lwjgl</groupId>
+    <artifactId>lwjgl</artifactId>
+    <version>${lwjgl.version}</version>
+    <classifier>natives-macos-arm64</classifier>
+</dependency>
+<!-- the same for lwjgl-opengl, lwjgl-glfw, lwjgl-stb and lwjgl-openal -->
+```
+
+See `examples/pom.xml` for a setup that picks the classifier of the current platform via Maven profiles.
 
 ## Contribution
 
