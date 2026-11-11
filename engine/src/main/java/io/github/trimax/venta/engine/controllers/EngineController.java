@@ -41,9 +41,10 @@ public final class EngineController extends AbstractController<EngineState, Vent
     protected void destroy(@NonNull final EngineState state) {
         log.debug("Deinitializing engine state");
 
+        // Instances use prefabs and entities (e.g. a sound source plays a sound buffer), so they are released first
+        managerFactory.cleanup();
         repositoryFactory.cleanup();
         registryFactory.cleanup();
-        managerFactory.cleanup();
         memory.cleanup();
     }
 

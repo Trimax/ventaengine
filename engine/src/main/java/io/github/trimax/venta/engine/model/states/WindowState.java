@@ -19,9 +19,12 @@ public final class WindowState extends AbstractState {
     private int width;
     private int height;
 
+    /** A minimized window has a zero size; the last valid projection is kept instead of dividing by zero */
     public Matrix4f getProjectionMatrix() {
-        final float aspectRatio = (float) width / height;
-        return projectionMatrix.identity().perspective((float) Math.toRadians(60), aspectRatio, 0.1f, 1000f);
+        if (width > 0 && height > 0)
+            projectionMatrix.identity().perspective((float) Math.toRadians(60), (float) width / height, 0.1f, 1000f);
+
+        return projectionMatrix;
     }
 
     public void handleKeyboardKey(final int key, final int scancode, final int action, final int mods) {

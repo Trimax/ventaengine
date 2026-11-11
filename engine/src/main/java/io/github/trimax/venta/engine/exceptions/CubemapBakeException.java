@@ -6,4 +6,8 @@ public final class CubemapBakeException extends AbstractVentaException {
     public CubemapBakeException(final String message) {
         super(message);
     }
+
+    public CubemapBakeException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }
