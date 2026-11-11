@@ -40,7 +40,11 @@ public abstract class AbstractManagerImplementation<T extends I, I extends Abstr
     }
 
     protected final void delete(final T entity) {
-        values.remove(entity.getID());
+        if (!values.remove(entity.getID(), entity)) {
+            log.warn("{} {} is not registered or already deleted", entity.getClass().getSimpleName(), entity.getID());
+            return;
+        }
+
         destroy(entity);
         log.debug("{} {} deleted", entity.getClass().getSimpleName(), entity.getID());
     }
