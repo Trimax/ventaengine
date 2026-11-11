@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -101,5 +102,14 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     public void add(@NonNull final SoundSourceInstance soundSource) {
         if (soundSource instanceof SoundSourceInstanceImplementation instance)
             soundSources.add(instance);
+    }
+
+    @Override
+    public void remove(@NonNull final AbstractInstance instance) {
+        StreamEx.of(terrainSurfaces, waterSurfaces, soundSources, billboards, emitters, objects, lights)
+                .forEach(instances -> instances.remove(instance));
+
+        if (instance instanceof SoundSourceInstanceImplementation soundSource)
+            soundSource.stop();
     }
 }

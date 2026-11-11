@@ -52,4 +52,7 @@ public interface SceneInstance extends AbstractInstance {
     void add(@NonNull final WaterSurfaceInstance surface);
 
     void add(@NonNull final TerrainSurfaceInstance surface);
+
+    /** Removes the instance from the scene. The instance itself is not deleted */
+    void remove(@NonNull final AbstractInstance instance);
 }

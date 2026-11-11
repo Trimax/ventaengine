@@ -2,7 +2,10 @@ package io.github.trimax.venta.engine.managers.implementation;
 
 import java.util.Optional;
 
+import com.google.common.eventbus.Subscribe;
+
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.events.InstanceDeletedEvent;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.SceneManager;
 import io.github.trimax.venta.engine.model.common.scene.SceneBillboard;
@@ -111,6 +114,12 @@ public final class SceneManagerImplementation
         Optional.of(sceneLight).map(SceneLight::getPosition).ifPresent(light::setPosition);
 
         return light;
+    }
+
+    /** A deleted instance must not stay in any scene, otherwise its released resources are used on the next frame */
+    @Subscribe
+    public void onInstanceDeleted(@NonNull final InstanceDeletedEvent event) {
+        instanceIterator().forEachRemaining(scene -> scene.remove(event.instance()));
     }
 
     @Override
