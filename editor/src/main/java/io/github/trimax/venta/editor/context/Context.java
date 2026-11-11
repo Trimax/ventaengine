@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.model.common.resource.Resource;
 import javafx.scene.control.TreeItem;
 import lombok.*;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,6 +26,15 @@ public final class Context {
     
     public void setTree(@NonNull final GroupType type, @NonNull final TreeItem<Resource> tree) {
         groups.put(type, tree);
+    }
+
+    /** Trees of all groups in the order of group types */
+    public Map<GroupType, TreeItem<Resource>> getTrees() {
+        final var trees = new LinkedHashMap<GroupType, TreeItem<Resource>>();
+        for (final var type : GroupType.values())
+            trees.put(type, getTree(type));
+
+        return trees;
     }
 
     public TreeItem<Resource> getTree(@NonNull final GroupType type) {

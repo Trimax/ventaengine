@@ -96,15 +96,9 @@ Paths are relative to `engine/src/main/java/io/github/trimax/venta/engine/` unle
 - [ ] **Absolute paths in the project JSON.** `ResourceAddListener.java:26` stores `getAbsolutePath()`; on another machine
   `ArchiveBuildListener.java:57` silently writes empty nodes and still reports success.
 - [ ] **Silent failures.** `EventUtil` uses a plain `EventBus` that only logs subscriber exceptions; listeners use
-  `@SneakyThrows`; `ArchiveSaveListener.java:39` truncates the file before serializing. Show errors and write to a temp file.
+  `@SneakyThrows`, so failures of save, load and build are not shown to the user. Show errors in the UI.
 - [ ] **NPE for Emitters / Grid meshes.** `ItemRenderer.java:20-33` has no entries for them; `PropertiesController.java:57`.
 - [ ] **Listener leak.** `TreeUtil.initialize` (`TreeUtil.java:22-23`) adds a selection listener on every "New archive";
   auto-sort is attached only to the initial root.
 - [ ] `MixerController.java:28` passes a null image to `ImageUtil.write` when not all channels are set;
   `ImageUtil.java:69-77` throws from inside a native STB callback.
-
-## Tests
-
-- [ ] An end-to-end test: build an archive with the editor and load it with the engine (would catch the path and duplicate issues).
-- [ ] Unit tests for `ResourceService` lookups, JSON save/load round-trips, `ImageUtil`, `PerlinNoise`, `NameUtil`,
-  `ArchiveUtil` (its `while (in.available() > 0)` loop on a GZIP stream relies on EOF timing).

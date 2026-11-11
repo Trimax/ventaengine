@@ -28,10 +28,21 @@ public final class ArchiveUtil {
 
     @SneakyThrows
     private void load(@NonNull final File archive, @NonNull final TriConsumer<String, GroupType, byte[]> resourceLoader) {
-        try (var in = new DataInputStream(new GZIPInputStream(new BufferedInputStream(new FileInputStream(archive))))) {
-            while (in.available() > 0)
+        try (var stream = new PushbackInputStream(new GZIPInputStream(new BufferedInputStream(new FileInputStream(archive))));
+                var in = new DataInputStream(stream)) {
+            while (hasMoreData(stream))
                 loadNode(in, resourceLoader, "", GroupType.of(in.readUTF()));
         }
+    }
+
+    /** GZIPInputStream.available() reports 1 until a read reaches the end, so the end is detected by reading ahead */
+    private boolean hasMoreData(@NonNull final PushbackInputStream stream) throws IOException {
+        final var next = stream.read();
+        if (next == -1)
+            return false;
+
+        stream.unread(next);
+        return true;
     }
 
     @SneakyThrows
