@@ -35,7 +35,7 @@ public final class LightRepositoryImplementation
         final var lightDTO = resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightDTO.class);
         return abettor.createLight(
                 Optional.of(lightDTO.color()).map(ColorDTO::toVector3f).orElse(new Vector3f(DefinitionsCommon.VECTOR3F_ONE)),
-                Optional.ofNullable(lightDTO.attenuation()).map(Attenuation::new).orElse(new Attenuation()),
+                Optional.ofNullable(lightDTO.attenuation()).map(Attenuation::new).orElseGet(Attenuation::createDefault),
                 lightDTO.castShadows(),
                 lightDTO.intensity(),
                 lightDTO.range());
