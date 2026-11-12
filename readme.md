@@ -20,7 +20,7 @@ between minor versions. Known issues and planned work are listed in [ROADMAP.md]
 | | | |
 |:---:|:---:|:---:|
 | ![Water](examples/screenshots/water.jpg)<br>Water with Gerstner waves | ![Scene](examples/screenshots/scene.jpg)<br>Scene with models, skybox and particles | ![Dynamic light](examples/screenshots/dynamic-light.jpg)<br>Dynamic point lights |
-| ![Textured chest](examples/screenshots/textured-chest.jpg)<br>OBJ model with textures | ![Maze](examples/screenshots/maze.jpg)<br>Maze | ![Terrain](examples/screenshots/terrain.jpg)<br>Terrain from a heightmap (wireframe) |
+| ![Textured chest](examples/screenshots/textured-chest.jpg)<br>OBJ model with textures | ![Maze](examples/screenshots/maze.jpg)<br>Maze | ![Terrain](examples/screenshots/terrain.jpg)<br>Terrain with biomes, normal maps and lighting |
 | ![Point light](examples/screenshots/point-light.jpg)<br>Colored point lights | ![Colored cube](examples/screenshots/colored-cube.jpg)<br>Material color and textures | ![Emitter](examples/screenshots/emitter.jpg)<br>Particle emitters |
 | ![Reflection](examples/screenshots/reflection.jpg)<br>Skybox reflections | ![Fog](examples/screenshots/fog.jpg)<br>Fog | ![Moveable light](examples/screenshots/moveable-light.jpg)<br>Moving light |
 

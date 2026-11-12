@@ -7,20 +7,20 @@
   },
   "materials": [
     {
-      "elevation": 0.5,
-      "material": "sand.json"
+      "elevation": 0.45,
+      "material": "terrain-sand.json"
     },
     {
-      "elevation": 0.8,
-      "material": "grass.json"
+      "elevation": 0.58,
+      "material": "terrain-grass.json"
     },
     {
-      "elevation": 0.9,
-      "material": "rock.json"
+      "elevation": 0.72,
+      "material": "terrain-rock.json"
     },
     {
       "elevation": 1.0,
-      "material": "snow.json"
+      "material": "terrain-snow.json"
     }
   ]
 }

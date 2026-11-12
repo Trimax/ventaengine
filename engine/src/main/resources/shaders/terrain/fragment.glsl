@@ -32,6 +32,12 @@ struct DirectionalLight {
     float intensity;
 };
 
+struct Fog {
+    vec3 color;
+    float minimalDistance;
+    float maximalDistance;
+};
+
 struct Material {
     vec4 color;
     vec2 tiling;
@@ -46,7 +52,10 @@ struct Material {
 
 /* Vertex shader output */
 in vec3 vertexNormal;
+in vec3 vertexTangent;
+in vec3 vertexBitangent;
 in vec3 vertexPosition;
+in float vertexHeight;
 in vec2 vertexTextureCoordinates;
 in float vertexTimeElapsed;
 
@@ -61,6 +70,12 @@ uniform sampler2DArray textureAmbientOcclusion;
 /* Feature flags */
 uniform int useDirectionalLight;
 uniform int useTextureSkybox;
+uniform int useTextureNormal;
+uniform int useTextureRoughness;
+uniform int useFog;
+
+/* Fog */
+uniform Fog fog;
 
 /* Materials */
 uniform Material materials[MAX_MATERIALS];
@@ -95,6 +110,38 @@ bool isSet(int value) {
 }
 
 /***
+ * Materials
+ ***/
+
+vec2 getTextureCoordinates(int layer) {
+    return vertexTextureCoordinates * materials[layer].tiling + materials[layer].offset;
+}
+
+vec4 sampleLayers(sampler2DArray textures, int layer0, int layer1, float blend) {
+    vec4 value0 = texture(textures, vec3(getTextureCoordinates(layer0), float(layer0)));
+    vec4 value1 = texture(textures, vec3(getTextureCoordinates(layer1), float(layer1)));
+    return mix(value0, value1, blend);
+}
+
+vec3 getNormal(int layer0, int layer1, float blend) {
+    vec3 normal = normalize(vertexNormal);
+    if (!isSet(useTextureNormal))
+        return normal;
+
+    // Rows of the texture go along +v, while the green channel of an OpenGL normal map points up the image (-v)
+    vec3 mapped = sampleLayers(textureNormal, layer0, layer1, blend).rgb * 2.0 - 1.0;
+    mat3 tbn = mat3(normalize(vertexTangent), -normalize(vertexBitangent), normal);
+    return normalize(tbn * mapped);
+}
+
+float getRoughness(int layer0, int layer1, float blend) {
+    if (isSet(useTextureRoughness))
+        return sampleLayers(textureRoughness, layer0, layer1, blend).r;
+
+    return mix(materials[layer0].roughness, materials[layer1].roughness, blend);
+}
+
+/***
  * Lighting functions
  ***/
 
@@ -103,95 +150,98 @@ float getAttenuation(Attenuation attenuation, float distance) {
     return 1.0 / max(attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance, 0.0001);
 }
 
-/* Computes light */
-vec3 calculateLight(Light light, vec3 normal, vec3 cameraDirection) {
+/* Diffuse light takes the surface color, rough surfaces have weaker and wider highlights */
+vec3 shade(vec3 baseColor, vec3 normal, vec3 lightDirection, vec3 cameraDirection, float roughness) {
+    float diffuse = max(dot(normal, lightDirection), 0.0);
+    float shininess = mix(64.0, 4.0, roughness);
+    float specular = diffuse > 0.0 ? pow(max(dot(reflect(-lightDirection, normal), cameraDirection), 0.0), shininess) * (1.0 - roughness) * 0.5 : 0.0;
+
+    return diffuse * baseColor + vec3(specular);
+}
+
+vec3 calculateLight(Light light, vec3 baseColor, vec3 normal, vec3 cameraDirection, float roughness) {
     if (light.enabled == 0)
         return vec3(0.0);
 
-    vec3 lightDirection = normalize(light.position - vertexPosition);
-    float attenuation = getAttenuation(light.attenuation, length(light.position - vertexPosition));
+    vec3 toLight = light.position - vertexPosition;
+    float attenuation = getAttenuation(light.attenuation, length(toLight));
 
-    float diff = max(dot(normal, lightDirection), 0.0);
-    vec3 R = reflect(-lightDirection, normal);
-    float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
-
-    return (diff + spec * 0.3) * light.color * light.intensity * attenuation;
+    return shade(baseColor, normal, normalize(toLight), cameraDirection, roughness) * light.color * light.intensity * attenuation;
 }
 
-/* Computes directional light */
-vec3 computeDirectionalLight(vec3 normal, vec3 cameraDirection) {
+vec3 calculateDirectionalLight(vec3 baseColor, vec3 normal, vec3 cameraDirection, float roughness) {
     if (!isSet(useDirectionalLight))
         return vec3(0.0);
 
-    vec3 lightDirection = normalize(-directionalLight.direction);
-
-    float diff = max(dot(normal, lightDirection), 0.0);
-    vec3 R = reflect(-lightDirection, normal);
-    float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
-
-    return (diff + spec * 0.3) * directionalLight.color * directionalLight.intensity;
+    return shade(baseColor, normal, normalize(-directionalLight.direction), cameraDirection, roughness)
+            * directionalLight.color * directionalLight.intensity;
 }
 
-vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
-    vec3 result = ambientLight * baseColor;
+vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection, float roughness) {
+    vec3 result = ambientLight * baseColor + calculateDirectionalLight(baseColor, normal, cameraDirection, roughness);
 
     for (int i = 0; i < lightCount; i++)
-        result += calculateLight(lights[i], normal, cameraDirection);
+        result += calculateLight(lights[i], baseColor, normal, cameraDirection, roughness);
 
     return result;
 }
 
-vec2 getMaterialLayersAndBlend(float y, float blendWidth) {
-    int lower = 0;
-    int upper = 0;
-    float blend = 0.0;
+vec3 applyFog(vec3 color) {
+    if (!isSet(useFog))
+        return color;
 
-    for (int i = 0; i < materialCount; i++) {
+    float distance = length(cameraPosition - vertexPosition);
+    float range = max(fog.maximalDistance - fog.minimalDistance, 0.0001);
+    return mix(color, fog.color, clamp((distance - fog.minimalDistance) / range, 0.0, 1.0));
+}
+
+/*
+ * Material i covers the heights from elevations[i - 1] to elevations[i].
+ * Near a boundary the two neighbour materials are blended symmetrically, so both sides meet at 50/50 without a seam.
+ */
+void getMaterialLayers(float y, float blendWidth, out int layer0, out int layer1, out float blend) {
+    int current = materialCount - 1;
+    for (int i = 0; i < materialCount; i++)
         if (y < elevations[i]) {
-            upper = i;
-            lower = max(i - 1, 0);
-
-            float upperBound = elevations[upper];
-            float lowerEdge = upperBound - blendWidth;
-
-            if (y < lowerEdge) blend = 0.0;
-            else blend = clamp((y - lowerEdge) / (upperBound - lowerEdge), 0.0, 1.0);
-
+            current = i;
             break;
         }
+
+    float halfWidth = blendWidth * 0.5;
+    if (current > 0 && y < elevations[current - 1] + halfWidth) {
+        layer0 = current - 1;
+        layer1 = current;
+        blend = smoothstep(elevations[current - 1] - halfWidth, elevations[current - 1] + halfWidth, y);
+        return;
     }
 
-    if (y >= elevations[materialCount - 1]) {
-        lower = materialCount - 1;
-        upper = materialCount - 1;
-        blend = 0.0;
+    if (current < materialCount - 1 && y > elevations[current] - halfWidth) {
+        layer0 = current;
+        layer1 = current + 1;
+        blend = smoothstep(elevations[current] - halfWidth, elevations[current] + halfWidth, y);
+        return;
     }
 
-    return vec2(float(lower), blend);
+    layer0 = current;
+    layer1 = current;
+    blend = 0.0;
 }
 
 void main() {
     // A flat terrain (factor 0) has no height range
     float range = max(factor, 0.0001);
-    float minHeight = -0.5 * range;
-    float maxHeight =  0.5 * range;
+    float yNormalized = clamp(vertexHeight / range + 0.5, 0.0, 1.0);
 
-    float yNormalized = clamp((vertexPosition.y - minHeight) / (maxHeight - minHeight), 0.0, 1.0);
-    vec2 info = getMaterialLayersAndBlend(yNormalized, 0.05);
-    int layer0 = int(info.x);
-    int layer1 = min(layer0 + 1, materialCount - 1);
-    float blend = info.y;
+    int layer0;
+    int layer1;
+    float blend;
+    getMaterialLayers(yNormalized, 0.05, layer0, layer1, blend);
 
-    vec4 color0 = texture(textureDiffuse, vec3(vertexTextureCoordinates, float(layer0)));
-    vec4 color1 = texture(textureDiffuse, vec3(vertexTextureCoordinates, float(layer1)));
+    vec4 materialColor = mix(materials[layer0].color, materials[layer1].color, blend);
+    vec3 baseColor = sampleLayers(textureDiffuse, layer0, layer1, blend).rgb * materialColor.rgb;
+    vec3 normal = getNormal(layer0, layer1, blend);
+    float roughness = getRoughness(layer0, layer1, blend);
+    vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
 
-    outputColor = mix(color0, color1, blend);
-
-//    if (yNormalized > 0.0)
-//        outputColor = vec4(yNormalized, yNormalized, yNormalized, 1.0);
-//    else
-//        outputColor = vec4(1.0, 0.0, 0.0, 1.0);
-//
-//    if (yNormalized <= 0.48)
-//        outputColor = vec4(0.0, 1.0, 0.0, 1.0);
+    outputColor = vec4(applyFog(computeLighting(baseColor, normal, cameraDirection, roughness)), 1.0);
 }
