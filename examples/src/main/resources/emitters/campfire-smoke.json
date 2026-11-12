@@ -1,0 +1,13 @@
+{
+  "particlesCount": 400,
+  "emissionRate": 20,
+  "particleSize": {"min": 3.0, "max": 8.0},
+  "particleLifetime": {"value": 14.0, "deviation": 4.0},
+  "particleVelocity": {
+    "value": {"x": 0.4, "y": 2.2, "z": 0.1},
+    "deviation": {"x": 0.5, "y": 0.6, "z": 0.5}
+  },
+  "particleAngularVelocity": {"value": 0.05, "deviation": 0.05},
+  "texture": "sprites/smoke.png",
+  "lit": true
+}
