@@ -45,6 +45,18 @@ final class HeightmapUtilTest {
     }
 
     @Test
+    void testSixteenBitImageKeepsPrecision() throws IOException {
+        final var image = new BufferedImage(2, 1, BufferedImage.TYPE_USHORT_GRAY);
+        image.getRaster().setSample(0, 0, 0, 1000);
+        image.getRaster().setSample(1, 0, 0, 1001);
+
+        final var heightmap = HeightmapUtil.decode("gray16.png", toBuffer(image));
+
+        assertEquals(1000 / 65535.f, heightmap.sample(0.25f, 0.5f), 1e-7f, "16-bit values must not be reduced to 8 bits");
+        assertEquals(1001 / 65535.f, heightmap.sample(0.75f, 0.5f), 1e-7f, "Neighbour 16-bit values must stay different");
+    }
+
+    @Test
     void testBrokenImageIsRejected() {
         final var data = ByteBuffer.allocateDirect(4).put(new byte[]{1, 2, 3, 4}).flip();
 
