@@ -11,6 +11,8 @@ import io.github.trimax.venta.engine.model.common.scene.SceneEmitter;
 import io.github.trimax.venta.engine.model.common.scene.SceneLight;
 import io.github.trimax.venta.engine.model.common.scene.SceneObject;
 import io.github.trimax.venta.engine.model.common.scene.SceneSoundSource;
+import io.github.trimax.venta.engine.model.common.scene.SceneTerrainSurface;
+import io.github.trimax.venta.engine.model.common.scene.SceneWaterSurface;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
@@ -20,6 +22,8 @@ import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneSoundSourceDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneTerrainSurfaceDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneWaterSurfaceDTO;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
 import io.github.trimax.venta.engine.model.prefabs.implementation.ScenePrefabImplementation;
@@ -38,6 +42,8 @@ import lombok.extern.slf4j.Slf4j;
 public final class SceneRepositoryImplementation
         extends AbstractRepositoryImplementation<ScenePrefabImplementation, ScenePrefab>
         implements SceneRepository {
+    private final TerrainSurfaceRepositoryImplementation terrainSurfaceRepository;
+    private final WaterSurfaceRepositoryImplementation waterSurfaceRepository;
     private final SoundSourceRepositoryImplementation soundSourceRepository;
     private final BillboardRepositoryImplementation billboardRepository;
     private final EmitterRepositoryImplementation emitterRepository;
@@ -60,6 +66,8 @@ public final class SceneRepositoryImplementation
                 TransformationUtil.transform(sceneDTO.emitters(), this::createEmitter),
                 TransformationUtil.transform(sceneDTO.billboards(), this::createBillboard),
                 TransformationUtil.transform(sceneDTO.soundSources(), this::createSoundSource),
+                TransformationUtil.transform(sceneDTO.terrainSurfaces(), this::createTerrainSurface),
+                TransformationUtil.transform(sceneDTO.waterSurfaces(), this::createWaterSurface),
                 Optional.ofNullable(sceneDTO.skybox()).map(cubemapRegistry::get).orElse(null),
                 Optional.ofNullable(sceneDTO.directionalLight()).map(DirectionalLight::new).orElse(null),
                 Optional.ofNullable(sceneDTO.ambientLight()).map(ColorDTO::toVector3f).orElse(new Vector3f(DefinitionsCommon.VECTOR3F_ONE)),
@@ -84,6 +92,14 @@ public final class SceneRepositoryImplementation
 
     private SceneSoundSource createSoundSource(@NonNull final SceneSoundSourceDTO dto) {
         return new SceneSoundSource(dto, soundSourceRepository.get(dto.soundSource()));
+    }
+
+    private SceneTerrainSurface createTerrainSurface(@NonNull final SceneTerrainSurfaceDTO dto) {
+        return new SceneTerrainSurface(dto, terrainSurfaceRepository.get(dto.terrainSurface()));
+    }
+
+    private SceneWaterSurface createWaterSurface(@NonNull final SceneWaterSurfaceDTO dto) {
+        return new SceneWaterSurface(dto, waterSurfaceRepository.get(dto.waterSurface()));
     }
 
     @Override

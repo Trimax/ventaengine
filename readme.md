@@ -157,7 +157,7 @@ Resources are loaded from the classpath (or from registered archives) by folder:
 
 | Folder | Content |
 |---|---|
-| `scenes/` | Scene prefabs: objects, lights, emitters, billboards, sound sources, fog, skybox |
+| `scenes/` | Scene prefabs: objects, lights, emitters, billboards, sound sources, terrain and water surfaces, fog, skybox |
 | `objects/` | Object prefabs: a mesh (or a hierarchy of nodes) with materials and a program |
 | `meshes/` | Meshes in JSON or Wavefront OBJ |
 | `materials/` | Materials: color, parameters and texture maps |
@@ -206,7 +206,7 @@ Every example is a separate application in `examples` (`io.github.trimax.example
 | `fog.FogVentaApplication`, `transparency.TransparencyVentaApplication` | Fog and transparency |
 | `emitter.EmitterVentaApplication`, `billboard.BillboardVentaApplication` | Particles and billboards |
 | `gridmesh.terrain.TerrainVentaApplication`, `gridmesh.water.WaterVentaApplication` | Terrain and water surfaces |
-| `scene.SceneVentaApplication` | Castle by the lake: a scene file with the sky, the sun and the fog, terrain, water, a model, a campfire (particles, flickering light, 3D sound) and a camera flying around |
+| `scene.SceneVentaApplication` | Castle by the lake: the whole scene (sky, sun, fog, terrain, water, a model, a campfire with particles, light and 3D sound) is described in one JSON file, the code only flies the camera around and makes the campfire light flicker |
 | `camera.CameraVentaApplication`, `maze.MazeVentaApplication` | Camera control and input handling |
 | `sound.SoundVentaApplication` | 3D sound sources |
 | `debug.DebugVentaApplication` | Debug mode and gizmos |

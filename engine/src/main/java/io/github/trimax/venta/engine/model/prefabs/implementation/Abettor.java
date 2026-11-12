@@ -72,11 +72,13 @@ public final class Abettor {
                                                  @NonNull final List<SceneEmitter> emitters,
                                                  @NonNull final List<SceneBillboard> billboards,
                                                  @NonNull final List<SceneSoundSource> soundSources,
+                                                 @NonNull final List<SceneTerrainSurface> terrainSurfaces,
+                                                 @NonNull final List<SceneWaterSurface> waterSurfaces,
                                                  final CubemapEntityImplementation skybox,
                                                  final DirectionalLight directionalLight,
                                                  final Vector3f ambientLight,
                                                  final Fog fog) {
-        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, skybox, directionalLight, ambientLight, fog);
+        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, terrainSurfaces, waterSurfaces, skybox, directionalLight, ambientLight, fog);
     }
 
     public SoundSourcePrefabImplementation createSound(@NonNull final SoundEntityImplementation sound,

@@ -13,9 +13,13 @@ import io.github.trimax.venta.engine.model.common.scene.SceneEmitter;
 import io.github.trimax.venta.engine.model.common.scene.SceneLight;
 import io.github.trimax.venta.engine.model.common.scene.SceneObject;
 import io.github.trimax.venta.engine.model.common.scene.SceneSoundSource;
+import io.github.trimax.venta.engine.model.common.scene.SceneTerrainSurface;
+import io.github.trimax.venta.engine.model.common.scene.SceneWaterSurface;
 import io.github.trimax.venta.engine.model.instance.BillboardInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
+import io.github.trimax.venta.engine.model.instance.TerrainSurfaceInstance;
+import io.github.trimax.venta.engine.model.instance.WaterSurfaceInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.AbstractInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
@@ -37,6 +41,8 @@ import one.util.streamex.StreamEx;
 public final class SceneManagerImplementation
         extends AbstractManagerImplementation<SceneInstanceImplementation, SceneInstance>
         implements SceneManager {
+    private final TerrainSurfaceManagerImplementation terrainSurfaceManager;
+    private final WaterSurfaceManagerImplementation waterSurfaceManager;
     private final SoundSourceManagerImplementation soundSourceManager;
     private final BillboardManagerImplementation billboardManager;
     private final EmitterManagerImplementation emitterManager;
@@ -70,6 +76,8 @@ public final class SceneManagerImplementation
         StreamEx.of(prefab.getEmitters()).map(this::createEmitter).forEach(scene::add);
         StreamEx.of(prefab.getBillboards()).map(this::createBillboard).forEach(scene::add);
         StreamEx.of(prefab.getSoundSources()).map(this::createSoundSource).forEach(scene::add);
+        StreamEx.of(prefab.getTerrainSurfaces()).map(this::createTerrainSurface).forEach(scene::add);
+        StreamEx.of(prefab.getWaterSurfaces()).map(this::createWaterSurface).forEach(scene::add);
 
         Optional.ofNullable(prefab.getDirectionalLight()).ifPresent(scene::setDirectionalLight);
         Optional.ofNullable(prefab.getAmbientLight()).ifPresent(scene::setAmbientLight);
@@ -77,6 +85,24 @@ public final class SceneManagerImplementation
         Optional.ofNullable(prefab.getFog()).ifPresent(scene::setFog);
 
         return store(scene);
+    }
+
+    private TerrainSurfaceInstance createTerrainSurface(@NonNull final SceneTerrainSurface sceneSurface) {
+        final var surface = terrainSurfaceManager.create(sceneSurface.getName(), sceneSurface.getPrefab());
+        Optional.of(sceneSurface).map(SceneTerrainSurface::getPosition).ifPresent(surface::setPosition);
+        Optional.of(sceneSurface).map(SceneTerrainSurface::getAngles).ifPresent(surface::setRotation);
+        Optional.of(sceneSurface).map(SceneTerrainSurface::getScale).ifPresent(surface::setScale);
+
+        return surface;
+    }
+
+    private WaterSurfaceInstance createWaterSurface(@NonNull final SceneWaterSurface sceneSurface) {
+        final var surface = waterSurfaceManager.create(sceneSurface.getName(), sceneSurface.getPrefab());
+        Optional.of(sceneSurface).map(SceneWaterSurface::getPosition).ifPresent(surface::setPosition);
+        Optional.of(sceneSurface).map(SceneWaterSurface::getAngles).ifPresent(surface::setRotation);
+        Optional.of(sceneSurface).map(SceneWaterSurface::getScale).ifPresent(surface::setScale);
+
+        return surface;
     }
 
     private SoundSourceInstanceImplementation createSoundSource(@NonNull final SceneSoundSource sceneSoundSource) {

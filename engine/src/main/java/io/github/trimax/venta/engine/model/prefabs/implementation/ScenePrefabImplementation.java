@@ -9,6 +9,8 @@ import io.github.trimax.venta.engine.model.common.scene.SceneEmitter;
 import io.github.trimax.venta.engine.model.common.scene.SceneLight;
 import io.github.trimax.venta.engine.model.common.scene.SceneObject;
 import io.github.trimax.venta.engine.model.common.scene.SceneSoundSource;
+import io.github.trimax.venta.engine.model.common.scene.SceneTerrainSurface;
+import io.github.trimax.venta.engine.model.common.scene.SceneWaterSurface;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
@@ -35,6 +37,12 @@ public class ScenePrefabImplementation extends AbstractPrefabImplementation impl
 
     @NonNull
     List<SceneSoundSource> soundSources;
+
+    @NonNull
+    List<SceneTerrainSurface> terrainSurfaces;
+
+    @NonNull
+    List<SceneWaterSurface> waterSurfaces;
 
     CubemapEntityImplementation skybox;
 

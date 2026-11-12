@@ -10,12 +10,16 @@ import io.github.trimax.venta.engine.model.dto.scene.SceneFogDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneSoundSourceDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneTerrainSurfaceDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneWaterSurfaceDTO;
 
 public record SceneDTO(List<SceneLightDTO> lights,
                        List<SceneObjectDTO> objects,
                        List<SceneEmitterDTO> emitters,
                        List<SceneBillboardDTO> billboards,
                        List<SceneSoundSourceDTO> soundSources,
+                       List<SceneTerrainSurfaceDTO> terrainSurfaces,
+                       List<SceneWaterSurfaceDTO> waterSurfaces,
                        SceneDirectionalLightDTO directionalLight,
                        ColorDTO ambientLight,
                        SceneFogDTO fog,
