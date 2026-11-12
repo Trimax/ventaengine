@@ -104,6 +104,7 @@ public enum ShaderUniform {
     UseFoam("useFoam"),
 
     Elevations("elevations"),
+    GridSize("gridSize"),
 
     /* Common model parameters transformation */
     Factor("factor"),

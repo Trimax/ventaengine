@@ -28,6 +28,8 @@ public final class TextureBinder extends AbstractBinder {
     private final TextureRegistryImplementation textureRegistry;
 
     public void bind(final TextureType type, final ProgramEntityImplementation program, final TextureArrayEntityImplementation texture) {
+        // The default array is a placeholder for materials without this texture type
+        bind(program.getUniformID(type.getUseTextureUniform()), texture != null && texture != textureArrayRegistry.getDefaultTextureArray());
         bind(type.getUnit(), texture, program.getUniformID(type.getTextureUniform()));
     }
 

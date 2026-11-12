@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import org.joml.Vector2f;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.GridMeshVertexLayout;
@@ -32,7 +33,8 @@ public final class GridMeshRegistryImplementation
         final var gridMeshDTO = resourceService.getAsObject(String.format("/gridmeshes/%s", resourcePath), GridMeshDTO.class);
         final var grid = GeometryUtil.createGrid(gridMeshDTO.size(), gridMeshDTO.segments());
 
-        return abettor.createGridMesh(geometryHelper.create(resourcePath, GridMeshVertexLayout.class, grid.vertices(), grid.facets(), null));
+        return abettor.createGridMesh(geometryHelper.create(resourcePath, GridMeshVertexLayout.class, grid.vertices(), grid.facets(), null),
+                new Vector2f(gridMeshDTO.size()));
     }
 
     @Override

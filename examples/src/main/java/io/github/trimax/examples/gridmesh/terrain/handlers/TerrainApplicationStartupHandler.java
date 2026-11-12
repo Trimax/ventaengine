@@ -1,7 +1,7 @@
 package io.github.trimax.examples.gridmesh.terrain.handlers;
 
+import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.context.VentaContext;
-import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +14,16 @@ public final class TerrainApplicationStartupHandler implements VentaEngineStartu
         log.info("Terrain demo application started");
 
         final var scene = context.getSceneManager().getCurrent();
-        scene.setAmbientLight(new Vector3f(1.f));
+        scene.setAmbientLight(new Vector3f(0.25f));
+        scene.setDirectionalLight(new DirectionalLight(new Vector3f(1.f, 0.95f, 0.85f), new Vector3f(-1.f, -0.6f, -0.4f), 1.2f));
+        scene.setSkybox(context.getCubemapRegistry().get("clouds.json"));
 
         final var terrain = context.getTerrainSurfaceManager().create("Terrain", context.getTerrainSurfaceRepository().get("terrain.json"));
         terrain.setScale(new Vector3f(1.f, 0.5f, 1.f));
-        terrain.setDrawMode(DrawMode.Edge);
         scene.add(terrain);
 
         final var camera = context.getCameraManager().getCurrent();
-        camera.setPosition(new Vector3f(0f, 100f, 400f));
+        camera.setPosition(new Vector3f(0f, 70f, 260f));
         camera.lookAt(new Vector3f(0f));
     }
 }

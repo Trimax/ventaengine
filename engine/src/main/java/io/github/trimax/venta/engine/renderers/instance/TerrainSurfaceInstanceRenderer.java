@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.*;
 import io.github.trimax.venta.engine.enums.TextureType;
@@ -32,6 +33,7 @@ public final class TerrainSurfaceInstanceRenderer extends
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
     private final LightBinder lightBinder;
+    private final FogBinder fogBinder;
     private final TimeBinder timeBinder;
 
     @Override
@@ -53,10 +55,13 @@ public final class TerrainSurfaceInstanceRenderer extends
         cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());
 
         matrixBinder.bindModelMatrix(surface.getProgram(), getContext().getModelMatrixBuffer());
+        matrixBinder.bindNormalMatrix(surface.getProgram(), getContext().getNormalMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(surface.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
         materialBinder.bind(surface.getProgram(), surface.getMaterials());
-        elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getElevations(), surface.getFactor());
+        elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getElevations(), surface.getFactor(),
+                surface.getGridMesh().getSize());
+        fogBinder.bind(surface.getProgram(), getContext().getScene().getFog());
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
 
         StreamEx.of(TextureType.values()).forEach(type -> textureBinder.bind(type, surface.getProgram(), surface.getTextureArrays().get(type)));

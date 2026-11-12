@@ -1,0 +1,24 @@
+{
+  "metalness": 0.0,
+  "roughness": 0.9,
+  "opacity": 1.0,
+  "tiling": {
+    "x": 60.0,
+    "y": 60.0
+  },
+  "offset": {
+    "x": 0.0,
+    "y": 0.0
+  },
+  "color": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+  },
+  "textures": {
+    "diffuse": "terrain/sand/diffuse.jpg",
+    "normal": "terrain/sand/normal.jpg",
+    "roughness": "terrain/sand/roughness.jpg"
+  }
+}
