@@ -17,6 +17,7 @@ import io.github.trimax.venta.engine.model.instance.BillboardInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
+import io.github.trimax.venta.engine.model.instance.implementation.AbstractInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.LightInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
@@ -119,7 +120,8 @@ public final class SceneManagerImplementation
     /** A deleted instance must not stay in any scene, otherwise its released resources are used on the next frame */
     @Subscribe
     public void onInstanceDeleted(@NonNull final InstanceDeletedEvent event) {
-        instanceIterator().forEachRemaining(scene -> scene.remove(event.instance()));
+        if (event.instance() instanceof AbstractInstanceImplementation object && object.getParent() != null)
+            object.getParent().remove(object);
     }
 
     @Override
@@ -146,5 +148,6 @@ public final class SceneManagerImplementation
     @Override
     protected void destroy(final SceneInstanceImplementation scene) {
         log.info("Destroying scene {} ({})", scene.getID(), scene.getName());
+        scene.detachAll();
     }
 }

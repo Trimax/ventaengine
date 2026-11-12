@@ -15,6 +15,11 @@ public final class TestMeshes {
         return mesh(new Vector3f(-0.5f * size), new Vector3f(0.5f * size));
     }
 
+    /** A program without GPU resources */
+    public static ProgramEntityImplementation program() {
+        return new ProgramEntityImplementation(0);
+    }
+
     public static MeshEntityImplementation mesh(final Vector3f min, final Vector3f max) {
         return new MeshEntityImplementation(new Geometry(0, null, null, null), new BoundingBox(min, max));
     }
