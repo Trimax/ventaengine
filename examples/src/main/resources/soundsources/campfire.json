@@ -1,0 +1,9 @@
+{
+  "volume": 1.0,
+  "pitch": 1.0,
+  "looping": true,
+  "referenceDistance": 20.0,
+  "maximalDistance": 300.0,
+  "rolloff": 0.6,
+  "sound": "fire.ogg"
+}

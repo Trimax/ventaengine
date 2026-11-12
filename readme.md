@@ -19,7 +19,7 @@ between minor versions. Known issues and planned work are listed in [ROADMAP.md]
 
 | | | |
 |:---:|:---:|:---:|
-| ![Water](examples/screenshots/water.jpg)<br>Water with Gerstner waves | ![Scene](examples/screenshots/scene.jpg)<br>Scene with models, skybox and particles | ![Dynamic light](examples/screenshots/dynamic-light.jpg)<br>Dynamic point lights |
+| ![Water](examples/screenshots/water.jpg)<br>Water with Gerstner waves | ![Scene](examples/screenshots/scene.jpg)<br>Castle by the lake: terrain, water, fog, particles and 3D sound | ![Dynamic light](examples/screenshots/dynamic-light.jpg)<br>Dynamic point lights |
 | ![Textured chest](examples/screenshots/textured-chest.jpg)<br>OBJ model with textures | ![Maze](examples/screenshots/maze.jpg)<br>Maze | ![Terrain](examples/screenshots/terrain.jpg)<br>Terrain with biomes, normal maps and lighting |
 | ![Point light](examples/screenshots/point-light.jpg)<br>Colored point lights | ![Colored cube](examples/screenshots/colored-cube.jpg)<br>Material color and textures | ![Emitter](examples/screenshots/emitter.jpg)<br>Particle emitters |
 | ![Reflection](examples/screenshots/reflection.jpg)<br>Skybox reflections | ![Fog](examples/screenshots/fog.jpg)<br>Fog | ![Moveable light](examples/screenshots/moveable-light.jpg)<br>Moving light |
@@ -206,7 +206,7 @@ Every example is a separate application in `examples` (`io.github.trimax.example
 | `fog.FogVentaApplication`, `transparency.TransparencyVentaApplication` | Fog and transparency |
 | `emitter.EmitterVentaApplication`, `billboard.BillboardVentaApplication` | Particles and billboards |
 | `gridmesh.terrain.TerrainVentaApplication`, `gridmesh.water.WaterVentaApplication` | Terrain and water surfaces |
-| `scene.SceneVentaApplication` | A scene loaded from JSON |
+| `scene.SceneVentaApplication` | Castle by the lake: a scene file with the sky, the sun and the fog, terrain, water, a model, a campfire (particles, flickering light, 3D sound) and a camera flying around |
 | `camera.CameraVentaApplication`, `maze.MazeVentaApplication` | Camera control and input handling |
 | `sound.SoundVentaApplication` | 3D sound sources |
 | `debug.DebugVentaApplication` | Debug mode and gizmos |

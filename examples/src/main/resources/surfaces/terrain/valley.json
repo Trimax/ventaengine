@@ -1,0 +1,26 @@
+{
+  "gridMesh": "valley.json",
+  "program": "terrain.json",
+  "elevation": {
+    "heightmap": "heightmaps/valley.png",
+    "factor": 90.0
+  },
+  "materials": [
+    {
+      "elevation": 0.41,
+      "material": "terrain-sand.json"
+    },
+    {
+      "elevation": 0.64,
+      "material": "terrain-grass.json"
+    },
+    {
+      "elevation": 0.8,
+      "material": "terrain-rock.json"
+    },
+    {
+      "elevation": 1.0,
+      "material": "terrain-snow.json"
+    }
+  ]
+}
