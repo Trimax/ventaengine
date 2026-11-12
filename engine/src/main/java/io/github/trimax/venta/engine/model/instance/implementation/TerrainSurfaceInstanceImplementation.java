@@ -3,14 +3,19 @@ package io.github.trimax.venta.engine.model.instance.implementation;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.math.Transform;
+import io.github.trimax.venta.engine.model.common.terrain.Heightmap;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.instance.TerrainSurfaceInstance;
+import io.github.trimax.venta.engine.utils.HeightmapUtil;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import java.util.List;
@@ -24,6 +29,9 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
     private ProgramEntityImplementation program;
 
     private TextureEntityImplementation heightmap;
+
+    @Getter(AccessLevel.NONE)
+    private Heightmap heights;
 
     @NonNull
     private final List<MaterialEntityImplementation> materials;
@@ -53,6 +61,7 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
         this.textureArrays = textureArrays;
         this.elevations = elevations;
         this.materials = materials;
+        this.heights = HeightmapUtil.decode(heightmap.getID(), heightmap.getBuffer());
         this.heightmap = heightmap;
         this.gridMesh = gridMesh;
         this.program = program;
@@ -62,6 +71,15 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
     @Override
     public boolean hasProgram() {
         return program != null;
+    }
+
+    @Override
+    public float getHeight(final float x, final float z) {
+        final var matrix = transform.getMatrix();
+        final var point = matrix.invertAffine(new Matrix4f()).transformPosition(new Vector3f(x, 0.f, z));
+        final var height = (heights.sample(gridMesh.getSize(), gridMesh.getSegments(), point.x, point.z) - 0.5f) * factor;
+
+        return matrix.transformPosition(point.set(point.x, height, point.z)).y;
     }
 
     @Override
@@ -141,7 +159,9 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
 
     @Override
     public void setHeightmap(@NonNull final TextureEntity heightmap) {
-        if (heightmap instanceof TextureEntityImplementation entity)
+        if (heightmap instanceof TextureEntityImplementation entity) {
+            this.heights = HeightmapUtil.decode(entity.getID(), entity.getBuffer());
             this.heightmap = entity;
+        }
     }
 }

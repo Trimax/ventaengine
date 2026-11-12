@@ -34,7 +34,7 @@ public final class GridMeshRegistryImplementation
         final var grid = GeometryUtil.createGrid(gridMeshDTO.size(), gridMeshDTO.segments());
 
         return abettor.createGridMesh(geometryHelper.create(resourcePath, GridMeshVertexLayout.class, grid.vertices(), grid.facets(), null),
-                new Vector2f(gridMeshDTO.size()));
+                new Vector2f(gridMeshDTO.size()), gridMeshDTO.segments());
     }
 
     @Override
