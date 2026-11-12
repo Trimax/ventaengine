@@ -18,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
@@ -73,7 +75,11 @@ public final class TextureRegistryImplementation
             imageBuffer.put(data);
             imageBuffer.flip();
 
-            final var pixels = STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 0);
+            // 16-bit images (heightmaps) keep their precision, the others are loaded with 8 bits per channel
+            final var is16Bit = STBImage.stbi_is_16_bit_from_memory(imageBuffer);
+            final var pixels = is16Bit
+                    ? STBImage.stbi_load_16_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 0)
+                    : STBImage.stbi_load_from_memory(imageBuffer, widthBuffer, heightBuffer, channelsBuffer, 0);
             if (pixels == null) {
                 MemoryUtil.memFree(imageBuffer);
                 throw new UnknownTextureFormatException(String.format("%s (%s)", resourcePath, STBImage.stbi_failure_reason()));
@@ -91,7 +97,10 @@ public final class TextureRegistryImplementation
             final var textureID = memory.getTextures().create("Texture %s", resourcePath);
             glBindTexture(GL_TEXTURE_2D, textureID);
 
-            glTexImage2D(GL_TEXTURE_2D, 0, format.getInternal(), width, height, 0, format.getExternal(), GL_UNSIGNED_BYTE, pixels);
+            if (pixels instanceof ShortBuffer pixels16)
+                glTexImage2D(GL_TEXTURE_2D, 0, format.getInternal16(), width, height, 0, format.getExternal(), GL_UNSIGNED_SHORT, pixels16);
+            else
+                glTexImage2D(GL_TEXTURE_2D, 0, format.getInternal(), width, height, 0, format.getExternal(), GL_UNSIGNED_BYTE, (ByteBuffer) pixels);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -101,10 +110,17 @@ public final class TextureRegistryImplementation
             glGenerateMipmap(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, 0);
 
-            STBImage.stbi_image_free(pixels);
+            free(pixels);
 
             return abettor.createTexture(imageBuffer, format, textureID, width, height);
         }
+    }
+
+    private static void free(@NonNull final Buffer pixels) {
+        if (pixels instanceof ShortBuffer pixels16)
+            STBImage.stbi_image_free(pixels16);
+        else
+            STBImage.stbi_image_free((ByteBuffer) pixels);
     }
 
     @Override
