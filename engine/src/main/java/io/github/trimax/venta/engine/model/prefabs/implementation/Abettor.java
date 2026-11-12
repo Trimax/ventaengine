@@ -61,9 +61,10 @@ public final class Abettor {
                                                      @NonNull final Variable<Vector3f> particleVelocity,
                                                      @NonNull final Variable<Float> particleAngularVelocity,
                                                      final int particlesCount,
-                                                     final float emissionRate) {
+                                                     final float emissionRate,
+                                                     final boolean lit) {
         return new EmitterPrefabImplementation(texture,
-                particleSize, particleLifetime, particleVelocity, particleAngularVelocity, particlesCount, emissionRate);
+                particleSize, particleLifetime, particleVelocity, particleAngularVelocity, particlesCount, emissionRate, lit);
     }
 
     public ScenePrefabImplementation createScene(@NonNull final List<SceneLight> lights,

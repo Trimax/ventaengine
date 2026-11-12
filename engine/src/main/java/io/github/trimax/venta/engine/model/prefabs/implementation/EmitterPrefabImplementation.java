@@ -31,4 +31,7 @@ public class EmitterPrefabImplementation extends AbstractPrefabImplementation im
 
     int particlesCount;
     float emissionRate;
+
+    /** Lit particles (smoke, dust) take the scene lights, unlit ones (fire, sparks) keep their own color */
+    boolean lit;
 }

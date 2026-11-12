@@ -16,6 +16,8 @@ public interface EmitterInstance extends AbstractInstance {
 
     float getEmissionRate();
 
+    boolean isLit();
+
     void setPosition(@NonNull final Vector3fc position);
 
     void setParticleVelocity(@NonNull final Vector3fc particleVelocity);
@@ -23,6 +25,8 @@ public interface EmitterInstance extends AbstractInstance {
     void setParticleVelocityDeviation(@NonNull final Vector3fc particleVelocityDeviation);
 
     void setEmissionRate(final float rate);
+
+    void setLit(final boolean lit);
 
     void setTexture(@NonNull final TextureEntity texture);
 }

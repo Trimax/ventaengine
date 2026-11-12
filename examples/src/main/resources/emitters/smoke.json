@@ -8,5 +8,6 @@
     "deviation": {"x": 0.1, "y": 0.2, "z": 0.1}
   },
   "particleAngularVelocity": {"value": 0.01, "deviation": 0.0},
-  "texture": "sprites/smoke.png"
+  "texture": "sprites/smoke.png",
+  "lit": true
 }

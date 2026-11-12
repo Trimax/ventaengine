@@ -37,7 +37,8 @@ public final class EmitterRepositoryImplementation
                 emitterDTO.particleVelocity(),
                 emitterDTO.particleAngularVelocity(),
                 Math.max(1, emitterDTO.particlesCount()),
-                Math.max(0.f, emitterDTO.emissionRate()));
+                Math.max(0.f, emitterDTO.emissionRate()),
+                emitterDTO.lit());
     }
 
     @Override
