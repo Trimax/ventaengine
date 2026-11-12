@@ -2,6 +2,8 @@ package io.github.trimax.venta.engine.model.entity.implementation;
 
 import org.joml.Vector2fc;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
+import org.joml.Vector2ic;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.ShaderType;
@@ -35,8 +37,8 @@ public final class Abettor {
         return new MaterialEntityImplementation(materialDTO);
     }
 
-    public GridMeshEntityImplementation createGridMesh(@NonNull final Geometry geometry, @NonNull final Vector2fc size) {
-        return new GridMeshEntityImplementation(geometry, new Vector2f(size));
+    public GridMeshEntityImplementation createGridMesh(@NonNull final Geometry geometry, @NonNull final Vector2fc size, @NonNull final Vector2ic segments) {
+        return new GridMeshEntityImplementation(geometry, new Vector2f(size), new Vector2i(segments));
     }
 
     public MeshEntityImplementation createMesh(@NonNull final Geometry geometry,

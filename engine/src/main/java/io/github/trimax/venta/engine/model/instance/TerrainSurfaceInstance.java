@@ -20,6 +20,13 @@ public interface TerrainSurfaceInstance extends AbstractInstance {
 
     float getFactor();
 
+    /**
+     * Height of the rendered terrain surface in world space at the world point (x, z).
+     * Points outside the terrain get the height of its nearest edge.
+     * The result is exact while the terrain is rotated only around the Y axis.
+     */
+    float getHeight(final float x, final float z);
+
     boolean hasProgram();
 
     DrawMode getDrawMode();
