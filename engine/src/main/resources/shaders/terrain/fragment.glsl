@@ -118,10 +118,56 @@ vec2 getTextureCoordinates(int layer) {
     return vertexTextureCoordinates * materials[layer].tiling + materials[layer].offset;
 }
 
+/***
+ * Texture repetition
+ ***/
+
+float hash(vec2 point) {
+    return fract(sin(dot(point, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+/* Smooth value noise in [0, 1] */
+float valueNoise(vec2 point) {
+    vec2 cell = floor(point);
+    vec2 fraction = fract(point);
+    vec2 weight = fraction * fraction * (3.0 - 2.0 * fraction);
+
+    return mix(mix(hash(cell), hash(cell + vec2(1.0, 0.0)), weight.x),
+               mix(hash(cell + vec2(0.0, 1.0)), hash(cell + vec2(1.0, 1.0)), weight.x), weight.y);
+}
+
+/*
+ * A tiled texture without visible repetition (I. Quilez, "texture repetition", technique 3): a slow noise picks
+ * one of 8 random offsets of the texture and neighbour offsets are blended. Explicit gradients keep the mip level
+ * of the original coordinates, so there are no seams where the offset changes.
+ */
+vec4 sampleWithoutRepetition(sampler2DArray textures, vec2 coordinates, float layer) {
+    float index = valueNoise(coordinates * 0.35) * 8.0;
+    float lower = floor(index);
+    float fraction = fract(index);
+
+    vec2 offset0 = sin(vec2(3.0, 7.0) * lower);
+    vec2 offset1 = sin(vec2(3.0, 7.0) * (lower + 1.0));
+
+    vec2 dx = dFdx(coordinates);
+    vec2 dy = dFdy(coordinates);
+    vec4 value0 = textureGrad(textures, vec3(coordinates + offset0, layer), dx, dy);
+    vec4 value1 = textureGrad(textures, vec3(coordinates + offset1, layer), dx, dy);
+
+    return mix(value0, value1, smoothstep(0.2, 0.8, fraction));
+}
+
 vec4 sampleLayers(sampler2DArray textures, int layer0, int layer1, float blend) {
-    vec4 value0 = texture(textures, vec3(getTextureCoordinates(layer0), float(layer0)));
-    vec4 value1 = texture(textures, vec3(getTextureCoordinates(layer1), float(layer1)));
+    vec4 value0 = sampleWithoutRepetition(textures, getTextureCoordinates(layer0), float(layer0));
+    vec4 value1 = sampleWithoutRepetition(textures, getTextureCoordinates(layer1), float(layer1));
     return mix(value0, value1, blend);
+}
+
+/* Large patches of slightly brighter and darker ground, so wide areas of one material don't look uniform */
+float getBrightnessVariation() {
+    vec2 point = vertexTextureCoordinates * 6.0;
+    float noise = valueNoise(point) * 0.6 + valueNoise(point * 2.7 + 13.0) * 0.4;
+    return mix(0.82, 1.12, noise);
 }
 
 vec3 getNormal(int layer0, int layer1, float blend) {
@@ -258,7 +304,7 @@ void main() {
     getMaterialLayers(yNormalized, 0.05, layer0, layer1, blend);
 
     vec4 materialColor = mix(materials[layer0].color, materials[layer1].color, blend);
-    vec3 baseColor = sampleLayers(textureDiffuse, layer0, layer1, blend).rgb * materialColor.rgb;
+    vec3 baseColor = sampleLayers(textureDiffuse, layer0, layer1, blend).rgb * materialColor.rgb * getBrightnessVariation();
     vec3 normal = getNormal(layer0, layer1, blend);
     float roughness = getRoughness(layer0, layer1, blend);
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
