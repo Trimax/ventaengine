@@ -53,9 +53,11 @@ public final class WaterSurfaceInstanceRenderer extends
         glUseProgram(surface.getProgram().getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, surface.getDrawMode().getMode());
 
-        lightBinder.bind(surface.getProgram(), getContext().getScene().getDirectionalLight());
-        lightBinder.bind(surface.getProgram(), getContext().getScene().getAmbientLight());
-        lightBinder.bind(surface.getProgram(), getContext().getScene().getLights());
+        if (getContext().getParent().markLightsBound(surface.getProgram())) {
+            lightBinder.bind(surface.getProgram(), getContext().getScene().getDirectionalLight());
+            lightBinder.bind(surface.getProgram(), getContext().getScene().getAmbientLight());
+            lightBinder.bind(surface.getProgram(), getContext().getScene().getLights());
+        }
 
         cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());
 

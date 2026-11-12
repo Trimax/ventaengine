@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImple
 import io.github.trimax.venta.engine.managers.implementation.ObjectManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.TerrainSurfaceManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.WaterSurfaceManagerImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
@@ -15,6 +16,9 @@ import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
 
 import static org.lwjgl.opengl.GL11C.*;
 
@@ -103,6 +107,15 @@ public final class SceneInstanceRenderer
         private CameraInstanceImplementation camera;
         private Engine.VentaTime time;
 
+        /** Programs are cached by the registry, so they are compared by reference */
+        @Getter(AccessLevel.NONE)
+        private final Set<ProgramEntityImplementation> programsWithLights = Collections.newSetFromMap(new IdentityHashMap<>());
+
+        /** True for the first call per program in a frame: lights are uniforms of the program, so they are uploaded once */
+        public boolean markLightsBound(@NonNull final ProgramEntityImplementation program) {
+            return programsWithLights.add(program);
+        }
+
         public SceneRenderContext with(final WindowState window, final CameraInstanceImplementation camera) {
             window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
             projectionMatrix.set(window.getProjectionMatrix());
@@ -126,6 +139,7 @@ public final class SceneInstanceRenderer
             viewProjectionMatrixBuffer.clear();
             projectionMatrixBuffer.clear();
             viewMatrixBuffer.clear();
+            programsWithLights.clear();
             time = null;
         }
 
