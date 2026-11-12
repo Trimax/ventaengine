@@ -9,7 +9,8 @@ import lombok.Data;
 
 @Data
 public final class SceneApplicationState {
-    private final Vector3f cameraTarget = new Vector3f();
+    /* The middle of the castle (see scenes/demo.json) */
+    private final Vector3f cameraTarget = new Vector3f(40.f, 22.5f, -32.f);
 
     private float cameraAngle = 0.f;
     private float cameraDistance = 140.f;
