@@ -2,80 +2,64 @@
   "gridMesh": "valley.json",
   "program": "water.json",
   "material": {
-    "colorSurface": {"r": 0.12, "g": 0.52, "b": 0.65, "a": 1.0},
-    "colorDepth": {"r": 0.01, "g": 0.13, "b": 0.28, "a": 1.0},
-    "colorPeak": {"r": 0.95, "g": 0.97, "b": 1.0, "a": 1.0},
-    "metalness": 0.8,
+    "colorSurface": {"r": 0.08, "g": 0.2, "b": 0.24, "a": 1.0},
+    "colorDepth": {"r": 0.02, "g": 0.07, "b": 0.1, "a": 1.0},
+    "colorPeak": {"r": 0.8, "g": 0.85, "b": 0.9, "a": 1.0},
+    "metalness": 1.0,
     "opacity": 1.0
   },
   "foam": {
-    "threshold": 0.85,
-    "intensity": 1.0
+    "threshold": 0.97,
+    "intensity": 0.2
   },
   "waves": [
     {
-      "direction": {"x": 1.0, "y": 0.0},
-      "amplitude": 0.1,
-      "length": 25,
-      "steepness": 0.2,
-      "speed": 0.5
+      "direction": {"x": 1.0, "y": 0.3},
+      "amplitude": 0.08,
+      "length": 17,
+      "steepness": 0.3,
+      "speed": 0.6
     },
     {
-      "direction": {"x": 0.0, "y": 1.0},
-      "amplitude": 0.1,
-      "length": 25,
-      "steepness": 0.2,
-      "speed": 0.5
-    },
-
-    {
-      "direction": {"x": 1.0, "y": 1.0},
+      "direction": {"x": -0.4, "y": 1.0},
       "amplitude": 0.05,
-      "length": 5,
+      "length": 11,
+      "steepness": 0.3,
+      "speed": 0.8
+    },
+    {
+      "direction": {"x": 0.7, "y": -0.6},
+      "amplitude": 0.03,
+      "length": 6.5,
       "steepness": 0.4,
-      "speed": 1.0
+      "speed": 1.1
     },
     {
-      "direction": {"x": -1.0, "y": 1.0},
-      "amplitude": 0.05,
-      "length": 5,
+      "direction": {"x": -0.9, "y": -0.2},
+      "amplitude": 0.02,
+      "length": 3.7,
       "steepness": 0.4,
-      "speed": 1.0
-    },
-
-    {
-      "direction": {"x": 0.6, "y": 0.4},
-      "amplitude": 0.005,
-      "length": 0.5,
-      "steepness": 0.8,
-      "speed": 1.2
-    },
-    {
-      "direction": {"x": 0.4, "y": 0.6},
-      "amplitude": 0.005,
-      "length": 0.5,
-      "steepness": 0.8,
-      "speed": 1.2
+      "speed": 1.4
     }
   ],
   "noises": [
     {
-      "scale": 0.2,
-      "speed": 0.6,
+      "scale": 0.35,
+      "speed": 0.3,
       "offset": 1.0,
-      "strength": 0.1
+      "strength": 0.25
     },
     {
-      "scale": 0.4,
-      "speed": 0.6,
+      "scale": 0.9,
+      "speed": 0.5,
       "offset": 2.0,
-      "strength": 0.1
+      "strength": 0.15
     },
     {
-      "scale": 0.8,
-      "speed": 0.6,
+      "scale": 2.1,
+      "speed": 0.8,
       "offset": 3.0,
-      "strength": 0.1
+      "strength": 0.08
     }
   ]
 }
