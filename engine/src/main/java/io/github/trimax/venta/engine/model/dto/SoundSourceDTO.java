@@ -5,5 +5,8 @@ import lombok.NonNull;
 public record SoundSourceDTO(@NonNull String sound,
                              Float volume,
                              Float pitch,
-                             Boolean looping) {
+                             Boolean looping,
+                             Float referenceDistance,
+                             Float maximalDistance,
+                             Float rolloff) {
 }

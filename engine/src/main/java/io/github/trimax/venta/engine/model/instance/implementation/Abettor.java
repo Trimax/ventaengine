@@ -96,9 +96,13 @@ public final class Abettor {
                                                          final float volume,
                                                          final float pitch,
                                                          final boolean looping,
+                                                         final float referenceDistance,
+                                                         final float maximalDistance,
+                                                         final float rolloff,
                                                          final int sourceID,
                                                          @NonNull final GizmoInstanceImplementation gizmo) {
-        return new SoundSourceInstanceImplementation(name, sound, volume, pitch, looping, sourceID, gizmo);
+        return new SoundSourceInstanceImplementation(name, sound, volume, pitch, looping, referenceDistance, maximalDistance, rolloff,
+                sourceID, gizmo);
     }
 
 

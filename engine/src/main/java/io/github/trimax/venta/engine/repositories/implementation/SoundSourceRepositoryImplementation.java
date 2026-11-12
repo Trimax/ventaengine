@@ -21,6 +21,11 @@ import java.util.Optional;
 public final class SoundSourceRepositoryImplementation
         extends AbstractRepositoryImplementation<SoundSourcePrefabImplementation, SoundSourcePrefab>
         implements SoundSourceRepository {
+    /* OpenAL defaults */
+    private static final float DEFAULT_REFERENCE_DISTANCE = 1.f;
+    private static final float DEFAULT_MAXIMAL_DISTANCE = Float.MAX_VALUE;
+    private static final float DEFAULT_ROLLOFF = 1.f;
+
     private final SoundRegistryImplementation soundRegistry;
     private final ResourceService resourceService;
     private final Abettor abettor;
@@ -36,8 +41,11 @@ public final class SoundSourceRepositoryImplementation
         return abettor.createSound(
                 soundRegistry.get(soundSourceDTO.sound()),
                 Optional.ofNullable(soundSourceDTO.volume()).orElse(1.0f),
-                Optional.ofNullable(soundSourceDTO.pitch()).orElse(0.0f),
-                Optional.ofNullable(soundSourceDTO.looping()).orElse(true)
+                Optional.ofNullable(soundSourceDTO.pitch()).orElse(1.0f),
+                Optional.ofNullable(soundSourceDTO.looping()).orElse(true),
+                Optional.ofNullable(soundSourceDTO.referenceDistance()).orElse(DEFAULT_REFERENCE_DISTANCE),
+                Optional.ofNullable(soundSourceDTO.maximalDistance()).orElse(DEFAULT_MAXIMAL_DISTANCE),
+                Optional.ofNullable(soundSourceDTO.rolloff()).orElse(DEFAULT_ROLLOFF)
         );
     }
 

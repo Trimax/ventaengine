@@ -82,8 +82,11 @@ public final class Abettor {
     public SoundSourcePrefabImplementation createSound(@NonNull final SoundEntityImplementation sound,
                                                        final float volume,
                                                        final float pitch,
-                                                       final boolean looping) {
-        return new SoundSourcePrefabImplementation(sound, volume, pitch, looping);
+                                                       final boolean looping,
+                                                       final float referenceDistance,
+                                                       final float maximalDistance,
+                                                       final float rolloff) {
+        return new SoundSourcePrefabImplementation(sound, volume, pitch, looping, referenceDistance, maximalDistance, rolloff);
     }
 
     public BillboardPrefabImplementation createBillboard(@NonNull final ProgramEntityImplementation program,

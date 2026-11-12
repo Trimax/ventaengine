@@ -45,6 +45,9 @@ public final class SoundSourceManagerImplementation
                 Optional.of(prefab.getVolume()).orElse(1.0f),
                 Optional.of(prefab.getPitch()).orElse(1.0f),
                 Optional.of(prefab.isLooping()).orElse(false),
+                prefab.getReferenceDistance(),
+                prefab.getMaximalDistance(),
+                prefab.getRolloff(),
                 memory.getAudioSources().create("Sound source %s", name),
                 gizmoManager.create("Sound source", GizmoType.SoundSource)
         ));
