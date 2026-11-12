@@ -82,7 +82,8 @@ public final class SceneInstanceRenderer
         glDepthMask(false);
         for (final var billboard : scene.getBillboards())
             try (final var _ = billboardRenderer.withContext(getContext())
-                    .withModelMatrix(billboard.getTransform().getMatrix())) {
+                    .withModelMatrix(billboard.getTransform().getMatrix())
+                    .withScene(scene)) {
                 billboardRenderer.render(billboard);
             }
 

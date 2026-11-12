@@ -1,12 +1,15 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.binders.CameraBinder;
+import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.SpriteBinder;
 import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.BillboardInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +28,10 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<BillboardInstanceImplementation, BillboardInstanceRenderer.BillboardRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final GeometryHelper geometryHelper;
+    private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
     private final SpriteBinder spriteBinder;
+    private final FogBinder fogBinder;
 
     @Override
     protected BillboardRenderContext createContext() {
@@ -41,6 +46,8 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
         matrixBinder.bindModelMatrix(billboard.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(billboard.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
+        cameraBinder.bind(billboard.getProgram(), getContext().getParent().getCamera());
+        fogBinder.bind(billboard.getProgram(), getContext().getScene().getFog());
         spriteBinder.bindSprite(billboard.getProgram(), billboard.getSprite(), getFrameIndex(billboard.getSprite()));
 
         geometryHelper.render(billboard.getGeometry());
@@ -62,6 +69,13 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
         private final FloatBuffer modelMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final Matrix4f viewMatrix = new Matrix4f();
         private final Matrix4f modelMatrix = new Matrix4f();
+
+        private SceneInstanceImplementation scene;
+
+        public BillboardRenderContext withScene(final SceneInstanceImplementation scene) {
+            this.scene = scene;
+            return this;
+        }
 
         public BillboardRenderContext withModelMatrix(final Matrix4f matrix) {
             modelMatrixBuffer.clear();
@@ -86,6 +100,7 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
         @Override
         public void close() {
             modelMatrixBuffer.clear();
+            scene = null;
         }
 
         @Override
