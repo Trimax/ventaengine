@@ -87,7 +87,8 @@ public final class SceneInstanceRenderer
             }
 
         for (final var emitter : scene.getEmitters())
-            try (final var _ = emitterRenderer.withContext(getContext())) {
+            try (final var _ = emitterRenderer.withContext(getContext())
+                    .withScene(scene)) {
                 emitterRenderer.render(emitterManager.getInstance(emitter.getID()));
             }
         glDepthMask(true);

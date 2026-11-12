@@ -12,5 +12,6 @@ public record EmitterDTO(@NonNull String texture,
                          @NonNull Variable<Vector3f> particleVelocity,
                          @NonNull Variable<Float> particleAngularVelocity,
                          int particlesCount,
-                         float emissionRate) {
+                         float emissionRate,
+                         boolean lit) {
 }

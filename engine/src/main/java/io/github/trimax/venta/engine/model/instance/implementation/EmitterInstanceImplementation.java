@@ -48,6 +48,8 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
 
     private float emissionAccumulator = 0f;
 
+    private boolean isLit;
+
     private TextureEntityImplementation texture;
 
     EmitterInstanceImplementation(@NonNull final String name,
@@ -68,6 +70,7 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
         this.texture = texture;
         this.bufferColor = bufferColor;
         this.emissionRate = prefab.getEmissionRate();
+        this.isLit = prefab.isLit();
         this.particleSize = prefab.getParticleSize();
         this.particleLifetime = prefab.getParticleLifetime();
         this.particleAngularVelocity = prefab.getParticleAngularVelocity();
@@ -102,6 +105,11 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
 
     public void setParticleVelocityDeviation(@NonNull final Vector3fc particleVelocityDeviation) {
         this.particleVelocityDeviation.set(particleVelocityDeviation);
+    }
+
+    @Override
+    public void setLit(final boolean lit) {
+        this.isLit = lit;
     }
 
     @Override
