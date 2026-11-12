@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
+import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneFogDTO;
+
 final class FogTest {
     @Test
     void testInvalidDistancesAreRejected() {
@@ -53,5 +56,18 @@ final class FogTest {
 
         assertEquals(0, fog.getMinimalDistance(), "Minimal distance must not be negative");
         assertEquals(20, fog.getMaximalDistance(), "Maximal distance must not change");
+    }
+
+    @Test
+    void testFogHasNoLayerByDefault() {
+        assertEquals(Float.POSITIVE_INFINITY, new Fog(10, 20, new Vector3f()).getHeight(), "The whole way must be fogged");
+        assertEquals(Float.POSITIVE_INFINITY, new Fog(new SceneFogDTO(new Range<>(10.f, 20.f), new ColorDTO(1, 1, 1, 1), null)).getHeight(),
+                "A scene fog without a height must have no layer");
+    }
+
+    @Test
+    void testFogLayerHeightIsKept() {
+        assertEquals(15, new Fog(10, 20, 15, new Vector3f()).getHeight());
+        assertEquals(-3, new Fog(new SceneFogDTO(new Range<>(10.f, 20.f), new ColorDTO(1, 1, 1, 1), -3.f)).getHeight());
     }
 }

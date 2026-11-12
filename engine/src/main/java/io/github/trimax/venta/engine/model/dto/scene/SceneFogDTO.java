@@ -5,5 +5,6 @@ import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import lombok.NonNull;
 
 public record SceneFogDTO(@NonNull Range<Float> distance,
-                          @NonNull ColorDTO color) {
+                          @NonNull ColorDTO color,
+                          Float height) {
 }

@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FogBinder extends AbstractBinder {
+    /** Shaders get a finite height: an infinite fog layer is a very high one */
+    private static final float MAXIMAL_HEIGHT = 1e30f;
+
     public void bind(final ProgramEntityImplementation program, final Fog fog) {
         bind(program.getUniformID(ShaderUniform.UseFogFlag), fog != null);
 
@@ -20,6 +23,7 @@ public final class FogBinder extends AbstractBinder {
 
         bind(program.getUniformID(ShaderUniform.FogMinimalDistance), fog.getMinimalDistance());
         bind(program.getUniformID(ShaderUniform.FogMaximalDistance), fog.getMaximalDistance());
+        bind(program.getUniformID(ShaderUniform.FogHeight), Math.min(fog.getHeight(), MAXIMAL_HEIGHT));
         bind(program.getUniformID(ShaderUniform.FogColor), fog.getColor());
     }
 }

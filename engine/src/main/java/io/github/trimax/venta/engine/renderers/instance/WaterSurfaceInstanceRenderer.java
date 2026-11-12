@@ -12,6 +12,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.CameraBinder;
+import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.NoiseBinder;
@@ -42,6 +43,7 @@ public final class WaterSurfaceInstanceRenderer extends
     private final LightBinder lightBinder;
     private final WaveBinder waveBinder;
     private final TimeBinder timeBinder;
+    private final FogBinder fogBinder;
 
     @Override
     protected WaterSurfaceRenderContext createContext() {
@@ -74,6 +76,7 @@ public final class WaterSurfaceInstanceRenderer extends
 
         waterMaterialBinder.bind(surface.getProgram(), surface.getMaterial());
         waterFoamBinder.bind(surface.getProgram(), surface.getFoam());
+        fogBinder.bind(surface.getProgram(), getContext().getScene().getFog());
 
         geometryHelper.render(surface.getGridMesh().getGeometry());
 

@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.renderers.entity;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
@@ -30,6 +31,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
 
     private final GeometryHelper geometryHelper;
     private final TextureBinder textureBinder;
+    private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
     private final FogBinder fogBinder;
 
@@ -57,6 +59,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
         matrixBinder.bindProjectionMatrix(program, getContext().getParent().getProjectionMatrixBuffer());
         matrixBinder.bindViewMatrix(program, viewMatrixWithoutTranslationBuffer);
 
+        cameraBinder.bind(program, getContext().getParent().getCamera());
         fogBinder.bind(program, getContext().getScene().getFog());
         textureBinder.bind(program, cubemap);
 
