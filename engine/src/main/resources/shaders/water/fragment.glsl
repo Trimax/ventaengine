@@ -146,20 +146,29 @@ float noise(vec2 p) {
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
-/* Computes normal  */
+/*
+ * Ripples: every noise layer is a height field over the surface, its world space gradient tilts the normal.
+ * The gradient doesn't depend on the screen resolution or the distance, unlike screen space derivatives.
+ */
 vec3 calculateNormal() {
-    vec3 normal = vertexNormal;
+    const float STEP = 0.05;
+    vec3 normal = normalize(vertexNormal);
 
     for (int i = 0; i < noiseCount; i++) {
         vec2 uv = vertexPosition.xz * noises[i].scale + timeElapsed * noises[i].speed + noises[i].offset;
 
-        float noiseLevel = noise(uv);
-        vec3 gradNormal = normalize(vec3(-dFdx(noiseLevel), 1.0, -dFdy(noiseLevel)));
+        float level = noise(uv);
+        vec2 gradient = vec2(noise(uv + vec2(STEP, 0.0)) - level, noise(uv + vec2(0.0, STEP)) - level) / STEP * noises[i].scale;
 
-        normal += (gradNormal - vertexNormal) * noises[i].strength;
+        // Far away a pixel covers several ripples: they fade out instead of flickering (the surface gets smooth like a mirror)
+        float detail = 1.0 - smoothstep(0.25, 1.0, length(fwidth(uv)));
+
+        normal.xz -= gradient * noises[i].strength * detail;
     }
 
-    return normalize(normal);
+    // Far away the waves are smaller than a pixel too: the surface is seen as a smooth mirror reflecting the horizon
+    float footprint = length(fwidth(vertexPosition.xz));
+    return normalize(mix(normalize(normal), vec3(0.0, 1.0, 0.0), smoothstep(0.05, 0.5, footprint)));
 }
 
 /***
@@ -195,9 +204,11 @@ vec3 computeDirectionalLight(vec3 baseColor, vec3 normal, vec3 cameraDirection) 
 
     float diff = max(dot(normal, lightDirection), 0.0);
     vec3 R = reflect(-lightDirection, normal);
-    float spec = pow(max(dot(R, cameraDirection), 0.0), 32.0);
 
-    return (diff * baseColor + spec * 0.3) * directionalLight.color * directionalLight.intensity;
+    // The sun is small and bright: a sharp glint on the ripples
+    float spec = pow(max(dot(R, cameraDirection), 0.0), 256.0) * 2.0 + pow(max(dot(R, cameraDirection), 0.0), 24.0) * 0.1;
+
+    return (diff * baseColor + spec) * directionalLight.color * directionalLight.intensity;
 }
 
 vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
@@ -209,22 +220,22 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     return result;
 }
 
+const float WATER_REFLECTANCE = 0.02;
+
 vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
-    vec3 environmentColor = vec3(0.0);
+    // The sun is reflected by the specular light, the environment is the sky
+    if (!isSet(useTextureSkybox))
+        return color;
 
-    if (isSet(useTextureSkybox))
-        environmentColor += texture(textureSkybox, reflect(-cameraDirection, normal)).rgb;
+    vec3 direction = reflect(-cameraDirection, normal);
+    direction.y = abs(direction.y);
+    vec3 environmentColor = texture(textureSkybox, direction).rgb;
 
-    if (isSet(useDirectionalLight))
-        environmentColor += directionalLight.color * directionalLight.intensity;
+    // Schlick fresnel with the reflectance of water (2% looking straight down, all of it at grazing angles)
+    float cosine = clamp(dot(normal, cameraDirection), 0.0, 1.0);
+    float fresnel = WATER_REFLECTANCE + (1.0 - WATER_REFLECTANCE) * pow(1.0 - cosine, 5.0);
 
-    if (!isSet(useTextureSkybox) && !isSet(useDirectionalLight))
-        environmentColor = color;
-
-    // Schlick Fresnel
-    float factor = pow(1.0 - dot(normal, cameraDirection), 3.0);
-
-    return mix(color, environmentColor, factor * material.metalness);
+    return mix(color, environmentColor, fresnel * material.metalness);
 }
 
 /***
