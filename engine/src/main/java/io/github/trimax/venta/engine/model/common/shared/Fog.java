@@ -15,11 +15,25 @@ public final class Fog {
     private float minimalDistance;
     private float maximalDistance;
 
+    /**
+     * Top of the fog layer in world space: only the part of the way below it is fogged.
+     * Infinite by default, so the whole way is fogged and the fog hides the whole sky.
+     */
+    private float height = Float.POSITIVE_INFINITY;
+
     @NonNull
     private Vector3f color;
 
     public Fog(@NonNull final SceneFogDTO dto) {
         this(dto.distance().min(), dto.distance().max(), dto.color().toVector3f());
+
+        if (dto.height() != null)
+            this.height = dto.height();
+    }
+
+    public Fog(final float minimalDistance, final float maximalDistance, final float height, @NonNull final Vector3fc color) {
+        this(minimalDistance, maximalDistance, color);
+        this.height = height;
     }
 
     public Fog(final float minimalDistance, final float maximalDistance, @NonNull final Vector3fc color) {

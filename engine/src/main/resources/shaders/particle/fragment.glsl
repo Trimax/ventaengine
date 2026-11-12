@@ -8,6 +8,7 @@ struct Fog {
     vec3 color;
     float minimalDistance;
     float maximalDistance;
+    float height;
 };
 
 /***
