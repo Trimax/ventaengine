@@ -17,6 +17,12 @@ Paths are relative to `engine/src/main/resources/shaders/` unless stated otherwi
   fragments, and a semi-transparent texture is only alpha blended without sorting. Leaves, grass, fences and other
   foliage need an alpha threshold in the material (fragments below it are discarded, the rest are opaque and write
   depth) and double-sided faces for thin geometry like leaf cards.
+- [ ] **Shader includes.** GLSL has no `#include` (`GL_ARB_shading_language_include` isn't available on macOS), so
+  the same structures and functions (fog, lights and attenuation, `isSet`, noise) are copied into the default,
+  terrain, water, particle, billboard and sky shaders and have to be changed in all of them. A small preprocessor in
+  `ShaderRegistryImplementation` (between reading the source and `glShaderSource`) could replace
+  `#include "common/fog.glsl"` with the file content, include every file once and report cycles, with the shared
+  parts moved to `common/`.
 
 ## Assets
 
