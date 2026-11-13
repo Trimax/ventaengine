@@ -59,7 +59,8 @@ public final class TextureArrayRegistryImplementation
 
             final var textureArrayID = memory.getTextureArrays().create("Texture array %s", name);
             glBindTexture(GL_TEXTURE_2D_ARRAY, textureArrayID);
-            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format.getInternal(), width, height, layers, 0, format.getExternal(), GL_UNSIGNED_BYTE, (ByteBuffer) null);
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format.getInternal(false, textures.getFirst().getColorSpace()), width, height, layers, 0,
+                    format.getExternal(), GL_UNSIGNED_BYTE, (ByteBuffer) null);
 
             // Layers are copied through the client memory: glCopyImageSubData requires GL 4.3, which is not available on macOS (GL 4.1)
             glPixelStorei(GL_PACK_ALIGNMENT, 1);

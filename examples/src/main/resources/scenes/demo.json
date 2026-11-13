@@ -6,7 +6,7 @@
     "intensity": 1.15
   },
   "fog": {
-    "distance": {"min": 80.0, "max": 420.0},
+    "distance": {"min": 140.0, "max": 800.0},
     "color": {"r": 0.86, "g": 0.68, "b": 0.6, "a": 1.0},
     "height": 67.0
   },

@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
+import io.github.trimax.venta.engine.enums.ToneMapping;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.TextureType;
@@ -77,8 +79,10 @@ public final class Abettor {
                                                  final CubemapEntityImplementation skybox,
                                                  final DirectionalLight directionalLight,
                                                  final Vector3f ambientLight,
-                                                 final Fog fog) {
-        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, terrainSurfaces, waterSurfaces, skybox, directionalLight, ambientLight, fog);
+                                                 final Fog fog,
+                                                 final Float exposure,
+                                                 final ToneMapping toneMapping) {
+        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, terrainSurfaces, waterSurfaces, skybox, directionalLight, ambientLight, fog, exposure, toneMapping);
     }
 
     public SoundSourcePrefabImplementation createSound(@NonNull final SoundEntityImplementation sound,

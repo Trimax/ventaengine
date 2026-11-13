@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.model.dto;
 
+import io.github.trimax.venta.engine.enums.ToneMapping;
+
 import java.util.List;
 
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
@@ -23,5 +25,7 @@ public record SceneDTO(List<SceneLightDTO> lights,
                        SceneDirectionalLightDTO directionalLight,
                        ColorDTO ambientLight,
                        SceneFogDTO fog,
+                       Float exposure,
+                       ToneMapping toneMapping,
                        String skybox) {
 }

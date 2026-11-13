@@ -2,7 +2,7 @@
   "type": "Point",
   "color": {"r": 1.0, "g": 0.55, "b": 0.2, "a": 1.0},
   "attenuation": {"constant": 1.0, "linear": 0.05, "quadratic": 0.02},
-  "intensity": 4.0,
+  "intensity": 6.0,
   "range": 100.0,
   "castShadows": false
 }

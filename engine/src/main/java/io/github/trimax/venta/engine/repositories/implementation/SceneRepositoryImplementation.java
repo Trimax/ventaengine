@@ -71,7 +71,9 @@ public final class SceneRepositoryImplementation
                 Optional.ofNullable(sceneDTO.skybox()).map(cubemapRegistry::get).orElse(null),
                 Optional.ofNullable(sceneDTO.directionalLight()).map(DirectionalLight::new).orElse(null),
                 Optional.ofNullable(sceneDTO.ambientLight()).map(ColorDTO::toVector3f).orElse(new Vector3f(DefinitionsCommon.VECTOR3F_ONE)),
-                Optional.ofNullable(sceneDTO.fog()).map(Fog::new).orElse(null));
+                Optional.ofNullable(sceneDTO.fog()).map(Fog::new).orElse(null),
+                sceneDTO.exposure(),
+                sceneDTO.toneMapping());
     }
 
     private SceneLight createLight(@NonNull final SceneLightDTO dto) {

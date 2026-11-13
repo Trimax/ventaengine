@@ -19,5 +19,10 @@ public enum TextureType {
     private final ShaderUniform textureUniform;
     private final ShaderUniform useTextureUniform;
     private final ShaderTextureUniform stackedTextureUniform;
+
+    /** Diffuse maps are colors, the other maps are data */
+    public TextureColorSpace getColorSpace() {
+        return this == Diffuse ? TextureColorSpace.Color : TextureColorSpace.Data;
+    }
 }
 

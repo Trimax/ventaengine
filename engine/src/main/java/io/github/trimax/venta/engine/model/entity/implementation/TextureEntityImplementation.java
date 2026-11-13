@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
+import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import lombok.AccessLevel;
@@ -17,6 +18,9 @@ public class TextureEntityImplementation extends AbstractEntityImplementation im
 
     @NonNull
     TextureFormat format;
+
+    @NonNull
+    TextureColorSpace colorSpace;
 
     int internalID;
     int width;

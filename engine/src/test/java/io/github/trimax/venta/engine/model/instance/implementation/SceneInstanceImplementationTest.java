@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
+import io.github.trimax.venta.engine.enums.ToneMapping;
 import io.github.trimax.venta.engine.model.entity.implementation.TestMeshes;
 import io.github.trimax.venta.engine.model.prefabs.implementation.TestPrefabs;
 
@@ -93,6 +94,34 @@ final class SceneInstanceImplementationTest {
         light.setParent(null);
         light.setParent(second);
         assertSame(second, light.getParent(), "After detaching the instance can get another scene");
+    }
+
+    @Test
+    void testExposureAndToneMappingDefaults() {
+        final var scene = scene("scene");
+
+        assertEquals(1.f, scene.getExposure(), "The exposure 1 keeps the light");
+        assertEquals(ToneMapping.Neutral, scene.getToneMapping(), "Neutral tone mapping keeps the authored colors");
+    }
+
+    @Test
+    void testExposureIsNotNegative() {
+        final var scene = scene("scene");
+
+        scene.setExposure(2.5f);
+        assertEquals(2.5f, scene.getExposure(), "The exposure must be set");
+
+        scene.setExposure(-1.f);
+        assertEquals(0.f, scene.getExposure(), "A negative exposure is no light");
+    }
+
+    @Test
+    void testToneMappingIsSet() {
+        final var scene = scene("scene");
+
+        scene.setToneMapping(ToneMapping.ACES);
+        assertEquals(ToneMapping.ACES, scene.getToneMapping(), "The tone mapping must be set");
+        assertThrows(NullPointerException.class, () -> scene.setToneMapping(null), "The tone mapping is required");
     }
 
     private static SceneInstanceImplementation scene(final String name) {

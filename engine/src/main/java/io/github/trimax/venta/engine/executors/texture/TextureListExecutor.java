@@ -23,7 +23,7 @@ public final class TextureListExecutor extends AbstractTextureExecutor {
 
         final var textureRegistry = getRegistry(TextureRegistryImplementation.class);
         StreamEx.of(textureRegistry.getIds())
-                .map(resourceName -> String.format("%s: %s", resourceName, textureRegistry.get(resourceName).getID()))
+                .map(key -> String.format("%s: %s", key, textureRegistry.find(key).getID()))
                 .map(FormatUtil::indent)
                 .forEach(getConsole()::info);
     }

@@ -28,6 +28,7 @@ More screenshots can be produced by running the [examples](#examples).
 
 ## Features
 * **Window** — windowed and fullscreen modes, vertical synchronization, multisample antialiasing, window icon
+* **HDR** — the scene is lit in linear colors (textures and colors of the definitions are sRGB) and rendered into a floating point framebuffer, then tone mapped (`Neutral` by default, `ACES` or `None`) with an exposure per scene (`"exposure"`, `"toneMapping"` in the scene file)
 * **Scenes** — scenes described in JSON or built in code, switching between scenes, ambient and directional light, fog, skybox
 * **Objects** — meshes from JSON and Wavefront OBJ files, hierarchical objects (a model made of nodes with their own transformations); an OBJ model without a material of its own is split into its groups with the materials of its MTL file
 * **Materials** — color, tiling, offset, metalness and roughness, and diffuse, normal, height (parallax), roughness,

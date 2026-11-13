@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LightBinder extends AbstractBinder {
     public void bind(final ProgramEntityImplementation program, final Vector3fc ambientLight) {
-        bind(program.getUniformID(ShaderUniform.AmbientLight), ambientLight);
+        bindColor(program.getUniformID(ShaderUniform.AmbientLight), ambientLight);
     }
 
     public void bind(final ProgramEntityImplementation program, final DirectionalLight light) {
@@ -28,7 +28,7 @@ public final class LightBinder extends AbstractBinder {
         if (light == null)
             return;
 
-        bind(program.getUniformID(ShaderUniform.LightDirectionalColor), light.getColor());
+        bindColor(program.getUniformID(ShaderUniform.LightDirectionalColor), light.getColor());
         bind(program.getUniformID(ShaderUniform.LightDirectionalIntensity), light.getIntensity());
         bind(program.getUniformID(ShaderUniform.LightDirectionalDirection), light.getDirection());
     }
@@ -54,7 +54,7 @@ public final class LightBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderLightUniform.Position.getUniformName(lightIndex)), light.getPosition());
 
         /* Color and intensity */
-        bind(program.getUniformID(ShaderLightUniform.Color.getUniformName(lightIndex)), light.getColor());
+        bindColor(program.getUniformID(ShaderLightUniform.Color.getUniformName(lightIndex)), light.getColor());
         bind(program.getUniformID(ShaderLightUniform.Intensity.getUniformName(lightIndex)), light.getIntensity());
 
         /* Attenuation */

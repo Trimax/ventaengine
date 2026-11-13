@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.entity;
 
+import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 
 public interface TextureEntity extends AbstractEntity {
@@ -8,4 +9,6 @@ public interface TextureEntity extends AbstractEntity {
     int getHeight();
 
     TextureFormat getFormat();
+
+    TextureColorSpace getColorSpace();
 }

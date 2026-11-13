@@ -20,8 +20,8 @@ public final class WaterMaterialBinder extends AbstractBinder {
 
         bind(program.getUniformID(ShaderUniform.MaterialMetalness), material.getMetalness());
         bind(program.getUniformID(ShaderUniform.MaterialOpacity), material.getOpacity());
-        bind(program.getUniformID(ShaderUniform.MaterialColorSurface), material.getColorSurface());
-        bind(program.getUniformID(ShaderUniform.MaterialColorDepth), material.getColorDepth());
-        bind(program.getUniformID(ShaderUniform.MaterialColorPeak), material.getColorPeak());
+        bindColor(program.getUniformID(ShaderUniform.MaterialColorSurface), material.getColorSurface());
+        bindColor(program.getUniformID(ShaderUniform.MaterialColorDepth), material.getColorDepth());
+        bindColor(program.getUniformID(ShaderUniform.MaterialColorPeak), material.getColorPeak());
     }
 }

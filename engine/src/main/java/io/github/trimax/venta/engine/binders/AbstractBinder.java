@@ -6,6 +6,8 @@ import org.joml.Vector4fc;
 
 import java.nio.FloatBuffer;
 
+import io.github.trimax.venta.engine.utils.ColorUtil;
+
 import static org.lwjgl.opengl.GL20C.*;
 
 abstract class AbstractBinder {
@@ -69,5 +71,15 @@ abstract class AbstractBinder {
     protected final void bindMatrix4(final int uniformID, final FloatBuffer buffer) {
         if (uniformID >= 0)
             glUniformMatrix4fv(uniformID, false, buffer);
+    }
+
+    /** A color of a definition (sRGB) as a linear color for lighting, see ColorUtil */
+    protected final void bindColor(final int uniformID, final Vector3fc color) {
+        bind(uniformID, ColorUtil.toLinear(color.x()), ColorUtil.toLinear(color.y()), ColorUtil.toLinear(color.z()));
+    }
+
+    /** A color of a definition (sRGB) as a linear color for lighting, the alpha is kept */
+    protected final void bindColor(final int uniformID, final Vector4fc color) {
+        bind(uniformID, ColorUtil.toLinear(color.x()), ColorUtil.toLinear(color.y()), ColorUtil.toLinear(color.z()), color.w());
     }
 }
