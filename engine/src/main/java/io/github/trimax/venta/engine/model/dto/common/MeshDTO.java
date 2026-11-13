@@ -14,6 +14,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.engine.layouts.MeshVertexLayout;
+import io.github.trimax.venta.engine.utils.ColorUtil;
 import lombok.NonNull;
 import one.util.streamex.EntryStream;
 import one.util.streamex.StreamEx;
@@ -84,9 +85,9 @@ public record MeshDTO(@NonNull List<Vertex> vertices,
             }
 
             if (vertex.hasColor()) {
-                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_R] = vertex.color().r();
-                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_G] = vertex.color().g();
-                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_B] = vertex.color().b();
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_R] = ColorUtil.toLinear(vertex.color().r());
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_G] = ColorUtil.toLinear(vertex.color().g());
+                packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_B] = ColorUtil.toLinear(vertex.color().b());
                 packedArray[MeshVertexLayout.getFloatsCount() * vertexID + VERTEX_OFFSET_COLOR_A] = vertex.color().a();
             }
         }

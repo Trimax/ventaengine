@@ -47,6 +47,11 @@ public abstract class AbstractRegistryImplementation<T extends E, E extends Abst
         return StreamEx.ofValues(entities).map(this::toView).iterator();
     }
 
+    /** The cached entity of the key (a resource path with its argument), null when it isn't loaded */
+    public final T find(@NonNull final String key) {
+        return entities.get(key);
+    }
+
     public final Set<String> getIds() {
         return entities.keySet();
     }

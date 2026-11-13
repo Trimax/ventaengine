@@ -16,6 +16,7 @@ import org.lwjgl.system.MemoryUtil;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
 import io.github.trimax.venta.engine.enums.CubemapFace;
+import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.CubemapBakeException;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
@@ -111,7 +112,7 @@ public final class CubemapRegistryImplementation
                 throw new CubemapBakeException(String.format("%s face %s has unsupported channels count %d", face, path, channelsBuffer.get(0)));
             }
 
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face.getIndex(), 0, format.getInternal(), widthBuffer.get(0), heightBuffer.get(0),
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face.getIndex(), 0, format.getInternal(false, TextureColorSpace.Color), widthBuffer.get(0), heightBuffer.get(0),
                     0, format.getExternal(), GL_UNSIGNED_BYTE, pixels);
             STBImage.stbi_image_free(pixels);
 

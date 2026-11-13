@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import io.github.trimax.venta.engine.enums.ToneMapping;
+
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
@@ -37,6 +39,10 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     @Setter
     private DirectionalLight directionalLight;
 
+    private float exposure = 1.f;
+
+    private ToneMapping toneMapping = ToneMapping.Neutral;
+
     SceneInstanceImplementation(@NonNull final String name) {
         super(name);
     }
@@ -44,6 +50,16 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
     @Override
     public CubemapEntityImplementation getSkybox() {
         return skybox;
+    }
+
+    @Override
+    public void setToneMapping(@NonNull final ToneMapping toneMapping) {
+        this.toneMapping = toneMapping;
+    }
+
+    @Override
+    public void setExposure(final float exposure) {
+        this.exposure = Math.max(0.f, exposure);
     }
 
     @Override

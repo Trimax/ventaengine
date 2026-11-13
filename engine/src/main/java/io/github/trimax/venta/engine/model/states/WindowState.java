@@ -19,6 +19,9 @@ public final class WindowState extends AbstractState {
     private int width;
     private int height;
 
+    /** Multisampling of the scene framebuffer (the window itself has none, it only shows the tone mapped image) */
+    private final int samples;
+
     /** A minimized window has a zero size; the last valid projection is kept instead of dividing by zero */
     public Matrix4f getProjectionMatrix() {
         if (width > 0 && height > 0)

@@ -32,7 +32,7 @@ public final class MaterialBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.MaterialRoughness), material.getRoughness());
         bind(program.getUniformID(ShaderUniform.MaterialTiling), material.getTiling());
         bind(program.getUniformID(ShaderUniform.MaterialOffset), material.getOffset());
-        bind(program.getUniformID(ShaderUniform.MaterialColor), material.getColor());
+        bindColor(program.getUniformID(ShaderUniform.MaterialColor), material.getColor());
     }
 
     public void bind(final ProgramEntityImplementation program, final List<MaterialEntityImplementation> materials) {
@@ -53,7 +53,7 @@ public final class MaterialBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderMaterialUniform.Roughness.getUniformName(materialID)), material.getRoughness());
         bind(program.getUniformID(ShaderMaterialUniform.Tiling.getUniformName(materialID)), material.getTiling());
         bind(program.getUniformID(ShaderMaterialUniform.Offset.getUniformName(materialID)), material.getOffset());
-        bind(program.getUniformID(ShaderMaterialUniform.Color.getUniformName(materialID)), material.getColor());
+        bindColor(program.getUniformID(ShaderMaterialUniform.Color.getUniformName(materialID)), material.getColor());
     }
 
     private void bind(final TextureType type, final ProgramEntityImplementation program, final MaterialEntityImplementation material) {

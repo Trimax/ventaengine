@@ -19,11 +19,15 @@ public final class Memory {
     private final AnnotatedCache<Integer> textures = new AnnotatedCache<>(GL30C::glGenTextures, GL30C::glDeleteTextures);
     private final AnnotatedCache<Integer> programs = new AnnotatedCache<>(GL30C::glCreateProgram, GL30C::glDeleteProgram);
     private final AnnotatedCache<Integer> buffers = new AnnotatedCache<>(GL30C::glGenBuffers, GL30C::glDeleteBuffers);
+    private final AnnotatedCache<Integer> framebuffers = new AnnotatedCache<>(GL30C::glGenFramebuffers, GL30C::glDeleteFramebuffers);
+    private final AnnotatedCache<Integer> renderbuffers = new AnnotatedCache<>(GL30C::glGenRenderbuffers, GL30C::glDeleteRenderbuffers);
     private final AnnotatedCache<Long> windows = new AnnotatedCache<>(new DefaultSupplier<>(), GLFW::glfwDestroyWindow);
     private final AnnotatedCache<Integer> audioBuffers = new AnnotatedCache<>(AL10::alGenBuffers, AL10::alDeleteBuffers);
     private final AnnotatedCache<Integer> audioSources = new AnnotatedCache<>(AL10::alGenSources, AL10::alDeleteSources);
 
     public void cleanup() {
+        this.framebuffers.cleanup();
+        this.renderbuffers.cleanup();
         this.vertexArrays.cleanup();
         this.programs.cleanup();
         this.textureArrays.cleanup();

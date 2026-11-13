@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 final class WindowStateTest {
     @Test
     void testProjectionUsesWindowAspect() {
-        final var state = new WindowState(null, 1, "test", 800, 400);
+        final var state = new WindowState(null, 1, "test", 800, 400, 4);
 
         final var expected = new Matrix4f().perspective((float) Math.toRadians(60), 2.f, 0.1f, 1000f);
         assertEquals(expected, state.getProjectionMatrix(), "Projection must use the window aspect ratio");
@@ -16,7 +16,7 @@ final class WindowStateTest {
 
     @Test
     void testMinimizedWindowKeepsLastProjection() {
-        final var state = new WindowState(null, 1, "test", 800, 600);
+        final var state = new WindowState(null, 1, "test", 800, 600, 4);
         final var normal = new Matrix4f(state.getProjectionMatrix());
 
         state.setWidth(0);
@@ -29,7 +29,7 @@ final class WindowStateTest {
 
     @Test
     void testRestoredWindowUpdatesProjection() {
-        final var state = new WindowState(null, 1, "test", 800, 600);
+        final var state = new WindowState(null, 1, "test", 800, 600, 4);
         state.setHeight(0);
         state.getProjectionMatrix();
 

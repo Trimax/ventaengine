@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.repositories.implementation;
 import io.github.trimax.venta.engine.utils.LimitUtil;
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.TerrainSurfaceDTO;
 import io.github.trimax.venta.engine.model.dto.terrain.TerrainMaterialDTO;
@@ -50,7 +51,7 @@ public final class TerrainSurfaceRepositoryImplementation
         final var materials = StreamEx.of(terrainSurfaceDTO.materials()).map(TerrainMaterialDTO::material).map(materialRegistry::get).toList();
         return abettor.createTerrainSurface(gridMeshRegistry.get(terrainSurfaceDTO.gridMesh()),
                 programRegistry.get(terrainSurfaceDTO.program()),
-                textureRegistry.get(terrainSurfaceDTO.elevation().heightmap()),
+                textureRegistry.get(terrainSurfaceDTO.elevation().heightmap(), TextureColorSpace.Data),
                 materials,
                 createTextureArrays(resourcePath, materials),
                 StreamEx.of(terrainSurfaceDTO.materials()).mapToDouble(TerrainMaterialDTO::elevation).toFloatArray(),

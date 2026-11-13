@@ -65,7 +65,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
                                 final VentaEngineConfiguration.RenderConfiguration renderConfiguration) {
         log.info("Initializing window");
 
-        glfwWindowHint(GLFW_SAMPLES, renderConfiguration.antialiasingSamples().getValue());
+        glfwWindowHint(GLFW_SAMPLES, 0);
         final var id = memory.getWindows().create(() -> glfwCreateWindow(width, height, title, monitorID, NULL), "Window %s", title);
         if (id == NULL)
             throw new WindowCreationException(title);
@@ -79,7 +79,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
         if (OperationalSystem.detect() != OperationalSystem.MacOS)
             IconUtil.setIcon(id, resourceService.getAsBytes(DefinitionsIcon.DEFAULT));
 
-        final var window = new WindowState(handler, id, title, width, height);
+        final var window = new WindowState(handler, id, title, width, height, renderConfiguration.antialiasingSamples().getValue());
         glfwSetFramebufferSizeCallback(id, new FramebufferSizeCallback(this));
         glfwSetWindowSizeCallback(id, new WindowSizeCallback(this));
         glfwSetMouseButtonCallback(id, new MouseButtonCallback(this));

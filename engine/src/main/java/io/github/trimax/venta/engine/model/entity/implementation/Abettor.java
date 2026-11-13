@@ -7,6 +7,7 @@ import org.joml.Vector2ic;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.ShaderType;
+import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
@@ -58,10 +59,11 @@ public final class Abettor {
 
     public TextureEntityImplementation createTexture(@NonNull final ByteBuffer buffer,
                                                      @NonNull final TextureFormat format,
+                                                     @NonNull final TextureColorSpace colorSpace,
                                                      final int internalID,
                                                      final int width,
                                                      final int height) {
-        return new TextureEntityImplementation(buffer, format, internalID, width, height);
+        return new TextureEntityImplementation(buffer, format, colorSpace, internalID, width, height);
     }
 
     public TextureArrayEntityImplementation createTextureArray(final int internalID,

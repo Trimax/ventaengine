@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ProgramType {
     Particle("particle.json"),
+    Post("post.json"),
     Default("default.json"),
     Console("console.json"),
     Simple("simple.json"),

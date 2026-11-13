@@ -59,7 +59,7 @@ public final class MaterialRegistryImplementation
     private MaterialEntityImplementation create(@NonNull final MaterialDTO materialDTO) {
         final var material = abettor.createMaterial(materialDTO);
         if (materialDTO.hasTextures())
-            materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureRegistry.get(path)));
+            materialDTO.textures().forEach((textureType, path) -> material.setTexture(textureType, textureRegistry.get(path, textureType.getColorSpace())));
 
         return material;
     }

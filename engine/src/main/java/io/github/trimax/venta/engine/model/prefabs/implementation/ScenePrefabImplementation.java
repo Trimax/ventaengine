@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
+import io.github.trimax.venta.engine.enums.ToneMapping;
+
 import java.util.List;
 
 import org.joml.Vector3f;
@@ -49,4 +51,6 @@ public class ScenePrefabImplementation extends AbstractPrefabImplementation impl
     DirectionalLight directionalLight;
     Vector3f ambientLight;
     Fog fog;
+    Float exposure;
+    ToneMapping toneMapping;
 }

@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.registries.implementation;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsFont;
 import io.github.trimax.venta.engine.definitions.DefinitionsTexture;
+import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.UnknownTextureFormatException;
 import io.github.trimax.venta.engine.memory.Memory;
@@ -33,7 +34,7 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TextureRegistryImplementation
-        extends AbstractRegistryImplementation<TextureEntityImplementation, TextureEntity, Void>
+        extends AbstractRegistryImplementation<TextureEntityImplementation, TextureEntity, TextureColorSpace>
         implements TextureRegistry {
     private final ResourceService resourceService;
     private final Abettor abettor;
@@ -56,16 +57,17 @@ public final class TextureRegistryImplementation
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            return abettor.createTexture(bitmap, TextureFormat.Grayscale, textureID, DefinitionsFont.ATLAS_WIDTH, DefinitionsFont.ATLAS_HEIGHT);
+            return abettor.createTexture(bitmap, TextureFormat.Grayscale, TextureColorSpace.Data, textureID, DefinitionsFont.ATLAS_WIDTH, DefinitionsFont.ATLAS_HEIGHT);
         });
     }
 
     @Override
-    protected TextureEntityImplementation load(@NonNull final String resourcePath, final Void argument) {
-        return load(resourcePath, resourceService.getAsBytes(String.format("/textures/%s", resourcePath)));
+    protected TextureEntityImplementation load(@NonNull final String resourcePath, final TextureColorSpace argument) {
+        return load(resourcePath, resourceService.getAsBytes(String.format("/textures/%s", resourcePath)),
+                argument == null ? TextureColorSpace.Color : argument);
     }
 
-    private TextureEntityImplementation load(@NonNull final String resourcePath, final byte[] data) {
+    private TextureEntityImplementation load(@NonNull final String resourcePath, final byte[] data, @NonNull final TextureColorSpace colorSpace) {
         try (var stack = stackPush()) {
             final var widthBuffer = stack.mallocInt(1);
             final var heightBuffer = stack.mallocInt(1);
@@ -98,9 +100,9 @@ public final class TextureRegistryImplementation
             glBindTexture(GL_TEXTURE_2D, textureID);
 
             if (pixels instanceof ShortBuffer pixels16)
-                glTexImage2D(GL_TEXTURE_2D, 0, format.getInternal16(), width, height, 0, format.getExternal(), GL_UNSIGNED_SHORT, pixels16);
+                glTexImage2D(GL_TEXTURE_2D, 0, format.getInternal(true, colorSpace), width, height, 0, format.getExternal(), GL_UNSIGNED_SHORT, pixels16);
             else
-                glTexImage2D(GL_TEXTURE_2D, 0, format.getInternal(), width, height, 0, format.getExternal(), GL_UNSIGNED_BYTE, (ByteBuffer) pixels);
+                glTexImage2D(GL_TEXTURE_2D, 0, format.getInternal(false, colorSpace), width, height, 0, format.getExternal(), GL_UNSIGNED_BYTE, (ByteBuffer) pixels);
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -112,7 +114,7 @@ public final class TextureRegistryImplementation
 
             free(pixels);
 
-            return abettor.createTexture(imageBuffer, format, textureID, width, height);
+            return abettor.createTexture(imageBuffer, format, colorSpace, textureID, width, height);
         }
     }
 

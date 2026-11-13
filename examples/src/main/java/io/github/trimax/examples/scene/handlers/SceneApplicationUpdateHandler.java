@@ -32,7 +32,7 @@ public final class SceneApplicationUpdateHandler implements VentaEngineUpdateHan
     private static final float CAMERA_HEIGHT_SWING = 3.f;
     private static final float GROUND_CLEARANCE = 8.f;
 
-    private static final float CAMPFIRE_INTENSITY = 4.f;
+    private static final float CAMPFIRE_INTENSITY = 6.f;
 
     private final Vector3f cameraPosition = new Vector3f();
     private final SceneApplicationState state;

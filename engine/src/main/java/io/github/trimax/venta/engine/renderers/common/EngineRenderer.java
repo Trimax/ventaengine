@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11C.*;
 
 @Slf4j
 @Component
@@ -27,6 +26,7 @@ public final class EngineRenderer {
     private final CameraManagerImplementation cameraManager;
     private final SceneManagerImplementation sceneManager;
 
+    private final PostProcessingRenderer postProcessingRenderer;
     private final WindowStateRenderer windowRenderer;
     private final SceneInstanceRenderer sceneRenderer;
     private final DebugRenderer debugRenderer;
@@ -36,7 +36,8 @@ public final class EngineRenderer {
         if (glfwWindowShouldClose(window.getInternalID()))
             engineController.get().setApplicationRunning(false);
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // The scene and the debug overlays (they need the depth of the scene) are rendered in HDR
+        postProcessingRenderer.begin(window);
 
         final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
         try (final var _ = sceneRenderer.withContext(null)
@@ -50,6 +51,10 @@ public final class EngineRenderer {
                     .with(window, camera)) {
                 debugRenderer.render(sceneManager.getCurrent());
             }
+
+        // The console and the text are drawn over the tone mapped image
+        final var scene = sceneManager.getCurrent();
+        postProcessingRenderer.end(scene.getExposure(), scene.getToneMapping());
 
         try (final var _ = windowRenderer.withContext(null)
                         .withFrameRate((int) fpsCounter.getCurrentFps())) {

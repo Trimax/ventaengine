@@ -16,6 +16,7 @@ public enum ShaderUniform {
 
     /* Textures */
     TextureSkybox("textureSkybox"),
+    TextureScene("textureScene"),
     TextureDiffuse("textureDiffuse"),
     TextureHeight("textureHeight"),
     TextureNormal("textureNormal"),
@@ -81,6 +82,10 @@ public enum ShaderUniform {
     TimeDelta("timeDelta"),
 
     /* Fog */
+    /* Post processing */
+    Exposure("exposure"),
+    ToneMapping("toneMapping"),
+
     FogColor("fog.color"),
     FogMinimalDistance("fog.minimalDistance"),
     FogMaximalDistance("fog.maximalDistance"),

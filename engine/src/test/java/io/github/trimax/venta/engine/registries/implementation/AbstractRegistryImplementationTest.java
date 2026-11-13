@@ -36,6 +36,17 @@ final class AbstractRegistryImplementationTest {
     }
 
     @Test
+    void testFindDoesntLoad() {
+        final var registry = new TestRegistry();
+        assertNull(registry.find("a.json"), "An entity that isn't loaded is not found");
+        assertTrue(registry.loaded.isEmpty(), "Find must not load");
+
+        final var entity = registry.get("shader.glsl", "Vertex");
+        registry.getIds().forEach(key -> assertSame(entity, registry.find(key), "Every key must be found, " + key));
+        assertEquals(1, registry.loaded.size(), "Find must not load the keys with arguments as files");
+    }
+
+    @Test
     void testCleanupUnloadsAllEntities() {
         final var registry = new TestRegistry();
         registry.get("a.json");

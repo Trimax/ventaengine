@@ -17,7 +17,7 @@ public final class SpriteBinder extends AbstractBinder {
         textureBinder.bind(TextureType.Diffuse, program, sprite.getTexture());
 
         bind(program.getUniformID(ShaderUniform.FrameIndex), frameIndex);
-        bind(program.getUniformID(ShaderUniform.Color), sprite.getColor());
+        bindColor(program.getUniformID(ShaderUniform.Color), sprite.getColor());
         bind(program.getUniformID(ShaderUniform.Frames), sprite.getFramesBuffer());
     }
 }
