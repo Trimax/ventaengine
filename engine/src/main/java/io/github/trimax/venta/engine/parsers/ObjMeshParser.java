@@ -20,6 +20,7 @@ import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.MeshFormat;
+import io.github.trimax.venta.engine.enums.ObjStatement;
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import io.github.trimax.venta.engine.model.dto.common.MeshDTO;
 import io.github.trimax.venta.engine.model.dto.common.ObjModelDTO;
@@ -94,31 +95,37 @@ public final class ObjMeshParser implements AbstractParser<MeshDTO> {
                 continue;
 
             final var tokens = line.split("\\s+");
-            switch (tokens[0]) {
-                case "v" -> positions.add(new Vector3f(
+            final var statement = ObjStatement.of(tokens[0]);
+            if (statement == null) {
+                log.debug("Unsupported OBJ statement (ignored): {}", line);
+                continue;
+            }
+
+            switch (statement) {
+                case Position -> positions.add(new Vector3f(
                         Float.parseFloat(tokens[1]),
                         Float.parseFloat(tokens[2]),
                         Float.parseFloat(tokens[3])
                 ));
-                case "vt" -> textureCoordinates.add(new Vector2f(
+                case TextureCoordinates -> textureCoordinates.add(new Vector2f(
                         Float.parseFloat(tokens[1]),
                         1.f - Float.parseFloat(tokens[2])
                 ));
-                case "vn" -> normals.add(new Vector3f(
+                case Normal -> normals.add(new Vector3f(
                         Float.parseFloat(tokens[1]),
                         Float.parseFloat(tokens[2]),
                         Float.parseFloat(tokens[3])
                 ));
-                case "g", "o" -> {
+                case Group -> {
                     group = tokens.length > 1 ? getArgument(tokens) : DEFAULT_GROUP;
                     part = null;
                 }
-                case "usemtl" -> {
+                case Material -> {
                     material = tokens.length > 1 ? getArgument(tokens) : null;
                     part = null;
                 }
-                case "mtllib" -> materialLibraries.addAll(Arrays.asList(tokens).subList(1, tokens.length));
-                case "f" -> {
+                case MaterialLibrary -> materialLibraries.addAll(Arrays.asList(tokens).subList(1, tokens.length));
+                case Face -> {
                     if (tokens.length < 4) {
                         log.warn("Face with less than 3 vertices (ignored): {}", line);
                         continue;
@@ -133,7 +140,7 @@ public final class ObjMeshParser implements AbstractParser<MeshDTO> {
 
                     part.addPolygon(polygon);
                 }
-                default -> log.debug("Unsupported OBJ statement (ignored): {}", line);
+                default -> throw new IllegalStateException("Unexpected OBJ statement: " + statement);
             }
         }
 

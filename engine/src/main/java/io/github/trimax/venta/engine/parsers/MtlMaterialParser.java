@@ -10,6 +10,7 @@ import java.util.Map;
 import org.joml.Vector2f;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.enums.MtlStatement;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ResourceNotFoundException;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
@@ -63,7 +64,13 @@ public final class MtlMaterialParser {
                 continue;
 
             final var tokens = line.split("\\s+");
-            if (tokens[0].equals("newmtl")) {
+            final var statement = MtlStatement.of(tokens[0]);
+            if (statement == null) {
+                log.debug("Unsupported MTL statement (ignored): {}", line);
+                continue;
+            }
+
+            if (statement == MtlStatement.NewMaterial) {
                 if (material != null)
                     materials.put(material.name, material.build());
 
@@ -76,17 +83,17 @@ public final class MtlMaterialParser {
                 continue;
             }
 
-            switch (tokens[0]) {
-                case "Kd" -> material.color = new ColorDTO(Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]), Float.parseFloat(tokens[3]), 1.f);
-                case "d" -> material.opacity = Float.parseFloat(tokens[tokens.length - 1]);
-                case "Tr" -> material.opacity = 1.f - Float.parseFloat(tokens[tokens.length - 1]);
-                case "Ns" -> material.roughness = getRoughness(Float.parseFloat(tokens[1]));
-                case "Pr" -> material.roughness = Math.clamp(Float.parseFloat(tokens[1]), 0.f, 1.f);
-                case "Pm" -> material.metalness = Math.clamp(Float.parseFloat(tokens[1]), 0.f, 1.f);
-                case "map_Kd" -> material.textures.put(TextureType.Diffuse, getTexturePath(tokens));
-                case "map_Bump", "map_bump", "bump", "norm" -> material.textures.put(TextureType.Normal, getTexturePath(tokens));
-                case "map_Pr" -> material.textures.put(TextureType.Roughness, getTexturePath(tokens));
-                default -> log.debug("Unsupported MTL statement (ignored): {}", line);
+            switch (statement) {
+                case DiffuseColor -> material.color = new ColorDTO(Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]), Float.parseFloat(tokens[3]), 1.f);
+                case Opacity -> material.opacity = Float.parseFloat(tokens[tokens.length - 1]);
+                case Transparency -> material.opacity = 1.f - Float.parseFloat(tokens[tokens.length - 1]);
+                case Shininess -> material.roughness = getRoughness(Float.parseFloat(tokens[1]));
+                case Roughness -> material.roughness = Math.clamp(Float.parseFloat(tokens[1]), 0.f, 1.f);
+                case Metalness -> material.metalness = Math.clamp(Float.parseFloat(tokens[1]), 0.f, 1.f);
+                case DiffuseMap -> material.textures.put(TextureType.Diffuse, getTexturePath(tokens));
+                case NormalMap -> material.textures.put(TextureType.Normal, getTexturePath(tokens));
+                case RoughnessMap -> material.textures.put(TextureType.Roughness, getTexturePath(tokens));
+                default -> throw new IllegalStateException("Unexpected MTL statement: " + statement);
             }
         }
 

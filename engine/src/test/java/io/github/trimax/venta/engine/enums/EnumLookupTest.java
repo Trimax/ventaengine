@@ -24,4 +24,24 @@ final class EnumLookupTest {
         assertNull(GroupType.of("unknown"), "Unknown group");
         assertNull(GroupType.of(null), "Null name");
     }
+
+    @Test
+    void testObjStatementByKeyword() {
+        for (final var statement : ObjStatement.values())
+            statement.getKeywords().forEach(keyword -> assertEquals(statement, ObjStatement.of(keyword), keyword));
+
+        assertEquals(ObjStatement.Group, ObjStatement.of("o"), "Objects are groups");
+        assertNull(ObjStatement.of("s"), "Smoothing groups are not supported");
+        assertNull(ObjStatement.of("V"), "Keywords are case sensitive");
+    }
+
+    @Test
+    void testMtlStatementByKeyword() {
+        for (final var statement : MtlStatement.values())
+            statement.getKeywords().forEach(keyword -> assertEquals(statement, MtlStatement.of(keyword), keyword));
+
+        assertEquals(MtlStatement.NormalMap, MtlStatement.of("bump"), "bump is a normal map");
+        assertEquals(MtlStatement.NormalMap, MtlStatement.of("norm"), "norm is a normal map");
+        assertNull(MtlStatement.of("Ka"), "Ambient color is not supported");
+    }
 }
