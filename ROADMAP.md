@@ -56,3 +56,18 @@ Paths are relative to `engine/src/main/resources/shaders/` unless stated otherwi
   animation of the transforms of the hierarchy nodes (position, rotation, scale with interpolation) is the first
   step; skeletal animation (skinned meshes with joints and weights, played and blended in the vertex shader) needs a
   format with skeletons, so it comes with a glTF loader, which also brings PBR materials and scenes in one file.
+
+## Editor
+
+- [ ] **13. Editor redesign.** The editor (`editor/`) uses the default light Modena look with a couple of tiny style
+  sheets and PNG icons, and its center is a placeholder: `layouts/main.fxml` has a black `VBox` instead of a scene
+  view, the editor never starts the engine and the camera buttons of the toolbar have no actions. It should be
+  rebuilt like the map editor of The Native Land: a dark theme in one style sheet (a palette of looked-up colors,
+  spacing and font size scales, style classes for forms, panels, the status bar and the toolbar), panels in FXML
+  included into a `BorderPane` (a toolbar with SVG icons and indicators, the resource tree on the left, the scene
+  view in the center, a property inspector on the right, a status bar), controllers bound to shared contexts with
+  JavaFX properties, undo and redo, keyboard shortcuts. The scene view renders the engine offscreen (a hidden window
+  of the view size, resized with it) and shows the tone mapped frame: the pixels of the default framebuffer are read
+  after the post processing and before the buffer swap, on the engine thread (GLFW needs the main thread on macOS,
+  which JavaFX uses too), flipped and converted to BGRA for a JavaFX `PixelBuffer`; the camera is controlled with the
+  mouse and the toolbar buttons, objects can be selected and moved with gizmos.
