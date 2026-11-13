@@ -29,7 +29,7 @@ More screenshots can be produced by running the [examples](#examples).
 ## Features
 * **Window** — windowed and fullscreen modes, vertical synchronization, multisample antialiasing, window icon
 * **Scenes** — scenes described in JSON or built in code, switching between scenes, ambient and directional light, fog, skybox
-* **Objects** — meshes from JSON and Wavefront OBJ files, hierarchical objects (a model made of nodes with their own transformations)
+* **Objects** — meshes from JSON and Wavefront OBJ files, hierarchical objects (a model made of nodes with their own transformations); an OBJ model without a material of its own is split into its groups with the materials of its MTL file
 * **Materials** — color, tiling, offset, metalness and roughness, and diffuse, normal, height (parallax), roughness,
   metalness and ambient occlusion maps
 * **Lights** — up to 64 point lights per scene with color, intensity and attenuation
@@ -159,7 +159,7 @@ Resources are loaded from the classpath (or from registered archives) by folder:
 |---|---|
 | `scenes/` | Scene prefabs: objects, lights, emitters, billboards, sound sources, terrain and water surfaces, fog, skybox |
 | `objects/` | Object prefabs: a mesh (or a hierarchy of nodes) with materials and a program |
-| `meshes/` | Meshes in JSON or Wavefront OBJ |
+| `meshes/` | Meshes in JSON or Wavefront OBJ with their MTL material libraries (MTL texture paths are relative to `textures/`) |
 | `materials/` | Materials: color, parameters and texture maps |
 | `textures/`, `texturearrays/` | Textures (PNG, JPEG, ...) and texture arrays |
 | `cubemaps/` | Cube maps for skyboxes |
