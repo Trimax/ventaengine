@@ -14,5 +14,9 @@ public interface SceneManager extends AbstractManager<SceneInstance> {
 
     SceneInstance getCurrent();
 
+    /**
+     * Makes the scene current. The sound sources of the previous scene stop, the looping ones of the new scene
+     * (the ambience: a campfire, wind, music) start; other sounds are played by the application.
+     */
     void setCurrent(@NonNull final SceneInstance scene);
 }

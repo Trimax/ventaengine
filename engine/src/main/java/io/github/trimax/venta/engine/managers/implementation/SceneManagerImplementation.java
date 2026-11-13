@@ -152,12 +152,16 @@ public final class SceneManagerImplementation
 
     @Override
     public void setCurrent(@NonNull final SceneInstance scene) {
-        if (scene instanceof SceneInstanceImplementation entity) {
-            if (this.current != null)
-                this.current.getSoundSources().forEach(SoundSourceInstanceImplementation::stop);
+        if (!(scene instanceof SceneInstanceImplementation entity) || entity == this.current)
+            return;
 
-            this.current = entity;
-        }
+        if (this.current != null)
+            this.current.getSoundSources().forEach(SoundSourceInstanceImplementation::stop);
+
+        this.current = entity;
+        StreamEx.of(entity.getSoundSources())
+                .filter(SoundSourceInstanceImplementation::isLooping)
+                .forEach(SoundSourceInstanceImplementation::play);
     }
 
     @Override
