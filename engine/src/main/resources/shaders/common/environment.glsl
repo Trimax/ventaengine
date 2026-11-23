@@ -10,11 +10,18 @@
  * The ambient light of the scene multiplies it (white keeps the sky as it is, a darker color dims it), and a scene
  * without a skybox is lit by the ambient light alone, as a flat color.
  */
+/* The skybox itself: the reflection of a smooth surface is sharper than the prefiltered map can be */
+uniform samplerCube textureSkybox;
+uniform int useTextureSkybox;
 uniform samplerCube textureIrradiance;
 uniform samplerCube texturePrefilter;
 uniform sampler2D textureBrdf;
 uniform int useEnvironment;
 uniform float prefilterLevels;
+
+/* The roughness up to which the reflection is the skybox itself, and the one from which it is the prefiltered map */
+const float MIRROR_ROUGHNESS_MINIMAL = 0.05;
+const float MIRROR_ROUGHNESS_MAXIMAL = 0.25;
 
 /*
  * An approximation of the lookup table (Karis, "Physically Based Shading on Mobile") for a scene without a skybox.
@@ -47,7 +54,14 @@ vec3 getAmbientLight(vec3 N, vec3 V, vec3 albedo, float metalness, float roughne
 
     if (isSet(useEnvironment)) {
         irradiance *= texture(textureIrradiance, N).rgb;
-        prefiltered *= textureLod(texturePrefilter, reflect(-V, N), r * (prefilterLevels - 1.0)).rgb;
+        vec3 reflection = reflect(-V, N);
+        vec3 blurred = textureLod(texturePrefilter, reflection, r * (prefilterLevels - 1.0)).rgb;
+
+        // The prefiltered map has far fewer texels than the skybox, so a mirror would blur the stars
+        if (isSet(useTextureSkybox))
+            blurred = mix(blurred, texture(textureSkybox, reflection).rgb, 1.0 - smoothstep(MIRROR_ROUGHNESS_MINIMAL, MIRROR_ROUGHNESS_MAXIMAL, r));
+
+        prefiltered *= blurred;
         brdf = texture(textureBrdf, vec2(NdotV, r)).rg;
     }
 

@@ -46,6 +46,7 @@ final class EnvironmentLightShaderTest {
 
     private static ShaderHarness harness;
 
+    private int skybox;
     private int irradiance;
     private int prefilter;
     private int brdf;
@@ -58,6 +59,7 @@ final class EnvironmentLightShaderTest {
 
     @BeforeEach
     void createMaps() {
+        skybox = cube(0.9f, 0.1f, 0.5f);
         irradiance = cube(0.2f, 0.4f, 0.6f);
         prefilter = cube(1.f, 0.5f, 0.25f);
         brdf = table(1.f, 0.f);
@@ -72,6 +74,8 @@ final class EnvironmentLightShaderTest {
         }
 
         glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+        glDeleteTextures(skybox);
         glDeleteTextures(irradiance);
         glDeleteTextures(prefilter);
         glDeleteTextures(brdf);
@@ -130,6 +134,31 @@ final class EnvironmentLightShaderTest {
     }
 
     @Test
+    void testSmoothSurfaceReflectsTheSkyboxItselfAndARoughOneTheBlurredMap() {
+        final var white = new float[]{1.f, 1.f, 1.f};
+
+        // A white metal seen straight on reflects what it sees: with the table (1, 0) it is the color itself
+        final var mirror = ambientWithSkybox(white, white, 1.f, 0.f);
+        assertArrayEquals(new float[]{0.9f, 0.1f, 0.5f}, new float[]{mirror[0], mirror[1], mirror[2]}, EPSILON, "A mirror shows the skybox");
+
+        final var rough = ambientWithSkybox(white, white, 1.f, 1.f);
+        assertArrayEquals(new float[]{1.f, 0.5f, 0.25f}, new float[]{rough[0], rough[1], rough[2]}, EPSILON, "A rough surface shows the prefiltered map");
+
+        // Halfway between the roughness where the skybox ends (0.05) and where the map begins (0.25) both are mixed equally
+        final var between = ambientWithSkybox(white, white, 1.f, 0.15f);
+        assertEquals((0.9f + 1.f) / 2.f, between[0], EPSILON, "In between, red");
+        assertEquals((0.1f + 0.5f) / 2.f, between[1], EPSILON, "In between, green");
+    }
+
+    @Test
+    void testSkyboxIsNotUsedWhenTheSceneHasNone() {
+        final var white = new float[]{1.f, 1.f, 1.f};
+        final var mirror = ambient(true, white, white, 1.f, 0.f, 1.f);
+
+        assertArrayEquals(new float[]{1.f, 0.5f, 0.25f}, new float[]{mirror[0], mirror[1], mirror[2]}, EPSILON, "Only the prefiltered map is left");
+    }
+
+    @Test
     void testBlackSurfaceDiffusesNothing() {
         final var result = ambient(true, new float[]{1.f, 1.f, 1.f}, new float[]{0.f, 0.f, 0.f}, 0.f, 1.f, 1.f);
 
@@ -139,8 +168,19 @@ final class EnvironmentLightShaderTest {
         assertEquals(0.04f * 0.25f, result[2], EPSILON);
     }
 
+    private float[] ambientWithSkybox(final float[] ambientLight, final float[] albedo, final float metalness, final float roughness) {
+        return ambient(true, true, ambientLight, albedo, metalness, roughness, 1.f);
+    }
+
     private float[] ambient(final boolean environment, final float[] ambientLight, final float[] albedo, final float metalness,
                             final float roughness, final float occlusion) {
+        return ambient(environment, false, ambientLight, albedo, metalness, roughness, occlusion);
+    }
+
+    private float[] ambient(final boolean environment, final boolean withSkybox, final float[] ambientLight, final float[] albedo,
+                            final float metalness, final float roughness, final float occlusion) {
+        glActiveTexture(TextureUnit.Skybox.getLocationID());
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox);
         glActiveTexture(TextureUnit.Irradiance.getLocationID());
         glBindTexture(GL_TEXTURE_CUBE_MAP, irradiance);
         glActiveTexture(TextureUnit.Prefilter.getLocationID());
@@ -150,6 +190,8 @@ final class EnvironmentLightShaderTest {
         glActiveTexture(GL_TEXTURE0);
 
         final Map<String, Object> uniforms = new HashMap<>();
+        uniforms.put("textureSkybox", TextureUnit.Skybox.getId());
+        uniforms.put("useTextureSkybox", withSkybox ? 1 : 0);
         uniforms.put("textureIrradiance", TextureUnit.Irradiance.getId());
         uniforms.put("texturePrefilter", TextureUnit.Prefilter.getId());
         uniforms.put("textureBrdf", TextureUnit.Brdf.getId());

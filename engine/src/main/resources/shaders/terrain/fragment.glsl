@@ -41,7 +41,6 @@ in vec2 vertexTextureCoordinates;
 in float vertexTimeElapsed;
 
 /* Textures */
-uniform samplerCube textureSkybox;
 uniform sampler2DArray textureDiffuse;
 uniform sampler2DArray textureNormal;
 uniform sampler2DArray textureRoughness;
@@ -49,7 +48,6 @@ uniform sampler2DArray textureMetalness;
 uniform sampler2DArray textureAmbientOcclusion;
 
 /* Feature flags */
-uniform int useTextureSkybox;
 uniform int useTextureNormal;
 uniform int useTextureRoughness;
 
