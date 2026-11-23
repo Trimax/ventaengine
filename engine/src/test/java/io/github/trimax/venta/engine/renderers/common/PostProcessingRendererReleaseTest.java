@@ -28,14 +28,14 @@ final class PostProcessingRendererReleaseTest {
 
     @Test
     void testReleaseBeforeTheFirstFrameChangesNothing() throws Exception {
-        final var renderer = renderer(memory());
+        final var renderer = renderer(TestMemory.create());
 
         assertDoesNotThrow(renderer::release, "There is nothing to release before the first frame");
     }
 
     @Test
     void testReleaseDeletesEveryObjectOfTheRenderer() throws Exception {
-        final var memory = memory();
+        final var memory = TestMemory.create();
         final var renderer = renderer(memory);
 
         renderer.begin(new WindowState(null, GLTestContext.window(), "test", 64, 64, SAMPLES));
@@ -64,7 +64,7 @@ final class PostProcessingRendererReleaseTest {
 
     @Test
     void testReleasedRendererWorksAgainAndCanBeReleasedTwice() throws Exception {
-        final var renderer = renderer(memory());
+        final var renderer = renderer(TestMemory.create());
         final var window = new WindowState(null, GLTestContext.window(), "test", 64, 64, SAMPLES);
 
         renderer.begin(window);
@@ -74,14 +74,6 @@ final class PostProcessingRendererReleaseTest {
         renderer.begin(window);
         assertTrue(glIsFramebuffer(field(renderer, "sceneFramebufferID")), "The next frame creates the framebuffers again");
         renderer.release();
-    }
-
-    /** The memory is a component with a private constructor */
-    private static Memory memory() throws Exception {
-        final Constructor<Memory> constructor = Memory.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-
-        return constructor.newInstance();
     }
 
     /** The renderer is a component with a private constructor, the program registry isn't used before the post pass */

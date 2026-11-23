@@ -5,6 +5,7 @@
 #include "common/fog.glsl"
 #include "common/lights.glsl"
 #include "common/noise.glsl"
+#include "common/shadow.glsl"
 
 /***
  * Definitions
@@ -142,7 +143,7 @@ vec3 computeDirectionalLight(vec3 baseColor, vec3 normal, vec3 cameraDirection) 
     // The sun is small and bright: a sharp glint on the ripples
     float spec = pow(max(dot(R, cameraDirection), 0.0), 256.0) * 2.0 + pow(max(dot(R, cameraDirection), 0.0), 24.0) * 0.1;
 
-    return (diff * baseColor + spec) * directionalLight.color * directionalLight.intensity;
+    return (diff * baseColor + spec) * directionalLight.color * directionalLight.intensity * getSunShadow(vertexPosition, normalize(vertexNormal));
 }
 
 vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {

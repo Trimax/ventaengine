@@ -3,7 +3,9 @@
   "directionalLight": {
     "color": {"r": 1.0, "g": 0.72, "b": 0.48, "a": 1.0},
     "direction": {"x": -1.0, "y": -0.35, "z": 0.1},
-    "intensity": 1.15
+    "intensity": 1.15,
+    "castShadows": true,
+    "shadowDistance": 300
   },
   "fog": {
     "distance": {"min": 140.0, "max": 800.0},

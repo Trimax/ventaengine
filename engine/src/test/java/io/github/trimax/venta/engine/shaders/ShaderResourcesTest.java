@@ -34,7 +34,8 @@ final class ShaderResourcesTest {
             "MAX_LIGHTS", DefinitionsCommon.MAX_LIGHTS,
             "MAX_NOISES", DefinitionsCommon.MAX_NOISES,
             "MAX_WAVES", DefinitionsCommon.MAX_WAVES,
-            "MAX_FRAMES", DefinitionsCommon.MAX_FRAMES);
+            "MAX_FRAMES", DefinitionsCommon.MAX_FRAMES,
+            "MAX_CASCADES", DefinitionsCommon.MAX_CASCADES);
 
     @Test
     void testEveryProgramIsExpanded() throws Exception {

@@ -15,6 +15,7 @@ import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.ShadowBinder;
 import io.github.trimax.venta.engine.binders.NoiseBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.binders.TimeBinder;
@@ -39,6 +40,7 @@ public final class WaterSurfaceInstanceRenderer extends
     private final TextureBinder textureBinder;
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
+    private final ShadowBinder shadowBinder;
     private final NoiseBinder noiseBinder;
     private final LightBinder lightBinder;
     private final WaveBinder waveBinder;
@@ -59,6 +61,7 @@ public final class WaterSurfaceInstanceRenderer extends
             lightBinder.bind(surface.getProgram(), getContext().getScene().getDirectionalLight());
             lightBinder.bind(surface.getProgram(), getContext().getScene().getAmbientLight());
             lightBinder.bind(surface.getProgram(), getContext().getScene().getLights());
+            shadowBinder.bind(surface.getProgram());
         }
 
         cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());

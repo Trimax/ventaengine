@@ -3,6 +3,7 @@
 #include "common/flags.glsl"
 #include "common/fog.glsl"
 #include "common/lights.glsl"
+#include "common/shadow.glsl"
 
 /***
  * Definitions
@@ -181,7 +182,7 @@ vec3 calculateDirectionalLight(vec4 color, vec3 normal, vec2 textureCoordinates)
     vec3 colorDiffuse = calculateLightDiffuse(directionalLight.color, normal, lightDirection);
     vec3 colorSpecular = calculateLightSpecular(color, directionalLight.color, normal, lightDirection, getViewDirectionWorldSpace(), textureCoordinates);
 
-    return (colorDiffuse + colorSpecular) * directionalLight.intensity;
+    return (colorDiffuse + colorSpecular) * directionalLight.intensity * getSunShadow(vertexPosition, normalize(vertexTBN[2]));
 }
 
 vec3 calculateLighting(vec4 color, vec2 textureCoordinates) {

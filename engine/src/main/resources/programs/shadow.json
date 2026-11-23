@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "shadow/vertex.glsl",
+  "shaderFragment": "shadow/fragment.glsl"
+}

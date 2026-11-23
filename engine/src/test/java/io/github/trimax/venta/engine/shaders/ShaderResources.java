@@ -20,12 +20,12 @@ import io.github.trimax.venta.engine.utils.PreprocessingUtil;
 /**
  * The shaders and the programs of the engine as the resources of the classpath.
  */
-final class ShaderResources {
+public final class ShaderResources {
     private ShaderResources() {
     }
 
     /** The text of a shader file by its path relative to the shaders folder, null when there is no such file */
-    static String load(final String path) {
+    public static String load(final String path) {
         try (final var stream = ShaderResources.class.getResourceAsStream("/shaders/" + path)) {
             return stream == null ? null : new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (final IOException exception) {
@@ -34,20 +34,20 @@ final class ShaderResources {
     }
 
     /** The shader with its includes expanded */
-    static ShaderSource expand(final String shader) {
+    public static ShaderSource expand(final String shader) {
         return PreprocessingUtil.process(shader, ShaderResources::load);
     }
 
-    static List<String> shaders(final ProgramDTO program) {
+    public static List<String> shaders(final ProgramDTO program) {
         return List.of(program.shaderVertex(), program.shaderFragment());
     }
 
-    static List<String> allShaders() throws Exception {
+    public static List<String> allShaders() throws Exception {
         return programs().values().stream().flatMap(program -> shaders(program).stream()).toList();
     }
 
     /** The programs by the names of their definition files */
-    static Map<String, ProgramDTO> programs() throws Exception {
+    public static Map<String, ProgramDTO> programs() throws Exception {
         final Map<String, ProgramDTO> programs = new HashMap<>();
         try (final var files = Files.list(resources("/programs"))) {
             for (final var file : files.filter(path -> path.toString().endsWith(".json")).toList())
@@ -59,7 +59,7 @@ final class ShaderResources {
     }
 
     /** All the shader files, including the common ones, relative to the shaders folder */
-    static List<String> shaderFiles() throws Exception {
+    public static List<String> shaderFiles() throws Exception {
         final var folder = resources("/shaders");
         try (final Stream<Path> files = Files.walk(folder)) {
             return files.filter(path -> path.toString().endsWith(".glsl")).map(path -> folder.relativize(path).toString().replace('\\', '/')).toList();

@@ -19,9 +19,18 @@ import io.github.trimax.venta.engine.utils.PreprocessingUtil;
  * Calls the functions of the shaders on the GPU: a fragment shader made of the includes and the code of the test
  * writes a color into a float framebuffer of one pixel, which is read back.
  * <p>
- * The values of the uniforms are Integer, Float or float arrays (2 to 4 values).
+ * The values of the uniforms are Integer, Float or float arrays (2 to 4 values), Floats for an array of floats and
+ * Matrices for an array of 4x4 matrices.
  */
 final class ShaderHarness {
+    /** The values of an array of float uniforms */
+    record Floats(float... values) {
+    }
+
+    /** The values of an array of mat4 uniforms: 16 numbers for every matrix, column by column */
+    record Matrices(float... values) {
+    }
+
     private static final String VERTEX = "post/vertex.glsl";
     private static final String TEST = "test.glsl";
 
@@ -124,6 +133,8 @@ final class ShaderHarness {
             case float[] numbers when numbers.length == 2 -> glUniform2fv(location, numbers);
             case float[] numbers when numbers.length == 3 -> glUniform3fv(location, numbers);
             case float[] numbers when numbers.length == 4 -> glUniform4fv(location, numbers);
+            case Floats floats -> glUniform1fv(location, floats.values());
+            case Matrices matrices -> glUniformMatrix4fv(location, false, matrices.values());
             default -> throw new IllegalArgumentException("Unsupported value of " + name + ": " + value);
         }
     }
