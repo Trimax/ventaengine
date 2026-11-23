@@ -31,6 +31,11 @@ public final class EngineRenderer {
     private final SceneInstanceRenderer sceneRenderer;
     private final DebugRenderer debugRenderer;
 
+    /** Releases the GL objects of the renderers, the context must be alive */
+    public void release() {
+        postProcessingRenderer.release();
+    }
+
     public void render(final FPSCounter fpsCounter, final Engine.VentaTime time) {
         final var window = windowController.get();
         if (glfwWindowShouldClose(window.getInternalID()))

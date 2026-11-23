@@ -17,18 +17,24 @@ import org.lwjgl.opengl.GL;
  * When the environment variable VENTA_REQUIRE_OPENGL is true (the build on GitHub sets it), there must be a context:
  * the tests fail instead of being skipped, so a broken environment doesn't hide the tests.
  */
-final class GLTestContext {
+public final class GLTestContext {
     private static final String REQUIRED = "VENTA_REQUIRE_OPENGL";
     private static final int WINDOW_SIZE = 64;
 
     private static Boolean created;
+    private static long window;
     private static String problem = "";
 
     private GLTestContext() {
     }
 
+    /** The hidden window of the context, it exists after {@link #require()} didn't skip the test */
+    public static long window() {
+        return window;
+    }
+
     /** Skips the test when there is no context */
-    static synchronized void require() {
+    public static synchronized void require() {
         if (created == null)
             created = create();
 
@@ -61,7 +67,7 @@ final class GLTestContext {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
-        final var window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "Venta test", NULL, NULL);
+        window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, "Venta test", NULL, NULL);
         if (window == NULL) {
             problem = "The window can't be created: " + errors;
             return false;

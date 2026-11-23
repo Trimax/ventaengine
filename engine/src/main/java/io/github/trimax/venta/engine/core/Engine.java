@@ -45,6 +45,8 @@ public final class Engine {
 
             run();
         } finally {
+            // The renderers own GL objects, the context is destroyed by the controllers
+            engineRenderer.release();
             controllerFactory.cleanup();
             glfwTerminate();
 
