@@ -28,7 +28,7 @@ import lombok.experimental.UtilityClass;
  * </ul>
  */
 @UtilityClass
-public final class ShaderPreprocessor {
+public final class PreprocessingUtil {
     private static final Pattern INCLUDE = Pattern.compile("^\\s*#include\\s+\"([^\"]*)\"\\s*(?://.*)?$");
     private static final Pattern VERSION = Pattern.compile("^\\s*#\\s*version\\b.*");
 

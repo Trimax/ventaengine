@@ -13,7 +13,7 @@ import java.util.Map;
 import org.lwjgl.system.MemoryStack;
 
 import io.github.trimax.venta.engine.model.common.shader.ShaderSource;
-import io.github.trimax.venta.engine.utils.ShaderPreprocessor;
+import io.github.trimax.venta.engine.utils.PreprocessingUtil;
 
 /**
  * Calls the functions of the shaders on the GPU: a fragment shader made of the includes and the code of the test
@@ -88,7 +88,7 @@ final class ShaderHarness {
 
     private static int build(final String source) {
         final var vertex = compile(GL_VERTEX_SHADER, VERTEX, ShaderResources.expand(VERTEX));
-        final var fragment = compile(GL_FRAGMENT_SHADER, TEST, ShaderPreprocessor.process(TEST,
+        final var fragment = compile(GL_FRAGMENT_SHADER, TEST, PreprocessingUtil.process(TEST,
                 path -> path.equals(TEST) ? source : ShaderResources.load(path)));
 
         final var program = glCreateProgram();

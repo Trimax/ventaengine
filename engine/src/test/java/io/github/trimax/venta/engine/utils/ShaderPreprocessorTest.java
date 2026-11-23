@@ -98,7 +98,7 @@ final class ShaderPreprocessorTest {
     @Test
     void testLoaderErrorIsKeptAsTheCause() {
         final var failure = new IllegalStateException("broken");
-        final var error = assertThrows(ShaderIncludeException.class, () -> ShaderPreprocessor.process("main.glsl", path -> {
+        final var error = assertThrows(ShaderIncludeException.class, () -> PreprocessingUtil.process("main.glsl", path -> {
             if (path.equals("main.glsl"))
                 return "#version 330 core\n#include \"a.glsl\"\n";
 
@@ -211,7 +211,7 @@ final class ShaderPreprocessorTest {
     }
 
     private static ShaderSource process(final String path, final Map<String, String> files) {
-        return ShaderPreprocessor.process(path, new HashMap<>(files)::get);
+        return PreprocessingUtil.process(path, new HashMap<>(files)::get);
     }
 
     private static int count(final String text, final String part) {

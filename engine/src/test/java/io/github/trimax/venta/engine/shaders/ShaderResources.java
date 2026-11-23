@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import io.github.trimax.venta.engine.model.common.shader.ShaderSource;
 import io.github.trimax.venta.engine.model.dto.ProgramDTO;
 import io.github.trimax.venta.engine.utils.ParsingUtil;
-import io.github.trimax.venta.engine.utils.ShaderPreprocessor;
+import io.github.trimax.venta.engine.utils.PreprocessingUtil;
 
 /**
  * The shaders and the programs of the engine as the resources of the classpath.
@@ -35,7 +35,7 @@ final class ShaderResources {
 
     /** The shader with its includes expanded */
     static ShaderSource expand(final String shader) {
-        return ShaderPreprocessor.process(shader, ShaderResources::load);
+        return PreprocessingUtil.process(shader, ShaderResources::load);
     }
 
     static List<String> shaders(final ProgramDTO program) {
