@@ -31,6 +31,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
     private final ObjectBinder objectBinder;
     private final MatrixBinder matrixBinder;
     private final ShadowBinder shadowBinder;
+    private final EnvironmentBinder environmentBinder;
     private final CameraBinder cameraBinder;
     private final LightBinder lightBinder;
     private final FogBinder fogBinder;
@@ -58,6 +59,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
             lightBinder.bind(object.getProgram(), context.getScene().getAmbientLight());
             lightBinder.bind(object.getProgram(), context.getScene().getLights());
             shadowBinder.bind(object.getProgram());
+            environmentBinder.bind(object.getProgram());
         }
 
         textureBinder.bind(object.getProgram(), context.getScene().getSkybox());
