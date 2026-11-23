@@ -8,6 +8,7 @@ import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.ShaderEntityImplementation;
 import io.github.trimax.venta.engine.registries.ShaderRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
+import io.github.trimax.venta.engine.utils.ShaderPreprocessor;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -29,18 +30,18 @@ public final class ShaderRegistryImplementation
     protected ShaderEntityImplementation load(@NonNull final String resourcePath, final ShaderType type) {
         log.info("Loading shader {}", resourcePath);
 
-        final var code = resourceService.getAsString(String.format("/shaders/%s", resourcePath));
+        final var source = ShaderPreprocessor.process(resourcePath, path -> resourceService.getAsString(String.format("/shaders/%s", path)));
         final var id = glCreateShader(type.getValue());
 
-        glShaderSource(id, code);
+        glShaderSource(id, source.code());
         glCompileShader(id);
         if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE) {
             final var details = glGetShaderInfoLog(id);
             glDeleteShader(id);
-            throw new ShaderCompileException(String.format("%s: %s", resourcePath, details));
+            throw new ShaderCompileException(String.format("%s: %s", resourcePath, source.mapLog(details)));
         }
 
-        return abettor.createShader(id, type, code);
+        return abettor.createShader(id, type, source.code());
     }
 
     @Override
