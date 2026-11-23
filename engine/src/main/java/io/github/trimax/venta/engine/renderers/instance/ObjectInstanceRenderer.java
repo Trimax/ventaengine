@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.renderers.instance;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.binders.*;
+import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.memory.MatrixCache;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
@@ -10,6 +11,7 @@ import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityI
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.renderers.entity.MeshEntityRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<ObjectInstanceImplementation, ObjectInstanceRenderer.ObjectRenderContext, SceneInstanceRenderer.SceneRenderContext> {
+    private final ProgramRegistryImplementation programRegistry;
     private final MeshEntityRenderer meshRenderer;
     private final MatrixCache matrixCache;
 
@@ -47,25 +50,26 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
-        glUseProgram(object.getProgram().getInternalID());
+        final var program = getProgram(object);
+        glUseProgram(program.getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 
-        cameraBinder.bind(object.getProgram(), getContext().getParent().getCamera());
-        objectBinder.bind(object.getProgram(), object);
-        matrixBinder.bindViewProjectionMatrix(object.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
+        cameraBinder.bind(program, getContext().getParent().getCamera());
+        objectBinder.bind(program, object);
+        matrixBinder.bindViewProjectionMatrix(program, context.getParent().getViewProjectionMatrixBuffer());
 
-        if (getContext().getParent().markLightsBound(object.getProgram())) {
-            lightBinder.bind(object.getProgram(), context.getScene().getDirectionalLight());
-            lightBinder.bind(object.getProgram(), context.getScene().getAmbientLight());
-            lightBinder.bind(object.getProgram(), context.getScene().getLights());
-            shadowBinder.bind(object.getProgram());
-            environmentBinder.bind(object.getProgram());
+        if (getContext().getParent().markLightsBound(program)) {
+            lightBinder.bind(program, context.getScene().getDirectionalLight());
+            lightBinder.bind(program, context.getScene().getAmbientLight());
+            lightBinder.bind(program, context.getScene().getLights());
+            shadowBinder.bind(program);
+            environmentBinder.bind(program);
         }
 
-        textureBinder.bind(object.getProgram(), context.getScene().getSkybox());
-        fogBinder.bind(object.getProgram(), context.getScene().getFog());
+        textureBinder.bind(program, context.getScene().getSkybox());
+        fogBinder.bind(program, context.getScene().getFog());
 
-        render(object.getProgram(), object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
+        render(program, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
 
         glUseProgram(0);
     }
@@ -103,6 +107,17 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
                     .withProgram(program)) {
                 meshRenderer.render(reference.mesh());
             }
+    }
+
+    /**
+     * The program of an object. The shader of the objects has a variant with the holes of cutout surfaces: it is used only
+     * for the objects that have such a surface, because a shader that can discard fragments loses the early depth test.
+     */
+    private ProgramEntityImplementation getProgram(final ObjectInstanceImplementation object) {
+        if (object.hasCutout() && object.getProgram() == programRegistry.get(ProgramType.Default.getProgramName()))
+            return programRegistry.get(ProgramType.DefaultCutout.getProgramName());
+
+        return object.getProgram();
     }
 
     @Getter(AccessLevel.PACKAGE)

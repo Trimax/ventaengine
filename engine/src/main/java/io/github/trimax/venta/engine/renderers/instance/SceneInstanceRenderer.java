@@ -106,7 +106,7 @@ public final class SceneInstanceRenderer
         final var position = new Vector3f();
 
         return RenderOrderUtil.order(scene.getObjects(),
-                object -> object.getMaterial() != null && object.getMaterial().isCutout(),
+                ObjectInstanceImplementation::hasCutout,
                 object -> object.getTransform().getMatrix().getTranslation(position).distanceSquared(cameraPosition));
     }
 

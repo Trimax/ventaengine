@@ -25,6 +25,9 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     private MaterialEntityImplementation material;
     private ProgramEntityImplementation program;
 
+    /** Whether a surface of the object is cutout, null until it is asked: only a new material of the object changes it */
+    private Boolean cutout;
+
     private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
     private boolean isLit = true;
@@ -40,6 +43,29 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
         this.material = material;
         this.program = program;
         this.mesh = mesh;
+    }
+
+    /** Whether the object has a cutout surface: its own material or the material of a part of its model */
+    public boolean hasCutout() {
+        if (cutout == null)
+            cutout = (material != null && material.isCutout()) || hasCutout(mesh);
+
+        return cutout;
+    }
+
+    private static boolean hasCutout(final Node<MeshReference> node) {
+        if (node == null)
+            return false;
+
+        if (node.hasValue() && node.value().hasMaterial() && node.value().material().isCutout())
+            return true;
+
+        if (node.hasChildren())
+            for (final var child : node.children())
+                if (hasCutout(child))
+                    return true;
+
+        return false;
     }
 
     @Override
@@ -120,7 +146,9 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
 
     @Override
     public void setMaterial(@NonNull final MaterialEntity material) {
-        if (material instanceof MaterialEntityImplementation entity)
+        if (material instanceof MaterialEntityImplementation entity) {
             this.material = entity;
+            this.cutout = null;
+        }
     }
 }

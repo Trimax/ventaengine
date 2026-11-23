@@ -27,14 +27,22 @@ public final class RenderOrderUtil {
      */
     public <T> List<T> order(@NonNull final Collection<T> items, @NonNull final Predicate<T> solid, @NonNull final ToDoubleFunction<T> distance) {
         final var ordered = new ArrayList<T>(items.size());
-        final var blended = new ArrayList<T>();
+        final var blended = new ArrayList<Measured<T>>();
         for (final var item : items)
-            (solid.test(item) ? ordered : blended).add(item);
+            if (solid.test(item))
+                ordered.add(item);
+            else
+                // The distance is measured once: it can be costly and the sort asks for it many times
+                blended.add(new Measured<>(item, distance.applyAsDouble(item)));
 
         // The sort is stable: objects at the same distance keep their order
-        blended.sort(Comparator.comparingDouble(distance).reversed());
-        ordered.addAll(blended);
+        blended.sort(Comparator.comparingDouble((Measured<T> measured) -> measured.distance).reversed());
+        for (final var measured : blended)
+            ordered.add(measured.item);
 
         return ordered;
+    }
+
+    private record Measured<T>(T item, double distance) {
     }
 }

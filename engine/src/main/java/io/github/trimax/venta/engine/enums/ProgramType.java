@@ -15,6 +15,7 @@ public enum ProgramType {
     ShadowCutout("shadow-cutout.json"),
     Particle("particle.json"),
     Post("post.json"),
+    DefaultCutout("default-cutout.json"),
     Default("default.json"),
     Console("console.json"),
     Shadow("shadow.json"),

@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "default/vertex.glsl",
+  "shaderFragment": "default/fragment-cutout.glsl"
+}
