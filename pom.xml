@@ -42,6 +42,9 @@
         <lombok.version>1.18.48</lombok.version>
         <lwjgl.version>3.4.3</lwjgl.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Arguments of the JVM of the tests, the macOS profiles add the first thread one: GLFW requires it -->
+        <test.jvm.arguments></test.jvm.arguments>
     </properties>
 
     <modules>
@@ -159,6 +162,7 @@
                 <version>3.6.1</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <argLine>${test.jvm.arguments}</argLine>
                 </configuration>
             </plugin>
         </plugins>
@@ -223,6 +227,7 @@
             </activation>
             <properties>
                 <os.detected.classifier>macos</os.detected.classifier>
+                <test.jvm.arguments>-XstartOnFirstThread</test.jvm.arguments>
             </properties>
         </profile>
         <profile>
@@ -235,6 +240,7 @@
             </activation>
             <properties>
                 <os.detected.classifier>macos-arm64</os.detected.classifier>
+                <test.jvm.arguments>-XstartOnFirstThread</test.jvm.arguments>
             </properties>
         </profile>
         <profile>

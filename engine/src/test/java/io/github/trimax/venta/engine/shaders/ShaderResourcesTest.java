@@ -1,12 +1,8 @@
 package io.github.trimax.venta.engine.shaders;
 
+import static io.github.trimax.venta.engine.shaders.ShaderResources.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,15 +11,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.model.common.shader.ShaderSource;
-import io.github.trimax.venta.engine.model.dto.ProgramDTO;
-import io.github.trimax.venta.engine.utils.ParsingUtil;
-import io.github.trimax.venta.engine.utils.ShaderPreprocessor;
 
 /**
  * Checks the shaders of the engine without OpenGL: the includes of every program are expanded and the code that would
@@ -132,48 +124,6 @@ final class ShaderResourcesTest {
         final var duplicates = names.stream().filter(name -> names.stream().filter(name::equals).count() > 1).distinct().toList();
 
         assertTrue(duplicates.isEmpty(), shader + " defines twice: " + kind + " " + duplicates);
-    }
-
-    private static ShaderSource expand(final String shader) {
-        return ShaderPreprocessor.process(shader, ShaderResourcesTest::load);
-    }
-
-    private static String load(final String path) {
-        try (final var stream = ShaderResourcesTest.class.getResourceAsStream("/shaders/" + path)) {
-            return stream == null ? null : new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (final IOException exception) {
-            throw new IllegalStateException(exception);
-        }
-    }
-
-    private static List<String> shaders(final ProgramDTO program) {
-        return List.of(program.shaderVertex(), program.shaderFragment());
-    }
-
-    private static List<String> allShaders() throws Exception {
-        return programs().values().stream().flatMap(program -> shaders(program).stream()).toList();
-    }
-
-    private static Map<String, ProgramDTO> programs() throws Exception {
-        final Map<String, ProgramDTO> programs = new HashMap<>();
-        try (final var files = Files.list(resources("/programs"))) {
-            for (final var file : files.filter(path -> path.toString().endsWith(".json")).toList())
-                programs.put(file.getFileName().toString(), ParsingUtil.asObject(Files.readString(file), ProgramDTO.class));
-        }
-
-        assertFalse(programs.isEmpty(), "The programs must be found");
-        return programs;
-    }
-
-    private static List<String> shaderFiles() throws Exception {
-        final var folder = resources("/shaders");
-        try (final Stream<Path> files = Files.walk(folder)) {
-            return files.filter(path -> path.toString().endsWith(".glsl")).map(path -> folder.relativize(path).toString().replace('\\', '/')).toList();
-        }
-    }
-
-    private static Path resources(final String folder) throws URISyntaxException {
-        return Path.of(ShaderResourcesTest.class.getResource(folder).toURI());
     }
 
     /** The top level definitions of a shader: lines at the depth 0 outside of comments */

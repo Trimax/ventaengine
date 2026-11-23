@@ -25,8 +25,15 @@ jobs:
           distribution: temurin
           cache: maven
 
+      # The tests compile the shaders and call them on the GPU: a virtual display and the software OpenGL of Mesa give them a context
+      - name: Install software OpenGL
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1 libgl1-mesa-dri libglx-mesa0
+
       - name: Build
-        run: set -o pipefail && mvn -B package | tee maven-build.log
+        env:
+          VENTA_REQUIRE_OPENGL: "true"
+          LIBGL_ALWAYS_SOFTWARE: "true"
+        run: set -o pipefail && xvfb-run -a -s "-screen 0 1280x1024x24" mvn -B package | tee maven-build.log
 
       - name: Upload Maven logs
         if: always()

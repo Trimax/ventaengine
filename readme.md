@@ -168,7 +168,7 @@ Resources are loaded from the classpath (or from registered archives) by folder:
 | `emitters/`, `sprites/`, `billboards/` | Particle emitters, sprite animations and billboards |
 | `gridmeshes/`, `surfaces/terrain/`, `surfaces/water/` | Grid meshes and terrain and water surfaces |
 | `sounds/`, `soundsources/` | Sounds (OGG Vorbis) and sound source prefabs |
-| `programs/`, `shaders/` | Shader programs and GLSL shaders |
+| `programs/`, `shaders/` | Shader programs and GLSL shaders; a line `#include "common/fog.glsl"` of a shader is replaced with the file (the path is relative to `shaders/`, a file is included once per shader), the code used by several shaders is in `shaders/common/` |
 | `fonts/` | TrueType fonts |
 
 The engine has default resources (default program, textures, font, gizmo meshes), so an application provides only its own.
@@ -216,10 +216,11 @@ Every example is a separate application in `examples` (`io.github.trimax.example
 
 ## Building and releasing
 * `mvn package` builds all modules, runs the tests and checkstyle. Use JDK 25.
+* Some tests compile the shaders and call them on the GPU. They need an OpenGL 3.3 context and are skipped without one (the macOS profiles of the root pom run the tests with `-XstartOnFirstThread`, which GLFW requires). The `Build` workflow runs them under Xvfb with the software OpenGL of Mesa and fails when there is no context (`VENTA_REQUIRE_OPENGL`).
 * Pushes and pull requests to `main` are built by the `Build` workflow.
 * Creating a GitHub release runs the `Release` workflow: it builds the commit of the release tag, checks that the tag
   (with an optional `v` prefix) matches the project version, publishes `container` and `engine` (and the parent POM)
-  to Maven Central, then bumps the patch version in `main`.
+  to Maven Central, then bumps the patch version in `main`. For a new minor or major version set it in the project (`1.4.0`) before creating the release, the workflow bumps only the patch version.
 
 ## Contribution
 Contributions, issues, and feature requests are welcome! Feel free to fork the repository and submit pull requests.
