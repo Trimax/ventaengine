@@ -27,6 +27,7 @@ public final class EngineRenderer {
     private final SceneManagerImplementation sceneManager;
 
     private final PostProcessingRenderer postProcessingRenderer;
+    private final EnvironmentRenderer environmentRenderer;
     private final ShadowRenderer shadowRenderer;
     private final WindowStateRenderer windowRenderer;
     private final SceneInstanceRenderer sceneRenderer;
@@ -35,6 +36,7 @@ public final class EngineRenderer {
     /** Releases the GL objects of the renderers, the context must be alive */
     public void release() {
         shadowRenderer.release();
+        environmentRenderer.release();
         postProcessingRenderer.release();
     }
 
@@ -44,6 +46,9 @@ public final class EngineRenderer {
             engineController.get().setApplicationRunning(false);
 
         final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
+
+        // The light of the skybox is convolved when the skybox is new
+        environmentRenderer.prepare(sceneManager.getCurrent().getSkybox());
 
         // The shadow maps are drawn first, the scene takes them
         shadowRenderer.render(sceneManager.getCurrent(), camera, window);

@@ -33,6 +33,7 @@ public final class TerrainSurfaceInstanceRenderer extends
     private final CameraBinder cameraBinder;
     private final MatrixBinder matrixBinder;
     private final ShadowBinder shadowBinder;
+    private final EnvironmentBinder environmentBinder;
     private final LightBinder lightBinder;
     private final FogBinder fogBinder;
     private final TimeBinder timeBinder;
@@ -52,6 +53,7 @@ public final class TerrainSurfaceInstanceRenderer extends
             lightBinder.bind(surface.getProgram(), getContext().getScene().getAmbientLight());
             lightBinder.bind(surface.getProgram(), getContext().getScene().getLights());
             shadowBinder.bind(surface.getProgram());
+            environmentBinder.bind(surface.getProgram());
         }
 
         cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());

@@ -3,6 +3,7 @@ package io.github.trimax.examples.reflection.handlers;
 import io.github.trimax.examples.reflection.state.ReflectionApplicationState;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
+import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -16,8 +17,9 @@ public final class ReflectionApplicationStartupHandler implements VentaEngineSta
         log.info("Reflections demo application started");
 
         final var scene = context.getSceneManager().getCurrent();
-        scene.setAmbientLight(new Vector3f(0.6f, 0.6f, 0.6f));
+        scene.setAmbientLight(new Vector3f(1.f, 1.f, 1.f));
         scene.setSkybox(context.getCubemapRegistry().get("stars.json"));
+        scene.setDirectionalLight(new DirectionalLight(new Vector3f(1.f, 0.95f, 0.9f), new Vector3f(-0.5f, -0.8f, -0.6f), 1.5f));
 
         final var cubeMirror = context.getObjectManager().create("Cube like mirror", context.getObjectRepository().get("cube.json"));
         cubeMirror.setMaterial(context.getMaterialRegistry().get("mirror.json"));

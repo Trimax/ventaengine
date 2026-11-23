@@ -17,7 +17,10 @@ public enum TextureUnit {
     Roughness(GL_TEXTURE5, 5),
     Metalness(GL_TEXTURE6, 6),
     Debug(GL_TEXTURE7, 7),
-    Shadow(GL_TEXTURE8, 8);
+    Shadow(GL_TEXTURE8, 8),
+    Irradiance(GL_TEXTURE9, 9),
+    Prefilter(GL_TEXTURE10, 10),
+    Brdf(GL_TEXTURE11, 11);
 
     private final int locationID;
     private final int id;

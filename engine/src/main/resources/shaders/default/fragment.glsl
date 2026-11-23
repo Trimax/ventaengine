@@ -1,16 +1,11 @@
 #version 330 core
 
+#include "common/environment.glsl"
 #include "common/flags.glsl"
 #include "common/fog.glsl"
 #include "common/lights.glsl"
+#include "common/pbr.glsl"
 #include "common/shadow.glsl"
-
-/***
- * Definitions
- ***/
-
-/* Common */
-const float METALNESS_MINIMAL = 0.04;
 
 /***
  * Structures
@@ -37,7 +32,6 @@ in vec2 vertexTextureCoordinates;
 in mat3 vertexTBN;
 
 /* Textures */
-uniform samplerCube textureSkybox;
 uniform sampler2D textureDiffuse;
 uniform sampler2D textureHeight;
 uniform sampler2D textureNormal;
@@ -46,7 +40,6 @@ uniform sampler2D textureMetalness;
 uniform sampler2D textureAmbientOcclusion;
 
 /* Feature flags */
-uniform int useTextureSkybox;
 uniform int useTextureDiffuse;
 uniform int useTextureHeight;
 uniform int useTextureNormal;
@@ -145,78 +138,47 @@ vec4 getMaterialColor() {
  * Lighting
  ***/
 
-/* Calculates diffuse light component */
-vec3 calculateLightDiffuse(vec3 lightColor, vec3 normal, vec3 lightDirection) {
-    return max(dot(normal, lightDirection), 0.0) * lightColor;
-}
-
-/* Calculates specular light component */
-vec3 calculateLightSpecular(vec4 color, vec3 lightColor, vec3 normal, vec3 lightDirection, vec3 viewDirection, vec2 textureCoordinates) {
-    vec3 F0 = mix(vec3(METALNESS_MINIMAL), color.rgb, getMetalness(textureCoordinates));
-    float shininess = mix(1.0, 256.0, 1.0 - getRoughness(textureCoordinates));
-    float factorSpecular = pow(max(dot(getViewDirectionWorldSpace(), reflect(-lightDirection, normal)), 0.0), shininess);
-
-    return F0 * factorSpecular * lightColor;
-}
-
 /* Calculates effect of one light source */
-vec3 calculateLight(vec4 color, Light light, vec3 normal, vec3 fragmentPosition, vec2 textureCoordinates) {
+vec3 calculateLight(vec3 albedo, float metalness, float roughness, Light light, vec3 normal, vec3 viewDirection) {
     if (!isSet(light.enabled))
         return vec3(0.0);
 
-    vec3 lightDirection = normalize(light.position - fragmentPosition);
-    vec3 colorDiffuse = calculateLightDiffuse(light.color, normal, lightDirection);
-    vec3 colorSpecular = calculateLightSpecular(color, light.color, normal, lightDirection, getViewDirectionWorldSpace(), textureCoordinates);
+    vec3 toLight = light.position - vertexPosition;
+    float distance = length(toLight);
+    vec3 radiance = light.color * light.intensity * getAttenuation(light.attenuation, distance);
 
-    float attenuation = getAttenuation(light.attenuation, length(light.position - fragmentPosition));
-
-    return (colorDiffuse + colorSpecular) * light.intensity * attenuation;
+    return pbrLight(normal, viewDirection, toLight / max(distance, 0.0001), albedo, metalness, roughness, radiance);
 }
 
 /* Calculates effect of directional light if present */
-vec3 calculateDirectionalLight(vec4 color, vec3 normal, vec2 textureCoordinates) {
+vec3 calculateDirectionalLight(vec3 albedo, float metalness, float roughness, vec3 normal, vec3 viewDirection) {
     if (!isSet(useDirectionalLight))
         return vec3(0.0);
 
-    vec3 lightDirection = normalize(-directionalLight.direction);
-    vec3 colorDiffuse = calculateLightDiffuse(directionalLight.color, normal, lightDirection);
-    vec3 colorSpecular = calculateLightSpecular(color, directionalLight.color, normal, lightDirection, getViewDirectionWorldSpace(), textureCoordinates);
+    vec3 radiance = directionalLight.color * directionalLight.intensity * getSunShadow(vertexPosition, normalize(vertexTBN[2]));
 
-    return (colorDiffuse + colorSpecular) * directionalLight.intensity * getSunShadow(vertexPosition, normalize(vertexTBN[2]));
+    return pbrLight(normal, viewDirection, normalize(-directionalLight.direction), albedo, metalness, roughness, radiance);
 }
 
-vec3 calculateLighting(vec4 color, vec2 textureCoordinates) {
+/* The color of a surface: the light of the environment, the sun and the lights reflected by the material */
+vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
+    float occlusion = getAmbientOcclusion(textureCoordinates);
     if (!isSet(useLighting))
-        return vec3(1.0);
+        return vec4(color.rgb * occlusion, color.a);
 
     vec3 normal = getNormal(textureCoordinates);
+    vec3 viewDirection = getViewDirectionWorldSpace();
+    float metalness = getMetalness(textureCoordinates);
+    float roughness = getRoughness(textureCoordinates);
 
-    vec3 lighting = ambientLight.xyz;
+    vec3 lighting = getAmbientLight(normal, viewDirection, color.rgb, metalness, roughness, occlusion)
+            + calculateDirectionalLight(color.rgb, metalness, roughness, normal, viewDirection);
+
     for (int i = 0; i < lightCount; i++)
-        lighting += calculateLight(color, lights[i], normal, vertexPosition, textureCoordinates);
+        lighting += calculateLight(color.rgb, metalness, roughness, lights[i], normal, viewDirection);
 
-    return lighting + calculateDirectionalLight(color, normal, textureCoordinates);
-}
-
-vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
-    vec3 lighting = calculateLighting(color, textureCoordinates) * getAmbientOcclusion(textureCoordinates);
-
-    return vec4(clamp(color.rgb * lighting, 0.0, 1.0), color.a);
-}
-
-/***
- * Reflections
- ***/
-
-vec4 applyReflections(vec4 color, vec2 textureCoordinates) {
-    if (!isSet(useTextureSkybox))
-        return color;
-
-    vec3 N = normalize(getNormal(textureCoordinates));
-    vec3 V = normalize(getViewDirectionWorldSpace());
-    vec4 skyboxColor = vec4(texture(textureSkybox, reflect(-V, N)).rgb, 1.0);
-
-    return vec4(mix(color.rgb, skyboxColor.rgb, getMetalness(textureCoordinates)), color.a);
+    // The result is HDR: the tone mapping of the post processing brings it to the screen
+    return vec4(lighting, color.a);
 }
 
 /***
@@ -235,8 +197,7 @@ void main() {
 
     vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();
     vec4 colorWithLighting = applyLighting(colorWithoutEffects, textureCoordinates);
-    vec4 colorWithReflections = applyReflections(colorWithLighting, textureCoordinates);
-    vec4 colorWithFog = applyFog(colorWithReflections);
+    vec4 colorWithFog = applyFog(colorWithLighting);
 
     outputColor = colorWithFog;
 }

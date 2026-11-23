@@ -7,6 +7,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ProgramType {
+    EnvironmentIrradiance("ibl-irradiance.json"),
+    EnvironmentPrefilter("ibl-prefilter.json"),
+    EnvironmentCopy("ibl-environment.json"),
+    EnvironmentBrdf("ibl-brdf.json"),
     ShadowTerrain("shadow-terrain.json"),
     Particle("particle.json"),
     Post("post.json"),

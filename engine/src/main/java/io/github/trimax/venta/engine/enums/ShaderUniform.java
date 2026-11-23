@@ -67,6 +67,13 @@ public enum ShaderUniform {
     ShadowTexels("shadowTexels"),
     ShadowDistance("shadowDistance"),
 
+    /* Environment (image based lighting) */
+    UseEnvironment("useEnvironment"),
+    TextureIrradiance("textureIrradiance"),
+    TexturePrefilter("texturePrefilter"),
+    TextureBrdf("textureBrdf"),
+    PrefilterLevels("prefilterLevels"),
+
     /* Lighting */
     AmbientLight("ambientLight"),
     UseLighting("useLighting"),

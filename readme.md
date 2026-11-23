@@ -33,8 +33,9 @@ More screenshots can be produced by running the [examples](#examples).
 * **Scenes** — scenes described in JSON or built in code, switching between scenes, ambient and directional light, fog, skybox
 * **Objects** — meshes from JSON and Wavefront OBJ files, hierarchical objects (a model made of nodes with their own transformations); an OBJ model without a material of its own is split into its groups with the materials of its MTL file
 * **Materials** — color, tiling, offset, metalness and roughness, and diffuse, normal, height (parallax), roughness,
-  metalness and ambient occlusion maps
+  metalness and ambient occlusion maps; surfaces are shaded physically (Cook-Torrance with GGX, Smith and Schlick)
 * **Lights** — up to 64 point lights per scene with color, intensity and attenuation
+* **Image based lighting** — the skybox of a scene is convolved on the GPU once (diffuse irradiance, specular prefiltered by roughness, BRDF table), so objects and terrain take the color of the sky around them and metals reflect it; `ambientLight` of a scene multiplies the light of the sky, and a scene without a skybox has a flat ambient light
 * **Shadows** — the sun casts cascaded shadow maps (4 cascades, 2048×2048, soft edges) on objects, terrain and water: `"castShadows": true` and `"shadowDistance"` in the `directionalLight` of the scene file; off by default
 * **Terrain** — grid mesh displaced by a heightmap, materials blended by elevation
 * **Water** — grid mesh animated by Gerstner waves and noise, reflections of the skybox
