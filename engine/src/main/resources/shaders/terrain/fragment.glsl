@@ -5,6 +5,7 @@
 #include "common/fog.glsl"
 #include "common/lights.glsl"
 #include "common/noise.glsl"
+#include "common/shadow.glsl"
 
 /***
  * Definitions
@@ -156,7 +157,7 @@ vec3 calculateDirectionalLight(vec3 baseColor, vec3 normal, vec3 cameraDirection
         return vec3(0.0);
 
     return shade(baseColor, normal, normalize(-directionalLight.direction), cameraDirection, roughness)
-            * directionalLight.color * directionalLight.intensity;
+            * directionalLight.color * directionalLight.intensity * getSunShadow(vertexPosition, normalize(vertexNormal));
 }
 
 vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection, float roughness) {

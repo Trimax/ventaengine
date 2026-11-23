@@ -7,5 +7,7 @@ import lombok.NonNull;
 
 public record SceneDirectionalLightDTO(@NonNull ColorDTO color,
                                        @NonNull Vector3f direction,
-                                       float intensity) {
+                                       float intensity,
+                                       Boolean castShadows,
+                                       Float shadowDistance) {
 }
