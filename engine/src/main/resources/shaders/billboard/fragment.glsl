@@ -1,15 +1,10 @@
 #version 330 core
 
-/***
- * Structures
- ***/
+#include "common/fog.glsl"
 
-struct Fog {
-    vec3 color;
-    float minimalDistance;
-    float maximalDistance;
-    float height;
-};
+/***
+ * Input variables and uniforms
+ ***/
 
 /* Vertex shader output */
 in vec2 vertexTextureCoordinates;
@@ -18,9 +13,6 @@ in float vertexFog;
 
 /* Textures */
 uniform sampler2D textureDiffuse;
-
-/* Fog */
-uniform Fog fog;
 
 /* Output color */
 out vec4 outputColor;

@@ -1,11 +1,8 @@
 #version 330 core
 
-struct Fog {
-    vec3 color;
-    float minimalDistance;
-    float maximalDistance;
-    float height;
-};
+#include "common/camera.glsl"
+#include "common/flags.glsl"
+#include "common/fog.glsl"
 
 /* Vertex shader output */
 in vec3 vertexPosition;
@@ -13,28 +10,8 @@ in vec3 vertexPosition;
 /* Skybox texture */
 uniform samplerCube textureSkybox;
 
-/* Fog */
-uniform Fog fog;
-
-/* Camera */
-uniform vec3 cameraPosition;
-
-/* Feature flags */
-uniform int useFog;
-
 /* Output color */
 out vec4 outputColor;
-
-/* Checks if flag is set (bools are not supported by macOS Radeon cards */
-bool isSet(int value) {
-    return value != 0;
-}
-
-/* Amount of fog color: 0 is no fog, 1 is the fog color only */
-float getFogFactor(float distance) {
-    float range = max(fog.maximalDistance - fog.minimalDistance, 0.0001);
-    return clamp((distance - fog.minimalDistance) / range, 0.0, 1.0);
-}
 
 /*
  * The sky is infinitely far. Inside the fog layer a ray looking down or horizontally never leaves it, a ray looking up

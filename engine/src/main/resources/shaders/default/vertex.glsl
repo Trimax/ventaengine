@@ -1,5 +1,7 @@
 #version 330 core
 
+#include "common/camera.glsl"
+
 /* Vertex attributes */
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -7,9 +9,6 @@ layout(location = 2) in vec3 tangent;
 layout(location = 3) in vec3 bitangent;
 layout(location = 4) in vec2 textureCoordinates;
 layout(location = 5) in vec4 color;
-
-/* Camera attributes */
-uniform vec3 cameraPosition;
 
 /* Matrices */
 uniform mat4 matrixViewProjection;  // Multiplied View & Projections matrices (built based on the window & camera parameters)

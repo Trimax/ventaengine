@@ -1,5 +1,8 @@
 package io.github.trimax.venta.engine.registries.implementation;
 
+import static org.lwjgl.opengl.GL11C.GL_FALSE;
+import static org.lwjgl.opengl.GL20C.*;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderType;
 import io.github.trimax.venta.engine.exceptions.ShaderCompileException;
@@ -8,13 +11,11 @@ import io.github.trimax.venta.engine.model.entity.implementation.Abettor;
 import io.github.trimax.venta.engine.model.entity.implementation.ShaderEntityImplementation;
 import io.github.trimax.venta.engine.registries.ShaderRegistry;
 import io.github.trimax.venta.engine.services.ResourceService;
+import io.github.trimax.venta.engine.utils.PreprocessingUtil;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static org.lwjgl.opengl.GL11C.GL_FALSE;
-import static org.lwjgl.opengl.GL20C.*;
 
 @Slf4j
 @Component
@@ -29,18 +30,18 @@ public final class ShaderRegistryImplementation
     protected ShaderEntityImplementation load(@NonNull final String resourcePath, final ShaderType type) {
         log.info("Loading shader {}", resourcePath);
 
-        final var code = resourceService.getAsString(String.format("/shaders/%s", resourcePath));
+        final var source = PreprocessingUtil.process(resourcePath, path -> resourceService.getAsString(String.format("/shaders/%s", path)));
         final var id = glCreateShader(type.getValue());
 
-        glShaderSource(id, code);
+        glShaderSource(id, source.code());
         glCompileShader(id);
         if (glGetShaderi(id, GL_COMPILE_STATUS) == GL_FALSE) {
             final var details = glGetShaderInfoLog(id);
             glDeleteShader(id);
-            throw new ShaderCompileException(String.format("%s: %s", resourcePath, details));
+            throw new ShaderCompileException(String.format("%s: %s", resourcePath, source.mapLog(details)));
         }
 
-        return abettor.createShader(id, type, code);
+        return abettor.createShader(id, type, source.code());
     }
 
     @Override

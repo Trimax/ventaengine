@@ -1,43 +1,20 @@
 #version 330 core
 
+#include "common/camera.glsl"
+#include "common/flags.glsl"
+#include "common/fog.glsl"
+#include "common/lights.glsl"
+#include "common/noise.glsl"
+
 /***
  * Definitions
  ***/
 
-const int MAX_LIGHTS = 64;
 const int MAX_MATERIALS = 8;
 
 /***
  * Structures
  ***/
-
-struct Attenuation {
-    float constant;
-    float linear;
-    float quadratic;
-};
-
-struct Light {
-    vec3 position;
-    vec3 color;
-    float intensity;
-    Attenuation attenuation;
-    int castShadows;
-    int enabled;
-};
-
-struct DirectionalLight {
-    vec3 color;
-    vec3 direction;
-    float intensity;
-};
-
-struct Fog {
-    vec3 color;
-    float minimalDistance;
-    float maximalDistance;
-    float height;
-};
 
 struct Material {
     vec4 color;
@@ -69,14 +46,9 @@ uniform sampler2DArray textureMetalness;
 uniform sampler2DArray textureAmbientOcclusion;
 
 /* Feature flags */
-uniform int useDirectionalLight;
 uniform int useTextureSkybox;
 uniform int useTextureNormal;
 uniform int useTextureRoughness;
-uniform int useFog;
-
-/* Fog */
-uniform Fog fog;
 
 /* Materials */
 uniform Material materials[MAX_MATERIALS];
@@ -86,29 +58,11 @@ uniform int materialCount;
 uniform float elevations[MAX_MATERIALS];
 uniform float factor;
 
-/* Lighting */
-uniform DirectionalLight directionalLight;
-uniform Light lights[MAX_LIGHTS];
-uniform vec3 ambientLight;
-uniform int lightCount;
-
-/* Camera */
-uniform vec3 cameraPosition;
-
 /* Time */
 uniform float timeElapsed;
 
 /* Output color */
 out vec4 outputColor;
-
-/***
- * Common functions
- ***/
-
-/* Checks if flag is set (bools are not supported by macOS Radeon cards */
-bool isSet(int value) {
-    return value != 0;
-}
 
 /***
  * Materials
@@ -122,27 +76,13 @@ vec2 getTextureCoordinates(int layer) {
  * Texture repetition
  ***/
 
-float hash(vec2 point) {
-    return fract(sin(dot(point, vec2(127.1, 311.7))) * 43758.5453);
-}
-
-/* Smooth value noise in [0, 1] */
-float valueNoise(vec2 point) {
-    vec2 cell = floor(point);
-    vec2 fraction = fract(point);
-    vec2 weight = fraction * fraction * (3.0 - 2.0 * fraction);
-
-    return mix(mix(hash(cell), hash(cell + vec2(1.0, 0.0)), weight.x),
-               mix(hash(cell + vec2(0.0, 1.0)), hash(cell + vec2(1.0, 1.0)), weight.x), weight.y);
-}
-
 /*
  * A tiled texture without visible repetition (I. Quilez, "texture repetition", technique 3): a slow noise picks
  * one of 8 random offsets of the texture and neighbour offsets are blended. Explicit gradients keep the mip level
  * of the original coordinates, so there are no seams where the offset changes.
  */
 vec4 sampleWithoutRepetition(sampler2DArray textures, vec2 coordinates, float layer) {
-    float index = valueNoise(coordinates * 0.35) * 8.0;
+    float index = noise(coordinates * 0.35) * 8.0;
     float lower = floor(index);
     float fraction = fract(index);
 
@@ -166,8 +106,8 @@ vec4 sampleLayers(sampler2DArray textures, int layer0, int layer1, float blend) 
 /* Large patches of slightly brighter and darker ground, so wide areas of one material don't look uniform */
 float getBrightnessVariation() {
     vec2 point = vertexTextureCoordinates * 6.0;
-    float noise = valueNoise(point) * 0.6 + valueNoise(point * 2.7 + 13.0) * 0.4;
-    return mix(0.82, 1.12, noise);
+    float variation = noise(point) * 0.6 + noise(point * 2.7 + 13.0) * 0.4;
+    return mix(0.82, 1.12, variation);
 }
 
 vec3 getNormal(int layer0, int layer1, float blend) {
@@ -191,11 +131,6 @@ float getRoughness(int layer0, int layer1, float blend) {
 /***
  * Lighting functions
  ***/
-
-float getAttenuation(Attenuation attenuation, float distance) {
-    // An all-zero attenuation would divide by zero
-    return 1.0 / max(attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance, 0.0001);
-}
 
 /* Diffuse light takes the surface color, rough surfaces have weaker and wider highlights */
 vec3 shade(vec3 baseColor, vec3 normal, vec3 lightDirection, vec3 cameraDirection, float roughness) {
@@ -233,32 +168,11 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection, float ro
     return result;
 }
 
-/* Part of the way between two points that lies in the fog layer (below fog.height) */
-float getFogDistance(vec3 from, vec3 to) {
-    float distance = length(to - from);
-    float lower = min(from.y, to.y);
-    float upper = max(from.y, to.y);
-
-    if (upper <= fog.height)
-        return distance;
-
-    if (lower >= fog.height)
-        return 0.0;
-
-    return distance * (fog.height - lower) / (upper - lower);
-}
-
-/* Amount of fog color: 0 is no fog, 1 is the fog color only */
-float getFogFactor(float distance) {
-    float range = max(fog.maximalDistance - fog.minimalDistance, 0.0001);
-    return clamp((distance - fog.minimalDistance) / range, 0.0, 1.0);
-}
-
 vec3 applyFog(vec3 color) {
     if (!isSet(useFog))
         return color;
 
-    return mix(color, fog.color, getFogFactor(getFogDistance(cameraPosition, vertexPosition)));
+    return mix(color, fog.color, getFogAmount(cameraPosition, vertexPosition));
 }
 
 /*
