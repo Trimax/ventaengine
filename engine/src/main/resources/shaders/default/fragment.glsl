@@ -1,5 +1,9 @@
 #version 330 core
 
+#include "common/flags.glsl"
+#include "common/fog.glsl"
+#include "common/lights.glsl"
+
 /***
  * Definitions
  ***/
@@ -7,33 +11,9 @@
 /* Common */
 const float METALNESS_MINIMAL = 0.04;
 
-/* Light specific */
-const int MAX_LIGHTS = 64;
-
 /***
  * Structures
  ***/
-
-struct Attenuation {
-    float constant;
-    float linear;
-    float quadratic;
-};
-
-struct Light {
-    vec3 position;
-    vec3 color;
-    float intensity;
-    Attenuation attenuation;
-    int castShadows;
-    int enabled;
-};
-
-struct DirectionalLight {
-    vec3 color;
-    vec3 direction;
-    float intensity;
-};
 
 struct Material {
     vec4 color;
@@ -41,13 +21,6 @@ struct Material {
     vec2 offset;
     float metalness;
     float roughness;
-};
-
-struct Fog {
-    vec3 color;
-    float minimalDistance;
-    float maximalDistance;
-    float height;
 };
 
 /***
@@ -79,35 +52,14 @@ uniform int useTextureNormal;
 uniform int useTextureRoughness;
 uniform int useTextureMetalness;
 uniform int useTextureAmbientOcclusion;
-uniform int useDirectionalLight;
 uniform int useLighting;
 uniform int useMaterial;
-uniform int useFog;
-
-/* Lighting */
-uniform Light lights[MAX_LIGHTS];
-uniform vec3 ambientLight;
-uniform int lightCount;
-
-uniform DirectionalLight directionalLight;
 
 /* Material */
 uniform Material material;
 
-/* Fog */
-uniform Fog fog;
-
 /* Output color */
 out vec4 outputColor;
-
-/***
- * Common functions
- ***/
-
-/* Checks if flag is set (bools are not supported by macOS Radeon cards */
-bool isSet(int value) {
-    return value != 0;
-}
 
 /***
  * View direction
@@ -121,7 +73,6 @@ vec3 getViewDirectionWorldSpace() {
 vec3 getViewDirectionLocalSpace() {
     return normalize(transpose(vertexTBN) * getViewDirectionWorldSpace());
 }
-
 
 /* Gets base color from the texture */
 vec4 getDiffuseColor(vec2 textureCoordinates) {
@@ -192,11 +143,6 @@ vec4 getMaterialColor() {
 /***
  * Lighting
  ***/
-
-float getAttenuation(Attenuation attenuation, float distance) {
-    // An all-zero attenuation would divide by zero
-    return 1.0 / max(attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance, 0.0001);
-}
 
 /* Calculates diffuse light component */
 vec3 calculateLightDiffuse(vec3 lightColor, vec3 normal, vec3 lightDirection) {
@@ -276,32 +222,11 @@ vec4 applyReflections(vec4 color, vec2 textureCoordinates) {
  * Fog
  ***/
 
-/* Part of the way between two points that lies in the fog layer (below fog.height) */
-float getFogDistance(vec3 from, vec3 to) {
-    float distance = length(to - from);
-    float lower = min(from.y, to.y);
-    float upper = max(from.y, to.y);
-
-    if (upper <= fog.height)
-        return distance;
-
-    if (lower >= fog.height)
-        return 0.0;
-
-    return distance * (fog.height - lower) / (upper - lower);
-}
-
-/* Amount of fog color: 0 is no fog, 1 is the fog color only */
-float getFogFactor(float distance) {
-    float range = max(fog.maximalDistance - fog.minimalDistance, 0.0001);
-    return clamp((distance - fog.minimalDistance) / range, 0.0, 1.0);
-}
-
 vec4 applyFog(vec4 color) {
     if (!isSet(useFog))
         return color;
 
-    return vec4(mix(color.rgb, fog.color.rgb, getFogFactor(getFogDistance(vertexCameraPosition, vertexPosition))), color.a);
+    return vec4(mix(color.rgb, fog.color.rgb, getFogAmount(vertexCameraPosition, vertexPosition)), color.a);
 }
 
 void main() {
