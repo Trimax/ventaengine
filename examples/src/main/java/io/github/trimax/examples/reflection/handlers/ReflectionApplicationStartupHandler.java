@@ -17,7 +17,7 @@ public final class ReflectionApplicationStartupHandler implements VentaEngineSta
         log.info("Reflections demo application started");
 
         final var scene = context.getSceneManager().getCurrent();
-        scene.setAmbientLight(new Vector3f(0.6f, 0.6f, 0.6f));
+        scene.setAmbientLight(new Vector3f(1.f, 1.f, 1.f));
         scene.setSkybox(context.getCubemapRegistry().get("stars.json"));
         scene.setDirectionalLight(new DirectionalLight(new Vector3f(1.f, 0.95f, 0.9f), new Vector3f(-0.5f, -0.8f, -0.6f), 1.5f));
 
