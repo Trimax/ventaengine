@@ -12,6 +12,7 @@ public enum ProgramType {
     EnvironmentCopy("ibl-environment.json"),
     EnvironmentBrdf("ibl-brdf.json"),
     ShadowTerrain("shadow-terrain.json"),
+    ShadowCutout("shadow-cutout.json"),
     Particle("particle.json"),
     Post("post.json"),
     Default("default.json"),
