@@ -98,6 +98,23 @@ public final class PostProcessingRenderer {
     }
 
     /**
+     * Releases the framebuffers, the texture and the vertex array: they belong to the renderer and are deleted before
+     * the memory of the engine is cleaned up, which reports everything that is still there. The next frame creates
+     * them again.
+     */
+    public void release() {
+        deleteTargets();
+
+        if (vertexArrayID != 0) {
+            memory.getVertexArrays().delete(vertexArrayID);
+            vertexArrayID = 0;
+        }
+
+        width = 0;
+        height = 0;
+    }
+
+    /**
      * Sample counts to try for the scene framebuffer: drivers may support fewer samples for floating point colors than
      * for the window and OpenGL 4.1 can't tell the limit of a format, so the count is halved down to no multisampling.
      */
