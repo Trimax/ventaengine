@@ -23,7 +23,7 @@ between minor versions. Known issues and planned work are listed in [ROADMAP.md]
 | ![Textured chest](examples/screenshots/textured-chest.jpg)<br>OBJ model with textures | ![Maze](examples/screenshots/maze.jpg)<br>Maze | ![Terrain](examples/screenshots/terrain.jpg)<br>Terrain with biomes, normal maps and lighting |
 | ![Point light](examples/screenshots/point-light.jpg)<br>Colored point lights | ![Colored cube](examples/screenshots/colored-cube.jpg)<br>Material color and textures | ![Emitter](examples/screenshots/emitter.jpg)<br>Particle emitters |
 | ![Reflection](examples/screenshots/reflection.jpg)<br>Skybox reflections | ![Fog](examples/screenshots/fog.jpg)<br>Fog | ![Moveable light](examples/screenshots/moveable-light.jpg)<br>Moving light |
-| ![Shadows](examples/screenshots/shadow.jpg)<br>Cascaded shadows of the sun | | |
+| ![Shadows](examples/screenshots/shadow.jpg)<br>Cascaded shadows of the sun | ![Foliage](examples/screenshots/foliage.jpg)<br>Cutout leaves and fence, glass | |
 
 More screenshots can be produced by running the [examples](#examples).
 
@@ -34,6 +34,7 @@ More screenshots can be produced by running the [examples](#examples).
 * **Objects** — meshes from JSON and Wavefront OBJ files, hierarchical objects (a model made of nodes with their own transformations); an OBJ model without a material of its own is split into its groups with the materials of its MTL file
 * **Materials** — color, tiling, offset, metalness and roughness, and diffuse, normal, height (parallax), roughness,
   metalness and ambient occlusion maps; surfaces are shaded physically (Cook-Torrance with GGX, Smith and Schlick)
+* **Alpha** — a material mixes colors by its alpha (`"alphaMode": "blend"`, the default; such objects are drawn from the farthest to the nearest) or cuts holes (`"alphaMode": "cutout"`, `"alphaCutoff"`): leaves, grass and fences need no sorting and cast shadows with holes; `"doubleSided": false` draws only the front faces
 * **Lights** — up to 64 point lights per scene with color, intensity and attenuation
 * **Image based lighting** — the skybox of a scene is convolved on the GPU once (diffuse irradiance, specular prefiltered by roughness, BRDF table), so objects and terrain take the color of the sky around them and metals reflect it; `ambientLight` of a scene multiplies the light of the sky, and a scene without a skybox has a flat ambient light
 * **Shadows** — the sun casts cascaded shadow maps (4 cascades, 2048×2048, soft edges) on objects, terrain and water: `"castShadows": true` and `"shadowDistance"` in the `directionalLight` of the scene file; off by default
@@ -207,6 +208,7 @@ Every example is a separate application in `examples` (`io.github.trimax.example
 | `material.texture.TexturedChestVentaApplication`, `material.color.ColoredCubeVentaApplication` | Materials and textures |
 | `light.point`, `light.ambient`, `light.dynamic`, `light.moveable` | Point, ambient and moving lights |
 | `shadow.ShadowVentaApplication` | Shadows of the sun: cubes and tetrahedrons on a plane under a low sun |
+| `foliage.FoliageVentaApplication` | Cutout materials: trees made of cards of leaves, a chain link fence and panes of glass, with shadows |
 | `skybox.SkyboxVentaApplication`, `reflection.ReflectionVentaApplication` | Skybox and reflections |
 | `fog.FogVentaApplication`, `transparency.TransparencyVentaApplication` | Fog and transparency |
 | `emitter.EmitterVentaApplication`, `billboard.BillboardVentaApplication` | Particles and billboards |
