@@ -2,6 +2,7 @@ package io.github.trimax.examples.transparency.handlers;
 
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
+import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import lombok.AllArgsConstructor;
 import org.joml.Vector3f;
 
@@ -12,6 +13,7 @@ public final class TransparencyApplicationStartupHandler implements VentaEngineS
         final var scene = context.getSceneManager().getCurrent();
         scene.setSkybox(context.getCubemapRegistry().get("stars.json"));
         scene.setAmbientLight(new Vector3f(0.8f, 0.8f, 0.8f));
+        scene.setDirectionalLight(new DirectionalLight(new Vector3f(1.f, 1.f, 1.f), new Vector3f(-0.3f, -1.f, -0.2f), 1.f));
 
         final var plane = context.getObjectManager().create("plane", context.getObjectRepository().get("plane.json"));
         plane.setMaterial(context.getMaterialRegistry().get("hole.json"));
