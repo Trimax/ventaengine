@@ -17,6 +17,7 @@ struct Material {
     vec2 offset;
     float metalness;
     float roughness;
+    float alphaCutoff;
 };
 
 /***
@@ -48,6 +49,7 @@ uniform int useTextureMetalness;
 uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
 uniform int useMaterial;
+uniform int useAlphaCutout;
 
 /* Material */
 uniform Material material;
@@ -113,13 +115,23 @@ vec2 parallaxMapping(vec2 textureCoordinates) {
     return textureCoordinates + getViewDirectionLocalSpace().xy * (getHeight(textureCoordinates) * 0.01);
 }
 
+/* The side of a face that is seen: both sides of a double sided face are lit by the normal that faces the viewer */
+float getFaceSign() {
+    return gl_FrontFacing ? 1.0 : -1.0;
+}
+
+/* Gets the normal of the face (not from the normal map) in the world space, turned to the seen side of the face */
+vec3 getGeometricNormal() {
+    return normalize(vertexTBN[2]) * getFaceSign();
+}
+
 /* Gets normal (either face or from normal map) */
 vec3 getNormal(vec2 textureCoordinates) {
     if (!isSet(useTextureNormal))
-        return normalize(vertexTBN[2]);
+        return getGeometricNormal();
 
     /* Normal mapping */
-    return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0));
+    return normalize(vertexTBN * (texture(textureNormal, textureCoordinates).rgb * 2.0 - 1.0)) * getFaceSign();
 }
 
 /* Gets preprocessed texture coordinates */
@@ -155,7 +167,7 @@ vec3 calculateDirectionalLight(vec3 albedo, float metalness, float roughness, ve
     if (!isSet(useDirectionalLight))
         return vec3(0.0);
 
-    vec3 radiance = directionalLight.color * directionalLight.intensity * getSunShadow(vertexPosition, normalize(vertexTBN[2]));
+    vec3 radiance = directionalLight.color * directionalLight.intensity * getSunShadow(vertexPosition, getGeometricNormal());
 
     return pbrLight(normal, viewDirection, normalize(-directionalLight.direction), albedo, metalness, roughness, radiance);
 }
@@ -196,6 +208,15 @@ void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
     vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();
+
+    // A cutout surface is a hole or opaque: it has no partly transparent fragments
+    if (isSet(useAlphaCutout)) {
+        if (colorWithoutEffects.a < material.alphaCutoff)
+            discard;
+
+        colorWithoutEffects.a = 1.0;
+    }
+
     vec4 colorWithLighting = applyLighting(colorWithoutEffects, textureCoordinates);
     vec4 colorWithFog = applyFog(colorWithLighting);
 

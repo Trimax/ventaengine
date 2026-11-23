@@ -42,6 +42,7 @@ public enum ShaderUniform {
     MaterialTiling("material.tiling"),
     MaterialOffset("material.offset"),
     MaterialColor("material.color"),
+    MaterialAlphaCutoff("material.alphaCutoff"),
 
     /* Count of materials bound */
     MaterialCount("materialCount"),
@@ -53,6 +54,7 @@ public enum ShaderUniform {
 
     /* Material flags */
     UseMaterial("useMaterial"),
+    UseAlphaCutout("useAlphaCutout"),
 
     /* Camera */
     CameraPosition("cameraPosition"),

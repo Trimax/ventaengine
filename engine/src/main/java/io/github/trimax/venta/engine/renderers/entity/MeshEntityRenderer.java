@@ -18,6 +18,10 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 
+import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11C.glDisable;
+import static org.lwjgl.opengl.GL11C.glEnable;
+
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityImplementation, MeshEntityRenderer.MeshRenderContext, ObjectInstanceRenderer.ObjectRenderContext> {
@@ -35,9 +39,18 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
         matrixBinder.bindModelMatrix(getContext().getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindNormalMatrix(getContext().getProgram(), getContext().getNormalMatrixBuffer());
 
-        materialBinder.bind(getContext().getProgram(), getContext().getMaterial());
+        final var material = getContext().getMaterial();
+        materialBinder.bind(getContext().getProgram(), material);
+
+        // A one sided material has no back faces: they are never seen, so they are not drawn
+        final var oneSided = material != null && !material.isDoubleSided();
+        if (oneSided)
+            glEnable(GL_CULL_FACE);
 
         geometryHelper.render(object.getGeometry());
+
+        if (oneSided)
+            glDisable(GL_CULL_FACE);
     }
 
     @Getter(AccessLevel.PACKAGE)

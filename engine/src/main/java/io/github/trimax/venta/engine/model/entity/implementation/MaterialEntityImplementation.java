@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.entity.implementation;
 
+import io.github.trimax.venta.engine.enums.AlphaMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
@@ -28,6 +29,9 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
     Vector4f color;
     Vector2f tiling;
     Vector2f offset;
+    AlphaMode alphaMode;
+    float alphaCutoff;
+    boolean doubleSided;
 
     MaterialEntityImplementation(@NonNull final MaterialDTO dto) {
         this(Optional.ofNullable(dto.metalness()).orElse(0.f),
@@ -35,7 +39,25 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
                 Optional.ofNullable(dto.opacity()).orElse(0.f),
                 Optional.ofNullable(dto.color()).map(ColorDTO::toVector4f).orElse(new Vector4f(1.f)),
                 Optional.ofNullable(dto.tiling()).orElse(new Vector2f(1.f)),
-                Optional.ofNullable(dto.offset()).orElse(new Vector2f(0.f)));
+                Optional.ofNullable(dto.offset()).orElse(new Vector2f(0.f)),
+                Optional.ofNullable(dto.alphaMode()).orElse(AlphaMode.Blend),
+                checkAlphaCutoff(Optional.ofNullable(dto.alphaCutoff()).orElse(DEFAULT_ALPHA_CUTOFF)),
+                Optional.ofNullable(dto.doubleSided()).orElse(true));
+    }
+
+    /** The cutoff of a material that doesn't set one: the alpha of a pixel is a hole below it */
+    public static final float DEFAULT_ALPHA_CUTOFF = 0.5f;
+
+    private static float checkAlphaCutoff(final float alphaCutoff) {
+        if (!(alphaCutoff >= 0.f && alphaCutoff <= 1.f))
+            throw new IllegalArgumentException("The alpha cutoff must be from 0 to 1, got " + alphaCutoff);
+
+        return alphaCutoff;
+    }
+
+    /** Whether the fragments with a low alpha are discarded and the others are opaque */
+    public boolean isCutout() {
+        return alphaMode == AlphaMode.Cutout;
     }
 
     @Override

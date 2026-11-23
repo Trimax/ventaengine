@@ -8,16 +8,20 @@ import io.github.trimax.venta.engine.managers.implementation.TerrainSurfaceManag
 import io.github.trimax.venta.engine.managers.implementation.WaterSurfaceManagerImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
+import io.github.trimax.venta.engine.utils.RenderOrderUtil;
 import lombok.*;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 
 import static org.lwjgl.opengl.GL11C.*;
@@ -65,7 +69,7 @@ public final class SceneInstanceRenderer
                 terrainSurfaceRenderer.render(terrainSurfaceManager.getInstance(surface.getID()));
             }
 
-        for (final var object : scene.getObjects())
+        for (final var object : getObjectsInDrawingOrder(scene))
             try (final var _ = objectRenderer.withContext(getContext())
                     .withScene(scene)) {
                 objectRenderer.render(objectManager.getInstance(object.getID()));
@@ -94,6 +98,16 @@ public final class SceneInstanceRenderer
             }
         glDepthMask(true);
         glDisable(GL_BLEND);
+    }
+
+    /** Cutout objects write depth and go first, the objects that mix colors go from the farthest to the nearest */
+    private List<ObjectInstanceImplementation> getObjectsInDrawingOrder(final SceneInstanceImplementation scene) {
+        final var cameraPosition = getContext().getCamera().getPosition();
+        final var position = new Vector3f();
+
+        return RenderOrderUtil.order(scene.getObjects(),
+                object -> object.getMaterial() != null && object.getMaterial().isCutout(),
+                object -> object.getTransform().getMatrix().getTranslation(position).distanceSquared(cameraPosition));
     }
 
     @Getter
