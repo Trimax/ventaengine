@@ -1,5 +1,7 @@
 #version 330 core
 
+#include "common/heightmap.glsl"
+
 /* Vertex attributes */
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 textureCoordinates;
@@ -13,8 +15,6 @@ uniform mat3 matrixNormal;
 uniform float timeElapsed;
 
 /* Heightmap */
-uniform sampler2D textureHeight;
-uniform float factor;
 uniform vec2 gridSize;
 
 /* Parameters going to fragment shader (world space) */
@@ -25,10 +25,6 @@ out vec3 vertexPosition;
 out float vertexHeight;
 out float vertexTimeElapsed;
 out vec2 vertexTextureCoordinates;
-
-float getHeight(vec2 coordinates) {
-    return (texture(textureHeight, coordinates).r - 0.5) * factor;
-}
 
 void main() {
     float height = getHeight(textureCoordinates);

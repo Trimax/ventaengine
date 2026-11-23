@@ -11,6 +11,10 @@ public final class DefinitionsCommon {
     public static final int MAX_NOISES = 16;
     public static final int MAX_WAVES = 16;
     public static final int MAX_FRAMES = 64;
+    public static final int MAX_CASCADES = 4;
+
+    /* Shadows */
+    public static final int SHADOW_RESOLUTION = 2048;
 
     /* Vectors 4D */
     public static final Vector4fc VECTOR4F_ZERO = new Vector4f(0.f);

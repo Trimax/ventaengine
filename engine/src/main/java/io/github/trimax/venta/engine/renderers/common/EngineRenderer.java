@@ -27,12 +27,14 @@ public final class EngineRenderer {
     private final SceneManagerImplementation sceneManager;
 
     private final PostProcessingRenderer postProcessingRenderer;
+    private final ShadowRenderer shadowRenderer;
     private final WindowStateRenderer windowRenderer;
     private final SceneInstanceRenderer sceneRenderer;
     private final DebugRenderer debugRenderer;
 
     /** Releases the GL objects of the renderers, the context must be alive */
     public void release() {
+        shadowRenderer.release();
         postProcessingRenderer.release();
     }
 
@@ -41,10 +43,14 @@ public final class EngineRenderer {
         if (glfwWindowShouldClose(window.getInternalID()))
             engineController.get().setApplicationRunning(false);
 
+        final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
+
+        // The shadow maps are drawn first, the scene takes them
+        shadowRenderer.render(sceneManager.getCurrent(), camera, window);
+
         // The scene and the debug overlays (they need the depth of the scene) are rendered in HDR
         postProcessingRenderer.begin(window);
 
-        final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
         try (final var _ = sceneRenderer.withContext(null)
                 .withTime(time)
                 .with(window, camera)) {

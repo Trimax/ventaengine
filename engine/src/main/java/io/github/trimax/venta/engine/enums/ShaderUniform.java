@@ -56,6 +56,16 @@ public enum ShaderUniform {
 
     /* Camera */
     CameraPosition("cameraPosition"),
+    CameraForward("cameraForward"),
+
+    /* Shadows */
+    UseShadows("useShadows"),
+    TextureShadow("textureShadow"),
+    ShadowCascadeCount("shadowCascadeCount"),
+    ShadowMatrices("shadowMatrices"),
+    ShadowSplits("shadowSplits"),
+    ShadowTexels("shadowTexels"),
+    ShadowDistance("shadowDistance"),
 
     /* Lighting */
     AmbientLight("ambientLight"),

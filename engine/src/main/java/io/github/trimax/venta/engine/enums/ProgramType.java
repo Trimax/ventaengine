@@ -7,10 +7,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ProgramType {
+    ShadowTerrain("shadow-terrain.json"),
     Particle("particle.json"),
     Post("post.json"),
     Default("default.json"),
     Console("console.json"),
+    Shadow("shadow.json"),
     Simple("simple.json"),
     Text("text.json"),
     Sky("sky.json");
