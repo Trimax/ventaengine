@@ -1,10 +1,12 @@
 #version 330 core
 
 #include "common/camera.glsl"
+#include "common/environment.glsl"
 #include "common/flags.glsl"
 #include "common/fog.glsl"
 #include "common/lights.glsl"
 #include "common/noise.glsl"
+#include "common/pbr.glsl"
 #include "common/shadow.glsl"
 
 /***
@@ -133,35 +135,33 @@ float getRoughness(int layer0, int layer1, float blend) {
  * Lighting functions
  ***/
 
-/* Diffuse light takes the surface color, rough surfaces have weaker and wider highlights */
-vec3 shade(vec3 baseColor, vec3 normal, vec3 lightDirection, vec3 cameraDirection, float roughness) {
-    float diffuse = max(dot(normal, lightDirection), 0.0);
-    float shininess = mix(64.0, 4.0, roughness);
-    float specular = diffuse > 0.0 ? pow(max(dot(reflect(-lightDirection, normal), cameraDirection), 0.0), shininess) * (1.0 - roughness) * 0.5 : 0.0;
-
-    return diffuse * baseColor + vec3(specular);
-}
+/* The terrain is not a metal; its roughness comes from its materials */
+const float TERRAIN_METALNESS = 0.0;
 
 vec3 calculateLight(Light light, vec3 baseColor, vec3 normal, vec3 cameraDirection, float roughness) {
     if (light.enabled == 0)
         return vec3(0.0);
 
     vec3 toLight = light.position - vertexPosition;
-    float attenuation = getAttenuation(light.attenuation, length(toLight));
+    float distance = length(toLight);
+    vec3 radiance = light.color * light.intensity * getAttenuation(light.attenuation, distance);
 
-    return shade(baseColor, normal, normalize(toLight), cameraDirection, roughness) * light.color * light.intensity * attenuation;
+    return pbrLight(normal, cameraDirection, toLight / max(distance, 0.0001), baseColor, TERRAIN_METALNESS, roughness, radiance);
 }
 
 vec3 calculateDirectionalLight(vec3 baseColor, vec3 normal, vec3 cameraDirection, float roughness) {
     if (!isSet(useDirectionalLight))
         return vec3(0.0);
 
-    return shade(baseColor, normal, normalize(-directionalLight.direction), cameraDirection, roughness)
-            * directionalLight.color * directionalLight.intensity * getSunShadow(vertexPosition, normalize(vertexNormal));
+    vec3 radiance = directionalLight.color * directionalLight.intensity * getSunShadow(vertexPosition, normalize(vertexNormal));
+
+    return pbrLight(normal, cameraDirection, normalize(-directionalLight.direction), baseColor, TERRAIN_METALNESS, roughness, radiance);
 }
 
+/* The light of the environment, the sun and the lights; the result is HDR, the post processing tone maps it */
 vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection, float roughness) {
-    vec3 result = ambientLight * baseColor + calculateDirectionalLight(baseColor, normal, cameraDirection, roughness);
+    vec3 result = getAmbientLight(normal, cameraDirection, baseColor, TERRAIN_METALNESS, roughness, 1.0)
+            + calculateDirectionalLight(baseColor, normal, cameraDirection, roughness);
 
     for (int i = 0; i < lightCount; i++)
         result += calculateLight(lights[i], baseColor, normal, cameraDirection, roughness);
