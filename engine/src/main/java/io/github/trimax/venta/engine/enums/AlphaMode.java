@@ -15,5 +15,12 @@ public enum AlphaMode {
      * opaque and write depth. Leaves, grass, fences: they need no sorting and cast the shadows of their shape.
      */
     @SerializedName(value = "cutout", alternate = {"Cutout", "CUTOUT"})
-    Cutout
+    Cutout,
+
+    /**
+     * The alpha is ignored: the surface is opaque, whatever its color and its texture say. Buildings, rocks, trunks: they
+     * need no sorting, and the objects that have only such surfaces are drawn with instancing like cutout ones.
+     */
+    @SerializedName(value = "opaque", alternate = {"Opaque", "OPAQUE"})
+    Opaque
 }

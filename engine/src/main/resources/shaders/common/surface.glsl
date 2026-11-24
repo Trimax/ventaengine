@@ -53,6 +53,7 @@ uniform int useTextureMetalness;
 uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
 uniform int useMaterial;
+uniform int useAlphaOpaque;
 #ifdef ALPHA_CUTOUT
 uniform int useAlphaCutout;
 #endif
@@ -214,6 +215,10 @@ void main() {
     vec2 textureCoordinates = getTextureCoordinates();
 
     vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();
+
+    // An opaque surface has no alpha: its color is not mixed with what is behind it
+    if (isSet(useAlphaOpaque))
+        colorWithoutEffects.a = 1.0;
 
 #ifdef ALPHA_CUTOUT
     // A cutout surface is a hole or opaque: it has no partly transparent fragments
