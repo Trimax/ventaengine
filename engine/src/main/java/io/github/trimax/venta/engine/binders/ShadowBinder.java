@@ -26,17 +26,16 @@ public final class ShadowBinder extends AbstractBinder {
 
         // The sampler of shadows must never share a unit with a sampler of another type, so it is set even without shadows
         bind(program.getUniformID(ShaderUniform.TextureShadow), TextureUnit.Shadow.getId());
-        bind(program.getUniformID(ShaderUniform.UseShadows), frame != null);
+        bind(program.getUniformID(ShaderUniform.UseShadows), frame.isActive());
 
-        if (frame == null)
+        if (!frame.isActive())
             return;
 
-        final var cascades = frame.cascades();
-        final var count = Math.min(cascades.size(), DefinitionsCommon.MAX_CASCADES);
+        final var count = Math.min(frame.getCount(), DefinitionsCommon.MAX_CASCADES);
 
         bind(program.getUniformID(ShaderUniform.ShadowCascadeCount), count);
-        bind(program.getUniformID(ShaderUniform.ShadowDistance), frame.distance());
-        bind(program.getUniformID(ShaderUniform.CameraForward), frame.cameraForward());
+        bind(program.getUniformID(ShaderUniform.ShadowDistance), frame.getDistance());
+        bind(program.getUniformID(ShaderUniform.CameraForward), frame.getCameraForward());
 
         try (final var stack = MemoryStack.stackPush()) {
             final var matrices = stack.mallocFloat(16 * count);
@@ -44,9 +43,9 @@ public final class ShadowBinder extends AbstractBinder {
             final var texels = stack.mallocFloat(count);
 
             for (int i = 0; i < count; i++) {
-                cascades.get(i).matrix().get(16 * i, matrices);
-                splits.put(i, cascades.get(i).farDistance());
-                texels.put(i, cascades.get(i).texelSize());
+                frame.getCascade(i).getMatrix().get(16 * i, matrices);
+                splits.put(i, frame.getCascade(i).getFarDistance());
+                texels.put(i, frame.getCascade(i).getTexelSize());
             }
 
             bindMatrix4(program.getUniformID(ShaderUniform.ShadowMatrices), matrices);

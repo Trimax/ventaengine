@@ -36,7 +36,7 @@ import io.github.trimax.venta.engine.model.instance.implementation.SceneInstance
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
-import io.github.trimax.venta.engine.utils.ShadowCascadeUtil;
+import io.github.trimax.venta.engine.utils.ShadowCascadeCalculator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -59,19 +59,21 @@ public final class ShadowRenderer {
     private final MatrixCache matrixCache;
     private final Memory memory;
 
+    /** What a frame needs is made once and reused: the cascades, their computation and the pass over the objects */
+    private final ShadowCascadeCalculator calculator = new ShadowCascadeCalculator();
     private final Vector3f cameraForward = new Vector3f();
     private final ObjectPass pass = new ObjectPass();
 
     private ShadowMap map;
     private FloatBuffer matrixBuffer;
 
-    /** The shadows of the last frame, null when the scene has none */
+    /** The shadows of the last frame, it is not active when the scene has none */
     @Getter
-    private ShadowFrame frame;
+    private final ShadowFrame frame = new ShadowFrame(DefinitionsCommon.MAX_CASCADES);
 
     /** Draws the shadow maps of the frame when the sun of the scene casts shadows */
     public void render(final SceneInstanceImplementation scene, @NonNull final CameraInstanceImplementation camera, @NonNull final WindowState window) {
-        frame = null;
+        frame.deactivate();
 
         final var light = scene == null ? null : scene.getDirectionalLight();
         if (light == null || !light.isCastShadows())
@@ -83,7 +85,7 @@ public final class ShadowRenderer {
         }
 
         final var view = camera.getViewMatrix();
-        final var cascades = ShadowCascadeUtil.getCascades(view, window.getProjectionMatrix(), light.getDirection(), light.getShadowDistance(),
+        calculator.calculate(frame, view, window.getProjectionMatrix(), light.getDirection(), light.getShadowDistance(),
                 DefinitionsCommon.MAX_CASCADES, DefinitionsCommon.SHADOW_RESOLUTION);
 
         final var objects = programRegistry.get(ProgramType.Shadow.getProgramName());
@@ -96,12 +98,12 @@ public final class ShadowRenderer {
         glDepthMask(true);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-        for (int i = 0; i < cascades.size(); i++) {
+        for (int i = 0; i < frame.getCount(); i++) {
             map.bindLayer(i);
             glClear(GL_DEPTH_BUFFER_BIT);
 
-            drawTerrain(scene, terrain, cascades.get(i));
-            drawObjects(scene, pass.with(objects, cutouts, cascades.get(i)));
+            drawTerrain(scene, terrain, frame.getCascade(i));
+            drawObjects(scene, pass.with(objects, cutouts, frame.getCascade(i)));
         }
 
         glUseProgram(0);
@@ -113,12 +115,12 @@ public final class ShadowRenderer {
         glActiveTexture(GL_TEXTURE0);
 
         cameraForward.set(-view.m02(), -view.m12(), -view.m22()).normalize();
-        frame = new ShadowFrame(cascades, light.getShadowDistance(), new Vector3f(cameraForward));
+        frame.activate(cameraForward);
     }
 
     /** Releases the shadow map and the buffer, the next frame with shadows creates them again */
     public void release() {
-        frame = null;
+        frame.deactivate();
 
         if (map != null) {
             map.release();
@@ -215,7 +217,7 @@ public final class ShadowRenderer {
     }
 
     private void bindLight(final ProgramEntityImplementation program, final ShadowCascade cascade) {
-        cascade.matrix().get(matrixBuffer);
+        cascade.getMatrix().get(matrixBuffer);
         matrixBinder.bindViewProjectionMatrix(program, matrixBuffer);
     }
 

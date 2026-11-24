@@ -1,23 +1,22 @@
 package io.github.trimax.venta.engine.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import io.github.trimax.venta.engine.model.common.shadow.ShadowCascade;
+import io.github.trimax.venta.engine.model.common.shadow.ShadowFrame;
 import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 /**
  * Cascaded shadow maps: the view frustum up to the shadow distance is split along the view direction, and every part
  * gets the orthographic projection of the sun that fits it.
+ *
+ * <p>The cascades are computed every frame, so a calculator keeps the vectors and the matrices it works with and writes
+ * the result into a {@link ShadowFrame}: once they are made, computing allocates nothing. It is not thread safe.
  */
-@UtilityClass
-public final class ShadowCascadeUtil {
+public final class ShadowCascadeCalculator {
     /** 0 splits the distance evenly, 1 logarithmically (the near parts get more detail) */
     private static final float SPLIT_LAMBDA = 0.75f;
 
@@ -26,14 +25,38 @@ public final class ShadowCascadeUtil {
 
     private static final float PARALLEL_LIMIT = 0.99f;
 
+    private static final int CORNERS = 8;
+
+    private final Vector3f[] corners = new Vector3f[CORNERS];
+    private final Vector3f direction = new Vector3f();
+    private final Vector3f center = new Vector3f();
+    private final Vector3f snapped = new Vector3f();
+    private final Matrix4f lightView = new Matrix4f();
+    private final Matrix4f inverseView = new Matrix4f();
+
+    private float[] splits = new float[4];
+
+    public ShadowCascadeCalculator() {
+        for (int i = 0; i < CORNERS; i++)
+            corners[i] = new Vector3f();
+    }
+
+    /** The distance of the near plane of a perspective projection */
+    public static float getNear(@NonNull final Matrix4fc projection) {
+        return projection.m32() / (projection.m22() - 1.f);
+    }
+
     /**
      * The distances where the cascades end: a mix of the even and the logarithmic splits of the range from the near
      * plane to the shadow distance. The last one is the shadow distance.
+     *
+     * @param splits receives the distances of the first {@code count} cascades
      */
-    public float[] getSplits(final float near, final float distance, final int count) {
+    public static void getSplits(final float near, final float distance, final int count, final float @NonNull [] splits) {
         check(near, distance, count);
+        if (splits.length < count)
+            throw new IllegalArgumentException(String.format("The array has room for %d splits, %d are needed", splits.length, count));
 
-        final var splits = new float[count];
         for (int i = 1; i <= count; i++) {
             final var part = (float) i / count;
             final var logarithmic = near * (float) Math.pow(distance / near, part);
@@ -42,16 +65,16 @@ public final class ShadowCascadeUtil {
         }
 
         splits[count - 1] = distance;
-        return splits;
     }
 
     /**
-     * The cascades of a camera.
+     * Computes the cascades of a camera into a frame.
      *
      * <p>A cascade is fitted to the bounding sphere of its part of the frustum, so the size of its map doesn't depend on the
      * direction of the camera (the shadows don't shimmer when it turns), and its center is snapped to the texels of
      * the map (the shadows don't swim when the camera moves).
      *
+     * @param frame          receives the cascades, it must have room for them
      * @param view           the view matrix of the camera
      * @param projection     the perspective projection of the camera
      * @param lightDirection the direction the sun light goes in
@@ -59,12 +82,13 @@ public final class ShadowCascadeUtil {
      * @param count          the number of the cascades
      * @param resolution     the size of the shadow map of a cascade in texels
      */
-    public List<ShadowCascade> getCascades(@NonNull final Matrix4fc view,
-                                           @NonNull final Matrix4fc projection,
-                                           @NonNull final Vector3fc lightDirection,
-                                           final float distance,
-                                           final int count,
-                                           final int resolution) {
+    public void calculate(@NonNull final ShadowFrame frame,
+                          @NonNull final Matrix4fc view,
+                          @NonNull final Matrix4fc projection,
+                          @NonNull final Vector3fc lightDirection,
+                          final float distance,
+                          final int count,
+                          final int resolution) {
         final var near = getNear(projection);
         check(near, distance, count);
         if (resolution < 1)
@@ -73,32 +97,34 @@ public final class ShadowCascadeUtil {
         if (lightDirection.lengthSquared() == 0.f)
             throw new IllegalArgumentException("The direction of the light must not be zero");
 
-        final var direction = new Vector3f(lightDirection).normalize();
-        final var lightView = new Matrix4f().lookAt(new Vector3f(), direction,
-                Math.abs(direction.y) > PARALLEL_LIMIT ? new Vector3f(1.f, 0.f, 0.f) : new Vector3f(0.f, 1.f, 0.f));
-        final var inverseView = new Matrix4f(view).invert();
-        final var splits = getSplits(near, distance, count);
+        frame.begin(count, distance);
 
-        final List<ShadowCascade> cascades = new ArrayList<>(count);
+        if (splits.length < count)
+            splits = new float[count];
+
+        getSplits(near, distance, count, splits);
+
+        direction.set(lightDirection).normalize();
+        if (Math.abs(direction.y) > PARALLEL_LIMIT)
+            lightView.setLookAt(0.f, 0.f, 0.f, direction.x, direction.y, direction.z, 1.f, 0.f, 0.f);
+        else
+            lightView.setLookAt(0.f, 0.f, 0.f, direction.x, direction.y, direction.z, 0.f, 1.f, 0.f);
+
+        inverseView.set(view).invert();
+
         var start = near;
-        for (final var end : splits) {
-            cascades.add(fit(getCorners(inverseView, projection, start, end), lightView, end, resolution));
-            start = end;
+        for (int i = 0; i < count; i++) {
+            setCorners(projection, start, splits[i]);
+            fit(frame.getCascade(i), splits[i], resolution);
+            start = splits[i];
         }
-
-        return cascades;
     }
 
-    /** The distance of the near plane of a perspective projection */
-    public float getNear(@NonNull final Matrix4fc projection) {
-        return projection.m32() / (projection.m22() - 1.f);
-    }
-
-    private ShadowCascade fit(final Vector3f[] corners, final Matrix4f lightView, final float far, final int resolution) {
-        final var center = new Vector3f();
+    private void fit(final ShadowCascade cascade, final float far, final int resolution) {
+        center.zero();
         for (final var corner : corners)
             center.add(corner);
-        center.div(corners.length);
+        center.div(CORNERS);
 
         var radius = 0.f;
         for (final var corner : corners)
@@ -108,34 +134,33 @@ public final class ShadowCascadeUtil {
 
         // The center in the space of the sun is moved to a texel of the map, so the shadows keep to the world
         final var texel = 2.f * radius / resolution;
-        final var snapped = lightView.transformPosition(center, new Vector3f());
+        lightView.transformPosition(center, snapped);
         snapped.x = (float) Math.floor(snapped.x / texel) * texel;
         snapped.y = (float) Math.floor(snapped.y / texel) * texel;
 
         // The sun is as far behind the part as its radius: what is nearer to the sun than the near plane is clamped to it
         // when the map is drawn, so it still casts its shadow
-        final var matrix = new Matrix4f().ortho(snapped.x - radius, snapped.x + radius, snapped.y - radius, snapped.y + radius,
-                -snapped.z - 2.f * radius, -snapped.z + radius).mul(lightView);
-
-        return new ShadowCascade(matrix, far, texel);
+        cascade.getMatrix()
+                .setOrtho(snapped.x - radius, snapped.x + radius, snapped.y - radius, snapped.y + radius, -snapped.z - 2.f * radius, -snapped.z + radius)
+                .mul(lightView);
+        cascade.set(far, texel);
     }
 
     /** The corners of the part of the frustum between two distances, in the world space */
-    private Vector3f[] getCorners(final Matrix4f inverseView, final Matrix4fc projection, final float start, final float end) {
+    private void setCorners(final Matrix4fc projection, final float start, final float end) {
         final var halfWidth = 1.f / projection.m00();
         final var halfHeight = 1.f / projection.m11();
 
-        final var corners = new Vector3f[8];
         var index = 0;
-        for (final var depth : new float[]{start, end})
-            for (final var x : new float[]{-1.f, 1.f})
-                for (final var y : new float[]{-1.f, 1.f})
-                    corners[index++] = inverseView.transformPosition(new Vector3f(x * halfWidth * depth, y * halfHeight * depth, -depth));
-
-        return corners;
+        for (int near = 0; near < 2; near++) {
+            final var depth = near == 0 ? start : end;
+            for (int x = -1; x <= 1; x += 2)
+                for (int y = -1; y <= 1; y += 2)
+                    inverseView.transformPosition(x * halfWidth * depth, y * halfHeight * depth, -depth, corners[index++]);
+        }
     }
 
-    private void check(final float near, final float distance, final int count) {
+    private static void check(final float near, final float distance, final int count) {
         if (count < 1)
             throw new IllegalArgumentException("There must be a cascade, got " + count);
 
