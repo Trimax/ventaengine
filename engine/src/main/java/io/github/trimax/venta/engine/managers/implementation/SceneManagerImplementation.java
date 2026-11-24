@@ -84,6 +84,7 @@ public final class SceneManagerImplementation
         Optional.ofNullable(prefab.getSkybox()).ifPresent(scene::setSkybox);
         Optional.ofNullable(prefab.getFog()).ifPresent(scene::setFog);
         Optional.ofNullable(prefab.getWind()).ifPresent(scene::setWind);
+        Optional.ofNullable(prefab.getBloom()).ifPresent(scene::setBloom);
         Optional.ofNullable(prefab.getExposure()).ifPresent(scene::setExposure);
         Optional.ofNullable(prefab.getToneMapping()).ifPresent(scene::setToneMapping);
 

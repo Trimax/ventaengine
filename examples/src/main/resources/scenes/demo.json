@@ -5,7 +5,14 @@
     "direction": {"x": -1.0, "y": -0.35, "z": 0.1},
     "intensity": 1.15,
     "castShadows": true,
-    "shadowDistance": 300
+    "shadowDistance": 300,
+    "discSize": 2.5,
+    "discIntensity": 40.0
+  },
+  "bloom": {
+    "intensity": 0.18,
+    "threshold": 1.0,
+    "softKnee": 0.5
   },
   "fog": {
     "distance": {"min": 140.0, "max": 800.0},

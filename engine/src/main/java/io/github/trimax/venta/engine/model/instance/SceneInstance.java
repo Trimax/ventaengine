@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.model.instance;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.enums.ToneMapping;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import lombok.NonNull;
@@ -36,6 +37,9 @@ public interface SceneInstance extends AbstractInstance {
     /** The wind that sways the surfaces which follow it, null is a calm */
     Wind getWind();
 
+    /** The glow around the bright parts of the image, null is no bloom */
+    Bloom getBloom();
+
     /** Multiplies the light of the scene before the tone mapping, 1 keeps it */
     float getExposure();
 
@@ -50,6 +54,8 @@ public interface SceneInstance extends AbstractInstance {
     void setFog(final Fog fog);
 
     void setWind(final Wind wind);
+
+    void setBloom(final Bloom bloom);
 
     void setExposure(final float exposure);
 

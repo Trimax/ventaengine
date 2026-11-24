@@ -7,6 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ProgramType {
+    BloomDownsample("bloom-downsample.json"),
+    BloomUpsample("bloom-upsample.json"),
     EnvironmentIrradiance("ibl-irradiance.json"),
     EnvironmentPrefilter("ibl-prefilter.json"),
     EnvironmentCopy("ibl-environment.json"),

@@ -8,8 +8,6 @@ import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import io.github.trimax.venta.engine.memory.TestMemory;
 import io.github.trimax.venta.engine.model.common.environment.EnvironmentMap;
 import io.github.trimax.venta.engine.shaders.GLTestContext;
-import io.github.trimax.venta.engine.shaders.ShaderResources;
+import io.github.trimax.venta.engine.shaders.TestPrograms;
 
 /**
  * The convolution of a skybox on the GPU: the maps of the image based lighting made from skies of known colors.
@@ -26,8 +24,6 @@ import io.github.trimax.venta.engine.shaders.ShaderResources;
 final class EnvironmentHelperTest {
     private static final int SOURCE_SIZE = 4;
     private static final float TOLERANCE = 0.02f;
-
-    private static final Map<String, Integer> PROGRAMS = new HashMap<>();
 
     private static EnvironmentHelper generator;
     private static int brdf;
@@ -37,7 +33,7 @@ final class EnvironmentHelperTest {
         GLTestContext.require();
 
         // The table of the BRDF doesn't depend on the sky and is the slowest part: it is made once
-        generator = new EnvironmentHelper(TestMemory.create(), EnvironmentHelperTest::program);
+        generator = new EnvironmentHelper(TestMemory.create(), TestPrograms::get);
         brdf = generator.generateBrdf();
     }
 
@@ -49,8 +45,7 @@ final class EnvironmentHelperTest {
 
         generator.releaseBrdf(brdf);
 
-        PROGRAMS.values().forEach(program -> glDeleteProgram(program));
-        PROGRAMS.clear();
+        TestPrograms.deleteAll();
     }
 
     @Test
@@ -330,32 +325,5 @@ final class EnvironmentHelperTest {
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
         return id;
-    }
-
-    /** The program of the engine by the name of its definition file, compiled from the resources */
-    private static synchronized int program(final String name) {
-        return PROGRAMS.computeIfAbsent(name, key -> {
-            try {
-                final var definition = ShaderResources.programs().get(key);
-                assertNotNull(definition, "The program " + key);
-
-                final var program = glCreateProgram();
-                for (final var shader : ShaderResources.shaders(definition)) {
-                    final var source = ShaderResources.expand(shader);
-                    final var id = glCreateShader(shader.contains("vertex") ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
-                    glShaderSource(id, source.code());
-                    glCompileShader(id);
-                    assertEquals(GL_TRUE, glGetShaderi(id, GL_COMPILE_STATUS), shader + ": " + source.mapLog(glGetShaderInfoLog(id)));
-                    glAttachShader(program, id);
-                }
-
-                glLinkProgram(program);
-                assertEquals(GL_TRUE, glGetProgrami(program, GL_LINK_STATUS), glGetProgramInfoLog(program));
-
-                return program;
-            } catch (final Exception exception) {
-                throw new IllegalStateException(exception);
-            }
-        });
     }
 }

@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.renderers.common;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL20C.glUniform1f;
 import static org.lwjgl.opengl.GL20C.glUniform1i;
@@ -19,7 +20,9 @@ import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.ToneMapping;
 import io.github.trimax.venta.engine.exceptions.FramebufferCreationException;
+import io.github.trimax.venta.engine.helpers.BloomHelper;
 import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import lombok.AccessLevel;
@@ -49,6 +52,9 @@ public final class PostProcessingRenderer {
     private int width;
     private int height;
 
+    /** Makes the glow of the bright parts, created with the first frame that has a bloom */
+    private BloomHelper bloomHelper;
+
     /** Binds the HDR framebuffer of the window size for the scene and clears it */
     public void begin(final WindowState window) {
         try (final var stack = stackPush()) {
@@ -66,11 +72,17 @@ public final class PostProcessingRenderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    /** Resolves the scene and draws it tone mapped to the window, which then gets the overlays (console, text) */
-    public void end(final float exposure, @NonNull final ToneMapping toneMapping) {
+    /**
+     * Resolves the scene and draws it tone mapped to the window, which then gets the overlays (console, text).
+     *
+     * @param bloom the glow of the bright parts that is added to the scene, null or with no intensity for none
+     */
+    public void end(final float exposure, @NonNull final ToneMapping toneMapping, final Bloom bloom) {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, sceneFramebufferID);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolvedFramebufferID);
         glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+        final var glow = bloom != null && bloom.getIntensity() > 0.f ? getBloomHelper().render(resolvedTextureID, width, height, bloom) : 0;
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, width, height);
@@ -85,6 +97,15 @@ public final class PostProcessingRenderer {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, resolvedTextureID);
         glUniform1i(program.getUniformID(ShaderUniform.TextureScene), 0);
+        glUniform1i(program.getUniformID(ShaderUniform.UseBloom), glow != 0 ? 1 : 0);
+        if (glow != 0) {
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, glow);
+            glUniform1i(program.getUniformID(ShaderUniform.TextureBloom), 1);
+            glUniform1f(program.getUniformID(ShaderUniform.BloomIntensity), bloom.getIntensity());
+            glActiveTexture(GL_TEXTURE0);
+        }
+
         glUniform1f(program.getUniformID(ShaderUniform.Exposure), exposure);
         glUniform1i(program.getUniformID(ShaderUniform.ToneMapping), toneMapping.getShaderValue());
 
@@ -93,6 +114,9 @@ public final class PostProcessingRenderer {
         glBindVertexArray(0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glActiveTexture(GL_TEXTURE0);
         glUseProgram(0);
         glEnable(GL_DEPTH_TEST);
     }
@@ -104,6 +128,11 @@ public final class PostProcessingRenderer {
      */
     public void release() {
         deleteTargets();
+
+        if (bloomHelper != null) {
+            bloomHelper.release();
+            bloomHelper = null;
+        }
 
         if (vertexArrayID != 0) {
             memory.getVertexArrays().delete(vertexArrayID);
@@ -125,6 +154,13 @@ public final class PostProcessingRenderer {
 
         counts.add(0);
         return counts;
+    }
+
+    private BloomHelper getBloomHelper() {
+        if (bloomHelper == null)
+            bloomHelper = new BloomHelper(memory, name -> programRegistry.get(name).getInternalID());
+
+        return bloomHelper;
     }
 
     private int getVertexArray() {

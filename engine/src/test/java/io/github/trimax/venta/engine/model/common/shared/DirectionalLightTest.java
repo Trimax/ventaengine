@@ -71,4 +71,33 @@ final class DirectionalLightTest {
 
         assertEquals(50.f, light.getShadowDistance(), "A rejected distance changes nothing");
     }
+
+    @Test
+    void testSunHasNoDiscByDefault() {
+        final var light = new DirectionalLight(ParsingUtil.asObject(LIGHT.formatted(""), SceneDirectionalLightDTO.class));
+
+        assertEquals(0.f, light.getDiscSize(), "Existing scenes draw no disc");
+        assertEquals(DirectionalLight.DEFAULT_DISC_INTENSITY, light.getDiscIntensity());
+    }
+
+    @Test
+    void testDiscSettingsAreParsed() {
+        final var light = new DirectionalLight(ParsingUtil.asObject(
+                LIGHT.formatted(", \"discSize\": 2.5, \"discIntensity\": 100"), SceneDirectionalLightDTO.class));
+
+        assertEquals(2.5f, light.getDiscSize());
+        assertEquals(100.f, light.getDiscIntensity());
+    }
+
+    @Test
+    void testBadDiscSettingsAreRefused() {
+        final var light = new DirectionalLight(new Vector3f(1, 1, 1), new Vector3f(0, -1, 0), 1.f);
+
+        assertThrows(IllegalArgumentException.class, () -> light.setDiscSize(-1.f));
+        assertThrows(IllegalArgumentException.class, () -> light.setDiscSize(DirectionalLight.MAXIMAL_DISC_SIZE + 1.f));
+        assertThrows(IllegalArgumentException.class, () -> light.setDiscSize(Float.NaN));
+        assertThrows(IllegalArgumentException.class, () -> light.setDiscIntensity(-1.f));
+        assertThrows(IllegalArgumentException.class, () -> light.setDiscIntensity(Float.POSITIVE_INFINITY));
+        assertEquals(0.f, light.getDiscSize(), "A refused value changes nothing");
+    }
 }

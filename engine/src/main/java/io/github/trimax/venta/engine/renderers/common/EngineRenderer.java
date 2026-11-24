@@ -80,7 +80,7 @@ public final class EngineRenderer {
 
         // The console and the text are drawn over the tone mapped image
         final var scene = sceneManager.getCurrent();
-        postProcessingRenderer.end(scene.getExposure(), scene.getToneMapping());
+        postProcessingRenderer.end(scene.getExposure(), scene.getToneMapping(), scene.getBloom());
 
         try (final var _ = windowRenderer.withContext(null)
                         .withFrameRate((int) fpsCounter.getCurrentFps())) {

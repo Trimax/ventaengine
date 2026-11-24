@@ -17,6 +17,7 @@ public enum ShaderUniform {
     /* Textures */
     TextureSkybox("textureSkybox"),
     TextureScene("textureScene"),
+    TextureBloom("textureBloom"),
     TextureDiffuse("textureDiffuse"),
     TextureHeight("textureHeight"),
     TextureNormal("textureNormal"),
@@ -109,8 +110,16 @@ public enum ShaderUniform {
     MeshMinimum("meshMinimum"),
     MeshMaximum("meshMaximum"),
 
+    /* The disc of the sun in the sky */
+    UseSunDisc("useSunDisc"),
+    SunDirection("sunDirection"),
+    SunColor("sunColor"),
+    SunSize("sunSize"),
+
     /* Fog */
     /* Post processing */
+    BloomIntensity("bloomIntensity"),
+    UseBloom("useBloom"),
     Exposure("exposure"),
     ToneMapping("toneMapping"),
 
