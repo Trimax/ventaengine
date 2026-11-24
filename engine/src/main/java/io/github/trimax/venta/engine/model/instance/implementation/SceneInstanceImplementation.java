@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
+import io.github.trimax.venta.engine.model.common.shared.AmbientOcclusion;
 import io.github.trimax.venta.engine.model.common.shared.LightShafts;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
@@ -47,6 +48,9 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
 
     @Setter
     private LightShafts lightShafts;
+
+    @Setter
+    private AmbientOcclusion ambientOcclusion;
 
     @Setter
     private DirectionalLight directionalLight;

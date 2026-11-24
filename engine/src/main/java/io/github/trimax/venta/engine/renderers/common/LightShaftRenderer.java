@@ -8,10 +8,6 @@ import static org.lwjgl.opengl.GL14C.glBlendFuncSeparate;
 import static org.lwjgl.opengl.GL20C.glUniform1f;
 import static org.lwjgl.opengl.GL20C.glUniform1i;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER_BINDING;
-import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 import java.nio.FloatBuffer;
 
@@ -26,6 +22,7 @@ import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.ShadowBinder;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
+import io.github.trimax.venta.engine.helpers.ScreenPassHelper;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.post.LightShaftTargets;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
@@ -62,7 +59,7 @@ public final class LightShaftRenderer {
 
     private LightShaftTargets targets;
     private FloatBuffer inverseBuffer;
-    private int vertexArrayID;
+    private ScreenPassHelper screenPass;
 
     /** Whether the scene has shafts to draw this frame: the shadows of the frame are the ones that tell where the light reaches */
     public boolean isActive(final SceneInstanceImplementation scene) {
@@ -96,37 +93,14 @@ public final class LightShaftRenderer {
 
         window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjection).invert(inverse).get(inverseBuffer);
 
-        final var viewport = new int[4];
-        glGetIntegerv(GL_VIEWPORT, viewport);
-        final var previousFramebuffer = glGetInteger(GL_FRAMEBUFFER_BINDING);
-        final var blend = glIsEnabled(GL_BLEND);
-        final var depth = glIsEnabled(GL_DEPTH_TEST);
-
-        try {
-            glDisable(GL_DEPTH_TEST);
-            glDisable(GL_BLEND);
-            glBindVertexArray(getVertexArray());
-
+        try (final var _ = getScreenPass().begin()) {
             march(scene, camera, postRenderer);
             enlarge(scene, camera, postRenderer, width, height);
         } finally {
-            glBindVertexArray(0);
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, 0);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
-            glUseProgram(0);
-
-            glBindFramebuffer(GL_FRAMEBUFFER, previousFramebuffer);
-            glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
-
-            if (blend)
-                glEnable(GL_BLEND);
-            else
-                glDisable(GL_BLEND);
-
-            if (depth)
-                glEnable(GL_DEPTH_TEST);
         }
     }
 
@@ -139,10 +113,8 @@ public final class LightShaftRenderer {
             inverseBuffer = null;
         }
 
-        if (vertexArrayID != 0) {
-            memory.getVertexArrays().delete(vertexArrayID);
-            vertexArrayID = 0;
-        }
+        if (screenPass != null)
+            screenPass.release();
     }
 
     /** The march along the view rays: the light of the sun scattered in the fog is written to the image of half the size */
@@ -155,9 +127,7 @@ public final class LightShaftRenderer {
         glUniform1i(program.getUniformID(ShaderUniform.LightShaftsSteps), scene.getLightShafts().getSteps());
         glUniform1f(program.getUniformID(ShaderUniform.LightShaftsAnisotropy), scene.getLightShafts().getAnisotropy());
 
-        glBindFramebuffer(GL_FRAMEBUFFER, targets.getFramebufferID());
-        glViewport(0, 0, targets.getWidth(), targets.getHeight());
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        getScreenPass().draw(targets.getFramebufferID(), targets.getWidth(), targets.getHeight());
     }
 
     /** The image is enlarged to the size of the scene and added to it: the scene gets the light, so the bloom takes the shafts too */
@@ -175,11 +145,9 @@ public final class LightShaftRenderer {
         glActiveTexture(GL_TEXTURE0);
         glUniform1f(program.getUniformID(ShaderUniform.LightShaftsIntensity), scene.getLightShafts().getIntensity());
 
-        glBindFramebuffer(GL_FRAMEBUFFER, postRenderer.getResolvedColorFramebufferID());
-        glViewport(0, 0, width, height);
         glEnable(GL_BLEND);
         glBlendFuncSeparate(GL_ONE, GL_ONE, GL_ZERO, GL_ONE);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        getScreenPass().draw(postRenderer.getResolvedColorFramebufferID(), width, height);
         glDisable(GL_BLEND);
     }
 
@@ -200,11 +168,11 @@ public final class LightShaftRenderer {
         glUniform1i(program.getUniformID(ShaderUniform.TextureDepth), 0);
     }
 
-    private int getVertexArray() {
-        if (vertexArrayID == 0)
-            vertexArrayID = memory.getVertexArrays().create("Light shafts triangle");
+    private ScreenPassHelper getScreenPass() {
+        if (screenPass == null)
+            screenPass = new ScreenPassHelper(memory);
 
-        return vertexArrayID;
+        return screenPass;
     }
 
     private void releaseTargets() {
