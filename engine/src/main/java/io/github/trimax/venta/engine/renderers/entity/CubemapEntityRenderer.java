@@ -62,7 +62,7 @@ public final class CubemapEntityRenderer extends AbstractEntityRenderer<CubemapE
         matrixBinder.bindViewMatrix(program, viewMatrixWithoutTranslationBuffer);
 
         cameraBinder.bind(program, getContext().getParent().getCamera());
-        fogBinder.bind(program, getContext().getScene().getFog());
+        fogBinder.bind(program, getContext().getScene().getFog(), getContext().getScene().getDirectionalLight());
         sunBinder.bind(program, getContext().getScene().getDirectionalLight());
         textureBinder.bind(program, cubemap);
 

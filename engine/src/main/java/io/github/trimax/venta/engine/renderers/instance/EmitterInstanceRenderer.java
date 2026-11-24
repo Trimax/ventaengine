@@ -65,7 +65,7 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         }
 
         emitterBinder.bind(emitter.getProgram(), emitter);
-        fogBinder.bind(emitter.getProgram(), scene.getFog());
+        fogBinder.bind(emitter.getProgram(), scene.getFog(), scene.getDirectionalLight());
         cameraBinder.bind(emitter.getProgram(), getContext().getParent().getCamera());
         matrixBinder.bindViewProjectionMatrix(emitter.getProgram(), context.getParent().getViewProjectionMatrixBuffer());
         textureBinder.bind(TextureType.Diffuse, emitter.getProgram(), emitter.getTexture());

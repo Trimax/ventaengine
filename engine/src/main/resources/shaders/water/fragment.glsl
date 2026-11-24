@@ -181,7 +181,7 @@ vec3 applyFog(vec3 color) {
     if (!isSet(useFog))
         return color;
 
-    return mix(color, fog.color, getFogAmount(cameraPosition, vertexPosition));
+    return mix(color, getFogColor(cameraPosition, vertexPosition), getFogAmount(cameraPosition, vertexPosition));
 }
 
 void main() {

@@ -25,6 +25,7 @@ out vec2 vertexTextureCoordinates;
 out vec4 vertexColor;
 out vec3 vertexLight;
 out float vertexFog;
+out vec3 vertexFogColor;
 
 /***
  * Functions
@@ -60,6 +61,7 @@ void main() {
     vertexColor = color;
     vertexLight = computeLighting(center);
     vertexFog = computeFog(center);
+    vertexFogColor = isSet(useFog) ? getFogColor(cameraPosition, center) : vec3(0.0);
     vertexTextureCoordinates = (position + 0.5);
     gl_Position = matrixViewProjection * matrixModel * vec4(position, 0.0, 1.0);
 }

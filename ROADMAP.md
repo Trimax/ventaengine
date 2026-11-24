@@ -11,16 +11,15 @@ the holes are not antialiased by the multisampling yet (alpha to coverage would 
 Objects with cutout and opaque surfaces (`"alphaMode": "opaque"`; the default is `"blend"`, and such objects mix colors, so they are
 sorted from the farthest to the nearest and drawn one by one) are drawn with instancing (the copies of a mesh that share a material
 are one draw call, in the shadow maps as well); what is out of the view of the camera, or out of the box of a shadow cascade, is
-not drawn at all. An object can have simpler models that replace its main model when it is small on the screen (`"lods"`, cross fading by a dither, the last level can be a card with a picture); the levels of terrain are not made yet. Bright parts of the image glow (`"bloom"` of the scene) and the sun can be a disc in the sky that glows with it (`"discSize"` of the directional light). A material that follows the wind (`"windInfluence"`, the wind of the scene is `"wind"`) sways with it.
+not drawn at all. An object can have simpler models that replace its main model when it is small on the screen (`"lods"`, cross fading by a dither, the last level can be a card with a picture); the levels of terrain are not made yet. Fog is a layer or exponential (it thins out with the height), glows towards the sun and hazes the horizon. Bright parts of the image glow (`"bloom"` of the scene) and the sun can be a disc in the sky that glows with it (`"discSize"` of the directional light). A material that follows the wind (`"windInfluence"`, the wind of the scene is `"wind"`) sways with it.
 Paths are relative to `engine/src/main/resources/shaders/` unless stated otherwise.
 
 ## Rendering
 
-- [ ] **1. Atmosphere.** The fog is a layer with a sharp top. An exponential height fog (the density decreases with
-  the height, integrated along the view ray) with the sun color scattered towards the sun, and light shafts (god rays:
-  a march along the view ray that tests the points against the shadow maps of the sun, in the fog) give the hazy look
-  of sunsets and forests. The light shafts need the depth of the scene as a texture (the scene is multisampled, so its
-  depth must be resolved first).
+- [ ] **1. Light shafts.** The fog glows towards the sun, but there are no shafts of light through the clouds, the trees
+  and the castle. A march along the view ray in the fog that tests the points against the shadow maps of the sun (the
+  light is scattered only where it reaches), jittered and blurred or done at half the resolution, draws them. It needs
+  the depth of the scene as a texture: the scene is multisampled, so its depth must be resolved first.
 - [ ] **2. Ambient occlusion.** Contact shadows in corners, under walls and around the roots of trees are missing, so
   objects look like floating on the ground. Screen space ambient occlusion (from the depth and the normals of the
   scene, blurred) darkens the ambient and the image based lighting there.

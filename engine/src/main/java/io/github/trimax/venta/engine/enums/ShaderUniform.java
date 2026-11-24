@@ -127,6 +127,13 @@ public enum ShaderUniform {
     FogMinimalDistance("fog.minimalDistance"),
     FogMaximalDistance("fog.maximalDistance"),
     FogHeight("fog.height"),
+    FogDensity("fog.density"),
+    FogFalloff("fog.falloff"),
+    FogBaseHeight("fog.baseHeight"),
+    FogSunDirection("fog.sunDirection"),
+    FogSunColor("fog.sunColor"),
+    FogSunScattering("fog.sunScattering"),
+    FogSunSharpness("fog.sunSharpness"),
 
     /* Fog flag */
     UseFogFlag("useFog"),

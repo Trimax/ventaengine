@@ -214,7 +214,7 @@ vec4 applyFog(vec4 color) {
     if (!isSet(useFog))
         return color;
 
-    return vec4(mix(color.rgb, fog.color.rgb, getFogAmount(vertexCameraPosition, vertexPosition)), color.a);
+    return vec4(mix(color.rgb, getFogColor(vertexCameraPosition, vertexPosition), getFogAmount(vertexCameraPosition, vertexPosition)), color.a);
 }
 
 void main() {
