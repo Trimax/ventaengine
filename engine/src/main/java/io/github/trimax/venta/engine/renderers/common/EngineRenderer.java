@@ -40,6 +40,7 @@ public final class EngineRenderer {
 
     /** Releases the GL objects of the renderers, the context must be alive */
     public void release() {
+        sceneRenderer.release();
         shadowRenderer.release();
         environmentRenderer.release();
         postProcessingRenderer.release();

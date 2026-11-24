@@ -50,6 +50,11 @@ public final class SceneInstanceRenderer
     private final ObjectInstanceRenderer objectRenderer;
     private final CubemapEntityRenderer cubemapRenderer;
 
+    /** Releases the GL objects of the renderers of the scene, the context must be alive */
+    public void release() {
+        objectRenderer.release();
+    }
+
     @Override
     public SceneRenderContext createContext() {
         return new SceneRenderContext();

@@ -132,6 +132,11 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
             }
     }
 
+    /** Deletes the GL buffer of the copies: it belongs to the renderer, the next batched frame creates it again */
+    public void release() {
+        getContext().instanceBuffer.release(memory);
+    }
+
     /**
      * Whether the object is drawn together with the copies of the same meshes by {@link #renderBatched}. Only the solid
      * objects (opaque and cutout surfaces, see {@link ObjectInstanceImplementation#isSolid()}) are: they are drawn before
