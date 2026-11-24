@@ -12,6 +12,11 @@
     "color": {"r": 0.86, "g": 0.68, "b": 0.6, "a": 1.0},
     "height": 67.0
   },
+  "wind": {
+    "direction": {"x": 1.0, "y": 0.0, "z": 0.35},
+    "strength": 1.6,
+    "speed": 1.0
+  },
   "skybox": "sunset.json",
   "terrainSurfaces": [
     {

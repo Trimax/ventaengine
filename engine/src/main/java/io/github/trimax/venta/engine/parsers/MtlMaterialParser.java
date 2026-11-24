@@ -128,7 +128,7 @@ public final class MtlMaterialParser {
 
         private MaterialDTO build() {
             return new MaterialDTO(metalness, roughness, opacity, color, new Vector2f(1.f), new Vector2f(0.f),
-                    textures.isEmpty() ? null : Map.copyOf(textures), null, null, null);
+                    textures.isEmpty() ? null : Map.copyOf(textures), null, null, null, null);
         }
     }
 }

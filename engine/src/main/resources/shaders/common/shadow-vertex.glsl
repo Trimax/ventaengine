@@ -4,6 +4,8 @@
  * attributes, and a cutout surface (ALPHA_CUTOUT) also passes its alpha to the fragment shader, which discards the holes.
  */
 
+#include "common/wind.glsl"
+
 /* Vertex attributes */
 layout(location = 0) in vec3 position;
 
@@ -39,5 +41,7 @@ void main() {
     vertexColor = color;
 #endif
 
-    gl_Position = matrixViewProjection * model * vec4(position, 1.0);
+    vec3 worldPosition = applyWind((model * vec4(position, 1.0)).xyz, model);
+
+    gl_Position = matrixViewProjection * vec4(worldPosition, 1.0);
 }

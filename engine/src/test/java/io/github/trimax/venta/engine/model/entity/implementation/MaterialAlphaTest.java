@@ -60,4 +60,26 @@ final class MaterialAlphaTest {
         assertEquals(0.7f, material.getMetalness());
         assertEquals(0.2f, material.getRoughness());
     }
+
+    @Test
+    void testMaterialDoesNotFollowTheWindByDefault() {
+        final var material = material("{\"metalness\": 0.5}");
+
+        assertEquals(0.f, material.getWindInfluence());
+        assertFalse(material.followsWind());
+    }
+
+    @Test
+    void testWindInfluenceIsRead() {
+        final var material = material("{\"windInfluence\": 0.6}");
+
+        assertEquals(0.6f, material.getWindInfluence());
+        assertTrue(material.followsWind());
+    }
+
+    @Test
+    void testWindInfluenceMustBeFromZeroToOne() {
+        assertThrows(IllegalArgumentException.class, () -> material("{\"windInfluence\": 1.5}"));
+        assertThrows(IllegalArgumentException.class, () -> material("{\"windInfluence\": -0.1}"));
+    }
 }

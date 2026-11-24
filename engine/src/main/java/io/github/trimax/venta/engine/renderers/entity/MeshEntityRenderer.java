@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.renderers.entity;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.WindBinder;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
@@ -28,6 +29,7 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
     private final GeometryHelper geometryHelper;
     private final MaterialBinder materialBinder;
     private final MatrixBinder matrixBinder;
+    private final WindBinder windBinder;
 
     @Override
     protected MeshRenderContext createContext() {
@@ -41,6 +43,8 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
 
         final var material = getContext().getMaterial();
         materialBinder.bind(getContext().getProgram(), material);
+        windBinder.bind(getContext().getProgram(), material);
+        windBinder.bind(getContext().getProgram(), object);
 
         // A one sided material has no back faces: they are never seen, so they are not drawn
         final var oneSided = material != null && !material.isDoubleSided();

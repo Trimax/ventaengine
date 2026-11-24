@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.enums.ToneMapping;
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.*;
@@ -35,6 +36,9 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
 
     @Setter
     private Fog fog;
+
+    @Setter
+    private Wind wind;
 
     @Setter
     private DirectionalLight directionalLight;
