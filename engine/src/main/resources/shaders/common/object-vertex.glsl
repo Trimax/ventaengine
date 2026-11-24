@@ -31,6 +31,26 @@ out vec3 vertexPosition;
 out vec3 vertexCameraPosition;
 out vec2 vertexTextureCoordinates;
 
+/*
+ * The tangent space of a vertex. A vertex whose triangles have degenerate texture coordinates has no tangent (the mesh
+ * loader leaves zeros), and normalizing a zero vector gives NaN that turns every triangle that uses the vertex black.
+ * Such a vertex gets any tangent space around its normal: it has no texture detail to follow anyway.
+ */
+mat3 getTangentSpace(mat3 normalMatrix) {
+    vec3 n = normalize(normalMatrix * normal);
+    vec3 t = normalMatrix * tangent;
+    vec3 b = normalMatrix * bitangent;
+
+    if (dot(t, t) < 1e-12 || dot(b, b) < 1e-12) {
+        vec3 axis = abs(n.y) < 0.99 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);
+        t = normalize(cross(axis, n));
+        b = cross(n, t);
+        return mat3(t, b, n);
+    }
+
+    return mat3(normalize(t), normalize(b), n);
+}
+
 void main() {
 #ifdef INSTANCED
     mat4 model = instanceModel;
@@ -42,9 +62,7 @@ void main() {
 
     vec4 worldPos = model * vec4(position, 1.0);
 
-    vertexTBN = mat3(normalize(normalMatrix * tangent),
-                     normalize(normalMatrix * bitangent),
-                     normalize(normalMatrix * normal));
+    vertexTBN = getTangentSpace(normalMatrix);
 
     vertexTextureCoordinates = textureCoordinates;
     vertexCameraPosition = cameraPosition;

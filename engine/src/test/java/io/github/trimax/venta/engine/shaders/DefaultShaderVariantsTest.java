@@ -79,4 +79,14 @@ final class DefaultShaderVariantsTest {
         assertTrue(instanced.contains("layout(location = 6) in mat4 instanceModel"));
         assertTrue(instanced.contains("layout(location = 10) in mat3 instanceNormal"));
     }
+
+    @Test
+    void testObjectVertexShaderSurvivesVerticesWithoutTangents() {
+        final var code = ShaderResources.expand("default/vertex.glsl").code();
+
+        // The loader leaves zeros where the texture coordinates of a vertex are degenerate: normalizing them gives NaN
+        assertTrue(code.contains("getTangentSpace"), "The tangent space is built in one place");
+        assertTrue(code.contains("dot(t, t) < 1e-12"), "A zero tangent must be replaced before it is normalized");
+        assertFalse(code.contains("normalize(normalMatrix * tangent)"), "The tangent must not be normalized as it is");
+    }
 }

@@ -22,13 +22,13 @@ import io.github.trimax.venta.engine.model.common.geo.Buffer;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.utils.VertexLayoutUtil;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GeometryHelper {
     private final Memory memory;
 
