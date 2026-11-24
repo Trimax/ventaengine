@@ -4,9 +4,7 @@ import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
-import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30C.GL_TEXTURE_2D_ARRAY;
-import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
+import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.opengl.GL32C.GL_DEPTH_CLAMP;
 
 import java.nio.FloatBuffer;
@@ -24,18 +22,21 @@ import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.enums.TextureUnit;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
+import io.github.trimax.venta.engine.memory.InstanceBuffer;
 import io.github.trimax.venta.engine.memory.MatrixCache;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.shadow.ShadowCascade;
 import io.github.trimax.venta.engine.model.common.shadow.ShadowFrame;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
+import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
+import io.github.trimax.venta.engine.utils.InstanceBatcher;
 import io.github.trimax.venta.engine.utils.ShadowCascadeCalculator;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -59,10 +60,16 @@ public final class ShadowRenderer {
     private final MatrixCache matrixCache;
     private final Memory memory;
 
-    /** What a frame needs is made once and reused: the cascades, their computation and the pass over the objects */
+    /**
+     * What a frame needs is made once and reused: the cascades, their computation and the copies of the meshes of the
+     * objects. The copies are collected once per frame (the objects don't move between the cascades) and drawn into every
+     * cascade: the meshes with a cutout surface need their own program, so they are collected apart.
+     */
     private final ShadowCascadeCalculator calculator = new ShadowCascadeCalculator();
     private final Vector3f cameraForward = new Vector3f();
-    private final ObjectPass pass = new ObjectPass();
+    private final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> solids = new InstanceBatcher<>();
+    private final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> cutouts = new InstanceBatcher<>();
+    private final InstanceBuffer instanceBuffer = new InstanceBuffer();
 
     private ShadowMap map;
     private FloatBuffer matrixBuffer;
@@ -88,9 +95,11 @@ public final class ShadowRenderer {
         calculator.calculate(frame, view, window.getProjectionMatrix(), light.getDirection(), light.getShadowDistance(),
                 DefinitionsCommon.MAX_CASCADES, DefinitionsCommon.SHADOW_RESOLUTION);
 
-        final var objects = programRegistry.get(ProgramType.Shadow.getProgramName());
-        final var cutouts = programRegistry.get(ProgramType.ShadowCutout.getProgramName());
+        final var objects = programRegistry.get(ProgramType.ShadowInstanced.getProgramName());
+        final var cutoutObjects = programRegistry.get(ProgramType.ShadowCutoutInstanced.getProgramName());
         final var terrain = programRegistry.get(ProgramType.ShadowTerrain.getProgramName());
+
+        collectObjects(scene, objects, cutoutObjects);
 
         // What is nearer to the sun than the cascade is clamped to its near plane and still casts its shadow
         glEnable(GL_DEPTH_CLAMP);
@@ -103,8 +112,11 @@ public final class ShadowRenderer {
             glClear(GL_DEPTH_BUFFER_BIT);
 
             drawTerrain(scene, terrain, frame.getCascade(i));
-            drawObjects(scene, pass.with(objects, cutouts, frame.getCascade(i)));
+            drawObjects(objects, cutoutObjects, frame.getCascade(i));
         }
+
+        solids.clear();
+        cutouts.clear();
 
         glUseProgram(0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -131,6 +143,8 @@ public final class ShadowRenderer {
             MemoryUtil.memFree(matrixBuffer);
             matrixBuffer = null;
         }
+
+        instanceBuffer.release(memory);
     }
 
     private void drawTerrain(final SceneInstanceImplementation scene, final ProgramEntityImplementation program, final ShadowCascade cascade) {
@@ -142,23 +156,27 @@ public final class ShadowRenderer {
                 draw(program, surface);
     }
 
-    private void drawObjects(final SceneInstanceImplementation scene, final ObjectPass pass) {
-        pass.active = null;
-
+    /** Collects the copies of the meshes of the visible objects and uploads them: the cascades draw from the same buffer */
+    private void collectObjects(final SceneInstanceImplementation scene, final ProgramEntityImplementation objects,
+                                final ProgramEntityImplementation cutoutObjects) {
         for (final var object : scene.getObjects())
             if (object.isVisible())
-                draw(pass, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
+                collect(objects, cutoutObjects, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
+
+        instanceBuffer.begin();
+        append(solids);
+        append(cutouts);
+        instanceBuffer.upload(memory);
     }
 
-    private void draw(final ProgramEntityImplementation program, final TerrainSurfaceInstanceImplementation surface) {
-        elevationBinder.bind(program, surface.getHeightmap(), surface.getElevations(), surface.getFactor(), surface.getGridMesh().getSize());
-        bindModel(program, surface.getTransform().getMatrix());
-
-        geometryHelper.render(surface.getGridMesh().getGeometry());
+    private void append(final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batcher) {
+        for (final var batch : batcher.getBatches())
+            instanceBuffer.append(batch.getData(), batch.getLength());
     }
 
-    private void draw(final ObjectPass pass, final MaterialEntityImplementation material, final Node<MeshReference> node,
-                      final Matrix4f parentMatrix, final int depth) {
+    private void collect(final ProgramEntityImplementation objects, final ProgramEntityImplementation cutoutObjects,
+                         final MaterialEntityImplementation material, final Node<MeshReference> node,
+                         final Matrix4f parentMatrix, final int depth) {
         if (node == null)
             return;
 
@@ -169,51 +187,50 @@ public final class ShadowRenderer {
                 matrix.mul(reference.transform().getMatrix());
 
             if (reference.hasMesh()) {
-                // Only a cutout surface needs its alpha: the others cast the shadow of their whole shape
+                // Only a cutout surface needs its alpha: the others cast the shadow of their whole shape, whatever the material
                 final var surface = reference.hasMaterial() ? reference.material() : material;
-                final var cutout = surface != null && surface.isCutout();
-                final var program = cutout ? pass.cutouts : pass.objects;
-
-                use(pass, program);
-                if (cutout)
-                    materialBinder.bind(program, surface);
-
-                bindModel(program, matrix);
-                geometryHelper.render(reference.mesh().getGeometry());
+                if (surface != null && surface.isCutout())
+                    cutouts.add(reference.mesh(), cutoutObjects, surface, true, matrix);
+                else
+                    solids.add(reference.mesh(), objects, null, true, matrix);
             }
         }
 
         if (node.hasChildren())
             for (final var child : node.children())
-                draw(pass, material, child, matrix, depth + 1);
+                collect(objects, cutoutObjects, material, child, matrix, depth + 1);
     }
 
-    /** Switches to the program with the matrix of the cascade, nothing is done when it is already in use */
-    private void use(final ObjectPass pass, final ProgramEntityImplementation program) {
-        if (pass.active == program)
+    /** Draws the collected copies as the sun sees them with the matrix of the cascade */
+    private void drawObjects(final ProgramEntityImplementation objects, final ProgramEntityImplementation cutoutObjects, final ShadowCascade cascade) {
+        draw(solids, objects, cascade, 0);
+        draw(cutouts, cutoutObjects, cascade, solids.getCopiesCount());
+    }
+
+    /** Draws the batches with a program, the first of them starts at {@code first} in the buffer */
+    private void draw(final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batcher,
+                      final ProgramEntityImplementation program, final ShadowCascade cascade, final int first) {
+        if (batcher.getBatches().isEmpty())
             return;
 
         glUseProgram(program.getInternalID());
-        bindLight(program, pass.cascade);
-        pass.active = program;
+        bindLight(program, cascade);
+
+        var offset = first;
+        for (final var batch : batcher.getBatches()) {
+            if (batch.getMaterial() != null)
+                materialBinder.bind(program, batch.getMaterial());
+
+            geometryHelper.renderInstanced(batch.getShape().getGeometry(), instanceBuffer.getId(), offset, batch.getCount());
+            offset += batch.getCount();
+        }
     }
 
-    /** The programs and the cascade of the pass over the objects, and the program that is in use */
-    private static final class ObjectPass {
-        private ProgramEntityImplementation objects;
-        private ProgramEntityImplementation cutouts;
-        private ShadowCascade cascade;
-        private ProgramEntityImplementation active;
+    private void draw(final ProgramEntityImplementation program, final TerrainSurfaceInstanceImplementation surface) {
+        elevationBinder.bind(program, surface.getHeightmap(), surface.getElevations(), surface.getFactor(), surface.getGridMesh().getSize());
+        bindModel(program, surface.getTransform().getMatrix());
 
-        /** Sets up the pass for a cascade, the same instance serves every cascade of every frame */
-        private ObjectPass with(final ProgramEntityImplementation objects, final ProgramEntityImplementation cutouts, final ShadowCascade cascade) {
-            this.objects = objects;
-            this.cutouts = cutouts;
-            this.cascade = cascade;
-            this.active = null;
-
-            return this;
-        }
+        geometryHelper.render(surface.getGridMesh().getGeometry());
     }
 
     private void bindLight(final ProgramEntityImplementation program, final ShadowCascade cascade) {

@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "shadow/cutout-vertex-instanced.glsl",
+  "shaderFragment": "shadow/cutout-fragment.glsl"
+}
