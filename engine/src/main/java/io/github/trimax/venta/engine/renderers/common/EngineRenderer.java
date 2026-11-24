@@ -30,6 +30,7 @@ public final class EngineRenderer {
     private final SceneManagerImplementation sceneManager;
 
     private final PostProcessingRenderer postProcessingRenderer;
+    private final LightShaftRenderer lightShaftRenderer;
     private final EnvironmentRenderer environmentRenderer;
     private final ShadowRenderer shadowRenderer;
     private final WindowStateRenderer windowRenderer;
@@ -41,6 +42,7 @@ public final class EngineRenderer {
     /** Releases the GL objects of the renderers, the context must be alive */
     public void release() {
         sceneRenderer.release();
+        lightShaftRenderer.release();
         shadowRenderer.release();
         environmentRenderer.release();
         postProcessingRenderer.release();
@@ -79,10 +81,16 @@ public final class EngineRenderer {
                 debugRenderer.render(sceneManager.getCurrent());
             }
 
-        // The console and the text are drawn over the tone mapped image
+        // The scene is resolved, the shafts of the sun are added to it (they need its depth) and then it is tone mapped
         final var scene = sceneManager.getCurrent();
+        final var shafts = lightShaftRenderer.isActive(scene);
+        postProcessingRenderer.resolve(shafts);
+        if (shafts)
+            lightShaftRenderer.render(scene, camera, window, postProcessingRenderer);
+
         postProcessingRenderer.end(scene.getExposure(), scene.getToneMapping(), scene.getBloom());
 
+        // The console and the text are drawn over the tone mapped image
         try (final var _ = windowRenderer.withContext(null)
                         .withFrameRate((int) fpsCounter.getCurrentFps())) {
             windowRenderer.render(window);
