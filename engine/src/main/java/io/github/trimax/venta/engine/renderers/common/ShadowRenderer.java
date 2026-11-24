@@ -38,6 +38,7 @@ import io.github.trimax.venta.engine.model.instance.implementation.SceneInstance
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
+import io.github.trimax.venta.engine.utils.FrustumCuller;
 import io.github.trimax.venta.engine.utils.InstanceBatcher;
 import io.github.trimax.venta.engine.utils.ShadowCascadeCalculator;
 import lombok.AccessLevel;
@@ -65,14 +66,15 @@ public final class ShadowRenderer {
 
     /**
      * What a frame needs is made once and reused: the cascades, their computation and the copies of the meshes of the
-     * objects. The copies are collected once per frame (the objects don't move between the cascades) and drawn into every
-     * cascade: the meshes with a cutout surface need their own program, so they are collected apart.
+     * objects. The copies are collected for every cascade (only what reaches into the box of the cascade is) and drawn into
+     * it: the meshes with a cutout surface need their own program, so they are collected apart.
      */
     private final ShadowCascadeCalculator calculator = new ShadowCascadeCalculator();
     private final Vector3f cameraForward = new Vector3f();
     private final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> solids = new InstanceBatcher<>();
     private final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> cutouts = new InstanceBatcher<>();
     private final InstanceBuffer instanceBuffer = new InstanceBuffer();
+    private final FrustumCuller culler = new FrustumCuller();
 
     private ShadowMap map;
     private FloatBuffer matrixBuffer;
@@ -103,8 +105,6 @@ public final class ShadowRenderer {
         final var cutoutObjects = programRegistry.get(ProgramType.ShadowCutoutInstanced.getProgramName());
         final var terrain = programRegistry.get(ProgramType.ShadowTerrain.getProgramName());
 
-        collectObjects(scene, objects, cutoutObjects);
-
         // What is nearer to the sun than the cascade is clamped to its near plane and still casts its shadow
         glEnable(GL_DEPTH_CLAMP);
         glEnable(GL_DEPTH_TEST);
@@ -116,11 +116,14 @@ public final class ShadowRenderer {
             glClear(GL_DEPTH_BUFFER_BIT);
 
             drawTerrain(scene, terrain, frame.getCascade(i));
-            drawObjects(objects, cutoutObjects, frame.getCascade(i), scene, time);
-        }
 
-        solids.clear();
-        cutouts.clear();
+            // A cascade holds what the sun sees in its box: the objects beside the box can't shadow anything in it
+            collectObjects(scene, objects, cutoutObjects, frame.getCascade(i));
+            drawObjects(objects, cutoutObjects, frame.getCascade(i), scene, time);
+
+            solids.clear();
+            cutouts.clear();
+        }
 
         glUseProgram(0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -160,11 +163,15 @@ public final class ShadowRenderer {
                 draw(program, surface);
     }
 
-    /** Collects the copies of the meshes of the visible objects and uploads them: the cascades draw from the same buffer */
+    /** Collects the copies of the meshes of the visible objects that reach into the box of the cascade, and uploads them */
     private void collectObjects(final SceneInstanceImplementation scene, final ProgramEntityImplementation objects,
-                                final ProgramEntityImplementation cutoutObjects) {
+                                final ProgramEntityImplementation cutoutObjects, final ShadowCascade cascade) {
+        // Only the sides of the box cull: what is nearer to the sun than the map still casts its shadow into it
+        culler.set(cascade.getMatrix(), FrustumCuller.SIDE_PLANES);
+        final var margin = scene.getWind() == null ? 0.f : scene.getWind().getStrength();
+
         for (final var object : scene.getObjects())
-            if (object.isVisible())
+            if (object.isVisible() && culler.isVisible(object.getBox(), object.getTransform().getMatrix(), margin))
                 collect(objects, cutoutObjects, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
 
         instanceBuffer.begin();

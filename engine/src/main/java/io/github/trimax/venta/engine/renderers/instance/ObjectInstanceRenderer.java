@@ -110,7 +110,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
      * Draws the batchable objects: the copies of a mesh that share a material are drawn with one call, so a forest of
      * a few hundred trees costs as many calls as it has different meshes and materials.
      *
-     * @param objects the objects of the scene, the ones that are hidden or not batchable are skipped
+     * @param objects the objects of the scene, the ones that are hidden, out of the view or not batchable are skipped
      */
     public void renderBatched(final List<ObjectInstanceImplementation> objects) {
         final var context = getContext();
@@ -119,7 +119,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         final var programs = getPrograms();
         for (final var object : objects)
-            if (object.isVisible() && isBatchable(object))
+            if (object.isVisible() && isBatchable(object) && context.getParent().isInView(object, context.getScene().getWind()))
                 collect(object.hasCutout() ? programs.instancedCutoutProgram : programs.instancedProgram, object, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
 
         try {

@@ -25,7 +25,9 @@ import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanc
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
+import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.utils.DrawingOrder;
+import io.github.trimax.venta.engine.utils.FrustumCuller;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -88,7 +90,7 @@ public final class SceneInstanceRenderer
         }
 
         for (final var object : objects) {
-            if (!object.isVisible() || objectRenderer.isBatchable(object))
+            if (!object.isVisible() || objectRenderer.isBatchable(object) || !getContext().isInView(object, scene.getWind()))
                 continue;
 
             try (final var _ = objectRenderer.withContext(getContext())
@@ -141,6 +143,9 @@ public final class SceneInstanceRenderer
         private final ToDoubleFunction<ObjectInstanceImplementation> distanceToCamera = this::getDistanceToCamera;
         private final Vector3f objectPosition = new Vector3f();
 
+        /** What the camera doesn't see is not drawn */
+        private final FrustumCuller culler = new FrustumCuller();
+
         private CameraInstanceImplementation camera;
         private Engine.VentaTime time;
 
@@ -162,11 +167,20 @@ public final class SceneInstanceRenderer
             return object.getTransform().getMatrix().getTranslation(objectPosition).distanceSquared(camera.getPosition());
         }
 
+        /**
+         * Whether an object is at least partly in the view of the camera. The wind sways a surface out of its box, so the box
+         * is made as big as the wind can push the surface.
+         */
+        public boolean isInView(final ObjectInstanceImplementation object, final Wind wind) {
+            return culler.isVisible(object.getBox(), object.getTransform().getMatrix(), wind == null ? 0.f : wind.getStrength());
+        }
+
         public SceneRenderContext with(final WindowState window, final CameraInstanceImplementation camera) {
             window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
             projectionMatrix.set(window.getProjectionMatrix());
             viewMatrix.set(camera.getViewMatrix());
 
+            culler.set(viewProjectionMatrix, FrustumCuller.ALL_PLANES);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
             projectionMatrix.get(projectionMatrixBuffer);
             viewMatrix.get(viewMatrixBuffer);
