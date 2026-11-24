@@ -1,7 +1,10 @@
 package io.github.trimax.venta.engine.helpers;
 
 import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL31C.glDrawElementsInstanced;
+import static org.lwjgl.opengl.GL33C.glVertexAttribDivisor;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.FloatBuffer;
@@ -13,6 +16,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsBuffer;
 import io.github.trimax.venta.engine.layouts.AbstractVertexLayout;
+import io.github.trimax.venta.engine.layouts.InstanceVertexLayout;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.Buffer;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
@@ -28,6 +32,21 @@ import lombok.extern.slf4j.Slf4j;
 public final class GeometryHelper {
     private final Memory memory;
 
+    /** The calls that draw geometry: the ones of the frame in progress, and the ones of the last frame that ended */
+    private int drawCalls;
+    private volatile int lastFrameDrawCalls;
+
+    /** Starts counting the draw calls of a new frame */
+    public void startFrame() {
+        lastFrameDrawCalls = drawCalls;
+        drawCalls = 0;
+    }
+
+    /** The number of calls that drew geometry (objects, terrain, shadows) in the last frame that ended */
+    public int getDrawCalls() {
+        return lastFrameDrawCalls;
+    }
+
     public void render(@NonNull final Geometry geometry) {
         if (!geometry.isRenderable())
             return;
@@ -37,12 +56,60 @@ public final class GeometryHelper {
         if (geometry.hasFacets()) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
             glDrawElements(GL_TRIANGLES, geometry.facets().length(), GL_UNSIGNED_INT, 0);
+            drawCalls++;
         }
 
         if (geometry.hasEdges()) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.edges().id());
             glDrawElements(GL_LINES, geometry.edges().length(), GL_UNSIGNED_INT, 0);
+            drawCalls++;
         }
+
+        glBindVertexArray(0);
+    }
+
+    /**
+     * Draws many copies of a geometry with one call. The attributes of the copies ({@link InstanceVertexLayout}) are
+     * read from the buffer, which holds the data of {@code instances} copies; they are attached to the geometry for
+     * this call only, so the geometry can still be drawn on its own.
+     */
+    public void renderInstanced(@NonNull final Geometry geometry, final int instanceBufferID, final int instances) {
+        if (!geometry.isRenderable() || instances <= 0)
+            return;
+
+        glBindVertexArray(geometry.objectID());
+        glBindBuffer(GL_ARRAY_BUFFER, instanceBufferID);
+
+        final var stride = InstanceVertexLayout.getStride();
+        long offset = 0;
+        for (final var attribute : InstanceVertexLayout.values()) {
+            // A matrix takes several locations: one for every column
+            final var size = attribute.getSize() / attribute.getColumns();
+            for (int column = 0; column < attribute.getColumns(); column++) {
+                final var location = attribute.getLocationID() + column;
+                glEnableVertexAttribArray(location);
+                glVertexAttribPointer(location, size, GL_FLOAT, false, stride, offset + (long) column * size * Float.BYTES);
+                glVertexAttribDivisor(location, 1);
+            }
+
+            offset += (long) Float.BYTES * attribute.getSize();
+        }
+
+        if (geometry.hasFacets()) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
+            glDrawElementsInstanced(GL_TRIANGLES, geometry.facets().length(), GL_UNSIGNED_INT, 0, instances);
+            drawCalls++;
+        }
+
+        if (geometry.hasEdges()) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.edges().id());
+            glDrawElementsInstanced(GL_LINES, geometry.edges().length(), GL_UNSIGNED_INT, 0, instances);
+            drawCalls++;
+        }
+
+        for (final var attribute : InstanceVertexLayout.values())
+            for (int column = 0; column < attribute.getColumns(); column++)
+                glDisableVertexAttribArray(attribute.getLocationID() + column);
 
         glBindVertexArray(0);
     }

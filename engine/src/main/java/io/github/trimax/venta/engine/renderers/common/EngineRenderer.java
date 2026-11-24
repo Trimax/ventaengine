@@ -1,10 +1,14 @@
 package io.github.trimax.venta.engine.renderers.common;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.EngineController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.core.FPSCounter;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.renderers.instance.SceneInstanceRenderer;
@@ -13,9 +17,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -23,6 +24,7 @@ public final class EngineRenderer {
     private final EngineController engineController;
     private final WindowController windowController;
 
+    private final GeometryHelper geometryHelper;
     private final CameraManagerImplementation cameraManager;
     private final SceneManagerImplementation sceneManager;
 
@@ -44,6 +46,8 @@ public final class EngineRenderer {
         final var window = windowController.get();
         if (glfwWindowShouldClose(window.getInternalID()))
             engineController.get().setApplicationRunning(false);
+
+        geometryHelper.startFrame();
 
         final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
 

@@ -1,5 +1,18 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import static org.lwjgl.opengl.GL11C.*;
+
+import java.nio.FloatBuffer;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.function.ToDoubleFunction;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.system.MemoryUtil;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.managers.implementation.EmitterManagerImplementation;
@@ -13,19 +26,12 @@ import io.github.trimax.venta.engine.model.instance.implementation.SceneInstance
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
 import io.github.trimax.venta.engine.utils.DrawingOrder;
-import lombok.*;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.system.MemoryUtil;
-
-import java.nio.FloatBuffer;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.function.ToDoubleFunction;
-
-import static org.lwjgl.opengl.GL11C.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.SneakyThrows;
 
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -63,27 +69,46 @@ public final class SceneInstanceRenderer
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (final var surface : scene.getTerrainSurfaces())
+        // What is hidden is not drawn, nor does it cast a shadow (the shadow pass skips it too)
+        for (final var surface : scene.getTerrainSurfaces()) {
+            if (!surface.isVisible())
+                continue;
+
             try (final var _ = terrainSurfaceRenderer.withContext(getContext())
                     .withModelMatrix(surface.getTransform().getMatrix())
                     .withScene(scene)) {
                 terrainSurfaceRenderer.render(terrainSurfaceManager.getInstance(surface.getID()));
             }
+        }
 
-        for (final var object : getContext().getObjectsInDrawingOrder(scene))
+        final var objects = getContext().getObjectsInDrawingOrder(scene);
+        try (final var _ = objectRenderer.withContext(getContext())
+                .withScene(scene)) {
+            objectRenderer.renderBatched(objects);
+        }
+
+        for (final var object : objects) {
+            if (!object.isVisible() || objectRenderer.isBatchable(object))
+                continue;
+
             try (final var _ = objectRenderer.withContext(getContext())
                     .withScene(scene)) {
                 objectRenderer.render(objectManager.getInstance(object.getID()));
             }
+        }
 
         // Water is semi-transparent, so it is rendered after the geometry which can be seen through it
-        for (final var surface : scene.getWaterSurfaces())
+        for (final var surface : scene.getWaterSurfaces()) {
+            if (!surface.isVisible())
+                continue;
+
             try (final var _ = waterSurfaceRenderer.withContext(getContext())
                     .withModelMatrix(surface.getTransform().getMatrix())
                     .withScene(scene)) {
                 waterSurfaceRenderer.render(waterSurfaceManager.getInstance(surface.getID()));
             }
-            
+        }
+
         glDepthMask(false);
         for (final var billboard : scene.getBillboards())
             try (final var _ = billboardRenderer.withContext(getContext())

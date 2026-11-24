@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.executors.scene;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @SuppressWarnings("unused")
 public final class SceneInfoExecutor extends AbstractSceneExecutor {
-    private SceneInfoExecutor(@NonNull final ControllerFactory factory) {
+    private final GeometryHelper geometryHelper;
+
+    private SceneInfoExecutor(@NonNull final ControllerFactory factory, @NonNull final GeometryHelper geometryHelper) {
         super(factory, "info", "prints information about selected scene");
+
+        this.geometryHelper = geometryHelper;
     }
 
     @Override
@@ -31,5 +36,6 @@ public final class SceneInfoExecutor extends AbstractSceneExecutor {
         getConsole().info("      Ambient: %s", scene.getAmbientLight());
         getConsole().info("       Skybox: %b", scene.getSkybox() != null);
         getConsole().info("          Fog: %s", scene.getFog());
+        getConsole().info("   Draw calls: %s (last frame, with shadows)", geometryHelper.getDrawCalls());
     }
 }
