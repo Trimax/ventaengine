@@ -8,16 +8,14 @@ Surfaces are shaded physically (a Cook-Torrance BRDF) and lit by their skybox (i
 is 8 bit, so a loader of HDR environment maps (`.hdr`, `.exr`) would give the sun and the bright sky their real brightness.
 Materials can cut holes by the alpha of their texture (`"alphaMode": "cutout"`) and cast shadows with the holes; the edges of
 the holes are not antialiased by the multisampling yet (alpha to coverage would smooth them).
-Objects with cutout and opaque surfaces (`"alphaMode": "opaque"`; the default is `"blend"`) are drawn with instancing (the copies
-of a mesh that share a material are one draw call, in the shadow maps as well), and a material that follows the wind (`"windInfluence"`, the wind of the scene is `"wind"`) sways with it.
+Objects with cutout and opaque surfaces (`"alphaMode": "opaque"`; the default is `"blend"`, and such objects mix colors, so they are
+sorted from the farthest to the nearest and drawn one by one) are drawn with instancing (the copies of a mesh that share a material
+are one draw call, in the shadow maps as well); what is out of the view of the camera, or out of the box of a shadow cascade, is
+not drawn at all. A material that follows the wind (`"windInfluence"`, the wind of the scene is `"wind"`) sways with it.
 Paths are relative to `engine/src/main/resources/shaders/` unless stated otherwise.
 
 ## Rendering
 
-- [ ] **1. Culling.** Nothing is culled: objects out of the view are drawn and cost the same, so a frustum culling
-  (by the bounding boxes the objects already have) should drop them before the copies are collected, in the shadow
-  maps too (by the box of the cascade). Objects that mix colors (`"alphaMode": "blend"`, the default) are still one
-  draw call each, because they are sorted from the farthest to the nearest.
 - [ ] **2. Levels of detail.** A far object costs as much as a close one. Objects should have several meshes
   (simpler with the distance, the last one can be a billboard with a picture of the object) and switch between them
   by the distance or the screen size, with a short crossfade (dithered) so the switch doesn't pop; terrain far away

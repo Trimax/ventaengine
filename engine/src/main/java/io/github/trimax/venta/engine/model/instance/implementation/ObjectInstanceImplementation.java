@@ -56,36 +56,6 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
         return cutout;
     }
 
-    /**
-     * Whether the object has no partly transparent fragments: every surface of it is opaque or cutout, or it has a cutout
-     * surface (the other surfaces of such an object are drawn without sorting as well). Such an object is drawn before the
-     * objects that mix colors, in any order, and can be drawn with instancing.
-     */
-    public boolean isSolid() {
-        if (solid == null)
-            solid = hasCutout() || isSolid(material, mesh);
-
-        return solid;
-    }
-
-    private static boolean isSolid(final MaterialEntityImplementation material, final Node<MeshReference> node) {
-        if (node == null)
-            return true;
-
-        if (node.hasValue() && node.value().hasMesh()) {
-            final var surface = node.value().hasMaterial() ? node.value().material() : material;
-            if (surface == null || !surface.isSolid())
-                return false;
-        }
-
-        if (node.hasChildren())
-            for (final var child : node.children())
-                if (!isSolid(material, child))
-                    return false;
-
-        return true;
-    }
-
     private static boolean hasCutout(final Node<MeshReference> node) {
         if (node == null)
             return false;
@@ -99,6 +69,36 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
                     return true;
 
         return false;
+    }
+
+    /**
+     * Whether the object has no partly transparent fragments: every surface of it is opaque or cutout, or it has a cutout
+     * surface (the other surfaces of such an object are drawn without sorting as well). Such an object is drawn before the
+     * objects that mix colors, in any order, and can be drawn with instancing.
+     */
+    public boolean isSolid() {
+        if (solid == null)
+            solid = hasCutout() || hasOnlySolidSurfaces(material, mesh);
+
+        return solid;
+    }
+
+    private static boolean hasOnlySolidSurfaces(final MaterialEntityImplementation material, final Node<MeshReference> node) {
+        if (node == null)
+            return true;
+
+        if (node.hasValue() && node.value().hasMesh()) {
+            final var surface = node.value().hasMaterial() ? node.value().material() : material;
+            if (surface == null || !surface.isSolid())
+                return false;
+        }
+
+        if (node.hasChildren())
+            for (final var child : node.children())
+                if (!hasOnlySolidSurfaces(material, child))
+                    return false;
+
+        return true;
     }
 
     @Override
