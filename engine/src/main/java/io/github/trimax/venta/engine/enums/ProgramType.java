@@ -7,6 +7,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ProgramType {
+    AmbientOcclusionApply("ambient-occlusion-apply.json"),
+    AmbientOcclusionBlur("ambient-occlusion-blur.json"),
+    AmbientOcclusion("ambient-occlusion.json"),
     LightShaftsUpsample("light-shafts-upsample.json"),
     LightShafts("light-shafts.json"),
     BloomDownsample("bloom-downsample.json"),

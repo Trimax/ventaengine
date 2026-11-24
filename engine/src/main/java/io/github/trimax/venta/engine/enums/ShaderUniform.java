@@ -21,6 +21,7 @@ public enum ShaderUniform {
     TextureBloom("textureBloom"),
     TextureDepth("textureDepth"),
     TextureShafts("textureShafts"),
+    TextureAo("textureAo"),
     TextureDiffuse("textureDiffuse"),
     TextureHeight("textureHeight"),
     TextureNormal("textureNormal"),
@@ -122,6 +123,11 @@ public enum ShaderUniform {
     /* Fog */
     /* Post processing */
     BloomIntensity("bloomIntensity"),
+    AoRadius("aoRadius"),
+    AoPower("aoPower"),
+    AoIntensity("aoIntensity"),
+    AoProjectionScale("aoProjectionScale"),
+    AoBlurStep("aoBlurStep"),
     LightShaftsSteps("lightShaftsSteps"),
     LightShaftsAnisotropy("lightShaftsAnisotropy"),
     LightShaftsIntensity("lightShaftsIntensity"),

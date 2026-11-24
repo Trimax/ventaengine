@@ -14,6 +14,11 @@
     "threshold": 1.0,
     "softKnee": 0.5
   },
+  "ambientOcclusion": {
+    "intensity": 0.8,
+    "radius": 3.5,
+    "power": 1.6
+  },
   "lightShafts": {
     "intensity": 0.3,
     "steps": 32,

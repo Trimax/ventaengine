@@ -31,6 +31,7 @@ public final class EngineRenderer {
 
     private final PostProcessingRenderer postProcessingRenderer;
     private final LightShaftRenderer lightShaftRenderer;
+    private final AmbientOcclusionRenderer ambientOcclusionRenderer;
     private final EnvironmentRenderer environmentRenderer;
     private final ShadowRenderer shadowRenderer;
     private final WindowStateRenderer windowRenderer;
@@ -43,6 +44,7 @@ public final class EngineRenderer {
     public void release() {
         sceneRenderer.release();
         lightShaftRenderer.release();
+        ambientOcclusionRenderer.release();
         shadowRenderer.release();
         environmentRenderer.release();
         postProcessingRenderer.release();
@@ -81,10 +83,16 @@ public final class EngineRenderer {
                 debugRenderer.render(sceneManager.getCurrent());
             }
 
-        // The scene is resolved, the shafts of the sun are added to it (they need its depth) and then it is tone mapped
+        // The scene is resolved, the corners are darkened and the shafts of the sun are added (both need its depth), then it is tone mapped
         final var scene = sceneManager.getCurrent();
+        final var occlusion = ambientOcclusionRenderer.isActive(scene);
         final var shafts = lightShaftRenderer.isActive(scene);
-        postProcessingRenderer.resolve(shafts);
+        postProcessingRenderer.resolve(occlusion || shafts);
+
+        // The light that the fog scatters is in the air in front of the surfaces, so it is not darkened with them
+        if (occlusion)
+            ambientOcclusionRenderer.render(scene, camera, window, postProcessingRenderer);
+
         if (shafts)
             lightShaftRenderer.render(scene, camera, window, postProcessingRenderer);
 

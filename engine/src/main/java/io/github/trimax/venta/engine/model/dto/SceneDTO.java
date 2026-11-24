@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.enums.ToneMapping;
 import java.util.List;
 
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneAmbientOcclusionDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBloomDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneDirectionalLightDTO;
@@ -31,6 +32,7 @@ public record SceneDTO(List<SceneLightDTO> lights,
                        SceneWindDTO wind,
                        SceneBloomDTO bloom,
                        SceneLightShaftsDTO lightShafts,
+                       SceneAmbientOcclusionDTO ambientOcclusion,
                        Float exposure,
                        ToneMapping toneMapping,
                        String skybox) {
