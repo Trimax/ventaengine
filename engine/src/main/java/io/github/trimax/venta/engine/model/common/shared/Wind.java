@@ -9,7 +9,7 @@ import lombok.NonNull;
 
 /**
  * The wind of a scene. It sways the surfaces whose material follows the wind (the wind influence of the material): trees
- * lean along the direction and the gusts swing them, the more the higher a point is on its mesh.
+ * lean along the direction and the gusts swing them, the more, the higher a point is on its mesh.
  */
 public final class Wind {
     private static final float DEFAULT_STRENGTH = 0.5f;
