@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.shaders;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.regex.Pattern;
 
@@ -65,5 +66,27 @@ final class DefaultShaderVariantsTest {
 
         assertTrue(code.indexOf("#define ALPHA_CUTOUT") < code.indexOf("#ifdef ALPHA_CUTOUT"), "The condition must see the definition");
         assertTrue(code.startsWith("#version 330 core"), "The version comes first");
+    }
+
+    @Test
+    void testObjectVertexShaderHasTwoVariantsMadeOfOneFile() {
+        final var single = ShaderResources.expand("default/vertex.glsl").code();
+        final var instanced = ShaderResources.expand("default/vertex-instanced.glsl").code();
+
+        assertFalse(single.contains("#define INSTANCED"), "A single object takes its matrices from the uniforms");
+        assertTrue(instanced.contains("#define INSTANCED"), "Copies of a mesh take their matrices from the attributes");
+        assertTrue(instanced.indexOf("#define INSTANCED") < instanced.indexOf("#ifdef INSTANCED"), "The condition must see the definition");
+        assertTrue(instanced.contains("layout(location = 6) in mat4 instanceModel"));
+        assertTrue(instanced.contains("layout(location = 10) in mat3 instanceNormal"));
+    }
+
+    @Test
+    void testObjectVertexShaderSurvivesVerticesWithoutTangents() {
+        final var code = ShaderResources.expand("default/vertex.glsl").code();
+
+        // The loader leaves zeros where the texture coordinates of a vertex are degenerate: normalizing them gives NaN
+        assertTrue(code.contains("getTangentSpace"), "The tangent space is built in one place");
+        assertTrue(code.contains("dot(t, t) < 1e-12"), "A zero tangent must be replaced before it is normalized");
+        assertFalse(code.contains("normalize(normalMatrix * tangent)"), "The tangent must not be normalized as it is");
     }
 }
