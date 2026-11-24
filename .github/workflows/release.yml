@@ -40,9 +40,15 @@ jobs:
           fi
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
+      # The same environment as the Build workflow: what the build of a pull request ran must run (and not be skipped) in the build of a release
+      - name: Install software OpenGL
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1 libgl1-mesa-dri libglx-mesa0
+
       - name: Build & publish
-        run: set -o pipefail && mvn -P release --batch-mode clean deploy -pl '!editor,!examples' | tee maven-deploy.log
+        run: set -o pipefail && xvfb-run -a -s "-screen 0 1280x1024x24" mvn -P release --batch-mode clean deploy -pl '!editor,!examples' | tee maven-deploy.log
         env:
+          VENTA_REQUIRE_OPENGL: "true"
+          LIBGL_ALWAYS_SOFTWARE: "true"
           CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
           CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
