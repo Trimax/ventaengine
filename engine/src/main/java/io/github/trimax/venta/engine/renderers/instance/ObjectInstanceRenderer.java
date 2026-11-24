@@ -1,14 +1,11 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
 import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
 
-import java.nio.FloatBuffer;
 import java.util.List;
 
 import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryUtil;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
@@ -25,7 +22,7 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
-import io.github.trimax.venta.engine.layouts.InstanceVertexLayout;
+import io.github.trimax.venta.engine.memory.InstanceBuffer;
 import io.github.trimax.venta.engine.memory.MatrixCache;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
@@ -193,14 +190,16 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         objectBinder.bind(program, batch.isLit());
         materialBinder.bind(program, material);
 
-        context.upload(memory, batch.getData(), batch.getLength());
+        context.instanceBuffer.begin();
+        context.instanceBuffer.append(batch.getData(), batch.getLength());
+        context.instanceBuffer.upload(memory);
 
         // A one sided material has no back faces: they are never seen, so they are not drawn
         final var oneSided = material != null && !material.isDoubleSided();
         if (oneSided)
             glEnable(GL_CULL_FACE);
 
-        geometryHelper.renderInstanced(batch.getShape().getGeometry(), context.instanceBufferID, batch.getCount());
+        geometryHelper.renderInstanced(batch.getShape().getGeometry(), context.instanceBuffer.getId(), 0, batch.getCount());
 
         if (oneSided)
             glDisable(GL_CULL_FACE);
@@ -278,28 +277,8 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         /** The copies of the meshes of a frame, they are drawn in batches */
         private final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batcher = new InstanceBatcher<>();
 
-        /** The buffer the batches are uploaded to (created with the first batch), and the memory that stages them for the upload */
-        private int instanceBufferID;
-        private FloatBuffer staging;
-
-        /** Uploads the copies of a batch to the buffer, the previous contents of the buffer are replaced */
-        private void upload(final Memory memory, final float[] data, final int length) {
-            if (instanceBufferID == 0)
-                instanceBufferID = memory.getBuffers().create("Buffer of the copies of the objects");
-
-            if (staging == null || staging.capacity() < length) {
-                if (staging != null)
-                    MemoryUtil.memFree(staging);
-
-                staging = MemoryUtil.memAllocFloat(Math.max(length, 2 * InstanceVertexLayout.getFloatsCount() * 64));
-            }
-
-            staging.clear();
-            staging.put(data, 0, length).flip();
-
-            glBindBuffer(GL_ARRAY_BUFFER, instanceBufferID);
-            glBufferData(GL_ARRAY_BUFFER, staging, GL_STREAM_DRAW);
-        }
+        /** The buffer the batches are uploaded to, one batch at a time */
+        private final InstanceBuffer instanceBuffer = new InstanceBuffer();
 
         public ObjectRenderContext withScene(final SceneInstanceImplementation scene) {
             this.scene = scene;
@@ -313,10 +292,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         @Override
         public void destroy() {
-            if (staging != null) {
-                MemoryUtil.memFree(staging);
-                staging = null;
-            }
+            instanceBuffer.destroy();
         }
     }
 }

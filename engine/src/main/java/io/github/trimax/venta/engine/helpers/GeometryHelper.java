@@ -22,8 +22,8 @@ import io.github.trimax.venta.engine.model.common.geo.Buffer;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.utils.VertexLayoutUtil;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -72,8 +72,10 @@ public final class GeometryHelper {
      * Draws many copies of a geometry with one call. The attributes of the copies ({@link InstanceVertexLayout}) are
      * read from the buffer, which holds the data of {@code instances} copies; they are attached to the geometry for
      * this call only, so the geometry can still be drawn on its own.
+     *
+     * @param first the index of the first copy of the geometry in the buffer, which may hold the copies of several batches
      */
-    public void renderInstanced(@NonNull final Geometry geometry, final int instanceBufferID, final int instances) {
+    public void renderInstanced(@NonNull final Geometry geometry, final int instanceBufferID, final int first, final int instances) {
         if (!geometry.isRenderable() || instances <= 0)
             return;
 
@@ -81,7 +83,7 @@ public final class GeometryHelper {
         glBindBuffer(GL_ARRAY_BUFFER, instanceBufferID);
 
         final var stride = InstanceVertexLayout.getStride();
-        long offset = 0;
+        long offset = (long) first * stride;
         for (final var attribute : InstanceVertexLayout.values()) {
             // A matrix takes several locations: one for every column
             final var size = attribute.getSize() / attribute.getColumns();

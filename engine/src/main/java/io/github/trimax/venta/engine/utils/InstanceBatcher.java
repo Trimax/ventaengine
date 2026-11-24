@@ -45,6 +45,15 @@ public final class InstanceBatcher<S, P, M> {
         return active;
     }
 
+    /** The number of copies in all the batches of the frame */
+    public int getCopiesCount() {
+        var count = 0;
+        for (final var batch : active)
+            count += batch.getCount();
+
+        return count;
+    }
+
     /** Forgets the copies of the frame: the batches are kept for the next one, but they don't keep the scene alive */
     public void clear() {
         for (final var batch : active)

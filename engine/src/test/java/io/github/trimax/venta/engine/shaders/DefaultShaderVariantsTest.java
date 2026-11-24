@@ -89,4 +89,20 @@ final class DefaultShaderVariantsTest {
         assertTrue(code.contains("dot(t, t) < 1e-12"), "A zero tangent must be replaced before it is normalized");
         assertFalse(code.contains("normalize(normalMatrix * tangent)"), "The tangent must not be normalized as it is");
     }
+
+    @Test
+    void testShadowVertexShaderHasFourVariantsMadeOfOneFile() {
+        final var single = ShaderResources.expand("shadow/vertex.glsl").code();
+        final var cutout = ShaderResources.expand("shadow/cutout-vertex.glsl").code();
+        final var instanced = ShaderResources.expand("shadow/vertex-instanced.glsl").code();
+        final var cutoutInstanced = ShaderResources.expand("shadow/cutout-vertex-instanced.glsl").code();
+
+        assertFalse(single.contains("#define INSTANCED") || single.contains("#define ALPHA_CUTOUT"));
+        assertTrue(cutout.contains("#define ALPHA_CUTOUT") && !cutout.contains("#define INSTANCED"));
+        assertTrue(instanced.contains("#define INSTANCED") && !instanced.contains("#define ALPHA_CUTOUT"));
+        assertTrue(cutoutInstanced.contains("#define INSTANCED") && cutoutInstanced.contains("#define ALPHA_CUTOUT"));
+
+        for (final var code : new String[]{instanced, cutoutInstanced})
+            assertTrue(code.contains("layout(location = 6) in mat4 instanceModel"), "The copies take their matrix from the attributes");
+    }
 }
