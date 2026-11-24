@@ -11,6 +11,7 @@ in vec2 vertexTextureCoordinates;
 in vec4 vertexColor;
 in vec3 vertexLight;
 in float vertexFog;
+in vec3 vertexFogColor;
 
 /* Textures */
 uniform sampler2D textureDiffuse;
@@ -22,5 +23,5 @@ void main() {
     vec4 color = texture(textureDiffuse, vertexTextureCoordinates) * vertexColor;
 
     /* The alpha is kept: a particle in the fog keeps its shape and takes the fog color */
-    outputColor = vec4(mix(color.rgb * vertexLight, fog.color, vertexFog), color.a);
+    outputColor = vec4(mix(color.rgb * vertexLight, vertexFogColor, vertexFog), color.a);
 }

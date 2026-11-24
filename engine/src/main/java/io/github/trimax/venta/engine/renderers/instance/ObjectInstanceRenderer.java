@@ -88,7 +88,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         }
 
         textureBinder.bind(program, context.getScene().getSkybox());
-        fogBinder.bind(program, context.getScene().getFog());
+        fogBinder.bind(program, context.getScene().getFog(), context.getScene().getDirectionalLight());
         windBinder.bind(program, context.getScene().getWind(), context.getParent().getTime());
 
         // What is not batched is not drawn with the cross fade of the levels of detail nor as a card: it takes the model of the level
@@ -245,7 +245,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         }
 
         textureBinder.bind(program, context.getScene().getSkybox());
-        fogBinder.bind(program, context.getScene().getFog());
+        fogBinder.bind(program, context.getScene().getFog(), context.getScene().getDirectionalLight());
         windBinder.bind(program, context.getScene().getWind(), context.getParent().getTime());
     }
 

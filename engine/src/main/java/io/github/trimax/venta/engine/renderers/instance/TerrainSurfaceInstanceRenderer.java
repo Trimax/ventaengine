@@ -65,7 +65,7 @@ public final class TerrainSurfaceInstanceRenderer extends
         materialBinder.bind(surface.getProgram(), surface.getMaterials());
         elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getElevations(), surface.getFactor(),
                 surface.getGridMesh().getSize());
-        fogBinder.bind(surface.getProgram(), getContext().getScene().getFog());
+        fogBinder.bind(surface.getProgram(), getContext().getScene().getFog(), getContext().getScene().getDirectionalLight());
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
 
         StreamEx.of(TextureType.values()).forEach(type -> textureBinder.bind(type, surface.getProgram(), surface.getTextureArrays().get(type)));

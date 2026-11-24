@@ -32,10 +32,12 @@ uniform int frameIndex;
 out vec2 vertexTextureCoordinates;
 out vec4 vertexColor;
 out float vertexFog;
+out vec3 vertexFogColor;
 
 void main() {
     /* The whole billboard is fogged as its center, so it stays uniform */
     vertexFog = isSet(useFog) ? getFogAmount(cameraPosition, matrixModel[3].xyz) : 0.0;
+    vertexFogColor = isSet(useFog) ? getFogColor(cameraPosition, matrixModel[3].xyz) : vec3(0.0);
 
     vec2 baseUV = position + 0.5; // Position is in [-0.5; 0.5] range (see GeometryDefinitions.PARTICLE_VERTICES)
     vec4 subTextureCoordinates = frames[frameIndex];

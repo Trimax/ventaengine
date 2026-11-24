@@ -79,7 +79,7 @@ public final class WaterSurfaceInstanceRenderer extends
 
         waterMaterialBinder.bind(surface.getProgram(), surface.getMaterial());
         waterFoamBinder.bind(surface.getProgram(), surface.getFoam());
-        fogBinder.bind(surface.getProgram(), getContext().getScene().getFog());
+        fogBinder.bind(surface.getProgram(), getContext().getScene().getFog(), getContext().getScene().getDirectionalLight());
 
         geometryHelper.render(surface.getGridMesh().getGeometry());
 
