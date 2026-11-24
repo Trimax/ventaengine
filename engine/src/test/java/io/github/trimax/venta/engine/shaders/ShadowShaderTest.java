@@ -170,6 +170,71 @@ final class ShadowShaderTest {
         assertEquals(1.f, shadow(point(0.2f, 0.9f, 0.f), UP, parameters()), EPSILON, "Deep in the lit half");
     }
 
+    @Test
+    void testAirWithoutShadowsIsLit() {
+        fill(0.f, 0.f);
+
+        assertEquals(1.f, visibility(point(0.2f, 0.f, 0.f), parameters().with("useShadows", 0)), EPSILON);
+    }
+
+    @Test
+    void testPointOfTheAirBehindTheStoredDepthIsInTheShadow() {
+        fill(0.5f, 0.5f);
+
+        assertEquals(1.f, visibility(point(0.2f, 0.f, -0.5f), parameters()), EPSILON, "Before the stored depth");
+        assertEquals(0.f, visibility(point(0.2f, 0.f, 0.5f), parameters()), EPSILON, "Behind the stored depth");
+    }
+
+    @Test
+    void testAirTakesTheCascadeOfItsDistance() {
+        fill(1.f, 0.f);
+
+        assertEquals(1.f, visibility(point(0.2f, 0.f, 0.f), parameters()), EPSILON, "The first cascade is empty");
+        assertEquals(0.f, visibility(point(0.55f, 0.f, 0.f), parameters()), EPSILON, "The second cascade is full");
+    }
+
+    @Test
+    void testAirBeyondTheShadowsIsLitAndTheShadowsFadeOut() {
+        fill(0.f, 0.f);
+
+        assertEquals(1.f, visibility(point(1.5f, 0.f, 0.f), parameters()), EPSILON, "Behind the shadow distance");
+        assertEquals(1.f, visibility(point(0.2f, 0.f, 1.5f), parameters()), EPSILON, "Farther than the far plane of the cascade");
+
+        final var x = 0.9f;
+        final var t = (x - 0.85f * DISTANCE) / (0.15f * DISTANCE);
+        assertEquals(t * t * (3.f - 2.f * t), visibility(point(x, 0.f, 0.f), parameters()), EPSILON, "The shadows fade out at the end");
+    }
+
+    @Test
+    void testAirIsMovedToTheSunByTheTexelSize() {
+        fill(0.5f, 0.5f);
+
+        // The sun shines along -z: a point at 0.55 is behind the stored depth, 1.5 texels of 0.1 move it to 0.475 where it is lit
+        final var light = new float[]{0, 0, 1};
+        assertEquals(0.f, visibility(point(0.2f, 0.f, 0.1f), parameters().with("directionalLight.direction", light)), EPSILON);
+        assertEquals(1.f, visibility(point(0.2f, 0.f, 0.1f), parameters().with("directionalLight.direction", light)
+                .with("shadowTexels", new ShaderHarness.Floats(0.1f, 0.1f))), EPSILON);
+    }
+
+    @Test
+    void testAirAndSurfaceAgreeAwayFromTheEdges() {
+        fill(0.5f, 0.5f);
+
+        for (final var z : new float[]{-0.8f, -0.3f, 0.3f, 0.8f})
+            assertEquals(shadow(point(0.2f, 0.f, z), UP, parameters()), visibility(point(0.2f, 0.f, z), parameters()), EPSILON, "At " + z);
+    }
+
+    private float visibility(final float[] position, final Parameters parameters) {
+        glActiveTexture(TextureUnit.Shadow.getLocationID());
+        glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
+        glActiveTexture(GL_TEXTURE0);
+
+        final var uniforms = new HashMap<>(parameters.uniforms);
+        uniforms.put("position", position);
+
+        return harness.run(List.of("common/shadow.glsl"), "uniform vec3 position;", "outputColor = vec4(getSunVisibility(position));", uniforms)[0];
+    }
+
     private float shadow(final float[] position, final float[] normal, final Parameters parameters) {
         glActiveTexture(TextureUnit.Shadow.getLocationID());
         glBindTexture(GL_TEXTURE_2D_ARRAY, texture);

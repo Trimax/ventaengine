@@ -16,6 +16,7 @@ import io.github.trimax.venta.engine.model.common.scene.SceneWaterSurface;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
+import io.github.trimax.venta.engine.model.common.shared.LightShafts;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
@@ -55,6 +56,7 @@ public class ScenePrefabImplementation extends AbstractPrefabImplementation impl
     Fog fog;
     Wind wind;
     Bloom bloom;
+    LightShafts lightShafts;
     Float exposure;
     ToneMapping toneMapping;
 }

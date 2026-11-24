@@ -65,6 +65,11 @@ float getFogThickness(vec3 from, vec3 to) {
     return start * length(way) * mean;
 }
 
+/* The density of the exponential fog at a height: the part of the light that is lost on a unit of the way */
+float getFogDensity(float height) {
+    return fog.density * exp(clamp(-fog.falloff * (height - fog.baseHeight), -FOG_MAXIMAL_EXPONENT, FOG_MAXIMAL_EXPONENT));
+}
+
 /* Amount of fog color of a point seen from another one */
 float getFogAmount(vec3 from, vec3 to) {
     if (isFogExponential())

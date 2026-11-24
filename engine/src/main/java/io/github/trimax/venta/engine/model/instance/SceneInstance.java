@@ -4,6 +4,7 @@ import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.enums.ToneMapping;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
+import io.github.trimax.venta.engine.model.common.shared.LightShafts;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import lombok.NonNull;
@@ -40,6 +41,9 @@ public interface SceneInstance extends AbstractInstance {
     /** The glow around the bright parts of the image, null is no bloom */
     Bloom getBloom();
 
+    /** The shafts of the light of the sun in the fog, null is none */
+    LightShafts getLightShafts();
+
     /** Multiplies the light of the scene before the tone mapping, 1 keeps it */
     float getExposure();
 
@@ -56,6 +60,8 @@ public interface SceneInstance extends AbstractInstance {
     void setWind(final Wind wind);
 
     void setBloom(final Bloom bloom);
+
+    void setLightShafts(final LightShafts lightShafts);
 
     void setExposure(final float exposure);
 

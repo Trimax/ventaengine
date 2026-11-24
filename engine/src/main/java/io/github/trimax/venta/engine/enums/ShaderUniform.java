@@ -13,11 +13,14 @@ public enum ShaderUniform {
     MatrixNormal("matrixNormal"),
     MatrixModel("matrixModel"),
     MatrixView("matrixView"),
+    MatrixViewProjectionInverse("matrixViewProjectionInverse"),
 
     /* Textures */
     TextureSkybox("textureSkybox"),
     TextureScene("textureScene"),
     TextureBloom("textureBloom"),
+    TextureDepth("textureDepth"),
+    TextureShafts("textureShafts"),
     TextureDiffuse("textureDiffuse"),
     TextureHeight("textureHeight"),
     TextureNormal("textureNormal"),
@@ -119,6 +122,9 @@ public enum ShaderUniform {
     /* Fog */
     /* Post processing */
     BloomIntensity("bloomIntensity"),
+    LightShaftsSteps("lightShaftsSteps"),
+    LightShaftsAnisotropy("lightShaftsAnisotropy"),
+    LightShaftsIntensity("lightShaftsIntensity"),
     UseBloom("useBloom"),
     Exposure("exposure"),
     ToneMapping("toneMapping"),

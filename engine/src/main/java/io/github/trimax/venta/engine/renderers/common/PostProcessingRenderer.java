@@ -26,6 +26,7 @@ import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,9 +48,19 @@ public final class PostProcessingRenderer {
     private int sceneDepthID;
     private int resolvedFramebufferID;
     private int resolvedTextureID;
+
+    /* The depth of the resolved scene, and a framebuffer of its color alone: a pass can add light to the scene and read the depth */
+    @Getter
+    private int resolvedDepthTextureID;
+    @Getter
+    private int resolvedColorFramebufferID;
     private int vertexArrayID;
 
+    /** The size of the scene in pixels */
+    @Getter
     private int width;
+
+    @Getter
     private int height;
 
     /** Makes the glow of the bright parts, created with the first frame that has a bloom */
@@ -73,15 +84,24 @@ public final class PostProcessingRenderer {
     }
 
     /**
-     * Resolves the scene and draws it tone mapped to the window, which then gets the overlays (console, text).
+     * Resolves the multisampled scene into the textures the post passes read: the color and, when a pass needs it, the depth.
+     *
+     * @param depth whether the depth is resolved as well (see {@link #getResolvedDepthTextureID()})
+     */
+    public void resolve(final boolean depth) {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, sceneFramebufferID);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolvedFramebufferID);
+        glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, depth ? GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT : GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    /**
+     * Draws the resolved scene tone mapped to the window, which then gets the overlays (console, text).
+     * The scene must be resolved (see {@link #resolve(boolean)}), the passes that add light to it have been made.
      *
      * @param bloom the glow of the bright parts that is added to the scene, null or with no intensity for none
      */
     public void end(final float exposure, @NonNull final ToneMapping toneMapping, final Bloom bloom) {
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, sceneFramebufferID);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolvedFramebufferID);
-        glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
         final var glow = bloom != null && bloom.getIntensity() > 0.f ? getBloomHelper().render(resolvedTextureID, width, height, bloom) : 0;
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -186,13 +206,34 @@ public final class PostProcessingRenderer {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glBindTexture(GL_TEXTURE_2D, 0);
 
+        // The depth is a texture of the format of the depth of the scene: a blit between buffers needs the same formats
+        resolvedDepthTextureID = memory.getTextures().create("HDR resolved scene depth");
+        glBindTexture(GL_TEXTURE_2D, resolvedDepthTextureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, (ByteBuffer) null);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
         resolvedFramebufferID = memory.getFramebuffers().create("HDR resolved scene");
         glBindFramebuffer(GL_FRAMEBUFFER, resolvedFramebufferID);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolvedTextureID, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, resolvedDepthTextureID, 0);
         final var status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        if (status != GL_FRAMEBUFFER_COMPLETE)
+        if (status != GL_FRAMEBUFFER_COMPLETE) {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             throw new FramebufferCreationException(String.format("HDR resolved scene framebuffer is incomplete: 0x%X", status));
+        }
+
+        // A pass that reads the depth can't draw into a framebuffer that has it attached, so the color has a framebuffer of its own
+        resolvedColorFramebufferID = memory.getFramebuffers().create("HDR resolved scene color");
+        glBindFramebuffer(GL_FRAMEBUFFER, resolvedColorFramebufferID);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolvedTextureID, 0);
+        final var colorStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        if (colorStatus != GL_FRAMEBUFFER_COMPLETE)
+            throw new FramebufferCreationException(String.format("HDR resolved scene color framebuffer is incomplete: 0x%X", colorStatus));
 
         this.width = width;
         this.height = height;
@@ -234,8 +275,11 @@ public final class PostProcessingRenderer {
             return;
 
         memory.getFramebuffers().delete(resolvedFramebufferID);
+        memory.getFramebuffers().delete(resolvedColorFramebufferID);
         memory.getTextures().delete(resolvedTextureID);
+        memory.getTextures().delete(resolvedDepthTextureID);
         resolvedFramebufferID = 0;
+        resolvedColorFramebufferID = 0;
     }
 
     private void deleteSceneFramebuffer() {

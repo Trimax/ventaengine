@@ -33,6 +33,29 @@ int getShadowCascade(float depth) {
 }
 
 /*
+ * How much of the light of the sun reaches a point of the air: 1 is all of it, 0 is none. The air has no surface, so
+ * there is no normal to move the point along: it is only moved towards the sun, which is enough for the points near the ground.
+ */
+float getSunVisibility(vec3 position) {
+    if (!isSet(useShadows))
+        return 1.0;
+
+    float depth = dot(position - cameraPosition, cameraForward);
+    int cascade = getShadowCascade(depth);
+    if (cascade >= shadowCascadeCount)
+        return 1.0;
+
+    vec3 shifted = position + normalize(-directionalLight.direction) * (shadowTexels[cascade] * SHADOW_LIGHT_OFFSET);
+    vec3 coordinates = (shadowMatrices[cascade] * vec4(shifted, 1.0)).xyz * 0.5 + 0.5;
+    if (coordinates.z > 1.0)
+        return 1.0;
+
+    // One comparison: the hardware filters it, and a march takes many points, so their sum is smooth
+    float lit = texture(textureShadow, vec4(coordinates.xy, float(cascade), coordinates.z));
+    return mix(lit, 1.0, smoothstep(0.85 * shadowDistance, shadowDistance, depth));
+}
+
+/*
  * How much of the light of the sun reaches a point: 1 is all of it, 0 is none (the point is in a shadow).
  * The normal is the geometric normal of the surface in the world space.
  */

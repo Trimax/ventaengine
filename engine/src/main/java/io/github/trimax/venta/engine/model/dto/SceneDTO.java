@@ -11,6 +11,7 @@ import io.github.trimax.venta.engine.model.dto.scene.SceneDirectionalLightDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneFogDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
+import io.github.trimax.venta.engine.model.dto.scene.SceneLightShaftsDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneObjectDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneSoundSourceDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneTerrainSurfaceDTO;
@@ -29,6 +30,7 @@ public record SceneDTO(List<SceneLightDTO> lights,
                        SceneFogDTO fog,
                        SceneWindDTO wind,
                        SceneBloomDTO bloom,
+                       SceneLightShaftsDTO lightShafts,
                        Float exposure,
                        ToneMapping toneMapping,
                        String skybox) {
