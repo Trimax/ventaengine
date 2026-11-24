@@ -100,6 +100,14 @@ public enum ShaderUniform {
     TimeElapsed("timeElapsed"),
     TimeDelta("timeDelta"),
 
+    /* Wind: the wind of the scene, how much the material follows it, and the bounding box of the mesh */
+    WindDirection("windDirection"),
+    WindStrength("windStrength"),
+    WindSpeed("windSpeed"),
+    WindInfluence("windInfluence"),
+    MeshMinimum("meshMinimum"),
+    MeshMaximum("meshMaximum"),
+
     /* Fog */
     /* Post processing */
     Exposure("exposure"),

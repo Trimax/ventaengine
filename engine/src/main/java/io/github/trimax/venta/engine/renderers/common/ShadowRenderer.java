@@ -18,6 +18,8 @@ import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.binders.ElevationBinder;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
+import io.github.trimax.venta.engine.binders.WindBinder;
+import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.enums.TextureUnit;
@@ -57,6 +59,7 @@ public final class ShadowRenderer {
     private final GeometryHelper geometryHelper;
     private final MaterialBinder materialBinder;
     private final MatrixBinder matrixBinder;
+    private final WindBinder windBinder;
     private final MatrixCache matrixCache;
     private final Memory memory;
 
@@ -79,7 +82,8 @@ public final class ShadowRenderer {
     private final ShadowFrame frame = new ShadowFrame(DefinitionsCommon.MAX_CASCADES);
 
     /** Draws the shadow maps of the frame when the sun of the scene casts shadows */
-    public void render(final SceneInstanceImplementation scene, @NonNull final CameraInstanceImplementation camera, @NonNull final WindowState window) {
+    public void render(final SceneInstanceImplementation scene, @NonNull final CameraInstanceImplementation camera, @NonNull final WindowState window,
+                       final Engine.VentaTime time) {
         frame.deactivate();
 
         final var light = scene == null ? null : scene.getDirectionalLight();
@@ -112,7 +116,7 @@ public final class ShadowRenderer {
             glClear(GL_DEPTH_BUFFER_BIT);
 
             drawTerrain(scene, terrain, frame.getCascade(i));
-            drawObjects(objects, cutoutObjects, frame.getCascade(i));
+            drawObjects(objects, cutoutObjects, frame.getCascade(i), scene, time);
         }
 
         solids.clear();
@@ -192,7 +196,7 @@ public final class ShadowRenderer {
                 if (surface != null && surface.isCutout())
                     cutouts.add(reference.mesh(), cutoutObjects, surface, true, matrix);
                 else
-                    solids.add(reference.mesh(), objects, null, true, matrix);
+                    solids.add(reference.mesh(), objects, surface != null && surface.followsWind() ? surface : null, true, matrix);
             }
         }
 
@@ -202,24 +206,31 @@ public final class ShadowRenderer {
     }
 
     /** Draws the collected copies as the sun sees them with the matrix of the cascade */
-    private void drawObjects(final ProgramEntityImplementation objects, final ProgramEntityImplementation cutoutObjects, final ShadowCascade cascade) {
-        draw(solids, objects, cascade, 0);
-        draw(cutouts, cutoutObjects, cascade, solids.getCopiesCount());
+    private void drawObjects(final ProgramEntityImplementation objects, final ProgramEntityImplementation cutoutObjects, final ShadowCascade cascade,
+                             final SceneInstanceImplementation scene, final Engine.VentaTime time) {
+        draw(solids, objects, cascade, 0, scene, time);
+        draw(cutouts, cutoutObjects, cascade, solids.getCopiesCount(), scene, time);
     }
 
     /** Draws the batches with a program, the first of them starts at {@code first} in the buffer */
     private void draw(final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batcher,
-                      final ProgramEntityImplementation program, final ShadowCascade cascade, final int first) {
+                      final ProgramEntityImplementation program, final ShadowCascade cascade, final int first,
+                      final SceneInstanceImplementation scene, final Engine.VentaTime time) {
         if (batcher.getBatches().isEmpty())
             return;
 
         glUseProgram(program.getInternalID());
         bindLight(program, cascade);
+        windBinder.bind(program, scene.getWind(), time);
 
         var offset = first;
         for (final var batch : batcher.getBatches()) {
             if (batch.getMaterial() != null)
                 materialBinder.bind(program, batch.getMaterial());
+
+            // The shadow sways like the surface, the material is bound for it when it follows the wind
+            windBinder.bind(program, batch.getMaterial());
+            windBinder.bind(program, batch.getShape());
 
             geometryHelper.renderInstanced(batch.getShape().getGeometry(), instanceBuffer.getId(), offset, batch.getCount());
             offset += batch.getCount();

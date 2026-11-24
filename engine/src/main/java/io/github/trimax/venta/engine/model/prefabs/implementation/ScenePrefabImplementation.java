@@ -15,6 +15,7 @@ import io.github.trimax.venta.engine.model.common.scene.SceneTerrainSurface;
 import io.github.trimax.venta.engine.model.common.scene.SceneWaterSurface;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
 import io.github.trimax.venta.engine.model.prefabs.ScenePrefab;
 import lombok.AccessLevel;
@@ -51,6 +52,7 @@ public class ScenePrefabImplementation extends AbstractPrefabImplementation impl
     DirectionalLight directionalLight;
     Vector3f ambientLight;
     Fog fog;
+    Wind wind;
     Float exposure;
     ToneMapping toneMapping;
 }

@@ -4,6 +4,7 @@
  * call and takes the matrices of every copy from the vertex attributes.
  */
 #include "common/camera.glsl"
+#include "common/wind.glsl"
 
 /* Vertex attributes */
 layout(location = 0) in vec3 position;
@@ -61,6 +62,7 @@ void main() {
 #endif
 
     vec4 worldPos = model * vec4(position, 1.0);
+    worldPos.xyz = applyWind(worldPos.xyz, model);
 
     vertexTBN = getTangentSpace(normalMatrix);
 

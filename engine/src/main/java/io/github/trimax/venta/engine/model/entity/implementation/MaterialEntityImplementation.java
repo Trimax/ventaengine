@@ -32,6 +32,7 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
     AlphaMode alphaMode;
     float alphaCutoff;
     boolean doubleSided;
+    float windInfluence;
 
     MaterialEntityImplementation(@NonNull final MaterialDTO dto) {
         this(Optional.ofNullable(dto.metalness()).orElse(0.f),
@@ -42,7 +43,15 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
                 Optional.ofNullable(dto.offset()).orElse(new Vector2f(0.f)),
                 Optional.ofNullable(dto.alphaMode()).orElse(AlphaMode.Blend),
                 checkAlphaCutoff(Optional.ofNullable(dto.alphaCutoff()).orElse(DEFAULT_ALPHA_CUTOFF)),
-                Optional.ofNullable(dto.doubleSided()).orElse(true));
+                Optional.ofNullable(dto.doubleSided()).orElse(true),
+                checkWindInfluence(Optional.ofNullable(dto.windInfluence()).orElse(0.f)));
+    }
+
+    private static float checkWindInfluence(final float windInfluence) {
+        if (!(windInfluence >= 0.f && windInfluence <= 1.f))
+            throw new IllegalArgumentException("The wind influence must be from 0 to 1, got " + windInfluence);
+
+        return windInfluence;
     }
 
     /** The cutoff of a material that doesn't set one: the alpha of a pixel is a hole below it */
@@ -53,6 +62,11 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
             throw new IllegalArgumentException("The alpha cutoff must be from 0 to 1, got " + alphaCutoff);
 
         return alphaCutoff;
+    }
+
+    /** Whether the wind sways the surface */
+    public boolean followsWind() {
+        return windInfluence > 0.f;
     }
 
     /** Whether the fragments with a low alpha are discarded and the others are opaque */

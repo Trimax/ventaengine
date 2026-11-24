@@ -14,6 +14,7 @@ import io.github.trimax.venta.engine.binders.EnvironmentBinder;
 import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
+import io.github.trimax.venta.engine.binders.WindBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.ObjectBinder;
 import io.github.trimax.venta.engine.binders.ShadowBinder;
@@ -57,6 +58,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
     private final CameraBinder cameraBinder;
     private final LightBinder lightBinder;
     private final FogBinder fogBinder;
+    private final WindBinder windBinder;
 
     @Override
     protected ObjectRenderContext createContext() {
@@ -87,6 +89,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         textureBinder.bind(program, context.getScene().getSkybox());
         fogBinder.bind(program, context.getScene().getFog());
+        windBinder.bind(program, context.getScene().getWind(), context.getParent().getTime());
 
         render(program, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
 
@@ -180,6 +183,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         textureBinder.bind(program, context.getScene().getSkybox());
         fogBinder.bind(program, context.getScene().getFog());
+        windBinder.bind(program, context.getScene().getWind(), context.getParent().getTime());
     }
 
     private void render(final InstanceBatcher.Batch<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batch) {
@@ -189,6 +193,8 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         objectBinder.bind(program, batch.isLit());
         materialBinder.bind(program, material);
+        windBinder.bind(program, material);
+        windBinder.bind(program, batch.getShape());
 
         context.instanceBuffer.begin();
         context.instanceBuffer.append(batch.getData(), batch.getLength());

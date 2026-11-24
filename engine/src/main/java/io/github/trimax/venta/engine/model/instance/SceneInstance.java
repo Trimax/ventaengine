@@ -3,6 +3,7 @@ package io.github.trimax.venta.engine.model.instance;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.enums.ToneMapping;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
 import lombok.NonNull;
 import org.joml.Vector3fc;
@@ -32,6 +33,9 @@ public interface SceneInstance extends AbstractInstance {
 
     Fog getFog();
 
+    /** The wind that sways the surfaces which follow it, null is a calm */
+    Wind getWind();
+
     /** Multiplies the light of the scene before the tone mapping, 1 keeps it */
     float getExposure();
 
@@ -44,6 +48,8 @@ public interface SceneInstance extends AbstractInstance {
     void setSkybox(final CubemapEntity skybox);
 
     void setFog(final Fog fog);
+
+    void setWind(final Wind wind);
 
     void setExposure(final float exposure);
 

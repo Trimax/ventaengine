@@ -19,6 +19,9 @@ public interface MaterialEntity extends AbstractEntity {
     /** The alpha below which a cutout material has a hole, from 0 to 1 */
     float getAlphaCutoff();
 
+    /** How much the wind of the scene sways the surface: 0 is not at all, 1 is fully (leaves); the surface bends the more the higher it is on its mesh */
+    float getWindInfluence();
+
     /** Whether both sides of a face are drawn; one sided materials are drawn with the faces turned counter-clockwise to the viewer only */
     boolean isDoubleSided();
 

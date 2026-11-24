@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.interfaces.VentaEngineStartupHandler;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
+import io.github.trimax.venta.engine.model.common.shared.Wind;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +29,9 @@ public final class FoliageApplicationStartupHandler implements VentaEngineStartu
         final var scene = context.getSceneManager().getCurrent();
         scene.setAmbientLight(new Vector3f(0.8f));
         scene.setSkybox(context.getCubemapRegistry().get("clouds.json"));
+
+        // The leaves follow the wind (see leaves.json): the cards sway, the trunks and the shadows too
+        scene.setWind(new Wind(1.f, 0.3f, 0.5f, 1.2f));
 
         // The sun is low, so the shadows of the leaves lie long on the ground and show their holes
         final var sun = new DirectionalLight(new Vector3f(1.f, 0.93f, 0.8f), new Vector3f(-0.6f, -0.55f, -0.35f), 1.6f);

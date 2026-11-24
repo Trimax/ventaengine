@@ -8,6 +8,7 @@
   "alphaMode": "cutout",
   "alphaCutoff": 0.5,
   "doubleSided": true,
+  "windInfluence": 1.0,
   "textures": {
     "diffuse": "foliage/leaf.png"
   }

@@ -55,7 +55,7 @@ public final class EngineRenderer {
         environmentRenderer.prepare(sceneManager.getCurrent().getSkybox());
 
         // The shadow maps are drawn first, the scene takes them
-        shadowRenderer.render(sceneManager.getCurrent(), camera, window);
+        shadowRenderer.render(sceneManager.getCurrent(), camera, window, time);
 
         // The scene and the debug overlays (they need the depth of the scene) are rendered in HDR
         postProcessingRenderer.begin(window);
