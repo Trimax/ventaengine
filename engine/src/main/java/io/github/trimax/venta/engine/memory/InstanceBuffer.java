@@ -56,7 +56,9 @@ public final class InstanceBuffer {
         return first;
     }
 
-    /** Uploads everything appended since {@link #begin()}: the previous contents of the buffer are replaced */
+    /**
+     * Uploads everything appended since {@link #begin()}: the previous contents of the buffer are replaced
+     */
     public void upload(@NonNull final Memory memory) {
         if (id == 0)
             id = memory.getBuffers().create("Buffer of the copies of meshes");
@@ -72,7 +74,9 @@ public final class InstanceBuffer {
         staging.clear();
     }
 
-    /** The number of copies that were appended since {@link #begin()} */
+    /**
+     * The number of copies that were appended since {@link #begin()}
+     */
     public int getCount() {
         return staging == null ? 0 : staging.position() / InstanceVertexLayout.getFloatsCount();
     }

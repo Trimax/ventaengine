@@ -219,7 +219,9 @@ public final class ShadowRenderer {
         draw(cutouts, cutoutObjects, cascade, solids.getCopiesCount(), scene, time);
     }
 
-    /** Draws the batches with a program, the first of them starts at {@code first} in the buffer */
+    /**
+     * Draws the batches with a program, the first of them starts at {@code first} in the buffer
+     */
     private void draw(final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batcher,
                       final ProgramEntityImplementation program, final ShadowCascade cascade, final int first,
                       final SceneInstanceImplementation scene, final Engine.VentaTime time) {

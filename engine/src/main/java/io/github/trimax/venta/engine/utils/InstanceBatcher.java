@@ -40,7 +40,9 @@ public final class InstanceBatcher<S, P, M> {
 
     private final Matrix3f normalMatrix = new Matrix3f();
 
-    /** The batches of the frame, valid until the next {@link #clear()}; the list must not be changed */
+    /**
+     * The batches of the frame, valid until the next {@link #clear()}; the list must not be changed
+     */
     public List<Batch<S, P, M>> getBatches() {
         return active;
     }
@@ -104,7 +106,9 @@ public final class InstanceBatcher<S, P, M> {
         /** The number of copies */
         private int count;
 
-        /** The copies: {@link InstanceVertexLayout#getFloatsCount()} floats of every one, the first {@link #getLength()} are used */
+        /**
+         * The copies: {@link InstanceVertexLayout#getFloatsCount()} floats of every one, the first {@link #getLength()} are used
+         */
         private float[] data = new float[INITIAL_CAPACITY * InstanceVertexLayout.getFloatsCount()];
 
         @Getter(AccessLevel.NONE)
@@ -113,7 +117,9 @@ public final class InstanceBatcher<S, P, M> {
         private Batch() {
         }
 
-        /** The number of floats of the copies in {@link #getData()} */
+        /**
+         * The number of floats of the copies in {@link #getData()}
+         */
         public int getLength() {
             return count * InstanceVertexLayout.getFloatsCount();
         }

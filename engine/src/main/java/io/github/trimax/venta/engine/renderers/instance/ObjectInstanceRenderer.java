@@ -96,6 +96,41 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         glUseProgram(0);
     }
 
+    private void render(final ProgramEntityImplementation program,
+                        final MaterialEntityImplementation material,
+                        final Node<MeshReference> node,
+                        final Matrix4f parentMatrix,
+                        final int depth) {
+        if (node == null)
+            return;
+
+        final Matrix4f localMatrix = matrixCache.get(depth).set(parentMatrix);
+        if (node.hasValue()) {
+            final var reference = node.value();
+            if (reference.hasTransform())
+                localMatrix.mul(node.value().transform().getMatrix());
+
+            render(program, material, reference, localMatrix);
+        }
+
+        if (node.hasChildren())
+            for (final Node<MeshReference> child : node.children())
+                render(program, material, child, localMatrix, depth + 1);
+    }
+
+    private void render(final ProgramEntityImplementation program,
+                        final MaterialEntityImplementation material,
+                        final MeshReference reference,
+                        final Matrix4f modelMatrix) {
+        if (reference.hasMesh())
+            try (var _ = meshRenderer.withContext(getContext())
+                    .withMaterial(reference.hasMaterial() ? reference.material() : material)
+                    .withModelMatrix(modelMatrix)
+                    .withProgram(program)) {
+                meshRenderer.render(reference.mesh());
+            }
+    }
+
     /**
      * Whether the object is drawn together with the copies of the same meshes by {@link #renderBatched}. Only the solid
      * objects (opaque and cutout surfaces, see {@link ObjectInstanceImplementation#isSolid()}) are: they are drawn before
@@ -132,7 +167,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
                     bindFrame(active);
                 }
 
-                render(batch);
+                drawBatch(batch);
             }
         } finally {
             context.batcher.clear();
@@ -140,7 +175,9 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         }
     }
 
-    /** Collects the copies of the meshes of an object: the same walk over its hierarchy as {@link #render(ProgramEntityImplementation, MaterialEntityImplementation, Node, Matrix4f, int)} */
+    /**
+     * Collects the copies of the meshes of an object: the same walk over its hierarchy as {@link #render(ProgramEntityImplementation, MaterialEntityImplementation, Node, Matrix4f, int)}
+     */
     private void collect(final ProgramEntityImplementation program,
                          final ObjectInstanceImplementation object,
                          final MaterialEntityImplementation material,
@@ -187,7 +224,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         windBinder.bind(program, context.getScene().getWind(), context.getParent().getTime());
     }
 
-    private void render(final InstanceBatcher.Batch<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batch) {
+    private void drawBatch(final InstanceBatcher.Batch<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batch) {
         final var context = getContext();
         final var program = batch.getProgram();
         final var material = batch.getMaterial();
@@ -210,41 +247,6 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         if (oneSided)
             glDisable(GL_CULL_FACE);
-    }
-
-    private void render(final ProgramEntityImplementation program,
-                        final MaterialEntityImplementation material,
-                        final Node<MeshReference> node,
-                        final Matrix4f parentMatrix,
-                        final int depth) {
-        if (node == null)
-            return;
-
-        final Matrix4f localMatrix = matrixCache.get(depth).set(parentMatrix);
-        if (node.hasValue()) {
-            final var reference = node.value();
-            if (reference.hasTransform())
-                localMatrix.mul(node.value().transform().getMatrix());
-
-            render(program, material, reference, localMatrix);
-        }
-
-        if (node.hasChildren())
-            for (final Node<MeshReference> child : node.children())
-                render(program, material, child, localMatrix, depth + 1);
-    }
-
-    private void render(final ProgramEntityImplementation program,
-                        final MaterialEntityImplementation material,
-                        final MeshReference reference,
-                        final Matrix4f modelMatrix) {
-        if (reference.hasMesh())
-            try (var _ = meshRenderer.withContext(getContext())
-                    .withMaterial(reference.hasMaterial() ? reference.material() : material)
-                    .withModelMatrix(modelMatrix)
-                    .withProgram(program)) {
-                meshRenderer.render(reference.mesh());
-            }
     }
 
     /**
