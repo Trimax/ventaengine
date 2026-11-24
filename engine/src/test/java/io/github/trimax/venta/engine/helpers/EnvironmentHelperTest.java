@@ -43,6 +43,10 @@ final class EnvironmentHelperTest {
 
     @AfterAll
     static void deleteEverything() {
+        // Without an OpenGL context the tests are skipped before anything is made (the build of a release has no display)
+        if (generator == null)
+            return;
+
         generator.releaseBrdf(brdf);
 
         PROGRAMS.values().forEach(program -> glDeleteProgram(program));
