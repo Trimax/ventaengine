@@ -23,7 +23,7 @@ between minor versions. Known issues and planned work are listed in [ROADMAP.md]
 | ![Textured chest](examples/screenshots/textured-chest.jpg)<br>OBJ model with textures | ![Maze](examples/screenshots/maze.jpg)<br>Maze | ![Terrain](examples/screenshots/terrain.jpg)<br>Terrain with biomes, normal maps and lighting |
 | ![Point light](examples/screenshots/point-light.jpg)<br>Colored point lights | ![Colored cube](examples/screenshots/colored-cube.jpg)<br>Material color and textures | ![Emitter](examples/screenshots/emitter.jpg)<br>Particle emitters |
 | ![Reflection](examples/screenshots/reflection.jpg)<br>Skybox reflections | ![Fog](examples/screenshots/fog.jpg)<br>Fog | ![Moveable light](examples/screenshots/moveable-light.jpg)<br>Moving light |
-| ![Shadows](examples/screenshots/shadow.jpg)<br>Cascaded shadows of the sun | ![Foliage](examples/screenshots/foliage.jpg)<br>Cutout leaves and fence, glass | |
+| ![Shadows](examples/screenshots/shadow.jpg)<br>Cascaded shadows of the sun | ![Foliage](examples/screenshots/foliage.jpg)<br>Cutout leaves and fence, glass | ![Bloom](examples/screenshots/bloom.jpg)<br>Bloom and the disc of the sun |
 
 More screenshots can be produced by running the [examples](#examples).
 
