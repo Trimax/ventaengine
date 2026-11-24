@@ -23,7 +23,7 @@ between minor versions. Known issues and planned work are listed in [ROADMAP.md]
 | ![Textured chest](examples/screenshots/textured-chest.jpg)<br>OBJ model with textures | ![Maze](examples/screenshots/maze.jpg)<br>Maze | ![Terrain](examples/screenshots/terrain.jpg)<br>Terrain with biomes, normal maps and lighting |
 | ![Point light](examples/screenshots/point-light.jpg)<br>Colored point lights | ![Colored cube](examples/screenshots/colored-cube.jpg)<br>Material color and textures | ![Emitter](examples/screenshots/emitter.jpg)<br>Particle emitters |
 | ![Reflection](examples/screenshots/reflection.jpg)<br>Skybox reflections | ![Fog](examples/screenshots/fog.jpg)<br>Fog | ![Moveable light](examples/screenshots/moveable-light.jpg)<br>Moving light |
-| ![Shadows](examples/screenshots/shadow.jpg)<br>Cascaded shadows of the sun | ![Foliage](examples/screenshots/foliage.jpg)<br>Cutout leaves and fence, glass | |
+| ![Shadows](examples/screenshots/shadow.jpg)<br>Cascaded shadows of the sun | ![Foliage](examples/screenshots/foliage.jpg)<br>Cutout leaves and fence, glass | ![Bloom](examples/screenshots/bloom.jpg)<br>Bloom and the disc of the sun |
 
 More screenshots can be produced by running the [examples](#examples).
 
@@ -32,6 +32,7 @@ More screenshots can be produced by running the [examples](#examples).
 * **HDR** — the scene is lit in linear colors (textures and colors of the definitions are sRGB) and rendered into a floating point framebuffer, then tone mapped (`Neutral` by default, `ACES` or `None`) with an exposure per scene (`"exposure"`, `"toneMapping"` in the scene file)
 * **Scenes** — scenes described in JSON or built in code, switching between scenes, ambient and directional light, fog, skybox
 * **Objects** — meshes from JSON and Wavefront OBJ files, hierarchical objects (a model made of nodes with their own transformations); an OBJ model without a material of its own is split into its groups with the materials of its MTL file
+* **Bloom** — the bright parts of the HDR image glow: they are blurred over up to six scales (a chain of reductions and enlargements with a soft threshold, the sparks are tamed) and added back before the exposure. `"bloom"` in the scene file (`intensity`, `threshold`, `softKnee`), off without it. The sun can be drawn as a disc in the sky that is far brighter than the sky (`"discSize"`, the radius in degrees, and `"discIntensity"` in the `directionalLight`), so it glows with the bloom
 * **Levels of detail** — an object can have simpler models (`"lods"` in the object file: `"screenSize"`, the share of the screen height below which a level is drawn, and the `"root"` of the model); the level follows the size of the object on the screen, with a hysteresis, and a change of the level is a cross fade (dithered). The last level can be a card with a picture of the object that is turned to the camera (`"facing": true`, a quad in the plane of x and y with a cutout material). Objects with levels are drawn with instancing (cutout and opaque surfaces, default shader); the others take the main model
 * **Materials** — color, tiling, offset, metalness and roughness, and diffuse, normal, height (parallax), roughness,
   metalness and ambient occlusion maps; surfaces are shaded physically (Cook-Torrance with GGX, Smith and Schlick)

@@ -21,6 +21,11 @@ in vec2 vertexTextureCoordinates;
 /* The scene in linear HDR colors */
 uniform sampler2D textureScene;
 
+/* The glow of the bright parts, added to the scene before the exposure */
+uniform sampler2D textureBloom;
+uniform float bloomIntensity;
+uniform int useBloom;
+
 /* Multiplies the light before the tone mapping, 1 keeps it */
 uniform float exposure;
 
@@ -45,7 +50,11 @@ vec3 toneMap(vec3 color) {
 }
 
 void main() {
-    vec3 color = texture(textureScene, vertexTextureCoordinates).rgb * exposure;
+    vec3 color = texture(textureScene, vertexTextureCoordinates).rgb;
+    if (useBloom != 0)
+        color += texture(textureBloom, vertexTextureCoordinates).rgb * bloomIntensity;
+
+    color *= exposure;
 
     outputColor = vec4(toSRGB(toneMap(max(color, vec3(0.0)))), 1.0);
 }

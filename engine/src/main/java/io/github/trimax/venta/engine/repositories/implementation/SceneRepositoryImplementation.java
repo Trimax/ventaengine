@@ -15,6 +15,7 @@ import io.github.trimax.venta.engine.model.common.scene.SceneTerrainSurface;
 import io.github.trimax.venta.engine.model.common.scene.SceneWaterSurface;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
+import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
@@ -74,6 +75,7 @@ public final class SceneRepositoryImplementation
                 Optional.ofNullable(sceneDTO.ambientLight()).map(ColorDTO::toVector3f).orElse(new Vector3f(DefinitionsCommon.VECTOR3F_ONE)),
                 Optional.ofNullable(sceneDTO.fog()).map(Fog::new).orElse(null),
                 Optional.ofNullable(sceneDTO.wind()).map(Wind::new).orElse(null),
+                Optional.ofNullable(sceneDTO.bloom()).map(Bloom::new).orElse(null),
                 sceneDTO.exposure(),
                 sceneDTO.toneMapping());
     }

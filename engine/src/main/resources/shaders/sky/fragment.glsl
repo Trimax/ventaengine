@@ -10,6 +10,12 @@ in vec3 vertexPosition;
 /* Skybox texture */
 uniform samplerCube textureSkybox;
 
+/* The disc of the sun: the direction to the sun, its color (the light times how much brighter the disc is) and the cosines of its radius and of the radius where the edge starts */
+uniform int useSunDisc;
+uniform vec3 sunDirection;
+uniform vec3 sunColor;
+uniform vec2 sunSize;
+
 /* Output color */
 out vec4 outputColor;
 
@@ -28,8 +34,18 @@ float getSkyFogFactor(vec3 direction) {
     return getFogFactor((fog.height - cameraPosition.y) / max(direction.y, 0.0001));
 }
 
+/* The disc of the sun is far brighter than the sky: in HDR it glows with the bloom */
+vec3 getSunDisc(vec3 direction) {
+    if (!isSet(useSunDisc))
+        return vec3(0.0);
+
+    return sunColor * smoothstep(sunSize.x, sunSize.y, dot(direction, sunDirection));
+}
+
 void main() {
     vec4 color = texture(textureSkybox, vertexPosition);
+    color.rgb += getSunDisc(normalize(vertexPosition));
+
     if (!isSet(useFog)) {
         outputColor = color;
         return;
