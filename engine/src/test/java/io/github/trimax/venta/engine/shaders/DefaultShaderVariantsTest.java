@@ -3,6 +3,8 @@ package io.github.trimax.venta.engine.shaders;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayDeque;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
@@ -14,28 +16,24 @@ import org.junit.jupiter.api.Test;
 final class DefaultShaderVariantsTest {
     private static final Pattern DISCARD = Pattern.compile("^\\s*discard\\s*;", Pattern.MULTILINE);
 
+    /** The conditions of the variants: a discard is compiled in when the code defines the macro of the condition it is in */
+    private static final List<String> VARIANT_MACROS = List.of("ALPHA_CUTOUT", "LOD_FADE");
+
     /** Whether a discard statement is compiled in: the lines that are cut away by the conditions are not counted */
     private static boolean discards(final String code) {
-        final var defines = code.contains("#define ALPHA_CUTOUT");
-
+        // The conditions that are not about a variant are taken as true, the ones about a variant when the macro is defined
+        final var skipped = new ArrayDeque<Boolean>();
         var active = true;
-        var depth = 0;
-        var skippedFrom = -1;
         for (final var line : code.split("\n")) {
             final var trimmed = line.trim();
-            if (trimmed.startsWith("#ifdef ALPHA_CUTOUT")) {
-                depth++;
-                if (!defines && active) {
-                    active = false;
-                    skippedFrom = depth;
-                }
+            if (trimmed.startsWith("#ifdef ")) {
+                final var macro = trimmed.substring("#ifdef ".length()).trim();
+                skipped.push(active);
+                active = active && (!VARIANT_MACROS.contains(macro) || code.contains("#define " + macro));
             } else if (trimmed.startsWith("#if")) {
-                depth++;
+                skipped.push(active);
             } else if (trimmed.startsWith("#endif")) {
-                if (!active && depth == skippedFrom)
-                    active = true;
-
-                depth--;
+                active = skipped.pop();
             } else if (active && DISCARD.matcher(line).find())
                 return true;
         }
@@ -114,5 +112,47 @@ final class DefaultShaderVariantsTest {
             assertTrue(code.contains("uniform int useAlphaOpaque;"), shader + " knows whether the surface is opaque");
             assertTrue(code.contains("colorWithoutEffects.a = 1.0;"), shader + " drops the alpha of an opaque surface");
         }
+    }
+
+    @Test
+    void testOnlyTheVariantsThatNeedItDiscard() {
+        assertFalse(discards(ShaderResources.expand("default/fragment.glsl").code()));
+        assertTrue(discards(ShaderResources.expand("default/fragment-cutout.glsl").code()));
+        assertTrue(discards(ShaderResources.expand("default/fragment-fade.glsl").code()), "The pixels of the other level are discarded");
+        assertTrue(discards(ShaderResources.expand("default/fragment-cutout-fade.glsl").code()));
+    }
+
+    @Test
+    void testFadeVariantsDefineTheFadeBeforeTheSharedCode() {
+        for (final var shader : new String[]{"default/fragment-fade.glsl", "default/fragment-cutout-fade.glsl"}) {
+            final var code = ShaderResources.expand(shader).code();
+
+            assertTrue(code.indexOf("#define LOD_FADE") < code.indexOf("#ifdef LOD_FADE"), shader + ": the condition must see the definition");
+            assertTrue(code.contains("flat in float vertexFade;"), shader + " takes the fade of the copy from the vertex shader");
+            assertTrue(code.startsWith("#version 330 core"));
+        }
+
+        assertTrue(ShaderResources.expand("default/fragment-cutout-fade.glsl").code().contains("#define ALPHA_CUTOUT"), "The holes are cut as well");
+        assertFalse(ShaderResources.expand("default/fragment-fade.glsl").code().contains("#define ALPHA_CUTOUT"));
+    }
+
+    @Test
+    void testCardsAreTurnedToTheCameraByTheirOwnVariant() {
+        final var card = ShaderResources.expand("default/vertex-instanced-facing.glsl").code();
+
+        assertTrue(card.contains("#define FACING") && card.contains("#define INSTANCED"));
+        assertTrue(card.indexOf("#define FACING") < card.indexOf("#ifdef FACING"), "The condition must see the definition");
+
+        for (final var shader : new String[]{"default/vertex.glsl", "default/vertex-instanced.glsl"})
+            assertFalse(ShaderResources.expand(shader).code().contains("#define FACING"), shader + " draws models");
+    }
+
+    @Test
+    void testInstancedShadersTakeTheFadeOfTheCopyFromTheAttributes() {
+        for (final var shader : new String[]{"default/vertex-instanced.glsl", "default/vertex-instanced-facing.glsl"})
+            assertTrue(ShaderResources.expand(shader).code().contains("layout(location = 13) in float instanceFade"), shader);
+
+        // The text of the file has the attribute for the variants that define INSTANCED: a single object doesn't
+        assertFalse(ShaderResources.expand("default/vertex.glsl").code().contains("#define INSTANCED"), "A single object has no fade");
     }
 }

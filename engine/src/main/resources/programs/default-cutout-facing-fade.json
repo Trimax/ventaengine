@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "default/vertex-instanced-facing.glsl",
+  "shaderFragment": "default/fragment-cutout-fade.glsl"
+}

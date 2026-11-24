@@ -1,13 +1,16 @@
 /*
- * The fragment shader of the objects: the physically based shading of a surface by its material. It has two variants,
- * both are made of this file: default/fragment.glsl and default/fragment-cutout.glsl, which defines ALPHA_CUTOUT and
- * cuts the holes of the cutout materials.
+ * The fragment shader of the objects: the physically based shading of a surface by its material. It has four variants,
+ * all are made of this file: default/fragment.glsl, default/fragment-cutout.glsl, which defines ALPHA_CUTOUT and cuts the
+ * holes of the cutout materials, and the two with the cross fade of the levels of detail (default/fragment-fade.glsl and
+ * default/fragment-cutout-fade.glsl), which define LOD_FADE and discard the pixels that don't belong to the level.
+ * A shader that can discard loses the early depth test, so the variants with a discard are used only when they are needed.
  */
 
 #include "common/environment.glsl"
 #include "common/flags.glsl"
 #include "common/fog.glsl"
 #include "common/lights.glsl"
+#include "common/lod.glsl"
 #include "common/pbr.glsl"
 #include "common/shadow.glsl"
 
@@ -54,6 +57,9 @@ uniform int useTextureAmbientOcclusion;
 uniform int useLighting;
 uniform int useMaterial;
 uniform int useAlphaOpaque;
+#ifdef LOD_FADE
+flat in float vertexFade;
+#endif
 #ifdef ALPHA_CUTOUT
 uniform int useAlphaCutout;
 #endif
@@ -212,6 +218,12 @@ vec4 applyFog(vec4 color) {
 }
 
 void main() {
+#ifdef LOD_FADE
+    // A level of detail that fades in or out: the dither of its fade decides which pixels it has
+    if (!lodVisible(vertexFade, gl_FragCoord.xy))
+        discard;
+#endif
+
     vec2 textureCoordinates = getTextureCoordinates();
 
     vec4 colorWithoutEffects = vertexColor * getDiffuseColor(textureCoordinates) * getMaterialColor();

@@ -32,6 +32,7 @@ More screenshots can be produced by running the [examples](#examples).
 * **HDR** — the scene is lit in linear colors (textures and colors of the definitions are sRGB) and rendered into a floating point framebuffer, then tone mapped (`Neutral` by default, `ACES` or `None`) with an exposure per scene (`"exposure"`, `"toneMapping"` in the scene file)
 * **Scenes** — scenes described in JSON or built in code, switching between scenes, ambient and directional light, fog, skybox
 * **Objects** — meshes from JSON and Wavefront OBJ files, hierarchical objects (a model made of nodes with their own transformations); an OBJ model without a material of its own is split into its groups with the materials of its MTL file
+* **Levels of detail** — an object can have simpler models (`"lods"` in the object file: `"screenSize"`, the share of the screen height below which a level is drawn, and the `"root"` of the model); the level follows the size of the object on the screen, with a hysteresis, and a change of the level is a cross fade (dithered). The last level can be a card with a picture of the object that is turned to the camera (`"facing": true`, a quad in the plane of x and y with a cutout material). Objects with levels are drawn with instancing (cutout and opaque surfaces, default shader); the others take the main model
 * **Materials** — color, tiling, offset, metalness and roughness, and diffuse, normal, height (parallax), roughness,
   metalness and ambient occlusion maps; surfaces are shaded physically (Cook-Torrance with GGX, Smith and Schlick)
 * **Alpha** — a material mixes colors by its alpha (`"alphaMode": "blend"`, the default; such objects are drawn from the farthest to the nearest) or cuts holes (`"alphaMode": "cutout"`, `"alphaCutoff"`): leaves, grass and fences need no sorting and cast shadows with holes, or ignores the alpha (`"alphaMode": "opaque"`): buildings, rocks and trunks need no sorting either, and objects of cutout and opaque surfaces are drawn with instancing; `"doubleSided": false` draws only the front faces
@@ -208,6 +209,7 @@ Every example is a separate application in `examples` (`io.github.trimax.example
 | `material.texture.TexturedChestVentaApplication`, `material.color.ColoredCubeVentaApplication` | Materials and textures |
 | `light.point`, `light.ambient`, `light.dynamic`, `light.moveable` | Point, ambient and moving lights |
 | `shadow.ShadowVentaApplication` | Shadows of the sun: cubes and tetrahedrons on a plane under a low sun |
+| `lod.LodVentaApplication` | Levels of detail: hundreds of spheres in rows with four levels each (the color tells the level) and cards with a picture, the camera flies along the rows and the log counts the spheres by level |
 | `foliage.FoliageVentaApplication` | Cutout materials: trees made of cards of leaves, a chain link fence and panes of glass, with shadows |
 | `skybox.SkyboxVentaApplication`, `reflection.ReflectionVentaApplication` | Skybox and reflections |
 | `fog.FogVentaApplication`, `transparency.TransparencyVentaApplication` | Fog and transparency |

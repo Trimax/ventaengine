@@ -5,6 +5,7 @@ import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.GizmoType;
 import io.github.trimax.venta.engine.exceptions.UnknownInstanceException;
 import io.github.trimax.venta.engine.managers.ObjectManager;
+import io.github.trimax.venta.engine.model.common.hierarchy.LodLevel;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
@@ -39,7 +40,12 @@ public final class ObjectManagerImplementation
 
     private ObjectInstance create(final String name, final ObjectPrefabImplementation prefab) {
         return store(abettor.createObject(name, prefab.getProgram(), prefab.getMaterial(),
-                createHierarchy(prefab.getRoot()), gizmoManager.create("Bounding box", GizmoType.Object)));
+                createHierarchy(prefab.getRoot()), StreamEx.of(prefab.getLods()).map(this::createLevel).toList(),
+                gizmoManager.create("Bounding box", GizmoType.Object)));
+    }
+
+    private LodLevel createLevel(final LodLevel level) {
+        return new LodLevel(createHierarchy(level.root()), level.screenSize(), level.facing());
     }
 
     private Node<MeshReference> createHierarchy(final Node<MeshReference> node) {

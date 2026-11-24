@@ -16,7 +16,14 @@ public enum InstanceVertexLayout implements AbstractVertexLayout {
     MatrixModel(6, 16, 4),
 
     /** The normal matrix: a `mat3` takes three locations of three floats */
-    MatrixNormal(10, 9, 3);
+    MatrixNormal(10, 9, 3),
+
+    /**
+     * How far the copy fades in or out while a level of detail replaces another: 1 is a copy that is drawn whole, 0 to 1 is
+     * a level that fades in (the dither lets this share of the pixels through), 0 to -1 is a level that fades out (the share
+     * of the pixels is the absolute value, the dither is the opposite of the one that fades in)
+     */
+    Fade(13, 1, 1);
 
     private final int locationID;
     private final int size;

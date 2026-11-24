@@ -6,6 +6,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
+import io.github.trimax.venta.engine.model.common.hierarchy.LodLevel;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.scene.*;
 import io.github.trimax.venta.engine.model.common.shared.*;
@@ -53,8 +54,9 @@ public final class Abettor {
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
                                                    final MaterialEntityImplementation material,
-                                                   final Node<MeshReference> root) {
-        return new ObjectPrefabImplementation(program, material, root);
+                                                   final Node<MeshReference> root,
+                                                   @NonNull final List<LodLevel> lods) {
+        return new ObjectPrefabImplementation(program, material, root, lods);
     }
 
     public EmitterPrefabImplementation createEmitter(@NonNull final TextureEntityImplementation texture,

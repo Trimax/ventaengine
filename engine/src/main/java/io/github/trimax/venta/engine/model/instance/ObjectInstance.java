@@ -19,6 +19,12 @@ public interface ObjectInstance extends AbstractInstance {
 
     boolean hasProgram();
 
+    /** The level of detail that is drawn: 0 is the main model, the greater the level the simpler the model */
+    int getLod();
+
+    /** The number of the levels of detail including the main model */
+    int getLodCount();
+
     DrawMode getDrawMode();
 
     ProgramEntity getProgram();

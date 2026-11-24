@@ -91,7 +91,8 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         fogBinder.bind(program, context.getScene().getFog());
         windBinder.bind(program, context.getScene().getWind(), context.getParent().getTime());
 
-        render(program, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
+        // What is not batched is not drawn with the cross fade of the levels of detail nor as a card: it takes the model of the level
+        render(program, object.getMaterial(), object.getMesh(object.getModelLod()), object.getTransform().getMatrix(), 0);
 
         glUseProgram(0);
     }
@@ -152,27 +153,45 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
-        final var programs = getPrograms();
         for (final var object : objects)
             if (object.isVisible() && isBatchable(object) && context.getParent().isInView(object, context.getScene().getWind()))
-                collect(object.hasCutout() ? programs.instancedCutoutProgram : programs.instancedProgram, object, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
+                collectLevels(object);
 
         try {
             glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
 
             ProgramEntityImplementation active = null;
             for (final var batch : context.batcher.getBatches()) {
-                if (batch.getProgram() != active) {
-                    active = batch.getProgram();
+                // A batch with a copy that fades is drawn with the shader that dithers it, the others keep the early depth test
+                final var program = batch.isFading() ? getFadingVariant(batch.getProgram()) : batch.getProgram();
+                if (program != active) {
+                    active = program;
                     bindFrame(active);
                 }
 
-                drawBatch(batch);
+                drawBatch(batch, program);
             }
         } finally {
             context.batcher.clear();
             glUseProgram(0);
         }
+    }
+
+    /**
+     * Collects the copies of the level of an object that is drawn, and of the level that is fading out while it is replaced:
+     * the first fades in and the second fades out, the dithers are opposite, so every pixel has one of them.
+     */
+    private void collectLevels(final ObjectInstanceImplementation object) {
+        final var level = object.getLod();
+        final var previous = object.getPreviousLod();
+
+        collect(object, level, previous < 0 ? 1.f : object.getLodBlend());
+        if (previous >= 0)
+            collect(object, previous, -(1.f - object.getLodBlend()));
+    }
+
+    private void collect(final ObjectInstanceImplementation object, final int level, final float fade) {
+        collect(getInstancedProgram(object, level), object, object.getMaterial(), object.getMesh(level), object.getTransform().getMatrix(), 0, fade);
     }
 
     /**
@@ -183,7 +202,8 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
                          final MaterialEntityImplementation material,
                          final Node<MeshReference> node,
                          final Matrix4f parentMatrix,
-                         final int depth) {
+                         final int depth,
+                         final float fade) {
         if (node == null)
             return;
 
@@ -195,12 +215,12 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
             if (reference.hasMesh())
                 getContext().batcher.add(reference.mesh(), program, reference.hasMaterial() ? reference.material() : material,
-                        object.isLit(), localMatrix);
+                        object.isLit(), localMatrix, fade);
         }
 
         if (node.hasChildren())
             for (final Node<MeshReference> child : node.children())
-                collect(program, object, material, child, localMatrix, depth + 1);
+                collect(program, object, material, child, localMatrix, depth + 1, fade);
     }
 
     /** What the program of the batches takes from the frame: the camera, the lights, the sky and the fog */
@@ -224,9 +244,9 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         windBinder.bind(program, context.getScene().getWind(), context.getParent().getTime());
     }
 
-    private void drawBatch(final InstanceBatcher.Batch<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batch) {
+    private void drawBatch(final InstanceBatcher.Batch<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batch,
+                           final ProgramEntityImplementation program) {
         final var context = getContext();
-        final var program = batch.getProgram();
         final var material = batch.getMaterial();
 
         objectBinder.bind(program, batch.isLit());
@@ -250,6 +270,27 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
     }
 
     /**
+     * The program that draws a level of an object with instancing: a card is drawn with the shader that turns it to the
+     * camera, a model with holes with the shader that cuts them and the others with the shader that keeps the early depth test.
+     */
+    private ProgramEntityImplementation getInstancedProgram(final ObjectInstanceImplementation object, final int level) {
+        final var programs = getPrograms();
+        if (object.isFacing(level))
+            return programs.facingProgram;
+
+        return object.hasCutout(level) ? programs.instancedCutoutProgram : programs.instancedProgram;
+    }
+
+    /** The variant of a program that dithers the copies that fade */
+    private ProgramEntityImplementation getFadingVariant(final ProgramEntityImplementation program) {
+        final var programs = getPrograms();
+        if (program == programs.facingProgram)
+            return programs.facingFadeProgram;
+
+        return program == programs.instancedCutoutProgram ? programs.instancedCutoutFadeProgram : programs.instancedFadeProgram;
+    }
+
+    /**
      * The program of an object. The shader of the objects has a variant with the holes of cutout surfaces: it is used only
      * for the objects that have such a surface, because a shader that can discard fragments loses the early depth test.
      */
@@ -269,6 +310,10 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
             context.cutoutProgram = programRegistry.get(ProgramType.DefaultCutout.getProgramName());
             context.instancedCutoutProgram = programRegistry.get(ProgramType.DefaultCutoutInstanced.getProgramName());
             context.instancedProgram = programRegistry.get(ProgramType.DefaultInstanced.getProgramName());
+            context.instancedFadeProgram = programRegistry.get(ProgramType.DefaultInstancedFade.getProgramName());
+            context.instancedCutoutFadeProgram = programRegistry.get(ProgramType.DefaultCutoutInstancedFade.getProgramName());
+            context.facingProgram = programRegistry.get(ProgramType.DefaultCutoutFacing.getProgramName());
+            context.facingFadeProgram = programRegistry.get(ProgramType.DefaultCutoutFacingFade.getProgramName());
         }
 
         return context;
@@ -284,6 +329,10 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         private ProgramEntityImplementation cutoutProgram;
         private ProgramEntityImplementation instancedCutoutProgram;
         private ProgramEntityImplementation instancedProgram;
+        private ProgramEntityImplementation instancedFadeProgram;
+        private ProgramEntityImplementation instancedCutoutFadeProgram;
+        private ProgramEntityImplementation facingProgram;
+        private ProgramEntityImplementation facingFadeProgram;
 
         /** The copies of the meshes of a frame, they are drawn in batches */
         private final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> batcher = new InstanceBatcher<>();

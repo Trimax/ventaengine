@@ -126,4 +126,40 @@ final class InstanceBatcherTest {
         assertThrows(NullPointerException.class, () -> batcher.add(null, "program", "material", true, new Matrix4f()));
         assertThrows(NullPointerException.class, () -> batcher.add("tree", "program", "material", true, null));
     }
+
+    @Test
+    void testCopiesAreWholeUnlessTheyFade() {
+        batcher.add("tree", "program", "material", true, new Matrix4f());
+
+        final var batch = batcher.getBatches().getFirst();
+        final var fade = InstanceVertexLayout.MatrixModel.getSize() + InstanceVertexLayout.MatrixNormal.getSize();
+        assertEquals(1.f, batch.getData()[fade], "A copy is drawn whole by default");
+        assertFalse(batch.isFading());
+    }
+
+    @Test
+    void testFadingCopyMakesTheBatchFadingAndKeepsItsFade() {
+        final var fade = InstanceVertexLayout.MatrixModel.getSize() + InstanceVertexLayout.MatrixNormal.getSize();
+        batcher.add("tree", "program", "material", true, new Matrix4f());
+        batcher.add("tree", "program", "material", true, new Matrix4f(), 0.25f);
+        batcher.add("tree", "program", "material", true, new Matrix4f(), -0.75f);
+
+        final var batch = batcher.getBatches().getFirst();
+        assertEquals(3, batch.getCount());
+        assertTrue(batch.isFading(), "One copy that fades makes the batch need the shader with the dither");
+        assertEquals(1.f, batch.getData()[fade]);
+        assertEquals(0.25f, batch.getData()[FLOATS + fade], "The fade that comes in");
+        assertEquals(-0.75f, batch.getData()[2 * FLOATS + fade], "The fade that goes out");
+    }
+
+    @Test
+    void testBatchIsNotFadingInTheNextFrame() {
+        batcher.add("tree", "program", "material", true, new Matrix4f(), 0.5f);
+        batcher.clear();
+
+        batcher.add("tree", "program", "material", true, new Matrix4f());
+
+        assertFalse(batcher.getBatches().getFirst().isFading());
+    }
+
 }

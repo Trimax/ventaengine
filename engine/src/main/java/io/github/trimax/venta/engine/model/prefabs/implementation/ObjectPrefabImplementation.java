@@ -1,6 +1,9 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
+import java.util.List;
+
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.model.common.hierarchy.LodLevel;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
@@ -20,4 +23,8 @@ public class ObjectPrefabImplementation extends AbstractPrefabImplementation imp
 
     @NonNull
     Node<MeshReference> root;
+
+    /** The simpler models of the object from the nearest to the farthest, the root is the level 0 */
+    @NonNull
+    List<LodLevel> lods;
 }

@@ -1,0 +1,111 @@
+{
+  "program": "default.json",
+  "root": {
+    "name": "sphere",
+    "value": {
+      "mesh": "lod/sphere-0.obj",
+      "material": "lod/level-0.json",
+      "transform": {
+        "position": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      }
+    }
+  },
+  "lods": [
+    {
+      "screenSize": 0.12,
+      "root": {
+        "name": "sphere",
+        "value": {
+          "mesh": "lod/sphere-1.obj",
+          "material": "lod/level-1.json",
+          "transform": {
+            "position": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "screenSize": 0.05,
+      "root": {
+        "name": "sphere",
+        "value": {
+          "mesh": "lod/sphere-2.obj",
+          "material": "lod/level-2.json",
+          "transform": {
+            "position": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "screenSize": 0.02,
+      "facing": true,
+      "root": {
+        "name": "sphere",
+        "value": {
+          "mesh": "lod/quad.obj",
+          "material": "lod/card.json",
+          "transform": {
+            "position": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
+          }
+        }
+      }
+    }
+  ]
+}
