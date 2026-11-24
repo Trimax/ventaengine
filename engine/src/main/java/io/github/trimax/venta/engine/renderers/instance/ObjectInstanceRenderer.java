@@ -97,12 +97,13 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
     }
 
     /**
-     * Whether the object is drawn together with the copies of the same meshes by {@link #renderBatched}. Only the objects
-     * with a cutout surface are: they are drawn before the rest in any order, so their order doesn't matter, and the
-     * objects that mix colors must keep the order from the farthest to the nearest.
+     * Whether the object is drawn together with the copies of the same meshes by {@link #renderBatched}. Only the solid
+     * objects (opaque and cutout surfaces, see {@link ObjectInstanceImplementation#isSolid()}) are: they are drawn before
+     * the rest in any order, so their order doesn't matter, and the objects that mix colors must keep the order from the
+     * farthest to the nearest.
      */
     public boolean isBatchable(final ObjectInstanceImplementation object) {
-        return object.hasCutout() && object.getDrawMode() == DrawMode.Polygon && object.getProgram() == getPrograms().plainProgram;
+        return object.isSolid() && object.getDrawMode() == DrawMode.Polygon && object.getProgram() == getPrograms().plainProgram;
     }
 
     /**
@@ -119,7 +120,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         final var programs = getPrograms();
         for (final var object : objects)
             if (object.isVisible() && isBatchable(object))
-                collect(programs.instancedProgram, object, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
+                collect(object.hasCutout() ? programs.instancedCutoutProgram : programs.instancedProgram, object, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
 
         try {
             glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
@@ -264,7 +265,8 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         if (context.cutoutProgram == null) {
             context.plainProgram = programRegistry.get(ProgramType.Default.getProgramName());
             context.cutoutProgram = programRegistry.get(ProgramType.DefaultCutout.getProgramName());
-            context.instancedProgram = programRegistry.get(ProgramType.DefaultCutoutInstanced.getProgramName());
+            context.instancedCutoutProgram = programRegistry.get(ProgramType.DefaultCutoutInstanced.getProgramName());
+            context.instancedProgram = programRegistry.get(ProgramType.DefaultInstanced.getProgramName());
         }
 
         return context;
@@ -278,6 +280,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         /** The shader of the objects and its variants: with the holes, and with the holes for many copies of a mesh */
         private ProgramEntityImplementation plainProgram;
         private ProgramEntityImplementation cutoutProgram;
+        private ProgramEntityImplementation instancedCutoutProgram;
         private ProgramEntityImplementation instancedProgram;
 
         /** The copies of the meshes of a frame, they are drawn in batches */

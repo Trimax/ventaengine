@@ -28,6 +28,9 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     /** Whether a surface of the object is cutout, null until it is asked: only a new material of the object changes it */
     private Boolean cutout;
 
+    /** Whether no surface of the object mixes colors, null until it is asked: only a new material of the object changes it */
+    private Boolean solid;
+
     private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
     private boolean isLit = true;
@@ -51,6 +54,36 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
             cutout = (material != null && material.isCutout()) || hasCutout(mesh);
 
         return cutout;
+    }
+
+    /**
+     * Whether the object has no partly transparent fragments: every surface of it is opaque or cutout, or it has a cutout
+     * surface (the other surfaces of such an object are drawn without sorting as well). Such an object is drawn before the
+     * objects that mix colors, in any order, and can be drawn with instancing.
+     */
+    public boolean isSolid() {
+        if (solid == null)
+            solid = hasCutout() || isSolid(material, mesh);
+
+        return solid;
+    }
+
+    private static boolean isSolid(final MaterialEntityImplementation material, final Node<MeshReference> node) {
+        if (node == null)
+            return true;
+
+        if (node.hasValue() && node.value().hasMesh()) {
+            final var surface = node.value().hasMaterial() ? node.value().material() : material;
+            if (surface == null || !surface.isSolid())
+                return false;
+        }
+
+        if (node.hasChildren())
+            for (final var child : node.children())
+                if (!isSolid(material, child))
+                    return false;
+
+        return true;
     }
 
     private static boolean hasCutout(final Node<MeshReference> node) {
@@ -149,6 +182,7 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
         if (material instanceof MaterialEntityImplementation entity) {
             this.material = entity;
             this.cutout = null;
+            this.solid = null;
         }
     }
 }

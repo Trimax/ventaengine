@@ -105,4 +105,14 @@ final class DefaultShaderVariantsTest {
         for (final var code : new String[]{instanced, cutoutInstanced})
             assertTrue(code.contains("layout(location = 6) in mat4 instanceModel"), "The copies take their matrix from the attributes");
     }
+
+    @Test
+    void testBothVariantsMakeAnOpaqueSurfaceOpaque() {
+        for (final var shader : new String[]{"default/fragment.glsl", "default/fragment-cutout.glsl"}) {
+            final var code = ShaderResources.expand(shader).code();
+
+            assertTrue(code.contains("uniform int useAlphaOpaque;"), shader + " knows whether the surface is opaque");
+            assertTrue(code.contains("colorWithoutEffects.a = 1.0;"), shader + " drops the alpha of an opaque surface");
+        }
+    }
 }

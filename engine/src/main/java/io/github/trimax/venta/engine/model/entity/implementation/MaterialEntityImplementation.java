@@ -69,6 +69,16 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
         return windInfluence > 0.f;
     }
 
+    /** Whether the alpha is ignored and every fragment is opaque */
+    public boolean isOpaque() {
+        return alphaMode == AlphaMode.Opaque;
+    }
+
+    /** Whether the surface has no partly transparent fragments: it is opaque or has holes, so it needs no sorting */
+    public boolean isSolid() {
+        return isOpaque() || isCutout();
+    }
+
     /** Whether the fragments with a low alpha are discarded and the others are opaque */
     public boolean isCutout() {
         return alphaMode == AlphaMode.Cutout;

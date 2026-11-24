@@ -153,9 +153,9 @@ public final class SceneInstanceRenderer
             return programsWithLights.add(program);
         }
 
-        /** Cutout objects write depth and go first, the objects that mix colors go from the farthest to the nearest */
+        /** Solid (opaque and cutout) objects write depth and go first, the objects that mix colors go from the farthest to the nearest */
         public List<ObjectInstanceImplementation> getObjectsInDrawingOrder(final SceneInstanceImplementation scene) {
-            return drawingOrder.order(scene.getObjects(), ObjectInstanceImplementation::hasCutout, distanceToCamera);
+            return drawingOrder.order(scene.getObjects(), ObjectInstanceImplementation::isSolid, distanceToCamera);
         }
 
         private double getDistanceToCamera(final ObjectInstanceImplementation object) {

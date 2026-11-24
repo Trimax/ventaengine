@@ -82,4 +82,22 @@ final class MaterialAlphaTest {
         assertThrows(IllegalArgumentException.class, () -> material("{\"windInfluence\": 1.5}"));
         assertThrows(IllegalArgumentException.class, () -> material("{\"windInfluence\": -0.1}"));
     }
+
+    @Test
+    void testOpaqueModeIsReadAndSolid() {
+        final var material = material("{\"alphaMode\": \"opaque\"}");
+
+        assertEquals(AlphaMode.Opaque, material.getAlphaMode());
+        assertTrue(material.isOpaque());
+        assertFalse(material.isCutout());
+        assertTrue(material.isSolid(), "An opaque surface needs no sorting");
+    }
+
+    @Test
+    void testOnlyBlendMixesColors() {
+        assertFalse(material("{}").isSolid());
+        assertFalse(material("{\"alphaMode\": \"blend\"}").isSolid());
+        assertTrue(material("{\"alphaMode\": \"cutout\"}").isSolid());
+        assertTrue(material("{\"alphaMode\": \"OPAQUE\"}").isSolid(), "The mode is read in any case");
+    }
 }

@@ -22,6 +22,7 @@ public final class MaterialBinder extends AbstractBinder {
     public void bind(final ProgramEntityImplementation program, final MaterialEntityImplementation material) {
         bind(program.getUniformID(ShaderUniform.UseMaterial), material != null);
         bind(program.getUniformID(ShaderUniform.UseAlphaCutout), material != null && material.isCutout());
+        bind(program.getUniformID(ShaderUniform.UseAlphaOpaque), material != null && material.isOpaque());
 
         // Uniforms are per program state, so textures of a previously rendered material must be reset
         StreamEx.of(TextureType.values()).forEach(type -> bind(type, program, material));

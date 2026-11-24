@@ -17,6 +17,7 @@ public enum ProgramType {
     Particle("particle.json"),
     Post("post.json"),
     DefaultCutoutInstanced("default-cutout-instanced.json"),
+    DefaultInstanced("default-instanced.json"),
     DefaultCutout("default-cutout.json"),
     Default("default.json"),
     Console("console.json"),
