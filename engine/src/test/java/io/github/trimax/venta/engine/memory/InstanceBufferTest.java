@@ -1,11 +1,13 @@
 package io.github.trimax.venta.engine.memory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.lwjgl.opengl.GL15C.glIsBuffer;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import io.github.trimax.venta.engine.layouts.InstanceVertexLayout;
+import io.github.trimax.venta.engine.shaders.GLTestContext;
 
 final class InstanceBufferTest {
     private static final int FLOATS = InstanceVertexLayout.getFloatsCount();
@@ -76,5 +78,51 @@ final class InstanceBufferTest {
         assertEquals(0, buffer.getId(), "The GL buffer is created with the first upload");
         buffer.begin();
         assertEquals(0, buffer.getCount());
+    }
+
+    @Test
+    void testReleaseDeletesTheGlBuffer() throws Exception {
+        GLTestContext.require();
+
+        final var memory = TestMemory.create();
+        buffer.begin();
+        buffer.append(copies(2, 1), 2 * FLOATS);
+        buffer.upload(memory);
+
+        final var id = buffer.getId();
+        assertNotEquals(0, id, "The first upload creates the GL buffer");
+        assertTrue(glIsBuffer(id));
+
+        buffer.release(memory);
+
+        assertFalse(glIsBuffer(id), "It is deleted, or the memory of the engine reports it at the shutdown");
+        assertEquals(0, buffer.getId());
+        assertEquals(0, buffer.getCount());
+    }
+
+    @Test
+    void testReleaseTwiceAndWithoutAnUploadIsHarmless() throws Exception {
+        final var memory = TestMemory.create();
+
+        assertDoesNotThrow(() -> buffer.release(memory), "Nothing was made yet");
+        assertDoesNotThrow(() -> buffer.release(memory));
+    }
+
+    @Test
+    void testUploadAfterReleaseMakesTheBufferAgain() throws Exception {
+        GLTestContext.require();
+
+        final var memory = TestMemory.create();
+        buffer.begin();
+        buffer.append(copies(1, 1), FLOATS);
+        buffer.upload(memory);
+        buffer.release(memory);
+
+        buffer.begin();
+        buffer.append(copies(1, 2), FLOATS);
+        buffer.upload(memory);
+
+        assertTrue(glIsBuffer(buffer.getId()), "The next frame has a buffer again");
+        buffer.release(memory);
     }
 }
