@@ -226,7 +226,8 @@ Every example is a separate application in `examples` (`io.github.trimax.example
 * `mvn package` builds all modules, runs the tests and checkstyle. Use JDK 25.
 * Some tests compile the shaders and call them on the GPU. They need an OpenGL 3.3 context and are skipped without one (the macOS profiles of the root pom run the tests with `-XstartOnFirstThread`, which GLFW requires). The `Build` workflow runs them under Xvfb with the software OpenGL of Mesa and fails when there is no context (`VENTA_REQUIRE_OPENGL`).
 * Pushes and pull requests to `main` are built by the `Build` workflow.
-* Creating a GitHub release runs the `Release` workflow: it builds the commit of the release tag, checks that the tag
+* Creating a GitHub release runs the `Release` workflow: it builds the commit of the release tag in the same environment as the
+  `Build` workflow (software OpenGL under Xvfb, the tests with OpenGL are not skipped), checks that the tag
   (with an optional `v` prefix) matches the project version, publishes `container` and `engine` (and the parent POM)
   to Maven Central, then bumps the patch version in `main`. For a new minor or major version set it in the project (`1.4.0`) before creating the release, the workflow bumps only the patch version.
 
