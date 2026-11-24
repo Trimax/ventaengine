@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers.common;
+package io.github.trimax.venta.engine.model.common.shadow;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.lwjgl.opengl.GL11C.*;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.lwjgl.system.MemoryStack;
 
+import io.github.trimax.venta.engine.memory.TestMemory;
 import io.github.trimax.venta.engine.shaders.GLTestContext;
 import io.github.trimax.venta.engine.shaders.ShaderResources;
 

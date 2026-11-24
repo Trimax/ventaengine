@@ -1,17 +1,15 @@
-package io.github.trimax.venta.engine.renderers.common;
+package io.github.trimax.venta.engine.memory;
 
 import java.lang.reflect.Constructor;
-
-import io.github.trimax.venta.engine.memory.Memory;
 
 /**
  * The memory of the engine for the tests with OpenGL: it is a component with a private constructor.
  */
-final class TestMemory {
+public final class TestMemory {
     private TestMemory() {
     }
 
-    static Memory create() throws Exception {
+    public static Memory create() throws Exception {
         final Constructor<Memory> constructor = Memory.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 

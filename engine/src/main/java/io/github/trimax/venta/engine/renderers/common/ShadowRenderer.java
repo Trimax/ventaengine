@@ -30,6 +30,7 @@ import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.shadow.ShadowCascade;
 import io.github.trimax.venta.engine.model.common.shadow.ShadowFrame;
+import io.github.trimax.venta.engine.model.common.shadow.ShadowMap;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.MeshEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
@@ -38,9 +39,9 @@ import io.github.trimax.venta.engine.model.instance.implementation.SceneInstance
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
-import io.github.trimax.venta.engine.utils.FrustumCuller;
-import io.github.trimax.venta.engine.utils.InstanceBatcher;
-import io.github.trimax.venta.engine.utils.ShadowCascadeCalculator;
+import io.github.trimax.venta.engine.helpers.FrustumHelper;
+import io.github.trimax.venta.engine.model.common.draw.InstanceBatcher;
+import io.github.trimax.venta.engine.helpers.ShadowCascadeHelper;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -69,12 +70,12 @@ public final class ShadowRenderer {
      * objects. The copies are collected for every cascade (only what reaches into the box of the cascade is) and drawn into
      * it: the meshes with a cutout surface need their own program, so they are collected apart.
      */
-    private final ShadowCascadeCalculator calculator = new ShadowCascadeCalculator();
+    private final ShadowCascadeHelper calculator = new ShadowCascadeHelper();
     private final Vector3f cameraForward = new Vector3f();
     private final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> solids = new InstanceBatcher<>();
     private final InstanceBatcher<MeshEntityImplementation, ProgramEntityImplementation, MaterialEntityImplementation> cutouts = new InstanceBatcher<>();
     private final InstanceBuffer instanceBuffer = new InstanceBuffer();
-    private final FrustumCuller culler = new FrustumCuller();
+    private final FrustumHelper culler = new FrustumHelper();
 
     private ShadowMap map;
     private FloatBuffer matrixBuffer;
@@ -167,7 +168,7 @@ public final class ShadowRenderer {
     private void collectObjects(final SceneInstanceImplementation scene, final ProgramEntityImplementation objects,
                                 final ProgramEntityImplementation cutoutObjects, final ShadowCascade cascade) {
         // Only the sides of the box cull: what is nearer to the sun than the map still casts its shadow into it
-        culler.set(cascade.getMatrix(), FrustumCuller.SIDE_PLANES);
+        culler.set(cascade.getMatrix(), FrustumHelper.SIDE_PLANES);
         final var margin = scene.getWind() == null ? 0.f : scene.getWind().getStrength();
 
         for (final var object : scene.getObjects())

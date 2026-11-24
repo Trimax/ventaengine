@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers.common;
+package io.github.trimax.venta.engine.helpers;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.lwjgl.opengl.GL11C.*;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.github.trimax.venta.engine.memory.TestMemory;
 import io.github.trimax.venta.engine.model.common.environment.EnvironmentMap;
 import io.github.trimax.venta.engine.shaders.GLTestContext;
 import io.github.trimax.venta.engine.shaders.ShaderResources;
@@ -22,13 +23,13 @@ import io.github.trimax.venta.engine.shaders.ShaderResources;
 /**
  * The convolution of a skybox on the GPU: the maps of the image based lighting made from skies of known colors.
  */
-final class EnvironmentGeneratorTest {
+final class EnvironmentHelperTest {
     private static final int SOURCE_SIZE = 4;
     private static final float TOLERANCE = 0.02f;
 
     private static final Map<String, Integer> PROGRAMS = new HashMap<>();
 
-    private static EnvironmentGenerator generator;
+    private static EnvironmentHelper generator;
     private static int brdf;
 
     @BeforeAll
@@ -36,7 +37,7 @@ final class EnvironmentGeneratorTest {
         GLTestContext.require();
 
         // The table of the BRDF doesn't depend on the sky and is the slowest part: it is made once
-        generator = new EnvironmentGenerator(TestMemory.create(), EnvironmentGeneratorTest::program);
+        generator = new EnvironmentHelper(TestMemory.create(), EnvironmentHelperTest::program);
         brdf = generator.generateBrdf();
     }
 
@@ -57,8 +58,8 @@ final class EnvironmentGeneratorTest {
             assertColor(new float[]{0.25f, 0.5f, 0.75f}, texel(map.irradianceID(), face, 0, 16, 16), TOLERANCE, "Irradiance, face " + face);
             assertColor(new float[]{0.25f, 0.5f, 0.75f}, texel(map.irradianceID(), face, 0, 2, 29), TOLERANCE, "Irradiance near the edge, face " + face);
 
-            for (int level = 0; level < EnvironmentGenerator.PREFILTER_LEVELS; level++) {
-                final var size = EnvironmentGenerator.PREFILTER_RESOLUTION >> level;
+            for (int level = 0; level < EnvironmentHelper.PREFILTER_LEVELS; level++) {
+                final var size = EnvironmentHelper.PREFILTER_RESOLUTION >> level;
                 assertColor(new float[]{0.25f, 0.5f, 0.75f}, texel(map.prefilterID(), face, level, size / 2, size / 2), TOLERANCE,
                         "Prefiltered, face " + face + ", level " + level);
             }
@@ -113,8 +114,8 @@ final class EnvironmentGeneratorTest {
 
     @Test
     void testLightStaysWhereTheSkyShinesOnEveryFace() {
-        final var irradianceSize = EnvironmentGenerator.IRRADIANCE_RESOLUTION;
-        final var prefilterSize = EnvironmentGenerator.PREFILTER_RESOLUTION >> 2;
+        final var irradianceSize = EnvironmentHelper.IRRADIANCE_RESOLUTION;
+        final var prefilterSize = EnvironmentHelper.PREFILTER_RESOLUTION >> 2;
         final var near = 3;
 
         // A bright spot in the corner of one face of the sky. What a surface diffuses and reflects is read by the
@@ -150,8 +151,8 @@ final class EnvironmentGeneratorTest {
         final var map = generator.generate(sky, brdf);
 
         var previous = Float.MAX_VALUE;
-        for (int level = 0; level < EnvironmentGenerator.PREFILTER_LEVELS; level++) {
-            final var size = EnvironmentGenerator.PREFILTER_RESOLUTION >> level;
+        for (int level = 0; level < EnvironmentHelper.PREFILTER_LEVELS; level++) {
+            final var size = EnvironmentHelper.PREFILTER_RESOLUTION >> level;
             final var center = texel(map.prefilterID(), 2, level, size / 2, size / 2)[0];
 
             assertTrue(center <= previous + TOLERANCE, "The sun gets dimmer with the roughness: level " + level + " has " + center + " after " + previous);
@@ -159,13 +160,13 @@ final class EnvironmentGeneratorTest {
         }
 
         final var sharp = texel(map.prefilterID(), 2, 0, 64, 64)[0];
-        final var blurred = texel(map.prefilterID(), 2, EnvironmentGenerator.PREFILTER_LEVELS - 1, 4, 4)[0];
+        final var blurred = texel(map.prefilterID(), 2, EnvironmentHelper.PREFILTER_LEVELS - 1, 4, 4)[0];
         assertTrue(sharp > 0.9f, "A mirror shows the bright spot as it is: " + sharp);
         assertTrue(blurred < sharp - 0.2f, "A rough surface spreads it: " + blurred + " < " + sharp);
 
         // A mirror looking at the side of the sky sees black; the roughest level gets some light from the spot
         final var sideMirror = texel(map.prefilterID(), 0, 0, 64, 64)[0];
-        final var sideRough = texel(map.prefilterID(), 0, EnvironmentGenerator.PREFILTER_LEVELS - 1, 4, 4)[0];
+        final var sideRough = texel(map.prefilterID(), 0, EnvironmentHelper.PREFILTER_LEVELS - 1, 4, 4)[0];
         assertTrue(sideMirror < 0.01f, "A mirror sees black on the side: " + sideMirror);
         assertTrue(sideRough > sideMirror + 0.005f, "A rough surface gets the light of the spot from the side: " + sideRough);
 
@@ -174,7 +175,7 @@ final class EnvironmentGeneratorTest {
 
     @Test
     void testBrdfTableOfAMirrorSeenStraightOnReflectsAllTheLight() {
-        final var size = EnvironmentGenerator.BRDF_RESOLUTION;
+        final var size = EnvironmentHelper.BRDF_RESOLUTION;
         final var table = table();
 
         // x is the cosine of the viewer angle, y is the roughness: the table starts at the smoothest roughness
@@ -195,7 +196,7 @@ final class EnvironmentGeneratorTest {
 
     @Test
     void testBrdfTableOfARoughSurfaceReflectsLess() {
-        final var size = EnvironmentGenerator.BRDF_RESOLUTION;
+        final var size = EnvironmentHelper.BRDF_RESOLUTION;
         final var table = table();
 
         final var smooth = table[(40 * size + size / 2) * 2] + table[(40 * size + size / 2) * 2 + 1];
@@ -257,7 +258,7 @@ final class EnvironmentGeneratorTest {
 
     /** The scale and the bias of the table, row by row */
     private static float[] table() {
-        final var size = EnvironmentGenerator.BRDF_RESOLUTION;
+        final var size = EnvironmentHelper.BRDF_RESOLUTION;
         final var table = new float[size * size * 2];
 
         glBindTexture(GL_TEXTURE_2D, brdf);

@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL13C.glActiveTexture;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.TextureUnit;
+import io.github.trimax.venta.engine.helpers.EnvironmentHelper;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.environment.EnvironmentMap;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Keeps the light of the environment for the skybox of the scene: when the skybox changes, the maps of the image based
- * lighting are convolved from it (see {@link EnvironmentGenerator}) and bound to their texture units, the shaders of the
+ * lighting are convolved from it (see {@link EnvironmentHelper}) and bound to their texture units, the shaders of the
  * objects and the terrain take them from there. A scene without a skybox has none.
  */
 @Slf4j
@@ -29,7 +30,7 @@ public final class EnvironmentRenderer {
     private final ProgramRegistryImplementation programRegistry;
     private final Memory memory;
 
-    private EnvironmentGenerator generator;
+    private EnvironmentHelper generator;
     private CubemapEntityImplementation skybox;
     private int brdfID;
 
@@ -70,7 +71,7 @@ public final class EnvironmentRenderer {
 
     private void build(final CubemapEntityImplementation skybox) {
         if (generator == null)
-            generator = new EnvironmentGenerator(memory, name -> programRegistry.get(name).getInternalID());
+            generator = new EnvironmentHelper(memory, name -> programRegistry.get(name).getInternalID());
 
         final var started = System.nanoTime();
         if (brdfID == 0)

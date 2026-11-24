@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.utils;
+package io.github.trimax.venta.engine.helpers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import io.github.trimax.venta.engine.model.common.shadow.ShadowCascade;
 import io.github.trimax.venta.engine.model.common.shadow.ShadowFrame;
 
-final class ShadowCascadeCalculatorTest {
+final class ShadowCascadeHelperTest {
     private static final float NEAR = 0.1f;
     private static final float FAR = 1000.f;
     private static final int RESOLUTION = 1024;
@@ -23,12 +23,12 @@ final class ShadowCascadeCalculatorTest {
 
     private static final Matrix4f PROJECTION = new Matrix4f().perspective((float) Math.toRadians(60.0), 16.f / 9.f, NEAR, FAR);
 
-    private final ShadowCascadeCalculator calculator = new ShadowCascadeCalculator();
+    private final ShadowCascadeHelper calculator = new ShadowCascadeHelper();
 
     @Test
     void testNearPlaneIsReadFromTheProjection() {
-        assertEquals(NEAR, ShadowCascadeCalculator.getNear(PROJECTION), 1e-5f, "The near plane of the perspective");
-        assertEquals(2.5f, ShadowCascadeCalculator.getNear(new Matrix4f().perspective(1.f, 1.f, 2.5f, 80.f)), 1e-5f, "Another near plane");
+        assertEquals(NEAR, ShadowCascadeHelper.getNear(PROJECTION), 1e-5f, "The near plane of the perspective");
+        assertEquals(2.5f, ShadowCascadeHelper.getNear(new Matrix4f().perspective(1.f, 1.f, 2.5f, 80.f)), 1e-5f, "Another near plane");
     }
 
     @Test
@@ -55,7 +55,7 @@ final class ShadowCascadeCalculatorTest {
     void testSplitsFillOnlyTheirCountOfAnArray() {
         final var splits = new float[]{-1.f, -1.f, -1.f, -1.f, -1.f};
 
-        ShadowCascadeCalculator.getSplits(NEAR, DISTANCE, 3, splits);
+        ShadowCascadeHelper.getSplits(NEAR, DISTANCE, 3, splits);
 
         assertEquals(DISTANCE, splits[2], "The last split of three");
         assertEquals(-1.f, splits[3], "The rest of the array is not touched");
@@ -147,7 +147,7 @@ final class ShadowCascadeCalculatorTest {
         calculator.calculate(reused, viewB, PROJECTION, new Vector3f(0.3f, -1.f, 0.2f), 150.f, 3, 512);
 
         final var fresh = new ShadowFrame(4);
-        new ShadowCascadeCalculator().calculate(fresh, viewB, PROJECTION, new Vector3f(0.3f, -1.f, 0.2f), 150.f, 3, 512);
+        new ShadowCascadeHelper().calculate(fresh, viewB, PROJECTION, new Vector3f(0.3f, -1.f, 0.2f), 150.f, 3, 512);
 
         assertEquals(fresh.getCount(), reused.getCount(), "Three cascades after four");
         assertEquals(150.f, reused.getDistance(), "The new distance");
@@ -183,10 +183,10 @@ final class ShadowCascadeCalculatorTest {
         final var identity = new Matrix4f();
         final var frame = new ShadowFrame(4);
 
-        assertThrows(IllegalArgumentException.class, () -> ShadowCascadeCalculator.getSplits(NEAR, DISTANCE, 0, new float[4]), "No cascades");
-        assertThrows(IllegalArgumentException.class, () -> ShadowCascadeCalculator.getSplits(NEAR, NEAR, 4, new float[4]), "The distance isn't behind the near plane");
-        assertThrows(IllegalArgumentException.class, () -> ShadowCascadeCalculator.getSplits(0.f, DISTANCE, 4, new float[4]), "The near plane is zero");
-        assertThrows(IllegalArgumentException.class, () -> ShadowCascadeCalculator.getSplits(NEAR, DISTANCE, 4, new float[3]), "The array is too small");
+        assertThrows(IllegalArgumentException.class, () -> ShadowCascadeHelper.getSplits(NEAR, DISTANCE, 0, new float[4]), "No cascades");
+        assertThrows(IllegalArgumentException.class, () -> ShadowCascadeHelper.getSplits(NEAR, NEAR, 4, new float[4]), "The distance isn't behind the near plane");
+        assertThrows(IllegalArgumentException.class, () -> ShadowCascadeHelper.getSplits(0.f, DISTANCE, 4, new float[4]), "The near plane is zero");
+        assertThrows(IllegalArgumentException.class, () -> ShadowCascadeHelper.getSplits(NEAR, DISTANCE, 4, new float[3]), "The array is too small");
         assertThrows(IllegalArgumentException.class, () -> calculator.calculate(frame, identity, PROJECTION, new Vector3f(), DISTANCE, 4, RESOLUTION), "No direction");
         assertThrows(IllegalArgumentException.class, () -> calculator.calculate(frame, identity, PROJECTION, SUN, DISTANCE, 4, 0), "No texels");
         assertThrows(IllegalArgumentException.class, () -> calculator.calculate(frame, identity, PROJECTION, SUN, 0.05f, 4, RESOLUTION), "The distance is before the near plane");
@@ -196,7 +196,7 @@ final class ShadowCascadeCalculatorTest {
 
     private float[] splits(final int count) {
         final var splits = new float[count];
-        ShadowCascadeCalculator.getSplits(NEAR, DISTANCE, count, splits);
+        ShadowCascadeHelper.getSplits(NEAR, DISTANCE, count, splits);
 
         return splits;
     }

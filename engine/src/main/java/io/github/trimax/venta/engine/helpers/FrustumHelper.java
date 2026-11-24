@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.utils;
+package io.github.trimax.venta.engine.helpers;
 
 import org.joml.FrustumIntersection;
 import org.joml.Matrix4fc;
@@ -13,7 +13,7 @@ import lombok.NonNull;
  *
  * <p>It is asked for every object of every frame, so one instance keeps its scratch vectors: a test allocates nothing.
  */
-public final class FrustumCuller {
+public final class FrustumHelper {
     /** Every plane of the view: the sides, the near plane and the far plane */
     public static final int ALL_PLANES = FrustumIntersection.PLANE_MASK_NX | FrustumIntersection.PLANE_MASK_PX
             | FrustumIntersection.PLANE_MASK_NY | FrustumIntersection.PLANE_MASK_PY

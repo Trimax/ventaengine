@@ -3,7 +3,7 @@ package io.github.trimax.venta.engine.utils;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public final class PerlinNoise {
+public final class PerlinNoiseUtil {
     
     private static final int[] PERMUTATION = {
         151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,

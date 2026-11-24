@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers.common;
+package io.github.trimax.venta.engine.helpers;
 
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
@@ -33,16 +33,16 @@ import lombok.NonNull;
  * </ol>
  * The state of OpenGL that the passes change (the framebuffer, the viewport, the culling) is restored.
  */
-final class EnvironmentGenerator {
-    static final int ENVIRONMENT_RESOLUTION = 256;
-    static final int IRRADIANCE_RESOLUTION = 32;
-    static final int PREFILTER_RESOLUTION = 128;
-    static final int PREFILTER_LEVELS = 5;
-    static final int BRDF_RESOLUTION = 256;
+public final class EnvironmentHelper {
+    public static final int ENVIRONMENT_RESOLUTION = 256;
+    public static final int IRRADIANCE_RESOLUTION = 32;
+    public static final int PREFILTER_RESOLUTION = 128;
+    public static final int PREFILTER_LEVELS = 5;
+    public static final int BRDF_RESOLUTION = 256;
 
-    static final int IRRADIANCE_SAMPLES = 1024;
-    static final int PREFILTER_SAMPLES = 256;
-    static final int BRDF_SAMPLES = 256;
+    public static final int IRRADIANCE_SAMPLES = 1024;
+    public static final int PREFILTER_SAMPLES = 256;
+    public static final int BRDF_SAMPLES = 256;
 
     /** The irradiance changes slowly: its samples read the sky from a coarse level (the cube map of 16 texels) */
     private static final float IRRADIANCE_SOURCE_LEVEL = 4.f;
@@ -57,13 +57,13 @@ final class EnvironmentGenerator {
      *
      * @param programs gives the identifier of a program by its name, see {@link ProgramType}
      */
-    EnvironmentGenerator(@NonNull final Memory memory, @NonNull final ToIntFunction<String> programs) {
+    public EnvironmentHelper(@NonNull final Memory memory, @NonNull final ToIntFunction<String> programs) {
         this.memory = memory;
         this.programs = programs;
     }
 
     /** Makes the irradiance and the prefiltered maps of a cube map; the table of the BRDF is given */
-    EnvironmentMap generate(final int sourceID, final int brdfID) {
+    public EnvironmentMap generate(final int sourceID, final int brdfID) {
         try (final var state = new State()) {
             final var environmentID = createCube("Environment", ENVIRONMENT_RESOLUTION, fullLevels(ENVIRONMENT_RESOLUTION), 1, true);
             final var irradianceID = createCube("Irradiance", IRRADIANCE_RESOLUTION, 1, 1, false);
@@ -104,7 +104,7 @@ final class EnvironmentGenerator {
     }
 
     /** Makes the lookup table of the BRDF: the cosine of the viewer angle goes along x, the roughness along y */
-    int generateBrdf() {
+    public int generateBrdf() {
         try (final var state = new State()) {
             final var textureID = memory.getTextures().create("BRDF lookup table");
             glBindTexture(GL_TEXTURE_2D, textureID);
@@ -130,12 +130,12 @@ final class EnvironmentGenerator {
     }
 
     /** Deletes the maps of a sky, the table of the BRDF stays */
-    void release(@NonNull final EnvironmentMap map) {
+    public void release(@NonNull final EnvironmentMap map) {
         memory.getTextures().delete(map.irradianceID());
         memory.getTextures().delete(map.prefilterID());
     }
 
-    void releaseBrdf(final int brdfID) {
+    public void releaseBrdf(final int brdfID) {
         memory.getTextures().delete(brdfID);
     }
 

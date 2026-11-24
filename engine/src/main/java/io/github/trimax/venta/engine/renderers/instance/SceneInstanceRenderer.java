@@ -26,8 +26,8 @@ import io.github.trimax.venta.engine.model.instance.implementation.SceneInstance
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
-import io.github.trimax.venta.engine.utils.DrawingOrder;
-import io.github.trimax.venta.engine.utils.FrustumCuller;
+import io.github.trimax.venta.engine.model.common.draw.DrawingOrder;
+import io.github.trimax.venta.engine.helpers.FrustumHelper;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -144,7 +144,7 @@ public final class SceneInstanceRenderer
         private final Vector3f objectPosition = new Vector3f();
 
         /** What the camera doesn't see is not drawn */
-        private final FrustumCuller culler = new FrustumCuller();
+        private final FrustumHelper culler = new FrustumHelper();
 
         private CameraInstanceImplementation camera;
         private Engine.VentaTime time;
@@ -180,7 +180,7 @@ public final class SceneInstanceRenderer
             projectionMatrix.set(window.getProjectionMatrix());
             viewMatrix.set(camera.getViewMatrix());
 
-            culler.set(viewProjectionMatrix, FrustumCuller.ALL_PLANES);
+            culler.set(viewProjectionMatrix, FrustumHelper.ALL_PLANES);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
             projectionMatrix.get(projectionMatrixBuffer);
             viewMatrix.get(viewMatrixBuffer);

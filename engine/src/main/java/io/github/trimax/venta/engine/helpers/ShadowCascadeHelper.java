@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.utils;
+package io.github.trimax.venta.engine.helpers;
 
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
@@ -16,7 +16,7 @@ import lombok.NonNull;
  * <p>The cascades are computed every frame, so a calculator keeps the vectors and the matrices it works with and writes
  * the result into a {@link ShadowFrame}: once they are made, computing allocates nothing. It is not thread safe.
  */
-public final class ShadowCascadeCalculator {
+public final class ShadowCascadeHelper {
     /** 0 splits the distance evenly, 1 logarithmically (the near parts get more detail) */
     private static final float SPLIT_LAMBDA = 0.75f;
 
@@ -36,7 +36,7 @@ public final class ShadowCascadeCalculator {
 
     private float[] splits = new float[4];
 
-    public ShadowCascadeCalculator() {
+    public ShadowCascadeHelper() {
         for (int i = 0; i < CORNERS; i++)
             corners[i] = new Vector3f();
     }
