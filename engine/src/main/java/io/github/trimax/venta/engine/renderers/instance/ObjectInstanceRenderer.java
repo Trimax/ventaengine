@@ -34,7 +34,7 @@ import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanc
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.renderers.entity.MeshEntityRenderer;
-import io.github.trimax.venta.engine.utils.InstanceBatcher;
+import io.github.trimax.venta.engine.model.common.draw.InstanceBatcher;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

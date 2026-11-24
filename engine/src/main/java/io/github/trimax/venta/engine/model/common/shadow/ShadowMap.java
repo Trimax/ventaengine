@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.renderers.common;
+package io.github.trimax.venta.engine.model.common.shadow;
 
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL12C.glTexImage3D;
@@ -20,7 +20,7 @@ import lombok.NonNull;
  * <p>The texture compares the depth of a point with the stored one when it is sampled (as a shadow sampler) and the
  * hardware filters the comparisons: a texel at the edge of a shadow is partly lit. Outside of the layer everything is lit.
  */
-final class ShadowMap {
+public final class ShadowMap {
     private static final float[] LIT = {1.f, 1.f, 1.f, 1.f};
 
     private final Memory memory;
@@ -36,7 +36,7 @@ final class ShadowMap {
 
     private final int framebufferID;
 
-    ShadowMap(@NonNull final Memory memory, final int resolution, final int layers) {
+    public ShadowMap(@NonNull final Memory memory, final int resolution, final int layers) {
         if (resolution < 1 || layers < 1)
             throw new IllegalArgumentException(String.format("A shadow map needs texels and layers, got %d texels and %d layers", resolution, layers));
 
@@ -71,7 +71,7 @@ final class ShadowMap {
     }
 
     /** Draws into the layer: binds the framebuffer with it and sets the viewport of the map */
-    void bindLayer(final int layer) {
+    public void bindLayer(final int layer) {
         if (layer < 0 || layer >= layers)
             throw new IllegalArgumentException(String.format("The shadow map has %d layers, got %d", layers, layer));
 
@@ -80,7 +80,7 @@ final class ShadowMap {
         glViewport(0, 0, resolution, resolution);
     }
 
-    void release() {
+    public void release() {
         memory.getFramebuffers().delete(framebufferID);
         memory.getTextureArrays().delete(textureID);
     }

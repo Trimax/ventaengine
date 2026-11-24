@@ -7,7 +7,7 @@ import io.github.trimax.venta.editor.controllers.heightmap.HeightmapGeneratorCon
 import io.github.trimax.venta.editor.listeners.AbstractListener;
 import io.github.trimax.venta.editor.model.event.heightmap.HeightmapGenerateEvent;
 import io.github.trimax.venta.editor.utils.ImageViewUtil;
-import io.github.trimax.venta.engine.utils.PerlinNoise;
+import io.github.trimax.venta.engine.utils.PerlinNoiseUtil;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public final class HeightmapGenerateListener implements AbstractListener<Heightm
     @Subscribe
     public void handle(final @NonNull HeightmapGenerateEvent event) {
         log.info("Generating image {}", context.getRandomSeed());
-        final var heightmap = PerlinNoise.generate(
+        final var heightmap = PerlinNoiseUtil.generate(
                 context.getWidth(), context.getHeight(),
                 context.getRandomSeed(), context.getCellSize(),
                 context.getLevels(), context.getAttenuation(),

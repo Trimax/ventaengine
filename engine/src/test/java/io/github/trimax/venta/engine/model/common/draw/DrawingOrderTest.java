@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.utils;
+package io.github.trimax.venta.engine.model.common.draw;
 
 import static org.junit.jupiter.api.Assertions.*;
 

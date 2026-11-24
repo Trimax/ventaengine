@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.github.trimax.venta.engine.memory.TestMemory;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.shaders.GLTestContext;

@@ -1,4 +1,4 @@
-package io.github.trimax.venta.engine.utils;
+package io.github.trimax.venta.engine.helpers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +12,7 @@ import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
  * The view is a camera at the origin that looks along -z (a perspective of 90 degrees, from 1 to 100), or a box of the
  * sun that is 20 wide (x and y from -10 to 10, z from -10 to 10).
  */
-final class FrustumCullerTest {
+final class FrustumHelperTest {
     private static final Matrix4f IDENTITY = new Matrix4f();
 
     private static Matrix4f camera() {
@@ -28,20 +28,20 @@ final class FrustumCullerTest {
         return new BoundingBox(new Vector3f(x - 1, y - 1, z - 1), new Vector3f(x + 1, y + 1, z + 1));
     }
 
-    private static FrustumCuller culler(final Matrix4f view, final int planes) {
-        final var culler = new FrustumCuller();
+    private static FrustumHelper culler(final Matrix4f view, final int planes) {
+        final var culler = new FrustumHelper();
         culler.set(view, planes);
         return culler;
     }
 
     @Test
     void testWhatIsInFrontOfTheCameraIsVisible() {
-        assertTrue(culler(camera(), FrustumCuller.ALL_PLANES).isVisible(around(0, 0, -20), IDENTITY, 0));
+        assertTrue(culler(camera(), FrustumHelper.ALL_PLANES).isVisible(around(0, 0, -20), IDENTITY, 0));
     }
 
     @Test
     void testWhatIsBesideBehindOrBeyondTheCameraIsCulled() {
-        final var culler = culler(camera(), FrustumCuller.ALL_PLANES);
+        final var culler = culler(camera(), FrustumHelper.ALL_PLANES);
 
         assertFalse(culler.isVisible(around(60, 0, -20), IDENTITY, 0), "Right of the view");
         assertFalse(culler.isVisible(around(-60, 0, -20), IDENTITY, 0), "Left of the view");
@@ -53,12 +53,12 @@ final class FrustumCullerTest {
 
     @Test
     void testWhatCrossesTheEdgeOfTheViewIsVisible() {
-        assertTrue(culler(camera(), FrustumCuller.ALL_PLANES).isVisible(around(21, 0, -20), IDENTITY, 0), "A part of the box is in the view");
+        assertTrue(culler(camera(), FrustumHelper.ALL_PLANES).isVisible(around(21, 0, -20), IDENTITY, 0), "A part of the box is in the view");
     }
 
     @Test
     void testTheMatrixOfTheObjectMovesTurnsAndScalesTheBox() {
-        final var culler = culler(camera(), FrustumCuller.ALL_PLANES);
+        final var culler = culler(camera(), FrustumHelper.ALL_PLANES);
         final var box = around(0, 0, 0);
 
         assertTrue(culler.isVisible(box, new Matrix4f().translation(0, 0, -20), 0));
@@ -70,7 +70,7 @@ final class FrustumCullerTest {
 
     @Test
     void testTheMarginKeepsWhatReachesIntoTheView() {
-        final var culler = culler(camera(), FrustumCuller.ALL_PLANES);
+        final var culler = culler(camera(), FrustumHelper.ALL_PLANES);
         final var box = around(24, 0, -20);
 
         assertFalse(culler.isVisible(box, IDENTITY, 0), "Just outside");
@@ -81,14 +81,14 @@ final class FrustumCullerTest {
     void testBoxWithoutPointsIsNeverCulled() {
         final var empty = new BoundingBox(new Vector3f(Float.POSITIVE_INFINITY), new Vector3f(Float.NEGATIVE_INFINITY));
 
-        assertTrue(culler(camera(), FrustumCuller.ALL_PLANES).isVisible(empty, IDENTITY, 0));
-        assertTrue(culler(camera(), FrustumCuller.ALL_PLANES).isVisible(empty, new Matrix4f().translation(1000, 0, 0), 0));
+        assertTrue(culler(camera(), FrustumHelper.ALL_PLANES).isVisible(empty, IDENTITY, 0));
+        assertTrue(culler(camera(), FrustumHelper.ALL_PLANES).isVisible(empty, new Matrix4f().translation(1000, 0, 0), 0));
     }
 
     @Test
     void testTheSunSeesTheSidesOnlyWhenAskedTo() {
-        final var all = culler(sun(), FrustumCuller.ALL_PLANES);
-        final var sides = culler(sun(), FrustumCuller.SIDE_PLANES);
+        final var all = culler(sun(), FrustumHelper.ALL_PLANES);
+        final var sides = culler(sun(), FrustumHelper.SIDE_PLANES);
 
         assertTrue(all.isVisible(around(0, 0, 0), IDENTITY, 0));
         assertTrue(sides.isVisible(around(0, 0, 0), IDENTITY, 0));
@@ -105,21 +105,21 @@ final class FrustumCullerTest {
 
     @Test
     void testTheViewCanBeChangedBetweenTests() {
-        final var culler = new FrustumCuller();
+        final var culler = new FrustumHelper();
         final var box = around(0, 0, -20);
 
-        culler.set(camera(), FrustumCuller.ALL_PLANES);
+        culler.set(camera(), FrustumHelper.ALL_PLANES);
         assertTrue(culler.isVisible(box, IDENTITY, 0));
 
-        culler.set(new Matrix4f(camera()).translate(0, 0, 200), FrustumCuller.ALL_PLANES);
+        culler.set(new Matrix4f(camera()).translate(0, 0, 200), FrustumHelper.ALL_PLANES);
         assertFalse(culler.isVisible(box, IDENTITY, 0), "The camera moved away");
     }
 
     @Test
     void testArgumentsAreRequired() {
-        final var culler = new FrustumCuller();
+        final var culler = new FrustumHelper();
 
-        assertThrows(NullPointerException.class, () -> culler.set(null, FrustumCuller.ALL_PLANES));
+        assertThrows(NullPointerException.class, () -> culler.set(null, FrustumHelper.ALL_PLANES));
         assertThrows(NullPointerException.class, () -> culler.isVisible(null, IDENTITY, 0));
         assertThrows(NullPointerException.class, () -> culler.isVisible(around(0, 0, 0), null, 0));
     }
