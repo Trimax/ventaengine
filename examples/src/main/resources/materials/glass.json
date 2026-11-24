@@ -1,0 +1,9 @@
+{
+  "metalness": 0.0,
+  "roughness": 0.05,
+  "opacity": 1.0,
+  "tiling": {"x": 1.0, "y": 1.0},
+  "offset": {"x": 0.0, "y": 0.0},
+  "color": {"r": 0.45, "g": 0.75, "b": 1.0, "a": 0.4},
+  "alphaMode": "blend"
+}

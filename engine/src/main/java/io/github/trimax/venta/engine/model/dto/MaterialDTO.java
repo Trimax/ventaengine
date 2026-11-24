@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.joml.Vector2f;
 
+import io.github.trimax.venta.engine.enums.AlphaMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 
@@ -13,7 +14,10 @@ public record MaterialDTO(Float metalness,
                           ColorDTO color,
                           Vector2f tiling,
                           Vector2f offset,
-                          Map<TextureType, String> textures) {
+                          Map<TextureType, String> textures,
+                          AlphaMode alphaMode,
+                          Float alphaCutoff,
+                          Boolean doubleSided) {
     public boolean hasTextures() {
         return textures != null && !textures.isEmpty();
     }

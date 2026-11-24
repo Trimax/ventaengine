@@ -8,17 +8,22 @@ import io.github.trimax.venta.engine.managers.implementation.TerrainSurfaceManag
 import io.github.trimax.venta.engine.managers.implementation.WaterSurfaceManagerImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
+import io.github.trimax.venta.engine.utils.DrawingOrder;
 import lombok.*;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
+import java.util.function.ToDoubleFunction;
 
 import static org.lwjgl.opengl.GL11C.*;
 
@@ -65,7 +70,7 @@ public final class SceneInstanceRenderer
                 terrainSurfaceRenderer.render(terrainSurfaceManager.getInstance(surface.getID()));
             }
 
-        for (final var object : scene.getObjects())
+        for (final var object : getContext().getObjectsInDrawingOrder(scene))
             try (final var _ = objectRenderer.withContext(getContext())
                     .withScene(scene)) {
                 objectRenderer.render(objectManager.getInstance(object.getID()));
@@ -106,6 +111,11 @@ public final class SceneInstanceRenderer
         private final Matrix4f projectionMatrix = new Matrix4f();
         private final Matrix4f viewMatrix = new Matrix4f();
 
+        /** The order of the objects of a frame: its lists and arrays are kept, so a frame allocates nothing for it */
+        private final DrawingOrder<ObjectInstanceImplementation> drawingOrder = new DrawingOrder<>();
+        private final ToDoubleFunction<ObjectInstanceImplementation> distanceToCamera = this::getDistanceToCamera;
+        private final Vector3f objectPosition = new Vector3f();
+
         private CameraInstanceImplementation camera;
         private Engine.VentaTime time;
 
@@ -116,6 +126,15 @@ public final class SceneInstanceRenderer
         /** True for the first call per program in a frame: lights are uniforms of the program, so they are uploaded once */
         public boolean markLightsBound(@NonNull final ProgramEntityImplementation program) {
             return programsWithLights.add(program);
+        }
+
+        /** Cutout objects write depth and go first, the objects that mix colors go from the farthest to the nearest */
+        public List<ObjectInstanceImplementation> getObjectsInDrawingOrder(final SceneInstanceImplementation scene) {
+            return drawingOrder.order(scene.getObjects(), ObjectInstanceImplementation::hasCutout, distanceToCamera);
+        }
+
+        private double getDistanceToCamera(final ObjectInstanceImplementation object) {
+            return object.getTransform().getMatrix().getTranslation(objectPosition).distanceSquared(camera.getPosition());
         }
 
         public SceneRenderContext with(final WindowState window, final CameraInstanceImplementation camera) {

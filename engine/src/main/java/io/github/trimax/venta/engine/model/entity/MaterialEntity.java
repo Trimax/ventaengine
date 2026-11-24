@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.entity;
 
+import io.github.trimax.venta.engine.enums.AlphaMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import lombok.NonNull;
 import org.joml.Vector2fc;
@@ -11,6 +12,15 @@ public interface MaterialEntity extends AbstractEntity {
     Vector2fc getOffset();
 
     Vector4fc getColor();
+
+    /** Whether the alpha of the material mixes colors or cuts holes */
+    AlphaMode getAlphaMode();
+
+    /** The alpha below which a cutout material has a hole, from 0 to 1 */
+    float getAlphaCutoff();
+
+    /** Whether both sides of a face are drawn; one sided materials are drawn with the faces turned counter-clockwise to the viewer only */
+    boolean isDoubleSided();
 
     TextureEntity getTexture(@NonNull final TextureType texture);
 

@@ -21,6 +21,7 @@ public final class MaterialBinder extends AbstractBinder {
 
     public void bind(final ProgramEntityImplementation program, final MaterialEntityImplementation material) {
         bind(program.getUniformID(ShaderUniform.UseMaterial), material != null);
+        bind(program.getUniformID(ShaderUniform.UseAlphaCutout), material != null && material.isCutout());
 
         // Uniforms are per program state, so textures of a previously rendered material must be reset
         StreamEx.of(TextureType.values()).forEach(type -> bind(type, program, material));
@@ -30,6 +31,7 @@ public final class MaterialBinder extends AbstractBinder {
 
         bind(program.getUniformID(ShaderUniform.MaterialMetalness), material.getMetalness());
         bind(program.getUniformID(ShaderUniform.MaterialRoughness), material.getRoughness());
+        bind(program.getUniformID(ShaderUniform.MaterialAlphaCutoff), material.getAlphaCutoff());
         bind(program.getUniformID(ShaderUniform.MaterialTiling), material.getTiling());
         bind(program.getUniformID(ShaderUniform.MaterialOffset), material.getOffset());
         bindColor(program.getUniformID(ShaderUniform.MaterialColor), material.getColor());

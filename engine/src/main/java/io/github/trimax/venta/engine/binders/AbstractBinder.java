@@ -63,6 +63,12 @@ abstract class AbstractBinder {
             glUniform4fv(uniformID, buffer);
     }
 
+    /** An array of floats (a uniform float[]) from a buffer: the buffer needs no array of the heap */
+    protected final void bindFloats(final int uniformID, final FloatBuffer buffer) {
+        if (uniformID >= 0)
+            glUniform1fv(uniformID, buffer);
+    }
+
     protected final void bindMatrix3(final int uniformID, final FloatBuffer buffer) {
         if (uniformID >= 0)
             glUniformMatrix3fv(uniformID, false, buffer);
