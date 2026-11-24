@@ -100,4 +100,28 @@ final class MeshUtilTest {
         assertEquals(max.y, box.max().y, DELTA, "max y");
         assertEquals(max.z, box.max().z, DELTA, "max z");
     }
+
+    @Test
+    void testLevelOfDetailIsPlacedByTheMainModel() {
+        // The main model is 4 wide, the simpler one is 2 wide (a coarser shape): by itself it would be scaled to the same unit
+        final var main = node(TestMeshes.mesh(new Vector3f(0, 0, 0), new Vector3f(4, 2, 2)), transform(new Vector3f(), new Vector3f(1)));
+        final var simpler = node(TestMeshes.mesh(new Vector3f(0, 0, 0), new Vector3f(2, 1, 1)), transform(new Vector3f(), new Vector3f(1)));
+
+        final var box = GeometryUtil.computeBoundingBox(MeshUtil.normalize(simpler, main));
+
+        assertBox(box, new Vector3f(-0.5f, -0.25f, -0.25f), new Vector3f(0.f, 0.f, 0.f));
+        assertBox(GeometryUtil.computeBoundingBox(MeshUtil.normalize(main)), new Vector3f(-0.5f, -0.25f, -0.25f), new Vector3f(0.5f, 0.25f, 0.25f));
+    }
+
+    @Test
+    void testNormalizingWithTheModelItselfIsTheSameAsNormalizing() {
+        final var first = node(TestMeshes.mesh(new Vector3f(2, 0, 0), new Vector3f(6, 2, 1)), transform(new Vector3f(), new Vector3f(1)));
+        final var second = node(TestMeshes.mesh(new Vector3f(2, 0, 0), new Vector3f(6, 2, 1)), transform(new Vector3f(), new Vector3f(1)));
+
+        final var expected = GeometryUtil.computeBoundingBox(MeshUtil.normalize(first));
+        final var actual = GeometryUtil.computeBoundingBox(MeshUtil.normalize(second, second));
+
+        assertBox(actual, expected.min(), expected.max());
+    }
+
 }

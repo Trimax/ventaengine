@@ -17,7 +17,15 @@ public final class MeshUtil {
      * Child transforms are relative to their parents, so only the root transform is changed.
      */
     public Node<MeshReference> normalize(@NonNull final Node<MeshReference> root) {
-        final var boundingBox = GeometryUtil.computeBoundingBox(root, false);
+        return normalize(root, root);
+    }
+
+    /**
+     * Places the hierarchy like {@link #normalize(Node)} places the base: the center and the size of the base
+     * decide, so a simpler model of an object (a level of detail) stays exactly where the main model is, whatever its own size.
+     */
+    public Node<MeshReference> normalize(@NonNull final Node<MeshReference> root, @NonNull final Node<MeshReference> base) {
+        final var boundingBox = GeometryUtil.computeBoundingBox(base, false);
         final var size = boundingBox.size();
         final var maximalSize = Math.max(size.x, Math.max(size.y, size.z));
         if (!Float.isFinite(maximalSize) || maximalSize <= 0.f)

@@ -71,6 +71,15 @@ public final class InstanceBatcher<S, P, M> {
      * @param model the model matrix of the copy, its normal matrix is computed here
      */
     public void add(@NonNull final S shape, final P program, final M material, final boolean lit, @NonNull final Matrix4fc model) {
+        add(shape, program, material, lit, model, 1.f);
+    }
+
+    /**
+     * Adds a copy of a shape that fades in or out.
+     *
+     * @param fade how far the copy is drawn, see {@link InstanceVertexLayout#Fade}: 1 is the whole copy
+     */
+    public void add(@NonNull final S shape, final P program, final M material, final boolean lit, @NonNull final Matrix4fc model, final float fade) {
         final var head = heads.get(shape);
 
         var batch = head;
@@ -85,7 +94,7 @@ public final class InstanceBatcher<S, P, M> {
         }
 
         model.normal(normalMatrix);
-        batch.append(model, normalMatrix);
+        batch.append(model, normalMatrix, fade);
     }
 
     private Batch<S, P, M> obtain() {
@@ -105,6 +114,9 @@ public final class InstanceBatcher<S, P, M> {
 
         /** The number of copies */
         private int count;
+
+        /** Whether a copy fades: the batch is drawn with the shader that dithers the fading copies */
+        private boolean fading;
 
         /**
          * The copies: {@link InstanceVertexLayout#getFloatsCount()} floats of every one, the first {@link #getLength()} are used
@@ -135,9 +147,10 @@ public final class InstanceBatcher<S, P, M> {
             this.lit = lit;
             this.next = next;
             this.count = 0;
+            this.fading = false;
         }
 
-        private void append(final Matrix4fc model, final Matrix3f normal) {
+        private void append(final Matrix4fc model, final Matrix3f normal, final float fade) {
             final var floats = InstanceVertexLayout.getFloatsCount();
             if ((count + 1) * floats > data.length)
                 data = Arrays.copyOf(data, data.length * 2);
@@ -145,6 +158,8 @@ public final class InstanceBatcher<S, P, M> {
             final var offset = count * floats;
             model.get(data, offset);
             normal.get(data, offset + InstanceVertexLayout.MatrixModel.getSize());
+            data[offset + InstanceVertexLayout.MatrixModel.getSize() + InstanceVertexLayout.MatrixNormal.getSize()] = fade;
+            fading |= fade != 1.f;
             count++;
         }
 

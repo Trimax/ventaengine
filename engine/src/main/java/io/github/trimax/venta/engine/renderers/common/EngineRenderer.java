@@ -9,6 +9,7 @@ import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
+import io.github.trimax.venta.engine.helpers.LodHelper;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.renderers.instance.SceneInstanceRenderer;
@@ -35,6 +36,8 @@ public final class EngineRenderer {
     private final SceneInstanceRenderer sceneRenderer;
     private final DebugRenderer debugRenderer;
 
+    private final LodHelper lodHelper = new LodHelper();
+
     /** Releases the GL objects of the renderers, the context must be alive */
     public void release() {
         shadowRenderer.release();
@@ -53,6 +56,9 @@ public final class EngineRenderer {
 
         // The light of the skybox is convolved when the skybox is new
         environmentRenderer.prepare(sceneManager.getCurrent().getSkybox());
+
+        // The levels of detail are chosen once: the shadows and the scene draw the same ones
+        lodHelper.update(sceneManager.getCurrent().getObjects(), camera.getPosition(), window.getProjectionMatrix().m11(), (float) time.getDelta());
 
         // The shadow maps are drawn first, the scene takes them
         shadowRenderer.render(sceneManager.getCurrent(), camera, window, time);

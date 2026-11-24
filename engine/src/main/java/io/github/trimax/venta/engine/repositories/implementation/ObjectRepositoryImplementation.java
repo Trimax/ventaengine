@@ -1,15 +1,18 @@
 package io.github.trimax.venta.engine.repositories.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.model.common.hierarchy.LodLevel;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshPart;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.dto.ObjectDTO;
+import io.github.trimax.venta.engine.model.dto.object.ObjectLodDTO;
 import io.github.trimax.venta.engine.model.dto.object.ObjectMeshDTO;
 import io.github.trimax.venta.engine.model.prefabs.ObjectPrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.Abettor;
@@ -43,9 +46,32 @@ public final class ObjectRepositoryImplementation
         log.info("Loading object {}", resourcePath);
 
         final var objectDTO = resourceService.getAsObject(String.format("/objects/%s", resourcePath), ObjectDTO.class);
+        final var root = loadMeshHierarchy(objectDTO.root());
+
+        // The levels are placed by the main model, or a simpler model would be scaled to its own size and jump when it replaces the main one
+        final var lods = loadLevels(resourcePath, objectDTO.lods(), root);
         return abettor.createObject(programRegistry.get(objectDTO.program()),
                 Optional.ofNullable(objectDTO.material()).map(materialRegistry::get).orElse(null),
-                MeshUtil.normalize(loadMeshHierarchy(objectDTO.root())));
+                MeshUtil.normalize(root), lods);
+    }
+
+    private List<LodLevel> loadLevels(final String resourcePath, final List<ObjectLodDTO> levels, final Node<MeshReference> main) {
+        if (levels == null || levels.isEmpty())
+            return List.of();
+
+        var previous = 1.f;
+        final var result = new ArrayList<LodLevel>(levels.size());
+        for (final var level : levels) {
+            final var size = level.screenSize();
+            if (!(size > 0.f && size < previous))
+                throw new IllegalArgumentException(String.format("The levels of detail of %s must go from the nearest to the farthest: the screen size "
+                        + "of a level must be greater than 0 and less than %s, got %s", resourcePath, previous, size));
+
+            result.add(new LodLevel(MeshUtil.normalize(loadMeshHierarchy(level.root()), main), size, Boolean.TRUE.equals(level.facing())));
+            previous = size;
+        }
+
+        return List.copyOf(result);
     }
     
     private Node<MeshReference> loadMeshHierarchy(@NonNull final Node<ObjectMeshDTO> node) {

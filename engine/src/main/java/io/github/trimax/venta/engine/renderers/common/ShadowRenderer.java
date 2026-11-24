@@ -173,7 +173,7 @@ public final class ShadowRenderer {
 
         for (final var object : scene.getObjects())
             if (object.isVisible() && culler.isVisible(object.getBox(), object.getTransform().getMatrix(), margin))
-                collect(objects, cutoutObjects, object.getMaterial(), object.getMesh(), object.getTransform().getMatrix(), 0);
+                collect(objects, cutoutObjects, object.getMaterial(), object.getMesh(object.getModelLod()), object.getTransform().getMatrix(), 0);
 
         instanceBuffer.begin();
         append(solids);
