@@ -60,6 +60,7 @@ public final class ShadowRenderer {
     private final Memory memory;
 
     private final Vector3f cameraForward = new Vector3f();
+    private final ObjectPass pass = new ObjectPass();
 
     private ShadowMap map;
     private FloatBuffer matrixBuffer;
@@ -100,7 +101,7 @@ public final class ShadowRenderer {
             glClear(GL_DEPTH_BUFFER_BIT);
 
             drawTerrain(scene, terrain, cascades.get(i));
-            drawObjects(scene, new ObjectPass(objects, cutouts, cascades.get(i)));
+            drawObjects(scene, pass.with(objects, cutouts, cascades.get(i)));
         }
 
         glUseProgram(0);
@@ -197,16 +198,19 @@ public final class ShadowRenderer {
 
     /** The programs and the cascade of the pass over the objects, and the program that is in use */
     private static final class ObjectPass {
-        private final ProgramEntityImplementation objects;
-        private final ProgramEntityImplementation cutouts;
-        private final ShadowCascade cascade;
-
+        private ProgramEntityImplementation objects;
+        private ProgramEntityImplementation cutouts;
+        private ShadowCascade cascade;
         private ProgramEntityImplementation active;
 
-        private ObjectPass(final ProgramEntityImplementation objects, final ProgramEntityImplementation cutouts, final ShadowCascade cascade) {
+        /** Sets up the pass for a cascade, the same instance serves every cascade of every frame */
+        private ObjectPass with(final ProgramEntityImplementation objects, final ProgramEntityImplementation cutouts, final ShadowCascade cascade) {
             this.objects = objects;
             this.cutouts = cutouts;
             this.cascade = cascade;
+            this.active = null;
+
+            return this;
         }
     }
 

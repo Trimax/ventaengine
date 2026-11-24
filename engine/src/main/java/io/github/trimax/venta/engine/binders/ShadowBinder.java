@@ -40,18 +40,18 @@ public final class ShadowBinder extends AbstractBinder {
 
         try (final var stack = MemoryStack.stackPush()) {
             final var matrices = stack.mallocFloat(16 * count);
-            final var splits = new float[count];
-            final var texels = new float[count];
+            final var splits = stack.mallocFloat(count);
+            final var texels = stack.mallocFloat(count);
 
             for (int i = 0; i < count; i++) {
                 cascades.get(i).matrix().get(16 * i, matrices);
-                splits[i] = cascades.get(i).farDistance();
-                texels[i] = cascades.get(i).texelSize();
+                splits.put(i, cascades.get(i).farDistance());
+                texels.put(i, cascades.get(i).texelSize());
             }
 
             bindMatrix4(program.getUniformID(ShaderUniform.ShadowMatrices), matrices);
-            bind(program.getUniformID(ShaderUniform.ShadowSplits), splits);
-            bind(program.getUniformID(ShaderUniform.ShadowTexels), texels);
+            bindFloats(program.getUniformID(ShaderUniform.ShadowSplits), splits);
+            bindFloats(program.getUniformID(ShaderUniform.ShadowTexels), texels);
         }
     }
 }

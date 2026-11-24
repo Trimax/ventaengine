@@ -114,16 +114,26 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
      * for the objects that have such a surface, because a shader that can discard fragments loses the early depth test.
      */
     private ProgramEntityImplementation getProgram(final ObjectInstanceImplementation object) {
-        if (object.hasCutout() && object.getProgram() == programRegistry.get(ProgramType.Default.getProgramName()))
-            return programRegistry.get(ProgramType.DefaultCutout.getProgramName());
+        if (!object.hasCutout())
+            return object.getProgram();
 
-        return object.getProgram();
+        final var context = getContext();
+        if (context.cutoutProgram == null) {
+            context.plainProgram = programRegistry.get(ProgramType.Default.getProgramName());
+            context.cutoutProgram = programRegistry.get(ProgramType.DefaultCutout.getProgramName());
+        }
+
+        return object.getProgram() == context.plainProgram ? context.cutoutProgram : object.getProgram();
     }
 
     @Getter(AccessLevel.PACKAGE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     public static final class ObjectRenderContext extends AbstractRenderContext<SceneInstanceRenderer.SceneRenderContext> {
         private SceneInstanceImplementation scene;
+
+        /** The shader of the objects and its variant with the holes, found when the first cutout object is drawn */
+        private ProgramEntityImplementation plainProgram;
+        private ProgramEntityImplementation cutoutProgram;
 
         public ObjectRenderContext withScene(final SceneInstanceImplementation scene) {
             this.scene = scene;
