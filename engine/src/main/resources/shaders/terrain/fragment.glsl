@@ -101,7 +101,7 @@ vec2 getTextureCoordinates(int layer) {
  * one of 8 random offsets of the texture and neighbour offsets are blended. Explicit gradients keep the mip level
  * of the original coordinates, so there are no seams where the offset changes.
  */
-vec4 sampleWithoutRepetition(sampler2DArray textures, vec2 coordinates, float layer) {
+vec4 sampleWithoutRepetition(sampler2DArray textures, vec2 coordinates, float layer, vec2 dx, vec2 dy) {
     float index = noise(coordinates * 0.35) * 8.0;
     float lower = floor(index);
     float fraction = fract(index);
@@ -109,8 +109,6 @@ vec4 sampleWithoutRepetition(sampler2DArray textures, vec2 coordinates, float la
     vec2 offset0 = sin(vec2(3.0, 7.0) * lower);
     vec2 offset1 = sin(vec2(3.0, 7.0) * (lower + 1.0));
 
-    vec2 dx = dFdx(coordinates);
-    vec2 dy = dFdy(coordinates);
     vec4 value0 = textureGrad(textures, vec3(coordinates + offset0, layer), dx, dy);
     vec4 value1 = textureGrad(textures, vec3(coordinates + offset1, layer), dx, dy);
 
@@ -118,8 +116,10 @@ vec4 sampleWithoutRepetition(sampler2DArray textures, vec2 coordinates, float la
 }
 
 vec4 sampleLayers(sampler2DArray textures, int layer0, int layer1, float blend) {
-    vec4 value0 = sampleWithoutRepetition(textures, getTextureCoordinates(layer0), float(layer0));
-    vec4 value1 = sampleWithoutRepetition(textures, getTextureCoordinates(layer1), float(layer1));
+    vec2 coordinates0 = getTextureCoordinates(layer0);
+    vec2 coordinates1 = getTextureCoordinates(layer1);
+    vec4 value0 = sampleWithoutRepetition(textures, coordinates0, float(layer0), dFdx(coordinates0), dFdy(coordinates0));
+    vec4 value1 = sampleWithoutRepetition(textures, coordinates1, float(layer1), dFdx(coordinates1), dFdy(coordinates1));
     return mix(value0, value1, blend);
 }
 
@@ -133,6 +133,16 @@ float getBrightnessVariation() {
 /* The frame of the normal maps: rows of the texture go along +v, while the green channel of an OpenGL normal map points up the image (-v) */
 mat3 getTangentFrame(vec3 normal) {
     return mat3(normalize(vertexTangent), -normalize(vertexBitangent), normal);
+}
+
+/*
+ * Patches of lighter and darker ground by the position in the world (not by the map: the same on a wall as on a slope),
+ * larger than the repeat of the texture and of two sizes, so the pattern of a texture of the steep ground doesn't repeat in rows.
+ */
+float getMacroVariation() {
+    vec2 point = (vertexPosition.xz + vec2(vertexPosition.y * 0.7, -vertexPosition.y * 0.4)) / max(worldSize, vec2(0.0001)) * 24.0;
+    float variation = noise(point) * 0.5 + noise(point * 3.1 + 17.0) * 0.3 + noise(point * 9.7 + 41.0) * 0.2;
+    return mix(0.6, 1.35, variation);
 }
 
 vec3 getNormal(int layer0, int layer1, float blend) {
@@ -200,7 +210,7 @@ vec4 sampleTriplanar(sampler2DArray textures, int layer, Triplanar triplanar) {
     vec4 result = vec4(0.0);
     for (int plane = 0; plane < 3; plane++)
         if (triplanar.weights[plane] > 0.001)
-            result += textureGrad(textures, vec3(getTriplanarTextureCoordinates(triplanar, plane, layer), float(layer)),
+            result += sampleWithoutRepetition(textures, getTriplanarTextureCoordinates(triplanar, plane, layer), float(layer),
                     triplanar.dx[plane] * materials[layer].tiling, triplanar.dy[plane] * materials[layer].tiling) * triplanar.weights[plane];
 
     return result;
@@ -211,7 +221,7 @@ vec3 sampleTriplanarNormal(int layer, Triplanar triplanar) {
     vec3 result = vec3(0.0);
     for (int plane = 0; plane < 3; plane++)
         if (triplanar.weights[plane] > 0.001) {
-            vec3 mapped = textureGrad(textureNormal, vec3(getTriplanarTextureCoordinates(triplanar, plane, layer), float(layer)),
+            vec3 mapped = sampleWithoutRepetition(textureNormal, getTriplanarTextureCoordinates(triplanar, plane, layer), float(layer),
                     triplanar.dx[plane] * materials[layer].tiling, triplanar.dy[plane] * materials[layer].tiling).rgb * 2.0 - 1.0;
             result += getTriplanarNormal(plane, triplanar.normal, mapped) * triplanar.weights[plane];
         }
@@ -328,7 +338,7 @@ void main() {
             continue;
 
         int layer = heightMaterialCount + i;
-        baseColor = mix(baseColor, sampleTriplanar(textureDiffuse, layer, triplanar).rgb * materials[layer].color.rgb * getBrightnessVariation(), weight);
+        baseColor = mix(baseColor, sampleTriplanar(textureDiffuse, layer, triplanar).rgb * materials[layer].color.rgb * getBrightnessVariation() * getMacroVariation(), weight);
 
         if (isSet(useTextureNormal))
             normal = normalize(mix(normal, sampleTriplanarNormal(layer, triplanar), weight));
