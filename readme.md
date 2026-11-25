@@ -26,6 +26,7 @@ between minor versions. Known issues and planned work are listed in [ROADMAP.md]
 | ![Shadows](examples/screenshots/shadow.jpg)<br>Cascaded shadows of the sun | ![Foliage](examples/screenshots/foliage.jpg)<br>Cutout leaves and fence, glass | ![Bloom](examples/screenshots/bloom.jpg)<br>Bloom and the disc of the sun |
 | ![Light shafts](examples/screenshots/light-shafts.jpg)<br>Light shafts of the sun in the fog | ![Point light shadows](examples/screenshots/point-shadows.jpg)<br>Shadows of three point lights | ![Spot lights](examples/screenshots/spot-lights.jpg)<br>Spot lights and their shadows |
 | ![Terrain slopes](examples/screenshots/terrain-slopes.jpg)<br>Rock on the steep ground of a terrain | ![Water depth](examples/screenshots/water-depth.jpg)<br>Depth of water, the bottom and the foam of the shore | ![Water reflections](examples/screenshots/water-reflections.jpg)<br>Reflections of the scene in water |
+| ![Terrain levels of detail](examples/screenshots/terrain-lod.jpg)<br>Levels of detail of a huge terrain, as lines | | |
 
 More screenshots can be produced by running the [examples](#examples).
 
@@ -224,6 +225,7 @@ Every example is a separate application in `examples` (`io.github.trimax.example
 | `shadow.ShadowVentaApplication` | Shadows of the sun: cubes and tetrahedrons on a plane under a low sun |
 | `lod.LodVentaApplication` | Levels of detail: hundreds of spheres in rows with four levels each (the color tells the level) and cards with a picture, the camera flies along the rows and the log counts the spheres by level |
 | `pointshadow.PointShadowVentaApplication` | Shadows of point lights: pillars and cubes in the dark, two lights fly around them and a third stands still, every one throws its own colored shadows |
+| `terrainlod.TerrainLodVentaApplication` | Levels of detail of a terrain: a huge terrain (4 by 4 kilometers) drawn as lines, a camera that flies over it; the space key switches to the solid terrain
 | `spotlight.SpotLightVentaApplication` | Spot lights: pillars and cubes in the dark, a cone over the middle and two cones that sweep over the plane, every one throws its own colored shadows
 | `foliage.FoliageVentaApplication` | Cutout materials: trees made of cards of leaves, a chain link fence and panes of glass, with shadows |
 | `skybox.SkyboxVentaApplication`, `reflection.ReflectionVentaApplication` | Skybox and reflections |
