@@ -33,6 +33,7 @@ import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.WaterSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.renderers.common.PostProcessingRenderer;
+import io.github.trimax.venta.engine.renderers.common.ReflectionRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,6 +45,7 @@ public final class WaterSurfaceInstanceRenderer extends
         AbstractInstanceRenderer<WaterSurfaceInstanceImplementation, WaterSurfaceInstanceRenderer.WaterSurfaceRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final WaterMaterialBinder waterMaterialBinder;
     private final PostProcessingRenderer postProcessingRenderer;
+    private final ReflectionRenderer reflectionRenderer;
     private final WaterFoamBinder waterFoamBinder;
     private final GeometryHelper geometryHelper;
     private final TextureBinder textureBinder;
@@ -73,13 +75,14 @@ public final class WaterSurfaceInstanceRenderer extends
             shadowBinder.bind(surface.getProgram());
         }
 
-        cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());
+        cameraBinder.bind(surface.getProgram(), getContext().getParent().getCameraPosition());
 
         matrixBinder.bindModelMatrix(surface.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindNormalMatrix(surface.getProgram(), getContext().getNormalMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(surface.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
         matrixBinder.bindViewProjectionInverseMatrix(surface.getProgram(), getContext().getParent().getViewProjectionInverseMatrixBuffer());
         bindSceneTextures(surface);
+        bindReflection(surface);
 
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
         waveBinder.bind(surface.getProgram(), surface.getWaveAmplitude());
@@ -95,6 +98,23 @@ public final class WaterSurfaceInstanceRenderer extends
         geometryHelper.render(surface.getGridMesh().getGeometry());
 
         glUseProgram(0);
+    }
+
+    /** The reflection of the scene, when this is the water it is drawn for: the water looks it up by the projection of the mirror image */
+    private void bindReflection(final WaterSurfaceInstanceImplementation surface) {
+        final var program = surface.getProgram();
+        final var reflected = reflectionRenderer.getWater() == surface;
+
+        glUniform1i(program.getUniformID(ShaderUniform.UseReflection), reflected ? 1 : 0);
+        glUniform1i(program.getUniformID(ShaderUniform.TextureReflection), TextureUnit.Reflection.getId());
+        if (!reflected)
+            return;
+
+        matrixBinder.bindViewProjectionReflectionMatrix(program, reflectionRenderer.getViewProjectionMatrixBuffer());
+
+        glActiveTexture(TextureUnit.Reflection.getLocationID());
+        glBindTexture(GL_TEXTURE_2D, reflectionRenderer.getTextureID());
+        glActiveTexture(GL_TEXTURE0);
     }
 
     /** The opaque scene behind the water: its depth gives the depth of the water, its color is what is seen through it */

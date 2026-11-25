@@ -25,6 +25,17 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
         water.setPosition(new Vector3f(0f, 1.5f, 0f));
         scene.add(water);
 
+        // Pillars that stand in the water: they are reflected in it and the water is white with foam around them
+        final var cube = context.getObjectRepository().get("cube.json");
+        for (int i = 0; i < 6; i++) {
+            final var angle = (float) Math.PI / 4.f + (i - 2.5f) * 0.22f;
+            final var distance = 16.f + (i % 3) * 7.f;
+            final var pillar = context.getObjectManager().create("Pillar " + i, cube);
+            pillar.setScale(new Vector3f(2.f, 2.f, 2.f));
+            pillar.setPosition(new Vector3f((float) Math.sin(angle) * distance, 1.5f + (9.f + i) / 2.f - 2.f, (float) Math.cos(angle) * distance));
+            scene.add(pillar);
+        }
+
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(0f, 5f, 0f));
         camera.lookAt(new Vector3f(-1f, 5f, -1f));

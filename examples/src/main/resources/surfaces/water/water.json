@@ -6,7 +6,8 @@
     "colorDepth": {"r": 0.01, "g": 0.13, "b": 0.28, "a": 1.0},
     "colorPeak": {"r": 0.95, "g": 0.97, "b": 1.0, "a": 1.0},
     "metalness": 1.0,
-    "opacity": 1.0
+    "opacity": 1.0,
+    "reflections": true
   },
   "foam": {
     "threshold": 0.85,

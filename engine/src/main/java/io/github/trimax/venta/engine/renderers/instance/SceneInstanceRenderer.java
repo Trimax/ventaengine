@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.ToDoubleFunction;
 
+import org.joml.Matrix4fc;
+import org.joml.Vector3fc;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
@@ -111,13 +113,14 @@ public final class SceneInstanceRenderer
 
         // Water is semi-transparent, so it is rendered after the geometry which can be seen through it: the geometry is
         // resolved for it to read (the depth of the water, the bottom seen through it)
-        if (StreamEx.of(scene.getWaterSurfaces()).anyMatch(WaterSurfaceInstanceImplementation::isVisible)) {
+        final var water = !getContext().isReflection() && StreamEx.of(scene.getWaterSurfaces()).anyMatch(WaterSurfaceInstanceImplementation::isVisible);
+        if (water) {
             postProcessingRenderer.resolveScene();
             getContext().setSceneResolved(true);
         }
 
         for (final var surface : scene.getWaterSurfaces()) {
-            if (!surface.isVisible())
+            if (!water || !surface.isVisible())
                 continue;
 
             try (final var _ = waterSurfaceRenderer.withContext(getContext())
@@ -125,6 +128,12 @@ public final class SceneInstanceRenderer
                     .withScene(scene)) {
                 waterSurfaceRenderer.render(waterSurfaceManager.getInstance(surface.getID()));
             }
+        }
+
+        // The reflection is the geometry and the sky: the particles and the billboards are not worth a second pass
+        if (getContext().isReflection()) {
+            glDisable(GL_BLEND);
+            return;
         }
 
         glDepthMask(false);
@@ -167,6 +176,12 @@ public final class SceneInstanceRenderer
         private CameraInstanceImplementation camera;
         private Engine.VentaTime time;
 
+        /** Where the shaders see the scene from: the camera, or its mirror image when the reflection is drawn */
+        private final Vector3f cameraPosition = new Vector3f();
+
+        /** Whether this is the reflection of the water: it has no water, particles or billboards */
+        private boolean reflection;
+
         /**
          * Whether the opaque scene of this frame is resolved to textures (see {@link PostProcessingRenderer#resolveScene()}).
          */
@@ -188,7 +203,7 @@ public final class SceneInstanceRenderer
         }
 
         private double getDistanceToCamera(final ObjectInstanceImplementation object) {
-            return object.getTransform().getMatrix().getTranslation(objectPosition).distanceSquared(camera.getPosition());
+            return object.getTransform().getMatrix().getTranslation(objectPosition).distanceSquared(cameraPosition);
         }
 
         /**
@@ -200,16 +215,36 @@ public final class SceneInstanceRenderer
         }
 
         public SceneRenderContext with(final WindowState window, final CameraInstanceImplementation camera) {
-            window.getProjectionMatrix().mul(camera.getViewMatrix(), viewProjectionMatrix);
-            projectionMatrix.set(window.getProjectionMatrix());
-            viewMatrix.set(camera.getViewMatrix());
+            reflection = false;
+            cameraPosition.set(camera.getPosition());
+            this.camera = camera;
+
+            return apply(camera.getViewMatrix(), window.getProjectionMatrix());
+        }
+
+        /**
+         * The scene as the mirror image of the camera sees it, for the reflection of the water: its view and projection (with the
+         * plane of the water cutting what is under it), and the position it looks from. What is drawn in the reflection
+         * is the geometry and the sky only.
+         */
+        public SceneRenderContext withReflection(final CameraInstanceImplementation camera, final Matrix4fc view, final Matrix4fc projection, final Vector3fc position) {
+            reflection = true;
+            cameraPosition.set(position);
+            this.camera = camera;
+
+            return apply(view, projection);
+        }
+
+        private SceneRenderContext apply(final Matrix4fc view, final Matrix4fc projection) {
+            projection.mul(view, viewProjectionMatrix);
+            projectionMatrix.set(projection);
+            viewMatrix.set(view);
 
             culler.set(viewProjectionMatrix, FrustumHelper.ALL_PLANES);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
             viewProjectionMatrix.invert(viewProjectionInverseMatrix).get(viewProjectionInverseMatrixBuffer);
             projectionMatrix.get(projectionMatrixBuffer);
             viewMatrix.get(viewMatrixBuffer);
-            this.camera = camera;
 
             return this;
         }
@@ -226,6 +261,7 @@ public final class SceneInstanceRenderer
             viewMatrixBuffer.clear();
             programsWithLights.clear();
             sceneResolved = false;
+            reflection = false;
             time = null;
         }
 

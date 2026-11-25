@@ -34,16 +34,20 @@ public final class WaterMaterial {
     /** How far the bottom seen through the water is shifted by its ripples, a share of the screen (0 is none) */
     float refraction;
 
+    /** Whether the water mirrors the scene: the scene is drawn once more for the nearest water that has it (see ReflectionRenderer) */
+    boolean reflections;
+
     public WaterMaterial(@NonNull final WaterMaterialDTO dto) {
         this(dto.colorSurface().toVector3f(), dto.colorDepth().toVector3f(), dto.colorPeak().toVector3f(),
                 dto.metalness(), dto.opacity(),
                 dto.depthDistance() == null ? DEFAULT_DEPTH_DISTANCE : checkDepthDistance(dto.depthDistance()),
-                dto.refraction() == null ? DEFAULT_REFRACTION : checkRefraction(dto.refraction()));
+                dto.refraction() == null ? DEFAULT_REFRACTION : checkRefraction(dto.refraction()),
+                dto.reflections() != null && dto.reflections());
     }
 
     public WaterMaterial(@NonNull final WaterMaterial material) {
         this(new Vector3f(material.colorSurface), new Vector3f(material.colorDepth), new Vector3f(material.colorPeak),
-                material.getMetalness(), material.getOpacity(), material.getDepthDistance(), material.getRefraction());
+                material.getMetalness(), material.getOpacity(), material.getDepthDistance(), material.getRefraction(), material.isReflections());
     }
 
     private static float checkDepthDistance(final float depthDistance) {

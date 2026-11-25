@@ -75,7 +75,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         glUseProgram(program.getInternalID());
         glPolygonMode(GL_FRONT_AND_BACK, object.getDrawMode().getMode());
 
-        cameraBinder.bind(program, getContext().getParent().getCamera());
+        cameraBinder.bind(program, getContext().getParent().getCameraPosition());
         objectBinder.bind(program, object);
         matrixBinder.bindViewProjectionMatrix(program, context.getParent().getViewProjectionMatrixBuffer());
 
@@ -233,7 +233,7 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         final var context = getContext();
 
         glUseProgram(program.getInternalID());
-        cameraBinder.bind(program, context.getParent().getCamera());
+        cameraBinder.bind(program, context.getParent().getCameraPosition());
         matrixBinder.bindViewProjectionMatrix(program, context.getParent().getViewProjectionMatrixBuffer());
 
         if (context.getParent().markLightsBound(program)) {

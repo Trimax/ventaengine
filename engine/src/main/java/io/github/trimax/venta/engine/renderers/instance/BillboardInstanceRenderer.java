@@ -46,7 +46,7 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
         matrixBinder.bindModelMatrix(billboard.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(billboard.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());
 
-        cameraBinder.bind(billboard.getProgram(), getContext().getParent().getCamera());
+        cameraBinder.bind(billboard.getProgram(), getContext().getParent().getCameraPosition());
         fogBinder.bind(billboard.getProgram(), getContext().getScene().getFog(), getContext().getScene().getDirectionalLight());
         spriteBinder.bindSprite(billboard.getProgram(), billboard.getSprite(), getFrameIndex(billboard.getSprite()));
 
