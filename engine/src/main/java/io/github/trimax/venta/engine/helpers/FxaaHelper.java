@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL20C.*;
-import static org.lwjgl.opengl.GL30C.*;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 
 import java.util.function.ToIntFunction;
 
@@ -12,26 +12,21 @@ import io.github.trimax.venta.engine.enums.ProgramType;
 import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Smooths the edges of a finished image on the GPU (FXAA): a full screen pass reads the tone mapped image and draws the
  * smoothed one into the framebuffer that is bound. The state of OpenGL that the pass changes is restored.
  */
+@RequiredArgsConstructor
 public final class FxaaHelper {
-    private final ToIntFunction<String> programs;
+    @NonNull
     private final Memory memory;
 
-    private int vertexArrayID;
+    @NonNull
+    private final ToIntFunction<String> programs;
 
-    /**
-     * Creates a helper that draws with the program of FXAA.
-     *
-     * @param programs gives the identifier of a program by its name, see {@link ProgramType}
-     */
-    public FxaaHelper(@NonNull final Memory memory, @NonNull final ToIntFunction<String> programs) {
-        this.memory = memory;
-        this.programs = programs;
-    }
+    private int vertexArrayID;
 
     /**
      * Draws the smoothed image into the bound framebuffer, over all of its viewport.
