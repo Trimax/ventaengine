@@ -33,6 +33,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import io.github.trimax.venta.engine.renderers.common.PostProcessingRenderer;
+import io.github.trimax.venta.engine.model.instance.implementation.WaterSurfaceInstanceImplementation;
+import one.util.streamex.StreamEx;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 @Component
@@ -41,6 +45,7 @@ public final class SceneInstanceRenderer
         extends AbstractInstanceRenderer<SceneInstanceImplementation, SceneInstanceRenderer.SceneRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final TerrainSurfaceManagerImplementation terrainSurfaceManager;
     private final WaterSurfaceManagerImplementation waterSurfaceManager;
+    private final PostProcessingRenderer postProcessingRenderer;
     private final EmitterManagerImplementation emitterManager;
     private final ObjectManagerImplementation objectManager;
     private final TerrainSurfaceInstanceRenderer terrainSurfaceRenderer;
@@ -104,7 +109,13 @@ public final class SceneInstanceRenderer
             }
         }
 
-        // Water is semi-transparent, so it is rendered after the geometry which can be seen through it
+        // Water is semi-transparent, so it is rendered after the geometry which can be seen through it: the geometry is
+        // resolved for it to read (the depth of the water, the bottom seen through it)
+        if (StreamEx.of(scene.getWaterSurfaces()).anyMatch(WaterSurfaceInstanceImplementation::isVisible)) {
+            postProcessingRenderer.resolveScene();
+            getContext().setSceneResolved(true);
+        }
+
         for (final var surface : scene.getWaterSurfaces()) {
             if (!surface.isVisible())
                 continue;
@@ -140,6 +151,8 @@ public final class SceneInstanceRenderer
         private final FloatBuffer projectionMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final FloatBuffer viewMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final Matrix4f viewProjectionMatrix = new Matrix4f();
+        private final Matrix4f viewProjectionInverseMatrix = new Matrix4f();
+        private final FloatBuffer viewProjectionInverseMatrixBuffer = MemoryUtil.memAllocFloat(16);
         private final Matrix4f projectionMatrix = new Matrix4f();
         private final Matrix4f viewMatrix = new Matrix4f();
 
@@ -153,6 +166,12 @@ public final class SceneInstanceRenderer
 
         private CameraInstanceImplementation camera;
         private Engine.VentaTime time;
+
+        /**
+         * Whether the opaque scene of this frame is resolved to textures (see {@link PostProcessingRenderer#resolveScene()}).
+         */
+        @Setter
+        private boolean sceneResolved;
 
         /** Programs are cached by the registry, so they are compared by reference */
         @Getter(AccessLevel.NONE)
@@ -187,6 +206,7 @@ public final class SceneInstanceRenderer
 
             culler.set(viewProjectionMatrix, FrustumHelper.ALL_PLANES);
             viewProjectionMatrix.get(viewProjectionMatrixBuffer);
+            viewProjectionMatrix.invert(viewProjectionInverseMatrix).get(viewProjectionInverseMatrixBuffer);
             projectionMatrix.get(projectionMatrixBuffer);
             viewMatrix.get(viewMatrixBuffer);
             this.camera = camera;
@@ -205,12 +225,14 @@ public final class SceneInstanceRenderer
             projectionMatrixBuffer.clear();
             viewMatrixBuffer.clear();
             programsWithLights.clear();
+            sceneResolved = false;
             time = null;
         }
 
         @Override
         public void destroy() {
             MemoryUtil.memFree(viewProjectionMatrixBuffer);
+            MemoryUtil.memFree(viewProjectionInverseMatrixBuffer);
             MemoryUtil.memFree(projectionMatrixBuffer);
             MemoryUtil.memFree(viewMatrixBuffer);
         }

@@ -7,6 +7,7 @@
 #include "common/noise.glsl"
 #include "common/point-shadow.glsl"
 #include "common/shadow.glsl"
+#include "common/water-depth.glsl"
 
 /***
  * Definitions
@@ -25,6 +26,8 @@ struct Material {
     vec3 colorPeak;
     float metalness;
     float opacity;
+    float depthDistance;
+    float refraction;
 };
 
 struct Noise {
@@ -37,6 +40,8 @@ struct Noise {
 struct Foam {
     float threshold;
     float intensity;
+    float shoreWidth;
+    float shoreIntensity;
 };
 
 /***
@@ -52,6 +57,12 @@ in float vertexTimeElapsed;
 
 /* Textures */
 uniform samplerCube textureSkybox;
+
+/* The opaque scene behind the water (its depth and color), when it is resolved for the water to read */
+uniform sampler2D textureSceneColor;
+uniform sampler2D textureSceneDepth;
+uniform int useSceneTextures;
+uniform mat4 matrixViewProjectionInverse;
 
 /* Feature flags */
 uniform int useTextureSkybox;
@@ -156,6 +167,30 @@ vec3 computeLighting(vec3 baseColor, vec3 normal, vec3 cameraDirection) {
     return result;
 }
 
+/*
+ * The world position of the opaque scene at a point of the screen: the position of what lies under the water there. The sky
+ * (the far plane) is infinitely far.
+ */
+vec3 getScenePosition(vec2 coordinates, float depth) {
+    vec4 position = matrixViewProjectionInverse * vec4(vec3(coordinates, depth) * 2.0 - 1.0, 1.0);
+    return position.xyz / position.w;
+}
+
+/* How much water the view goes through at a point of the screen, up to the opaque scene behind it */
+float getThickness(vec2 coordinates) {
+    float depth = texture(textureSceneDepth, coordinates).r;
+
+    // Nothing behind the water: the sky, or the depth of the water is not known
+    if (depth >= 1.0)
+        return material.depthDistance * 10.0;
+
+    // What stands in front of this point of the water can not be seen under it
+    if (depth <= gl_FragCoord.z)
+        return 0.0;
+
+    return distance(getScenePosition(coordinates, depth), vertexPosition);
+}
+
 const float WATER_REFLECTANCE = 0.02;
 
 vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
@@ -190,7 +225,31 @@ void main() {
     vec3 normal = calculateNormal();
 
     vec3 colorWithLighting = computeLighting(calculateColor(), normal, cameraDirection);
+
+    if (isSet(useSceneTextures)) {
+        // The bottom is seen through the ripples, and the deeper the water, the less of it
+        vec2 coordinates = gl_FragCoord.xy / vec2(textureSize(textureSceneDepth, 0));
+        float thickness = getThickness(coordinates);
+
+        vec2 refracted = getRefractedCoordinates(coordinates, normal, material.refraction, thickness, material.depthDistance);
+
+        // What stands out of the water in front of the shifted point must not be dragged into the water
+        if (texture(textureSceneDepth, refracted).r < gl_FragCoord.z)
+            refracted = coordinates;
+        else
+            thickness = getThickness(refracted);
+
+        vec3 bottom = texture(textureSceneColor, refracted).rgb;
+        colorWithLighting = mix(colorWithLighting, bottom, getWaterTransmittance(thickness, material.depthDistance));
+
+        // The foam of the shore, lit as a surface of its color
+        float pattern = noise(vertexPosition.xz * 0.9 + timeElapsed * 0.25) * 0.6 + noise(vertexPosition.xz * 2.3 - timeElapsed * 0.4) * 0.4;
+        float shore = getShoreFoam(thickness, foam.shoreWidth, foam.shoreIntensity, pattern);
+        if (shore > 0.0)
+            colorWithLighting = mix(colorWithLighting, computeLighting(material.colorPeak, normal, cameraDirection), shore);
+    }
+
     vec3 colorWithReflections = applyReflections(colorWithLighting, cameraDirection, normal);
 
-    outputColor = vec4(applyFog(clamp(colorWithReflections, 0.0, 1.0)), material.opacity);
+    outputColor = vec4(applyFog(max(colorWithReflections, vec3(0.0))), material.opacity);
 }

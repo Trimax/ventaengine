@@ -50,6 +50,12 @@ public final class PostProcessingRenderer {
     private int sceneColorID;
     private int sceneDepthID;
     private int resolvedFramebufferID;
+
+    /**
+     * The color of the resolved scene: the post passes read it, and so does the water in the middle of the frame
+     * (see {@link #resolveScene()}).
+     */
+    @Getter
     private int resolvedTextureID;
 
     /* The depth of the resolved scene, and a framebuffer of its color alone: a pass can add light to the scene and read the depth */
@@ -103,6 +109,17 @@ public final class PostProcessingRenderer {
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolvedFramebufferID);
         glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, depth ? GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT : GL_COLOR_BUFFER_BIT, GL_NEAREST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    /**
+     * Resolves what is drawn so far (the color and the depth) in the middle of the frame, and goes on drawing into the scene: a
+     * surface drawn after it (the water) can read the opaque scene behind it. The post passes resolve it again after the frame.
+     */
+    public void resolveScene() {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, sceneFramebufferID);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolvedFramebufferID);
+        glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+        glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebufferID);
     }
 
     /**

@@ -21,7 +21,9 @@ public enum TextureUnit {
     Irradiance(GL_TEXTURE9, 9),
     Prefilter(GL_TEXTURE10, 10),
     Brdf(GL_TEXTURE11, 11),
-    PointShadow(GL_TEXTURE12, 12);
+    PointShadow(GL_TEXTURE12, 12),
+    SceneColor(GL_TEXTURE13, 13),
+    SceneDepth(GL_TEXTURE14, 14);
 
     private final int locationID;
     private final int id;
