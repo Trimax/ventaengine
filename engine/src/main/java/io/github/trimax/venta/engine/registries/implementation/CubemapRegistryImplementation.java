@@ -19,6 +19,7 @@ import io.github.trimax.venta.engine.enums.CubemapFace;
 import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureFormat;
 import io.github.trimax.venta.engine.exceptions.CubemapBakeException;
+import io.github.trimax.venta.engine.helpers.EquirectangularHelper;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.layouts.CubemapVertexLayout;
 import io.github.trimax.venta.engine.memory.Memory;
@@ -52,6 +53,35 @@ public final class CubemapRegistryImplementation
     }
 
     private CubemapEntityImplementation load(@NonNull final String resourcePath, final CubemapDTO dto) {
+        try {
+            dto.check();
+        } catch (final IllegalArgumentException exception) {
+            throw new CubemapBakeException(String.format("Cubemap %s can't be constructed: %s", resourcePath, exception.getMessage()), exception);
+        }
+
+        return dto.isEquirectangular() ? loadPanorama(resourcePath, dto) : loadFaces(resourcePath, dto);
+    }
+
+    /** A sky of one panorama in HDR: the cube map of floats is drawn from it, nothing of the panorama stays in the memory */
+    private CubemapEntityImplementation loadPanorama(@NonNull final String resourcePath, final CubemapDTO dto) {
+        return get(resourcePath, () -> {
+            final var helper = new EquirectangularHelper(memory, name -> programRegistry.get(name).getInternalID());
+
+            final int textureID;
+            try {
+                textureID = helper.convert(resourceService.getAsBytes("/textures/" + dto.equirectangular()), resourcePath, dto.getResolution(), dto.getClampValue());
+            } catch (final IllegalArgumentException exception) {
+                throw new CubemapBakeException(String.format("Cubemap %s can't be constructed: %s", resourcePath, exception.getMessage()), exception);
+            }
+
+            return abettor.createCubemap(new EnumMap<>(CubemapFace.class), programRegistry.get(dto.program()), TextureFormat.RGB,
+                    geometryHelper.create(resourcePath, CubemapVertexLayout.class,
+                            DefinitionsGeometry.Skybox.VERTICES, DefinitionsGeometry.Skybox.FACETS, null),
+                    textureID, true);
+        });
+    }
+
+    private CubemapEntityImplementation loadFaces(@NonNull final String resourcePath, final CubemapDTO dto) {
         return get(resourcePath, () -> {
             final int textureID = memory.getTextures().create("3D texture %s", resourcePath);
             glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
@@ -83,7 +113,7 @@ public final class CubemapRegistryImplementation
             return abettor.createCubemap(buffers, programRegistry.get(dto.program()), format,
                     geometryHelper.create(resourcePath, CubemapVertexLayout.class,
                             DefinitionsGeometry.Skybox.VERTICES, DefinitionsGeometry.Skybox.FACETS, null),
-                    textureID);
+                    textureID, false);
         });
     }
 

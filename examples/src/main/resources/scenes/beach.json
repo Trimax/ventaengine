@@ -1,8 +1,8 @@
 {
   "ambientLight": {
-    "r": 0.74,
-    "g": 0.68,
-    "b": 0.64,
+    "r": 0.5,
+    "g": 0.49,
+    "b": 0.5,
     "a": 1.0
   },
   "directionalLight": {
@@ -19,9 +19,7 @@
     },
     "intensity": 4.2,
     "castShadows": true,
-    "shadowDistance": 160,
-    "discSize": 1.4,
-    "discIntensity": 20.0
+    "shadowDistance": 160
   },
   "view": {
     "near": 0.3,
@@ -29,7 +27,7 @@
     "fov": 50.0
   },
   "bloom": {
-    "intensity": 0.14,
+    "intensity": 0.1,
     "threshold": 1.6,
     "softKnee": 0.5
   },
@@ -43,7 +41,7 @@
     "quality": "High"
   },
   "lightShafts": {
-    "intensity": 1.0,
+    "intensity": 0.7,
     "steps": 64,
     "anisotropy": 0.9
   },
@@ -69,7 +67,7 @@
     "strength": 0.9,
     "speed": 1.0
   },
-  "exposure": 0.76,
+  "exposure": 0.64,
   "toneMapping": "ACES",
   "skybox": "beach.json",
   "terrainSurfaces": [
