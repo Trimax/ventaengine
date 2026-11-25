@@ -77,8 +77,9 @@ public final class Abettor {
                                                      @NonNull final ProgramEntityImplementation program,
                                                      @NonNull final TextureFormat format,
                                                      @NonNull final Geometry geometry,
-                                                     final int internalID) {
-        return new CubemapEntityImplementation(buffers, program, format, geometry, internalID);
+                                                     final int internalID,
+                                                     final boolean hdr) {
+        return new CubemapEntityImplementation(buffers, program, format, geometry, internalID, hdr);
     }
 
     public SoundEntityImplementation createSound(final int bufferID, final float duration) {

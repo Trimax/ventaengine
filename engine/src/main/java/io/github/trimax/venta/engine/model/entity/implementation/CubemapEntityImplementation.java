@@ -28,4 +28,7 @@ public class CubemapEntityImplementation extends AbstractEntityImplementation im
     Geometry geometry;
 
     int internalID;
+
+    /** Whether the sky is made of a panorama in HDR: its colors are floats, with the brightness the sky really has */
+    boolean hdr;
 }
