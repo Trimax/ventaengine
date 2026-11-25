@@ -8,6 +8,7 @@ import io.github.trimax.venta.engine.model.instance.implementation.Abettor;
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.model.prefabs.TerrainSurfacePrefab;
 import io.github.trimax.venta.engine.model.prefabs.implementation.TerrainSurfacePrefabImplementation;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainChunks;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -38,7 +39,9 @@ public final class TerrainSurfaceManagerImplementation
                 prefab.getTextureArrays(),
                 prefab.getElevations(),
                 prefab.getSlopes(),
-                prefab.getFactor()));
+                prefab.getFactor(),
+                new TerrainChunks(prefab.getChunkLayout(), prefab.getChunkGeometry()),
+                prefab.getLodDistance()));
     }
 
     @Override

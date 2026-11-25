@@ -8,6 +8,8 @@ import io.github.trimax.venta.engine.controllers.EngineController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.engine.core.FPSCounter;
+import io.github.trimax.venta.engine.helpers.TerrainChunkHelper;
+import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.helpers.LodHelper;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
@@ -29,6 +31,7 @@ public final class EngineRenderer {
     private final CameraManagerImplementation cameraManager;
     private final SceneManagerImplementation sceneManager;
 
+    private final TerrainChunkHelper terrainChunkHelper;
     private final PostProcessingRenderer postProcessingRenderer;
     private final ReflectionRenderer reflectionRenderer;
     private final LightShaftRenderer lightShaftRenderer;
@@ -52,6 +55,7 @@ public final class EngineRenderer {
         pointShadowRenderer.release();
         shadowCasterRenderer.release();
         environmentRenderer.release();
+        terrainChunkHelper.release();
         reflectionRenderer.release();
         postProcessingRenderer.release();
     }
@@ -62,6 +66,7 @@ public final class EngineRenderer {
             engineController.get().setApplicationRunning(false);
 
         geometryHelper.startFrame();
+        terrainChunkHelper.startFrame();
 
         final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
 
@@ -70,6 +75,11 @@ public final class EngineRenderer {
 
         // The levels of detail are chosen once: the shadows and the scene draw the same ones
         lodHelper.update(sceneManager.getCurrent().getObjects(), camera.getPosition(), window.getProjectionMatrix().m11(), (float) time.getDelta());
+
+        // The chunks of the terrains get their levels of detail by the distance to the camera, the same ones in every pass
+        for (final var surface : sceneManager.getCurrent().getTerrainSurfaces())
+            if (surface instanceof TerrainSurfaceInstanceImplementation terrain && terrain.isVisible())
+                terrainChunkHelper.update(terrain.getChunks(), terrain.getTransform().getMatrix(), camera.getPosition(), terrain.getFactor(), terrain.getLodDistance());
 
         // The shadow maps are drawn first, the scene takes them
         shadowRenderer.render(sceneManager.getCurrent(), camera, window, time);

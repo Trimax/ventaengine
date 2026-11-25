@@ -35,7 +35,8 @@ void main() {
     float slopeX = (getHeight(textureCoordinates + vec2(texel.x, 0.0)) - getHeight(textureCoordinates - vec2(texel.x, 0.0))) / (2.0 * texel.x * size.x);
     float slopeZ = (getHeight(textureCoordinates + vec2(0.0, texel.y)) - getHeight(textureCoordinates - vec2(0.0, texel.y))) / (2.0 * texel.y * size.y);
 
-    vec3 localPosition = vec3(position.x, height, position.z);
+    // The skirts hang from the edge of a chunk: they are lit like it
+    vec3 localPosition = vec3(position.x, height - getSkirt(position.y), position.z);
     vec4 worldPosition = matrixModel * vec4(localPosition, 1.0);
 
     vertexPosition = worldPosition.xyz;

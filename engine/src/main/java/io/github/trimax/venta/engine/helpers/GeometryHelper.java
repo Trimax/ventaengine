@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.helpers;
 
+import static org.lwjgl.opengl.GL14C.glMultiDrawElements;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
@@ -12,6 +13,7 @@ import java.nio.IntBuffer;
 import java.util.Optional;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.PointerBuffer;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsBuffer;
@@ -64,6 +66,30 @@ public final class GeometryHelper {
             glDrawElements(GL_LINES, geometry.edges().length(), GL_UNSIGNED_INT, 0);
             drawCalls++;
         }
+
+        glBindVertexArray(0);
+    }
+
+    /**
+     * Draws parts of the facets of a geometry with one call: the chunks of a terrain, each with the indices of its level of detail.
+     *
+     * @param counts  how many indices every part has
+     * @param offsets where the indices of every part start in the facets, in bytes
+     * @param parts   how many parts there are, from the start of the buffers
+     */
+    public void renderParts(@NonNull final Geometry geometry, @NonNull final IntBuffer counts, @NonNull final PointerBuffer offsets, final int parts) {
+        if (!geometry.isRenderable() || !geometry.hasFacets() || parts <= 0)
+            return;
+
+        glBindVertexArray(geometry.objectID());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.facets().id());
+
+        counts.limit(parts);
+        offsets.limit(parts);
+        glMultiDrawElements(GL_TRIANGLES, counts, GL_UNSIGNED_INT, offsets);
+        counts.clear();
+        offsets.clear();
+        drawCalls++;
 
         glBindVertexArray(0);
     }

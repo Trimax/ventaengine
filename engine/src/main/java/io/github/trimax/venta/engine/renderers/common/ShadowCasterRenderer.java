@@ -11,6 +11,7 @@ import org.lwjgl.system.MemoryUtil;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
 import io.github.trimax.venta.engine.binders.ElevationBinder;
+import io.github.trimax.venta.engine.helpers.TerrainChunkHelper;
 import io.github.trimax.venta.engine.binders.MaterialBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.WindBinder;
@@ -46,6 +47,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ShadowCasterRenderer {
     private final ProgramRegistryImplementation programRegistry;
+    private final TerrainChunkHelper terrainChunkHelper;
     private final ElevationBinder elevationBinder;
     private final GeometryHelper geometryHelper;
     private final MaterialBinder materialBinder;
@@ -75,6 +77,7 @@ public final class ShadowCasterRenderer {
         final var cutoutObjects = programRegistry.get(ProgramType.ShadowCutoutInstanced.getProgramName());
         final var terrain = programRegistry.get(ProgramType.ShadowTerrain.getProgramName());
 
+        culler.set(matrix, planes);
         drawTerrain(scene, terrain, matrix);
 
         collectObjects(scene, objects, cutoutObjects, matrix, planes);
@@ -190,7 +193,8 @@ public final class ShadowCasterRenderer {
         elevationBinder.bind(program, surface.getHeightmap(), surface.getElevations(), surface.getFactor(), surface.getGridMesh().getSize());
         bindModel(program, surface.getTransform().getMatrix());
 
-        geometryHelper.render(surface.getGridMesh().getGeometry());
+        elevationBinder.bindSkirt(program, surface.getChunks().getSkirtDepth(surface.getFactor()));
+        terrainChunkHelper.draw(surface.getChunks(), surface.getTransform().getMatrix(), surface.getFactor(), culler);
     }
 
     private void bindLight(final ProgramEntityImplementation program, final Matrix4fc matrix) {

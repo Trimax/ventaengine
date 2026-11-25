@@ -55,4 +55,9 @@ public final class ElevationBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.SlopeMaximums), maximums);
         bind(program.getUniformID(ShaderUniform.SlopeBlends), blends);
     }
+
+    /** How deep the skirts of the chunks of the terrain hang, in the local space of the terrain */
+    public void bindSkirt(final ProgramEntityImplementation program, final float depth) {
+        bind(program.getUniformID(ShaderUniform.SkirtDepth), depth);
+    }
 }

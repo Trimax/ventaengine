@@ -1,6 +1,8 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.model.common.geo.Geometry;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainChunkLayout;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.prefabs.TerrainSurfacePrefab;
@@ -37,4 +39,14 @@ public class TerrainSurfacePrefabImplementation extends AbstractPrefabImplementa
     List<TerrainSlope> slopes;
 
     float factor;
+
+    /** The chunks of the terrain: where its grid is cut and the geometry of it, which the terrains of this prefab share */
+    @NonNull
+    TerrainChunkLayout chunkLayout;
+
+    @NonNull
+    Geometry chunkGeometry;
+
+    /** The distance (in the world) the first level of detail changes at, 0 for a bit more than the size of a chunk */
+    float lodDistance;
 }

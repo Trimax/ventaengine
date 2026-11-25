@@ -1,34 +1,35 @@
 # Roadmap
 
-All the known issues found during the code review of 1.2.61 are fixed. The planned features are listed below in the
-order they will be done: every step builds on the previous ones and makes a visible difference on its own.
-The scene is rendered in HDR and tone mapped, so the post effects below render into its framebuffer, and the sun
-casts cascaded shadows (point and spot lights cast shadows too).
-Surfaces are shaded physically (a Cook-Torrance BRDF) and lit by their skybox (image based lighting); the skybox
-is 8 bit, so a loader of HDR environment maps (`.hdr`, `.exr`) would give the sun and the bright sky their real brightness.
-Materials can cut holes by the alpha of their texture (`"alphaMode": "cutout"`) and cast shadows with the holes; the edges of
-the holes are not antialiased by the multisampling yet (alpha to coverage would smooth them).
-Objects with cutout and opaque surfaces (`"alphaMode": "opaque"`; the default is `"blend"`, and such objects mix colors, so they are
-sorted from the farthest to the nearest and drawn one by one) are drawn with instancing (the copies of a mesh that share a material
-are one draw call, in the shadow maps as well); what is out of the view of the camera, or out of the box of a shadow cascade, is
-not drawn at all. An object can have simpler models that replace its main model when it is small on the screen (`"lods"`, cross fading by a dither, the last level can be a card with a picture); the levels of terrain are not made yet. Fog is a layer or exponential (it thins out with the height), glows towards the sun and hazes the horizon. The corners and the contacts are darker (`"ambientOcclusion"` of the scene, from the depth). The sun shines through the fog in light shafts where nothing shadows it. Bright parts of the image glow (`"bloom"` of the scene) and the sun can be a disc in the sky that glows with it (`"discSize"` of the directional light). The edges of the finished image are smoothed (`"antialiasing"` of the scene, FXAA after the tone mapping, the multisampling smooths the geometry only). Terrain materials are blended by the height and by the steepness of the ground (triplanar on cliffs, a detail normal near the camera). Water mirrors the scene (`"reflections"` of the material), gets its color by the depth, the bottom is seen through it and the shore is white with foam (`"depthDistance"`, `"refraction"` of the material, `"shoreWidth"` of the foam). Point lights fade to nothing at their range, and a spot light is a cone of it (`"type": "Spot"`); both cast shadows (up to four of the nearest). A material that follows the wind (`"windInfluence"`, the wind of the scene is `"wind"`) sways with it.
-Paths are relative to `engine/src/main/resources/shaders/` unless stated otherwise.
+What is left to do, in the order it is planned: every step builds on the previous ones and makes a visible difference on
+its own. What the engine can do already is in the [readme](readme.md). Paths of shaders are relative to
+`engine/src/main/resources/shaders/`.
 
 ## Rendering
 
-- [ ] **1. Reflections of the other surfaces.** Reflective materials (`default/fragment.glsl`) reflect only the skybox
-  cubemap, so objects, terrain and other surfaces never appear in their reflections (the water has its own, see above). A
-  dynamic cubemap of the surroundings of a reflective object (drawn from its position, refreshed now and then) would fix it.
-  The reflection of the water does not have the particles and the billboards, the other waters of the scene and the shadows
-  of the lights of the point and spot kinds in it either.
-- [ ] **2. Terrain chunks and levels of detail.** A terrain is one grid that is drawn whole with one call, so far away
-  it costs as much as close and every vertex of it is displaced by the heightmap. It should be cut into chunks that
-  are culled by the view and drawn with coarser grid cells with the distance (the borders of chunks of different
-  levels must not crack, for example with skirts or by morphing the vertices on the border).
+- [ ] **1. Demo: an ocean beach.** A showcase scene that puts the rendering together, with a fixed camera: a wide sandy
+  beach that goes to the horizon, seen from the sand towards the sea at a low sun. Our chest (`materials/chest.json`) stands
+  on the sand, lit by the sun and the sky and throwing a long shadow on it, and the sun shines through the haze in light
+  shafts. The water in front has waves that roll in; at the shore it is clear and semi transparent with the sand seen through
+  it, white with foam where it washes up, and fades to the deep colors further out. A sound of the surf plays from the sea.
+  What the engine lacks for it: the view distance is fixed (the far plane is 1000), so it has to become a setting of the
+  camera or the window, and the water must reach the horizon (a mesh that is large enough or follows the camera, and
+  the haze that hides its end); the sand that the water has wet is darker (a wet line that follows the washing waves); the
+  waves should break and wash up the beach, not only rise and fall. The assets are to be found with a free license (CC0, for
+  example Poly Haven or freesound): a skybox of a sunset over the sea (the skybox is 8 bit until the HDR environment maps
+  are loaded), a sand material and the sound of the surf. The water of the scene is tuned for it: the colors, the depth
+  distance, the foam, the refraction.
+- [ ] **2. Reflections of the other surfaces.** Reflective materials (`default/fragment.glsl`) reflect only the skybox
+  cubemap, so objects, terrain and other surfaces never appear in their reflections (the water has its own reflection of the
+  scene). A dynamic cubemap of the surroundings of a reflective object (drawn from its position, refreshed now and then)
+  would fix it. The reflection of the water has no particles and billboards in it, and only the nearest water of a scene has it.
+- [ ] **3. HDR environment maps.** The skybox is 8 bit, so the sun and the bright sky have no real brightness in the image
+  based lighting. A loader of HDR environment maps (`.hdr`, `.exr`) would give the light of the sky its real range.
+- [ ] **4. Antialiasing of the cutout edges.** The edges of the holes of the cutout materials (`"alphaMode": "cutout"`) are
+  not smoothed by the multisampling, which only sees the edges of the geometry. Alpha to coverage would smooth them.
 
 ## Animation
 
-- [ ] **3. Animation.** Objects move only from code: there are no animations in the resources. Keyframe
+- [ ] **5. Animation.** Objects move only from code: there are no animations in the resources. Keyframe
   animation of the transforms of the hierarchy nodes (position, rotation, scale with interpolation) is the first
   step, and the boxes of the nodes must follow them, or the culling would cut a moving object; skeletal animation
   (skinned meshes with joints and weights, played and blended in the vertex shader) needs a format with skeletons, so
@@ -36,15 +37,14 @@ Paths are relative to `engine/src/main/resources/shaders/` unless stated otherwi
 
 ## Later
 
-- [ ] **4. Temporal antialiasing.** The image with the post effects shimmers on thin things (leaves, wires) in motion,
+- [ ] **6. Temporal antialiasing.** The image with the post effects shimmers on thin things (leaves, wires) in motion,
   which FXAA only softens. TAA keeps the history of the frames and needs the motion vectors of what moves: the camera,
   the objects and the skinned meshes, so it comes after the animation.
-
-- [ ] **5. Volumetric clouds.** The clouds are painted on the 8 bit skybox: they don't move, they cast no shadows on the
+- [ ] **7. Volumetric clouds.** The clouds are painted on the 8 bit skybox: they don't move, they cast no shadows on the
   land and no light shafts, and the sun can't be hidden by one. Clouds made of a noise (a march through a layer of
   the sky, or a few layers of cards), lit by the sun and the sky, would drift, shadow the land through the shadow maps
   and the light shafts, and change the light of the scene as they pass.
-- [ ] **6. Ambient occlusion of the indirect light only.** The ambient occlusion multiplies the finished image, so it
+- [ ] **8. Ambient occlusion of the indirect light only.** The ambient occlusion multiplies the finished image, so it
   darkens the direct light of the sun in a corner as well, where the shadow maps decide what is lit. The shaders of
   the surfaces should read it and apply it to the light of the sky and to the image based lighting only. For that
   the occlusion must be known before the surfaces are drawn: a depth pass over the objects and the terrain (with the
@@ -53,7 +53,7 @@ Paths are relative to `engine/src/main/resources/shaders/` unless stated otherwi
 
 ## Editor
 
-- [ ] **7. Editor redesign.** The editor (`editor/`) uses the default light Modena look with a couple of tiny style
+- [ ] **9. Editor redesign.** The editor (`editor/`) uses the default light Modena look with a couple of tiny style
   sheets and PNG icons, and its center is a placeholder: `layouts/main.fxml` has a black `VBox` instead of a scene
   view, the editor never starts the engine and the camera buttons of the toolbar have no actions. It should be
   rebuilt like the map editor of The Native Land: a dark theme in one style sheet (a palette of looked-up colors,

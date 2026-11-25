@@ -1,0 +1,18 @@
+{
+  "gridMesh": "huge.json",
+  "program": "terrain.json",
+  "lodDistance": 110.0,
+  "elevation": {
+    "heightmap": "heightmaps/huge.png",
+    "factor": 520.0
+  },
+  "materials": [
+    {"elevation": 0.30, "material": "terrain-sand.json"},
+    {"elevation": 0.52, "material": "terrain-grass.json"},
+    {"elevation": 0.74, "material": "terrain-rock.json"},
+    {"elevation": 1.0, "material": "terrain-snow.json"}
+  ],
+  "slopeMaterials": [
+    {"material": "terrain-rock.json", "minSlope": 32, "maxSlope": 90, "slopeBlend": 10}
+  ]
+}
