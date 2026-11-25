@@ -198,6 +198,21 @@ float getThickness(vec2 coordinates) {
     return distance(getScenePosition(coordinates, depth), vertexPosition);
 }
 
+/* The foam scatters the light of the sky and of the sun that passes through it, so it is never dark: this much of its color is added to the light it gets */
+const float FOAM_GLOW = 0.35;
+
+/* How deep (the height of the water over the ground) the water becomes opaque, at the edge of a shore */
+const float SHORE_EDGE = 0.15;
+
+/* The height of the water over the opaque scene under it at a point of the screen: large where there is nothing under it */
+float getVerticalDepth(vec2 coordinates) {
+    float depth = texture(textureSceneDepth, coordinates).r;
+    if (depth >= 1.0)
+        return 1000.0;
+
+    return vertexPosition.y - getScenePosition(coordinates, depth).y;
+}
+
 const float WATER_REFLECTANCE = 0.02;
 
 vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
@@ -237,8 +252,12 @@ void main() {
     vec3 normal = calculateNormal();
 
     vec3 colorWithLighting = computeLighting(calculateColor(), normal, cameraDirection);
+    float opacity = material.opacity;
 
     if (isSet(useSceneTextures)) {
+        // At the very edge of a shore the water is thin: the ground shows through it
+        opacity *= getShoreFade(getVerticalDepth(gl_FragCoord.xy / vec2(textureSize(textureSceneDepth, 0))), SHORE_EDGE);
+
         // The bottom is seen through the ripples, and the deeper the water, the less of it
         vec2 coordinates = gl_FragCoord.xy / vec2(textureSize(textureSceneDepth, 0));
         float thickness = getThickness(coordinates);
@@ -259,10 +278,10 @@ void main() {
         float shore = max(getShoreFoam(thickness, foam.shoreWidth, foam.shoreIntensity, pattern),
                 getFoamBands(thickness, foam.shoreWidth, foam.bands, timeElapsed) * mix(0.55, 1.0, pattern));
         if (shore > 0.0)
-            colorWithLighting = mix(colorWithLighting, computeLighting(material.colorPeak, normal, cameraDirection), shore);
+            colorWithLighting = mix(colorWithLighting, computeLighting(material.colorPeak, normal, cameraDirection) + material.colorPeak * FOAM_GLOW, shore);
     }
 
     vec3 colorWithReflections = applyReflections(colorWithLighting, cameraDirection, normal);
 
-    outputColor = vec4(applyFog(max(colorWithReflections, vec3(0.0))), material.opacity);
+    outputColor = vec4(applyFog(max(colorWithReflections, vec3(0.0))), opacity);
 }

@@ -49,3 +49,15 @@ float getFoamBands(float thickness, float width, float intensity, float time) {
 
     return clamp(lines * zone * intensity, 0.0, 1.0);
 }
+
+/*
+ * How opaque the water is where it is thin: it fades out over a few centimeters of depth, so the edge of the water on the shore is
+ * soft and doesn't show the triangles of its grid, which cut the ground in straight lines. The depth is the height of the water over
+ * the ground under it (not the length of the view through it).
+ */
+float getShoreFade(float depth, float edge) {
+    if (edge <= 0.0)
+        return 1.0;
+
+    return smoothstep(0.0, edge, depth);
+}

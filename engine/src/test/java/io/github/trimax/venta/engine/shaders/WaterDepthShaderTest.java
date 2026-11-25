@@ -203,4 +203,35 @@ final class WaterDepthShaderTest {
         for (var thickness = 1.f; thickness < 12.f; thickness += 0.1f)
             assertTrue(bands(thickness, 1.2f, 0.4f, 2.f) <= 0.4f + EPSILON, "At " + thickness);
     }
+
+    private static float shoreFade(final float depth, final float edge) {
+        return harness.run(INCLUDES, "uniform float depth; uniform float edge;", "outputColor = vec4(getShoreFade(depth, edge));",
+                Map.of("depth", depth, "edge", edge))[0];
+    }
+
+    @Test
+    void testWaterIsClearAtTheEdgeAndOpaqueFromTheEdgeDepth() {
+        assertEquals(0.f, shoreFade(0.f, 0.15f), EPSILON, "No water over the ground");
+        assertEquals(0.f, shoreFade(-1.f, 0.15f), EPSILON, "The ground over the water");
+        assertEquals(1.f, shoreFade(0.15f, 0.15f), EPSILON);
+        assertEquals(1.f, shoreFade(30.f, 0.15f), EPSILON);
+    }
+
+    @Test
+    void testWaterFadesInSmoothlyWithTheDepth() {
+        var previous = 0.f;
+        for (var depth = 0.f; depth <= 0.2f; depth += 0.01f) {
+            final var value = shoreFade(depth, 0.15f);
+            assertTrue(value >= previous - EPSILON, "Deeper is not clearer: " + value + " after " + previous);
+            previous = value;
+        }
+
+        final var middle = shoreFade(0.075f, 0.15f);
+        assertTrue(middle > 0.1f && middle < 0.9f, "Half way it is neither: " + middle);
+    }
+
+    @Test
+    void testNoEdgeKeepsTheWaterOpaque() {
+        assertEquals(1.f, shoreFade(0.f, 0.f), EPSILON);
+    }
 }

@@ -1,0 +1,27 @@
+{
+  "metalness": 0.0,
+  "roughness": 0.75,
+  "opacity": 1.0,
+  "tiling": {
+    "x": 1.0,
+    "y": 1.0
+  },
+  "offset": {
+    "x": 0.0,
+    "y": 0.0
+  },
+  "color": {
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "a": 1.0
+  },
+  "alphaMode": "cutout",
+  "alphaCutoff": 0.5,
+  "doubleSided": true,
+  "windInfluence": 0.3,
+  "textures": {
+    "diffuse": "palm/diffuse.png",
+    "normal": "palm/normal.png"
+  }
+}
