@@ -26,15 +26,15 @@
     "refraction": 0.05,
     "reflections": true,
     "waveFadeDistance": 1000.0,
-    "swashAmplitude": 0.18,
+    "swashAmplitude": 0.12,
     "swashPeriod": 9.0
   },
   "foam": {
-    "threshold": 0.5,
-    "intensity": 0.55,
+    "threshold": 0.6,
+    "intensity": 0.8,
     "shoreWidth": 2.4,
-    "shoreIntensity": 0.85,
-    "bands": 0.9
+    "shoreIntensity": 1.0,
+    "bands": 0.85
   },
   "waves": [
     {
@@ -42,7 +42,7 @@
         "x": 0.0,
         "y": 1.0
       },
-      "amplitude": 0.2,
+      "amplitude": 0.12,
       "length": 24,
       "steepness": 0.35,
       "speed": 1.5
@@ -52,7 +52,7 @@
         "x": 0.3,
         "y": 1.0
       },
-      "amplitude": 0.1,
+      "amplitude": 0.06,
       "length": 13,
       "steepness": 0.35,
       "speed": 1.9
@@ -62,7 +62,7 @@
         "x": -0.35,
         "y": 1.0
       },
-      "amplitude": 0.05,
+      "amplitude": 0.03,
       "length": 7.5,
       "steepness": 0.4,
       "speed": 2.2

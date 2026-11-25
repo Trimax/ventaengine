@@ -18,15 +18,15 @@ public final class BeachApplicationUpdateHandler implements VentaEngineUpdateHan
     /** Where the camera is: on the sand, 2.75 meters over the ground (a person on a low dune), and where it looks (the angles are from -z, to +x, in radians) */
     private static final float POSITION_X = 0.f;
     private static final float POSITION_Y = 3.4f;
-    private static final float POSITION_Z = 26.f;
+    private static final float POSITION_Z = 30.f;
     private static final float YAW = (float) Math.toRadians(14.0);
-    private static final float PITCH = (float) Math.toRadians(-7.5);
+    private static final float PITCH = (float) Math.toRadians(-8.5);
 
     /** How much the camera sways: the head, in radians, and the eyes, in meters */
-    private static final float SWAY_YAW = 0.0065f;
-    private static final float SWAY_PITCH = 0.0035f;
-    private static final float SWAY_HEIGHT = 0.02f;
-    private static final float SWAY_SIDE = 0.015f;
+    private static final float SWAY_YAW = 0.016f;
+    private static final float SWAY_PITCH = 0.009f;
+    private static final float SWAY_HEIGHT = 0.05f;
+    private static final float SWAY_SIDE = 0.04f;
 
     private final BeachApplicationState state;
 
@@ -37,11 +37,11 @@ public final class BeachApplicationUpdateHandler implements VentaEngineUpdateHan
     public void onUpdate(final Engine.VentaTime time, final VentaContext context) {
         final var t = (float) time.getTimeElapsed();
 
-        final var yaw = YAW + SWAY_YAW * (float) (Math.sin(t * 0.31) * 0.7 + Math.sin(t * 0.83 + 1.3) * 0.3);
-        final var pitch = PITCH + SWAY_PITCH * (float) (Math.sin(t * 0.43 + 1.0) * 0.65 + Math.sin(t * 1.1) * 0.35);
+        final var yaw = YAW + SWAY_YAW * (float) (Math.sin(t * 0.52) * 0.7 + Math.sin(t * 1.21 + 1.3) * 0.3);
+        final var pitch = PITCH + SWAY_PITCH * (float) (Math.sin(t * 0.67 + 1.0) * 0.65 + Math.sin(t * 1.5) * 0.35);
 
-        position.set(POSITION_X + SWAY_SIDE * (float) Math.sin(t * 0.37),
-                POSITION_Y + SWAY_HEIGHT * (float) (Math.sin(t * 0.9) * 0.6 + Math.sin(t * 2.3 + 0.5) * 0.4),
+        position.set(POSITION_X + SWAY_SIDE * (float) Math.sin(t * 0.43),
+                POSITION_Y + SWAY_HEIGHT * (float) (Math.sin(t * 1.1) * 0.6 + Math.sin(t * 2.6 + 0.5) * 0.4),
                 POSITION_Z);
 
         target.set(position).add(

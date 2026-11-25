@@ -100,8 +100,8 @@
       "object": "chest-beach.json",
       "position": {
         "x": 2.596,
-        "y": 0.779,
-        "z": 19.974
+        "y": 0.977,
+        "z": 23.574
       },
       "angles": {
         "x": 0.0,
@@ -118,9 +118,9 @@
       "name": "Palm",
       "object": "palm-bend.json",
       "position": {
-        "x": 6.238,
-        "y": 3.063,
-        "z": 17.528
+        "x": 6.538,
+        "y": 3.282,
+        "z": 21.528
       },
       "angles": {
         "x": 0.0,
@@ -159,9 +159,9 @@
       "name": "Bounce light",
       "light": "beach-bounce.json",
       "position": {
-        "x": 2.7,
-        "y": 1.173,
-        "z": 21.2
+        "x": 2.75,
+        "y": 1.371,
+        "z": 24.8
       }
     }
   ]

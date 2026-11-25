@@ -2,6 +2,7 @@
 
 #include "common/camera.glsl"
 #include "common/flags.glsl"
+#include "common/foam.glsl"
 #include "common/fog.glsl"
 #include "common/lights.glsl"
 #include "common/noise.glsl"
@@ -285,19 +286,19 @@ void main() {
         vec3 bottom = texture(textureSceneColor, refracted).rgb;
         colorWithLighting = mix(colorWithLighting, bottom, getWaterTransmittance(thickness, material.depthDistance));
 
-        // The foam of the shore, lit as a surface of its color
-        float pattern = noise(vertexPosition.xz * 0.9 + timeElapsed * 0.25) * 0.6 + noise(vertexPosition.xz * 2.3 - timeElapsed * 0.4) * 0.4;
-        float shore = max(getShoreFoam(thickness, foam.shoreWidth, foam.shoreIntensity, pattern),
-                getFoamBands(thickness, foam.shoreWidth, foam.bands, timeElapsed) * mix(0.55, 1.0, pattern));
+        // The foam of the shore, lit as a surface of its color: a lace of bubbles that goes with the water (to the shore, as it washes up)
+        float lace = getFoamLace(vertexPosition.xz + vec2(0.0, timeElapsed * 0.35), 2.2);
+        float shore = max(getShoreFoam(thickness, foam.shoreWidth, foam.shoreIntensity, lace),
+                getFoamBands(thickness, foam.shoreWidth, foam.bands, timeElapsed, lace));
         if (shore > 0.0)
             colorWithLighting = mix(colorWithLighting, computeLighting(material.colorPeak, normal, cameraDirection) + material.colorPeak * FOAM_GLOW, shore);
     }
 
-    // The crests of the waves are white with the foam that scatters the light, so they glow against the sun as well. The foam lies in
-    // soft streaks along the waves (the noise is stretched along them), not on the whole crest and not where the water is shallow
-    float patches = noise(vertexPosition.xz * vec2(0.12, 0.9) + timeElapsed * vec2(0.02, 0.15)) * 0.6 + noise(vertexPosition.xz * vec2(0.4, 2.6) - timeElapsed * vec2(0.03, 0.25)) * 0.4;
+    // The crests of the waves are white with a lace of foam that scatters the light, so it glows against the sun as well (not where the
+    // water is shallow, the shore has foam of its own)
     float deep = smoothstep(foam.shoreWidth * 2.0, foam.shoreWidth * 6.0, seaThickness);
-    float crest = smoothstep(foam.threshold, 1.0, getHeightFactor()) * smoothstep(0.3, 0.72, patches) * deep * foam.intensity;
+    float crestLace = getFoamLace(vertexPosition.xz * vec2(1.0, 1.6) + vec2(0.0, timeElapsed * 0.3), 1.3);
+    float crest = smoothstep(0.35, 0.7, crestLace) * smoothstep(foam.threshold, 1.0, getHeightFactor()) * deep * foam.intensity;
     colorWithLighting += material.colorPeak * crest * CREST_GLOW;
 
     vec3 colorWithReflections = applyReflections(colorWithLighting, cameraDirection, normal);

@@ -22,10 +22,10 @@
   ],
   "wetness": {
     "level": 0.0,
-    "height": 0.35,
+    "height": 0.3,
     "darkening": 0.4,
     "glossiness": 0.2,
-    "swashAmplitude": 0.18,
+    "swashAmplitude": 0.12,
     "swashPeriod": 9.0
   }
 }

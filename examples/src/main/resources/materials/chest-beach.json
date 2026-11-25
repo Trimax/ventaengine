@@ -1,6 +1,6 @@
 {
-  "metalness": 0.45,
-  "roughness": 0.28,
+  "metalness": 0.0,
+  "roughness": 0.15,
   "alphaMode": "opaque",
   "opacity": 1.0,
   "tiling": {
@@ -18,8 +18,8 @@
     "a": 1.0
   },
   "textures": {
+    "ambientOcclusion": "chest/specular.png",
     "diffuse": "chest/diffuse.png",
-    "normal": "chest/normal.png",
-    "metalness": "chest/specular.png"
+    "normal": "chest/normal.png"
   }
 }

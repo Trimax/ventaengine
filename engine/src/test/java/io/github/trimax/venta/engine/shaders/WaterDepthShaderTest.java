@@ -87,10 +87,11 @@ final class WaterDepthShaderTest {
 
     @Test
     void testPatternBreaksTheFoamIntoPatches() {
-        final var full = foam(0.2f, 1.2f, 1.f, 1.f);
-        final var broken = foam(0.2f, 1.2f, 1.f, 0.f);
+        final var full = foam(0.7f, 1.2f, 1.f, 1.f);
+        final var broken = foam(0.7f, 1.2f, 1.f, 0.f);
 
-        assertTrue(full > broken && broken > 0.f, "A dim spot of the pattern has less foam, not none: " + broken + " against " + full);
+        assertTrue(full > broken, "A gap of the lace has less foam than a bubble: " + broken + " against " + full);
+        assertEquals(1.f, foam(0.f, 1.2f, 1.f, 0.f), EPSILON, "But at the very edge even a gap of the lace is foam");
     }
 
     @Test
@@ -141,7 +142,7 @@ final class WaterDepthShaderTest {
 
     private static float bands(final float thickness, final float width, final float intensity, final float time) {
         return harness.run(INCLUDES, "uniform float thickness; uniform float width; uniform float intensity; uniform float time;",
-                "outputColor = vec4(getFoamBands(thickness, width, intensity, time));",
+                "outputColor = vec4(getFoamBands(thickness, width, intensity, time, 1.0));",
                 Map.of("thickness", thickness, "width", width, "intensity", intensity, "time", time))[0];
     }
 
