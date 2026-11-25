@@ -1,9 +1,12 @@
 package io.github.trimax.venta.engine.binders;
 
+import java.util.List;
+
 import org.joml.Vector2fc;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import lombok.AccessLevel;
@@ -23,5 +26,33 @@ public final class ElevationBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.GridSize), gridSize);
 
         bind(program.getUniformID(ShaderUniform.Elevations), elevations);
+    }
+
+    /**
+     * Gives the shader the materials by the steepness of the ground, which are the last ones of the materials of the terrain.
+     *
+     * @param slopes    the materials by the steepness
+     * @param worldSize the size of the terrain in the world: the textures that are sampled from the sides are laid by it
+     */
+    public void bind(final ProgramEntityImplementation program, final List<TerrainSlope> slopes, final int heightMaterials, final Vector2fc worldSize) {
+        bind(program.getUniformID(ShaderUniform.HeightMaterialCount), heightMaterials);
+        bind(program.getUniformID(ShaderUniform.SlopeCount), slopes.size());
+        bind(program.getUniformID(ShaderUniform.WorldSize), worldSize);
+
+        if (slopes.isEmpty())
+            return;
+
+        final var minimums = new float[slopes.size()];
+        final var maximums = new float[slopes.size()];
+        final var blends = new float[slopes.size()];
+        for (int i = 0; i < slopes.size(); i++) {
+            minimums[i] = slopes.get(i).getMinimum();
+            maximums[i] = slopes.get(i).getMaximum();
+            blends[i] = slopes.get(i).getBlend();
+        }
+
+        bind(program.getUniformID(ShaderUniform.SlopeMinimums), minimums);
+        bind(program.getUniformID(ShaderUniform.SlopeMaximums), maximums);
+        bind(program.getUniformID(ShaderUniform.SlopeBlends), blends);
     }
 }

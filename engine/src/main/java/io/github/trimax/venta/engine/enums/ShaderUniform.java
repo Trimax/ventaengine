@@ -169,6 +169,12 @@ public enum ShaderUniform {
     UseFoam("useFoam"),
 
     Elevations("elevations"),
+    HeightMaterialCount("heightMaterialCount"),
+    SlopeCount("slopeCount"),
+    SlopeMinimums("slopeMinimums"),
+    SlopeMaximums("slopeMaximums"),
+    SlopeBlends("slopeBlends"),
+    WorldSize("worldSize"),
     GridSize("gridSize"),
 
     /* Common model parameters transformation */

@@ -6,7 +6,9 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.TerrainSurfaceDTO;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.dto.terrain.TerrainMaterialDTO;
+import io.github.trimax.venta.engine.model.dto.terrain.TerrainSlopeMaterialDTO;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureArrayEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
@@ -46,15 +48,23 @@ public final class TerrainSurfaceRepositoryImplementation
 
         final var terrainSurfaceDTO = resourceService.getAsObject(String.format("/surfaces/terrain/%s", resourcePath), TerrainSurfaceDTO.class);
 
+        final var slopeDTOs = terrainSurfaceDTO.slopeMaterials() == null ? List.<TerrainSlopeMaterialDTO>of() : terrainSurfaceDTO.slopeMaterials();
+
         LimitUtil.checkCount(resourcePath, "materials", terrainSurfaceDTO.materials() == null ? 0 : terrainSurfaceDTO.materials().size(),
-                1, DefinitionsCommon.MAX_MATERIALS);
-        final var materials = StreamEx.of(terrainSurfaceDTO.materials()).map(TerrainMaterialDTO::material).map(materialRegistry::get).toList();
+                1, DefinitionsCommon.MAX_MATERIALS - slopeDTOs.size());
+        LimitUtil.checkCount(resourcePath, "slopeMaterials", slopeDTOs.size(), 0, TerrainSlope.MAXIMAL_COUNT);
+
+        // The materials by the steepness are the last layers of the textures: after the ones of the heights
+        final var materials = StreamEx.of(terrainSurfaceDTO.materials()).map(TerrainMaterialDTO::material)
+                .append(StreamEx.of(slopeDTOs).map(TerrainSlopeMaterialDTO::material))
+                .map(materialRegistry::get).toList();
         return abettor.createTerrainSurface(gridMeshRegistry.get(terrainSurfaceDTO.gridMesh()),
                 programRegistry.get(terrainSurfaceDTO.program()),
                 textureRegistry.get(terrainSurfaceDTO.elevation().heightmap(), TextureColorSpace.Data),
                 materials,
                 createTextureArrays(resourcePath, materials),
                 StreamEx.of(terrainSurfaceDTO.materials()).mapToDouble(TerrainMaterialDTO::elevation).toFloatArray(),
+                StreamEx.of(slopeDTOs).map(TerrainSlope::new).toList(),
                 terrainSurfaceDTO.elevation().factor());
     }
 
