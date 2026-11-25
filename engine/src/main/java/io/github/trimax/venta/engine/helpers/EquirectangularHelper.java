@@ -3,10 +3,7 @@ package io.github.trimax.venta.engine.helpers;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL12C.GL_TEXTURE_WRAP_R;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP;
-import static org.lwjgl.opengl.GL13C.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-import static org.lwjgl.opengl.GL13C.glActiveTexture;
+import static org.lwjgl.opengl.GL13C.*;
 import static org.lwjgl.opengl.GL20C.*;
 import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
@@ -22,27 +19,22 @@ import io.github.trimax.venta.engine.exceptions.CubemapBakeException;
 import io.github.trimax.venta.engine.exceptions.FramebufferCreationException;
 import io.github.trimax.venta.engine.memory.Memory;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Makes a cube map of floating point colors from a panorama of the sky in HDR (a Radiance file): the panorama is decoded with the
  * real brightness of its pixels, put in a texture, and every face of the cube is drawn from it. The state of OpenGL that it changes
  * is restored.
  */
+@RequiredArgsConstructor
 public final class EquirectangularHelper {
     private static final int FACES = 6;
 
-    private final ToIntFunction<String> programs;
+    @NonNull
     private final Memory memory;
 
-    /**
-     * Creates a helper that draws with the program of the conversion.
-     *
-     * @param programs gives the identifier of a program by its name, see {@link ProgramType}
-     */
-    public EquirectangularHelper(@NonNull final Memory memory, @NonNull final ToIntFunction<String> programs) {
-        this.memory = memory;
-        this.programs = programs;
-    }
+    @NonNull
+    private final ToIntFunction<String> programs;
 
     /**
      * Makes a cube map of a panorama.
@@ -132,7 +124,7 @@ public final class EquirectangularHelper {
         }
     }
 
-    /** The texture of the panorama, in the colors it was written in (16 bit floats are enough for the sky, and the clamp keeps it in range) */
+    /** The texture of the panorama, in the colors it was written in (16-bit floats are enough for the sky, and the clamp keeps it in range) */
     private int createPanorama(final byte[] data, final String name) {
         final var encoded = MemoryUtil.memAlloc(data.length);
         try (final var stack = stackPush()) {
