@@ -185,4 +185,61 @@ final class PointShadowHelperTest {
         assertThrows(NullPointerException.class, () -> helper.assign(frame, null, new Vector3f()));
         assertThrows(NullPointerException.class, () -> helper.assign(frame, lights(), null));
     }
+
+    @Test
+    void testSpotLightGetsOneFaceAlongItsDirection() {
+        final var spot = TestObjects.spot("spot", new Vector3f(1, 2, 3), new Vector3f(1, 0, 0), 20.f, 30.f, 40.f, true);
+
+        helper.assign(frame, lights(spot), new Vector3f());
+
+        assertEquals(1, frame.getCount());
+        assertEquals(1, frame.getUsedFaces(0), "A cone is one view");
+
+        // The point along the direction is the center of the face, at the depth of its distance between the planes
+        final var center = new Vector4f(1.f + 10.f, 2.f, 3.f, 1.f).mul(frame.getMatrix(0, 0));
+        assertEquals(0.f, center.x / center.w, EPSILON);
+        assertEquals(0.f, center.y / center.w, EPSILON);
+        assertTrue(center.z / center.w > -1.f && center.z / center.w < 1.f);
+
+        final var far = new Vector4f(1.f + 40.f, 2.f, 3.f, 1.f).mul(frame.getMatrix(0, 0));
+        assertEquals(1.f, far.z / far.w, 1e-3f, "The range is the far plane");
+    }
+
+    @Test
+    void testFaceOfASpotLightSeesJustMoreThanItsCone() {
+        final var spot = TestObjects.spot("spot", new Vector3f(), new Vector3f(0, 0, -1), 20.f, 45.f, 40.f, true);
+
+        helper.assign(frame, lights(spot), new Vector3f());
+
+        // At the outer angle of 45 degrees the edge of the cone is at the edge of the face: a bit inside it
+        final var edge = new Vector4f(10.f, 0.f, -10.f, 1.f).mul(frame.getMatrix(0, 0));
+        assertTrue(Math.abs(edge.x / edge.w) < 1.f && Math.abs(edge.x / edge.w) > 0.9f, "The edge of the cone is inside, near the border: " + edge.x / edge.w);
+    }
+
+    @Test
+    void testSpotLightLookingStraightUpOrDownHasAFace() {
+        for (final var y : new float[]{1.f, -1.f}) {
+            final var spot = TestObjects.spot("spot", new Vector3f(), new Vector3f(0, y, 0), 20.f, 30.f, 40.f, true);
+
+            helper.assign(frame, lights(spot), new Vector3f());
+
+            final var center = new Vector4f(0.f, 10.f * y, 0.f, 1.f).mul(frame.getMatrix(0, 0));
+            assertEquals(0.f, center.x / center.w, EPSILON, "Looking along y = " + y);
+            assertEquals(0.f, center.y / center.w, EPSILON);
+            assertTrue(Float.isFinite(center.z), "The matrix is not degenerate");
+        }
+    }
+
+    @Test
+    void testSpotLightsAndPointLightsShareTheSlotsByDistance() {
+        final var near = TestObjects.spot("near", new Vector3f(1, 0, 0), new Vector3f(0, -1, 0), 20.f, 30.f, 40.f, true);
+        final var far = light("far", 5.f, 20.f, true);
+
+        helper.assign(frame, lights(far, near), new Vector3f());
+
+        assertEquals(0, frame.getSlot(near));
+        assertEquals(1, frame.getUsedFaces(0));
+        assertEquals(1, frame.getSlot(far));
+        assertEquals(6, frame.getUsedFaces(1));
+    }
 }

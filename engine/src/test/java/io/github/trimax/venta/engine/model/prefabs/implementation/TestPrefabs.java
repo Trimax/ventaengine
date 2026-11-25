@@ -10,6 +10,6 @@ public final class TestPrefabs {
     }
 
     public static LightPrefabImplementation light() {
-        return new LightPrefabImplementation(new Vector3f(1), Attenuation.createDefault(), false, 1.f, 10.f);
+        return new LightPrefabImplementation(new Vector3f(1), Attenuation.createDefault(), false, 1.f, 10.f, io.github.trimax.venta.engine.enums.LightType.Point, null);
     }
 }

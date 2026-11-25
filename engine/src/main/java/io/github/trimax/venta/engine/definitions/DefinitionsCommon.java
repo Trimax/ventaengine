@@ -7,7 +7,7 @@ import org.joml.*;
 public final class DefinitionsCommon {
     /* Limitations */
     public static final int MAX_MATERIALS = 8;
-    public static final int MAX_LIGHTS = 64;
+    public static final int MAX_LIGHTS = 32;
     public static final int MAX_NOISES = 16;
     public static final int MAX_WAVES = 16;
     public static final int MAX_FRAMES = 64;

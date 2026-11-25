@@ -4,6 +4,7 @@ import io.github.trimax.venta.engine.enums.ToneMapping;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.tree.Node;
+import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.hierarchy.LodLevel;
@@ -29,8 +30,10 @@ public final class Abettor {
                                                  @NonNull final Attenuation attenuation,
                                                  final boolean castShadows,
                                                  final float intensity,
-                                                 final float range) {
-        return new LightPrefabImplementation(color, attenuation, castShadows, intensity, range);
+                                                 final float range,
+                                                 @NonNull final LightType type,
+                                                 final Cone cone) {
+        return new LightPrefabImplementation(color, attenuation, castShadows, intensity, range, type, cone);
     }
 
     public WaterSurfacePrefabImplementation createWaterSurface(@NonNull final GridMeshEntityImplementation gridMesh,
