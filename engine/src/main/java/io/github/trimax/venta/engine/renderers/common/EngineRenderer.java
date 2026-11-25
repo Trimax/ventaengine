@@ -110,6 +110,7 @@ public final class EngineRenderer {
         try (final var _ = sceneRenderer.withContext(null)
                 .withTime(time)
                 .withProbes(reflectionProbeRenderer.getProbes())
+                .withMultisampling(postProcessingRenderer.isMultisampled())
                 .with(window, camera)) {
             sceneRenderer.render(sceneManager.getCurrent());
         }

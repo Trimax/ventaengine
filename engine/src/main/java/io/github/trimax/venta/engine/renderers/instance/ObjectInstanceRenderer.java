@@ -264,6 +264,10 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         objectBinder.bind(program, batch.isLit());
         materialBinder.bind(program, material);
+
+        // The holes of a cutout surface are smoothed by the multisampling where there is any
+        final var coverage = material != null && material.isCutout() && context.getParent().isMultisampled();
+        materialBinder.bindCoverage(program, coverage);
         windBinder.bind(program, material);
         windBinder.bind(program, batch.getShape());
 
@@ -280,6 +284,8 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
 
         if (oneSided)
             glDisable(GL_CULL_FACE);
+
+        materialBinder.unbindCoverage(coverage);
     }
 
     /**

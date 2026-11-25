@@ -11,6 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 
+import static org.lwjgl.opengl.GL11C.GL_BLEND;
+import static org.lwjgl.opengl.GL11C.glDisable;
+import static org.lwjgl.opengl.GL11C.glEnable;
+import static org.lwjgl.opengl.GL13C.GL_SAMPLE_ALPHA_TO_COVERAGE;
+
 import java.util.List;
 
 @Slf4j
@@ -62,5 +67,31 @@ public final class MaterialBinder extends AbstractBinder {
 
     private void bind(final TextureType type, final ProgramEntityImplementation program, final MaterialEntityImplementation material) {
         textureBinder.bind(type, program, material != null ? material.getTexture(type) : null);
+    }
+
+    /**
+     * Whether the holes of the cutout surface that is drawn next are smoothed by alpha to coverage: the shader outputs the share of
+     * the samples that a fragment covers, so the colors must not be mixed by the alpha too (the blending is off until
+     * {@link #unbindCoverage(boolean)}). Only a multisampled framebuffer has samples to cover.
+     *
+     * @param enabled whether the framebuffer is multisampled and the material has holes
+     */
+    public void bindCoverage(final ProgramEntityImplementation program, final boolean enabled) {
+        bind(program.getUniformID(ShaderUniform.UseAlphaToCoverage), enabled);
+
+        if (enabled) {
+            glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+            glDisable(GL_BLEND);
+        }
+    }
+
+    /**
+     * What was changed by {@link #bindCoverage(ProgramEntityImplementation, boolean)} is as it was: the scene mixes colors by default.
+     */
+    public void unbindCoverage(final boolean enabled) {
+        if (enabled) {
+            glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+            glEnable(GL_BLEND);
+        }
     }
 }
