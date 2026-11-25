@@ -16,6 +16,12 @@ public enum ShaderLightUniform {
     Intensity("intensity"),
     Range("range"),
 
+    /* The cone of a spot light: the flag, the direction and the cosines of the angles */
+    Spot("spot"),
+    Direction("direction"),
+    ConeInner("cosInner"),
+    ConeOuter("cosOuter"),
+
     /* Attenuation */
     AttenuationLinear("attenuation.linear"),
     AttenuationConstant("attenuation.constant"),

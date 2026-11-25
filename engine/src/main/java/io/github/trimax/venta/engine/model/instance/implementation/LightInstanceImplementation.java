@@ -4,7 +4,9 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
+import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.shared.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Cone;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.prefabs.implementation.LightPrefabImplementation;
 import lombok.Getter;
@@ -16,6 +18,9 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     private final Vector3f position = new Vector3f(DefinitionsCommon.VECTOR3F_ZERO);
     private final Vector3f color = new Vector3f(DefinitionsCommon.VECTOR3F_ONE);
 
+    private final Vector3f direction = new Vector3f(0.f, -1.f, 0.f);
+
+    private Cone cone;
     private Attenuation attenuation = new Attenuation(0f, 0f, 0f);
     private float intensity = 1.f;
     private float range;
@@ -35,6 +40,7 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
         setAttenuation(new Attenuation(prefab.getAttenuation()));
         setCastShadows(prefab.isCastShadows());
         setRange(prefab.getRange());
+        setCone(prefab.getCone());
         setIntensity(prefab.getIntensity());
         setColor(prefab.getColor());
     }
@@ -52,6 +58,25 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     @Override
     public void setAttenuation(@NonNull final Attenuation attenuation) {
         this.attenuation = attenuation;
+    }
+
+    @Override
+    public LightType getType() {
+        return cone == null ? LightType.Point : LightType.Spot;
+    }
+
+    @Override
+    public void setCone(final Cone cone) {
+        this.cone = cone;
+    }
+
+    @Override
+    public void setDirection(@NonNull final Vector3fc direction) {
+        final var length = direction.length();
+        if (!Float.isFinite(length) || length < 1e-6f)
+            throw new IllegalArgumentException("The direction of a light must not be zero, got " + direction);
+
+        this.direction.set(direction).div(length);
     }
 
     @Override

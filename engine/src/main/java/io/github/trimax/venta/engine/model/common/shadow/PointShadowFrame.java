@@ -18,6 +18,7 @@ import lombok.Getter;
 public final class PointShadowFrame {
     private final LightInstanceImplementation[] lights;
     private final float[] ranges;
+    private final int[] used;
     private final Matrix4f[] matrices;
     private final int faces;
 
@@ -31,6 +32,7 @@ public final class PointShadowFrame {
 
         this.lights = new LightInstanceImplementation[capacity];
         this.ranges = new float[capacity];
+        this.used = new int[capacity];
         this.matrices = new Matrix4f[capacity * faces];
         this.faces = faces;
 
@@ -60,19 +62,39 @@ public final class PointShadowFrame {
     }
 
     /**
-     * Gives the next slot to a light.
+     * Gives the next slot to a light that has all the faces of a cube.
      *
      * @param range how far the shadows of the light reach: the far plane of its faces
      * @return the slot
      */
     public int add(final LightInstanceImplementation light, final float range) {
+        return add(light, range, faces);
+    }
+
+    /**
+     * Gives the next slot to a light.
+     *
+     * @param range     how far the shadows of the light reach: the far plane of its faces
+     * @param usedFaces how many of the faces of the slot are drawn: a spot light has one, from the first
+     * @return the slot
+     */
+    public int add(final LightInstanceImplementation light, final float range, final int usedFaces) {
         if (count >= lights.length)
             throw new IllegalStateException("The frame has no room for another light with shadows: " + lights.length);
 
+        if (usedFaces < 1 || usedFaces > faces)
+            throw new IllegalArgumentException(String.format("A slot has 1 to %d faces, got %d", faces, usedFaces));
+
         lights[count] = light;
         ranges[count] = range;
+        used[count] = usedFaces;
 
         return count++;
+    }
+
+    /** How many faces of a slot are drawn */
+    public int getUsedFaces(final int slot) {
+        return used[slot];
     }
 
     public LightInstanceImplementation getLight(final int slot) {

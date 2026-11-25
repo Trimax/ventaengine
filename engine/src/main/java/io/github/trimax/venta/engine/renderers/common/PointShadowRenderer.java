@@ -59,7 +59,7 @@ public final class PointShadowRenderer {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         for (int slot = 0; slot < frame.getCount(); slot++)
-            for (int face = 0; face < frame.getFaces(); face++) {
+            for (int face = 0; face < frame.getUsedFaces(slot); face++) {
                 map.bindLayer(slot * frame.getFaces() + face);
                 glClear(GL_DEPTH_BUFFER_BIT);
 

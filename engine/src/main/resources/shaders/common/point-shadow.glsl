@@ -44,23 +44,27 @@ float getPointShadow(Light light, vec3 position, vec3 normal) {
     if (distance < 1e-4)
         return 1.0;
 
-    // A face sees 90 degrees, so a texel of the map is about 2 / resolution of the distance from the light wide
+    // A face of a point light sees 90 degrees, so a texel of its map is about 2 / resolution of the distance from the light wide;
+    // the one face of a spot light sees its cone, which is wider or narrower by the tangent of its outer angle
     ivec2 size = textureSize(texturePointShadow, 0).xy;
-    float texel = 2.0 * distance / float(size.x);
+    float tangent = light.spot != 0 ? sqrt(max(1.0 - light.cosOuter * light.cosOuter, 0.0)) / max(light.cosOuter, 0.0001) : 1.0;
+    float texel = 2.0 * distance * tangent / float(size.x);
 
     vec3 toLight = -toPoint / distance;
     float cosine = clamp(dot(normal, toLight), 0.0, 1.0);
     float sine = sqrt(1.0 - cosine * cosine);
     vec3 shifted = position + normal * (texel * POINT_SHADOW_NORMAL_OFFSET * sine) + toLight * (texel * POINT_SHADOW_LIGHT_OFFSET);
 
-    int face = getPointShadowFace(shifted - light.position);
+    // A spot light has one face, the first of its block
+    int face = light.spot != 0 ? 0 : getPointShadowFace(shifted - light.position);
     int layer = light.shadowSlot * POINT_SHADOW_FACES + face;
 
     vec4 clip = pointShadowMatrices[layer] * vec4(shifted, 1.0);
     vec3 coordinates = clip.xyz / clip.w * 0.5 + 0.5;
 
-    // Beyond the far plane of the faces (the range of the light) there is no map: the light itself is gone there
-    if (coordinates.z > 1.0)
+    // Beyond the far plane of the faces (the range of the light) there is no map: the light itself is gone there. Out of the
+    // cone of a spot light there is none either, and the cone gives no light there
+    if (coordinates.z > 1.0 || (light.spot != 0 && (coordinates.x < 0.0 || coordinates.x > 1.0 || coordinates.y < 0.0 || coordinates.y > 1.0)))
         return 1.0;
 
     vec2 step = 1.0 / vec2(size);

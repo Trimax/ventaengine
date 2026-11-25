@@ -66,7 +66,10 @@ public final class PointShadowHelper {
             nearest[i] = null;
 
             final var range = getRange(light);
-            fill(frame, frame.add(light, range), light.getPosition(), range);
+            if (light.getCone() == null)
+                fill(frame, frame.add(light, range), light.getPosition(), range);
+            else
+                fillCone(frame, frame.add(light, range, 1), light, range);
         }
     }
 
@@ -94,6 +97,23 @@ public final class PointShadowHelper {
         distances[position] = distance;
 
         return count;
+    }
+
+    /** Makes the matrix of the one face of a spot light: the view from the light along its direction, with the perspective of its cone */
+    private void fillCone(final PointShadowFrame frame, final int slot, final LightInstanceImplementation light, final float range) {
+        final var half = (float) Math.atan(Math.tan(Math.toRadians(light.getCone().getOuterAngle())) * FACE_TANGENT);
+        projection.setPerspective(2.f * half, 1.f, DefinitionsCommon.POINT_SHADOW_NEAR, range);
+
+        final var position = light.getPosition();
+        final var direction = light.getDirection();
+
+        // The up direction must not be along the direction, or the light could not be looked along it
+        final var vertical = Math.abs(direction.y()) > 0.99f;
+        view.setLookAt(position.x(), position.y(), position.z(),
+                position.x() + direction.x(), position.y() + direction.y(), position.z() + direction.z(),
+                0.f, vertical ? 0.f : 1.f, vertical ? 1.f : 0.f);
+
+        projection.mul(view, frame.getMatrix(slot, 0));
     }
 
     /** Makes the matrices of the faces of a slot: the view from the light along the direction of the face and the projection */

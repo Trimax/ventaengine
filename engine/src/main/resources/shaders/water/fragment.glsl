@@ -122,7 +122,7 @@ vec3 calculateLight(Light light, vec3 baseColor, vec3 normal, vec3 cameraDirecti
         return vec3(0.0);
 
     vec3 lightDirection = normalize(light.position - vertexPosition);
-    float attenuation = getLightFactor(light, length(light.position - vertexPosition)) * getPointShadow(light, vertexPosition, normalize(vertexNormal));
+    float attenuation = getLightFactor(light, vertexPosition) * getPointShadow(light, vertexPosition, normalize(vertexNormal));
 
     float diff = max(dot(normal, lightDirection), 0.0);
     vec3 R = reflect(-lightDirection, normal);

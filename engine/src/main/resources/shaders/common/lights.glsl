@@ -1,4 +1,4 @@
-const int MAX_LIGHTS = 64;
+const int MAX_LIGHTS = 32;
 
 struct Attenuation {
     float constant;
@@ -14,6 +14,12 @@ struct Light {
     float range;
     int shadowSlot;
     int enabled;
+
+    /* A spot light shines in a cone: the unit direction and the cosines of the inner and the outer angle */
+    int spot;
+    vec3 direction;
+    float cosInner;
+    float cosOuter;
 };
 
 struct DirectionalLight {
@@ -49,7 +55,27 @@ float getAttenuation(Attenuation attenuation, float distance) {
     return 1.0 / max(attenuation.constant + attenuation.linear * distance + attenuation.quadratic * distance * distance, 0.0001);
 }
 
-/* The part of the light of a source that reaches a point at a distance: its attenuation and the fade at the end of its range */
-float getLightFactor(Light light, float distance) {
-    return getAttenuation(light.attenuation, distance) * getLightFade(light.range, distance);
+/*
+ * How much of a spot light reaches a point by the angle from its direction: all of it inside the inner angle, nothing
+ * beyond the outer one and a smooth fall between. A point light shines to all the directions.
+ */
+float getLightCone(Light light, vec3 position) {
+    if (light.spot == 0)
+        return 1.0;
+
+    vec3 toPoint = position - light.position;
+    float cosine = dot(toPoint, light.direction) / max(length(toPoint), 0.0001);
+
+    // The same angles make a hard edge
+    if (light.cosInner <= light.cosOuter + 1e-6)
+        return cosine >= light.cosOuter ? 1.0 : 0.0;
+
+    return smoothstep(light.cosOuter, light.cosInner, cosine);
+}
+
+/* The part of the light of a source that reaches a point: its attenuation, the fade at the end of its range and the cone */
+float getLightFactor(Light light, vec3 position) {
+    float distance = length(light.position - position);
+
+    return getAttenuation(light.attenuation, distance) * getLightFade(light.range, distance) * getLightCone(light, position);
 }

@@ -1,0 +1,10 @@
+{
+  "type": "Spot",
+  "color": {"r": 1.0, "g": 1.0, "b": 1.0, "a": 1.0},
+  "attenuation": {"constant": 1.0, "linear": 0.0, "quadratic": 0.0},
+  "intensity": 1.5,
+  "range": 100.0,
+  "innerAngle": 20.0,
+  "outerAngle": 32.0,
+  "castShadows": false
+}

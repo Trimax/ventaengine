@@ -54,6 +54,15 @@ public final class LightBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderLightUniform.Range.getUniformName(lightIndex)), light.getRange());
         bind(program.getUniformID(ShaderLightUniform.ShadowSlot.getUniformName(lightIndex)), pointShadowRenderer.getFrame().getSlot(light));
 
+        /* Cone */
+        final var cone = light.getCone();
+        bind(program.getUniformID(ShaderLightUniform.Spot.getUniformName(lightIndex)), cone != null);
+        if (cone != null) {
+            bind(program.getUniformID(ShaderLightUniform.Direction.getUniformName(lightIndex)), light.getDirection());
+            bind(program.getUniformID(ShaderLightUniform.ConeInner.getUniformName(lightIndex)), cone.getCosInner());
+            bind(program.getUniformID(ShaderLightUniform.ConeOuter.getUniformName(lightIndex)), cone.getCosOuter());
+        }
+
         /* Position */
         bind(program.getUniformID(ShaderLightUniform.Position.getUniformName(lightIndex)), light.getPosition());
 

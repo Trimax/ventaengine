@@ -59,4 +59,18 @@ public final class TestObjects {
 
         return light;
     }
+
+    /**
+     * A spot light for the tests: a light with a cone, shining along a direction.
+     *
+     * @param range how far it reaches, 0 for a light without a range
+     */
+    public static LightInstanceImplementation spot(final String name, final Vector3f position, final Vector3f direction,
+                                                   final float innerAngle, final float outerAngle, final float range, final boolean castShadows) {
+        final var light = light(name, position, range, castShadows);
+        light.setCone(new io.github.trimax.venta.engine.model.common.shared.Cone(innerAngle, outerAngle));
+        light.setDirection(direction);
+
+        return light;
+    }
 }

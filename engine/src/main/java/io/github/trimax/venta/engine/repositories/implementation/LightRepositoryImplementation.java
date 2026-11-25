@@ -6,7 +6,9 @@ import org.joml.Vector3f;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
+import io.github.trimax.venta.engine.enums.LightType;
 import io.github.trimax.venta.engine.model.common.shared.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Cone;
 import io.github.trimax.venta.engine.model.dto.LightDTO;
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import io.github.trimax.venta.engine.model.prefabs.LightPrefab;
@@ -33,12 +35,15 @@ public final class LightRepositoryImplementation
         log.info("Loading light {}", resourcePath);
 
         final var lightDTO = resourceService.getAsObject(String.format("/lights/%s", resourcePath), LightDTO.class);
+        final var type = Optional.ofNullable(lightDTO.type()).orElse(LightType.Point);
         return abettor.createLight(
                 Optional.of(lightDTO.color()).map(ColorDTO::toVector3f).orElse(new Vector3f(DefinitionsCommon.VECTOR3F_ONE)),
                 Optional.ofNullable(lightDTO.attenuation()).map(Attenuation::new).orElseGet(Attenuation::createDefault),
                 lightDTO.castShadows(),
                 lightDTO.intensity(),
-                lightDTO.range());
+                lightDTO.range(),
+                type,
+                type == LightType.Spot ? new Cone(lightDTO) : null);
     }
 
     @Override

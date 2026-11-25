@@ -78,4 +78,25 @@ final class PointShadowFrameTest {
         assertThrows(IllegalArgumentException.class, () -> new PointShadowFrame(0, 6));
         assertThrows(IllegalArgumentException.class, () -> new PointShadowFrame(4, 0));
     }
+
+    @Test
+    void testPointLightUsesAllFacesAndSpotLightTheOnesItIsGiven() {
+        final var point = TestObjects.light("point", new Vector3f(), 10.f, true);
+        final var spot = TestObjects.light("spot", new Vector3f(), 10.f, true);
+
+        frame.add(point, 10.f);
+        frame.add(spot, 10.f, 1);
+
+        assertEquals(6, frame.getUsedFaces(0));
+        assertEquals(1, frame.getUsedFaces(1));
+    }
+
+    @Test
+    void testBadNumberOfFacesIsRefused() {
+        final var light = TestObjects.light("light", new Vector3f(), 10.f, true);
+
+        assertThrows(IllegalArgumentException.class, () -> frame.add(light, 10.f, 0));
+        assertThrows(IllegalArgumentException.class, () -> frame.add(light, 10.f, 7));
+        assertEquals(0, frame.getCount(), "A refused light takes no slot");
+    }
 }
