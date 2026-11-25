@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +37,15 @@ public final class SceneInfoExecutor extends AbstractSceneExecutor {
         getConsole().info("      Ambient: %s", scene.getAmbientLight());
         getConsole().info("       Skybox: %b", scene.getSkybox() != null);
         getConsole().info("          Fog: %s", scene.getFog());
+        getConsole().info("Antialiasing: %s", describe(scene.getAntialiasing()));
         getConsole().info("   Draw calls: %s (last frame, with shadows)", geometryHelper.getDrawCalls());
+    }
+
+    private static String describe(final Antialiasing antialiasing) {
+        if (antialiasing == null || !antialiasing.isActive())
+            return "none";
+
+        return String.format("%s, %s quality, subpixel %s, edge threshold %s", antialiasing.getType(), antialiasing.getQuality(),
+                antialiasing.getSubpixel(), antialiasing.getEdgeThreshold());
     }
 }

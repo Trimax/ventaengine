@@ -87,6 +87,7 @@ public final class SceneManagerImplementation
         Optional.ofNullable(prefab.getBloom()).ifPresent(scene::setBloom);
         Optional.ofNullable(prefab.getLightShafts()).ifPresent(scene::setLightShafts);
         Optional.ofNullable(prefab.getAmbientOcclusion()).ifPresent(scene::setAmbientOcclusion);
+        Optional.ofNullable(prefab.getAntialiasing()).ifPresent(scene::setAntialiasing);
         Optional.ofNullable(prefab.getExposure()).ifPresent(scene::setExposure);
         Optional.ofNullable(prefab.getToneMapping()).ifPresent(scene::setToneMapping);
 

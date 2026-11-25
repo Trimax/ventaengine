@@ -5,6 +5,7 @@ import io.github.trimax.venta.engine.enums.ToneMapping;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.common.shared.AmbientOcclusion;
+import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
 import io.github.trimax.venta.engine.model.common.shared.LightShafts;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
@@ -48,6 +49,9 @@ public interface SceneInstance extends AbstractInstance {
     /** The darkening of the corners and the contacts, null is none */
     AmbientOcclusion getAmbientOcclusion();
 
+    /** The smoothing of the edges of the finished image, null is none */
+    Antialiasing getAntialiasing();
+
     /** Multiplies the light of the scene before the tone mapping, 1 keeps it */
     float getExposure();
 
@@ -68,6 +72,8 @@ public interface SceneInstance extends AbstractInstance {
     void setLightShafts(final LightShafts lightShafts);
 
     void setAmbientOcclusion(final AmbientOcclusion ambientOcclusion);
+
+    void setAntialiasing(final Antialiasing antialiasing);
 
     void setExposure(final float exposure);
 
