@@ -96,10 +96,14 @@ out vec4 outputColor;
  * Common functions
  ***/
 
-vec3 calculateColor() {
-    // Height of the wave at this point relative to the calm surface; a calm surface is in the middle
+/* Height of the wave at this point relative to the calm surface, from 0 (the lowest) to 1 (the crest); a calm surface is in the middle */
+float getHeightFactor() {
     float amplitude = max(waveAmplitude, 0.0001);
-    float heightFactor = clamp((vertexHeight + amplitude) / (2.0 * amplitude), 0.0, 1.0);
+    return clamp((vertexHeight + amplitude) / (2.0 * amplitude), 0.0, 1.0);
+}
+
+vec3 calculateColor() {
+    float heightFactor = getHeightFactor();
     vec3 waterColor = mix(material.colorDepth, material.colorSurface, heightFactor);
 
     return mix(waterColor, material.colorPeak, smoothstep(foam.threshold, 1.0, heightFactor) * foam.intensity);
@@ -201,6 +205,9 @@ float getThickness(vec2 coordinates) {
 /* The foam scatters the light of the sky and of the sun that passes through it, so it is never dark: this much of its color is added to the light it gets */
 const float FOAM_GLOW = 0.35;
 
+/* The foam of the crests of the waves is the whitest: it scatters the light too, and more of it than the foam of the shore */
+const float CREST_GLOW = 0.8;
+
 /* How deep (the height of the water over the ground) the water becomes opaque, at the edge of a shore */
 const float SHORE_EDGE = 0.15;
 
@@ -280,6 +287,12 @@ void main() {
         if (shore > 0.0)
             colorWithLighting = mix(colorWithLighting, computeLighting(material.colorPeak, normal, cameraDirection) + material.colorPeak * FOAM_GLOW, shore);
     }
+
+    // The crests of the waves are white with the foam that scatters the light, so they glow against the sun as well; the foam lies
+    // in patches and streaks, not on the whole crest
+    float patches = noise(vertexPosition.xz * vec2(0.9, 1.4) + timeElapsed * 0.15) * 0.55 + noise(vertexPosition.xz * 3.3 - timeElapsed * 0.3) * 0.45;
+    float crest = smoothstep(foam.threshold, 1.0, getHeightFactor()) * smoothstep(0.42, 0.62, patches) * foam.intensity;
+    colorWithLighting += material.colorPeak * crest * CREST_GLOW;
 
     vec3 colorWithReflections = applyReflections(colorWithLighting, cameraDirection, normal);
 

@@ -19,7 +19,7 @@
   "alphaMode": "cutout",
   "alphaCutoff": 0.5,
   "doubleSided": true,
-  "windInfluence": 0.3,
+  "windInfluence": 1.0,
   "textures": {
     "diffuse": "palm/diffuse.png",
     "normal": "palm/normal.png"

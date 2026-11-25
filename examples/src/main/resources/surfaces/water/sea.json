@@ -30,11 +30,11 @@
     "swashPeriod": 9.0
   },
   "foam": {
-    "threshold": 0.97,
-    "intensity": 0.12,
-    "shoreWidth": 2.2,
-    "shoreIntensity": 0.9,
-    "bands": 0.55
+    "threshold": 0.45,
+    "intensity": 1.0,
+    "shoreWidth": 3.0,
+    "shoreIntensity": 1.0,
+    "bands": 0.9
   },
   "waves": [
     {

@@ -8,8 +8,8 @@
   "directionalLight": {
     "color": {
       "r": 1.0,
-      "g": 0.68,
-      "b": 0.42,
+      "g": 0.8,
+      "b": 0.58,
       "a": 1.0
     },
     "direction": {
@@ -17,11 +17,11 @@
       "y": -0.0337,
       "z": 0.8082
     },
-    "intensity": 6.0,
+    "intensity": 4.2,
     "castShadows": true,
     "shadowDistance": 160,
     "discSize": 1.4,
-    "discIntensity": 60.0
+    "discIntensity": 20.0
   },
   "view": {
     "near": 0.3,
@@ -29,8 +29,8 @@
     "fov": 50.0
   },
   "bloom": {
-    "intensity": 0.22,
-    "threshold": 1.2,
+    "intensity": 0.14,
+    "threshold": 1.6,
     "softKnee": 0.5
   },
   "ambientOcclusion": {
@@ -43,9 +43,9 @@
     "quality": "High"
   },
   "lightShafts": {
-    "intensity": 0.55,
-    "steps": 48,
-    "anisotropy": 0.72
+    "intensity": 1.0,
+    "steps": 64,
+    "anisotropy": 0.9
   },
   "fog": {
     "color": {
@@ -54,22 +54,22 @@
       "b": 0.72,
       "a": 1.0
     },
-    "density": 0.0014,
-    "falloff": 0.05,
-    "baseHeight": 2.0,
-    "sunScattering": 0.9,
+    "density": 0.0012,
+    "falloff": 0.07,
+    "baseHeight": 1.0,
+    "sunScattering": 1.0,
     "sunSharpness": 5.0
   },
   "wind": {
     "direction": {
-      "x": 0.1,
+      "x": 0.2,
       "y": 0.0,
       "z": 1.0
     },
-    "strength": 0.8,
-    "speed": 1.0
+    "strength": 2.4,
+    "speed": 1.2
   },
-  "exposure": 1.1,
+  "exposure": 0.72,
   "toneMapping": "ACES",
   "skybox": "beach.json",
   "terrainSurfaces": [
@@ -99,9 +99,9 @@
       "name": "Chest",
       "object": "chest.json",
       "position": {
-        "x": -0.815,
-        "y": 0.831,
-        "z": 20.578
+        "x": 2.585,
+        "y": 0.779,
+        "z": 19.978
       },
       "angles": {
         "x": 0.0,
