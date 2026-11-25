@@ -6,18 +6,16 @@ its own. What the engine can do already is in the [readme](readme.md). Paths of 
 
 ## Rendering
 
-- [ ] **1. Demo: an ocean beach.** A showcase scene that puts the rendering together, with a fixed camera: a wide sandy
-  beach that goes to the horizon, seen from the sand towards the sea at a low sun. Our chest (`materials/chest.json`) stands
-  on the sand, lit by the sun and the sky and throwing a long shadow on it, and the sun shines through the haze in light
-  shafts. The water in front has waves that roll in; at the shore it is clear and semi transparent with the sand seen through
-  it, white with foam where it washes up, and fades to the deep colors further out. A sound of the surf plays from the sea.
-  What the engine lacks for it: the view distance is fixed (the far plane is 1000), so it has to become a setting of the
-  camera or the window, and the water must reach the horizon (a mesh that is large enough or follows the camera, and
-  the haze that hides its end); the sand that the water has wet is darker (a wet line that follows the washing waves); the
-  waves should break and wash up the beach, not only rise and fall. The assets are to be found with a free license (CC0, for
-  example Poly Haven or freesound): a skybox of a sunset over the sea (the skybox is 8 bit until the HDR environment maps
-  are loaded), a sand material and the sound of the surf. The water of the scene is tuned for it: the colors, the depth
-  distance, the foam, the refraction.
+- [ ] **1. Demo: an ocean beach.** A showcase scene that puts the rendering together, with a fixed camera that sways a
+  little: a wide sandy beach that goes to the horizon, seen from the sand towards the sea at a low sun. Our chest
+  (`materials/chest.json`) stands on the sand, lit by the sun and the sky and throwing a long shadow on it, and a palm stands
+  on the beach, so the sun shines through the haze in light shafts behind it. The water in front has waves that roll in; at
+  the shore it is clear and semi transparent with the sand seen through it, wet and white with foam where it washes up, and
+  fades to the deep colors further out. A sound of the surf plays from the sea. The engine has what it needs (`"view"`, the
+  fade of the waves, the swash, the bands of foam, the wet sand); what is left is the scene itself and its assets, found with
+  a free license (CC0, for example Poly Haven, Quaternius or Kenney): a skybox of a sunset over the sea (the skybox is 8 bit
+  until the HDR environment maps are loaded), a palm, a sand material and the sound of the surf (made with a script when a
+  recording with such a license is not found).
 - [ ] **2. Reflections of the other surfaces.** Reflective materials (`default/fragment.glsl`) reflect only the skybox
   cubemap, so objects, terrain and other surfaces never appear in their reflections (the water has its own reflection of the
   scene). A dynamic cubemap of the surroundings of a reflective object (drawn from its position, refreshed now and then)

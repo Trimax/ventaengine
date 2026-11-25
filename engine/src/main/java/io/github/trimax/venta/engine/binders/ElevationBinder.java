@@ -7,6 +7,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainWetness;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TextureEntityImplementation;
 import lombok.AccessLevel;
@@ -59,5 +60,20 @@ public final class ElevationBinder extends AbstractBinder {
     /** How deep the skirts of the chunks of the terrain hang, in the local space of the terrain */
     public void bindSkirt(final ProgramEntityImplementation program, final float depth) {
         bind(program.getUniformID(ShaderUniform.SkirtDepth), depth);
+    }
+
+    /** Gives the shader the wet ground of a shore, or switches it off when there is none */
+    public void bindWetness(final ProgramEntityImplementation program, final TerrainWetness wetness) {
+        bind(program.getUniformID(ShaderUniform.UseWetness), wetness != null);
+
+        if (wetness == null)
+            return;
+
+        bind(program.getUniformID(ShaderUniform.WetnessLevel), wetness.getLevel());
+        bind(program.getUniformID(ShaderUniform.WetnessHeight), wetness.getHeight());
+        bind(program.getUniformID(ShaderUniform.WetnessDarkening), wetness.getDarkening());
+        bind(program.getUniformID(ShaderUniform.WetnessGlossiness), wetness.getGlossiness());
+        bind(program.getUniformID(ShaderUniform.WetnessSwashAmplitude), wetness.getSwashAmplitude());
+        bind(program.getUniformID(ShaderUniform.WetnessSwashPeriod), wetness.getSwashPeriod());
     }
 }

@@ -34,3 +34,18 @@ vec2 getRefractedCoordinates(vec2 coordinates, vec3 normal, float strength, floa
 
     return coordinates + normal.xz * strength * fade;
 }
+
+/*
+ * Lines of foam that run to the shore from the deep, one after another: the waves that come in. They are where the water is thin
+ * enough to break (from twice the width of the foam of the shore up to ten widths of it), and move to the shore with time.
+ */
+float getFoamBands(float thickness, float width, float intensity, float time) {
+    if (width <= 0.0 || intensity <= 0.0)
+        return 0.0;
+
+    float phase = thickness / width * 0.45 + time * 0.12;
+    float lines = smoothstep(0.62, 0.95, 0.5 + 0.5 * sin(6.28318531 * phase));
+    float zone = smoothstep(width * 0.4, width * 1.2, thickness) * (1.0 - smoothstep(width * 3.0, width * 10.0, thickness));
+
+    return clamp(lines * zone * intensity, 0.0, 1.0);
+}

@@ -22,5 +22,6 @@ public final class WaterFoamBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.FoamIntensity), foam.getIntensity());
         bind(program.getUniformID(ShaderUniform.FoamShoreWidth), foam.getShoreWidth());
         bind(program.getUniformID(ShaderUniform.FoamShoreIntensity), foam.getShoreIntensity());
+        bind(program.getUniformID(ShaderUniform.FoamBands), foam.getBands());
     }
 }

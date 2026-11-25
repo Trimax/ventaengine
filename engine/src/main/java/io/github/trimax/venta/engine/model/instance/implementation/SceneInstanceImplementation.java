@@ -8,6 +8,7 @@ import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.common.shared.AmbientOcclusion;
 import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
+import io.github.trimax.venta.engine.model.common.shared.View;
 import io.github.trimax.venta.engine.model.common.shared.LightShafts;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
@@ -55,6 +56,9 @@ public final class SceneInstanceImplementation extends AbstractInstanceImplement
 
     @Setter
     private Antialiasing antialiasing;
+
+    @Setter
+    private View view;
 
     @Setter
     private DirectionalLight directionalLight;

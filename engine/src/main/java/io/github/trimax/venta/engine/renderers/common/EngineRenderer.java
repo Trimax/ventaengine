@@ -66,6 +66,9 @@ public final class EngineRenderer {
             engineController.get().setApplicationRunning(false);
 
         geometryHelper.startFrame();
+
+        // The camera sees the scene as it says (the planes and the field of view), in every pass of the frame
+        window.getView().set(sceneManager.getCurrent() == null ? null : sceneManager.getCurrent().getView());
         terrainChunkHelper.startFrame();
 
         final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());

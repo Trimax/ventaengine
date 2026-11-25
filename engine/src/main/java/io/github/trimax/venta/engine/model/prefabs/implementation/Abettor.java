@@ -22,6 +22,7 @@ import org.joml.Vector3f;
 
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainChunkLayout;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainWetness;
 import java.util.List;
 import java.util.Map;
 
@@ -57,9 +58,10 @@ public final class Abettor {
                                                                    final float factor,
                                                                    @NonNull final TerrainChunkLayout chunkLayout,
                                                                    @NonNull final Geometry chunkGeometry,
-                                                                   final float lodDistance) {
+                                                                   final float lodDistance,
+                                                                   final TerrainWetness wetness) {
         return new TerrainSurfacePrefabImplementation(gridMesh, program, heightmap, materials, textureArrays, elevations, slopes, factor,
-                chunkLayout, chunkGeometry, lodDistance);
+                chunkLayout, chunkGeometry, lodDistance, wetness);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,
@@ -97,9 +99,11 @@ public final class Abettor {
                                                  final LightShafts lightShafts,
                                                  final AmbientOcclusion ambientOcclusion,
                                                  final Antialiasing antialiasing,
+                                                 final View view,
                                                  final Float exposure,
                                                  final ToneMapping toneMapping) {
-        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, terrainSurfaces, waterSurfaces, skybox, directionalLight, ambientLight, fog, wind, bloom, lightShafts, ambientOcclusion, antialiasing, exposure, toneMapping);
+        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, terrainSurfaces, waterSurfaces, skybox,
+                directionalLight, ambientLight, fog, wind, bloom, lightShafts, ambientOcclusion, antialiasing, view, exposure, toneMapping);
     }
 
     public SoundSourcePrefabImplementation createSound(@NonNull final SoundEntityImplementation sound,

@@ -41,7 +41,8 @@ public final class TerrainSurfaceManagerImplementation
                 prefab.getSlopes(),
                 prefab.getFactor(),
                 new TerrainChunks(prefab.getChunkLayout(), prefab.getChunkGeometry()),
-                prefab.getLodDistance()));
+                prefab.getLodDistance(),
+                prefab.getWetness()));
     }
 
     @Override

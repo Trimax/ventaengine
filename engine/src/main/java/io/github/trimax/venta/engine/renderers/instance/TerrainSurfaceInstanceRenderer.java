@@ -74,6 +74,7 @@ public final class TerrainSurfaceInstanceRenderer extends
 
         StreamEx.of(TextureType.values()).forEach(type -> textureBinder.bind(type, surface.getProgram(), surface.getTextureArrays().get(type)));
 
+        elevationBinder.bindWetness(surface.getProgram(), surface.getWetness());
         elevationBinder.bindSkirt(surface.getProgram(), surface.getChunks().getSkirtDepth(surface.getFactor()));
 
         // The chunks the camera sees, each with the level of detail chosen for this frame

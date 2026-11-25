@@ -138,4 +138,69 @@ final class WaterDepthShaderTest {
         assertEquals(0.5f, result[0], EPSILON);
         assertEquals(0.25f, result[1], EPSILON);
     }
+
+    private static float bands(final float thickness, final float width, final float intensity, final float time) {
+        return harness.run(INCLUDES, "uniform float thickness; uniform float width; uniform float intensity; uniform float time;",
+                "outputColor = vec4(getFoamBands(thickness, width, intensity, time));",
+                Map.of("thickness", thickness, "width", width, "intensity", intensity, "time", time))[0];
+    }
+
+    @Test
+    void testBandsAreOnlyWhereTheWaterIsThinEnoughToBreak() {
+        for (var time = 0.f; time < 10.f; time += 0.5f) {
+            assertEquals(0.f, bands(0.f, 1.2f, 1.f, time), EPSILON, "At the very edge there are the foam of the shore, not the bands");
+            assertEquals(0.f, bands(15.f, 1.2f, 1.f, time), EPSILON, "Deep water has no bands");
+        }
+    }
+
+    @Test
+    void testBandsMoveToTheShoreWithTime() {
+        // A line of foam is at some thickness at a time and at a smaller one a while after: the waves go in
+        final var width = 1.2f;
+        float lineAtStart = -1.f;
+        float lineLater = -1.f;
+        for (var thickness = 2.f; thickness < 9.f; thickness += 0.02f) {
+            if (lineAtStart < 0.f && bands(thickness, width, 1.f, 0.f) > 0.9f)
+                lineAtStart = thickness;
+
+            if (lineLater < 0.f && bands(thickness, width, 1.f, 1.5f) > 0.9f)
+                lineLater = thickness;
+        }
+
+        assertTrue(lineAtStart > 0.f && lineLater > 0.f, "Lines are found: " + lineAtStart + ", " + lineLater);
+        assertTrue(lineLater != lineAtStart, "The lines have moved");
+    }
+
+    @Test
+    void testBandsAreSeveralInARowAndHaveGapsBetween() {
+        var lines = 0;
+        var previous = false;
+        var gaps = 0;
+        for (var thickness = 2.f; thickness < 11.f; thickness += 0.02f) {
+            final var value = bands(thickness, 1.2f, 1.f, 0.f);
+            final var on = value > 0.5f;
+            if (on && !previous)
+                lines++;
+
+            if (!on && value < 0.05f)
+                gaps++;
+
+            previous = on;
+        }
+
+        assertTrue(lines >= 2, "More than one line: " + lines);
+        assertTrue(gaps > 0, "And clear water between them");
+    }
+
+    @Test
+    void testBandsNeedAWidthAndAnIntensity() {
+        assertEquals(0.f, bands(3.f, 0.f, 1.f, 0.f), EPSILON);
+        assertEquals(0.f, bands(3.f, 1.2f, 0.f, 0.f), EPSILON);
+    }
+
+    @Test
+    void testBandsAreNotBrighterThanTheirIntensity() {
+        for (var thickness = 1.f; thickness < 12.f; thickness += 0.1f)
+            assertTrue(bands(thickness, 1.2f, 0.4f, 2.f) <= 0.4f + EPSILON, "At " + thickness);
+    }
 }

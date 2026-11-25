@@ -22,6 +22,7 @@ import org.joml.Vector3f;
 import java.nio.FloatBuffer;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainChunks;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainWetness;
 import java.util.List;
 import java.util.Map;
 
@@ -68,8 +69,9 @@ public final class Abettor {
                                                                      @NonNull final List<TerrainSlope> slopes,
                                                                      final float factor,
                                                                      @NonNull final TerrainChunks chunks,
-                                                                     final float lodDistance) {
-        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, heightmap, materials, textureArrays, elevations, slopes, factor, chunks, lodDistance);
+                                                                     final float lodDistance,
+                                                                     final TerrainWetness wetness) {
+        return new TerrainSurfaceInstanceImplementation(name, gridMesh, program, heightmap, materials, textureArrays, elevations, slopes, factor, chunks, lodDistance, wetness);
     }
 
     public ObjectInstanceImplementation createObject(@NonNull final String name,

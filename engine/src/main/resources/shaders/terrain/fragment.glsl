@@ -10,6 +10,7 @@
 #include "common/point-shadow.glsl"
 #include "common/shadow.glsl"
 #include "common/terrain-blend.glsl"
+#include "common/terrain-wet.glsl"
 
 /***
  * Definitions
@@ -70,6 +71,19 @@ uniform int slopeCount;
 uniform float slopeMinimums[MAX_SLOPES];
 uniform float slopeMaximums[MAX_SLOPES];
 uniform float slopeBlends[MAX_SLOPES];
+
+/* The wet ground of a shore */
+struct Wetness {
+    float level;
+    float height;
+    float darkening;
+    float glossiness;
+    float swashAmplitude;
+    float swashPeriod;
+};
+
+uniform Wetness wetness;
+uniform int useWetness;
 
 /* The size of the terrain in the world */
 uniform vec2 worldSize;
@@ -374,6 +388,15 @@ void main() {
             normal = normalize(mix(normal, sampleTriplanarNormal(layer, triplanar), weight));
 
         roughness = mix(roughness, isSet(useTextureRoughness) ? sampleTriplanar(textureRoughness, layer, triplanar).r : materials[layer].roughness, weight);
+    }
+
+    // The ground the water has wet is darker and smoother
+    if (isSet(useWetness)) {
+        float irregularity = (noise(vertexPosition.xz * 0.12 + timeElapsed * 0.02) - 0.5) * wetness.height * 0.8;
+        float wet = getWetness(vertexPosition.y, wetness.level, wetness.height, wetness.swashAmplitude, wetness.swashPeriod, timeElapsed, irregularity);
+
+        baseColor *= 1.0 - wet * wetness.darkening;
+        roughness *= 1.0 - wet * wetness.glossiness;
     }
 
     outputColor = vec4(applyFog(computeLighting(baseColor, normal, cameraDirection, roughness)), 1.0);

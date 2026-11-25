@@ -16,6 +16,7 @@ import io.github.trimax.venta.engine.model.common.scene.SceneWaterSurface;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
+import io.github.trimax.venta.engine.model.common.shared.View;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.common.shared.AmbientOcclusion;
 import io.github.trimax.venta.engine.model.common.shared.LightShafts;
@@ -82,6 +83,7 @@ public final class SceneRepositoryImplementation
                 Optional.ofNullable(sceneDTO.lightShafts()).map(LightShafts::new).orElse(null),
                 Optional.ofNullable(sceneDTO.ambientOcclusion()).map(AmbientOcclusion::new).orElse(null),
                 Optional.ofNullable(sceneDTO.antialiasing()).map(Antialiasing::new).orElse(null),
+                Optional.ofNullable(sceneDTO.view()).map(View::new).orElse(null),
                 sceneDTO.exposure(),
                 sceneDTO.toneMapping());
     }
