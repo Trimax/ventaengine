@@ -34,6 +34,8 @@ public final class EngineRenderer {
     private final AmbientOcclusionRenderer ambientOcclusionRenderer;
     private final EnvironmentRenderer environmentRenderer;
     private final ShadowRenderer shadowRenderer;
+    private final ShadowCasterRenderer shadowCasterRenderer;
+    private final PointShadowRenderer pointShadowRenderer;
     private final WindowStateRenderer windowRenderer;
     private final SceneInstanceRenderer sceneRenderer;
     private final DebugRenderer debugRenderer;
@@ -46,6 +48,8 @@ public final class EngineRenderer {
         lightShaftRenderer.release();
         ambientOcclusionRenderer.release();
         shadowRenderer.release();
+        pointShadowRenderer.release();
+        shadowCasterRenderer.release();
         environmentRenderer.release();
         postProcessingRenderer.release();
     }
@@ -67,6 +71,7 @@ public final class EngineRenderer {
 
         // The shadow maps are drawn first, the scene takes them
         shadowRenderer.render(sceneManager.getCurrent(), camera, window, time);
+        pointShadowRenderer.render(sceneManager.getCurrent(), camera, time);
 
         // The scene and the debug overlays (they need the depth of the scene) are rendered in HDR
         postProcessingRenderer.begin(window);

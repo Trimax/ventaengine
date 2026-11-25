@@ -26,6 +26,14 @@ public interface LightInstance extends AbstractInstance {
 
     void setEnabled(final boolean value);
 
+    /**
+     * How far the light reaches, in the units of the world: it fades smoothly to nothing at this distance, and a light that
+     * casts shadows has them up to it. 0 is a light that reaches as far as its attenuation does (it casts no shadows then).
+     */
+    float getRange();
+
+    void setRange(final float range);
+
     boolean isCastShadows();
 
     void setCastShadows(final boolean value);

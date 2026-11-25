@@ -18,6 +18,7 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
 
     private Attenuation attenuation = new Attenuation(0f, 0f, 0f);
     private float intensity = 1.f;
+    private float range;
 
     @Setter
     private boolean castShadows = false;
@@ -33,6 +34,7 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
         // Each instance gets its own copy, otherwise changing one light would change all lights of the prefab
         setAttenuation(new Attenuation(prefab.getAttenuation()));
         setCastShadows(prefab.isCastShadows());
+        setRange(prefab.getRange());
         setIntensity(prefab.getIntensity());
         setColor(prefab.getColor());
     }
@@ -50,6 +52,14 @@ public final class LightInstanceImplementation extends AbstractInstanceImplement
     @Override
     public void setAttenuation(@NonNull final Attenuation attenuation) {
         this.attenuation = attenuation;
+    }
+
+    @Override
+    public void setRange(final float range) {
+        if (!Float.isFinite(range) || range < 0.f)
+            throw new IllegalArgumentException("The range of a light must not be negative, got " + range);
+
+        this.range = range;
     }
 
     @Override

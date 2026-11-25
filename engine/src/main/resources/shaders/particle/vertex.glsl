@@ -42,7 +42,7 @@ vec3 computeLighting(vec3 center) {
 
     for (int i = 0; i < lightCount; i++)
         if (lights[i].enabled != 0)
-            result += lights[i].color * lights[i].intensity * getAttenuation(lights[i].attenuation, length(lights[i].position - center));
+            result += lights[i].color * lights[i].intensity * getLightFactor(lights[i], length(lights[i].position - center));
 
     return result;
 }

@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
+import io.github.trimax.venta.engine.renderers.common.PointShadowRenderer;
 import io.github.trimax.venta.engine.model.instance.implementation.LightInstanceImplementation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LightBinder extends AbstractBinder {
+    private final PointShadowRenderer pointShadowRenderer;
+
     public void bind(final ProgramEntityImplementation program, final Vector3fc ambientLight) {
         bindColor(program.getUniformID(ShaderUniform.AmbientLight), ambientLight);
     }
@@ -48,7 +51,8 @@ public final class LightBinder extends AbstractBinder {
 
     private void bind(final ProgramEntityImplementation program, final LightInstanceImplementation light, final int lightIndex) {
         bind(program.getUniformID(ShaderLightUniform.Enabled.getUniformName(lightIndex)), light.isEnabled());
-        bind(program.getUniformID(ShaderLightUniform.CastShadows.getUniformName(lightIndex)), light.isCastShadows());
+        bind(program.getUniformID(ShaderLightUniform.Range.getUniformName(lightIndex)), light.getRange());
+        bind(program.getUniformID(ShaderLightUniform.ShadowSlot.getUniformName(lightIndex)), pointShadowRenderer.getFrame().getSlot(light));
 
         /* Position */
         bind(program.getUniformID(ShaderLightUniform.Position.getUniformName(lightIndex)), light.getPosition());

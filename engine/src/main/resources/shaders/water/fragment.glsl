@@ -5,6 +5,7 @@
 #include "common/fog.glsl"
 #include "common/lights.glsl"
 #include "common/noise.glsl"
+#include "common/point-shadow.glsl"
 #include "common/shadow.glsl"
 
 /***
@@ -121,7 +122,7 @@ vec3 calculateLight(Light light, vec3 baseColor, vec3 normal, vec3 cameraDirecti
         return vec3(0.0);
 
     vec3 lightDirection = normalize(light.position - vertexPosition);
-    float attenuation = getAttenuation(light.attenuation, length(light.position - vertexPosition));
+    float attenuation = getLightFactor(light, length(light.position - vertexPosition)) * getPointShadow(light, vertexPosition, normalize(vertexNormal));
 
     float diff = max(dot(normal, lightDirection), 0.0);
     vec3 R = reflect(-lightDirection, normal);

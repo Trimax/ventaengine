@@ -10,6 +10,7 @@ import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
 import io.github.trimax.venta.engine.model.entity.implementation.TestMeshes;
+import io.github.trimax.venta.engine.model.prefabs.implementation.TestPrefabs;
 
 /**
  * Objects for the tests of other packages: the constructors of the instances are not public.
@@ -39,5 +40,23 @@ public final class TestObjects {
                 new Vector3f(), new Vector3f(), new Vector3f(1));
 
         return new ObjectInstanceImplementation("object", TestMeshes.program(), material, model(), List.of(levels), gizmo);
+    }
+
+    /**
+     * A point light that is on.
+     *
+     * @param range       how far it reaches, 0 for a light without a range
+     * @param castShadows whether it has a shadow map when it is near enough
+     */
+    public static LightInstanceImplementation light(final String name, final Vector3f position, final float range, final boolean castShadows) {
+        final var gizmo = new GizmoInstanceImplementation("gizmo", TestMeshes.program(), TestMeshes.cube(1),
+                new Vector3f(), new Vector3f(), new Vector3f(1));
+
+        final var light = new LightInstanceImplementation(name, TestPrefabs.light(), gizmo);
+        light.setPosition(position);
+        light.setRange(range);
+        light.setCastShadows(castShadows);
+
+        return light;
     }
 }

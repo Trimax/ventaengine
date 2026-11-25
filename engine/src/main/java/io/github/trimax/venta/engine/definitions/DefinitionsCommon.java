@@ -16,6 +16,15 @@ public final class DefinitionsCommon {
     /* Shadows */
     public static final int SHADOW_RESOLUTION = 2048;
 
+    /* Shadows of the point lights: a map of depths of 6 faces for every light that has one, there are few of them */
+    public static final int MAX_POINT_SHADOWS = 4;
+    public static final int POINT_SHADOW_FACES = 6;
+    public static final int POINT_SHADOW_RESOLUTION = 512;
+    public static final float POINT_SHADOW_NEAR = 0.1f;
+
+    /** How far the shadows of a light reach when the light has no range */
+    public static final float DEFAULT_POINT_SHADOW_RANGE = 50.f;
+
     /* Vectors 4D */
     public static final Vector4fc VECTOR4F_ZERO = new Vector4f(0.f);
     public static final Vector4fc VECTOR4F_ONE = new Vector4f(1.f);

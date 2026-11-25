@@ -7,6 +7,7 @@ import io.github.trimax.venta.engine.definitions.DefinitionsCommon;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.TextureUnit;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
+import io.github.trimax.venta.engine.renderers.common.PointShadowRenderer;
 import io.github.trimax.venta.engine.renderers.common.ShadowRenderer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,8 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ShadowBinder extends AbstractBinder {
     private final ShadowRenderer shadowRenderer;
+    private final PointShadowRenderer pointShadowRenderer;
 
     public void bind(final ProgramEntityImplementation program) {
+        bindPoint(program);
+
         final var frame = shadowRenderer.getFrame();
 
         // The sampler of shadows must never share a unit with a sampler of another type, so it is set even without shadows
@@ -51,6 +55,27 @@ public final class ShadowBinder extends AbstractBinder {
             bindMatrix4(program.getUniformID(ShaderUniform.ShadowMatrices), matrices);
             bindFloats(program.getUniformID(ShaderUniform.ShadowSplits), splits);
             bindFloats(program.getUniformID(ShaderUniform.ShadowTexels), texels);
+        }
+    }
+
+    /** The maps of the point lights: the matrices of all the faces of the slots in use, the unit is the same for all the programs */
+    private void bindPoint(final ProgramEntityImplementation program) {
+        final var frame = pointShadowRenderer.getFrame();
+
+        bind(program.getUniformID(ShaderUniform.TexturePointShadow), TextureUnit.PointShadow.getId());
+        bind(program.getUniformID(ShaderUniform.UsePointShadows), frame.isActive());
+
+        if (!frame.isActive())
+            return;
+
+        try (final var stack = MemoryStack.stackPush()) {
+            final var faces = frame.getCount() * frame.getFaces();
+            final var matrices = stack.mallocFloat(16 * faces);
+            for (int slot = 0; slot < frame.getCount(); slot++)
+                for (int face = 0; face < frame.getFaces(); face++)
+                    frame.getMatrix(slot, face).get(16 * (slot * frame.getFaces() + face), matrices);
+
+            bindMatrix4(program.getUniformID(ShaderUniform.PointShadowMatrices), matrices);
         }
     }
 }
