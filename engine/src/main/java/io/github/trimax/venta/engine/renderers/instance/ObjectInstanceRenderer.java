@@ -91,8 +91,16 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
         fogBinder.bind(program, context.getScene().getFog(), context.getScene().getDirectionalLight());
         windBinder.bind(program, context.getScene().getWind(), context.getParent().getTime());
 
+        // The object reflects the cube map of its surroundings when it has one that is drawn
+        final var probe = context.getParent().getProbe(object);
+        if (probe != null)
+            environmentBinder.bindProbe(program, probe.getTextureID(), probe.getLevels());
+
         // What is not batched is not drawn with the cross fade of the levels of detail nor as a card: it takes the model of the level
         render(program, object.getMaterial(), object.getMesh(object.getModelLod()), object.getTransform().getMatrix(), 0);
+
+        if (probe != null)
+            environmentBinder.unbindProbe(program);
 
         glUseProgram(0);
     }
@@ -141,10 +149,10 @@ public final class ObjectInstanceRenderer extends AbstractInstanceRenderer<Objec
      * Whether the object is drawn together with the copies of the same meshes by {@link #renderBatched}. Only the solid
      * objects (opaque and cutout surfaces, see {@link ObjectInstanceImplementation#isSolid()}) are: they are drawn before
      * the rest in any order, so their order doesn't matter, and the objects that mix colors must keep the order from the
-     * farthest to the nearest.
+     * farthest to the nearest. An object that reflects its own cube map is not: the cube map is bound for it alone.
      */
     public boolean isBatchable(final ObjectInstanceImplementation object) {
-        return object.isSolid() && object.getDrawMode() == DrawMode.Polygon && object.getProgram() == getPrograms().plainProgram;
+        return object.isSolid() && getContext().getParent().getProbe(object) == null && object.getDrawMode() == DrawMode.Polygon && object.getProgram() == getPrograms().plainProgram;
     }
 
     /**

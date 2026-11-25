@@ -20,7 +20,8 @@ public record MaterialDTO(Float metalness,
                           Boolean doubleSided,
                           Float windInfluence,
                           ColorDTO emissive,
-                          Float emissiveIntensity) {
+                          Float emissiveIntensity,
+                          MaterialReflectionsDTO dynamicReflections) {
     public boolean hasTextures() {
         return textures != null && !textures.isEmpty();
     }

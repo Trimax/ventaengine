@@ -30,6 +30,8 @@ import io.github.trimax.venta.engine.renderers.entity.CubemapEntityRenderer;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.common.draw.DrawingOrder;
 import io.github.trimax.venta.engine.helpers.FrustumHelper;
+import io.github.trimax.venta.engine.model.common.reflection.ReflectionProbe;
+import io.github.trimax.venta.engine.model.common.reflection.ReflectionProbes;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -179,8 +181,14 @@ public final class SceneInstanceRenderer
         /** Where the shaders see the scene from: the camera, or its mirror image when the reflection is drawn */
         private final Vector3f cameraPosition = new Vector3f();
 
-        /** Whether this is the reflection of the water: it has no water, particles or billboards */
+        /** Whether this is a reflection (of the water, or a face of a reflection probe): it has no water, particles or billboards */
         private boolean reflection;
+
+        /** The probes that the objects reflect, null where the objects reflect the skybox only (the reflections themselves) */
+        private ReflectionProbes probes;
+
+        /** The object whose probe is drawn: it is not in its own reflection */
+        private ObjectInstanceImplementation excluded;
 
         /**
          * Whether the opaque scene of this frame is resolved to textures (see {@link PostProcessingRenderer#resolveScene()}).
@@ -211,7 +219,7 @@ public final class SceneInstanceRenderer
          * is made as big as the wind can push the surface.
          */
         public boolean isInView(final ObjectInstanceImplementation object, final Wind wind) {
-            return culler.isVisible(object.getBox(), object.getTransform().getMatrix(), wind == null ? 0.f : wind.getStrength());
+            return object != excluded && culler.isVisible(object.getBox(), object.getTransform().getMatrix(), wind == null ? 0.f : wind.getStrength());
         }
 
         public SceneRenderContext with(final WindowState window, final CameraInstanceImplementation camera) {
@@ -249,6 +257,23 @@ public final class SceneInstanceRenderer
             return this;
         }
 
+        /** The objects reflect the probes that are ready in this pass */
+        public SceneRenderContext withProbes(final ReflectionProbes probes) {
+            this.probes = probes;
+            return this;
+        }
+
+        /** The object is left out of this pass: the pass is the cube map of its probe */
+        public SceneRenderContext excluding(final ObjectInstanceImplementation object) {
+            this.excluded = object;
+            return this;
+        }
+
+        /** The probe that an object reflects in this pass: null when it reflects the skybox */
+        public ReflectionProbe getProbe(final ObjectInstanceImplementation object) {
+            return probes == null ? null : probes.getReady(object);
+        }
+
         public SceneRenderContext withTime(final Engine.VentaTime time) {
             this.time = time;
             return this;
@@ -262,6 +287,8 @@ public final class SceneInstanceRenderer
             programsWithLights.clear();
             sceneResolved = false;
             reflection = false;
+            probes = null;
+            excluded = null;
             time = null;
         }
 
