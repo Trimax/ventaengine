@@ -43,6 +43,10 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
 
         final var material = getContext().getMaterial();
         materialBinder.bind(getContext().getProgram(), material);
+
+        // The holes of a cutout surface are smoothed by the multisampling where there is any
+        final var coverage = material != null && material.isCutout() && getContext().getParent().getParent().isMultisampled();
+        materialBinder.bindCoverage(getContext().getProgram(), coverage);
         windBinder.bind(getContext().getProgram(), material);
         windBinder.bind(getContext().getProgram(), object);
 
@@ -55,6 +59,8 @@ public final class MeshEntityRenderer extends AbstractEntityRenderer<MeshEntityI
 
         if (oneSided)
             glDisable(GL_CULL_FACE);
+
+        materialBinder.unbindCoverage(coverage);
     }
 
     @Getter(AccessLevel.PACKAGE)

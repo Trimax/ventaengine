@@ -47,6 +47,9 @@ public final class PostProcessingRenderer {
 
     /* The scene with multisampling, the resolved scene for the post pass and an empty vertex array for the full screen triangle */
     private int sceneFramebufferID;
+
+    /** The samples of the scene framebuffer that was created: it can have fewer than the window asks for, or none */
+    private int sceneSamples;
     private int sceneColorID;
     private int sceneDepthID;
     private int resolvedFramebufferID;
@@ -256,6 +259,11 @@ public final class PostProcessingRenderer {
         return displayFramebufferID;
     }
 
+    /** Whether the scene framebuffer has more than one sample per pixel: only then there is something to smooth by alpha to coverage */
+    public boolean isMultisampled() {
+        return sceneSamples > 1;
+    }
+
     private int getVertexArray() {
         if (vertexArrayID == 0)
             vertexArrayID = memory.getVertexArrays().create("Post processing triangle");
@@ -326,6 +334,7 @@ public final class PostProcessingRenderer {
 
         if (status == GL_FRAMEBUFFER_COMPLETE) {
             log.info("HDR scene framebuffer {}x{} with {} samples", width, height, samples);
+            sceneSamples = samples;
             return true;
         }
 

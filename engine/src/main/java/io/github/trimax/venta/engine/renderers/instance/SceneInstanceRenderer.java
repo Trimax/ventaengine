@@ -184,6 +184,9 @@ public final class SceneInstanceRenderer
         /** Whether this is a reflection (of the water, or a face of a reflection probe): it has no water, particles or billboards */
         private boolean reflection;
 
+        /** Whether the framebuffer of this pass is multisampled: the holes of the cutout surfaces can be smoothed by alpha to coverage */
+        private boolean multisampled;
+
         /** The probes that the objects reflect, null where the objects reflect the skybox only (the reflections themselves) */
         private ReflectionProbes probes;
 
@@ -257,6 +260,12 @@ public final class SceneInstanceRenderer
             return this;
         }
 
+        /** The framebuffer of the pass has samples: the main pass draws into the multisampled one, the reflections don't */
+        public SceneRenderContext withMultisampling(final boolean multisampled) {
+            this.multisampled = multisampled;
+            return this;
+        }
+
         /** The objects reflect the probes that are ready in this pass */
         public SceneRenderContext withProbes(final ReflectionProbes probes) {
             this.probes = probes;
@@ -288,6 +297,7 @@ public final class SceneInstanceRenderer
             sceneResolved = false;
             reflection = false;
             probes = null;
+            multisampled = false;
             excluded = null;
             time = null;
         }

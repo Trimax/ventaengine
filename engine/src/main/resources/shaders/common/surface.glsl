@@ -6,6 +6,7 @@
  * A shader that can discard loses the early depth test, so the variants with a discard are used only when they are needed.
  */
 
+#include "common/coverage.glsl"
 #include "common/environment.glsl"
 #include "common/flags.glsl"
 #include "common/fog.glsl"
@@ -68,6 +69,7 @@ flat in float vertexFade;
 #endif
 #ifdef ALPHA_CUTOUT
 uniform int useAlphaCutout;
+uniform int useAlphaToCoverage;
 #endif
 
 /* Material */
@@ -250,10 +252,20 @@ void main() {
 #ifdef ALPHA_CUTOUT
     // A cutout surface is a hole or opaque: it has no partly transparent fragments
     if (isSet(useAlphaCutout)) {
-        if (colorWithoutEffects.a < material.alphaCutoff)
-            discard;
+#ifndef LOD_FADE
+        // The edge of a hole is smoothed by the multisampling: the alpha that is output is the share of the samples that the fragment covers
+        if (isSet(useAlphaToCoverage)) {
+            colorWithoutEffects.a = getSharpenedAlpha(colorWithoutEffects.a, material.alphaCutoff, fwidth(colorWithoutEffects.a));
+            if (colorWithoutEffects.a <= 0.0)
+                discard;
+        } else
+#endif
+        {
+            if (colorWithoutEffects.a < material.alphaCutoff)
+                discard;
 
-        colorWithoutEffects.a = 1.0;
+            colorWithoutEffects.a = 1.0;
+        }
     }
 #endif
 

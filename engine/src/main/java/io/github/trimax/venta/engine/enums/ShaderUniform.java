@@ -69,6 +69,7 @@ public enum ShaderUniform {
     /* Material flags */
     UseMaterial("useMaterial"),
     UseAlphaCutout("useAlphaCutout"),
+    UseAlphaToCoverage("useAlphaToCoverage"),
     UseAlphaOpaque("useAlphaOpaque"),
 
     /* Camera */
