@@ -17,6 +17,7 @@ import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
 import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.common.shared.AmbientOcclusion;
+import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
 import io.github.trimax.venta.engine.model.common.shared.LightShafts;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.implementation.CubemapEntityImplementation;
@@ -59,6 +60,7 @@ public class ScenePrefabImplementation extends AbstractPrefabImplementation impl
     Bloom bloom;
     LightShafts lightShafts;
     AmbientOcclusion ambientOcclusion;
+    Antialiasing antialiasing;
     Float exposure;
     ToneMapping toneMapping;
 }

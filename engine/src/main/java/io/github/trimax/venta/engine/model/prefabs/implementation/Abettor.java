@@ -86,9 +86,10 @@ public final class Abettor {
                                                  final Bloom bloom,
                                                  final LightShafts lightShafts,
                                                  final AmbientOcclusion ambientOcclusion,
+                                                 final Antialiasing antialiasing,
                                                  final Float exposure,
                                                  final ToneMapping toneMapping) {
-        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, terrainSurfaces, waterSurfaces, skybox, directionalLight, ambientLight, fog, wind, bloom, lightShafts, ambientOcclusion, exposure, toneMapping);
+        return new ScenePrefabImplementation(lights, objects, emitters, billboards, soundSources, terrainSurfaces, waterSurfaces, skybox, directionalLight, ambientLight, fog, wind, bloom, lightShafts, ambientOcclusion, antialiasing, exposure, toneMapping);
     }
 
     public SoundSourcePrefabImplementation createSound(@NonNull final SoundEntityImplementation sound,

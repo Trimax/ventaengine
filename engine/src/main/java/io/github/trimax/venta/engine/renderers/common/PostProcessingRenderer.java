@@ -21,7 +21,9 @@ import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.enums.ToneMapping;
 import io.github.trimax.venta.engine.exceptions.FramebufferCreationException;
 import io.github.trimax.venta.engine.helpers.BloomHelper;
+import io.github.trimax.venta.engine.helpers.FxaaHelper;
 import io.github.trimax.venta.engine.memory.Memory;
+import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
@@ -33,7 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * The scene is rendered in linear HDR colors into a floating point framebuffer (multisampled like the window was),
- * then a full screen pass applies the exposure and the tone mapping and encodes the image to sRGB for the window.
+ * then a full screen pass applies the exposure and the tone mapping and encodes the image to sRGB for the window. With
+ * an antialiasing the pass draws into a texture of the colors of the window instead, and FXAA smooths it into the window.
  */
 @Slf4j
 @Component
@@ -63,8 +66,15 @@ public final class PostProcessingRenderer {
     @Getter
     private int height;
 
+    /** The tone mapped image that FXAA reads, created with the first frame that has an antialiasing */
+    private int displayFramebufferID;
+    private int displayTextureID;
+
     /** Makes the glow of the bright parts, created with the first frame that has a bloom */
     private BloomHelper bloomHelper;
+
+    /** Smooths the edges of the tone mapped image, created with the first frame that has an antialiasing */
+    private FxaaHelper fxaaHelper;
 
     /** Binds the HDR framebuffer of the window size for the scene and clears it */
     public void begin(final WindowState window) {
@@ -99,12 +109,14 @@ public final class PostProcessingRenderer {
      * Draws the resolved scene tone mapped to the window, which then gets the overlays (console, text).
      * The scene must be resolved (see {@link #resolve(boolean)}), the passes that add light to it have been made.
      *
-     * @param bloom the glow of the bright parts that is added to the scene, null or with no intensity for none
+     * @param bloom        the glow of the bright parts that is added to the scene, null or with no intensity for none
+     * @param antialiasing the smoothing of the edges of the finished image, null or switched off for none
      */
-    public void end(final float exposure, @NonNull final ToneMapping toneMapping, final Bloom bloom) {
+    public void end(final float exposure, @NonNull final ToneMapping toneMapping, final Bloom bloom, final Antialiasing antialiasing) {
         final var glow = bloom != null && bloom.getIntensity() > 0.f ? getBloomHelper().render(resolvedTextureID, width, height, bloom) : 0;
+        final var smoothed = antialiasing != null && antialiasing.isActive();
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, smoothed ? getDisplayFramebuffer() : 0);
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -138,6 +150,13 @@ public final class PostProcessingRenderer {
         glBindTexture(GL_TEXTURE_2D, 0);
         glActiveTexture(GL_TEXTURE0);
         glUseProgram(0);
+
+        if (smoothed) {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            getFxaaHelper().render(displayTextureID, width, height, antialiasing);
+        }
+
         glEnable(GL_DEPTH_TEST);
     }
 
@@ -152,6 +171,11 @@ public final class PostProcessingRenderer {
         if (bloomHelper != null) {
             bloomHelper.release();
             bloomHelper = null;
+        }
+
+        if (fxaaHelper != null) {
+            fxaaHelper.release();
+            fxaaHelper = null;
         }
 
         if (vertexArrayID != 0) {
@@ -181,6 +205,38 @@ public final class PostProcessingRenderer {
             bloomHelper = new BloomHelper(memory, name -> programRegistry.get(name).getInternalID());
 
         return bloomHelper;
+    }
+
+    private FxaaHelper getFxaaHelper() {
+        if (fxaaHelper == null)
+            fxaaHelper = new FxaaHelper(memory, name -> programRegistry.get(name).getInternalID());
+
+        return fxaaHelper;
+    }
+
+    /** The framebuffer of the tone mapped image, the size of the scene */
+    private int getDisplayFramebuffer() {
+        if (displayFramebufferID != 0)
+            return displayFramebufferID;
+
+        displayTextureID = memory.getTextures().create("Tone mapped scene");
+        glBindTexture(GL_TEXTURE_2D, displayTextureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        displayFramebufferID = memory.getFramebuffers().create("Tone mapped scene");
+        glBindFramebuffer(GL_FRAMEBUFFER, displayFramebufferID);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, displayTextureID, 0);
+        final var status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        if (status != GL_FRAMEBUFFER_COMPLETE)
+            throw new FramebufferCreationException(String.format("Tone mapped scene framebuffer is incomplete: 0x%X", status));
+
+        return displayFramebufferID;
     }
 
     private int getVertexArray() {
@@ -270,6 +326,7 @@ public final class PostProcessingRenderer {
 
     private void deleteTargets() {
         deleteSceneFramebuffer();
+        deleteDisplayFramebuffer();
 
         if (resolvedFramebufferID == 0)
             return;
@@ -280,6 +337,16 @@ public final class PostProcessingRenderer {
         memory.getTextures().delete(resolvedDepthTextureID);
         resolvedFramebufferID = 0;
         resolvedColorFramebufferID = 0;
+    }
+
+    private void deleteDisplayFramebuffer() {
+        if (displayFramebufferID == 0)
+            return;
+
+        memory.getFramebuffers().delete(displayFramebufferID);
+        memory.getTextures().delete(displayTextureID);
+        displayFramebufferID = 0;
+        displayTextureID = 0;
     }
 
     private void deleteSceneFramebuffer() {

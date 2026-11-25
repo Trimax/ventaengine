@@ -101,7 +101,7 @@ public final class EngineRenderer {
         if (shafts)
             lightShaftRenderer.render(scene, camera, window, postProcessingRenderer);
 
-        postProcessingRenderer.end(scene.getExposure(), scene.getToneMapping(), scene.getBloom());
+        postProcessingRenderer.end(scene.getExposure(), scene.getToneMapping(), scene.getBloom(), scene.getAntialiasing());
 
         // The console and the text are drawn over the tone mapped image
         try (final var _ = windowRenderer.withContext(null)

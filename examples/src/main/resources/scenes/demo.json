@@ -19,6 +19,10 @@
     "radius": 3.5,
     "power": 1.6
   },
+  "antialiasing": {
+    "type": "FXAA",
+    "quality": "Medium"
+  },
   "lightShafts": {
     "intensity": 0.3,
     "steps": 32,
