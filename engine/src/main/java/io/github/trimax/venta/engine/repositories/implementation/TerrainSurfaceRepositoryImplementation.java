@@ -11,6 +11,7 @@ import io.github.trimax.venta.engine.layouts.GridMeshVertexLayout;
 import io.github.trimax.venta.engine.utils.HeightmapUtil;
 import io.github.trimax.venta.engine.utils.TerrainChunkUtil;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainWetness;
 import io.github.trimax.venta.engine.model.dto.terrain.TerrainMaterialDTO;
 import io.github.trimax.venta.engine.model.dto.terrain.TerrainSlopeMaterialDTO;
 import io.github.trimax.venta.engine.model.entity.implementation.MaterialEntityImplementation;
@@ -81,7 +82,8 @@ public final class TerrainSurfaceRepositoryImplementation
                 terrainSurfaceDTO.elevation().factor(),
                 layout,
                 chunkGeometry,
-                terrainSurfaceDTO.lodDistance() == null ? 0.f : terrainSurfaceDTO.lodDistance());
+                terrainSurfaceDTO.lodDistance() == null ? 0.f : terrainSurfaceDTO.lodDistance(),
+                terrainSurfaceDTO.wetness() == null ? null : new TerrainWetness(terrainSurfaceDTO.wetness()));
     }
 
     private Map<TextureType, TextureArrayEntityImplementation> createTextureArrays(@NonNull final String name, @NonNull final List<MaterialEntityImplementation> materials) {

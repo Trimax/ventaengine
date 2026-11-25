@@ -22,14 +22,25 @@ public final class WaterFoam {
     /** How white the foam of the shore is, from 0 to 1 */
     private float shoreIntensity;
 
+    /** How white the lines of foam are that run to the shore, one after another, from the deep, from 0 (none) to 1 */
+    private float bands;
+
     public WaterFoam(@NonNull final WaterFoamDTO dto) {
         this(dto.threshold(), dto.intensity(),
                 dto.shoreWidth() == null ? DEFAULT_SHORE_WIDTH : checkShoreWidth(dto.shoreWidth()),
-                dto.shoreIntensity() == null ? DEFAULT_SHORE_INTENSITY : checkShoreIntensity(dto.shoreIntensity()));
+                dto.shoreIntensity() == null ? DEFAULT_SHORE_INTENSITY : checkShoreIntensity(dto.shoreIntensity()),
+                dto.bands() == null ? 0.f : checkBands(dto.bands()));
     }
 
     public WaterFoam(@NonNull final WaterFoam foam) {
-        this(foam.getThreshold(), foam.getIntensity(), foam.getShoreWidth(), foam.getShoreIntensity());
+        this(foam.getThreshold(), foam.getIntensity(), foam.getShoreWidth(), foam.getShoreIntensity(), foam.getBands());
+    }
+
+    private static float checkBands(final float bands) {
+        if (!(bands >= 0.f && bands <= 1.f))
+            throw new IllegalArgumentException("The intensity of the bands of foam must be from 0 to 1, got " + bands);
+
+        return bands;
     }
 
     private static float checkShoreWidth(final float shoreWidth) {

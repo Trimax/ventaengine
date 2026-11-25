@@ -43,6 +43,7 @@ struct Foam {
     float intensity;
     float shoreWidth;
     float shoreIntensity;
+    float bands;
 };
 
 /***
@@ -255,7 +256,8 @@ void main() {
 
         // The foam of the shore, lit as a surface of its color
         float pattern = noise(vertexPosition.xz * 0.9 + timeElapsed * 0.25) * 0.6 + noise(vertexPosition.xz * 2.3 - timeElapsed * 0.4) * 0.4;
-        float shore = getShoreFoam(thickness, foam.shoreWidth, foam.shoreIntensity, pattern);
+        float shore = max(getShoreFoam(thickness, foam.shoreWidth, foam.shoreIntensity, pattern),
+                getFoamBands(thickness, foam.shoreWidth, foam.bands, timeElapsed) * mix(0.55, 1.0, pattern));
         if (shore > 0.0)
             colorWithLighting = mix(colorWithLighting, computeLighting(material.colorPeak, normal, cameraDirection), shore);
     }

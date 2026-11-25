@@ -92,4 +92,38 @@ final class WaterDepthSettingsTest {
     void testShoreWidthOfZeroSwitchesTheShoreFoamOff() {
         assertEquals(0.f, foam(", \"shoreWidth\": 0").getShoreWidth());
     }
+
+    @Test
+    void testWavesAreNotFadedAndHaveNoSwashUnlessAsked() {
+        final var material = material("");
+
+        assertEquals(0.f, material.getWaveFadeDistance());
+        assertEquals(0.f, material.getSwashAmplitude());
+        assertEquals(WaterMaterial.DEFAULT_SWASH_PERIOD, material.getSwashPeriod());
+    }
+
+    @Test
+    void testFadeAndSwashAreReadAndCopied() {
+        final var material = new WaterMaterial(material(", \"waveFadeDistance\": 900, \"swashAmplitude\": 0.4, \"swashPeriod\": 10"));
+
+        assertEquals(900.f, material.getWaveFadeDistance());
+        assertEquals(0.4f, material.getSwashAmplitude());
+        assertEquals(10.f, material.getSwashPeriod());
+    }
+
+    @Test
+    void testBadFadeAndSwashAreRefused() {
+        assertThrows(IllegalArgumentException.class, () -> material(", \"waveFadeDistance\": -1"));
+        assertThrows(IllegalArgumentException.class, () -> material(", \"swashAmplitude\": -0.1"));
+        assertThrows(IllegalArgumentException.class, () -> material(", \"swashPeriod\": 0"));
+        assertThrows(IllegalArgumentException.class, () -> material(", \"swashPeriod\": -4"));
+    }
+
+    @Test
+    void testBandsOfFoamAreOffUnlessAsked() {
+        assertEquals(0.f, foam("").getBands());
+        assertEquals(0.6f, new WaterFoam(foam(", \"bands\": 0.6")).getBands());
+        assertThrows(IllegalArgumentException.class, () -> foam(", \"bands\": 1.5"));
+        assertThrows(IllegalArgumentException.class, () -> foam(", \"bands\": -0.1"));
+    }
 }

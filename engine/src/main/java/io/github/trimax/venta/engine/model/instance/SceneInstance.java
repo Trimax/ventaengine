@@ -6,6 +6,7 @@ import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.Bloom;
 import io.github.trimax.venta.engine.model.common.shared.AmbientOcclusion;
 import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
+import io.github.trimax.venta.engine.model.common.shared.View;
 import io.github.trimax.venta.engine.model.common.shared.LightShafts;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
 import io.github.trimax.venta.engine.model.entity.CubemapEntity;
@@ -52,6 +53,9 @@ public interface SceneInstance extends AbstractInstance {
     /** The smoothing of the edges of the finished image, null is none */
     Antialiasing getAntialiasing();
 
+    /** How the camera sees the scene: the planes and the field of view, null is the default view */
+    View getView();
+
     /** Multiplies the light of the scene before the tone mapping, 1 keeps it */
     float getExposure();
 
@@ -74,6 +78,8 @@ public interface SceneInstance extends AbstractInstance {
     void setAmbientOcclusion(final AmbientOcclusion ambientOcclusion);
 
     void setAntialiasing(final Antialiasing antialiasing);
+
+    void setView(final View view);
 
     void setExposure(final float exposure);
 

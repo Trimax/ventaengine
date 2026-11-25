@@ -10,5 +10,8 @@ public record WaterMaterialDTO(@NonNull ColorDTO colorSurface,
                                float opacity,
                                Float depthDistance,
                                Float refraction,
-                               Boolean reflections) {
+                               Boolean reflections,
+                               Float waveFadeDistance,
+                               Float swashAmplitude,
+                               Float swashPeriod) {
 }

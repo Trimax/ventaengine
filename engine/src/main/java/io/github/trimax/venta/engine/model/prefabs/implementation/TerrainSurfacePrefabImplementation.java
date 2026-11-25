@@ -4,6 +4,7 @@ import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainChunkLayout;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainWetness;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.prefabs.TerrainSurfacePrefab;
 import lombok.AccessLevel;
@@ -49,4 +50,7 @@ public class TerrainSurfacePrefabImplementation extends AbstractPrefabImplementa
 
     /** The distance (in the world) the first level of detail changes at, 0 for a bit more than the size of a chunk */
     float lodDistance;
+
+    /** The wet ground of a shore, null for a terrain with none */
+    TerrainWetness wetness;
 }

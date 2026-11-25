@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.model.states;
 
 import io.github.trimax.venta.engine.interfaces.VentaEngineInputHandler;
+import io.github.trimax.venta.engine.model.common.shared.View;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
@@ -22,10 +23,13 @@ public final class WindowState extends AbstractState {
     /** Multisampling of the scene framebuffer (the window itself has none, it only shows the tone mapped image) */
     private final int samples;
 
+    /** How the camera sees the scene shown: the engine sets it from the scene in every frame */
+    private final View view = new View();
+
     /** A minimized window has a zero size; the last valid projection is kept instead of dividing by zero */
     public Matrix4f getProjectionMatrix() {
         if (width > 0 && height > 0)
-            projectionMatrix.identity().perspective((float) Math.toRadians(60), (float) width / height, 0.1f, 1000f);
+            projectionMatrix.identity().perspective((float) Math.toRadians(view.getFov()), (float) width / height, view.getNear(), view.getFar());
 
         return projectionMatrix;
     }
