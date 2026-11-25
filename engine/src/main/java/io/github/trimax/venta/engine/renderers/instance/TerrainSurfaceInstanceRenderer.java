@@ -65,6 +65,8 @@ public final class TerrainSurfaceInstanceRenderer extends
         materialBinder.bind(surface.getProgram(), surface.getMaterials());
         elevationBinder.bind(surface.getProgram(), surface.getHeightmap(), surface.getElevations(), surface.getFactor(),
                 surface.getGridMesh().getSize());
+        elevationBinder.bind(surface.getProgram(), surface.getSlopes(), surface.getElevations().length,
+                new org.joml.Vector2f(surface.getGridMesh().getSize()).mul(surface.getScale().x(), surface.getScale().z()));
         fogBinder.bind(surface.getProgram(), getContext().getScene().getFog(), getContext().getScene().getDirectionalLight());
         timeBinder.bind(surface.getProgram(), getContext().getParent().getTime());
 

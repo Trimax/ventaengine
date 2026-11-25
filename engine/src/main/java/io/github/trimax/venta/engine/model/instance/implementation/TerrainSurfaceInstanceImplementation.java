@@ -4,6 +4,7 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.common.terrain.Heightmap;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
@@ -41,6 +42,9 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
 
     private final float[] elevations;
 
+    /** The materials by the steepness: the last ones of the materials, after those of the heights */
+    private final List<TerrainSlope> slopes;
+
     private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
     private boolean isLit = true;
@@ -55,11 +59,13 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
                                          @NonNull final List<MaterialEntityImplementation> materials,
                                          @NonNull final Map<TextureType, TextureArrayEntityImplementation> textureArrays,
                                          final float @NonNull [] elevations,
+                                         @NonNull final List<TerrainSlope> slopes,
                                          final float factor) {
         super(null, name);
 
         this.textureArrays = textureArrays;
         this.elevations = elevations;
+        this.slopes = slopes;
         this.materials = materials;
         this.heights = HeightmapUtil.decode(heightmap.getID(), heightmap.getBuffer());
         this.heightmap = heightmap;

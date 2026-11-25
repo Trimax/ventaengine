@@ -22,5 +22,13 @@
       "elevation": 1.0,
       "material": "terrain-snow.json"
     }
+  ],
+  "slopeMaterials": [
+    {
+      "material": "terrain-rock.json",
+      "minSlope": 32,
+      "maxSlope": 90,
+      "slopeBlend": 10
+    }
   ]
 }

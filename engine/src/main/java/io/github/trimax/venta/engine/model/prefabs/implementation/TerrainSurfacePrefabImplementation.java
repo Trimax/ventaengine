@@ -1,6 +1,7 @@
 package io.github.trimax.venta.engine.model.prefabs.implementation;
 
 import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.entity.implementation.*;
 import io.github.trimax.venta.engine.model.prefabs.TerrainSurfacePrefab;
 import lombok.AccessLevel;
@@ -30,6 +31,10 @@ public class TerrainSurfacePrefabImplementation extends AbstractPrefabImplementa
     Map<TextureType, TextureArrayEntityImplementation> textureArrays;
 
     float[] elevations;
+
+    /** The materials by the steepness, they are the last ones of the materials: after those of the heights */
+    @NonNull
+    List<TerrainSlope> slopes;
 
     float factor;
 }
