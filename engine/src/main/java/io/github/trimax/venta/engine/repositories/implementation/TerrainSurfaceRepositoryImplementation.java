@@ -6,6 +6,10 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.TextureColorSpace;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.dto.TerrainSurfaceDTO;
+import io.github.trimax.venta.engine.helpers.GeometryHelper;
+import io.github.trimax.venta.engine.layouts.GridMeshVertexLayout;
+import io.github.trimax.venta.engine.utils.HeightmapUtil;
+import io.github.trimax.venta.engine.utils.TerrainChunkUtil;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.dto.terrain.TerrainMaterialDTO;
 import io.github.trimax.venta.engine.model.dto.terrain.TerrainSlopeMaterialDTO;
@@ -39,6 +43,7 @@ public final class TerrainSurfaceRepositoryImplementation
     private final GridMeshRegistryImplementation gridMeshRegistry;
     private final ProgramRegistryImplementation programRegistry;
     private final TextureRegistryImplementation textureRegistry;
+    private final GeometryHelper geometryHelper;
     private final ResourceService resourceService;
     private final Abettor abettor;
 
@@ -58,14 +63,25 @@ public final class TerrainSurfaceRepositoryImplementation
         final var materials = StreamEx.of(terrainSurfaceDTO.materials()).map(TerrainMaterialDTO::material)
                 .append(StreamEx.of(slopeDTOs).map(TerrainSlopeMaterialDTO::material))
                 .map(materialRegistry::get).toList();
-        return abettor.createTerrainSurface(gridMeshRegistry.get(terrainSurfaceDTO.gridMesh()),
+        final var gridMesh = gridMeshRegistry.get(terrainSurfaceDTO.gridMesh());
+        final var heightmap = textureRegistry.get(terrainSurfaceDTO.elevation().heightmap(), TextureColorSpace.Data);
+
+        // The grid is cut into chunks (with their levels of detail and skirts), which have a geometry of their own: the water
+        // draws the whole grid, and shares it with the terrain
+        final var layout = TerrainChunkUtil.build(gridMesh.getSize(), gridMesh.getSegments(), HeightmapUtil.decode(heightmap.getID(), heightmap.getBuffer()));
+        final var chunkGeometry = geometryHelper.create(resourcePath + " chunks", GridMeshVertexLayout.class, layout.getVertices(), layout.getIndices(), null);
+
+        return abettor.createTerrainSurface(gridMesh,
                 programRegistry.get(terrainSurfaceDTO.program()),
-                textureRegistry.get(terrainSurfaceDTO.elevation().heightmap(), TextureColorSpace.Data),
+                heightmap,
                 materials,
                 createTextureArrays(resourcePath, materials),
                 StreamEx.of(terrainSurfaceDTO.materials()).mapToDouble(TerrainMaterialDTO::elevation).toFloatArray(),
                 StreamEx.of(slopeDTOs).map(TerrainSlope::new).toList(),
-                terrainSurfaceDTO.elevation().factor());
+                terrainSurfaceDTO.elevation().factor(),
+                layout,
+                chunkGeometry,
+                terrainSurfaceDTO.lodDistance() == null ? 0.f : terrainSurfaceDTO.lodDistance());
     }
 
     private Map<TextureType, TextureArrayEntityImplementation> createTextureArrays(@NonNull final String name, @NonNull final List<MaterialEntityImplementation> materials) {
@@ -100,5 +116,7 @@ public final class TerrainSurfaceRepositoryImplementation
     @Override
     protected void unload(@NonNull final TerrainSurfacePrefabImplementation entity) {
         log.info("Unloading terrain surface {}", entity.getID());
+
+        geometryHelper.delete(entity.getChunkGeometry());
     }
 }

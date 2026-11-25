@@ -4,6 +4,7 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.common.terrain.Heightmap;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainChunks;
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
 import io.github.trimax.venta.engine.model.entity.GridMeshEntity;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
@@ -42,6 +43,12 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
 
     private final float[] elevations;
 
+    /** The chunks of the terrain with the level of detail each has in this frame */
+    private final TerrainChunks chunks;
+
+    /** The distance (in the world) the first level of detail changes at, 0 for a bit more than the size of a chunk */
+    private final float lodDistance;
+
     /** The materials by the steepness: the last ones of the materials, after those of the heights */
     private final List<TerrainSlope> slopes;
 
@@ -60,12 +67,16 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
                                          @NonNull final Map<TextureType, TextureArrayEntityImplementation> textureArrays,
                                          final float @NonNull [] elevations,
                                          @NonNull final List<TerrainSlope> slopes,
-                                         final float factor) {
+                                         final float factor,
+                                         @NonNull final TerrainChunks chunks,
+                                         final float lodDistance) {
         super(null, name);
 
         this.textureArrays = textureArrays;
         this.elevations = elevations;
         this.slopes = slopes;
+        this.chunks = chunks;
+        this.lodDistance = lodDistance;
         this.materials = materials;
         this.heights = HeightmapUtil.decode(heightmap.getID(), heightmap.getBuffer());
         this.heightmap = heightmap;

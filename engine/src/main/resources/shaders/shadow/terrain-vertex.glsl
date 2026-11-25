@@ -11,7 +11,7 @@ uniform mat4 matrixViewProjection;
 uniform mat4 matrixModel;
 
 void main() {
-    vec3 displaced = vec3(position.x, getHeight(textureCoordinates), position.z);
+    vec3 displaced = vec3(position.x, getHeight(textureCoordinates) - getSkirt(position.y), position.z);
 
     gl_Position = matrixViewProjection * matrixModel * vec4(displaced, 1.0);
 }

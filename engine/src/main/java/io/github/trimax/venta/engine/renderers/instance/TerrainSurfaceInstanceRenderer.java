@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.renderers.instance;
 
+import io.github.trimax.venta.engine.helpers.TerrainChunkHelper;
 import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.binders.*;
@@ -27,6 +28,7 @@ import static org.lwjgl.opengl.GL20C.glUseProgram;
 public final class TerrainSurfaceInstanceRenderer extends
         AbstractInstanceRenderer<TerrainSurfaceInstanceImplementation, TerrainSurfaceInstanceRenderer.TerrainSurfaceRenderContext, SceneInstanceRenderer.SceneRenderContext> {
     private final GeometryHelper geometryHelper;
+    private final TerrainChunkHelper terrainChunkHelper;
     private final ElevationBinder elevationBinder;
     private final MaterialBinder materialBinder;
     private final TextureBinder textureBinder;
@@ -72,7 +74,10 @@ public final class TerrainSurfaceInstanceRenderer extends
 
         StreamEx.of(TextureType.values()).forEach(type -> textureBinder.bind(type, surface.getProgram(), surface.getTextureArrays().get(type)));
 
-        geometryHelper.render(surface.getGridMesh().getGeometry()); //TODO: should be a separate shader. Or a separate format
+        elevationBinder.bindSkirt(surface.getProgram(), surface.getChunks().getSkirtDepth(surface.getFactor()));
+
+        // The chunks the camera sees, each with the level of detail chosen for this frame
+        terrainChunkHelper.draw(surface.getChunks(), surface.getTransform().getMatrix(), surface.getFactor(), getContext().getParent().getCuller());
 
         glUseProgram(0);
     }

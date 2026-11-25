@@ -4,6 +4,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.console.ConsoleCommandQueue;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
+import io.github.trimax.venta.engine.helpers.TerrainChunkHelper;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
 import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
 import lombok.NonNull;
@@ -14,11 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("unused")
 public final class SceneInfoExecutor extends AbstractSceneExecutor {
     private final GeometryHelper geometryHelper;
+    private final TerrainChunkHelper terrainChunkHelper;
 
-    private SceneInfoExecutor(@NonNull final ControllerFactory factory, @NonNull final GeometryHelper geometryHelper) {
+    private SceneInfoExecutor(@NonNull final ControllerFactory factory, @NonNull final GeometryHelper geometryHelper,
+                              @NonNull final TerrainChunkHelper terrainChunkHelper) {
         super(factory, "info", "prints information about selected scene");
 
         this.geometryHelper = geometryHelper;
+        this.terrainChunkHelper = terrainChunkHelper;
     }
 
     @Override
@@ -38,6 +42,7 @@ public final class SceneInfoExecutor extends AbstractSceneExecutor {
         getConsole().info("       Skybox: %b", scene.getSkybox() != null);
         getConsole().info("          Fog: %s", scene.getFog());
         getConsole().info(" Antialiasing: %s", describe(scene.getAntialiasing()));
+        getConsole().info("Terrain tris: %s (last frame, all the passes)", terrainChunkHelper.getTriangles());
         getConsole().info("   Draw calls: %s (last frame, with shadows)", geometryHelper.getDrawCalls());
     }
 

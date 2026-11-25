@@ -21,6 +21,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.engine.model.common.terrain.TerrainSlope;
+import io.github.trimax.venta.engine.model.common.terrain.TerrainChunkLayout;
 import java.util.List;
 import java.util.Map;
 
@@ -53,8 +54,12 @@ public final class Abettor {
                                                                    @NonNull final Map<TextureType, TextureArrayEntityImplementation> textureArrays,
                                                                    final float[] elevations,
                                                                    @NonNull final List<TerrainSlope> slopes,
-                                                                   final float factor) {
-        return new TerrainSurfacePrefabImplementation(gridMesh, program, heightmap, materials, textureArrays, elevations, slopes, factor);
+                                                                   final float factor,
+                                                                   @NonNull final TerrainChunkLayout chunkLayout,
+                                                                   @NonNull final Geometry chunkGeometry,
+                                                                   final float lodDistance) {
+        return new TerrainSurfacePrefabImplementation(gridMesh, program, heightmap, materials, textureArrays, elevations, slopes, factor,
+                chunkLayout, chunkGeometry, lodDistance);
     }
 
     public ObjectPrefabImplementation createObject(final ProgramEntityImplementation program,

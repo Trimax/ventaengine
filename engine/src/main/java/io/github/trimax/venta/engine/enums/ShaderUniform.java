@@ -178,6 +178,7 @@ public enum ShaderUniform {
     TextureReflection("textureReflection"),
     UseReflection("useReflection"),
     MatrixViewProjectionReflection("matrixViewProjectionReflection"),
+    SkirtDepth("skirtDepth"),
     Elevations("elevations"),
     HeightMaterialCount("heightMaterialCount"),
     SlopeCount("slopeCount"),

@@ -11,5 +11,6 @@ public record TerrainSurfaceDTO(@NonNull String gridMesh,
                                 @NonNull String program,
                                 @NonNull TerrainElevationDTO elevation,
                                 @NonNull List<TerrainMaterialDTO> materials,
-                                List<TerrainSlopeMaterialDTO> slopeMaterials) {
+                                List<TerrainSlopeMaterialDTO> slopeMaterials,
+                                Float lodDistance) {
 }
