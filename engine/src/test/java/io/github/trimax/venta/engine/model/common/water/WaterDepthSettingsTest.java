@@ -45,6 +45,14 @@ final class WaterDepthSettingsTest {
     }
 
     @Test
+    void testReflectionsAreOffUnlessAsked() {
+        assertFalse(material("").isReflections());
+        assertTrue(material(", \"reflections\": true").isReflections());
+        assertFalse(material(", \"reflections\": false").isReflections());
+        assertTrue(new WaterMaterial(material(", \"reflections\": true")).isReflections(), "A copy keeps it");
+    }
+
+    @Test
     void testRefractionOfZeroSwitchesItOff() {
         assertEquals(0.f, material(", \"refraction\": 0").getRefraction());
     }

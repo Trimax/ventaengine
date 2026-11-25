@@ -23,7 +23,8 @@ public enum TextureUnit {
     Brdf(GL_TEXTURE11, 11),
     PointShadow(GL_TEXTURE12, 12),
     SceneColor(GL_TEXTURE13, 13),
-    SceneDepth(GL_TEXTURE14, 14);
+    SceneDepth(GL_TEXTURE14, 14),
+    Reflection(GL_TEXTURE15, 15);
 
     private final int locationID;
     private final int id;

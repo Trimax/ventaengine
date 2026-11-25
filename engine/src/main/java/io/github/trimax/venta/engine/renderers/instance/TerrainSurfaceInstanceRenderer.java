@@ -56,7 +56,7 @@ public final class TerrainSurfaceInstanceRenderer extends
             environmentBinder.bind(surface.getProgram());
         }
 
-        cameraBinder.bind(surface.getProgram(), getContext().getParent().getCamera());
+        cameraBinder.bind(surface.getProgram(), getContext().getParent().getCameraPosition());
 
         matrixBinder.bindModelMatrix(surface.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindNormalMatrix(surface.getProgram(), getContext().getNormalMatrixBuffer());

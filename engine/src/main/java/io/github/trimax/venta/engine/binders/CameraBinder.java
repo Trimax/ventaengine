@@ -1,5 +1,7 @@
 package io.github.trimax.venta.engine.binders;
 
+import org.joml.Vector3fc;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.enums.ShaderUniform;
 import io.github.trimax.venta.engine.model.entity.implementation.ProgramEntityImplementation;
@@ -16,6 +18,11 @@ public final class CameraBinder extends AbstractBinder {
         if (camera == null)
             return;
 
-        bind(program.getUniformID(ShaderUniform.CameraPosition), camera.getPosition());
+        bind(program, camera.getPosition());
+    }
+
+    /** The position the shaders see the scene from: the one of the camera, or the one of its mirror image in a reflection */
+    public void bind(final ProgramEntityImplementation program, final Vector3fc position) {
+        bind(program.getUniformID(ShaderUniform.CameraPosition), position);
     }
 }

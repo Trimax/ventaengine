@@ -8,6 +8,7 @@
 #include "common/point-shadow.glsl"
 #include "common/shadow.glsl"
 #include "common/water-depth.glsl"
+#include "common/water-reflection.glsl"
 
 /***
  * Definitions
@@ -63,6 +64,11 @@ uniform sampler2D textureSceneColor;
 uniform sampler2D textureSceneDepth;
 uniform int useSceneTextures;
 uniform mat4 matrixViewProjectionInverse;
+
+/* The reflection of the scene (drawn as the mirror image of the camera sees it), when this water has it */
+uniform sampler2D textureReflection;
+uniform int useReflection;
+uniform mat4 matrixViewProjectionReflection;
 
 /* Feature flags */
 uniform int useTextureSkybox;
@@ -194,13 +200,18 @@ float getThickness(vec2 coordinates) {
 const float WATER_REFLECTANCE = 0.02;
 
 vec3 applyReflections(vec3 color, vec3 cameraDirection, vec3 normal) {
-    // The sun is reflected by the specular light, the environment is the sky
-    if (!isSet(useTextureSkybox))
+    // The sun is reflected by the specular light, the environment is the sky and, where the water has it, the scene
+    if (!isSet(useTextureSkybox) && !isSet(useReflection))
         return color;
 
     vec3 direction = reflect(-cameraDirection, normal);
     direction.y = abs(direction.y);
-    vec3 environmentColor = texture(textureSkybox, direction).rgb;
+    vec3 environmentColor = isSet(useTextureSkybox) ? texture(textureSkybox, direction).rgb : color;
+
+    if (isSet(useReflection)) {
+        vec3 reflection = getReflectionCoordinates(matrixViewProjectionReflection, vertexPosition, normal, material.refraction * 0.5);
+        environmentColor = mix(environmentColor, texture(textureReflection, reflection.xy).rgb, reflection.z);
+    }
 
     // Schlick fresnel with the reflectance of water (2% looking straight down, all of it at grazing angles)
     float cosine = clamp(dot(normal, cameraDirection), 0.0, 1.0);

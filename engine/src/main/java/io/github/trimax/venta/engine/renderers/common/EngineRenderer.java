@@ -30,6 +30,7 @@ public final class EngineRenderer {
     private final SceneManagerImplementation sceneManager;
 
     private final PostProcessingRenderer postProcessingRenderer;
+    private final ReflectionRenderer reflectionRenderer;
     private final LightShaftRenderer lightShaftRenderer;
     private final AmbientOcclusionRenderer ambientOcclusionRenderer;
     private final EnvironmentRenderer environmentRenderer;
@@ -51,6 +52,7 @@ public final class EngineRenderer {
         pointShadowRenderer.release();
         shadowCasterRenderer.release();
         environmentRenderer.release();
+        reflectionRenderer.release();
         postProcessingRenderer.release();
     }
 
@@ -72,6 +74,17 @@ public final class EngineRenderer {
         // The shadow maps are drawn first, the scene takes them
         shadowRenderer.render(sceneManager.getCurrent(), camera, window, time);
         pointShadowRenderer.render(sceneManager.getCurrent(), camera, time);
+
+        // The water that mirrors the scene has it drawn as its mirror image sees it, before the scene itself
+        if (reflectionRenderer.begin(sceneManager.getCurrent(), camera, window)) {
+            try (final var _ = sceneRenderer.withContext(null)
+                    .withTime(time)
+                    .withReflection(camera, reflectionRenderer.getViewMatrix(), reflectionRenderer.getProjectionMatrix(), reflectionRenderer.getCameraPosition())) {
+                sceneRenderer.render(sceneManager.getCurrent());
+            }
+
+            reflectionRenderer.end();
+        }
 
         // The scene and the debug overlays (they need the depth of the scene) are rendered in HDR
         postProcessingRenderer.begin(window);
