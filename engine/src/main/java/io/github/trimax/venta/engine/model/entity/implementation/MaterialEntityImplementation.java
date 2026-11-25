@@ -12,6 +12,7 @@ import lombok.NonNull;
 import lombok.Value;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.joml.Vector4fc;
 
@@ -33,6 +34,7 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
     float alphaCutoff;
     boolean doubleSided;
     float windInfluence;
+    Vector3f emissive;
 
     MaterialEntityImplementation(@NonNull final MaterialDTO dto) {
         this(Optional.ofNullable(dto.metalness()).orElse(0.f),
@@ -44,7 +46,21 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
                 Optional.ofNullable(dto.alphaMode()).orElse(AlphaMode.Blend),
                 checkAlphaCutoff(Optional.ofNullable(dto.alphaCutoff()).orElse(DEFAULT_ALPHA_CUTOFF)),
                 Optional.ofNullable(dto.doubleSided()).orElse(true),
-                checkWindInfluence(Optional.ofNullable(dto.windInfluence()).orElse(0.f)));
+                checkWindInfluence(Optional.ofNullable(dto.windInfluence()).orElse(0.f)),
+                readEmissive(dto));
+    }
+
+    /** The light that the surface gives out by itself: its color by its intensity (black for a surface that gives out none) */
+    private static Vector3f readEmissive(final MaterialDTO dto) {
+        final var intensity = Optional.ofNullable(dto.emissiveIntensity()).orElse(1.f);
+        if (!(intensity >= 0.f && Float.isFinite(intensity)))
+            throw new IllegalArgumentException("The emissive intensity must not be negative, got " + intensity);
+
+        final var color = Optional.ofNullable(dto.emissive()).map(ColorDTO::toVector4f).orElse(new Vector4f(0.f));
+        if (!(color.x >= 0.f && color.y >= 0.f && color.z >= 0.f && Float.isFinite(color.x + color.y + color.z)))
+            throw new IllegalArgumentException("The emissive color must not be negative, got " + color);
+
+        return new Vector3f(color.x, color.y, color.z).mul(intensity);
     }
 
     private static float checkWindInfluence(final float windInfluence) {

@@ -29,6 +29,7 @@ public enum ShaderUniform {
     TextureRoughness("textureRoughness"),
     TextureMetalness("textureMetalness"),
     TextureAmbientOcclusion("textureAmbientOcclusion"),
+    TextureEmissive("textureEmissive"),
     TextureDebug("textureDebug"),
 
     /* Texture flags */
@@ -39,6 +40,7 @@ public enum ShaderUniform {
     UseTextureRoughness("useTextureRoughness"),
     UseTextureMetalness("useTextureMetalness"),
     UseTextureAmbientOcclusion("useTextureAmbientOcclusion"),
+    UseTextureEmissive("useTextureEmissive"),
     UseTextureDebug("useTextureDebug"),
 
     /* Materials */
@@ -54,6 +56,7 @@ public enum ShaderUniform {
     MaterialOffset("material.offset"),
     MaterialColor("material.color"),
     MaterialAlphaCutoff("material.alphaCutoff"),
+    MaterialEmissive("material.emissive"),
 
     /* Count of materials bound */
     MaterialCount("materialCount"),

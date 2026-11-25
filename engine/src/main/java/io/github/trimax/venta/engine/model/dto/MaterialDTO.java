@@ -18,7 +18,9 @@ public record MaterialDTO(Float metalness,
                           AlphaMode alphaMode,
                           Float alphaCutoff,
                           Boolean doubleSided,
-                          Float windInfluence) {
+                          Float windInfluence,
+                          ColorDTO emissive,
+                          Float emissiveIntensity) {
     public boolean hasTextures() {
         return textures != null && !textures.isEmpty();
     }

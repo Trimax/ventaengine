@@ -26,6 +26,9 @@ struct Material {
     float metalness;
     float roughness;
     float alphaCutoff;
+
+    /* The light that the surface gives out by itself (HDR) */
+    vec3 emissive;
 };
 
 /***
@@ -47,6 +50,7 @@ uniform sampler2D textureNormal;
 uniform sampler2D textureRoughness;
 uniform sampler2D textureMetalness;
 uniform sampler2D textureAmbientOcclusion;
+uniform sampler2D textureEmissive;
 
 /* Feature flags */
 uniform int useTextureDiffuse;
@@ -55,6 +59,7 @@ uniform int useTextureNormal;
 uniform int useTextureRoughness;
 uniform int useTextureMetalness;
 uniform int useTextureAmbientOcclusion;
+uniform int useTextureEmissive;
 uniform int useLighting;
 uniform int useMaterial;
 uniform int useAlphaOpaque;
@@ -108,6 +113,14 @@ float getRoughness(vec2 textureCoordinates) {
         return material.roughness;
 
     return 0.0;
+}
+
+/* The light that the surface gives out by itself: the color of the material, where its map says (everywhere without a map) */
+vec3 getEmission(vec2 textureCoordinates) {
+    if (!isSet(useMaterial))
+        return vec3(0.0);
+
+    return material.emissive * (isSet(useTextureEmissive) ? texture(textureEmissive, textureCoordinates).r : 1.0);
 }
 
 /* Gets metalness */
@@ -189,8 +202,9 @@ vec3 calculateDirectionalLight(vec3 albedo, float metalness, float roughness, ve
 /* The color of a surface: the light of the environment, the sun and the lights reflected by the material */
 vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
     float occlusion = getAmbientOcclusion(textureCoordinates);
+    vec3 emission = getEmission(textureCoordinates);
     if (!isSet(useLighting))
-        return vec4(color.rgb * occlusion, color.a);
+        return vec4(color.rgb * occlusion + emission, color.a);
 
     vec3 normal = getNormal(textureCoordinates);
     vec3 viewDirection = getViewDirectionWorldSpace();
@@ -204,7 +218,7 @@ vec4 applyLighting(vec4 color, vec2 textureCoordinates) {
         lighting += calculateLight(color.rgb, metalness, roughness, lights[i], normal, viewDirection);
 
     // The result is HDR: the tone mapping of the post processing brings it to the screen
-    return vec4(lighting, color.a);
+    return vec4(lighting + emission, color.a);
 }
 
 /***
