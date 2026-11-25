@@ -45,6 +45,8 @@ public enum ShaderUniform {
     MaterialMetalness("material.metalness"),
     MaterialRoughness("material.roughness"),
     MaterialOpacity("material.opacity"),
+    MaterialDepthDistance("material.depthDistance"),
+    MaterialRefraction("material.refraction"),
     MaterialTiling("material.tiling"),
     MaterialOffset("material.offset"),
     MaterialColor("material.color"),
@@ -164,10 +166,15 @@ public enum ShaderUniform {
     /* Foam */
     FoamThreshold("foam.threshold"),
     FoamIntensity("foam.intensity"),
+    FoamShoreWidth("foam.shoreWidth"),
+    FoamShoreIntensity("foam.shoreIntensity"),
 
     /* Foam flags */
     UseFoam("useFoam"),
 
+    TextureSceneColor("textureSceneColor"),
+    TextureSceneDepth("textureSceneDepth"),
+    UseSceneTextures("useSceneTextures"),
     Elevations("elevations"),
     HeightMaterialCount("heightMaterialCount"),
     SlopeCount("slopeCount"),

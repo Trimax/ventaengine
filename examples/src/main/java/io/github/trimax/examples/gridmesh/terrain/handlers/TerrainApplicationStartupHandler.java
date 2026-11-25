@@ -22,6 +22,11 @@ public final class TerrainApplicationStartupHandler implements VentaEngineStartu
         terrain.setScale(new Vector3f(1.f, 0.5f, 1.f));
         scene.add(terrain);
 
+        // Water in the low places: its depth, the bottom seen through it and the foam of the shore
+        final var lake = context.getWaterSurfaceManager().create("Lake", context.getWaterSurfaceRepository().get("lake.json"));
+        lake.setPosition(new Vector3f(0.f, -2.f, 0.f));
+        scene.add(lake);
+
         final var camera = context.getCameraManager().getCurrent();
         camera.setPosition(new Vector3f(0f, 70f, 260f));
         camera.lookAt(new Vector3f(0f));

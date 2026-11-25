@@ -7,5 +7,7 @@ public record WaterMaterialDTO(@NonNull ColorDTO colorSurface,
                                @NonNull ColorDTO colorDepth,
                                @NonNull ColorDTO colorPeak,
                                float metalness,
-                               float opacity) {
+                               float opacity,
+                               Float depthDistance,
+                               Float refraction) {
 }

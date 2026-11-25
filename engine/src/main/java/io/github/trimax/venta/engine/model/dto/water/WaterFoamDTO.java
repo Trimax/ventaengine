@@ -1,4 +1,4 @@
 package io.github.trimax.venta.engine.model.dto.water;
 
-public record WaterFoamDTO(float threshold, float intensity) {
+public record WaterFoamDTO(float threshold, float intensity, Float shoreWidth, Float shoreIntensity) {
 }
