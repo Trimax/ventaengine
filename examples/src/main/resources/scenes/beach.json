@@ -66,8 +66,8 @@
       "y": 0.0,
       "z": 1.0
     },
-    "strength": 2.4,
-    "speed": 1.2
+    "strength": 0.9,
+    "speed": 1.0
   },
   "exposure": 0.72,
   "toneMapping": "ACES",
@@ -97,15 +97,15 @@
   "objects": [
     {
       "name": "Chest",
-      "object": "chest.json",
+      "object": "chest-beach.json",
       "position": {
-        "x": 2.585,
+        "x": 2.596,
         "y": 0.779,
-        "z": 19.978
+        "z": 19.974
       },
       "angles": {
         "x": 0.0,
-        "y": 0.6,
+        "y": 0.15,
         "z": 0.0
       },
       "scale": {
@@ -151,6 +151,17 @@
         "x": 45.0,
         "y": 0.5,
         "z": 16.0
+      }
+    }
+  ],
+  "lights": [
+    {
+      "name": "Bounce light",
+      "light": "beach-bounce.json",
+      "position": {
+        "x": 2.7,
+        "y": 1.173,
+        "z": 21.2
       }
     }
   ]

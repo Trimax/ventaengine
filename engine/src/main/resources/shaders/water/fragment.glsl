@@ -261,6 +261,9 @@ void main() {
     vec3 colorWithLighting = computeLighting(calculateColor(), normal, cameraDirection);
     float opacity = material.opacity;
 
+    // How much water the view goes through: the foam of the crests is out at sea, the shore has the foam of its own
+    float seaThickness = 1000.0;
+
     if (isSet(useSceneTextures)) {
         // At the very edge of a shore the water is thin: the ground shows through it
         opacity *= getShoreFade(getVerticalDepth(gl_FragCoord.xy / vec2(textureSize(textureSceneDepth, 0))), SHORE_EDGE);
@@ -277,6 +280,8 @@ void main() {
         else
             thickness = getThickness(refracted);
 
+        seaThickness = thickness;
+
         vec3 bottom = texture(textureSceneColor, refracted).rgb;
         colorWithLighting = mix(colorWithLighting, bottom, getWaterTransmittance(thickness, material.depthDistance));
 
@@ -288,10 +293,11 @@ void main() {
             colorWithLighting = mix(colorWithLighting, computeLighting(material.colorPeak, normal, cameraDirection) + material.colorPeak * FOAM_GLOW, shore);
     }
 
-    // The crests of the waves are white with the foam that scatters the light, so they glow against the sun as well; the foam lies
-    // in patches and streaks, not on the whole crest
-    float patches = noise(vertexPosition.xz * vec2(0.9, 1.4) + timeElapsed * 0.15) * 0.55 + noise(vertexPosition.xz * 3.3 - timeElapsed * 0.3) * 0.45;
-    float crest = smoothstep(foam.threshold, 1.0, getHeightFactor()) * smoothstep(0.42, 0.62, patches) * foam.intensity;
+    // The crests of the waves are white with the foam that scatters the light, so they glow against the sun as well. The foam lies in
+    // soft streaks along the waves (the noise is stretched along them), not on the whole crest and not where the water is shallow
+    float patches = noise(vertexPosition.xz * vec2(0.12, 0.9) + timeElapsed * vec2(0.02, 0.15)) * 0.6 + noise(vertexPosition.xz * vec2(0.4, 2.6) - timeElapsed * vec2(0.03, 0.25)) * 0.4;
+    float deep = smoothstep(foam.shoreWidth * 2.0, foam.shoreWidth * 6.0, seaThickness);
+    float crest = smoothstep(foam.threshold, 1.0, getHeightFactor()) * smoothstep(0.3, 0.72, patches) * deep * foam.intensity;
     colorWithLighting += material.colorPeak * crest * CREST_GLOW;
 
     vec3 colorWithReflections = applyReflections(colorWithLighting, cameraDirection, normal);
