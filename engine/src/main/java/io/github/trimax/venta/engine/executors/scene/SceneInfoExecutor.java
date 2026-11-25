@@ -37,7 +37,7 @@ public final class SceneInfoExecutor extends AbstractSceneExecutor {
         getConsole().info("      Ambient: %s", scene.getAmbientLight());
         getConsole().info("       Skybox: %b", scene.getSkybox() != null);
         getConsole().info("          Fog: %s", scene.getFog());
-        getConsole().info("Antialiasing: %s", describe(scene.getAntialiasing()));
+        getConsole().info(" Antialiasing: %s", describe(scene.getAntialiasing()));
         getConsole().info("   Draw calls: %s (last frame, with shadows)", geometryHelper.getDrawCalls());
     }
 
