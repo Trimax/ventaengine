@@ -22,6 +22,13 @@ public interface MaterialEntity extends AbstractEntity {
     /** How much the wind of the scene sways the surface: 0 is not at all, 1 is fully (leaves); the surface bends the more the higher it is on its mesh */
     float getWindInfluence();
 
+    /**
+     * The light that the surface gives out by itself, in the HDR colors (the color of the material by its intensity): it is added to
+     * the light that reaches the surface, so a gold or a lamp shines in the dark. The map of the type emissive (its red channel)
+     * says where: it multiplies this color. Black is a surface that gives out nothing.
+     */
+    org.joml.Vector3fc getEmissive();
+
     /** Whether both sides of a face are drawn; one sided materials are drawn with the faces turned counter-clockwise to the viewer only */
     boolean isDoubleSided();
 

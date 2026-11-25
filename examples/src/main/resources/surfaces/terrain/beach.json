@@ -1,0 +1,31 @@
+{
+  "gridMesh": "beach.json",
+  "program": "terrain.json",
+  "lodDistance": 90.0,
+  "elevation": {
+    "heightmap": "heightmaps/beach.png",
+    "factor": 80.0
+  },
+  "materials": [
+    {
+      "elevation": 1.0,
+      "material": "beach-sand.json"
+    }
+  ],
+  "slopeMaterials": [
+    {
+      "material": "beach-rock.json",
+      "minSlope": 38,
+      "maxSlope": 90,
+      "slopeBlend": 10
+    }
+  ],
+  "wetness": {
+    "level": 0.0,
+    "height": 0.3,
+    "darkening": 0.4,
+    "glossiness": 0.2,
+    "swashAmplitude": 0.12,
+    "swashPeriod": 9.0
+  }
+}

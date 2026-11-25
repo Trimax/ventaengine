@@ -33,6 +33,7 @@ public final class MaterialBinder extends AbstractBinder {
         bind(program.getUniformID(ShaderUniform.MaterialMetalness), material.getMetalness());
         bind(program.getUniformID(ShaderUniform.MaterialRoughness), material.getRoughness());
         bind(program.getUniformID(ShaderUniform.MaterialAlphaCutoff), material.getAlphaCutoff());
+        bind(program.getUniformID(ShaderUniform.MaterialEmissive), material.getEmissive());
         bind(program.getUniformID(ShaderUniform.MaterialTiling), material.getTiling());
         bind(program.getUniformID(ShaderUniform.MaterialOffset), material.getOffset());
         bindColor(program.getUniformID(ShaderUniform.MaterialColor), material.getColor());

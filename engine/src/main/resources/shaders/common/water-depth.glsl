@@ -12,16 +12,20 @@ float getWaterTransmittance(float thickness, float depthDistance) {
 }
 
 /*
- * The foam where the water is thin: the shore and what stands in the water. It is the whitest at the very edge and gone at the
- * width. A pattern (from 0 to 1, moving ripples of a noise) breaks it into patches so it is not a smooth band.
+ * The foam where the water is thin: the shore and what stands in the water. It is the whitest at the very edge, where it is all
+ * foam, and thins out to the width into a lace (the lace is from 0 to 1, see common/foam.glsl): where the water is thinner,
+ * even the gaps of the lace are foam.
  */
-float getShoreFoam(float thickness, float width, float intensity, float pattern) {
+float getShoreFoam(float thickness, float width, float intensity, float lace) {
     if (width <= 0.0)
         return 0.0;
 
     float edge = 1.0 - smoothstep(0.0, width, thickness);
 
-    return clamp(edge * mix(0.45, 1.0, pattern) * intensity, 0.0, 1.0);
+    // The bubbles don't go farther than the width
+    float reach = 1.0 - smoothstep(width * 0.75, width, thickness);
+
+    return clamp(smoothstep(0.0, 0.35, edge * 1.4 + lace * 0.7 - 0.4) * reach * intensity, 0.0, 1.0);
 }
 
 /*
@@ -37,9 +41,10 @@ vec2 getRefractedCoordinates(vec2 coordinates, vec3 normal, float strength, floa
 
 /*
  * Lines of foam that run to the shore from the deep, one after another: the waves that come in. They are where the water is thin
- * enough to break (from twice the width of the foam of the shore up to ten widths of it), and move to the shore with time.
+ * enough to break (from twice the width of the foam of the shore up to ten widths of it), and move to the shore with time. The
+ * lace (see common/foam.glsl) makes them a net of bubbles, not lines.
  */
-float getFoamBands(float thickness, float width, float intensity, float time) {
+float getFoamBands(float thickness, float width, float intensity, float time, float lace) {
     if (width <= 0.0 || intensity <= 0.0)
         return 0.0;
 
@@ -47,5 +52,17 @@ float getFoamBands(float thickness, float width, float intensity, float time) {
     float lines = smoothstep(0.62, 0.95, 0.5 + 0.5 * sin(6.28318531 * phase));
     float zone = smoothstep(width * 0.4, width * 1.2, thickness) * (1.0 - smoothstep(width * 3.0, width * 10.0, thickness));
 
-    return clamp(lines * zone * intensity, 0.0, 1.0);
+    return clamp(lines * zone * smoothstep(0.3, 0.7, lace) * intensity, 0.0, 1.0);
+}
+
+/*
+ * How opaque the water is where it is thin: it fades out over a few centimeters of depth, so the edge of the water on the shore is
+ * soft and doesn't show the triangles of its grid, which cut the ground in straight lines. The depth is the height of the water over
+ * the ground under it (not the length of the view through it).
+ */
+float getShoreFade(float depth, float edge) {
+    if (edge <= 0.0)
+        return 1.0;
+
+    return smoothstep(0.0, edge, depth);
 }

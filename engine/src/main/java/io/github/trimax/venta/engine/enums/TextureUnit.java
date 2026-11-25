@@ -24,7 +24,10 @@ public enum TextureUnit {
     PointShadow(GL_TEXTURE12, 12),
     SceneColor(GL_TEXTURE13, 13),
     SceneDepth(GL_TEXTURE14, 14),
-    Reflection(GL_TEXTURE15, 15);
+    Reflection(GL_TEXTURE15, 15),
+
+    /* The map of the light that a material gives out: a surface has no use for the textures of the water, so it takes the unit of one */
+    Emissive(GL_TEXTURE13, 13);
 
     private final int locationID;
     private final int id;

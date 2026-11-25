@@ -1,0 +1,24 @@
+{
+  "metalness": 0.0,
+  "roughness": 0.9,
+  "opacity": 1.0,
+  "tiling": {
+    "x": 600.0,
+    "y": 600.0
+  },
+  "offset": {
+    "x": 0.0,
+    "y": 0.0
+  },
+  "color": {
+    "r": 0.96,
+    "g": 0.94,
+    "b": 0.9,
+    "a": 1.0
+  },
+  "textures": {
+    "diffuse": "beach/sand/diffuse.jpg",
+    "normal": "beach/sand/normal.jpg",
+    "roughness": "beach/sand/roughness.jpg"
+  }
+}

@@ -87,10 +87,11 @@ final class WaterDepthShaderTest {
 
     @Test
     void testPatternBreaksTheFoamIntoPatches() {
-        final var full = foam(0.2f, 1.2f, 1.f, 1.f);
-        final var broken = foam(0.2f, 1.2f, 1.f, 0.f);
+        final var full = foam(0.7f, 1.2f, 1.f, 1.f);
+        final var broken = foam(0.7f, 1.2f, 1.f, 0.f);
 
-        assertTrue(full > broken && broken > 0.f, "A dim spot of the pattern has less foam, not none: " + broken + " against " + full);
+        assertTrue(full > broken, "A gap of the lace has less foam than a bubble: " + broken + " against " + full);
+        assertEquals(1.f, foam(0.f, 1.2f, 1.f, 0.f), EPSILON, "But at the very edge even a gap of the lace is foam");
     }
 
     @Test
@@ -141,7 +142,7 @@ final class WaterDepthShaderTest {
 
     private static float bands(final float thickness, final float width, final float intensity, final float time) {
         return harness.run(INCLUDES, "uniform float thickness; uniform float width; uniform float intensity; uniform float time;",
-                "outputColor = vec4(getFoamBands(thickness, width, intensity, time));",
+                "outputColor = vec4(getFoamBands(thickness, width, intensity, time, 1.0));",
                 Map.of("thickness", thickness, "width", width, "intensity", intensity, "time", time))[0];
     }
 
@@ -202,5 +203,36 @@ final class WaterDepthShaderTest {
     void testBandsAreNotBrighterThanTheirIntensity() {
         for (var thickness = 1.f; thickness < 12.f; thickness += 0.1f)
             assertTrue(bands(thickness, 1.2f, 0.4f, 2.f) <= 0.4f + EPSILON, "At " + thickness);
+    }
+
+    private static float shoreFade(final float depth, final float edge) {
+        return harness.run(INCLUDES, "uniform float depth; uniform float edge;", "outputColor = vec4(getShoreFade(depth, edge));",
+                Map.of("depth", depth, "edge", edge))[0];
+    }
+
+    @Test
+    void testWaterIsClearAtTheEdgeAndOpaqueFromTheEdgeDepth() {
+        assertEquals(0.f, shoreFade(0.f, 0.15f), EPSILON, "No water over the ground");
+        assertEquals(0.f, shoreFade(-1.f, 0.15f), EPSILON, "The ground over the water");
+        assertEquals(1.f, shoreFade(0.15f, 0.15f), EPSILON);
+        assertEquals(1.f, shoreFade(30.f, 0.15f), EPSILON);
+    }
+
+    @Test
+    void testWaterFadesInSmoothlyWithTheDepth() {
+        var previous = 0.f;
+        for (var depth = 0.f; depth <= 0.2f; depth += 0.01f) {
+            final var value = shoreFade(depth, 0.15f);
+            assertTrue(value >= previous - EPSILON, "Deeper is not clearer: " + value + " after " + previous);
+            previous = value;
+        }
+
+        final var middle = shoreFade(0.075f, 0.15f);
+        assertTrue(middle > 0.1f && middle < 0.9f, "Half way it is neither: " + middle);
+    }
+
+    @Test
+    void testNoEdgeKeepsTheWaterOpaque() {
+        assertEquals(1.f, shoreFade(0.f, 0.f), EPSILON);
     }
 }

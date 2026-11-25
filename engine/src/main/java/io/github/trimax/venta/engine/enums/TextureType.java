@@ -9,6 +9,7 @@ import lombok.Getter;
 public enum TextureType {
     AmbientOcclusion("ambientOcclusion", TextureUnit.AmbientOcclusion, ShaderUniform.TextureAmbientOcclusion, ShaderUniform.UseTextureAmbientOcclusion, ShaderTextureUniform.AmbientOcclusion),
     Diffuse("diffuse", TextureUnit.Diffuse, ShaderUniform.TextureDiffuse, ShaderUniform.UseTextureDiffuse, ShaderTextureUniform.Diffuse),
+    Emissive("emissive", TextureUnit.Emissive, ShaderUniform.TextureEmissive, ShaderUniform.UseTextureEmissive, ShaderTextureUniform.Emissive),
     Height("height", TextureUnit.Height, ShaderUniform.TextureHeight, ShaderUniform.UseTextureHeight, ShaderTextureUniform.Height),
     Metalness("metalness", TextureUnit.Metalness, ShaderUniform.TextureMetalness, ShaderUniform.UseTextureMetalness, ShaderTextureUniform.Metalness),
     Normal("normal", TextureUnit.Normal, ShaderUniform.TextureNormal, ShaderUniform.UseTextureNormal, ShaderTextureUniform.Normal),

@@ -14,7 +14,8 @@ public enum ShaderTextureUniform {
     Normal("textureNormal"),
     Roughness("textureRoughness"),
     Metalness("textureMetalness"),
-    AmbientOcclusion("textureAmbientOcclusion");
+    AmbientOcclusion("textureAmbientOcclusion"),
+    Emissive("textureEmissive");
 
     private final String uniformName;
 
