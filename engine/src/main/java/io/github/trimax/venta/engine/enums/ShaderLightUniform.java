@@ -14,14 +14,15 @@ public enum ShaderLightUniform {
     Enabled("enabled"),
     Position("position"),
     Intensity("intensity"),
+    Range("range"),
 
     /* Attenuation */
     AttenuationLinear("attenuation.linear"),
     AttenuationConstant("attenuation.constant"),
     AttenuationQuadratic("attenuation.quadratic"),
 
-    /* Shadows */
-    CastShadows("castShadows");
+    /* Shadows: the slot of the map of the light, -1 when the light has none */
+    ShadowSlot("shadowSlot");
 
     private final String uniformName;
 

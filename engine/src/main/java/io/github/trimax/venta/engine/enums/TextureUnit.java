@@ -20,7 +20,8 @@ public enum TextureUnit {
     Shadow(GL_TEXTURE8, 8),
     Irradiance(GL_TEXTURE9, 9),
     Prefilter(GL_TEXTURE10, 10),
-    Brdf(GL_TEXTURE11, 11);
+    Brdf(GL_TEXTURE11, 11),
+    PointShadow(GL_TEXTURE12, 12);
 
     private final int locationID;
     private final int id;

@@ -7,6 +7,7 @@
 #include "common/lights.glsl"
 #include "common/noise.glsl"
 #include "common/pbr.glsl"
+#include "common/point-shadow.glsl"
 #include "common/shadow.glsl"
 
 /***
@@ -142,7 +143,7 @@ vec3 calculateLight(Light light, vec3 baseColor, vec3 normal, vec3 cameraDirecti
 
     vec3 toLight = light.position - vertexPosition;
     float distance = length(toLight);
-    vec3 radiance = light.color * light.intensity * getAttenuation(light.attenuation, distance);
+    vec3 radiance = light.color * light.intensity * getLightFactor(light, distance) * getPointShadow(light, vertexPosition, normalize(vertexNormal));
 
     return pbrLight(normal, cameraDirection, toLight / max(distance, 0.0001), baseColor, TERRAIN_METALNESS, roughness, radiance);
 }
