@@ -34,6 +34,7 @@ public final class EngineRenderer {
     private final TerrainChunkHelper terrainChunkHelper;
     private final PostProcessingRenderer postProcessingRenderer;
     private final ReflectionRenderer reflectionRenderer;
+    private final ReflectionProbeRenderer reflectionProbeRenderer;
     private final LightShaftRenderer lightShaftRenderer;
     private final AmbientOcclusionRenderer ambientOcclusionRenderer;
     private final EnvironmentRenderer environmentRenderer;
@@ -57,6 +58,7 @@ public final class EngineRenderer {
         environmentRenderer.release();
         terrainChunkHelper.release();
         reflectionRenderer.release();
+        reflectionProbeRenderer.release();
         postProcessingRenderer.release();
     }
 
@@ -88,6 +90,9 @@ public final class EngineRenderer {
         shadowRenderer.render(sceneManager.getCurrent(), camera, window, time);
         pointShadowRenderer.render(sceneManager.getCurrent(), camera, time);
 
+        // The objects that reflect their surroundings have a face of their cube maps drawn
+        reflectionProbeRenderer.render(sceneManager.getCurrent(), camera, window, time);
+
         // The water that mirrors the scene has it drawn as its mirror image sees it, before the scene itself
         if (reflectionRenderer.begin(sceneManager.getCurrent(), camera, window)) {
             try (final var _ = sceneRenderer.withContext(null)
@@ -104,6 +109,7 @@ public final class EngineRenderer {
 
         try (final var _ = sceneRenderer.withContext(null)
                 .withTime(time)
+                .withProbes(reflectionProbeRenderer.getProbes())
                 .with(window, camera)) {
             sceneRenderer.render(sceneManager.getCurrent());
         }

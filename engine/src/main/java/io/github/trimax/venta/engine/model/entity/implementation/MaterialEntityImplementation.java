@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.model.entity.implementation;
 
 import io.github.trimax.venta.engine.enums.AlphaMode;
 import io.github.trimax.venta.engine.enums.TextureType;
+import io.github.trimax.venta.engine.model.common.reflection.ReflectionSettings;
 import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.engine.model.dto.common.ColorDTO;
 import io.github.trimax.venta.engine.model.entity.MaterialEntity;
@@ -36,6 +37,9 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
     float windInfluence;
     Vector3f emissive;
 
+    /** How the objects of the material reflect their surroundings, null for the objects that reflect the skybox only */
+    ReflectionSettings reflections;
+
     MaterialEntityImplementation(@NonNull final MaterialDTO dto) {
         this(Optional.ofNullable(dto.metalness()).orElse(0.f),
                 Optional.ofNullable(dto.roughness()).orElse(0.f),
@@ -47,7 +51,8 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
                 checkAlphaCutoff(Optional.ofNullable(dto.alphaCutoff()).orElse(DEFAULT_ALPHA_CUTOFF)),
                 Optional.ofNullable(dto.doubleSided()).orElse(true),
                 checkWindInfluence(Optional.ofNullable(dto.windInfluence()).orElse(0.f)),
-                readEmissive(dto));
+                readEmissive(dto),
+                dto.dynamicReflections() == null ? null : new ReflectionSettings(dto.dynamicReflections()));
     }
 
     /** The light that the surface gives out by itself: its color by its intensity (black for a surface that gives out none) */
@@ -78,6 +83,11 @@ public class MaterialEntityImplementation extends AbstractEntityImplementation i
             throw new IllegalArgumentException("The alpha cutoff must be from 0 to 1, got " + alphaCutoff);
 
         return alphaCutoff;
+    }
+
+    /** Whether the objects of the material have a cube map of their surroundings to reflect */
+    public boolean hasReflections() {
+        return reflections != null;
     }
 
     /** Whether the wind sways the surface */
