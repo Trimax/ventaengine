@@ -21,8 +21,7 @@ import io.github.trimax.venta.engine.shaders.GLTestContext;
 import io.github.trimax.venta.engine.shaders.TestPrograms;
 
 /**
- * A cube map made of a panorama in HDR, on the GPU: the panorama is a Radiance file that the test writes (4 by 2 pixels, which is
- * stored flat, without the run length encoding).
+ * A cube map made of a panorama in HDR, on the GPU: the panorama is a Radiance file that the test writes (8 by 2 pixels).
  */
 final class EquirectangularHelperTest {
     private static final int RESOLUTION = 16;
@@ -41,28 +40,43 @@ final class EquirectangularHelperTest {
         TestPrograms.deleteAll();
     }
 
-    /** The bytes of a Radiance file of 4 by 2 pixels: the color of a column (the same in both rows) */
+    /**
+     * The bytes of a Radiance file of 8 by 2 pixels: the color of a column (every column is two pixels wide, the rows are the same).
+     * The scanlines are written in the run length encoding of the real files (a narrower file would be flat, and the decoder
+     * reads that wrongly on some platforms).
+     */
     private static byte[] panorama(final float[][] columns) {
+        final var width = columns.length * 2;
         final var output = new ByteArrayOutputStream();
-        final var header = "#?RADIANCE\nFORMAT=32-bit_rle_rgbe\n\n-Y 2 +X 4\n";
+        final var header = "#?RADIANCE\nFORMAT=32-bit_rle_rgbe\n\n-Y 2 +X " + width + "\n";
         output.writeBytes(header.getBytes(StandardCharsets.US_ASCII));
 
-        for (int row = 0; row < 2; row++)
-            for (final var color : columns) {
-                final var largest = Math.max(color[0], Math.max(color[1], color[2]));
-                if (largest < 1e-32f) {
-                    output.writeBytes(new byte[]{0, 0, 0, 0});
-                    continue;
-                }
+        final var pixels = new byte[width][4];
+        for (int index = 0; index < width; index++) {
+            final var color = columns[index / 2];
+            final var largest = Math.max(color[0], Math.max(color[1], color[2]));
+            if (largest < 1e-32f)
+                continue;
 
-                // RGBE: the mantissas are scaled by the power of two of the largest channel
-                final var exponent = Math.getExponent(largest) + 1;
-                final var scale = (float) Math.pow(2.0, -exponent) * 256.f;
-                output.write((int) (color[0] * scale));
-                output.write((int) (color[1] * scale));
-                output.write((int) (color[2] * scale));
-                output.write(exponent + 128);
+            // RGBE: the mantissas are scaled by the power of two of the largest channel
+            final var exponent = Math.getExponent(largest) + 1;
+            final var scale = (float) Math.pow(2.0, -exponent) * 256.f;
+            pixels[index] = new byte[]{(byte) (int) (color[0] * scale), (byte) (int) (color[1] * scale), (byte) (int) (color[2] * scale), (byte) (exponent + 128)};
+        }
+
+        for (int row = 0; row < 2; row++) {
+            output.write(2);
+            output.write(2);
+            output.write(width >> 8);
+            output.write(width & 0xFF);
+
+            // Every channel is a block of its own: the number of the values (without a run) and the values
+            for (int channel = 0; channel < 4; channel++) {
+                output.write(width);
+                for (final var pixel : pixels)
+                    output.write(pixel[channel]);
             }
+        }
 
         return output.toByteArray();
     }
