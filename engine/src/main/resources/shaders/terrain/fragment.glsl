@@ -139,10 +139,13 @@ mat3 getTangentFrame(vec3 normal) {
  * Patches of lighter and darker ground by the position in the world (not by the map: the same on a wall as on a slope),
  * larger than the repeat of the texture and of two sizes, so the pattern of a texture of the steep ground doesn't repeat in rows.
  */
-float getMacroVariation() {
+float getMacroVariation01() {
     vec2 point = (vertexPosition.xz + vec2(vertexPosition.y * 0.7, -vertexPosition.y * 0.4)) / max(worldSize, vec2(0.0001)) * 24.0;
-    float variation = noise(point) * 0.5 + noise(point * 3.1 + 17.0) * 0.3 + noise(point * 9.7 + 41.0) * 0.2;
-    return mix(0.6, 1.35, variation);
+    return noise(point) * 0.5 + noise(point * 3.1 + 17.0) * 0.3 + noise(point * 9.7 + 41.0) * 0.2;
+}
+
+float getMacroVariation() {
+    return mix(0.6, 1.35, getMacroVariation01());
 }
 
 vec3 getNormal(int layer0, int layer1, float blend) {
@@ -214,6 +217,33 @@ vec4 sampleTriplanar(sampler2DArray textures, int layer, Triplanar triplanar) {
                     triplanar.dx[plane] * materials[layer].tiling, triplanar.dy[plane] * materials[layer].tiling) * triplanar.weights[plane];
 
     return result;
+}
+
+/*
+ * The same texture at a larger scale and turned, sampled from three sides: laid under the near one it hides the rows of the
+ * repeat, because the two have different periods and directions (the colors of the distant tiling).
+ */
+const float FAR_SCALE = 0.21;
+const float FAR_ANGLE = 0.65;
+
+vec4 sampleTriplanarFar(sampler2DArray textures, int layer, Triplanar triplanar) {
+    mat2 turn = mat2(cos(FAR_ANGLE), sin(FAR_ANGLE), -sin(FAR_ANGLE), cos(FAR_ANGLE));
+
+    vec4 result = vec4(0.0);
+    for (int plane = 0; plane < 3; plane++)
+        if (triplanar.weights[plane] > 0.001)
+            result += textureGrad(textures, vec3(turn * getTriplanarTextureCoordinates(triplanar, plane, layer) * FAR_SCALE, float(layer)),
+                    turn * triplanar.dx[plane] * materials[layer].tiling * FAR_SCALE, turn * triplanar.dy[plane] * materials[layer].tiling * FAR_SCALE) * triplanar.weights[plane];
+
+    return result;
+}
+
+/* The color of a material of the steep ground: the near scale and the far one, mixed by patches (by half, a bit more or less) */
+vec3 sampleTriplanarColor(int layer, Triplanar triplanar) {
+    vec3 near = sampleTriplanar(textureDiffuse, layer, triplanar).rgb;
+    vec3 far = sampleTriplanarFar(textureDiffuse, layer, triplanar).rgb;
+
+    return mix(near, far, mix(0.3, 0.7, getMacroVariation01()));
 }
 
 /* Every plane has its own normal map: the normals are brought into the world before they are mixed */
@@ -338,7 +368,7 @@ void main() {
             continue;
 
         int layer = heightMaterialCount + i;
-        baseColor = mix(baseColor, sampleTriplanar(textureDiffuse, layer, triplanar).rgb * materials[layer].color.rgb * getBrightnessVariation() * getMacroVariation(), weight);
+        baseColor = mix(baseColor, sampleTriplanarColor(layer, triplanar) * materials[layer].color.rgb * getBrightnessVariation() * getMacroVariation(), weight);
 
         if (isSet(useTextureNormal))
             normal = normalize(mix(normal, sampleTriplanarNormal(layer, triplanar), weight));
