@@ -31,7 +31,7 @@ public final class WaterApplicationStartupHandler implements VentaEngineStartupH
             final var angle = (float) Math.PI / 4.f + (i - 2.5f) * 0.22f;
             final var distance = 16.f + (i % 3) * 7.f;
             final var pillar = context.getObjectManager().create("Pillar " + i, cube);
-            pillar.setScale(new Vector3f(2.f, 9.f + i, 2.f));
+            pillar.setScale(new Vector3f(2.f, 2.f, 2.f));
             pillar.setPosition(new Vector3f((float) Math.sin(angle) * distance, 1.5f + (9.f + i) / 2.f - 2.f, (float) Math.cos(angle) * distance));
             scene.add(pillar);
         }
