@@ -1,7 +1,9 @@
 package io.github.trimax.venta.engine.renderers.common;
 
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.system.MemoryStack.stackPush;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.controllers.EngineController;
@@ -11,6 +13,7 @@ import io.github.trimax.venta.engine.core.FPSCounter;
 import io.github.trimax.venta.engine.helpers.TerrainChunkHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
+import io.github.trimax.venta.engine.interfaces.VentaEngineFrameListener;
 import io.github.trimax.venta.engine.helpers.LodHelper;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
@@ -35,6 +38,7 @@ public final class EngineRenderer {
     private final PostProcessingRenderer postProcessingRenderer;
     private final ReflectionRenderer reflectionRenderer;
     private final ReflectionProbeRenderer reflectionProbeRenderer;
+    private VentaEngineFrameListener frameListener;
     private final LightShaftRenderer lightShaftRenderer;
     private final AmbientOcclusionRenderer ambientOcclusionRenderer;
     private final EnvironmentRenderer environmentRenderer;
@@ -60,6 +64,13 @@ public final class EngineRenderer {
         reflectionRenderer.release();
         reflectionProbeRenderer.release();
         postProcessingRenderer.release();
+    }
+
+    /**
+     * Gets every finished frame (see {@link VentaEngineFrameListener}), null for none.
+     */
+    public void setFrameListener(final VentaEngineFrameListener frameListener) {
+        this.frameListener = frameListener;
     }
 
     public void render(final FPSCounter fpsCounter, final Engine.VentaTime time) {
@@ -135,6 +146,15 @@ public final class EngineRenderer {
             lightShaftRenderer.render(scene, camera, window, postProcessingRenderer);
 
         postProcessingRenderer.end(scene.getExposure(), scene.getToneMapping(), scene.getBloom(), scene.getAntialiasing());
+
+        // The host that embeds the engine takes the finished image before the overlays and the swap of the buffers
+        if (frameListener != null)
+            try (final var stack = stackPush()) {
+                final var framebufferWidth = stack.mallocInt(1);
+                final var framebufferHeight = stack.mallocInt(1);
+                glfwGetFramebufferSize(window.getInternalID(), framebufferWidth, framebufferHeight);
+                frameListener.onFrame(framebufferWidth.get(0), framebufferHeight.get(0));
+            }
 
         // The console and the text are drawn over the tone mapped image
         try (final var _ = windowRenderer.withContext(null)
