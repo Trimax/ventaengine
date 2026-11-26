@@ -18,7 +18,6 @@ import io.github.trimax.venta.engine.binders.LightBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.TextureBinder;
 import io.github.trimax.venta.engine.definitions.DefinitionsGeometry;
-import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.exceptions.ObjectRenderingException;
 import io.github.trimax.venta.engine.model.instance.implementation.EmitterInstanceImplementation;
@@ -53,7 +52,7 @@ public final class EmitterInstanceRenderer extends AbstractInstanceRenderer<Emit
         if (context == null)
             throw new ObjectRenderingException("RenderContext is not set. Did you forget to call withContext()?");
 
-        glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
+        glPolygonMode(GL_FRONT_AND_BACK, emitter.getDrawMode().getMode());
 
         glUseProgram(emitter.getProgram().getInternalID());
 

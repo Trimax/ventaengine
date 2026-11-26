@@ -52,6 +52,7 @@
         <module>editor</module>
         <module>engine</module>
         <module>examples</module>
+        <module>studio</module>
     </modules>
 
     <dependencyManagement>

@@ -1,6 +1,5 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
-import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.enums.TextureType;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.common.terrain.Heightmap;
@@ -56,7 +55,6 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
     /** The materials by the steepness: the last ones of the materials, after those of the heights */
     private final List<TerrainSlope> slopes;
 
-    private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
     private boolean isLit = true;
 
@@ -151,11 +149,6 @@ public final class TerrainSurfaceInstanceImplementation extends AbstractInstance
     @Override
     public void scale(final float factor) {
         this.transform.scale(factor);
-    }
-
-    @Override
-    public void setDrawMode(@NonNull final DrawMode drawMode) {
-        this.drawMode = drawMode;
     }
 
     @Override

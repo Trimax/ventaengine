@@ -19,7 +19,14 @@ import io.github.trimax.venta.engine.controllers.TextController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
+import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
+import io.github.trimax.venta.engine.model.common.pick.PickResult;
+import io.github.trimax.venta.engine.utils.PickingUtil;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
+import io.github.trimax.venta.engine.interfaces.VentaEngineFrameListener;
+import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
 import io.github.trimax.venta.engine.renderers.common.EngineRenderer;
 import io.github.trimax.venta.engine.updaters.EngineUpdater;
 import lombok.AccessLevel;
@@ -36,7 +43,15 @@ public final class Engine {
     private final ControllerFactory controllerFactory;
     private final EngineRenderer engineRenderer;
     private final EngineUpdater engineUpdater;
+    private final CameraManagerImplementation cameraManager;
+    private final SceneManagerImplementation sceneManager;
     private final VentaContext context;
+
+    /**
+     * The frames of an engine that is a part of another application (see {@link #startEmbedded}).
+     */
+    private FPSCounter embeddedFpsCounter;
+    private VentaTime embeddedTime;
 
     public void start(final String[] args, @NonNull final VentaEngineApplication application) {
         try {
@@ -45,19 +60,97 @@ public final class Engine {
 
             run();
         } finally {
-            // The renderers own GL objects, the context is destroyed by the controllers
-            engineRenderer.release();
-            controllerFactory.cleanup();
-            glfwTerminate();
-
-            final var errorCallback = glfwSetErrorCallback(null);
-            if (errorCallback != null)
-                errorCallback.free();
+            release();
         }
+    }
+
+    /**
+     * Starts the engine as a part of another application (an editor): the window is hidden, there is no loop, and the host draws the
+     * frames one by one with {@link #renderFrame()} on the thread that called this method. The application must say that it is
+     * embedded, see {@link io.github.trimax.venta.engine.interfaces.VentaEngineConfiguration#isEmbedded()}.
+     *
+     * @param frameListener gets every finished frame before it is shown, it can read the image
+     */
+    public void startEmbedded(final String[] args, @NonNull final VentaEngineApplication application, final VentaEngineFrameListener frameListener) {
+        if (!application.getConfiguration().isEmbedded())
+            throw new EngineInitializationException("The application must be embedded to be started by a host");
+
+        try {
+            initialize(application);
+            engineRenderer.setFrameListener(frameListener);
+            application.getStartupHandler().onStartup(args, context);
+
+            glEnable(GL_DEPTH_TEST);
+            embeddedFpsCounter = new FPSCounter();
+            embeddedTime = new VentaTime();
+        } catch (final RuntimeException exception) {
+            release();
+            throw exception;
+        }
+    }
+
+    /** Draws a frame of an embedded engine and updates the scene */
+    public void renderFrame() {
+        if (embeddedTime == null)
+            throw new IllegalStateException("The embedded engine is not started");
+
+        step(embeddedFpsCounter, embeddedTime);
+    }
+
+    /** What the editor puts over the finished image: the grid, the marks and the frame of the chosen thing, null for none */
+    public void setOverlay(final EditorOverlay overlay) {
+        engineRenderer.setOverlay(overlay);
+    }
+
+    /**
+     * The thing that is under a point of the last frame of an embedded engine.
+     *
+     * @param x the point from 0 (the left edge of the frame) to 1 (the right one)
+     * @param y the point from 0 (the top edge) to 1 (the bottom one)
+     * @return the thing, null when there is none under the point
+     */
+    public PickResult pick(final float x, final float y) {
+        final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
+        final var window = controllerFactory.get(WindowController.class).get();
+
+        return PickingUtil.pick(sceneManager.getCurrent(), x * 2.f - 1.f, 1.f - y * 2.f, camera.getViewMatrix(), window.getProjectionMatrix());
+    }
+
+    /** The size of the window of an embedded engine, which is the size of its frames in pixels */
+    public void resize(final int width, final int height) {
+        glfwSetWindowSize(controllerFactory.get(WindowController.class).get().getInternalID(), width, height);
+    }
+
+    /** Stops an embedded engine and releases everything it owns */
+    public void shutdown() {
+        embeddedTime = null;
+        embeddedFpsCounter = null;
+        release();
+    }
+
+    /** The frame rate of the last second of an embedded engine */
+    public double getFrameRate() {
+        return embeddedFpsCounter == null ? 0.0 : embeddedFpsCounter.getCurrentFps();
+    }
+
+    private void release() {
+        // The renderers own GL objects, the context is destroyed by the controllers
+        engineRenderer.release();
+        controllerFactory.cleanup();
+        glfwTerminate();
+
+        final var errorCallback = glfwSetErrorCallback(null);
+        if (errorCallback != null)
+            errorCallback.free();
     }
 
     private void initialize(@NonNull final VentaEngineApplication ventaEngineApplication) {
         glfwSetErrorCallback(new ErrorCallback());
+
+        // The application that hosts the engine has its own menu bar
+        if (ventaEngineApplication.getConfiguration().isEmbedded())
+            glfwInitHint(GLFW_COCOA_MENUBAR, GLFW_FALSE);
+
         if (!glfwInit())
             throw new EngineInitializationException("GLFW init failed");
 
@@ -88,15 +181,22 @@ public final class Engine {
         final var fpsCounter = new FPSCounter();
         final var time = new VentaTime();
 
-        while (engineController.get().isApplicationRunning()) {
-            engineRenderer.render(fpsCounter, time);
+        while (engineController.get().isApplicationRunning())
+            step(fpsCounter, time, updateHandler);
+    }
 
-            time.setDelta(fpsCounter.tick());
-            updateHandler.onUpdate(time, context);
-            engineUpdater.update(time);
+    private void step(final FPSCounter fpsCounter, final VentaTime time) {
+        step(fpsCounter, time, controllerFactory.get(EngineController.class).get().getApplication().getUpdateHandler());
+    }
 
-            consoleCommandExecutor.execute();
-        }
+    private void step(final FPSCounter fpsCounter, final VentaTime time, final VentaEngineUpdateHandler updateHandler) {
+        engineRenderer.render(fpsCounter, time);
+
+        time.setDelta(fpsCounter.tick());
+        updateHandler.onUpdate(time, context);
+        engineUpdater.update(time);
+
+        consoleCommandExecutor.execute();
     }
 
     @Getter

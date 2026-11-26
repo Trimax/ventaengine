@@ -41,9 +41,10 @@ public final class WindowController extends AbstractController<WindowState, Vent
     protected WindowState create(@NonNull final VentaEngineApplication application) {
         final var windowConfiguration = application.getConfiguration().getWindowConfiguration();
 
-        if (!windowConfiguration.isFullscreen())
+        final var embedded = application.getConfiguration().isEmbedded();
+        if (!windowConfiguration.isFullscreen() || embedded)
             return create(windowConfiguration.title(), NULL, windowConfiguration.width(), windowConfiguration.height(),
-                    application.getInputHandler(), application.getConfiguration().getRenderConfiguration());
+                    application.getInputHandler(), application.getConfiguration().getRenderConfiguration(), embedded);
 
         final var monitorID = glfwGetPrimaryMonitor();
         if (monitorID == NULL)
@@ -54,7 +55,7 @@ public final class WindowController extends AbstractController<WindowState, Vent
             throw new WindowCreationException("Can't determine video mode for the fullscreen window");
 
         return create(windowConfiguration.title(), monitorID, videoMode.width(), videoMode.height(),
-                application.getInputHandler(), application.getConfiguration().getRenderConfiguration());
+                application.getInputHandler(), application.getConfiguration().getRenderConfiguration(), false);
     }
 
     private WindowState create(@NonNull final String title,
@@ -62,19 +63,28 @@ public final class WindowController extends AbstractController<WindowState, Vent
                                 final int width,
                                 final int height,
                                 final VentaEngineInputHandler handler,
-                                final VentaEngineConfiguration.RenderConfiguration renderConfiguration) {
+                                final VentaEngineConfiguration.RenderConfiguration renderConfiguration,
+                                final boolean embedded) {
         log.info("Initializing window");
 
         glfwWindowHint(GLFW_SAMPLES, 0);
+        if (embedded) {
+            // The picture goes to the host, so the window is never shown, and its framebuffer has the pixels the host asks for
+            glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+            glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+        }
+
         final var id = memory.getWindows().create(() -> glfwCreateWindow(width, height, title, monitorID, NULL), "Window %s", title);
         if (id == NULL)
             throw new WindowCreationException(title);
 
         glfwMakeContextCurrent(id);
-        glfwSwapInterval(renderConfiguration.isVerticalSynchronizationEnabled() ? 1 : 0);
-        glfwShowWindow(id);
-        glfwRestoreWindow(id);
-        glfwFocusWindow(id);
+        glfwSwapInterval(!embedded && renderConfiguration.isVerticalSynchronizationEnabled() ? 1 : 0);
+        if (!embedded) {
+            glfwShowWindow(id);
+            glfwRestoreWindow(id);
+            glfwFocusWindow(id);
+        }
 
         if (OperationalSystem.detect() != OperationalSystem.MacOS)
             IconUtil.setIcon(id, resourceService.getAsBytes(DefinitionsIcon.DEFAULT));

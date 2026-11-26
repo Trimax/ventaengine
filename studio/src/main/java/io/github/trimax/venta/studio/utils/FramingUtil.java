@@ -1,0 +1,51 @@
+package io.github.trimax.venta.studio.utils;
+
+import java.util.Collection;
+
+import org.joml.Vector3f;
+
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+
+/**
+ * Where to look at a scene from: the middle of what is in it and how big it is.
+ */
+@UtilityClass
+public final class FramingUtil {
+    /** A scene that is a point or a few things close to each other is still looked at from this far */
+    public static final float MINIMAL_RADIUS = 5.f;
+
+    /**
+     * The place that is looked at, and the radius of the sphere that holds the points.
+     *
+     * @param center the middle of the box of the points
+     * @param radius how far the points reach from the middle
+     */
+    public record Frame(Vector3f center, float radius) {
+    }
+
+    /**
+     * The frame of the points, null when there are none; a scene of few close things is looked at from {@link #MINIMAL_RADIUS}.
+     */
+    public Frame frame(@NonNull final Collection<Vector3f> points) {
+        final var bounds = bounds(points);
+
+        return bounds == null ? null : new Frame(bounds.center(), Math.max(bounds.radius(), MINIMAL_RADIUS));
+    }
+
+    /** The middle of the box of the points and the radius of the ball that holds the box, null when there are no points */
+    public Frame bounds(@NonNull final Collection<Vector3f> points) {
+        if (points.isEmpty())
+            return null;
+
+        final var minimum = new Vector3f(Float.MAX_VALUE);
+        final var maximum = new Vector3f(-Float.MAX_VALUE);
+        for (final var point : points) {
+            minimum.min(point);
+            maximum.max(point);
+        }
+
+        final var center = new Vector3f(minimum).add(maximum).mul(0.5f);
+        return new Frame(center, new Vector3f(maximum).sub(minimum).length() * 0.5f);
+    }
+}

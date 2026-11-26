@@ -21,6 +21,11 @@ public final class VentaApplication {
     private static final Map<Class<?>, Object> components = new LinkedHashMap<>();
     private static final Deque<Class<?>> creationStack = new ArrayDeque<>();
 
+    /**
+     * The packages besides the one of the application that are scanned, see {@link #runScanning}.
+     */
+    private static List<String> extraPackages = List.of();
+
     /** Sorted by class name, so components and injected lists are created in the same order on every run */
     private static final Set<Class<?>> knownComponents = new TreeSet<>(Comparator.comparing(Class::getName));
 
@@ -43,12 +48,27 @@ public final class VentaApplication {
         run(args, appClass, null);
     }
 
+    /**
+     * Runs an application whose components use components of other packages too (e.g. an editor that embeds the engine).
+     *
+     * @param packages the packages that are scanned for components in addition to the package of the application
+     */
+    public static <T, R extends AbstractVentaApplication<T>> void runScanning(final String[] args, @NonNull final Class<R> appClass, final String... packages) {
+        extraPackages = List.of(packages);
+        try {
+            run(args, appClass, null);
+        } finally {
+            extraPackages = List.of();
+        }
+    }
+
     private static void createContext(@NonNull final Class<?> appClass) {
         // The state is static: a previous run (e.g. another test) must not leak components into this one
         components.clear();
         creationStack.clear();
         knownComponents.clear();
         knownComponents.addAll(ComponentUtil.scan(appClass.getPackageName()));
+        extraPackages.forEach(basePackage -> knownComponents.addAll(ComponentUtil.scan(basePackage)));
 
         StreamEx.of(knownComponents).forEach(VentaApplication::createComponent);
         log.debug("Found components: {}", StreamEx.of(components.keySet()).map(Class::getSimpleName).joining(","));

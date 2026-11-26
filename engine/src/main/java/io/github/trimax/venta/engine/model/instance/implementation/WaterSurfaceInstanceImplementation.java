@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.joml.Vector3fc;
 
-import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.common.shared.Noise;
 import io.github.trimax.venta.engine.model.common.shared.Wave;
@@ -37,7 +36,6 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
     @Setter
     private WaterFoam foam;
 
-    private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
     private boolean isLit = true;
 
@@ -113,11 +111,6 @@ public final class WaterSurfaceInstanceImplementation extends AbstractInstanceIm
     @Override
     public void scale(final float factor) {
         this.transform.scale(factor);
-    }
-
-    @Override
-    public void setDrawMode(@NonNull final DrawMode drawMode) {
-        this.drawMode = drawMode;
     }
 
     @Override

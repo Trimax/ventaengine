@@ -14,6 +14,14 @@ public interface VentaEngineConfiguration {
         return WindowConfiguration.DEFAULT;
     }
 
+    /**
+     * Whether the engine is a part of another application (an editor): its window is hidden, it is not swapped by the screen
+     * refresh, and the host draws the frames one by one with {@link io.github.trimax.venta.engine.core.Engine#renderFrame()}.
+     */
+    default boolean isEmbedded() {
+        return false;
+    }
+
     record RenderConfiguration(boolean isConsoleEnabled,
                                boolean isDebugEnabled,
                                boolean isMouseCursorVisible,

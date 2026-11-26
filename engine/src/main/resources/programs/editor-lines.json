@@ -1,0 +1,4 @@
+{
+  "shaderVertex": "editor/lines-vertex.glsl",
+  "shaderFragment": "editor/lines-fragment.glsl"
+}

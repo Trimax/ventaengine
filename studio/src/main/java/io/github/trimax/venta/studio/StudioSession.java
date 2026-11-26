@@ -1,0 +1,50 @@
+package io.github.trimax.venta.studio;
+
+import java.nio.file.Path;
+import java.util.EnumSet;
+import java.util.Set;
+
+import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.studio.model.WireframeTarget;
+import io.github.trimax.venta.studio.model.settings.StudioSettings;
+import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
+import javafx.application.HostServices;
+import javafx.stage.Stage;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * What the parts of the studio share: the window, the viewport and its camera, and the project and the scene that are open.
+ * The application fills it when it starts, the panels and the services read it.
+ */
+@Getter
+@Setter
+@Component
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class StudioSession {
+    private Stage stage;
+    private HostServices hostServices;
+    private ViewportPanel viewport;
+    private FlyCamera camera;
+    private StudioSettings settings = StudioSettings.DEFAULT;
+
+    /**
+     * What the engine draws over the viewport: the grid, the marks and the frame of the chosen thing.
+     */
+    private final EditorOverlay overlay = new EditorOverlay();
+
+    /** The folder of the open project, null before one is open */
+    private Path project;
+
+    /**
+     * The name of the scene that is open, like {@code beach.json}, null before one is open.
+     */
+    private String scene;
+
+    /**
+     * The kinds of things of the scene that are drawn as lines.
+     */
+    private final Set<WireframeTarget> wireframe = EnumSet.noneOf(WireframeTarget.class);
+}

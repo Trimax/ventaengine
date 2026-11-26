@@ -19,6 +19,8 @@ public enum ProgramType {
     EnvironmentPrefilter("ibl-prefilter.json"),
     EnvironmentCopy("ibl-environment.json"),
     EnvironmentBrdf("ibl-brdf.json"),
+    EditorGrid("editor-grid.json"),
+    EditorLines("editor-lines.json"),
     EquirectangularToCube("equirect-to-cube.json"),
     ShadowTerrain("shadow-terrain.json"),
     ShadowCutoutInstanced("shadow-cutout-instanced.json"),
