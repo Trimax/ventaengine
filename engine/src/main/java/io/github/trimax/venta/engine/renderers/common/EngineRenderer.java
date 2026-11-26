@@ -14,6 +14,7 @@ import io.github.trimax.venta.engine.helpers.TerrainChunkHelper;
 import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.interfaces.VentaEngineFrameListener;
+import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
 import io.github.trimax.venta.engine.helpers.LodHelper;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
@@ -38,7 +39,9 @@ public final class EngineRenderer {
     private final PostProcessingRenderer postProcessingRenderer;
     private final ReflectionRenderer reflectionRenderer;
     private final ReflectionProbeRenderer reflectionProbeRenderer;
+    private final EditorOverlayRenderer editorOverlayRenderer;
     private VentaEngineFrameListener frameListener;
+    private EditorOverlay overlay;
     private final LightShaftRenderer lightShaftRenderer;
     private final AmbientOcclusionRenderer ambientOcclusionRenderer;
     private final EnvironmentRenderer environmentRenderer;
@@ -63,12 +66,17 @@ public final class EngineRenderer {
         terrainChunkHelper.release();
         reflectionRenderer.release();
         reflectionProbeRenderer.release();
+        editorOverlayRenderer.release();
         postProcessingRenderer.release();
     }
 
     /**
      * Gets every finished frame (see {@link VentaEngineFrameListener}), null for none.
      */
+    public void setOverlay(final EditorOverlay overlay) {
+        this.overlay = overlay;
+    }
+
     public void setFrameListener(final VentaEngineFrameListener frameListener) {
         this.frameListener = frameListener;
     }
@@ -136,7 +144,7 @@ public final class EngineRenderer {
         final var scene = sceneManager.getCurrent();
         final var occlusion = ambientOcclusionRenderer.isActive(scene);
         final var shafts = lightShaftRenderer.isActive(scene);
-        postProcessingRenderer.resolve(occlusion || shafts);
+        postProcessingRenderer.resolve(occlusion || shafts || overlay != null);
 
         // The light that the fog scatters is in the air in front of the surfaces, so it is not darkened with them
         if (occlusion)
@@ -146,6 +154,10 @@ public final class EngineRenderer {
             lightShaftRenderer.render(scene, camera, window, postProcessingRenderer);
 
         postProcessingRenderer.end(scene.getExposure(), scene.getToneMapping(), scene.getBloom(), scene.getAntialiasing());
+
+        // An editor puts its grid, its marks and its frame over the finished image, before the host takes it
+        if (overlay != null)
+            editorOverlayRenderer.render(scene, camera, window, overlay, postProcessingRenderer.getResolvedDepthTextureID());
 
         // The host that embeds the engine takes the finished image before the overlays and the swap of the buffers
         if (frameListener != null)

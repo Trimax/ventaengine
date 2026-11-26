@@ -19,6 +19,11 @@ import io.github.trimax.venta.engine.controllers.TextController;
 import io.github.trimax.venta.engine.controllers.WindowController;
 import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
+import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
+import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
+import io.github.trimax.venta.engine.model.common.pick.PickResult;
+import io.github.trimax.venta.engine.utils.PickingUtil;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
 import io.github.trimax.venta.engine.interfaces.VentaEngineFrameListener;
 import io.github.trimax.venta.engine.interfaces.VentaEngineUpdateHandler;
@@ -38,6 +43,8 @@ public final class Engine {
     private final ControllerFactory controllerFactory;
     private final EngineRenderer engineRenderer;
     private final EngineUpdater engineUpdater;
+    private final CameraManagerImplementation cameraManager;
+    private final SceneManagerImplementation sceneManager;
     private final VentaContext context;
 
     /**
@@ -88,6 +95,25 @@ public final class Engine {
             throw new IllegalStateException("The embedded engine is not started");
 
         step(embeddedFpsCounter, embeddedTime);
+    }
+
+    /** What the editor puts over the finished image: the grid, the marks and the frame of the chosen thing, null for none */
+    public void setOverlay(final EditorOverlay overlay) {
+        engineRenderer.setOverlay(overlay);
+    }
+
+    /**
+     * The thing that is under a point of the last frame of an embedded engine.
+     *
+     * @param x the point from 0 (the left edge of the frame) to 1 (the right one)
+     * @param y the point from 0 (the top edge) to 1 (the bottom one)
+     * @return the thing, null when there is none under the point
+     */
+    public PickResult pick(final float x, final float y) {
+        final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
+        final var window = controllerFactory.get(WindowController.class).get();
+
+        return PickingUtil.pick(sceneManager.getCurrent(), x * 2.f - 1.f, 1.f - y * 2.f, camera.getViewMatrix(), window.getProjectionMatrix());
     }
 
     /** The size of the window of an embedded engine, which is the size of its frames in pixels */
