@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.geo.Geometry;
 import io.github.trimax.venta.engine.model.common.math.Transform;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
@@ -18,6 +19,7 @@ import org.joml.Vector3fc;
 public final class BillboardInstanceImplementation extends AbstractInstanceImplementation implements BillboardInstance {
     private final Transform transform = new Transform();
     private final Vector2f size = new Vector2f();
+    private DrawMode drawMode = DrawMode.Polygon;
 
     @NonNull
     private final Geometry geometry;
@@ -68,6 +70,11 @@ public final class BillboardInstanceImplementation extends AbstractInstanceImple
     @Override
     public void setSize(@NonNull final Vector2fc size) {
         transform.setScale(new Vector3f(size.x(), 1.f, size.y()));
+    }
+
+    @Override
+    public void setDrawMode(@NonNull final DrawMode drawMode) {
+        this.drawMode = drawMode;
     }
 
     @Override

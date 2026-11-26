@@ -68,7 +68,16 @@
         </Menu>
         <MenuItem text="Reset Camera" accelerator="Shortcut+R" onAction="#onViewReset"/>
         <SeparatorMenuItem/>
-        <CheckMenuItem fx:id="viewWireframe" text="Wireframe" onAction="#onWireframe"/>
+        <Menu fx:id="viewWireframe" text="Wireframe">
+            <CheckMenuItem text="Objects" userData="Objects" onAction="#onWireframe"/>
+            <CheckMenuItem text="Terrain" userData="Terrain" onAction="#onWireframe"/>
+            <CheckMenuItem text="Water" userData="Water" onAction="#onWireframe"/>
+            <CheckMenuItem text="Emitters" userData="Emitters" onAction="#onWireframe"/>
+            <CheckMenuItem text="Billboards" userData="Billboards" onAction="#onWireframe"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="All" onAction="#onWireframeAll"/>
+            <MenuItem text="None" onAction="#onWireframeNone"/>
+        </Menu>
         <CheckMenuItem fx:id="viewGrid" text="Grid" selected="true" onAction="#onOverlay"/>
         <CheckMenuItem fx:id="viewMarks" text="Marks of Lights and Sounds" selected="true" onAction="#onOverlay"/>
     </Menu>

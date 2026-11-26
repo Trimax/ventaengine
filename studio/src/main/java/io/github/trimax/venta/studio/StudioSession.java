@@ -1,8 +1,11 @@
 package io.github.trimax.venta.studio;
 
 import java.nio.file.Path;
+import java.util.EnumSet;
+import java.util.Set;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.studio.model.WireframeTarget;
 import io.github.trimax.venta.studio.model.settings.StudioSettings;
 import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
 import javafx.application.HostServices;
@@ -41,7 +44,7 @@ public final class StudioSession {
     private String scene;
 
     /**
-     * Whether the objects of the scene are drawn as lines.
+     * The kinds of things of the scene that are drawn as lines.
      */
-    private boolean wireframe;
+    private final Set<WireframeTarget> wireframe = EnumSet.noneOf(WireframeTarget.class);
 }

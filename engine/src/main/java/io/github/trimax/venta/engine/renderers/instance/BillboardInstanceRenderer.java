@@ -5,7 +5,6 @@ import io.github.trimax.venta.engine.binders.CameraBinder;
 import io.github.trimax.venta.engine.binders.FogBinder;
 import io.github.trimax.venta.engine.binders.MatrixBinder;
 import io.github.trimax.venta.engine.binders.SpriteBinder;
-import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.helpers.GeometryHelper;
 import io.github.trimax.venta.engine.model.entity.implementation.SpriteEntityImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.BillboardInstanceImplementation;
@@ -41,7 +40,7 @@ public final class BillboardInstanceRenderer extends AbstractInstanceRenderer<Bi
     @Override
     public void render(final BillboardInstanceImplementation billboard) {
         glUseProgram(billboard.getProgram().getInternalID());
-        glPolygonMode(GL_FRONT_AND_BACK, DrawMode.Polygon.getMode());
+        glPolygonMode(GL_FRONT_AND_BACK, billboard.getDrawMode().getMode());
 
         matrixBinder.bindModelMatrix(billboard.getProgram(), getContext().getModelMatrixBuffer());
         matrixBinder.bindViewProjectionMatrix(billboard.getProgram(), getContext().getParent().getViewProjectionMatrixBuffer());

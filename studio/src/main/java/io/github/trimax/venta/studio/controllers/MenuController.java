@@ -5,7 +5,11 @@ import java.nio.file.Path;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
+import com.google.common.eventbus.Subscribe;
+
 import io.github.trimax.venta.studio.StudioSession;
+import io.github.trimax.venta.studio.model.WireframeTarget;
+import io.github.trimax.venta.studio.model.event.WireframeChangedEvent;
 import io.github.trimax.venta.studio.model.CameraView;
 import io.github.trimax.venta.studio.model.event.ProjectOpenedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
@@ -41,7 +45,7 @@ public final class MenuController {
     @FXML private CheckMenuItem viewHierarchy;
     @FXML private CheckMenuItem viewInspector;
     @FXML private CheckMenuItem viewBottom;
-    @FXML private CheckMenuItem viewWireframe;
+    @FXML private Menu viewWireframe;
     @FXML private CheckMenuItem viewGrid;
     @FXML private CheckMenuItem viewMarks;
 
@@ -110,7 +114,25 @@ public final class MenuController {
 
     @FXML
     public void onWireframe(final ActionEvent event) {
-        scenes.setWireframe(viewWireframe.isSelected());
+        final var item = (CheckMenuItem) event.getSource();
+        scenes.setWireframe(WireframeTarget.valueOf((String) item.getUserData()), item.isSelected());
+    }
+
+    @FXML
+    public void onWireframeAll(final ActionEvent event) {
+        scenes.setWireframeEverywhere(true);
+    }
+
+    @FXML
+    public void onWireframeNone(final ActionEvent event) {
+        scenes.setWireframeEverywhere(false);
+    }
+
+    /** The choice is changed by the toolbar or by the scene that is open: the items show it */
+    @Subscribe
+    public void onWireframeChanged(final WireframeChangedEvent event) {
+        viewWireframe.getItems().stream().filter(CheckMenuItem.class::isInstance).map(CheckMenuItem.class::cast)
+                .forEach(item -> item.setSelected(session.getWireframe().contains(WireframeTarget.valueOf((String) item.getUserData()))));
     }
 
     @FXML

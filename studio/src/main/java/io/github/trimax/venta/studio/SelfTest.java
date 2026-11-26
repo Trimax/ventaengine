@@ -59,7 +59,7 @@ final class SelfTest extends AnimationTimer {
             select(System.getProperty("studio.select"));
 
         if (frame == 20 && System.getProperty("studio.wireframe") != null)
-            VentaApplication.getComponent(SceneService.class).setWireframe(true);
+            VentaApplication.getComponent(SceneService.class).setWireframeEverywhere(true);
 
         if (frame == 25)
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "d", "d", KeyCode.D, false, false, false, false));

@@ -2,6 +2,7 @@ package io.github.trimax.venta.engine.model.instance;
 
 import org.joml.Vector3fc;
 
+import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.entity.TextureEntity;
 import lombok.NonNull;
 
@@ -18,6 +19,9 @@ public interface EmitterInstance extends AbstractInstance {
 
     boolean isLit();
 
+    /** How the particles are drawn: filled, as lines or as points */
+    DrawMode getDrawMode();
+
     void setPosition(@NonNull final Vector3fc position);
 
     void setParticleVelocity(@NonNull final Vector3fc particleVelocity);
@@ -27,6 +31,8 @@ public interface EmitterInstance extends AbstractInstance {
     void setEmissionRate(final float rate);
 
     void setLit(final boolean lit);
+
+    void setDrawMode(@NonNull final DrawMode drawMode);
 
     void setTexture(@NonNull final TextureEntity texture);
 }

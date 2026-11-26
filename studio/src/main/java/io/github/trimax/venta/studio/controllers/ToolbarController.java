@@ -1,12 +1,17 @@
 package io.github.trimax.venta.studio.controllers;
 
+import com.google.common.eventbus.Subscribe;
+
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.CameraView;
+import io.github.trimax.venta.studio.model.WireframeTarget;
+import io.github.trimax.venta.studio.model.event.WireframeChangedEvent;
 import io.github.trimax.venta.studio.services.SceneService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.MenuButton;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +24,7 @@ public final class ToolbarController {
     private final StudioSession session;
     private final SceneService scenes;
 
-    @FXML private ToggleButton wireframe;
+    @FXML private MenuButton wireframe;
 
     @FXML
     public void onPerspective(final ActionEvent event) {
@@ -48,6 +53,24 @@ public final class ToolbarController {
 
     @FXML
     public void onWireframe(final ActionEvent event) {
-        scenes.setWireframe(wireframe.isSelected());
+        final var item = (CheckMenuItem) event.getSource();
+        scenes.setWireframe(WireframeTarget.valueOf((String) item.getUserData()), item.isSelected());
+    }
+
+    @FXML
+    public void onWireframeAll(final ActionEvent event) {
+        scenes.setWireframeEverywhere(true);
+    }
+
+    @FXML
+    public void onWireframeNone(final ActionEvent event) {
+        scenes.setWireframeEverywhere(false);
+    }
+
+    /** The choice is changed by the menu or by the scene that is open: the items show it */
+    @Subscribe
+    public void onWireframeChanged(final WireframeChangedEvent event) {
+        wireframe.getItems().stream().filter(CheckMenuItem.class::isInstance).map(CheckMenuItem.class::cast)
+                .forEach(item -> item.setSelected(session.getWireframe().contains(WireframeTarget.valueOf((String) item.getUserData()))));
     }
 }

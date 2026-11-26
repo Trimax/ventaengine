@@ -1,5 +1,6 @@
 package io.github.trimax.venta.engine.model.instance;
 
+import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.entity.ProgramEntity;
 import io.github.trimax.venta.engine.model.entity.SpriteEntity;
 import lombok.NonNull;
@@ -15,6 +16,9 @@ public interface BillboardInstance extends AbstractInstance {
 
     Vector3fc getPosition();
 
+    /** How the billboard is drawn: filled, as lines or as points */
+    DrawMode getDrawMode();
+
     void setProgram(@NonNull final ProgramEntity program);
 
     void setSprite(@NonNull final SpriteEntity sprite);
@@ -22,4 +26,6 @@ public interface BillboardInstance extends AbstractInstance {
     void setSize(@NonNull final Vector2fc size);
 
     void setPosition(@NonNull final Vector3fc position);
+
+    void setDrawMode(@NonNull final DrawMode drawMode);
 }

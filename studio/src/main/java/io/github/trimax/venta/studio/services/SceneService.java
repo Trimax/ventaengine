@@ -1,5 +1,6 @@
 package io.github.trimax.venta.studio.services;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 import org.joml.Vector3f;
@@ -11,7 +12,9 @@ import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.services.ResourceService;
 import io.github.trimax.venta.studio.StudioSession;
+import io.github.trimax.venta.studio.model.WireframeTarget;
 import io.github.trimax.venta.studio.model.event.SceneOpenedEvent;
+import io.github.trimax.venta.studio.model.event.WireframeChangedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
 import io.github.trimax.venta.studio.utils.FramingUtil;
 import io.github.trimax.venta.studio.utils.OutlineUtil;
@@ -66,10 +69,29 @@ public final class SceneService {
         }
     }
 
-    /** The objects of the scene are drawn as lines, or as they are */
-    public void setWireframe(final boolean wireframe) {
-        session.setWireframe(wireframe);
+    /**
+     * The things of a kind are drawn as lines, or as they are.
+     */
+    public void setWireframe(final WireframeTarget target, final boolean wireframe) {
+        if (wireframe)
+            session.getWireframe().add(target);
+        else
+            session.getWireframe().remove(target);
+
         applyWireframe();
+        EventUtil.post(new WireframeChangedEvent());
+    }
+
+    /**
+     * Every kind of things is drawn as lines, or none.
+     */
+    public void setWireframeEverywhere(final boolean wireframe) {
+        session.getWireframe().clear();
+        if (wireframe)
+            session.getWireframe().addAll(EnumSet.allOf(WireframeTarget.class));
+
+        applyWireframe();
+        EventUtil.post(new WireframeChangedEvent());
     }
 
     private void applyWireframe() {
@@ -77,9 +99,14 @@ public final class SceneService {
         if (scene == null)
             return;
 
-        final var mode = session.isWireframe() ? DrawMode.Edge : DrawMode.Polygon;
-        scene.getObjects().forEach(object -> object.setDrawMode(mode));
-        scene.getTerrainSurfaces().forEach(surface -> surface.setDrawMode(mode));
-        scene.getWaterSurfaces().forEach(surface -> surface.setDrawMode(mode));
+        scene.getObjects().forEach(object -> object.setDrawMode(modeOf(WireframeTarget.Objects)));
+        scene.getTerrainSurfaces().forEach(surface -> surface.setDrawMode(modeOf(WireframeTarget.Terrain)));
+        scene.getWaterSurfaces().forEach(surface -> surface.setDrawMode(modeOf(WireframeTarget.Water)));
+        scene.getEmitters().forEach(emitter -> emitter.setDrawMode(modeOf(WireframeTarget.Emitters)));
+        scene.getBillboards().forEach(billboard -> billboard.setDrawMode(modeOf(WireframeTarget.Billboards)));
+    }
+
+    private DrawMode modeOf(final WireframeTarget target) {
+        return session.getWireframe().contains(target) ? DrawMode.Edge : DrawMode.Polygon;
     }
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.github.trimax.venta.engine.enums.DrawMode;
+
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -49,6 +51,7 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
     private float emissionAccumulator = 0f;
 
     private boolean isLit;
+    private DrawMode drawMode = DrawMode.Polygon;
 
     private TextureEntityImplementation texture;
 
@@ -105,6 +108,11 @@ public final class EmitterInstanceImplementation extends AbstractInstanceImpleme
 
     public void setParticleVelocityDeviation(@NonNull final Vector3fc particleVelocityDeviation) {
         this.particleVelocityDeviation.set(particleVelocityDeviation);
+    }
+
+    @Override
+    public void setDrawMode(@NonNull final DrawMode drawMode) {
+        this.drawMode = drawMode;
     }
 
     @Override
