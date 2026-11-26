@@ -7,11 +7,10 @@ import javax.imageio.ImageIO;
 
 import io.github.trimax.venta.container.VentaApplication;
 import io.github.trimax.venta.container.utils.EventUtil;
-import io.github.trimax.venta.engine.model.dto.SceneDTO;
-import io.github.trimax.venta.engine.services.ResourceService;
-import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
-import io.github.trimax.venta.studio.model.outline.OutlineItem;
+import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
+import io.github.trimax.venta.studio.services.SelectionService;
+import io.github.trimax.venta.studio.utils.OutlineUtil;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -78,10 +77,10 @@ final class SelfTest extends AnimationTimer {
 
     /** Chooses an object of the scene in the hierarchy, as a click on it would */
     private void select(final String name) {
-        final var scene = VentaApplication.getComponent(ResourceService.class).getAsObject("/scenes/" + System.getProperty("studio.scene"), SceneDTO.class);
+        final var outline = VentaApplication.getComponent(SelectionService.class).getOutline();
 
-        scene.objects().stream().filter(object -> object.name().equals(name)).findFirst()
-                .ifPresent(object -> EventUtil.post(new OutlineSelectedEvent(new OutlineItem(OutlineKind.Object, object.name(), object.object(), object))));
+        OutlineUtil.items(outline, OutlineKind.Object).stream().filter(item -> item.name().equals(name)).findFirst()
+                .ifPresent(item -> EventUtil.post(new OutlineSelectionRequestEvent(item)));
     }
 
     private void drag(final double deltaX) {

@@ -80,4 +80,49 @@ final class OutlineUtilTest {
         assertEquals(1, OutlineUtil.positions(scene).size());
         assertTrue(OutlineUtil.positions(ParsingUtil.asObject("{}", SceneDTO.class)).isEmpty());
     }
+
+    private static final String DUPLICATES = """
+            {
+              "objects": [
+                {"name": "Tree", "object": "a.json", "position": {"x": 0, "y": 0, "z": 0}, "angles": {"x": 0, "y": 0, "z": 0}, "scale": {"x": 1, "y": 1, "z": 1}},
+                {"name": "Rock", "object": "r.json", "position": {"x": 0, "y": 0, "z": 0}, "angles": {"x": 0, "y": 0, "z": 0}, "scale": {"x": 1, "y": 1, "z": 1}},
+                {"name": "Tree", "object": "b.json", "position": {"x": 0, "y": 0, "z": 0}, "angles": {"x": 0, "y": 0, "z": 0}, "scale": {"x": 1, "y": 1, "z": 1}}
+              ]
+            }
+            """;
+
+    @Test
+    void testThingsThatShareANameAreToldByTheirPlaceInTheFile() {
+        final var outline = OutlineUtil.build("s.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
+
+        assertEquals("a.json", OutlineUtil.find(outline, OutlineKind.Object, "Tree", 0).detail());
+        assertEquals("b.json", OutlineUtil.find(outline, OutlineKind.Object, "Tree", 1).detail());
+        assertEquals("r.json", OutlineUtil.find(outline, OutlineKind.Object, "Rock", 0).detail());
+        assertNull(OutlineUtil.find(outline, OutlineKind.Object, "Tree", 2));
+        assertNull(OutlineUtil.find(outline, OutlineKind.Light, "Tree", 0), "Another kind");
+    }
+
+    @Test
+    void testOccurrenceIsTheNumberTheLookupTakes() {
+        final var outline = OutlineUtil.build("s.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
+
+        for (final var item : OutlineUtil.items(outline, OutlineKind.Object))
+            assertSame(item, OutlineUtil.find(outline, item.kind(), item.name(), OutlineUtil.occurrence(outline, item)));
+    }
+
+    @Test
+    void testItemThatIsNotInTheSceneHasNoOccurrence() {
+        final var outline = OutlineUtil.build("s.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
+        final var other = OutlineUtil.build("o.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
+
+        assertEquals(-1, OutlineUtil.occurrence(outline, OutlineUtil.items(other, OutlineKind.Object).getFirst()), "The items are compared as they are, not by their names");
+    }
+
+    @Test
+    void testItemsOfAKindAreInTheOrderOfTheFile() {
+        final var outline = OutlineUtil.build("s.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
+
+        assertEquals(List.of("Tree", "Rock", "Tree"), OutlineUtil.items(outline, OutlineKind.Object).stream().map(item -> item.name()).toList());
+        assertTrue(OutlineUtil.items(outline, OutlineKind.Light).isEmpty());
+    }
 }

@@ -19,13 +19,22 @@ public final class FramingUtil {
      * The place that is looked at, and the radius of the sphere that holds the points.
      *
      * @param center the middle of the box of the points
-     * @param radius at least {@link #MINIMAL_RADIUS}
+     * @param radius how far the points reach from the middle
      */
     public record Frame(Vector3f center, float radius) {
     }
 
-    /** The frame of the points, null when there are none */
+    /**
+     * The frame of the points, null when there are none; a scene of few close things is looked at from {@link #MINIMAL_RADIUS}.
+     */
     public Frame frame(@NonNull final Collection<Vector3f> points) {
+        final var bounds = bounds(points);
+
+        return bounds == null ? null : new Frame(bounds.center(), Math.max(bounds.radius(), MINIMAL_RADIUS));
+    }
+
+    /** The middle of the box of the points and the radius of the ball that holds the box, null when there are no points */
+    public Frame bounds(@NonNull final Collection<Vector3f> points) {
         if (points.isEmpty())
             return null;
 
@@ -37,8 +46,6 @@ public final class FramingUtil {
         }
 
         final var center = new Vector3f(minimum).add(maximum).mul(0.5f);
-        final var radius = new Vector3f(maximum).sub(minimum).length() * 0.5f;
-
-        return new Frame(center, Math.max(radius, MINIMAL_RADIUS));
+        return new Frame(center, new Vector3f(maximum).sub(minimum).length() * 0.5f);
     }
 }

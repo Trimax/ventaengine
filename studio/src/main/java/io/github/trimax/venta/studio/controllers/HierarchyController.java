@@ -7,26 +7,30 @@ import com.google.common.eventbus.Subscribe;
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
+import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
 import io.github.trimax.venta.studio.model.event.SceneOpenedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineItem;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
 import io.github.trimax.venta.studio.model.outline.OutlineNode;
-import io.github.trimax.venta.studio.utils.OutlineUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseButton;
+import io.github.trimax.venta.studio.services.SelectionService;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  * The tree of the scene that is open: its settings, and its things by their kinds. What is chosen here is what the inspector shows.
  */
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HierarchyController {
+    private final SelectionService selection;
+
     @FXML private TextField filter;
     @FXML private TreeView<OutlineItem> tree;
 
@@ -55,13 +59,43 @@ public final class HierarchyController {
         });
 
         filter.textProperty().addListener((observable, was, is) -> rebuild());
+        tree.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2)
+                selection.focusSelection();
+        });
+    }
+
+    /** The viewport chose a thing: its item is chosen here too, and shown */
+    @Subscribe
+    public void onSelectionRequested(final OutlineSelectionRequestEvent event) {
+        final var found = event.item() == null || tree.getRoot() == null ? null : find(tree.getRoot(), event.item());
+        if (found == null) {
+            tree.getSelectionModel().clearSelection();
+            return;
+        }
+
+        tree.getSelectionModel().select(found);
+        tree.scrollTo(tree.getRow(found));
     }
 
     @Subscribe
     public void onSceneOpened(final SceneOpenedEvent event) {
-        outline = OutlineUtil.build(event.name(), event.scene());
+        outline = event.outline();
         filter.clear();
         rebuild();
+    }
+
+    private TreeItem<OutlineItem> find(final TreeItem<OutlineItem> node, final OutlineItem item) {
+        if (node.getValue() == item)
+            return node;
+
+        for (final var child : node.getChildren()) {
+            final var found = find(child, item);
+            if (found != null)
+                return found;
+        }
+
+        return null;
     }
 
     private void rebuild() {

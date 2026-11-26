@@ -69,8 +69,8 @@
         <MenuItem text="Reset Camera" accelerator="Shortcut+R" onAction="#onViewReset"/>
         <SeparatorMenuItem/>
         <CheckMenuItem fx:id="viewWireframe" text="Wireframe" onAction="#onWireframe"/>
-        <CheckMenuItem text="Grid" disable="true"/>
-        <CheckMenuItem text="Gizmos" disable="true"/>
+        <CheckMenuItem fx:id="viewGrid" text="Grid" selected="true" onAction="#onOverlay"/>
+        <CheckMenuItem fx:id="viewMarks" text="Marks of Lights and Sounds" selected="true" onAction="#onOverlay"/>
     </Menu>
     <Menu text="Tools">
         <MenuItem text="Heightmap Generator" disable="true"/>

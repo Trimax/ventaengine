@@ -74,6 +74,7 @@ More screenshots can be produced by running the [examples](#examples).
 | `container` | yes | Dependency injection container: scans packages for `@Component` classes, injects constructor dependencies (including lists), detects cycles and closes `AutoCloseable` components on shutdown. Also provides the event bus used by the engine and the editor |
 | `engine` | yes | The engine: window and input, OpenGL rendering, audio, resource loading, scenes, console and the public API (`VentaEngine`, `VentaContext`) |
 | `editor` | no | JavaFX tool to build resource archives and to prepare textures (heightmap generator, texture mixer, texture packer) |
+| `studio` | no | The editor of scenes in a JavaFX window: the engine draws the scene into its viewport, in the same process |
 | `examples` | no | Example applications, one per feature, with their resources |
 
 ## Getting started
@@ -219,6 +220,23 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
 * **Texture mixer** — combines channels of several textures into one texture (for example, roughness, metalness and
   ambient occlusion maps)
 * **Texture packer** — packs textures into an atlas
+
+## Studio
+`studio` is the editor of scenes (`io.github.trimax.venta.studio.StudioLauncher`), it is being built step by step. Start it with
+`java -jar studio/target/studio-<version>.jar --project <folder>` (without the argument it opens the project that was open last).
+* **Project** — a folder that is laid out like the resources of an application (`scenes/`, `objects/`, `materials/`,
+  `textures/`, ...): its files are the resources of the studio before the archives and the classpath, and they are read from the disk
+  whenever they are needed. `examples/src/main/resources` is a project. Opening a project when one is open starts another window
+* **Viewport** — the engine draws into a hidden window of the size of the panel, and the finished image is shown in the window. The
+  camera flies (right mouse button looks, `W` `A` `S` `D` `Q` `E` move, `Shift` is faster, the wheel dollies), orbits the chosen thing
+  (`Alt` and the left button), pans (the middle button), turns to the chosen thing (`F`, or a double click in the hierarchy) and goes to
+  the views Perspective, Top, Front and Side
+* **Choosing** — a click chooses the thing under the mouse: the ray of the pixel meets the boxes of the objects and the marks of the
+  lights, the emitters, the billboards and the sounds. The chosen thing has a frame; a grid of the ground and the marks are drawn over
+  the finished image, they are hidden by what is in front of them and are not touched by the exposure
+* **Panels** — Project (the folders and the files, a scene opens with a double click), Hierarchy (the settings and the things of the
+  scene that is open), Inspector (the fields of what is chosen, the contents of a file), Console (the log of the engine)
+* The scene is not edited yet; the whole program of the studio is in [ROADMAP.md](ROADMAP.md)
 
 ## Examples
 Every example is a separate application in `examples` (`io.github.trimax.examples...`). Run them from the repository root:

@@ -30,15 +30,14 @@ its own. What the engine can do already is in the [readme](readme.md). Paths of 
 
 ## Editor
 
-- [ ] **5. Editor redesign.** The editor (`editor/`) uses the default light Modena look with a couple of tiny style
-  sheets and PNG icons, and its center is a placeholder: `layouts/main.fxml` has a black `VBox` instead of a scene
-  view, the editor never starts the engine and the camera buttons of the toolbar have no actions. It should be
-  rebuilt like the map editor of The Native Land: a dark theme in one style sheet (a palette of looked-up colors,
-  spacing and font size scales, style classes for forms, panels, the status bar and the toolbar), panels in FXML
-  included into a `BorderPane` (a toolbar with SVG icons and indicators, the resource tree on the left, the scene
-  view in the center, a property inspector on the right, a status bar), controllers bound to shared contexts with
-  JavaFX properties, undo and redo, keyboard shortcuts. The scene view renders the engine offscreen (a hidden window
-  of the view size, resized with it) and shows the tone mapped frame: the pixels of the default framebuffer are read
-  after the post processing and before the buffer swap, on the engine thread (GLFW needs the main thread on macOS,
-  which JavaFX uses too), flipped and converted to BGRA for a JavaFX `PixelBuffer`; the camera is controlled with the
-  mouse and the toolbar buttons, objects can be selected and moved with gizmos.
+- [ ] **5. Studio.** The editor of scenes (`studio/`) shows a scene in its viewport, the project, the hierarchy, the
+  inspector and the console, and chooses things with a click, but changes nothing. What is left, in the order of the work:
+  editing (move, turn and scale with handles drawn by the engine in the scene, creating, deleting and copying things,
+  undo and redo, saving the scene file; the editor keeps its own copy of the scene file as the truth, the engine shows it);
+  groups of things (the engine needs scene nodes with a parent first); the lights and the settings of the environment
+  with handles for their ranges and cones; the assets (importing files, thumbnails, the editor of materials, renaming with the
+  references updated, reloading what changed on the disk); the editors of the terrain, the water, the emitters and the sounds
+  (the tools of the old `editor` become panels of the studio); playing a scene in the editor and building the archive.
+  Smaller things: the panels may become strips of buttons at the edges as in IntelliJ, a silhouette outline of the chosen
+  thing instead of the frame, choosing by pixels (an id buffer) where the boxes are too coarse, choosing the ground and
+  the water, and the old `editor` goes when its tools are in the studio.

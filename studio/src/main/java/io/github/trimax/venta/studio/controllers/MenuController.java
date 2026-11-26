@@ -42,6 +42,8 @@ public final class MenuController {
     @FXML private CheckMenuItem viewInspector;
     @FXML private CheckMenuItem viewBottom;
     @FXML private CheckMenuItem viewWireframe;
+    @FXML private CheckMenuItem viewGrid;
+    @FXML private CheckMenuItem viewMarks;
 
     @FXML
     public void initialize() {
@@ -109,6 +111,12 @@ public final class MenuController {
     @FXML
     public void onWireframe(final ActionEvent event) {
         scenes.setWireframe(viewWireframe.isSelected());
+    }
+
+    @FXML
+    public void onOverlay(final ActionEvent event) {
+        session.getOverlay().setGrid(viewGrid.isSelected());
+        session.getOverlay().setMarks(viewMarks.isSelected());
     }
 
     @FXML

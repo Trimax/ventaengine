@@ -25,6 +25,10 @@ public final class FlyCamera {
     private static final float LOOK_SPEED = 0.003f;
     private static final float MOVE_SPEED = 6.f;
     private static final float FAST_FACTOR = 4.f;
+    private static final float START_PIVOT_DISTANCE = 20.f;
+    private static final float MINIMAL_ORBIT_RADIUS = 1.f;
+    private static final float PAN_SPEED = 0.0015f;
+    private static final float FOCUS_DISTANCE = 2.5f;
     private static final float MAXIMAL_PITCH = (float) Math.toRadians(89.0);
 
     private final Set<KeyCode> pressed = EnumSet.noneOf(KeyCode.class);
@@ -32,6 +36,7 @@ public final class FlyCamera {
     private final Vector3f front = new Vector3f();
     private final Vector3f right = new Vector3f();
     private final Vector3f target = new Vector3f();
+    private final Vector3f pivot = new Vector3f();
 
     /** What the camera looks at in the views: the scene that is open, null before there is one */
     private FramingUtil.Frame frame;
@@ -55,6 +60,7 @@ public final class FlyCamera {
             yaw = START_YAW;
             pitch = START_PITCH;
             updateDirections();
+            pivot.set(position).fma(START_PIVOT_DISTANCE, front);
             return;
         }
 
@@ -64,6 +70,7 @@ public final class FlyCamera {
     /** A scene is open: the views look at it, and the camera is put round it */
     public void frame(final FramingUtil.Frame frame) {
         this.frame = frame;
+        pivot.set(frame.center());
         reset();
     }
 
@@ -83,7 +90,41 @@ public final class FlyCamera {
             default -> position.set(center).add(0.f, frame.radius() * 0.6f, distance);
         }
 
+        pivot.set(center);
         lookAt(center);
+    }
+
+    /** The point the camera orbits and the panning keeps in the middle: the chosen thing, or the middle of the scene */
+    public Vector3f getPivot() {
+        return pivot;
+    }
+
+    /** Orbits round the pivot: dragging to the right turns the scene to the right, dragging down looks from above */
+    public void orbit(final double deltaX, final double deltaY) {
+        final var offset = new Vector3f(position).sub(pivot);
+        final var radius = Math.max(offset.length(), MINIMAL_ORBIT_RADIUS);
+
+        final var azimuth = (float) Math.atan2(offset.x, offset.z) - (float) deltaX * LOOK_SPEED;
+        final var elevation = Math.clamp((float) Math.asin(Math.clamp(offset.y / radius, -1.f, 1.f)) + (float) deltaY * LOOK_SPEED, -MAXIMAL_PITCH, MAXIMAL_PITCH);
+
+        position.set(pivot).add((float) (radius * Math.sin(azimuth) * Math.cos(elevation)), (float) (radius * Math.sin(elevation)),
+                (float) (radius * Math.cos(azimuth) * Math.cos(elevation)));
+        lookAt(pivot);
+    }
+
+    /** Moves the camera and the pivot with it, the scene follows the mouse: the farther the pivot, the faster */
+    public void pan(final double deltaX, final double deltaY) {
+        final var distance = Math.max(position.distance(pivot), MINIMAL_ORBIT_RADIUS);
+        final var shift = new Vector3f(right).mul(-(float) deltaX).add(0.f, (float) deltaY, 0.f).mul(distance * PAN_SPEED);
+
+        position.add(shift);
+        pivot.add(shift);
+    }
+
+    /** Looks at a thing from a distance that holds it, from where the camera looks now */
+    public void focus(final Vector3f center, final float radius) {
+        pivot.set(center);
+        position.set(center).fma(-Math.max(radius, FramingUtil.MINIMAL_RADIUS * 0.1f) * FOCUS_DISTANCE, front);
     }
 
     /** Turns the camera to the point */

@@ -56,7 +56,7 @@ public final class SceneService {
             final var frame = FramingUtil.frame(OutlineUtil.positions(file));
             session.getCamera().frame(frame == null ? new FramingUtil.Frame(new Vector3f(0.f, 2.f, 0.f), FramingUtil.MINIMAL_RADIUS) : frame);
 
-            EventUtil.post(new SceneOpenedEvent(name, file));
+            EventUtil.post(new SceneOpenedEvent(name, file, OutlineUtil.build(name, file)));
             EventUtil.post(new StatusEvent("Scene %s is open", name));
             return true;
         } catch (final RuntimeException exception) {

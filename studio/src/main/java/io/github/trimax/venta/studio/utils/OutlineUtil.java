@@ -56,6 +56,57 @@ public final class OutlineUtil {
         return positions;
     }
 
+    /**
+     * The item of a thing of a scene. Things are made from the file in its order, and may share a name, so the thing is told by its name
+     * and by how many things of the kind with the same name come before it.
+     *
+     * @param occurrence how many things of the kind with this name come before the thing
+     * @return the item, null when the scene has no such thing
+     */
+    public OutlineItem find(@NonNull final OutlineNode scene, @NonNull final OutlineKind kind, @NonNull final String name, final int occurrence) {
+        var seen = 0;
+        for (final var item : items(scene, kind)) {
+            if (!item.name().equals(name))
+                continue;
+
+            if (seen++ == occurrence)
+                return item;
+        }
+
+        return null;
+    }
+
+    /**
+     * How many items of the kind with the same name come before the item, the number {@link #find} takes.
+     */
+    public int occurrence(@NonNull final OutlineNode scene, @NonNull final OutlineItem item) {
+        var seen = 0;
+        for (final var other : items(scene, item.kind())) {
+            if (other == item)
+                return seen;
+
+            if (other.name().equals(item.name()))
+                seen++;
+        }
+
+        return -1;
+    }
+
+    /** The items of a kind in the order of the file */
+    public List<OutlineItem> items(@NonNull final OutlineNode scene, @NonNull final OutlineKind kind) {
+        final var items = new ArrayList<OutlineItem>();
+        gather(scene, kind, items);
+
+        return items;
+    }
+
+    private void gather(final OutlineNode node, final OutlineKind kind, final List<OutlineItem> items) {
+        if (node.item().kind() == kind)
+            items.add(node.item());
+
+        node.children().forEach(child -> gather(child, kind, items));
+    }
+
     private List<OutlineNode> settings(final SceneDTO scene) {
         final var settings = new ArrayList<OutlineNode>();
 

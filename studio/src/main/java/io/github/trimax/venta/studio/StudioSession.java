@@ -4,6 +4,7 @@ import java.nio.file.Path;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.studio.model.settings.StudioSettings;
+import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
 import javafx.application.HostServices;
 import javafx.stage.Stage;
 import lombok.AccessLevel;
@@ -25,6 +26,11 @@ public final class StudioSession {
     private ViewportPanel viewport;
     private FlyCamera camera;
     private StudioSettings settings = StudioSettings.DEFAULT;
+
+    /**
+     * What the engine draws over the viewport: the grid, the marks and the frame of the chosen thing.
+     */
+    private final EditorOverlay overlay = new EditorOverlay();
 
     /** The folder of the open project, null before one is open */
     private Path project;

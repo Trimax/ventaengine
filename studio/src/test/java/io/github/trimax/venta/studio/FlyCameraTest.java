@@ -133,4 +133,80 @@ final class FlyCameraTest {
 
         assertEquals(5.f, camera.getPosition().distance(before), 1e-3f);
     }
+
+    @Test
+    void testOrbitKeepsTheDistanceToThePivotAndLooksAtIt() {
+        final var camera = framed();
+        final var distance = camera.getPosition().distance(camera.getPivot());
+
+        camera.orbit(120, -40);
+
+        assertEquals(distance, camera.getPosition().distance(camera.getPivot()), 1e-3f);
+        final var toPivot = new Vector3f(camera.getPivot()).sub(camera.getPosition()).normalize();
+        assertEquals(Math.asin(toPivot.y), camera.getPitch(), 1e-3f, "It looks at the pivot");
+        assertEquals(Math.atan2(toPivot.x, -toPivot.z), camera.getYaw(), 1e-3f);
+    }
+
+    @Test
+    void testOrbitDraggedToTheRightTurnsTheSceneToTheRight() {
+        final var camera = framed();
+        camera.view(CameraView.Front);
+        final var yaw = camera.getYaw();
+
+        camera.orbit(100, 0);
+
+        assertTrue(camera.getYaw() > yaw, "The camera goes to the left round the scene, so the view turns to the right");
+        assertTrue(camera.getPosition().x < camera.getPivot().x);
+    }
+
+    @Test
+    void testOrbitNeverGoesOverThePoles() {
+        final var camera = framed();
+
+        camera.orbit(0, 1_000_000);
+        assertTrue(camera.getPosition().y > camera.getPivot().y);
+        assertFalse(Float.isNaN(camera.getPosition().x));
+
+        camera.orbit(0, -2_000_000);
+        assertTrue(camera.getPosition().y < camera.getPivot().y);
+    }
+
+    @Test
+    void testPanMovesTheCameraAndThePivotTogether() {
+        final var camera = framed();
+        camera.view(CameraView.Front);
+        final var distance = camera.getPosition().distance(camera.getPivot());
+        final var x = camera.getPosition().x;
+        final var pivotX = camera.getPivot().x;
+
+        camera.pan(100, 0);
+
+        assertTrue(camera.getPosition().x < x, "The scene follows the mouse to the right: the camera goes to the left");
+        assertEquals(camera.getPosition().x - x, camera.getPivot().x - pivotX, 1e-4f);
+        assertEquals(distance, camera.getPosition().distance(camera.getPivot()), 1e-3f);
+    }
+
+    @Test
+    void testFocusPutsTheThingInFrontOfTheCameraWithoutTurningIt() {
+        final var camera = framed();
+        camera.look(30, 20);
+        final var yaw = camera.getYaw();
+        final var pitch = camera.getPitch();
+
+        camera.focus(new Vector3f(3.f, 1.f, 2.f), 2.f);
+
+        assertEquals(yaw, camera.getYaw(), EPSILON);
+        assertEquals(pitch, camera.getPitch(), EPSILON);
+        assertEquals(new Vector3f(3.f, 1.f, 2.f), camera.getPivot());
+        assertEquals(5.f, camera.getPosition().distance(camera.getPivot()), 1e-3f, "A thing of the radius 2 is looked at from 2.5 radiuses");
+    }
+
+    @Test
+    void testFocusOnASmallThingIsNotTooClose() {
+        final var camera = framed();
+
+        camera.focus(new Vector3f(), 0.f);
+
+        assertTrue(camera.getPosition().distance(camera.getPivot()) > 0.5f);
+    }
 }

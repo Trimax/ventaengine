@@ -12,6 +12,7 @@ import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.studio.services.ConsoleLog;
 import io.github.trimax.venta.studio.services.ProjectService;
 import io.github.trimax.venta.studio.services.SceneService;
+import io.github.trimax.venta.studio.services.SelectionService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -56,6 +57,11 @@ public final class StudioApplication extends Application implements AbstractVent
         session.setCamera(flyCamera);
 
         engine.startEmbedded(arguments, new StudioEngineApplication(flyCamera), viewport::onFrame);
+        engine.setOverlay(session.getOverlay());
+
+        final var selection = VentaApplication.getComponent(SelectionService.class);
+        viewport.setOnPick(selection::pick);
+        viewport.setOnFocus(selection::focusSelection);
 
         final var loader = new FXMLLoader(StudioApplication.class.getResource("/layouts/main.fxml"));
         loader.setControllerFactory(VentaApplication::getComponent);

@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL12C.GL_BGRA;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.function.BiConsumer;
 
 import org.lwjgl.system.MemoryStack;
 
@@ -15,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelBuffer;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -33,6 +35,9 @@ import lombok.Getter;
 public final class ViewportPanel extends Region {
     /** The frames that the size of the panel must stay the same before the engine window follows it */
     private static final int RESIZE_DELAY = 6;
+
+    /** The pixels the mouse may move while a button is down and it is still a click */
+    private static final double CLICK_TOLERANCE = 4.0;
 
     private final Engine engine;
     private final VentaContext context;
@@ -54,6 +59,14 @@ public final class ViewportPanel extends Region {
 
     private double mouseX;
     private double mouseY;
+
+    /** Where the primary button went down, and whether the mouse moved far enough since for it to be a drag and not a click */
+    private double pressedX;
+    private double pressedY;
+    private boolean dragged;
+
+    private BiConsumer<Float, Float> onPick = (x, y) -> { };
+    private Runnable onFocus = () -> { };
     private long lastPulse;
 
     /** What the last frames cost, for the status line (the averages of the last second) */
@@ -77,9 +90,14 @@ public final class ViewportPanel extends Region {
 
         addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
         addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
+        addEventHandler(MouseEvent.MOUSE_RELEASED, this::onMouseReleased);
         addEventHandler(ScrollEvent.SCROLL, event -> flyCamera.dolly(event.getDeltaY() * 0.02));
         addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            flyCamera.press(event.getCode());
+            if (event.getCode() == KeyCode.F && !event.isShortcutDown())
+                onFocus.run();
+            else
+                flyCamera.press(event.getCode());
+
             event.consume();
         });
         addEventHandler(KeyEvent.KEY_RELEASED, event -> {
@@ -97,6 +115,16 @@ public final class ViewportPanel extends Region {
                 pulse(now);
             }
         };
+    }
+
+    /** A click in the viewport: the point is from 0 to 1 over the viewport, from its top left corner */
+    public void setOnPick(final BiConsumer<Float, Float> onPick) {
+        this.onPick = onPick;
+    }
+
+    /** The key that turns the camera to the chosen thing is pressed */
+    public void setOnFocus(final Runnable onFocus) {
+        this.onFocus = onFocus;
     }
 
     public void start() {
@@ -182,6 +210,17 @@ public final class ViewportPanel extends Region {
         requestFocus();
         mouseX = event.getSceneX();
         mouseY = event.getSceneY();
+        pressedX = mouseX;
+        pressedY = mouseY;
+        dragged = false;
+    }
+
+    /** A click of the primary button that didn't move the mouse chooses what is under it */
+    private void onMouseReleased(final MouseEvent event) {
+        if (event.getButton() == MouseButton.PRIMARY && !dragged && !event.isAltDown() && getWidth() > 0 && getHeight() > 0) {
+            final var point = sceneToLocal(event.getSceneX(), event.getSceneY());
+            onPick.accept((float) (point.getX() / getWidth()), (float) (point.getY() / getHeight()));
+        }
     }
 
     private void onMouseDragged(final MouseEvent event) {
@@ -190,8 +229,15 @@ public final class ViewportPanel extends Region {
         mouseX = event.getSceneX();
         mouseY = event.getSceneY();
 
-        if (event.getButton() == MouseButton.SECONDARY || event.getButton() == MouseButton.MIDDLE)
+        if (Math.hypot(event.getSceneX() - pressedX, event.getSceneY() - pressedY) > CLICK_TOLERANCE)
+            dragged = true;
+
+        if (event.getButton() == MouseButton.SECONDARY)
             flyCamera.look(deltaX, deltaY);
+        else if (event.getButton() == MouseButton.MIDDLE)
+            flyCamera.pan(deltaX, deltaY);
+        else if (event.getButton() == MouseButton.PRIMARY && event.isAltDown())
+            flyCamera.orbit(deltaX, deltaY);
     }
 
     /** The averages of what the frames cost over about a second */
