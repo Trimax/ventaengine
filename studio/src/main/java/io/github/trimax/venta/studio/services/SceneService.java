@@ -74,7 +74,12 @@ public final class SceneService {
 
     private void applyWireframe() {
         final var scene = context.getSceneManager().getCurrent();
-        if (scene != null)
-            scene.getObjects().forEach(object -> object.setDrawMode(session.isWireframe() ? DrawMode.Edge : DrawMode.Polygon));
+        if (scene == null)
+            return;
+
+        final var mode = session.isWireframe() ? DrawMode.Edge : DrawMode.Polygon;
+        scene.getObjects().forEach(object -> object.setDrawMode(mode));
+        scene.getTerrainSurfaces().forEach(surface -> surface.setDrawMode(mode));
+        scene.getWaterSurfaces().forEach(surface -> surface.setDrawMode(mode));
     }
 }

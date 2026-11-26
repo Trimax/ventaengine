@@ -9,6 +9,7 @@ import io.github.trimax.venta.container.VentaApplication;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
+import io.github.trimax.venta.studio.services.SceneService;
 import io.github.trimax.venta.studio.services.SelectionService;
 import io.github.trimax.venta.studio.utils.OutlineUtil;
 import javafx.animation.AnimationTimer;
@@ -56,6 +57,9 @@ final class SelfTest extends AnimationTimer {
 
         if (frame == 30 && System.getProperty("studio.select") != null)
             select(System.getProperty("studio.select"));
+
+        if (frame == 20 && System.getProperty("studio.wireframe") != null)
+            VentaApplication.getComponent(SceneService.class).setWireframe(true);
 
         if (frame == 25)
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "d", "d", KeyCode.D, false, false, false, false));
