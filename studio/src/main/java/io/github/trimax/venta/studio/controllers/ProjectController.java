@@ -1,7 +1,5 @@
 package io.github.trimax.venta.studio.controllers;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
 
@@ -14,6 +12,8 @@ import io.github.trimax.venta.studio.model.event.ProjectFileSelectedEvent;
 import io.github.trimax.venta.studio.model.event.ProjectOpenedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
 import io.github.trimax.venta.studio.services.SceneService;
+import io.github.trimax.venta.studio.utils.FormatUtil;
+import io.github.trimax.venta.studio.utils.IconViewUtil;
 import io.github.trimax.venta.studio.utils.ProjectUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -25,8 +25,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
@@ -58,7 +56,7 @@ public final class ProjectController {
                 super.updateItem(folder, empty);
 
                 setText(empty || folder == null ? null : getTreeItem().getParent() == null ? folder.getFileName().toString() + "  (project)" : folder.getFileName().toString());
-                setGraphic(empty || folder == null ? null : icon(folder));
+                setGraphic(empty || folder == null ? null : IconViewUtil.folder(session.getProject(), folder));
             }
         });
         folders.getSelectionModel().selectedItemProperty().addListener((observable, was, is) -> {
@@ -71,8 +69,8 @@ public final class ProjectController {
             protected void updateItem(final Path file, final boolean empty) {
                 super.updateItem(file, empty);
 
-                setText(empty || file == null ? null : file.getFileName().toString() + "  ·  " + size(file));
-                setGraphic(empty || file == null ? null : fileIcon());
+                setText(empty || file == null ? null : file.getFileName().toString() + "  ·  " + FormatUtil.size(file));
+                setGraphic(empty || file == null ? null : IconViewUtil.file());
             }
         });
         files.getSelectionModel().selectedItemProperty().addListener((observable, was, is) -> EventUtil.post(new ProjectFileSelectedEvent(is)));
@@ -185,33 +183,5 @@ public final class ProjectController {
             return;
 
         session.getHostServices().showDocument(file.getParent().toUri().toString());
-    }
-
-    private ImageView icon(final Path folder) {
-        final var group = session.getProject() == null || folder.equals(session.getProject()) ? null : ProjectUtil.groupOf(session.getProject(), folder);
-        final var path = group == null ? "/icons/common/folder.png" : group.getIconPath();
-
-        return image(path);
-    }
-
-    private ImageView fileIcon() {
-        return image("/icons/common/file.png");
-    }
-
-    private ImageView image(final String path) {
-        final var stream = ProjectController.class.getResourceAsStream(path);
-        final var view = new ImageView(stream == null ? null : new Image(stream));
-        view.setFitWidth(14);
-        view.setFitHeight(14);
-        return view;
-    }
-
-    private String size(final Path file) {
-        try {
-            final var bytes = Files.size(file);
-            return bytes < 1024 ? bytes + " B" : bytes < 1024 * 1024 ? String.format(Locale.ROOT, "%.1f KB", bytes / 1024.0) : String.format(Locale.ROOT, "%.1f MB", bytes / 1048576.0);
-        } catch (final IOException exception) {
-            return "";
-        }
     }
 }

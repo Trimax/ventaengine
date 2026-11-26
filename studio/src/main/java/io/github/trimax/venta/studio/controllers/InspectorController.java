@@ -14,6 +14,7 @@ import io.github.trimax.venta.studio.model.event.ProjectFileSelectedEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineItem;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
 import io.github.trimax.venta.studio.model.property.Property;
+import io.github.trimax.venta.studio.utils.FormatUtil;
 import io.github.trimax.venta.studio.utils.ProjectUtil;
 import io.github.trimax.venta.studio.utils.PropertyUtil;
 import javafx.fxml.FXML;
@@ -70,7 +71,7 @@ public final class InspectorController {
         switch (ProjectUtil.previewOf(file)) {
             case Image -> showImage(file);
             case Text -> showText(file);
-            default -> show(file.getFileName().toString(), "Binary file · " + size(file), new Label("There is nothing to show for this file yet"));
+            default -> show(file.getFileName().toString(), "Binary file · " + FormatUtil.size(file), new Label("There is nothing to show for this file yet"));
         }
     }
 
@@ -120,7 +121,7 @@ public final class InspectorController {
 
         final var scroll = new ScrollPane(view);
         scroll.setPannable(true);
-        show(file.getFileName().toString(), String.format(Locale.ROOT, "Image · %d x %d · %s", (int) image.getWidth(), (int) image.getHeight(), size(file)), scroll);
+        show(file.getFileName().toString(), String.format(Locale.ROOT, "Image · %d x %d · %s", (int) image.getWidth(), (int) image.getHeight(), FormatUtil.size(file)), scroll);
     }
 
     private void showText(final Path file) {
@@ -136,15 +137,6 @@ public final class InspectorController {
             area.setText("The file can't be read: " + exception.getMessage());
         }
 
-        show(file.getFileName().toString(), "Text · " + size(file), area);
-    }
-
-    private String size(final Path file) {
-        try {
-            final var bytes = Files.size(file);
-            return bytes < 1024 ? bytes + " B" : String.format(Locale.ROOT, "%.1f KB", bytes / 1024.0);
-        } catch (final IOException exception) {
-            return "";
-        }
+        show(file.getFileName().toString(), "Text · " + FormatUtil.size(file), area);
     }
 }
