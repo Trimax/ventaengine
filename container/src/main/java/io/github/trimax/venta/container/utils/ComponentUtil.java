@@ -104,7 +104,8 @@ public final class ComponentUtil {
             return;
 
         final var className = resourceName.substring(0, resourceName.length() - CLASS_FILE_SUFFIX.length()).replace('/', '.');
-        final var cls = Class.forName(className, true, classLoader);
+        // Only the annotations are looked at: a class that is not a component must not run its static code (a JavaFX control needs its toolkit)
+        final var cls = Class.forName(className, false, classLoader);
         if (cls.isAnnotationPresent(Component.class))
             classes.add(cls);
     }

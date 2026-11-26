@@ -157,4 +157,11 @@ public final class VentaContext {
     public void registerArchive(@NonNull final String archiveFilePath) {
         resourceService.loadArchive(archiveFilePath);
     }
+
+    /**
+     * The files of a folder are the resources of the application, they are found before the archives and the classpath.
+     */
+    public void useProject(@NonNull final java.nio.file.Path projectFolder) {
+        resourceService.useProject(projectFolder);
+    }
 }
