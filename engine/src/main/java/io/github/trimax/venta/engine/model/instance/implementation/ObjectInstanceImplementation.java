@@ -5,7 +5,6 @@ import java.util.List;
 import org.joml.Vector3fc;
 
 import io.github.trimax.venta.container.tree.Node;
-import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.hierarchy.LodLevel;
 import io.github.trimax.venta.engine.model.common.hierarchy.MeshReference;
@@ -60,7 +59,6 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     /** Whether no surface of the object mixes colors, null until it is asked: only a new material of the object changes it */
     private Boolean solid;
 
-    private DrawMode drawMode = DrawMode.Polygon;
     private boolean isVisible = true;
     private boolean isLit = true;
 
@@ -272,11 +270,6 @@ public final class ObjectInstanceImplementation extends AbstractInstanceImplemen
     @Override
     public void scale(final float factor) {
         this.transform.scale(factor);
-    }
-
-    @Override
-    public void setDrawMode(@NonNull final DrawMode drawMode) {
-        this.drawMode = drawMode;
     }
 
     @Override

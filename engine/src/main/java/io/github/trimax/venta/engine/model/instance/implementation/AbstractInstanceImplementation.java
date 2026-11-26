@@ -1,8 +1,10 @@
 package io.github.trimax.venta.engine.model.instance.implementation;
 
+import io.github.trimax.venta.engine.enums.DrawMode;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import io.github.trimax.venta.engine.utils.IdentifierUtil;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -10,6 +12,12 @@ public abstract class AbstractInstanceImplementation implements AbstractInstance
     private final String id = IdentifierUtil.generate(6);
     private final GizmoInstanceImplementation gizmo;
     private final String name;
+
+    /**
+     * How the instance is drawn: filled, as lines or as points. The things that are not drawn as a surface (a light, a sound) keep it
+     * and ignore it.
+     */
+    private DrawMode drawMode = DrawMode.Polygon;
 
     /** The scene the instance has been added to, or null; an instance belongs to one scene at most */
     private SceneInstanceImplementation parent;
@@ -39,6 +47,14 @@ public abstract class AbstractInstanceImplementation implements AbstractInstance
     /** Detaches the instance from its scene */
     final void removeParent() {
         setParent(null);
+    }
+
+    public final DrawMode getDrawMode() {
+        return drawMode;
+    }
+
+    public final void setDrawMode(@NonNull final DrawMode drawMode) {
+        this.drawMode = drawMode;
     }
 
     @Override
