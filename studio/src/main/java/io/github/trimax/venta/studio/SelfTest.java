@@ -48,7 +48,7 @@ final class SelfTest extends AnimationTimer {
     public void handle(final long now) {
         frame++;
 
-        if (frame == 5) {
+        if (frame == 5 && System.getProperty("studio.camera") == null) {
             startX = flyCamera.getPosition().x;
             startYaw = flyCamera.getYaw();
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "d", "d", KeyCode.D, false, false, false, false));
@@ -83,6 +83,11 @@ final class SelfTest extends AnimationTimer {
                     .map(window -> window.getClass().getSimpleName() + (window.isShowing() ? "(shown)" : "(hidden)")).toList());
         }
 
+        if (frame == 3 && System.getProperty("studio.camera") != null) {
+            final var values = System.getProperty("studio.camera").split(",");
+            flyCamera.place(Float.parseFloat(values[0]), Float.parseFloat(values[1]), Float.parseFloat(values[2]), Float.parseFloat(values[3]), Float.parseFloat(values[4]));
+        }
+
         if (frame == 25)
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "d", "d", KeyCode.D, false, false, false, false));
 
@@ -96,6 +101,12 @@ final class SelfTest extends AnimationTimer {
             System.out.printf("SELFTEST frame %d: heap %d MB, fps %.1f%n", frame,
                     (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) >> 20, viewport.getStatistics().getFramesPerSecond());
         }
+
+        final var shots = System.getProperty("studio.shot.frames");
+        if (shots != null && System.getProperty("studio.shot") != null)
+            for (final var number : shots.split(","))
+                if (frame == Integer.parseInt(number.trim()))
+                    writePicture(System.getProperty("studio.shot").replace(".png", "-" + frame + ".png"));
 
         if (frame == frames)
             report();
@@ -119,6 +130,21 @@ final class SelfTest extends AnimationTimer {
         return new MouseEvent(type, x, y, x, y, MouseButton.SECONDARY, 1, false, false, false, false, false, false, true, false, false, false, null);
     }
 
+    /** The picture of the whole window */
+    @SneakyThrows
+    private void writePicture(final String file) {
+        final var image = viewport.getScene().getRoot().snapshot(null, null);
+        final var width = (int) image.getWidth();
+        final var height = (int) image.getHeight();
+        final var output = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+                output.setRGB(x, y, image.getPixelReader().getArgb(x, y));
+
+        ImageIO.write(output, "png", new File(file));
+        System.out.println("SELFTEST picture " + file);
+    }
+
     @SneakyThrows
     private void report() {
         stop();
@@ -130,18 +156,8 @@ final class SelfTest extends AnimationTimer {
                 flyCamera.getPosition().x - startX, flyCamera.getYaw() - startYaw);
 
         final var shot = System.getProperty("studio.shot");
-        if (shot != null) {
-            final var image = viewport.getScene().getRoot().snapshot(null, null);
-            final var width = (int) image.getWidth();
-            final var height = (int) image.getHeight();
-            final var output = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            for (int y = 0; y < height; y++)
-                for (int x = 0; x < width; x++)
-                    output.setRGB(x, y, image.getPixelReader().getArgb(x, y));
-
-            ImageIO.write(output, "png", new File(shot));
-            System.out.println("SELFTEST picture " + shot);
-        }
+        if (shot != null)
+            writePicture(shot);
 
         Platform.exit();
     }
