@@ -6,6 +6,8 @@ import java.util.Set;
 import org.joml.Vector3f;
 
 import io.github.trimax.venta.engine.model.instance.CameraInstance;
+import io.github.trimax.venta.studio.model.CameraView;
+import io.github.trimax.venta.studio.utils.FramingUtil;
 import javafx.scene.input.KeyCode;
 import lombok.Getter;
 
@@ -13,7 +15,7 @@ import lombok.Getter;
  * The camera of the viewport that flies: the mouse looks round, the keys move it. The angles are kept here and the camera of the
  * engine is set from them, so it never rolls: the yaw is from -z to +x, the pitch is up from the horizon (both in radians).
  */
-final class FlyCamera {
+public final class FlyCamera {
     private static final float START_X = 0.f;
     private static final float START_Y = 3.4f;
     private static final float START_Z = 30.f;
@@ -31,21 +33,65 @@ final class FlyCamera {
     private final Vector3f right = new Vector3f();
     private final Vector3f target = new Vector3f();
 
+    /** What the camera looks at in the views: the scene that is open, null before there is one */
+    private FramingUtil.Frame frame;
+
     @Getter
     private float yaw;
 
     @Getter
     private float pitch;
 
-    FlyCamera() {
+    public FlyCamera() {
         reset();
     }
 
-    void reset() {
-        position.set(START_X, START_Y, START_Z);
-        yaw = START_YAW;
-        pitch = START_PITCH;
+    /** Back to where the camera starts: round the scene that is open, or at the first place without one */
+    public void reset() {
         pressed.clear();
+
+        if (frame == null) {
+            position.set(START_X, START_Y, START_Z);
+            yaw = START_YAW;
+            pitch = START_PITCH;
+            updateDirections();
+            return;
+        }
+
+        view(CameraView.Perspective);
+    }
+
+    /** A scene is open: the views look at it, and the camera is put round it */
+    public void frame(final FramingUtil.Frame frame) {
+        this.frame = frame;
+        reset();
+    }
+
+    /** Puts the camera where the view says, at a distance that holds the scene; without a scene nothing changes */
+    public void view(final CameraView view) {
+        if (frame == null)
+            return;
+
+        final var distance = frame.radius() * 2.2f;
+        final var center = frame.center();
+
+        switch (view) {
+            case Perspective -> position.set(center).add(0.f, frame.radius() * 0.6f, distance);
+            case Top -> position.set(center).add(0.f, distance, 0.f);
+            case Front -> position.set(center).add(0.f, 0.f, distance);
+            case Side -> position.set(center).add(distance, 0.f, 0.f);
+            default -> position.set(center).add(0.f, frame.radius() * 0.6f, distance);
+        }
+
+        lookAt(center);
+    }
+
+    /** Turns the camera to the point */
+    void lookAt(final Vector3f point) {
+        final var direction = new Vector3f(point).sub(position).normalize();
+
+        pitch = Math.clamp((float) Math.asin(direction.y), -MAXIMAL_PITCH, MAXIMAL_PITCH);
+        yaw = (float) Math.atan2(direction.x, -direction.z);
         updateDirections();
     }
 

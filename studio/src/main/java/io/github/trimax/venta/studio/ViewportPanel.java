@@ -30,7 +30,7 @@ import lombok.Getter;
  * <p>The image has the size of the panel in the pixels of the screen (the engine window is resized to it once the panel stops
  * changing), and it is upside down in memory (OpenGL starts from the bottom), so the image view is turned over.
  */
-final class ViewportPanel extends Region {
+public final class ViewportPanel extends Region {
     /** The frames that the size of the panel must stay the same before the engine window follows it */
     private static final int RESIZE_DELAY = 6;
 
@@ -61,7 +61,7 @@ final class ViewportPanel extends Region {
     private final FrameStatistics statistics = new FrameStatistics();
     private long readNanoseconds;
 
-    ViewportPanel(final Engine engine, final VentaContext context, final FlyCamera flyCamera) {
+    public ViewportPanel(final Engine engine, final VentaContext context, final FlyCamera flyCamera) {
         this.engine = engine;
         this.context = context;
         this.flyCamera = flyCamera;
@@ -99,11 +99,11 @@ final class ViewportPanel extends Region {
         };
     }
 
-    void start() {
+    public void start() {
         timer.start();
     }
 
-    void stop() {
+    public void stop() {
         timer.stop();
     }
 
@@ -148,7 +148,7 @@ final class ViewportPanel extends Region {
     }
 
     /** The engine has drawn a frame: its image is in the framebuffer of the hidden window */
-    void onFrame(final int width, final int height) {
+    public void onFrame(final int width, final int height) {
         final var started = System.nanoTime();
 
         if (pixels == null || width != imageWidth || height != imageHeight) {
@@ -195,7 +195,7 @@ final class ViewportPanel extends Region {
     }
 
     /** The averages of what the frames cost over about a second */
-    static final class FrameStatistics {
+    public static final class FrameStatistics {
         private static final double WINDOW = 1.0;
 
         private double accumulated;

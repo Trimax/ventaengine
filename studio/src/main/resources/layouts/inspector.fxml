@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.studio.controllers.InspectorController" styleClass="panel" minWidth="220">
+    <Label text="Inspector" styleClass="panel-title"/>
+    <Label fx:id="heading" styleClass="inspector-heading" wrapText="true"/>
+    <Label fx:id="subheading" styleClass="dim" wrapText="true"/>
+    <StackPane fx:id="content" VBox.vgrow="ALWAYS"/>
+</VBox>

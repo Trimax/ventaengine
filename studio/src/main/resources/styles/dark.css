@@ -1,0 +1,116 @@
+/*
+ * The dark theme of the studio. The colors are looked up from here, so a panel never has a color of its own; Modena derives the
+ * shades of the controls from -fx-base.
+ */
+.root {
+    -studio-bg: #1c1f26;
+    -studio-panel: #242831;
+    -studio-raised: #2c313c;
+    -studio-line: #383f4c;
+    -studio-text: #d8dde8;
+    -studio-dim: #8e97aa;
+    -studio-accent: #4f8cff;
+    -studio-accent-soft: #28344f;
+    -studio-selection: #30497e;
+    -studio-warning: #e0b050;
+    -studio-error: #f28b82;
+
+    -fx-base: #2a2f39;
+    -fx-background: -studio-bg;
+    -fx-control-inner-background: #1f232b;
+    -fx-control-inner-background-alt: #1f232b;
+    -fx-accent: -studio-accent;
+    -fx-focus-color: -studio-accent;
+    -fx-faint-focus-color: transparent;
+    -fx-text-base-color: -studio-text;
+    -fx-text-background-color: -studio-text;
+    -fx-selection-bar: -studio-selection;
+    -fx-selection-bar-non-focused: #2a3957;
+    -fx-font-size: 12px;
+}
+
+.panel {
+    -fx-background-color: -studio-panel;
+    -fx-padding: 8;
+    -fx-spacing: 6;
+}
+
+.panel-title {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -studio-dim;
+}
+
+.inspector-heading {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -studio-text;
+}
+
+.dim {
+    -fx-text-fill: -studio-dim;
+}
+
+.tool-row {
+    -fx-padding: 4 6 4 6;
+    -fx-alignment: center-left;
+}
+
+.status-bar {
+    -fx-padding: 3 10 3 10;
+    -fx-background-color: -studio-accent-soft;
+    -fx-border-color: -studio-line transparent transparent transparent;
+}
+
+.status-bar .label {
+    -fx-font-size: 11px;
+}
+
+.viewport-host {
+    -fx-background-color: black;
+}
+
+.viewport-hint {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 16 10 16;
+    -fx-background-color: rgba(20, 22, 28, 0.72);
+    -fx-background-radius: 6;
+}
+
+.tree-cell.category {
+    -fx-font-weight: bold;
+    -fx-text-fill: -studio-dim;
+}
+
+.console .list-cell {
+    -fx-font-family: "Menlo", "Consolas", monospace;
+    -fx-font-size: 11px;
+    -fx-padding: 1 6 1 6;
+}
+
+.console .list-cell.warning {
+    -fx-text-fill: -studio-warning;
+}
+
+.console .list-cell.error {
+    -fx-text-fill: -studio-error;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-padding: 0 1 0 1;
+    -fx-background-color: -studio-line;
+}
+
+.tool-bar {
+    -fx-background-color: -studio-panel;
+    -fx-border-color: transparent transparent -studio-line transparent;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: -studio-panel;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: -studio-raised;
+}

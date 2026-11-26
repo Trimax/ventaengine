@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * The engine of the viewport: a hidden window of the size of the viewport, and the scene to look at. The camera is the viewport's.
+ * The engine of the viewport: a hidden window of the size of the viewport. The scene is the one the user opens, the camera is the
+ * viewport's.
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -45,11 +46,8 @@ final class StudioEngineApplication implements VentaEngineApplication {
         return new VentaEngineStartupHandler() {
             @Override
             public void onStartup(final String[] args, final VentaContext context) {
-                final var scene = context.getSceneManager().create("Ocean beach", context.getSceneRepository().get("beach.json"));
-                context.getSceneManager().setCurrent(scene);
-
                 flyCamera.apply(context.getCameraManager().getCurrent());
-                log.info("The scene is loaded into the viewport");
+                log.info("The viewport is ready");
             }
         };
     }

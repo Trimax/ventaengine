@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.studio.controllers.MainController">
+    <top>
+        <VBox>
+            <fx:include source="menubar.fxml"/>
+            <fx:include source="toolbar.fxml"/>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane fx:id="horizontal" dividerPositions="0.17, 0.8">
+            <fx:include fx:id="hierarchyPanel" source="hierarchy.fxml"/>
+
+            <SplitPane fx:id="vertical" orientation="VERTICAL" dividerPositions="0.64">
+                <StackPane fx:id="viewportHost" styleClass="viewport-host">
+                    <Label fx:id="viewportHint" styleClass="viewport-hint" mouseTransparent="true"/>
+                </StackPane>
+                <fx:include fx:id="bottomPanel" source="bottom.fxml"/>
+            </SplitPane>
+
+            <fx:include fx:id="inspectorPanel" source="inspector.fxml"/>
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <fx:include source="status.fxml"/>
+    </bottom>
+</BorderPane>

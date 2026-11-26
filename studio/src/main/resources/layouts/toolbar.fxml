@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
+<ToolBar xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.studio.controllers.ToolbarController">
+    <Button text="Perspective" onAction="#onPerspective"><tooltip><Tooltip text="Look at the scene from a corner"/></tooltip></Button>
+    <Button text="Top" onAction="#onTop"><tooltip><Tooltip text="Look at the scene from above"/></tooltip></Button>
+    <Button text="Front" onAction="#onFront"><tooltip><Tooltip text="Look at the scene along the z axis"/></tooltip></Button>
+    <Button text="Side" onAction="#onSide"><tooltip><Tooltip text="Look at the scene along the x axis"/></tooltip></Button>
+    <Button text="Reset" onAction="#onReset"><tooltip><Tooltip text="Back to the first place of the camera (Shortcut+R)"/></tooltip></Button>
+    <Separator orientation="VERTICAL"/>
+    <ToggleButton fx:id="wireframe" text="Wireframe" onAction="#onWireframe"><tooltip><Tooltip text="Draw the objects as lines"/></tooltip></ToggleButton>
+</ToolBar>

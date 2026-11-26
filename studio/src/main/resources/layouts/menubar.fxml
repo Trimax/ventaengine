@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<MenuBar xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.studio.controllers.MenuController" useSystemMenuBar="true">
+    <Menu text="File">
+        <MenuItem text="New Scene" disable="true"/>
+        <MenuItem text="Open Project…" accelerator="Shortcut+O" onAction="#onProjectOpen"/>
+        <Menu fx:id="menuRecent" text="Open Recent"/>
+        <SeparatorMenuItem/>
+        <MenuItem text="Save" accelerator="Shortcut+S" disable="true"/>
+        <MenuItem text="Save As…" accelerator="Shortcut+Shift+S" disable="true"/>
+        <MenuItem text="Build Archive…" disable="true"/>
+        <SeparatorMenuItem/>
+        <MenuItem text="Quit" accelerator="Shortcut+Q" onAction="#onQuit"/>
+    </Menu>
+    <Menu text="Edit">
+        <MenuItem text="Undo" accelerator="Shortcut+Z" disable="true"/>
+        <MenuItem text="Redo" accelerator="Shortcut+Shift+Z" disable="true"/>
+        <SeparatorMenuItem/>
+        <MenuItem text="Cut" accelerator="Shortcut+X" disable="true"/>
+        <MenuItem text="Copy" accelerator="Shortcut+C" disable="true"/>
+        <MenuItem text="Paste" accelerator="Shortcut+V" disable="true"/>
+        <MenuItem text="Duplicate" accelerator="Shortcut+D" disable="true"/>
+        <MenuItem text="Delete" disable="true"/>
+        <SeparatorMenuItem/>
+        <MenuItem text="Select All" accelerator="Shortcut+A" disable="true"/>
+    </Menu>
+    <Menu text="Assets">
+        <MenuItem text="Import…" disable="true"/>
+        <Menu text="Create" disable="true">
+            <MenuItem text="Material"/>
+            <MenuItem text="Object"/>
+            <MenuItem text="Scene"/>
+        </Menu>
+        <SeparatorMenuItem/>
+        <MenuItem text="Refresh" accelerator="F5" onAction="#onRefresh"/>
+    </Menu>
+    <Menu text="Object" disable="true">
+        <Menu text="Create">
+            <MenuItem text="Object"/>
+            <Menu text="Light">
+                <MenuItem text="Point"/>
+                <MenuItem text="Spot"/>
+                <MenuItem text="Sun"/>
+            </Menu>
+            <MenuItem text="Camera"/>
+            <MenuItem text="Terrain"/>
+            <MenuItem text="Water"/>
+            <MenuItem text="Emitter"/>
+            <MenuItem text="Billboard"/>
+            <MenuItem text="Sound source"/>
+        </Menu>
+    </Menu>
+    <Menu text="View">
+        <CheckMenuItem fx:id="viewHierarchy" text="Hierarchy" selected="true" onAction="#onPanels"/>
+        <CheckMenuItem fx:id="viewInspector" text="Inspector" selected="true" onAction="#onPanels"/>
+        <CheckMenuItem fx:id="viewBottom" text="Project and Console" selected="true" onAction="#onPanels"/>
+        <SeparatorMenuItem/>
+        <Menu text="Camera">
+            <MenuItem text="Perspective" onAction="#onViewPerspective"/>
+            <MenuItem text="Top" onAction="#onViewTop"/>
+            <MenuItem text="Front" onAction="#onViewFront"/>
+            <MenuItem text="Side" onAction="#onViewSide"/>
+        </Menu>
+        <MenuItem text="Reset Camera" accelerator="Shortcut+R" onAction="#onViewReset"/>
+        <SeparatorMenuItem/>
+        <CheckMenuItem fx:id="viewWireframe" text="Wireframe" onAction="#onWireframe"/>
+        <CheckMenuItem text="Grid" disable="true"/>
+        <CheckMenuItem text="Gizmos" disable="true"/>
+    </Menu>
+    <Menu text="Tools">
+        <MenuItem text="Heightmap Generator" disable="true"/>
+        <MenuItem text="Texture Packer" disable="true"/>
+        <MenuItem text="Texture Mixer" disable="true"/>
+    </Menu>
+    <Menu text="Help">
+        <MenuItem text="About Venta Studio" onAction="#onAbout"/>
+        <MenuItem text="Documentation" onAction="#onDocumentation"/>
+        <MenuItem text="Open Log Folder" onAction="#onLogFolder"/>
+    </Menu>
+</MenuBar>

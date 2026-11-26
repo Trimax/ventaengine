@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.studio.controllers.ConsoleController">
+    <HBox styleClass="tool-row" spacing="6">
+        <Label text="Show"/>
+        <ChoiceBox fx:id="level"/>
+        <Button text="Clear" onAction="#onClear"/>
+    </HBox>
+    <ListView fx:id="lines" VBox.vgrow="ALWAYS" styleClass="console"/>
+</VBox>
