@@ -61,6 +61,28 @@ final class SelfTest extends AnimationTimer {
         if (frame == 20 && System.getProperty("studio.wireframe") != null)
             VentaApplication.getComponent(SceneService.class).setWireframeEverywhere(true);
 
+        if (frame == 40 && System.getProperty("studio.menu") != null) {
+            final var button = (javafx.scene.control.MenuButton) stage.getScene().lookup("#wireframe");
+            System.out.println("SELFTEST menu button found: " + (button != null));
+            if (button != null)
+                button.show();
+        }
+
+        if (frame == 60 && System.getProperty("studio.menu") != null) {
+            final var button = (javafx.scene.control.MenuButton) stage.getScene().lookup("#wireframe");
+            try {
+                final var field = javafx.scene.control.skin.MenuButtonSkinBase.class.getDeclaredField("popup");
+                field.setAccessible(true);
+                final var popup = (javafx.scene.control.ContextMenu) field.get(button.getSkin());
+                System.out.println("SELFTEST popup: showing=" + popup.isShowing() + ", items=" + popup.getItems().size() + "/" + button.getItems().size() + ", skin=" + button.getSkin().getClass().getSimpleName()
+                        + ", disabled=" + button.isDisabled() + ", visible=" + button.isVisible() + ", scene=" + (button.getScene() != null) + ", focused=" + button.isFocused());
+            } catch (final ReflectiveOperationException exception) {
+                System.out.println("SELFTEST popup: " + exception);
+            }
+            System.out.println("SELFTEST menu showing: " + button.isShowing() + ", windows: " + javafx.stage.Window.getWindows().stream()
+                    .map(window -> window.getClass().getSimpleName() + (window.isShowing() ? "(shown)" : "(hidden)")).toList());
+        }
+
         if (frame == 25)
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "d", "d", KeyCode.D, false, false, false, false));
 
