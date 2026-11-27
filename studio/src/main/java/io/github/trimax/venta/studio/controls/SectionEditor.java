@@ -2,6 +2,7 @@ package io.github.trimax.venta.studio.controls;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.Set;
 
 import com.google.gson.JsonElement;
@@ -23,9 +24,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
- * The fields of a section of the environment (the sun, the fog, the bloom, ...), made from what the section holds: a number is a field, a
- * switch is a box, a name from a list is a list, a color is a picker, a vector is a row. A new field of a section is edited without a line
- * of code. A change is a command of the scene, so it can be undone; the fields show the section again when it changes (an undo).
+ * The fields of an object of a file (a section of the environment: the sun, the fog, ...; a file of a resource: a light), made from what
+ * the object holds: a number is a field, a switch is a box, a name from a list is a list, a color is a picker, a vector is a row. A new
+ * field is edited without a line of code. A change is a command of the scene, so it can be undone; the fields show the object again when
+ * it changes (an undo).
  */
 public final class SectionEditor extends VBox {
     private static final Set<String> COLOR_FIELDS = Set.of("r", "g", "b", "a");
@@ -33,21 +35,69 @@ public final class SectionEditor extends VBox {
     private static final int LABEL_WIDTH = 120;
     private static final double PRECISION = 10000.0;
 
-    private final SceneEditService service;
-    private final String section;
+    private final JsonSource source;
     private final List<Runnable> refreshers = new ArrayList<>();
 
     private boolean refreshing;
 
-    public SectionEditor(final SceneEditService service, final String section) {
+    /** The form of an object of a file; the object must be there */
+    public SectionEditor(final JsonSource source) {
         super(6);
         setPadding(new Insets(4, 0, 0, 0));
 
-        this.service = service;
-        this.section = section;
+        this.source = source;
 
-        build(this, service.getDocument().getSection(section), List.of());
+        build(this, source.read(), List.of());
         refresh();
+    }
+
+    /** The form of a section of the environment of the scene that is open */
+    public static SectionEditor ofSection(final SceneEditService service, final String section) {
+        return new SectionEditor(new JsonSource() {
+            @Override
+            public JsonObject read() {
+                return service.getDocument() == null || !service.getDocument().hasSection(section) ? null : service.getDocument().getSection(section);
+            }
+
+            @Override
+            public void edit(final String field, final Consumer<JsonObject> change) {
+                service.editSection(section, "Change", field, change);
+            }
+
+            @Override
+            public Class<?> typeOf(final List<String> path) {
+                return SchemaUtil.typeOf(section, path);
+            }
+
+            @Override
+            public List<String> optionsOf(final List<String> path) {
+                return "Skybox".equals(section) ? service.filesOf("cubemaps") : null;
+            }
+        });
+    }
+
+    /**
+     * The form of a file of a resource of the project.
+     *
+     * @param type the record that the engine reads the file into ({@code LightDTO}), for the types of the fields
+     */
+    public static SectionEditor ofResource(final SceneEditService service, final String path, final Class<?> type) {
+        return new SectionEditor(new JsonSource() {
+            @Override
+            public JsonObject read() {
+                return service.readResource(path);
+            }
+
+            @Override
+            public void edit(final String field, final Consumer<JsonObject> change) {
+                service.editResource(path, "Change", field, change);
+            }
+
+            @Override
+            public Class<?> typeOf(final List<String> path) {
+                return SchemaUtil.typeOf(type, path);
+            }
+        });
     }
 
     /** Shows the section as the file says now */
@@ -120,7 +170,7 @@ public final class SectionEditor extends VBox {
     }
 
     private NumberField number(final List<String> path) {
-        final var whole = SchemaUtil.isWhole(SchemaUtil.typeOf(section, path));
+        final var whole = SchemaUtil.isWhole(source.typeOf(path));
         final var start = valueAt(path);
         final var field = new NumberField(whole ? 1.f : stepOf(start == null ? 0.0 : start.getAsDouble()), value -> {
             if (!refreshing)
@@ -153,7 +203,7 @@ public final class SectionEditor extends VBox {
 
     /** A name: one of the values of an enum when the engine reads the field as one, any text otherwise */
     private javafx.scene.Node text(final List<String> path) {
-        final var options = SchemaUtil.constantsOf(SchemaUtil.typeOf(section, path));
+        final var options = source.optionsOf(path) != null ? source.optionsOf(path) : SchemaUtil.constantsOf(source.typeOf(path));
         if (options != null) {
             final var list = new ComboBox<String>();
             list.getItems().addAll(options);
@@ -240,15 +290,12 @@ public final class SectionEditor extends VBox {
     }
 
     /** Changes the section with a command; the steps of a drag of the same field are one command */
-    private void write(final List<String> path, final java.util.function.Consumer<JsonObject> change) {
-        service.editSection(section, "Change", String.join(".", path), change);
+    private void write(final List<String> path, final Consumer<JsonObject> change) {
+        source.edit(String.join(".", path), change);
     }
 
     private JsonElement valueAt(final List<String> path) {
-        if (service.getDocument() == null || !service.getDocument().hasSection(section))
-            return null;
-
-        JsonElement element = service.getDocument().getSection(section);
+        JsonElement element = source.read();
         for (final var name : path) {
             if (element == null || !element.isJsonObject() || !element.getAsJsonObject().has(name))
                 return null;

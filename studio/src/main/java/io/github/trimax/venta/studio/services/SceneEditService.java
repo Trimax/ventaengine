@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 import java.util.function.Consumer;
 
@@ -26,7 +29,9 @@ import io.github.trimax.venta.studio.model.outline.OutlineNode;
 import io.github.trimax.venta.studio.utils.NamingUtil;
 import io.github.trimax.venta.studio.utils.PlacementUtil;
 import io.github.trimax.venta.studio.model.command.ReplaceEntryCommand;
+import io.github.trimax.venta.studio.model.command.ReplaceResourceCommand;
 import io.github.trimax.venta.studio.model.command.ReplaceSectionCommand;
+import io.github.trimax.venta.studio.model.document.ResourceDocument;
 import io.github.trimax.venta.studio.model.document.SceneDocument;
 import io.github.trimax.venta.studio.model.event.HistoryChangedEvent;
 import io.github.trimax.venta.studio.model.event.SceneChangedEvent;
@@ -47,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SceneEditService implements ReplaceEntryCommand.Writer, ReplaceSectionCommand.Writer, StructureCommand.Store {
+public final class SceneEditService implements ReplaceEntryCommand.Writer, ReplaceSectionCommand.Writer, ReplaceResourceCommand.Writer, StructureCommand.Store {
     private final StudioSession session;
     private final VentaContext context;
     private final SceneApplier applier;
@@ -57,6 +62,9 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
 
     private final History history = new History();
 
+    /** The files of the resources that were opened for editing, by their places in the project: they are read from the disk once */
+    private final Map<String, ResourceDocument> resources = new LinkedHashMap<>();
+
     /** The scene that is open, null before one is open */
     @Getter
     private SceneDocument document;
@@ -64,6 +72,7 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
     /** A scene is open: it is as the file says, there is nothing to undo */
     public void open(@NonNull final SceneDocument document) {
         this.document = document;
+        resources.clear();
         history.clear();
         announceHistory();
     }
@@ -112,8 +121,83 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
         if (before.equals(after))
             return;
 
-        history.perform(new ReplaceSectionCommand(this, section, before, after, label + " " + section.toLowerCase(Locale.ROOT), field));
-        announceHistory();
+        perform(new ReplaceSectionCommand(this, section, before, after, label + " " + section.toLowerCase(Locale.ROOT), field));
+    }
+
+    /**
+     * The file of a resource of the project as it is edited now, null when it can't be read.
+     *
+     * @param path the place of the file in the project, like {@code lights/campfire.json}
+     */
+    public JsonObject readResource(@NonNull final String path) {
+        final var resource = resource(path);
+        return resource == null ? null : resource.get();
+    }
+
+    /**
+     * Changes the file of a resource as a command, as {@link #edit} does for a thing. Every thing of the scene that is made of the file shows
+     * the change; the file is written when the scene is saved.
+     *
+     * @param path the place of the file in the project
+     */
+    public void editResource(@NonNull final String path, @NonNull final String label, @NonNull final String field, @NonNull final Consumer<JsonObject> change) {
+        final var resource = document == null ? null : resource(path);
+        if (resource == null)
+            return;
+
+        final var before = resource.get();
+        final var after = before.deepCopy();
+        change.accept(after);
+
+        if (before.equals(after))
+            return;
+
+        perform(new ReplaceResourceCommand(this, path, before, after, label + " " + path.substring(path.lastIndexOf('/') + 1), field));
+    }
+
+    /** How many things of the scene that is open are made of the file of a resource */
+    public int usesOf(@NonNull final OutlineKind kind, @NonNull final String file) {
+        if (document == null)
+            return 0;
+
+        final var field = PlacementUtil.fileFieldOf(kind);
+        var uses = 0;
+        for (int index = 0; index < document.count(kind); index++) {
+            final var entry = document.getEntry(kind, index);
+            if (field != null && entry.has(field) && file.equals(entry.get(field).getAsString()))
+                uses++;
+        }
+
+        return uses;
+    }
+
+    /** The names of the files in a folder of the project (without the folders in them), in order; none when there is no such folder */
+    public List<String> filesOf(@NonNull final String folder) {
+        if (session.getProject() == null || !Files.isDirectory(session.getProject().resolve(folder)))
+            return List.of();
+
+        try (final var files = Files.list(session.getProject().resolve(folder))) {
+            return files.filter(Files::isRegularFile).map(file -> file.getFileName().toString()).filter(name -> name.endsWith(".json")).sorted().toList();
+        } catch (final IOException exception) {
+            log.warn("Can't list {}", folder, exception);
+            return List.of();
+        }
+    }
+
+    private ResourceDocument resource(final String path) {
+        final var known = resources.get(path);
+        if (known != null || session.getProject() == null)
+            return known;
+
+        try {
+            final var resource = new ResourceDocument(path, Files.readString(session.getProject().resolve(path), StandardCharsets.UTF_8));
+            resources.put(path, resource);
+            return resource;
+        } catch (final IOException | RuntimeException exception) {
+            log.error("Can't read the resource {}", path, exception);
+            EventUtil.post(new StatusEvent("Can't read %s: %s", path, exception.getMessage()));
+            return null;
+        }
     }
 
     /**
@@ -206,9 +290,16 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
 
         final var file = session.getProject().resolve("scenes").resolve(document.getName());
         try {
-            final var temporary = file.resolveSibling(file.getFileName() + ".saving");
-            Files.writeString(temporary, document.toJson(), StandardCharsets.UTF_8);
-            Files.move(temporary, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            for (final var resource : resources.values())
+                if (resource.isModified()) {
+                    writeFile(session.getProject().resolve(resource.getPath()), resource.toJson());
+                    resource.markSaved();
+
+                    // What is made of the file the next time is made of what was written
+                    forget(resource.getPath());
+                }
+
+            writeFile(file, document.toJson());
         } catch (final IOException exception) {
             log.error("Can't save the scene {}", file, exception);
             EventUtil.post(new StatusEvent("Can't save the scene %s: %s", document.getName(), exception.getMessage()));
@@ -224,6 +315,18 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
         return true;
     }
 
+    /** Writes a file in one step: a file that can't be finished is not left half written */
+    private void writeFile(final Path file, final String text) throws IOException {
+        final var temporary = file.resolveSibling(file.getFileName() + ".saving");
+        Files.writeString(temporary, text, StandardCharsets.UTF_8);
+        Files.move(temporary, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+    }
+
+    private void forget(final String path) {
+        if (path.startsWith("lights/"))
+            context.getLightRepository().forget(path.substring("lights/".length()));
+    }
+
     /** What the commands write with: the file is changed, and the scene of the engine and the panels show it */
     @Override
     public void write(final OutlineKind kind, final int index, final JsonObject entry) {
@@ -235,8 +338,32 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
 
     @Override
     public void write(final String section, final JsonObject value) {
+        final var previous = document.getSection(section);
         document.setSection(section, value);
-        applier.applySection(section, document.getScene());
+
+        try {
+            applier.applySection(section, document.getScene());
+        } catch (final RuntimeException exception) {
+            // The engine can't show it (a file is missing, a number is out of range): the file is as it was
+            document.setSection(section, previous);
+            throw exception;
+        }
+
+        announce();
+    }
+
+    @Override
+    public void writeResource(final String path, final JsonObject value) {
+        final var resource = resource(path);
+        final var previous = resource.get();
+        resource.set(value);
+
+        try {
+            applier.applyResource(path, value, document);
+        } catch (final RuntimeException exception) {
+            resource.set(previous);
+            throw exception;
+        }
 
         announce();
     }
@@ -250,6 +377,9 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
         } catch (final RuntimeException exception) {
             log.error("Can't do `{}`", command.label(), exception);
             EventUtil.post(new StatusEvent("Can't do `%s`: %s", command.label(), exception.getMessage()));
+
+            // The fields that showed what the user typed show the scene again
+            announce();
             return false;
         }
     }

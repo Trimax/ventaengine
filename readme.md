@@ -250,8 +250,14 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   view and the output (exposure and tone mapping) of the scene are edited in the Inspector: the fields are made from what the section of
   the file holds (a number, a switch, a list of the values of an enum, a color picker, a row of a vector), so a new field of a section is
   edited without a line of code. A change is a command (the steps of a drag are one), and the scene of the engine shows it at once. The
-  skybox is not edited yet. A chosen light shows how far it shines: three circles of the range for a point light, the cone of the angles
-  and of the range for a spot light; a spot light that has a direction in the file is turned with the rotate tool
+  skybox is chosen from the cubemaps of the project. A chosen light shows how far it shines: three circles of the range for a point light,
+  the cone of the angles and of the range for a spot light; a spot light that has a direction in the file is turned with the rotate tool
+* **Resources** — under the fields of a light the Inspector has the fields of its file (`lights/*.json`: the type, the color, the
+  attenuation, the intensity, the range, the angles, the shadows), made the same way, with the note when the file is shared by several
+  lights of the scene. The handles on the chosen light (a cube for the range on every axis of a point light, one at the end of the axis
+  of a spot light and one on each edge of its cone) change the same file when they are dragged (`Cmd` or `Ctrl` snaps to half a meter and
+  five degrees). A change of a file is a command of the same history, every light that is made of the file shows it at once, and the
+  file is written with the scene by `Cmd+S` (only the files that differ from what was read)
 * **Handles** — the chosen thing has handles that the engine draws over the image and picks under the mouse; the studio only forwards the
   mouse and writes the result to the scene as a command (a whole drag is one step of the history). The tools are `Q` (only choose),
   `W` (move: arrows and the squares of the planes), `E` (turn: a ring for every axis) and `R` (scale: a cube for every axis, and one in

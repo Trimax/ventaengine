@@ -23,6 +23,13 @@ final class SchemaUtilTest {
     }
 
     @Test
+    void testTypeOfAFieldOfAResourceRecord() {
+        assertEquals(io.github.trimax.venta.engine.enums.LightType.class, SchemaUtil.typeOf(io.github.trimax.venta.engine.model.dto.LightDTO.class, List.of("type")));
+        assertEquals(boolean.class, SchemaUtil.typeOf(io.github.trimax.venta.engine.model.dto.LightDTO.class, List.of("castShadows")));
+        assertNull(SchemaUtil.typeOf(io.github.trimax.venta.engine.model.dto.LightDTO.class, List.of("nothing")));
+    }
+
+    @Test
     void testFieldsOfTheOutputAreFieldsOfTheScene() {
         assertEquals(ToneMapping.class, SchemaUtil.typeOf("Output", List.of("toneMapping")));
     }

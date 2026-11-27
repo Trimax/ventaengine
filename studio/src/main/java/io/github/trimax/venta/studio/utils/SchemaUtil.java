@@ -28,7 +28,19 @@ public final class SchemaUtil {
             return null;
 
         // The output is not an object of the file: its fields are the fields of the scene, so the first name of the path is one of them
-        var type = fields.size() == 1 ? component(SceneDTO.class, fields.getFirst()) : SceneDTO.class;
+        final var root = fields.size() == 1 ? component(SceneDTO.class, fields.getFirst()) : SceneDTO.class;
+        return typeOf(root, path);
+    }
+
+    /**
+     * The type of a field of a record that the engine reads a file into.
+     *
+     * @param root the record ({@code LightDTO})
+     * @param path the names of the fields from the record to the field; empty for the record itself
+     * @return the type, null when the record has no such field
+     */
+    public Class<?> typeOf(final Class<?> root, @NonNull final List<String> path) {
+        var type = root;
         for (final var name : path) {
             if (type == null)
                 return null;

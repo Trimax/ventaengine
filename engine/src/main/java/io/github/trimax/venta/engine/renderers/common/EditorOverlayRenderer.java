@@ -134,8 +134,12 @@ public final class EditorOverlayRenderer {
         else if (selected != null)
             marks.stream().filter(mark -> mark.instance() == selected).forEach(mark -> addMark(batch, mark, camera.getPosition(), SELECTION_COLOR, 1.6f));
 
-        if (selected instanceof LightInstance light)
+        if (selected instanceof LightInstance light) {
             LightShapeUtil.lines(light).forEach(line -> batch.add(line.start(), line.end(), line.color(), 0.9f));
+
+            if (overlay.isLightHandles())
+                LightShapeUtil.handleLines(LightShapeUtil.handles(light), camera.getPosition(), overlay.getLightHandle()).forEach(line -> batch.add(line.start(), line.end(), line.color(), 1.f));
+        }
 
         batch.flush();
 

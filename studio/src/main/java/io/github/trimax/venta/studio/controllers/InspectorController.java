@@ -9,6 +9,7 @@ import java.util.Locale;
 import com.google.common.eventbus.Subscribe;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.engine.model.dto.LightDTO;
 import io.github.trimax.venta.studio.controls.EntryEditor;
 import io.github.trimax.venta.studio.controls.SectionEditor;
 import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
@@ -32,6 +33,7 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -72,18 +74,53 @@ public final class InspectorController {
         if (item.isThing() && edits.getDocument() != null) {
             final var editor = new EntryEditor(edits, item.kind(), item.index(), item.detail());
             refresher = editor::refresh;
-            show(item.kind().name(), "", editor);
+            show(item.kind().name(), "", item.kind() == OutlineKind.Light ? withLightFile(item, editor) : editor);
             return;
         }
 
         if (item.kind() == OutlineKind.Setting && edits.getDocument() != null && edits.getDocument().hasSection(item.name())) {
-            final var editor = new SectionEditor(edits, item.name());
+            final var editor = SectionEditor.ofSection(edits, item.name());
             refresher = editor::refresh;
             show(item.name(), "Environment", editor);
             return;
         }
 
         show(item.name(), item.kind() + (item.detail().isEmpty() ? "" : " · " + item.detail()), createProperties(item));
+    }
+
+    /**
+     * The fields of the thing and, under them, the fields of the file of its light: a change of the file is a change of every light that is
+     * made of it, and the form says so.
+     */
+    private Node withLightFile(final OutlineItem item, final EntryEditor editor) {
+        final var path = "lights/" + item.detail();
+        if (item.detail().isEmpty() || edits.readResource(path) == null)
+            return editor;
+
+        final var file = SectionEditor.ofResource(edits, path, LightDTO.class);
+        final var title = new Label();
+        title.getStyleClass().add("panel-title");
+        final var uses = new Label();
+        uses.getStyleClass().add("dim");
+
+        final Runnable describe = () -> {
+            title.setText("Light file");
+            final var count = edits.usesOf(OutlineKind.Light, item.detail());
+            uses.setText(path + (count > 1 ? " · shared by " + count + " lights of this scene, a change is for all of them" : ""));
+        };
+        describe.run();
+
+        final var previous = refresher;
+        refresher = () -> {
+            previous.run();
+            file.refresh();
+            describe.run();
+        };
+
+        final var box = new VBox(6, editor, title, uses, file);
+        final var scroll = new ScrollPane(box);
+        scroll.setFitToWidth(true);
+        return scroll;
     }
 
     /** The scene was changed (an edit, an undo): what is shown is what the file says */

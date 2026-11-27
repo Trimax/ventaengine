@@ -45,10 +45,15 @@ public final class SceneDocument {
             Map.entry("Ambient occlusion", List.of("ambientOcclusion")),
             Map.entry("Antialiasing", List.of("antialiasing")),
             Map.entry("View", List.of("view")),
+            Map.entry("Skybox", List.of("skybox")),
             Map.entry("Output", List.of("exposure", "toneMapping")));
 
     /** The sections that are the fields of the file themselves, not objects */
     private static final String OUTPUT = "Output";
+
+    /** The skybox is a name of a file in the file of the scene: its section is an object with that name as its only field */
+    private static final String SKYBOX = "Skybox";
+    public static final String CUBEMAP = "cubemap";
 
     private static final com.google.gson.Gson WRITER = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
@@ -130,6 +135,12 @@ public final class SceneDocument {
     /** A copy of a section of the environment: the object of its field, or the fields of the output together */
     public JsonObject getSection(@NonNull final String name) {
         final var keys = sectionKeys(name);
+        if (SKYBOX.equals(name)) {
+            final var section = new JsonObject();
+            section.add(CUBEMAP, root.get(keys.getFirst()).deepCopy());
+            return section;
+        }
+
         if (!OUTPUT.equals(name))
             return root.get(keys.getFirst()).getAsJsonObject().deepCopy();
 
@@ -148,6 +159,8 @@ public final class SceneDocument {
                 else
                     root.remove(key);
             });
+        else if (SKYBOX.equals(name))
+            root.add(keys.getFirst(), section.get(CUBEMAP).deepCopy());
         else
             root.add(keys.getFirst(), section.deepCopy());
 

@@ -113,6 +113,12 @@ final class SelfTest extends AnimationTimer {
         if (System.getProperty("studio.section") != null)
             section();
 
+        if (System.getProperty("studio.resource") != null)
+            resource();
+
+        if (System.getProperty("studio.lighthandle") != null)
+            lightHandle();
+
         if (System.getProperty("studio.gizmo") != null)
             gizmo();
 
@@ -284,6 +290,79 @@ final class SelfTest extends AnimationTimer {
         if (frame == 70) {
             edits.redo();
             System.out.printf("SELFTEST section: redone: fog density=%.4f%n", scene.getFog().getDensity());
+        }
+    }
+
+    /** Changes the file of a light and the skybox, undoes it, does it again and saves: the numbers of the engine and of the file on the disk */
+    private void resource() {
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var applier = VentaApplication.getComponent(SceneApplier.class);
+        final var scene = VentaApplication.getComponent(io.github.trimax.venta.engine.context.VentaContext.class).getSceneManager().getCurrent();
+        final var path = System.getProperty("studio.resource");
+        final var light = (io.github.trimax.venta.engine.model.instance.LightInstance) applier.instanceOf(OutlineKind.Light, 0);
+
+        if (frame == 50) {
+            System.out.printf("SELFTEST resource: before: range=%.1f, intensity=%.2f, skybox=%s, uses=%d%n", light.getRange(), light.getIntensity(), scene.getSkybox().getID(),
+                    edits.usesOf(OutlineKind.Light, path.substring(path.lastIndexOf('/') + 1)));
+            edits.editResource(path, "Change", "range", file -> file.addProperty("range", 12.0));
+            edits.editResource(path, "Change", "intensity", file -> file.addProperty("intensity", 9.0));
+            edits.editSection("Skybox", "Change", "cubemap", skybox -> skybox.addProperty("cubemap", "stars.json"));
+            System.out.printf("SELFTEST resource: changed: range=%.1f, intensity=%.2f, skybox=%s, dirty=%s%n", light.getRange(), light.getIntensity(), scene.getSkybox().getID(), edits.isDirty());
+            edits.editResource(path, "Change", "range", file -> file.addProperty("range", -5.0));
+            System.out.printf("SELFTEST resource: refused a negative range: range=%.1f%n", light.getRange());
+        }
+
+        if (frame == 60) {
+            edits.undo();
+            edits.undo();
+            edits.undo();
+            System.out.printf("SELFTEST resource: undone: range=%.1f, intensity=%.2f, skybox=%s, dirty=%s%n", light.getRange(), light.getIntensity(), scene.getSkybox().getID(), edits.isDirty());
+        }
+
+        if (frame == 70) {
+            edits.redo();
+            edits.redo();
+            edits.redo();
+            final var saved = edits.save();
+            System.out.printf("SELFTEST resource: redone and saved=%s: range=%.1f, dirty=%s%n", saved, light.getRange(), edits.isDirty());
+        }
+    }
+
+    /** Takes the handle of the range of the chosen light with the primary button, drags it in three steps, lets it go, and undoes it */
+    private void lightHandle() {
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var engine = VentaApplication.getComponent(io.github.trimax.venta.engine.core.Engine.class);
+        final var applier = VentaApplication.getComponent(SceneApplier.class);
+        final var light = (io.github.trimax.venta.engine.model.instance.LightInstance) applier.instanceOf(OutlineKind.Light, 0);
+        final var overlay = VentaApplication.getComponent(StudioSession.class).getOverlay();
+
+        if (frame == 50) {
+            final var handles = io.github.trimax.venta.engine.utils.LightShapeUtil.handles(light);
+            System.out.printf("SELFTEST lighthandle: range=%.1f, handles=%d%n", light.getRange(), handles.size());
+
+            for (int row = 1; row < 100 && gizmoFrom == null; row++)
+                for (int column = 1; column < 100 && gizmoFrom == null; column++) {
+                    final var hit = io.github.trimax.venta.engine.utils.LightShapeUtil.hit(handles, engine.rayThrough(column / 100.f, row / 100.f), flyCamera.getPosition());
+                    if (hit != null && hit.index() == 0)
+                        gizmoFrom = new double[]{column / 100.f * viewport.getWidth(), row / 100.f * viewport.getHeight()};
+                }
+
+            System.out.println("SELFTEST lighthandle: x handle at " + (gizmoFrom == null ? "none" : (int) gizmoFrom[0] + "," + (int) gizmoFrom[1]));
+            if (gizmoFrom != null)
+                Event.fireEvent(viewport, primary(MouseEvent.MOUSE_PRESSED, gizmoFrom[0], gizmoFrom[1]));
+        }
+
+        if (gizmoFrom != null && frame >= 51 && frame <= 53)
+            Event.fireEvent(viewport, primary(MouseEvent.MOUSE_DRAGGED, gizmoFrom[0] - (frame - 50) * 10, gizmoFrom[1]));
+
+        if (gizmoFrom != null && frame == 54) {
+            Event.fireEvent(viewport, primary(MouseEvent.MOUSE_RELEASED, gizmoFrom[0] - 30, gizmoFrom[1]));
+            System.out.printf("SELFTEST lighthandle: dragged range=%.1f, dirty=%s, lit=%d%n", light.getRange(), edits.isDirty(), overlay.getLightHandle());
+        }
+
+        if (gizmoFrom != null && frame == 60) {
+            edits.undo();
+            System.out.printf("SELFTEST lighthandle: undone range=%.1f, dirty=%s (one step)%n", light.getRange(), edits.isDirty());
         }
     }
 

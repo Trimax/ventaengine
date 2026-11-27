@@ -12,6 +12,7 @@ final class SceneDocumentSectionTest {
               "ambientLight": {"r": 0.3, "g": 0.3, "b": 0.3, "a": 1.0},
               "customThing": {"anything": [1, 2, 3]},
               "fog": {"density": 0.001, "color": {"r": 1.0, "g": 0.5, "b": 0.2, "a": 1.0}, "somethingNew": 7},
+              "skybox": "sunset.json",
               "exposure": 0.6,
               "toneMapping": "Neutral"
             }
@@ -79,6 +80,18 @@ final class SceneDocumentSectionTest {
 
         assertNull(document.getScene().toneMapping());
         assertFalse(document.toJson().contains("toneMapping"));
+    }
+
+    @Test
+    void testSkyboxIsAnObjectWithTheNameOfTheCubemap() {
+        final var skybox = document.getSection("Skybox");
+        assertEquals("sunset.json", skybox.get("cubemap").getAsString());
+
+        skybox.addProperty("cubemap", "stars.json");
+        document.setSection("Skybox", skybox);
+
+        assertEquals("stars.json", document.getScene().skybox());
+        assertTrue(document.toJson().contains("\"skybox\": \"stars.json\""), "It is a name in the file, not an object");
     }
 
     @Test

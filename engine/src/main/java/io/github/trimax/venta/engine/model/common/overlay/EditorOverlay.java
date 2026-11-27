@@ -34,6 +34,12 @@ public final class EditorOverlay {
     /** The axes of the gizmo as the columns: the axes of the world, or the axes of the thing that is chosen */
     private final Matrix3f gizmoAxes = new Matrix3f();
 
+    /** Whether the chosen light has handles for its range and its cone */
+    private boolean lightHandles = true;
+
+    /** The place in the list of handles of the light of the one that the mouse is over or that is dragged, it is drawn lit; -1 for none */
+    private int lightHandle = -1;
+
     /** The handle that the mouse is over or that is dragged, it is drawn in another color; null for none */
     private GizmoHandle gizmoHandle;
 }

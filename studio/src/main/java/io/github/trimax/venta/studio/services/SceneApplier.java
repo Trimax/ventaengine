@@ -19,6 +19,10 @@ import io.github.trimax.venta.engine.model.common.shared.Fog;
 import io.github.trimax.venta.engine.model.common.shared.LightShafts;
 import io.github.trimax.venta.engine.model.common.shared.View;
 import io.github.trimax.venta.engine.model.common.shared.Wind;
+import io.github.trimax.venta.engine.enums.LightType;
+import io.github.trimax.venta.engine.model.common.shared.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Cone;
+import io.github.trimax.venta.engine.model.dto.LightDTO;
 import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
@@ -37,6 +41,7 @@ import io.github.trimax.venta.engine.model.instance.SoundSourceInstance;
 import io.github.trimax.venta.engine.model.instance.TerrainSurfaceInstance;
 import io.github.trimax.venta.engine.model.instance.WaterSurfaceInstance;
 import io.github.trimax.venta.engine.utils.ParsingUtil;
+import io.github.trimax.venta.studio.model.document.SceneDocument;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
 import io.github.trimax.venta.studio.utils.EntryUtil;
 import lombok.AccessLevel;
@@ -54,6 +59,8 @@ public final class SceneApplier {
     private static final Vector3f ONE = new Vector3f(1.f);
     private static final Vector2f ONE_BY_ONE = new Vector2f(1.f);
 
+    private static final String LIGHTS = "lights/";
+
     private final VentaContext context;
 
     /**
@@ -70,6 +77,7 @@ public final class SceneApplier {
         switch (name) {
             case "Sun" -> current.setDirectionalLight(Optional.ofNullable(scene.directionalLight()).map(DirectionalLight::new).orElse(null));
             case "Ambient light" -> Optional.ofNullable(scene.ambientLight()).ifPresent(color -> current.setAmbientLight(color.toVector3f()));
+            case "Skybox" -> Optional.ofNullable(scene.skybox()).ifPresent(cubemap -> current.setSkybox(context.getCubemapRegistry().get(cubemap)));
             case "Fog" -> current.setFog(Optional.ofNullable(scene.fog()).map(Fog::new).orElse(null));
             case "Wind" -> current.setWind(Optional.ofNullable(scene.wind()).map(Wind::new).orElse(null));
             case "Bloom" -> current.setBloom(Optional.ofNullable(scene.bloom()).map(Bloom::new).orElse(null));
@@ -83,6 +91,40 @@ public final class SceneApplier {
             }
             default -> throw new IllegalArgumentException(name + " is not a section of the environment");
         }
+    }
+
+    /**
+     * Shows a file of a resource as it is edited: every thing of the scene that is made of the file takes what the file says. Only the
+     * lights are shown so far.
+     *
+     * @param path     the place of the file in the project, like {@code lights/campfire.json}
+     * @param value    the contents of the file
+     * @param document the scene that is open
+     */
+    public void applyResource(@NonNull final String path, @NonNull final JsonObject value, @NonNull final SceneDocument document) {
+        if (!path.startsWith(LIGHTS))
+            return;
+
+        final var file = path.substring(LIGHTS.length());
+        final var dto = ParsingUtil.asObject(value.toString(), LightDTO.class);
+
+        for (int index = 0; index < document.count(OutlineKind.Light); index++) {
+            final var entry = document.getEntry(OutlineKind.Light, index);
+            if (entry.has("light") && file.equals(entry.get("light").getAsString()) && instanceOf(OutlineKind.Light, index) instanceof LightInstance light)
+                applyLight(light, dto);
+        }
+    }
+
+    /** What the file of a light says, the same as the engine makes a light of the file */
+    private void applyLight(final LightInstance light, final LightDTO dto) {
+        final var type = Optional.ofNullable(dto.type()).orElse(LightType.Point);
+
+        light.setColor(dto.color().toVector3f());
+        light.setAttenuation(Optional.ofNullable(dto.attenuation()).map(Attenuation::new).orElseGet(Attenuation::createDefault));
+        light.setCastShadows(dto.castShadows());
+        light.setIntensity(dto.intensity());
+        light.setRange(dto.range());
+        light.setCone(type == LightType.Spot ? new Cone(dto) : null);
     }
 
     /** The thing of the scene that has the place among the things of the kind, null when the scene has no such thing */

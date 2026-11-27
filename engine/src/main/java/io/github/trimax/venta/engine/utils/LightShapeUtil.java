@@ -7,6 +7,8 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import io.github.trimax.venta.engine.model.common.gizmo.GizmoLine;
+import io.github.trimax.venta.engine.model.common.gizmo.LightHandle;
+import io.github.trimax.venta.engine.model.common.geo.Ray;
 import io.github.trimax.venta.engine.model.common.shared.Cone;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
 import lombok.NonNull;
@@ -56,6 +58,102 @@ public final class LightShapeUtil {
         cone(lines, position, unit, length, cone.getInnerAngle(), INNER_COLOR, false);
 
         return lines;
+    }
+
+    /**
+     * A handle of a light: a small cube at a point of its shape that is dragged.
+     *
+     * @param index     the place of the handle in the list, so a handle is told from the others
+     * @param kind      what dragging it changes
+     * @param point     where it is
+     * @param axis      the line it is dragged along (the range), or the unit vector from the axis of the cone to it (the angles)
+     * @param direction the axis of the cone, a unit vector (zero for a point light)
+     */
+    public record Handle(int index, LightHandle kind, Vector3f point, Vector3f axis, Vector3f direction) {
+    }
+
+    /** The color of the handle that the mouse is over */
+    public static final float[] HIGHLIGHT_COLOR = {1.f, 1.f, 0.55f};
+
+    /** The size of a handle on the screen as a part of the size of the gizmo, and how far from it the mouse still takes it */
+    private static final float HANDLE_SIZE = 0.12f;
+    private static final float HANDLE_REACH = 2.4f;
+
+    /**
+     * The handles of the light, none for a light that has no shape (see {@link #lines(LightInstance)}).
+     */
+    public List<Handle> handles(@NonNull final LightInstance light) {
+        return handles(light.getPosition(), light.getRange(), light.getDirection(), light.getCone());
+    }
+
+    /**
+     * The handles of a light: a point light has one for the range on every axis, a spot light has one at the end of its axis and one on
+     * the edge of every cone, the outer and the inner one.
+     */
+    public List<Handle> handles(@NonNull final Vector3fc position, final float range, @NonNull final Vector3fc direction, final Cone cone) {
+        final var handles = new ArrayList<Handle>();
+
+        if (cone == null) {
+            if (range > 0.f)
+                for (int axis = 0; axis < 3; axis++) {
+                    final var unit = new Vector3f();
+                    unit.setComponent(axis, 1.f);
+                    handles.add(new Handle(handles.size(), LightHandle.Range, new Vector3f(position).fma(range, unit), unit, new Vector3f()));
+                }
+
+            return handles;
+        }
+
+        final var length = range > 0.f ? range : DEFAULT_LENGTH;
+        final var unit = new Vector3f(direction).normalize();
+        final var u = perpendicular(unit);
+
+        handles.add(new Handle(0, LightHandle.Range, new Vector3f(position).fma(length, unit), unit, unit));
+        handles.add(new Handle(1, LightHandle.Outer, edge(position, unit, u, length, cone.getOuterAngle()), u, unit));
+        handles.add(new Handle(2, LightHandle.Inner, edge(position, unit, u, length, cone.getInnerAngle()), u, unit));
+
+        return handles;
+    }
+
+    /** The cubes of the handles, the one of the index is lit; the cubes are of the same size on the screen whatever the distance */
+    public List<GizmoLine> handleLines(@NonNull final List<Handle> handles, @NonNull final Vector3fc camera, final int highlighted) {
+        final var lines = new ArrayList<GizmoLine>();
+        for (final var handle : handles) {
+            final var half = GizmoUtil.size(handle.point(), camera) * HANDLE_SIZE;
+            final var color = handle.index() == highlighted ? HIGHLIGHT_COLOR : COLOR;
+            final var corners = new Vector3f[8];
+            for (int corner = 0; corner < 8; corner++)
+                corners[corner] = new Vector3f(handle.point()).add((corner & 1) == 0 ? -half : half, (corner & 2) == 0 ? -half : half, (corner & 4) == 0 ? -half : half);
+
+            for (int corner = 0; corner < 8; corner++)
+                for (int bit = 1; bit <= 4; bit <<= 1)
+                    if ((corner & bit) == 0)
+                        lines.add(new GizmoLine(corners[corner], corners[corner | bit], color));
+        }
+
+        return lines;
+    }
+
+    /** The handle that the ray takes, the nearest one; null when it takes none */
+    public Handle hit(@NonNull final List<Handle> handles, @NonNull final Ray ray, @NonNull final Vector3fc camera) {
+        Handle best = null;
+        var nearest = Float.MAX_VALUE;
+
+        for (final var handle : handles) {
+            final var distance = RayUtil.intersectSphere(ray, handle.point(), GizmoUtil.size(handle.point(), camera) * HANDLE_SIZE * HANDLE_REACH);
+            if (distance != RayUtil.MISS && distance < nearest) {
+                best = handle;
+                nearest = distance;
+            }
+        }
+
+        return best;
+    }
+
+    /** The point of the edge of the cone: on the sphere of the length round the apex, at the angle from the axis */
+    private Vector3f edge(final Vector3fc apex, final Vector3fc direction, final Vector3fc u, final float length, final float angle) {
+        final var radians = (float) Math.toRadians(angle);
+        return new Vector3f(apex).fma(length * (float) Math.cos(radians), direction).fma(length * (float) Math.sin(radians), u);
     }
 
     /** The axis of the world by its index, the next one after it for the offset 0 and the one after that for 1 (so a circle goes round the missing one) */

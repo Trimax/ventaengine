@@ -34,8 +34,8 @@ its own. What the engine can do already is in the [readme](readme.md). Paths of 
   name, the place, the angles and the scale of a thing in the inspector, creates (a file dragged from the project, or the menu),
   copies and deletes things, moves, turns and scales them with the handles of the viewport, edits the settings of the environment, with undo and
   redo, and saves the scene file. What is left, in the order of the work: groups of things (the engine needs scene nodes with a parent first); the files
-  of the resources (the range, the cone, the color and the intensity of a light, the skybox of the scene, then the same for the materials
-  and the rest), edited with the same fields and with handles for the range and the cone; the assets (importing files, thumbnails, the editor of
+  of the other resources edited with the same fields (a light is done: its color, intensity, range and cone, with handles for the range
+  and the cone): the materials, the emitters, the sounds, the terrain and the water, the billboards and the objects; the assets (importing files, thumbnails, the editor of
   materials, renaming with the references updated, reloading what changed on the disk); the editors of the terrain, the water, the
   emitters and the sounds (the tools of the old `editor` become panels of the studio); playing a scene in the editor and building
   the archive. Smaller things: a thing that is dropped lands on the ground (now it lands on the plane at the height of the pivot, the
