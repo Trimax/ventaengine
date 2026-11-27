@@ -44,9 +44,17 @@ public final class SceneService {
      * @return whether the scene is open; when it isn't, the scene that was open stays
      */
     public boolean open(@NonNull final String name) {
-        if (!unsaved.confirm())
-            return false;
+        return unsaved.confirm() && reload(name);
+    }
 
+    /**
+     * Opens a scene of the project again from its file, without asking about the changes that are not saved: the caller has asked, and
+     * what the user didn't want to keep is dropped.
+     *
+     * @param name the file of the scene inside the folder of the scenes, like {@code beach.json}
+     * @return whether the scene is open; when it isn't, the scene that was open stays
+     */
+    public boolean reload(@NonNull final String name) {
         try {
             final var path = session.getProject().resolve("scenes").resolve(name);
             final var document = new SceneDocument(name, Files.readString(path, StandardCharsets.UTF_8));
