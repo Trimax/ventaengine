@@ -30,15 +30,15 @@ its own. What the engine can do already is in the [readme](readme.md). Paths of 
 
 ## Editor
 
-- [ ] **5. Studio.** The editor of scenes (`studio/`) shows a scene in its viewport, chooses things with a click, changes the
-  name, the place, the angles and the scale of a thing in the inspector, creates (a file dragged from the project, or the menu),
-  copies and deletes things, moves, turns and scales them with the handles of the viewport, edits the settings of the environment, with undo and
-  redo, and saves the scene file. What is left, in the order of the work: groups of things (the engine needs scene nodes with a parent first); the files
-  of the other resources edited with the same fields (a light is done: its color, intensity, range and cone, with handles for the range
-  and the cone): the materials, the emitters, the sounds, the terrain and the water, the billboards and the objects; the assets (importing files, thumbnails, the editor of
-  materials, renaming with the references updated, reloading what changed on the disk); the editors of the terrain, the water, the
-  emitters and the sounds (the tools of the old `editor` become panels of the studio); playing a scene in the editor and building
-  the archive. Smaller things: a thing that is dropped lands on the ground (now it lands on the plane at the height of the pivot, the
-  ground needs a ray against the terrain), the panels may become strips of buttons at the edges as in IntelliJ, a silhouette outline of
-  the chosen thing instead of the frame, choosing by pixels (an id buffer) where the boxes are too coarse, choosing the ground and
-  the water, and the old `editor` goes when its tools are in the studio.
+- [ ] **5. Studio.** The editor of scenes (`studio/`) edits a scene in its viewport and inspector: it chooses, creates, copies,
+  deletes, moves, turns and scales things, edits the environment and the file of a light (with handles for its range and cone), with
+  undo and redo, and saves the files. What is left, in the order of the work:
+  1. The other resource files with the same fields (the emitters, sounds, billboards and objects first, then the terrain, the water and
+     the materials); a field that names a file is a list of the files of the project.
+  2. The assets: importing files, thumbnails, renaming with the references updated, reloading what changed on the disk.
+  3. Groups of things (the engine needs scene nodes with a parent first).
+  4. The editors of the terrain, the water, the emitters and the sounds (the tools of the old `editor` become panels); playing a scene
+     in the editor and building the archive.
+  5. Smaller things: a dropped thing lands on the ground (needs a ray against the terrain), a silhouette instead of the frame of the
+     chosen thing, choosing by pixels (an id buffer), choosing the ground and the water, panels as strips of buttons at the edges, and
+     the old `editor` goes when its tools are in the studio.
