@@ -127,6 +127,15 @@ public final class FlyCamera {
         position.set(center).fma(-Math.max(radius, FramingUtil.MINIMAL_RADIUS * 0.1f) * FOCUS_DISTANCE, front);
     }
 
+    /** Puts the camera at a place and turns it (the yaw and the pitch in degrees); the self-test takes its pictures from chosen places */
+    void place(final float x, final float y, final float z, final float yawDegrees, final float pitchDegrees) {
+        position.set(x, y, z);
+        yaw = (float) Math.toRadians(yawDegrees);
+        pitch = (float) Math.toRadians(pitchDegrees);
+        updateDirections();
+        pivot.set(position).fma(START_PIVOT_DISTANCE, front);
+    }
+
     /** Turns the camera to the point */
     void lookAt(final Vector3f point) {
         final var direction = new Vector3f(point).sub(position).normalize();

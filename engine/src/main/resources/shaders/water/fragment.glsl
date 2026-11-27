@@ -259,6 +259,9 @@ void main() {
     vec3 cameraDirection = normalize(cameraPosition - vertexPosition);
     vec3 normal = calculateNormal();
 
+    // How much of the water a pixel covers: the foam is drawn with holes that are not smaller than that (the derivatives are taken here, out of any branch)
+    float footprint = max(fwidth(vertexPosition.x), fwidth(vertexPosition.z));
+
     vec3 colorWithLighting = computeLighting(calculateColor(), normal, cameraDirection);
     float opacity = material.opacity;
 
@@ -287,7 +290,7 @@ void main() {
         colorWithLighting = mix(colorWithLighting, bottom, getWaterTransmittance(thickness, material.depthDistance));
 
         // The foam of the shore, lit as a surface of its color: a lace of bubbles that goes with the water (to the shore, as it washes up)
-        float lace = getFoamLace(vertexPosition.xz + vec2(0.0, timeElapsed * 0.35), 2.2);
+        float lace = getFoamLace(vertexPosition.xz + vec2(0.0, timeElapsed * 0.35), 2.2, footprint);
         float shore = max(getShoreFoam(thickness, foam.shoreWidth, foam.shoreIntensity, lace),
                 getFoamBands(thickness, foam.shoreWidth, foam.bands, timeElapsed, lace));
         if (shore > 0.0)
@@ -297,7 +300,7 @@ void main() {
     // The crests of the waves are white with a lace of foam that scatters the light, so it glows against the sun as well (not where the
     // water is shallow, the shore has foam of its own)
     float deep = smoothstep(foam.shoreWidth * 2.0, foam.shoreWidth * 6.0, seaThickness);
-    float crestLace = getFoamLace(vertexPosition.xz * vec2(1.0, 1.6) + vec2(0.0, timeElapsed * 0.3), 1.3);
+    float crestLace = getFoamLace(vertexPosition.xz * vec2(1.0, 1.6) + vec2(0.0, timeElapsed * 0.3), 1.3, footprint);
     float crest = smoothstep(0.35, 0.7, crestLace) * smoothstep(foam.threshold, 1.0, getHeightFactor()) * deep * foam.intensity;
     colorWithLighting += material.colorPeak * crest * CREST_GLOW;
 
