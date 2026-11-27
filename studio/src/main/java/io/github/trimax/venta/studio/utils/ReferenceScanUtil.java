@@ -112,6 +112,24 @@ public final class ReferenceScanUtil {
         return references(json).stream().filter(reference -> groupOf(reference.key()) == group && reference.value().equals(name)).toList();
     }
 
+    /**
+     * The places of the text that name a file inside of a folder.
+     *
+     * @param group  the group of resources the folder is in
+     * @param prefix the name of the folder as the files name it, with the slash at the end: {@code chest/}
+     */
+    public List<Reference> inside(@NonNull final String json, @NonNull final GroupType group, @NonNull final String prefix) {
+        return references(json).stream().filter(reference -> groupOf(reference.key()) == group && reference.value().startsWith(prefix)).toList();
+    }
+
+    /** The text with every place named by a reference given the content that the function makes of what it had; the rest is as it was */
+    public String replaceEach(@NonNull final String json, @NonNull final List<Reference> places, @NonNull final java.util.function.UnaryOperator<String> content) {
+        final var text = new StringBuilder(json);
+        places.stream().sorted((first, second) -> Integer.compare(second.start(), first.start())).forEach(place -> text.replace(place.start(), place.end(), content.apply(place.value())));
+
+        return text.toString();
+    }
+
     /** The text with the places named by the references given another content; the rest of the text is as it was */
     public String replace(@NonNull final String json, @NonNull final List<Reference> places, @NonNull final String content) {
         final var text = new StringBuilder(json);

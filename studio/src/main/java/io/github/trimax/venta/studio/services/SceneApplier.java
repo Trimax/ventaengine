@@ -179,6 +179,11 @@ public final class SceneApplier {
         remakeUsersOf(dependents, document);
     }
 
+    /** A texture is loaded again from its file the next time something asks for it */
+    public void forgetTexture(@NonNull final String name) {
+        context.getTextureRegistry().forget(name);
+    }
+
     /** The files of the things that use a material are made again with the material that the disk has */
     public void discardMaterial(@NonNull final String path, @NonNull final List<ResourceKindUtil.Target> dependents) {
         resources.restore(path);

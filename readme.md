@@ -264,10 +264,14 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   meter and five degrees). The files are written with the scene by `Cmd+S` (only the ones that differ from what was read)
 * **Assets** — files from outside are brought into the project by dropping them on the Project panel (or `Import Files...` in its menu):
   they go to the folder that is chosen, and when the whole project is chosen to the folder of their kind (`textures/`, `meshes/`,
-  `sounds/`, ...); a file never replaces another, it gets a number in its name. `Rename...` (or `F2`) renames a file and the places
-  that name it: the scenes, the files of the things and the materials get the new name in the fields of the group of the file (a
-  material and an object of the same name are not mixed up), nothing else in them changes, and the files that change are listed before
-  anything is done. The text files of meshes (`.obj`, `.mtl`) are not read for names, and a folder can't be renamed yet
+  `sounds/`, ...); a file never replaces another, it gets a number in its name. Images have a small picture in the list of files.
+  `Rename...` (or `F2`; in the menu of the folders for a folder) renames a file or a folder and the places that name it: the scenes, the
+  files of the things and the materials get the new name in the fields of the group of the file (a material and an object of the same
+  name are not mixed up), nothing else in them changes, and the files that change are listed before anything is done. The text files
+  of meshes (`.obj`, `.mtl`) are not read for names, and the folders of the groups (`textures`, ...) keep their names. When the window is
+  entered again, the files that another program changed are shown: the things that are made of a changed file or material are made
+  again, a changed texture is loaded again, and a changed scene file is read again (with a question when the scene has changes that
+  are not saved); a file that has unsaved changes here is kept as it is here
 * **Handles** — the chosen thing has handles that the engine draws over the image and picks under the mouse; the studio only forwards the
   mouse and writes the result to the scene as a command (a whole drag is one step of the history). The tools are `Q` (only choose),
   `W` (move: arrows and the squares of the planes), `E` (turn: a ring for every axis) and `R` (scale: a cube for every axis, and one in

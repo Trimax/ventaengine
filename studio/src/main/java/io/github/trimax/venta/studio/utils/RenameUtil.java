@@ -14,7 +14,7 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 /**
- * Renames a file of a project and the places that name it: the files of the project (scenes, things, materials, ...) that have its name in
+ * Renames a file or a folder of a project and the places that name it: the files of the project (scenes, things, materials, ...) that have its name in
  * a field of its group are changed, and nothing else in them is. What the change would be is known before it is made.
  */
 @UtilityClass
@@ -55,8 +55,13 @@ public final class RenameUtil {
         if (name.isEmpty() || name.equals(".") || name.equals("..") || name.contains("/") || name.contains("\\"))
             throw new IllegalArgumentException("`" + newName + "` is not a name of a file");
 
-        if (!Files.isRegularFile(from) || !from.toAbsolutePath().normalize().startsWith(project.toAbsolutePath().normalize()))
-            throw new IllegalArgumentException(from + " is not a file of the project");
+        if (!(Files.isRegularFile(from) || Files.isDirectory(from)) || !from.toAbsolutePath().normalize().startsWith(project.toAbsolutePath().normalize())
+                || from.toAbsolutePath().normalize().equals(project.toAbsolutePath().normalize()))
+            throw new IllegalArgumentException(from + " is not a file or a folder of the project");
+
+        final var group = ProjectUtil.groupOf(project, from);
+        if (group != null && from.toAbsolutePath().normalize().equals(project.resolve(group.getArchiveFolder()).toAbsolutePath().normalize()))
+            throw new IllegalArgumentException("The folder of " + group.getDisplayName().toLowerCase() + " is where the engine looks for them, it keeps its name");
 
         if (name.equals(from.getFileName().toString()))
             throw new IllegalArgumentException("The file is called so already");
@@ -66,17 +71,18 @@ public final class RenameUtil {
             throw new IllegalArgumentException("The folder has a file `" + name + "` already");
 
         final var changes = new ArrayList<Change>();
-        final var group = ProjectUtil.groupOf(project, from);
         if (group != null) {
             final var folder = project.resolve(group.getArchiveFolder());
             final var oldName = folder.relativize(from).toString().replace('\\', '/');
             final var newPath = folder.relativize(to).toString().replace('\\', '/');
 
+            // The files inside of a renamed folder are named by the path that starts with the name of the folder
+            final var renamesFolder = Files.isDirectory(from);
             for (final var file : jsonFiles(project)) {
                 final var text = read(file);
-                final var places = ReferenceScanUtil.to(text, group, oldName);
+                final var places = renamesFolder ? ReferenceScanUtil.inside(text, group, oldName + "/") : ReferenceScanUtil.to(text, group, oldName);
                 if (!places.isEmpty())
-                    changes.add(new Change(file, text, ReferenceScanUtil.replace(text, places, newPath), places.size()));
+                    changes.add(new Change(file, text, renamesFolder ? ReferenceScanUtil.replaceEach(text, places, value -> newPath + value.substring(oldName.length())) : ReferenceScanUtil.replace(text, places, newPath), places.size()));
             }
         }
 

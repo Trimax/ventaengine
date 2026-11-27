@@ -32,12 +32,15 @@ import io.github.trimax.venta.studio.model.outline.OutlineItem;
 import io.github.trimax.venta.studio.model.outline.OutlineNode;
 import io.github.trimax.venta.studio.utils.NamingUtil;
 import io.github.trimax.venta.studio.utils.PlacementUtil;
+import io.github.trimax.venta.engine.enums.GroupType;
+import io.github.trimax.venta.studio.utils.ReferenceScanUtil;
 import io.github.trimax.venta.studio.utils.ResourceKindUtil;
 import io.github.trimax.venta.studio.model.command.ReplaceEntryCommand;
 import io.github.trimax.venta.studio.model.command.ReplaceResourceCommand;
 import io.github.trimax.venta.studio.model.command.ReplaceSectionCommand;
 import io.github.trimax.venta.studio.model.document.ResourceDocument;
 import io.github.trimax.venta.studio.model.document.SceneDocument;
+import io.github.trimax.venta.studio.model.event.FilesWrittenEvent;
 import io.github.trimax.venta.studio.model.event.HistoryChangedEvent;
 import io.github.trimax.venta.studio.model.event.SceneChangedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
@@ -218,6 +221,62 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
         }
     }
 
+    /**
+     * A file of a resource (a thing, a material) was changed on the disk: it is read again and shown, as if it were edited.
+     *
+     * @return false when the file has changes here that are not saved: it is left as it is here
+     */
+    public boolean reloadFromDisk(@NonNull final String path) {
+        if (document == null)
+            return true;
+
+        final var known = resources.get(path);
+        if (known != null && known.isModified())
+            return false;
+
+        resources.remove(path);
+        final var fresh = resource(path);
+        if (fresh == null)
+            return true;
+
+        overridden.add(path);
+        show(path, fresh.get());
+        announce();
+        return true;
+    }
+
+    /**
+     * A texture was changed on the disk: it is loaded again, and the materials and the things that name it are made again.
+     *
+     * @param name the file of the texture as the files name it, like {@code chest/diffuse.png}
+     */
+    public void reloadTexture(@NonNull final String name) {
+        if (document == null || session.getProject() == null)
+            return;
+
+        applier.forgetTexture(name);
+
+        final var paths = new ArrayList<String>();
+        for (final var kind : List.of(OutlineKind.Object, OutlineKind.Emitter, OutlineKind.Billboard, OutlineKind.Terrain, OutlineKind.Water)) {
+            final var folder = PlacementUtil.groupOf(kind).getArchiveFolder();
+            filesOf(folder, List.of(".json")).forEach(file -> paths.add(folder + "/" + file));
+        }
+
+        filesOf("materials", List.of(".json")).forEach(file -> paths.add("materials/" + file));
+
+        // The materials come first: what is made of a thing names a material, and the material has to be the one that is loaded again
+        paths.sort(java.util.Comparator.comparing((String path) -> !path.startsWith("materials/")).thenComparing(java.util.Comparator.naturalOrder()));
+        for (final var path : paths) {
+            final var contents = resource(path);
+            if (contents != null && ReferenceScanUtil.to(contents.toJson(), GroupType.Texture, name).size() > 0) {
+                overridden.add(path);
+                show(path, contents.get());
+            }
+        }
+
+        announce();
+    }
+
     /** Shows the contents of a file of a resource to the engine */
     private void show(final String path, final JsonObject value) {
         final var material = ResourceKindUtil.materialOf(path);
@@ -384,6 +443,7 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
         // The scene is made from its file the next time it is open
         context.getSceneRepository().forget(document.getName());
 
+        EventUtil.post(new FilesWrittenEvent());
         history.markSaved();
         announceHistory();
         EventUtil.post(new StatusEvent("Scene %s is saved", document.getName()));
