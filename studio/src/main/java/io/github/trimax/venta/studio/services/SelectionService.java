@@ -80,6 +80,9 @@ public final class SelectionService {
         selected = selected.isThing()
                 ? OutlineUtil.at(outline, selected.kind(), selected.index())
                 : OutlineUtil.items(outline, selected.kind()).stream().filter(item -> item.name().equals(selected.name())).findFirst().orElse(null);
+
+        // A thing that was made again (its file changed) is another instance of the engine
+        overlay().setSelected(instanceOf(selected));
     }
 
     @Subscribe

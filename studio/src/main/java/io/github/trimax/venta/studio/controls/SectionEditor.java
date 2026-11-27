@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.Set;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.utils.PropertyUtil;
+import io.github.trimax.venta.studio.utils.ReferenceUtil;
 import io.github.trimax.venta.studio.utils.SchemaUtil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -71,7 +73,7 @@ public final class SectionEditor extends VBox {
 
             @Override
             public List<String> optionsOf(final List<String> path) {
-                return "Skybox".equals(section) ? service.filesOf("cubemaps") : null;
+                return "Skybox".equals(section) ? service.filesOf("cubemaps", List.of(".json")) : null;
             }
         });
     }
@@ -96,6 +98,12 @@ public final class SectionEditor extends VBox {
             @Override
             public Class<?> typeOf(final List<String> path) {
                 return SchemaUtil.typeOf(type, path);
+            }
+
+            @Override
+            public List<String> optionsOf(final List<String> path) {
+                final var place = path.isEmpty() ? null : ReferenceUtil.placeOf(path.getLast());
+                return place == null ? null : service.filesOf(place.folder(), place.extensions());
             }
         });
     }
@@ -140,6 +148,8 @@ public final class SectionEditor extends VBox {
                 box.getChildren().add(row(entry.getKey(), color(value.getAsJsonObject(), child)));
             else if (value.isJsonObject())
                 box.getChildren().add(group(entry.getKey(), value.getAsJsonObject(), child));
+            else if (value.isJsonArray())
+                box.getChildren().add(list(entry.getKey(), value.getAsJsonArray(), child));
             else if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isBoolean())
                 box.getChildren().add(row(entry.getKey(), bool(child)));
             else if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber())
@@ -147,6 +157,29 @@ public final class SectionEditor extends VBox {
             else if (value.isJsonPrimitive())
                 box.getChildren().add(row(entry.getKey(), text(child)));
         }
+    }
+
+    /** A list of objects: every element is a group of its own, called by its number */
+    private VBox list(final String title, final JsonArray array, final List<String> path) {
+        final var label = new Label(PropertyUtil.humanize(title) + " (" + array.size() + ")");
+        label.getStyleClass().add("panel-title");
+
+        final var group = new VBox(6, label);
+        for (int index = 0; index < array.size(); index++) {
+            if (!array.get(index).isJsonObject())
+                continue;
+
+            final var child = new ArrayList<>(path);
+            child.add(String.valueOf(index));
+
+            final var element = array.get(index).getAsJsonObject();
+            if (isVector(element))
+                group.getChildren().add(vector(String.valueOf(index + 1), element, child));
+            else
+                group.getChildren().add(group(String.valueOf(index + 1), element, child));
+        }
+
+        return group;
     }
 
     private VBox group(final String title, final JsonObject object, final List<String> path) {
@@ -215,8 +248,13 @@ public final class SectionEditor extends VBox {
 
             refreshers.add(() -> {
                 final var element = valueAt(path);
-                if (element != null && element.isJsonPrimitive())
+                if (element != null && element.isJsonPrimitive()) {
+                    // A file that the folder doesn't have (or a name of another kind of path) is shown as it is
+                    if (!list.getItems().contains(element.getAsString()))
+                        list.getItems().add(element.getAsString());
+
                     list.setValue(element.getAsString());
+                }
             });
             return list;
         }
@@ -296,14 +334,24 @@ public final class SectionEditor extends VBox {
 
     private JsonElement valueAt(final List<String> path) {
         JsonElement element = source.read();
-        for (final var name : path) {
-            if (element == null || !element.isJsonObject() || !element.getAsJsonObject().has(name))
-                return null;
-
-            element = element.getAsJsonObject().get(name);
-        }
+        for (final var name : path)
+            element = child(element, name);
 
         return element;
+    }
+
+    /** The field of an object or the element of a list, null when there is none */
+    private static JsonElement child(final JsonElement element, final String name) {
+        if (element == null)
+            return null;
+
+        if (element.isJsonObject())
+            return element.getAsJsonObject().get(name);
+
+        if (element.isJsonArray() && name.chars().allMatch(Character::isDigit) && Integer.parseInt(name) < element.getAsJsonArray().size())
+            return element.getAsJsonArray().get(Integer.parseInt(name));
+
+        return null;
     }
 
     private static boolean isColor(final JsonObject object) {
@@ -337,10 +385,10 @@ public final class SectionEditor extends VBox {
     }
 
     private static JsonObject at(final JsonObject root, final List<String> path) {
-        var object = root;
+        JsonElement element = root;
         for (final var name : path)
-            object = object.getAsJsonObject(name);
+            element = child(element, name);
 
-        return object;
+        return element.getAsJsonObject();
     }
 }

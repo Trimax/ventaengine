@@ -1,6 +1,8 @@
 package io.github.trimax.venta.studio.utils;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.RecordComponent;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,15 +42,15 @@ public final class SchemaUtil {
      * @return the type, null when the record has no such field
      */
     public Class<?> typeOf(final Class<?> root, @NonNull final List<String> path) {
-        var type = root;
+        Type type = root;
         for (final var name : path) {
             if (type == null)
                 return null;
 
-            type = component(type, name);
+            type = step(type, name);
         }
 
-        return type;
+        return rawOf(type);
     }
 
     /** The names of the values of an enum, null for a type that is not one */
@@ -61,10 +63,27 @@ public final class SchemaUtil {
         return type == int.class || type == Integer.class || type == long.class || type == Long.class || type == short.class || type == Short.class;
     }
 
-    private Class<?> component(final Class<?> type, final String name) {
-        if (!type.isRecord())
+    /** The type of a field of a record, or of an element of a list when the name is its number */
+    private Type step(final Type type, final String name) {
+        if (type instanceof ParameterizedType generic && List.class.isAssignableFrom(rawOf(generic)) && name.chars().allMatch(Character::isDigit))
+            return generic.getActualTypeArguments()[0];
+
+        final var raw = rawOf(type);
+        if (raw == null || !raw.isRecord())
             return null;
 
-        return Arrays.stream(type.getRecordComponents()).filter(component -> component.getName().equals(name)).map(RecordComponent::getType).findFirst().orElse(null);
+        return Arrays.stream(raw.getRecordComponents()).filter(component -> component.getName().equals(name)).map(RecordComponent::getGenericType).findFirst().orElse(null);
+    }
+
+    /** The class of a type, null for a type that isn't known until it is used (the parameter of a generic record) */
+    private Class<?> rawOf(final Type type) {
+        if (type instanceof Class<?> found)
+            return found;
+
+        return type instanceof ParameterizedType generic && generic.getRawType() instanceof Class<?> found ? found : null;
+    }
+
+    private Class<?> component(final Class<?> type, final String name) {
+        return rawOf(step(type, name));
     }
 }

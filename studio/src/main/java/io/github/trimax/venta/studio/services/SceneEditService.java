@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
@@ -65,14 +67,26 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
     /** The files of the resources that were opened for editing, by their places in the project: they are read from the disk once */
     private final Map<String, ResourceDocument> resources = new LinkedHashMap<>();
 
+    /** The files that the engine has been shown changed (it made things of them from their edited contents) */
+    private final Set<String> overridden = new LinkedHashSet<>();
+
     /** The scene that is open, null before one is open */
     @Getter
     private SceneDocument document;
 
+    /**
+     * The files of the resources that were changed and not written are what the disk has again, and so is what the engine has made of
+     * them: a scene that is opened next is made of the files as they are.
+     */
+    public void discardResources() {
+        overridden.forEach(applier::discard);
+        overridden.clear();
+        resources.clear();
+    }
+
     /** A scene is open: it is as the file says, there is nothing to undo */
     public void open(@NonNull final SceneDocument document) {
         this.document = document;
-        resources.clear();
         history.clear();
         announceHistory();
     }
@@ -171,13 +185,23 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
         return uses;
     }
 
-    /** The names of the files in a folder of the project (without the folders in them), in order; none when there is no such folder */
-    public List<String> filesOf(@NonNull final String folder) {
+    /**
+     * The files in a folder of the project and in the folders in it, as the files that name them are written: the path from the folder,
+     * with slashes. None when there is no such folder.
+     *
+     * @param extensions how the names of the files end
+     */
+    public List<String> filesOf(@NonNull final String folder, @NonNull final List<String> extensions) {
         if (session.getProject() == null || !Files.isDirectory(session.getProject().resolve(folder)))
             return List.of();
 
-        try (final var files = Files.list(session.getProject().resolve(folder))) {
-            return files.filter(Files::isRegularFile).map(file -> file.getFileName().toString()).filter(name -> name.endsWith(".json")).sorted().toList();
+        final var root = session.getProject().resolve(folder);
+        try (final var files = Files.walk(root)) {
+            return files.filter(Files::isRegularFile)
+                    .map(file -> root.relativize(file).toString().replace('\\', '/'))
+                    .filter(name -> extensions.stream().anyMatch(name::endsWith))
+                    .sorted()
+                    .toList();
         } catch (final IOException exception) {
             log.warn("Can't list {}", folder, exception);
             return List.of();
@@ -359,9 +383,17 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
         resource.set(value);
 
         try {
+            overridden.add(path);
             applier.applyResource(path, value, document);
         } catch (final RuntimeException exception) {
+            // The engine can't show it (a file is missing, a number is out of range): the file is as it was, and so is what is made of it
             resource.set(previous);
+            try {
+                applier.applyResource(path, previous, document);
+            } catch (final RuntimeException again) {
+                log.error("Can't show {} as it was", path, again);
+            }
+
             throw exception;
         }
 

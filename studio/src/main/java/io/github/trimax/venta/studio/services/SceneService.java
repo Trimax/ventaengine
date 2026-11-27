@@ -52,6 +52,7 @@ public final class SceneService {
             final var document = new SceneDocument(name, Files.readString(path, StandardCharsets.UTF_8));
 
             // The scene is made from the file as it is on the disk: what was loaded before may be older
+            edits.discardResources();
             context.getSceneRepository().forget(name);
 
             final var manager = context.getSceneManager();

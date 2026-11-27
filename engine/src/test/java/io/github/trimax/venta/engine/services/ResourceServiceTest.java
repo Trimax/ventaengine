@@ -115,6 +115,28 @@ final class ResourceServiceTest {
     }
 
     @Test
+    void testOverriddenResourceIsWhatIsGivenUntilItIsRestored(@TempDir final Path directory) throws IOException {
+        Files.createDirectories(directory.resolve("programs"));
+        Files.writeString(directory.resolve("programs/default.json"), "{\"from\": \"project\"}");
+        service.useProject(directory);
+
+        service.override("programs/default.json", "{\"from\": \"editor\"}".getBytes());
+        assertEquals("{\"from\": \"editor\"}", service.getAsString(CLASSPATH_PROGRAM), "The path may have the first slash or not");
+
+        service.restore("/programs/default.json");
+        assertEquals("{\"from\": \"project\"}", service.getAsString(CLASSPATH_PROGRAM));
+    }
+
+    @Test
+    void testOverriddenResourceIsNotChangedByChangingWhatWasGiven() {
+        final var data = "{\"a\": 1}".getBytes();
+        service.override("/programs/default.json", data);
+        data[2] = 'b';
+
+        assertEquals("{\"a\": 1}", service.getAsString(CLASSPATH_PROGRAM));
+    }
+
+    @Test
     void testProjectMustBeAFolder(@TempDir final Path directory) throws IOException {
         final var file = Files.writeString(directory.resolve("file.txt"), "x");
 

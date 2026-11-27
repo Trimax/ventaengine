@@ -116,6 +116,9 @@ final class SelfTest extends AnimationTimer {
         if (System.getProperty("studio.resource") != null)
             resource();
 
+        if (System.getProperty("studio.recreate") != null)
+            recreate();
+
         if (System.getProperty("studio.lighthandle") != null)
             lightHandle();
 
@@ -217,7 +220,7 @@ final class SelfTest extends AnimationTimer {
     private void select(final String name) {
         final var outline = VentaApplication.getComponent(SelectionService.class).getOutline();
 
-        java.util.stream.Stream.of(OutlineKind.Object, OutlineKind.Setting, OutlineKind.Light).flatMap(kind -> OutlineUtil.items(outline, kind).stream())
+        java.util.stream.Stream.of(OutlineKind.values()).flatMap(kind -> OutlineUtil.items(outline, kind).stream())
                 .filter(item -> item.name().equals(name)).findFirst()
                 .ifPresent(item -> EventUtil.post(new OutlineSelectionRequestEvent(item)));
     }
@@ -363,6 +366,37 @@ final class SelfTest extends AnimationTimer {
         if (gizmoFrom != null && frame == 60) {
             edits.undo();
             System.out.printf("SELFTEST lighthandle: undone range=%.1f, dirty=%s (one step)%n", light.getRange(), edits.isDirty());
+        }
+    }
+
+    /** Changes the file of an emitter and of an object (the things are made again), tries a file that can't be loaded, undoes and saves */
+    private void recreate() {
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var applier = VentaApplication.getComponent(SceneApplier.class);
+        final var scene = VentaApplication.getComponent(io.github.trimax.venta.engine.context.VentaContext.class).getSceneManager().getCurrent();
+        final var path = "emitters/campfire-flame.json";
+        final var emitter = applier.instanceOf(OutlineKind.Emitter, 0);
+        final var smoke = applier.instanceOf(OutlineKind.Emitter, 1);
+
+        if (frame == 50) {
+            System.out.printf("SELFTEST recreate: before: emitters=%d, first=%s%n", scene.getEmitters().size(), ((io.github.trimax.venta.engine.model.instance.EmitterInstance) emitter).getName());
+            edits.editResource(path, "Change", "emissionRate", file -> file.addProperty("emissionRate", 10));
+            final var again = applier.instanceOf(OutlineKind.Emitter, 0);
+            System.out.printf("SELFTEST recreate: changed: emitters=%d, made again=%s, name=%s, second the same=%s, dirty=%s%n", scene.getEmitters().size(), again != emitter,
+                    ((io.github.trimax.venta.engine.model.instance.EmitterInstance) again).getName(), applier.instanceOf(OutlineKind.Emitter, 1) == smoke, edits.isDirty());
+            edits.editResource(path, "Change", "texture", file -> file.addProperty("texture", "sprites/nothing.png"));
+            System.out.printf("SELFTEST recreate: refused a texture that is not there: emitters=%d, dirty=%s%n", scene.getEmitters().size(), edits.isDirty());
+        }
+
+        if (frame == 60) {
+            edits.undo();
+            System.out.printf("SELFTEST recreate: undone: emitters=%d, dirty=%s%n", scene.getEmitters().size(), edits.isDirty());
+        }
+
+        if (frame == 70) {
+            edits.redo();
+            final var saved = edits.save();
+            System.out.printf("SELFTEST recreate: redone and saved=%s, emitters=%d, dirty=%s%n", saved, scene.getEmitters().size(), edits.isDirty());
         }
     }
 

@@ -55,4 +55,20 @@ final class SchemaUtilTest {
         assertFalse(SchemaUtil.isWhole(Float.class));
         assertFalse(SchemaUtil.isWhole(null));
     }
+
+    @Test
+    void testElementOfAListIsFoundByItsNumber() {
+        final var water = io.github.trimax.venta.engine.model.dto.WaterSurfaceDTO.class;
+
+        assertEquals(List.class, SchemaUtil.typeOf(water, List.of("waves")));
+        assertNotNull(SchemaUtil.typeOf(water, List.of("waves", "0")));
+        assertEquals(float.class, SchemaUtil.typeOf(water, List.of("waves", "2", "amplitude")));
+        assertNull(SchemaUtil.typeOf(water, List.of("waves", "0", "nothing")));
+    }
+
+    @Test
+    void testFieldOfAGenericRecordIsNotKnown() {
+        // The parameter of Variable<Float> is not known from the record: the editor shows a number as a fraction
+        assertNull(SchemaUtil.typeOf(io.github.trimax.venta.engine.model.dto.EmitterDTO.class, List.of("particleLifetime", "value")));
+    }
 }
