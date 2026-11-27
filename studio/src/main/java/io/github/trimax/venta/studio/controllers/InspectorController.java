@@ -10,6 +10,7 @@ import com.google.common.eventbus.Subscribe;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.studio.controls.EntryEditor;
+import io.github.trimax.venta.studio.controls.SectionEditor;
 import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
 import io.github.trimax.venta.studio.model.event.SceneChangedEvent;
 import io.github.trimax.venta.studio.services.SceneEditService;
@@ -19,6 +20,7 @@ import io.github.trimax.venta.studio.model.outline.OutlineKind;
 import io.github.trimax.venta.studio.model.property.Property;
 import io.github.trimax.venta.studio.utils.FormatUtil;
 import io.github.trimax.venta.studio.utils.ProjectUtil;
+import io.github.trimax.venta.studio.utils.ResourceKindUtil;
 import io.github.trimax.venta.studio.utils.PropertyUtil;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -31,12 +33,14 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Shows what is chosen: the fields of an item of the hierarchy, or the contents of a file of the project. Nothing is changed here yet.
+ * Shows what is chosen: the fields of an item of the hierarchy, which can be changed for a thing and for a section of the environment, or
+ * the contents of a file of the project.
  */
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -49,7 +53,8 @@ public final class InspectorController {
     @FXML private Label subheading;
     @FXML private StackPane content;
 
-    private EntryEditor editor;
+    /** Shows the thing or the section that is chosen as the file says now; null when nothing that is edited is shown */
+    private Runnable refresher;
 
     @FXML
     public void initialize() {
@@ -59,7 +64,7 @@ public final class InspectorController {
     @Subscribe
     public void onOutlineSelected(final OutlineSelectedEvent event) {
         final var item = event.item();
-        editor = null;
+        refresher = null;
 
         if (item == null || item.kind() == OutlineKind.Category) {
             clear();
@@ -67,32 +72,74 @@ public final class InspectorController {
         }
 
         if (item.isThing() && edits.getDocument() != null) {
-            editor = new EntryEditor(edits, item.kind(), item.index(), item.detail());
-            show(item.kind().name(), "", editor);
+            final var editor = new EntryEditor(edits, item.kind(), item.index(), item.detail());
+            refresher = editor::refresh;
+            show(item.kind().name(), "", withResourceFile(item, editor));
+            return;
+        }
+
+        if (item.kind() == OutlineKind.Setting && edits.getDocument() != null && edits.getDocument().hasSection(item.name())) {
+            final var editor = SectionEditor.ofSection(edits, item.name());
+            refresher = editor::refresh;
+            show(item.name(), "Environment", editor);
             return;
         }
 
         show(item.name(), item.kind() + (item.detail().isEmpty() ? "" : " · " + item.detail()), createProperties(item));
     }
 
+    /**
+     * The fields of the thing and, under them, the fields of the file that it is made of: a change of the file is a change of every thing
+     * that is made of it, and the form says so.
+     */
+    private Node withResourceFile(final OutlineItem item, final EntryEditor editor) {
+        final var path = ResourceKindUtil.pathOf(item.kind(), item.detail()).orElse(null);
+        if (path == null || edits.readResource(path) == null)
+            return editor;
+
+        final var file = SectionEditor.ofResource(edits, path, ResourceKindUtil.typeOf(item.kind()));
+        final var title = new Label(item.kind().name() + " file");
+        title.getStyleClass().add("panel-title");
+        final var uses = new Label();
+        uses.getStyleClass().add("dim");
+
+        final Runnable describe = () -> {
+            final var count = edits.usesOf(item.kind(), item.detail());
+            uses.setText(path + (count > 1 ? " · shared by " + count + " things of this scene, a change is for all of them" : ""));
+        };
+        describe.run();
+
+        final var previous = refresher;
+        refresher = () -> {
+            previous.run();
+            file.refresh();
+            describe.run();
+        };
+
+        final var box = new VBox(6, editor, title, uses, file);
+        final var scroll = new ScrollPane(box);
+        scroll.setFitToWidth(true);
+        return scroll;
+    }
+
     /** The scene was changed (an edit, an undo): what is shown is what the file says */
     @Subscribe
     public void onSceneChanged(final SceneChangedEvent event) {
-        if (editor == null)
+        if (refresher == null)
             return;
 
         try {
-            editor.refresh();
-        } catch (final IndexOutOfBoundsException exception) {
+            refresher.run();
+        } catch (final IndexOutOfBoundsException | IllegalArgumentException exception) {
             // The thing that was shown is gone (undone, deleted)
-            editor = null;
+            refresher = null;
             clear();
         }
     }
 
     @Subscribe
     public void onFileSelected(final ProjectFileSelectedEvent event) {
-        editor = null;
+        refresher = null;
 
         final var file = event.file();
         if (file == null) {

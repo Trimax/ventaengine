@@ -18,12 +18,17 @@ import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
 import io.github.trimax.venta.engine.model.common.overlay.Mark;
+import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.WaterSurfaceInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.utils.GizmoUtil;
+import io.github.trimax.venta.engine.utils.GroundUtil;
+import io.github.trimax.venta.engine.utils.LightShapeUtil;
 import io.github.trimax.venta.engine.utils.OverlayUtil;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -129,8 +134,19 @@ public final class EditorOverlayRenderer {
         final var selected = overlay.getSelected();
         if (selected instanceof ObjectInstanceImplementation object)
             addBrackets(batch, object.getBox(), object.getTransform().getMatrix());
+        else if (selected instanceof TerrainSurfaceInstanceImplementation terrain)
+            addBrackets(batch, GroundUtil.box(terrain), terrain.getTransform().getMatrix());
+        else if (selected instanceof WaterSurfaceInstanceImplementation water)
+            addBrackets(batch, GroundUtil.box(water), water.getTransform().getMatrix());
         else if (selected != null)
             marks.stream().filter(mark -> mark.instance() == selected).forEach(mark -> addMark(batch, mark, camera.getPosition(), SELECTION_COLOR, 1.6f));
+
+        if (selected instanceof LightInstance light) {
+            LightShapeUtil.lines(light).forEach(line -> batch.add(line.start(), line.end(), line.color(), 0.9f));
+
+            if (overlay.isLightHandles())
+                LightShapeUtil.handleLines(LightShapeUtil.handles(light), camera.getPosition(), overlay.getLightHandle()).forEach(line -> batch.add(line.start(), line.end(), line.color(), 1.f));
+        }
 
         batch.flush();
 

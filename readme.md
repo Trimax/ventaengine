@@ -231,8 +231,8 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   camera flies (the right mouse button looks, and only while it is held `W` `A` `S` `D` `Q` `E` move the camera, `Shift` is faster, the wheel dollies), orbits the chosen thing
   (`Alt` and the left button), pans (the middle button), turns to the chosen thing (`F`, or a double click in the hierarchy) and goes to
   the views Perspective, Top, Front and Side
-* **Choosing** — a click chooses the thing under the mouse: the ray of the pixel meets the boxes of the objects and the marks of the
-  lights, the emitters, the billboards and the sounds. The chosen thing has a frame; a grid of the ground and the marks are drawn over
+* **Choosing** — a click chooses the thing under the mouse: the ray of the pixel meets the boxes of the objects, the ground, the water and the marks of the
+  lights, the emitters, the billboards and the sounds (`Esc` lets go of what is chosen). The chosen thing has a frame; a grid of the ground and the marks are drawn over
   the finished image, they are hidden by what is in front of them and are not touched by the exposure
 * **Panels** — Project (the folders and the files, a scene opens with a double click), Hierarchy (the settings and the things of the
   scene that is open), Inspector (the fields of what is chosen, the contents of a file), Console (the log of the engine)
@@ -242,10 +242,26 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   window has a star while the scene has changes that are not saved, `Cmd+S` writes the file (in one piece, with the order of the fields
   and the fields that the studio doesn't know kept), and closing the window or opening another scene asks about the changes
 * **Creating things** — a file of the project that a scene holds (an object, a light, an emitter, a billboard, a sound source, a terrain,
-  a water) is dragged from the Project panel into the viewport, where it lands on the plane at the height of the point the camera turns
-  round, or into the Hierarchy; the Object menu makes the same from a list of the files. `Cmd+D` copies the chosen thing (the copy is the
+  a water) is dragged from the Project panel into the viewport, where it lands on the ground under the mouse (on the plane at the height of the point the camera turns
+  round when there is no ground), or into the Hierarchy; the Object menu makes the same from a list of the files. `Cmd+D` copies the chosen thing (the copy is the
   next one, a meter aside, with the next number in its name), `Delete` or `Cmd+Backspace` deletes it. All of it is undone and redone with
   the rest, and a thing that can't be made (its file doesn't load) is not put in the scene file
+* **Environment** — the sun, the ambient light, the fog, the wind, the bloom, the light shafts, the ambient occlusion, the antialiasing, the
+  view and the output (exposure and tone mapping) of the scene are edited in the Inspector: the fields are made from what the section of
+  the file holds (a number, a switch, a list of the values of an enum, a color picker, a row of a vector), so a new field of a section is
+  edited without a line of code. A change is a command (the steps of a drag are one), and the scene of the engine shows it at once. The
+  skybox is chosen from the cubemaps of the project. A chosen light shows how far it shines: three circles of the range for a point light,
+  the cone of the angles and of the range for a spot light; a spot light that has a direction in the file is turned with the rotate tool
+* **Resources** — under the fields of a thing the Inspector has the fields of the file it is made of (a light, an emitter, a sound, a
+  billboard, an object, a terrain, a water), made the same way from what the file holds: numbers, switches, lists of the values of an
+  enum, color pickers, rows of vectors, and the elements of a list as groups. A field that names another file (a program, a material, a
+  mesh, a texture, a sound, a sprite, a grid mesh) is a list of the files of the project, and next to a material the button Edit opens
+  the fields of the material file (its colors, textures, alpha mode, ...): the things that use it are made again. The form says when the file is shared by
+  several things of the scene. A change of a file is a command of the same history; a light shows it where it is, the other things are
+  made again from the edited file (the engine reads the contents given by the studio until they are written), and a file that can't be
+  loaded is refused. The handles on a chosen light (a cube for the range on every axis of a point light, one at the end of the axis of
+  a spot light and one on each edge of its cone) change the file of the light when they are dragged (`Cmd` or `Ctrl` snaps to half a
+  meter and five degrees). The files are written with the scene by `Cmd+S` (only the ones that differ from what was read)
 * **Handles** — the chosen thing has handles that the engine draws over the image and picks under the mouse; the studio only forwards the
   mouse and writes the result to the scene as a command (a whole drag is one step of the history). The tools are `Q` (only choose),
   `W` (move: arrows and the squares of the planes), `E` (turn: a ring for every axis) and `R` (scale: a cube for every axis, and one in

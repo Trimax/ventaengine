@@ -39,6 +39,11 @@ public final class PlacementUtil {
             OutlineKind.Terrain, "terrainSurface",
             OutlineKind.Water, "waterSurface");
 
+    /** The field of the file of the scene that names the file of the thing of the kind, null for a kind that is not a thing */
+    public String fileFieldOf(final OutlineKind kind) {
+        return FIELDS.get(kind);
+    }
+
     /** What a file of the group becomes in a scene, empty for a file that a scene can't hold (a texture, a material, a scene) */
     public Optional<OutlineKind> kindOf(final GroupType group) {
         return Optional.ofNullable(group).map(KINDS::get);

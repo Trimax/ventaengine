@@ -19,6 +19,13 @@ import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.ObjectInstance;
 import io.github.trimax.venta.engine.model.instance.SoundSourceInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.WaterSurfaceInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.TerrainSurfaceInstance;
+import io.github.trimax.venta.engine.model.instance.WaterSurfaceInstance;
+import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
+import io.github.trimax.venta.engine.utils.GroundUtil;
+import org.joml.Matrix4fc;
 import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
 import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
@@ -80,6 +87,9 @@ public final class SelectionService {
         selected = selected.isThing()
                 ? OutlineUtil.at(outline, selected.kind(), selected.index())
                 : OutlineUtil.items(outline, selected.kind()).stream().filter(item -> item.name().equals(selected.name())).findFirst().orElse(null);
+
+        // A thing that was made again (its file changed) is another instance of the engine
+        overlay().setSelected(instanceOf(selected));
     }
 
     @Subscribe
@@ -141,20 +151,33 @@ public final class SelectionService {
             case EmitterInstance _ -> OutlineKind.Emitter;
             case BillboardInstance _ -> OutlineKind.Billboard;
             case SoundSourceInstance _ -> OutlineKind.Sound;
+            case TerrainSurfaceInstance _ -> OutlineKind.Terrain;
+            case WaterSurfaceInstance _ -> OutlineKind.Water;
             default -> null;
         };
     }
 
+    /** The box of a thing that has a shape and where it is: an object, the ground, the water; null for the others */
+    private static OrientedBox boxOf(final AbstractInstance instance) {
+        return switch (instance) {
+            case ObjectInstanceImplementation object -> new OrientedBox(object.getBox(), object.getTransform().getMatrix());
+            case TerrainSurfaceInstanceImplementation terrain -> new OrientedBox(GroundUtil.box(terrain), terrain.getTransform().getMatrix());
+            case WaterSurfaceInstanceImplementation water -> new OrientedBox(GroundUtil.box(water), water.getTransform().getMatrix());
+            case null, default -> null;
+        };
+    }
+
+    private record OrientedBox(BoundingBox box, Matrix4fc matrix) {
+    }
+
     /** The place of a thing and how far it reaches: the box of an object, a small ball round a mark */
     private FramingUtil.Frame frameOf(final AbstractInstance instance) {
-        if (instance instanceof ObjectInstanceImplementation object) {
-            final var model = object.getTransform().getMatrix();
-            final var box = object.getBox();
-
+        final var box = boxOf(instance);
+        if (box != null) {
             final var corners = new ArrayList<Vector3f>();
             for (int index = 0; index < 8; index++)
-                corners.add(model.transformPosition(new Vector3f((index & 1) == 0 ? box.min().x : box.max().x,
-                        (index & 2) == 0 ? box.min().y : box.max().y, (index & 4) == 0 ? box.min().z : box.max().z)));
+                corners.add(box.matrix().transformPosition(new Vector3f((index & 1) == 0 ? box.box().min().x : box.box().max().x,
+                        (index & 2) == 0 ? box.box().min().y : box.box().max().y, (index & 4) == 0 ? box.box().min().z : box.box().max().z)));
 
             return FramingUtil.bounds(corners);
         }

@@ -1,6 +1,10 @@
 package io.github.trimax.venta.studio.services;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import org.joml.Vector2f;
@@ -10,6 +14,19 @@ import com.google.gson.JsonObject;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.context.VentaContext;
+import io.github.trimax.venta.engine.model.common.shared.AmbientOcclusion;
+import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
+import io.github.trimax.venta.engine.model.common.shared.Bloom;
+import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
+import io.github.trimax.venta.engine.model.common.shared.LightShafts;
+import io.github.trimax.venta.engine.model.common.shared.View;
+import io.github.trimax.venta.engine.model.common.shared.Wind;
+import io.github.trimax.venta.engine.enums.LightType;
+import io.github.trimax.venta.engine.model.common.shared.Attenuation;
+import io.github.trimax.venta.engine.model.common.shared.Cone;
+import io.github.trimax.venta.engine.model.dto.LightDTO;
+import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
@@ -18,6 +35,7 @@ import io.github.trimax.venta.engine.model.dto.scene.SceneSoundSourceDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneTerrainSurfaceDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneWaterSurfaceDTO;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
+import io.github.trimax.venta.engine.model.instance.implementation.AbstractInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.BillboardInstance;
 import io.github.trimax.venta.engine.model.instance.EmitterInstance;
 import io.github.trimax.venta.engine.model.instance.LightInstance;
@@ -26,7 +44,14 @@ import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.SoundSourceInstance;
 import io.github.trimax.venta.engine.model.instance.TerrainSurfaceInstance;
 import io.github.trimax.venta.engine.model.instance.WaterSurfaceInstance;
+import io.github.trimax.venta.engine.services.ResourceService;
 import io.github.trimax.venta.engine.utils.ParsingUtil;
+import io.github.trimax.venta.studio.StudioSession;
+import io.github.trimax.venta.studio.utils.PlacementUtil;
+import io.github.trimax.venta.studio.utils.ResourceKindUtil;
+import io.github.trimax.venta.studio.model.document.SceneDocument;
+import io.github.trimax.venta.engine.enums.DrawMode;
+import io.github.trimax.venta.studio.model.WireframeTarget;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
 import io.github.trimax.venta.studio.utils.EntryUtil;
 import lombok.AccessLevel;
@@ -45,6 +70,182 @@ public final class SceneApplier {
     private static final Vector2f ONE_BY_ONE = new Vector2f(1.f);
 
     private final VentaContext context;
+    private final ResourceService resources;
+    private final StudioSession session;
+
+    /**
+     * Shows a section of the environment as the file says: the fog, the sun, the bloom, ... of the scene of the engine are made again from it.
+     *
+     * @param name  the name of the section in the hierarchy
+     * @param scene the scene as the file says now
+     */
+    public void applySection(@NonNull final String name, @NonNull final SceneDTO scene) {
+        final var current = context.getSceneManager().getCurrent();
+        if (current == null)
+            return;
+
+        switch (name) {
+            case "Sun" -> current.setDirectionalLight(Optional.ofNullable(scene.directionalLight()).map(DirectionalLight::new).orElse(null));
+            case "Ambient light" -> Optional.ofNullable(scene.ambientLight()).ifPresent(color -> current.setAmbientLight(color.toVector3f()));
+            case "Skybox" -> Optional.ofNullable(scene.skybox()).ifPresent(cubemap -> current.setSkybox(context.getCubemapRegistry().get(cubemap)));
+            case "Fog" -> current.setFog(Optional.ofNullable(scene.fog()).map(Fog::new).orElse(null));
+            case "Wind" -> current.setWind(Optional.ofNullable(scene.wind()).map(Wind::new).orElse(null));
+            case "Bloom" -> current.setBloom(Optional.ofNullable(scene.bloom()).map(Bloom::new).orElse(null));
+            case "Light shafts" -> current.setLightShafts(Optional.ofNullable(scene.lightShafts()).map(LightShafts::new).orElse(null));
+            case "Ambient occlusion" -> current.setAmbientOcclusion(Optional.ofNullable(scene.ambientOcclusion()).map(AmbientOcclusion::new).orElse(null));
+            case "Antialiasing" -> current.setAntialiasing(Optional.ofNullable(scene.antialiasing()).map(Antialiasing::new).orElse(null));
+            case "View" -> current.setView(Optional.ofNullable(scene.view()).map(View::new).orElse(null));
+            case "Output" -> {
+                Optional.ofNullable(scene.exposure()).ifPresent(current::setExposure);
+                Optional.ofNullable(scene.toneMapping()).ifPresent(current::setToneMapping);
+            }
+            default -> throw new IllegalArgumentException(name + " is not a section of the environment");
+        }
+    }
+
+    /**
+     * Shows a file of a resource as it is edited: every thing of the scene that is made of the file takes what the file says. A light
+     * takes it where it is; the other things are made again from the file (the engine reads them from the contents that are given
+     * instead of the file, until {@link #discard(String)}), at the same places among the things of their kind.
+     *
+     * @param path     the place of the file in the project, like {@code emitters/campfire.json}
+     * @param value    the contents of the file
+     * @param document the scene that is open
+     */
+    public void applyResource(@NonNull final String path, @NonNull final JsonObject value, @NonNull final SceneDocument document) {
+        final var target = ResourceKindUtil.of(path).orElse(null);
+        if (target == null)
+            return;
+
+        resources.override(path, value.toString().getBytes(StandardCharsets.UTF_8));
+
+        final var users = usersOf(target, document);
+        if (target.kind() == OutlineKind.Light) {
+            final var dto = ParsingUtil.asObject(value.toString(), LightDTO.class);
+            users.forEach(index -> {
+                if (instanceOf(OutlineKind.Light, index) instanceof LightInstance light)
+                    applyLight(light, dto);
+            });
+            return;
+        }
+
+        // The file is read before anything is taken out: one that can't be read leaves the scene as it is
+        forget(target.kind(), target.file());
+        load(target.kind(), target.file());
+
+        // From the last: taking a thing out moves the ones after it
+        for (int position = users.size() - 1; position >= 0; position--)
+            remove(target.kind(), users.get(position));
+
+        for (final var index : users)
+            create(target.kind(), index, document.getEntry(target.kind(), index));
+    }
+
+    /** Makes again the things of the scene that are made of the files: the places among the things of their kinds are the same */
+    private void remakeUsersOf(final List<ResourceKindUtil.Target> targets, final SceneDocument document) {
+        // Every thing once, by its kind and its place among the things of the kind
+        final var all = new ArrayList<Map.Entry<OutlineKind, Integer>>();
+        targets.forEach(target -> usersOf(target, document).forEach(index -> all.add(Map.entry(target.kind(), index))));
+        all.sort(java.util.Comparator.comparing((Map.Entry<OutlineKind, Integer> entry) -> entry.getKey()).thenComparing(Map.Entry::getValue));
+
+        // From the last: taking a thing out moves the ones after it of its kind
+        for (int position = all.size() - 1; position >= 0; position--)
+            remove(all.get(position).getKey(), all.get(position).getValue());
+
+        all.forEach(entry -> create(entry.getKey(), entry.getValue(), document.getEntry(entry.getKey(), entry.getValue())));
+    }
+
+    /**
+     * Shows a file of a material as it is edited: the things that are made of the files that use the material are made again, so they
+     * take the material from the contents that the studio gives instead of the file.
+     *
+     * @param path       the place of the file of the material, like {@code materials/chest.json}
+     * @param value      the contents of the file
+     * @param dependents the files of the things (objects, terrains) that name the material
+     */
+    public void applyMaterial(@NonNull final String path, @NonNull final JsonObject value, @NonNull final SceneDocument document,
+                              @NonNull final List<ResourceKindUtil.Target> dependents) {
+        final var file = ResourceKindUtil.materialOf(path).orElseThrow();
+        resources.override(path, value.toString().getBytes(StandardCharsets.UTF_8));
+
+        // What is made of the material is read before anything is taken out: what can't be read leaves the scene as it is
+        context.getMaterialRegistry().forget(file);
+        for (final var dependent : dependents) {
+            forget(dependent.kind(), dependent.file());
+            if (!usersOf(dependent, document).isEmpty())
+                load(dependent.kind(), dependent.file());
+        }
+
+        remakeUsersOf(dependents, document);
+    }
+
+    /** The files of the things that use a material are made again with the material that the disk has */
+    public void discardMaterial(@NonNull final String path, @NonNull final List<ResourceKindUtil.Target> dependents) {
+        resources.restore(path);
+        ResourceKindUtil.materialOf(path).ifPresent(context.getMaterialRegistry()::forget);
+        dependents.forEach(dependent -> forget(dependent.kind(), dependent.file()));
+    }
+
+    /** What the file at a path is again what the disk has: the engine forgets what it has made of the edited contents */
+    public void discard(@NonNull final String path) {
+        resources.restore(path);
+        ResourceKindUtil.of(path).ifPresent(target -> forget(target.kind(), target.file()));
+    }
+
+    /** The places among the things of the kind of the things that are made of the file, in order */
+    private List<Integer> usersOf(final ResourceKindUtil.Target target, final SceneDocument document) {
+        final var field = PlacementUtil.fileFieldOf(target.kind());
+        final var users = new ArrayList<Integer>();
+
+        for (int index = 0; index < document.count(target.kind()); index++) {
+            final var entry = document.getEntry(target.kind(), index);
+            if (entry.has(field) && target.file().equals(entry.get(field).getAsString()))
+                users.add(index);
+        }
+
+        return users;
+    }
+
+    /** Makes what the engine makes of the file (the prefab), so it is known to be fine */
+    private void load(final OutlineKind kind, final String file) {
+        switch (kind) {
+            case Object -> context.getObjectRepository().get(file);
+            case Light -> context.getLightRepository().get(file);
+            case Emitter -> context.getEmitterRepository().get(file);
+            case Billboard -> context.getBillboardRepository().get(file);
+            case Sound -> context.getSoundSourceRepository().get(file);
+            case Terrain -> context.getTerrainSurfaceRepository().get(file);
+            case Water -> context.getWaterSurfaceRepository().get(file);
+            default -> {
+            }
+        }
+    }
+
+    private void forget(final OutlineKind kind, final String file) {
+        switch (kind) {
+            case Object -> context.getObjectRepository().forget(file);
+            case Light -> context.getLightRepository().forget(file);
+            case Emitter -> context.getEmitterRepository().forget(file);
+            case Billboard -> context.getBillboardRepository().forget(file);
+            case Sound -> context.getSoundSourceRepository().forget(file);
+            case Terrain -> context.getTerrainSurfaceRepository().forget(file);
+            case Water -> context.getWaterSurfaceRepository().forget(file);
+            default -> {
+            }
+        }
+    }
+
+    /** What the file of a light says, the same as the engine makes a light of the file */
+    private void applyLight(final LightInstance light, final LightDTO dto) {
+        final var type = Optional.ofNullable(dto.type()).orElse(LightType.Point);
+
+        light.setColor(dto.color().toVector3f());
+        light.setAttenuation(Optional.ofNullable(dto.attenuation()).map(Attenuation::new).orElseGet(Attenuation::createDefault));
+        light.setCastShadows(dto.castShadows());
+        light.setIntensity(dto.intensity());
+        light.setRange(dto.range());
+        light.setCone(type == LightType.Spot ? new Cone(dto) : null);
+    }
 
     /** The thing of the scene that has the place among the things of the kind, null when the scene has no such thing */
     public AbstractInstance instanceOf(@NonNull final OutlineKind kind, final int index) {
@@ -156,6 +357,22 @@ public final class SceneApplier {
         tail.forEach(thing -> add(scene, thing));
 
         applyTransform(created, entry);
+        applyDrawMode(created);
+    }
+
+    /** A thing that is made while some kinds are drawn as lines is drawn as the others of its kind are */
+    private void applyDrawMode(final AbstractInstance created) {
+        final var target = switch (created) {
+            case ObjectInstance _ -> WireframeTarget.Objects;
+            case TerrainSurfaceInstance _ -> WireframeTarget.Terrain;
+            case WaterSurfaceInstance _ -> WireframeTarget.Water;
+            case EmitterInstance _ -> WireframeTarget.Emitters;
+            case BillboardInstance _ -> WireframeTarget.Billboards;
+            default -> null;
+        };
+
+        if (target != null && created instanceof AbstractInstanceImplementation instance)
+            instance.setDrawMode(session.getWireframe().contains(target) ? DrawMode.Edge : DrawMode.Polygon);
     }
 
     /** Takes the thing of the place out of the scene and releases it */

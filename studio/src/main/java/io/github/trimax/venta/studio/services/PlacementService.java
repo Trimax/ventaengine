@@ -12,7 +12,9 @@ import org.joml.Vector3fc;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
+import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
+import io.github.trimax.venta.engine.utils.GroundUtil;
 import io.github.trimax.venta.engine.utils.RayUtil;
 import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
@@ -37,6 +39,7 @@ public final class PlacementService {
     private final StudioSession session;
     private final SceneEditService edits;
     private final Engine engine;
+    private final VentaContext context;
 
     /** Whether a file of the project can be put in a scene: it is a file of a thing that a scene holds */
     public boolean isPlaceable(final Path file) {
@@ -85,10 +88,18 @@ public final class PlacementService {
         return edits.create(kind.get(), PlacementUtil.resourceOf(session.getProject(), file), x == null || y == null ? pivot() : ground(x, y));
     }
 
-    /** The point of the plane at the height of the pivot that is under a point of the viewport, the pivot when the point is above the horizon */
+    /**
+     * The point of the ground that is under a point of the viewport; when there is no ground there (the scene has none, or the point is
+     * beside it), the point of the plane at the height of the pivot, and the pivot when the point is above the horizon.
+     */
     private Vector3fc ground(final float x, final float y) {
         final var ray = engine.rayThrough(x, y);
         final var pivot = pivot();
+
+        final var scene = context.getSceneManager().getCurrent();
+        final var onGround = scene == null ? RayUtil.MISS : GroundUtil.ground(ray, scene);
+        if (onGround != RayUtil.MISS)
+            return new Vector3f(ray.origin()).fma(onGround, ray.direction());
 
         final var distance = RayUtil.intersectPlane(ray, pivot, UP);
         return distance == RayUtil.MISS ? pivot : new Vector3f(ray.origin()).fma(distance, ray.direction());

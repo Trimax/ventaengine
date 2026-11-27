@@ -35,6 +35,9 @@ public final class ResourceService {
      */
     private Path projectRoot;
 
+    /** What the resources are instead of their files, by their paths without the first slash */
+    private final Map<String, byte[]> overrides = new HashMap<>();
+
     /**
      * Makes the files of a folder the resources of the application: they are found first, and read from the disk on every request, so
      * a file that is changed is loaded changed.
@@ -50,6 +53,21 @@ public final class ResourceService {
     /** The folder of the project, empty when the resources are in the archives and the classpath only */
     public Optional<Path> getProject() {
         return Optional.ofNullable(projectRoot);
+    }
+
+    /**
+     * Makes a resource what is given instead of what the file has: an editor shows a change of a file before it is written. Whatever
+     * is loaded after it is loaded from the given contents, until {@link #restore(String)}.
+     *
+     * @param path the path of the resource, with or without the first slash: {@code emitters/flame.json}
+     */
+    public void override(@NonNull final String path, final byte @NonNull [] data) {
+        overrides.put(normalize(path), data.clone());
+    }
+
+    /** The resource is what its file has again */
+    public void restore(@NonNull final String path) {
+        overrides.remove(normalize(path));
     }
 
     public void loadArchive(@NonNull final String archiveFile) {
@@ -90,6 +108,10 @@ public final class ResourceService {
     private <T> T get(@NonNull final String path,
                       @NonNull final Function<byte[], T> mapper,
                       @NonNull final Supplier<T> alternative) {
+        final var overridden = overrides.get(normalize(path));
+        if (overridden != null)
+            return mapper.apply(overridden);
+
         final var projectFile = readProjectFile(path);
         if (projectFile != null)
             return mapper.apply(projectFile);
@@ -99,6 +121,10 @@ public final class ResourceService {
                 .map(Resource::data)
                 .map(mapper)
                 .orElseGet(alternative);
+    }
+
+    private static String normalize(final String path) {
+        return path.startsWith("/") ? path.substring(1) : path;
     }
 
     public record Resource(File archiveFile, String resourcePath, GroupType type, byte[] data) {

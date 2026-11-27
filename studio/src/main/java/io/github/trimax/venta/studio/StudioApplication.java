@@ -15,6 +15,8 @@ import io.github.trimax.venta.studio.services.PlacementService;
 import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.services.SceneService;
 import io.github.trimax.venta.engine.model.common.gizmo.GizmoMode;
+import io.github.trimax.venta.container.utils.EventUtil;
+import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
 import io.github.trimax.venta.studio.services.GizmoService;
 import io.github.trimax.venta.studio.services.SelectionService;
 import io.github.trimax.venta.studio.services.UnsavedChangesService;
@@ -67,6 +69,7 @@ public final class StudioApplication extends Application implements AbstractVent
         final var selection = VentaApplication.getComponent(SelectionService.class);
         viewport.setOnPick(selection::pick);
         viewport.setOnFocus(selection::focusSelection);
+        viewport.setOnDeselect(() -> EventUtil.post(new OutlineSelectionRequestEvent(null)));
 
         final var gizmos = VentaApplication.getComponent(GizmoService.class);
         viewport.setGizmo(new ViewportPanel.Gizmo() {
@@ -145,6 +148,9 @@ public final class StudioApplication extends Application implements AbstractVent
 
     @Override
     public void stop() {
+        // The engine writes hundreds of lines while it is shut down, and the console is gone by then
+        VentaApplication.getComponent(ConsoleLog.class).close();
+
         if (viewport != null)
             viewport.stop();
 

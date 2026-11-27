@@ -4,6 +4,7 @@ import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.gson.JsonObject;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
@@ -12,6 +13,9 @@ import io.github.trimax.venta.engine.model.common.gizmo.GizmoDrag;
 import io.github.trimax.venta.engine.model.common.gizmo.GizmoHandle;
 import io.github.trimax.venta.engine.model.common.gizmo.GizmoMode;
 import io.github.trimax.venta.engine.model.common.gizmo.GizmoSpace;
+import io.github.trimax.venta.engine.model.common.gizmo.LightHandleDrag;
+import io.github.trimax.venta.engine.model.instance.LightInstance;
+import io.github.trimax.venta.engine.utils.LightShapeUtil;
 import io.github.trimax.venta.engine.utils.GizmoUtil;
 import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.event.GizmoChangedEvent;
@@ -36,6 +40,7 @@ public final class GizmoService {
     private final StudioSession session;
     private final SceneEditService edits;
     private final Engine engine;
+    private final SceneApplier applier;
 
     /** The handles that are drawn; null for the tool that only chooses */
     @Getter
@@ -54,6 +59,12 @@ public final class GizmoService {
     private Vector3f startPosition;
     private Vector3f startAngles;
     private Vector3f startScale;
+    private Vector3f startDirection;
+
+    /** The handle of the range or of the cone of the chosen light that is taken, with what it changes: the file of the light and the field of it */
+    private LightHandleDrag lightDrag;
+    private LightShapeUtil.Handle lightTaken;
+    private String lightPath;
 
     /** The tool is chosen: null is the one that only chooses */
     public void setMode(final GizmoMode mode) {
@@ -88,10 +99,20 @@ public final class GizmoService {
 
     /** The mouse is over a point of the viewport (from 0 to 1): the handle under it is lit */
     public void hover(final float x, final float y) {
-        if (drag != null || !isShown())
+        if (drag != null || lightDrag != null)
             return;
 
         final var overlay = session.getOverlay();
+        final var light = lightHandleAt(x, y);
+        overlay.setLightHandle(light == null ? -1 : light.index());
+        if (light != null) {
+            overlay.setGizmoHandle(null);
+            return;
+        }
+
+        if (!isShown())
+            return;
+
         final var handle = hit(x, y);
         if (handle != overlay.getGizmoHandle())
             overlay.setGizmoHandle(handle);
@@ -99,6 +120,9 @@ public final class GizmoService {
 
     /** The mouse is down on a point of the viewport; returns whether it took a handle (then it is not a click that chooses) */
     public boolean press(final float x, final float y) {
+        if (pressLightHandle(x, y))
+            return true;
+
         if (!isShown())
             return false;
 
@@ -113,6 +137,7 @@ public final class GizmoService {
         startPosition = EntryUtil.getVector(entry, EntryUtil.POSITION, new Vector3f());
         startAngles = EntryUtil.getVector(entry, EntryUtil.ANGLES, new Vector3f());
         startScale = EntryUtil.getVector(entry, EntryUtil.SCALE, new Vector3f(1.f));
+        startDirection = EntryUtil.getVector(entry, EntryUtil.DIRECTION, new Vector3f(0.f, -1.f, 0.f));
 
         dragMode = mode;
         dragKey = "gizmo-" + ++dragCounter;
@@ -123,6 +148,11 @@ public final class GizmoService {
 
     /** The mouse moved with a handle taken: the thing follows it; with the snapping the result is in whole steps */
     public void drag(final float x, final float y, final boolean snap) {
+        if (lightDrag != null) {
+            dragLightHandle(x, y, snap);
+            return;
+        }
+
         if (drag == null || kind == null)
             return;
 
@@ -138,6 +168,12 @@ public final class GizmoService {
             switch (dragMode) {
                 case Translate -> EntryUtil.setVector(entry, EntryUtil.POSITION, new Vector3f(startPosition).add(result.translation()));
                 case Rotate -> {
+                    if (kind == OutlineKind.Light) {
+                        // A spot light has a direction and no angles: the direction is turned
+                        EntryUtil.setVector(entry, EntryUtil.DIRECTION, result.rotation().transform(new Vector3f(startDirection)).normalize());
+                        return;
+                    }
+
                     final var turned = new Matrix3f(result.rotation()).mul(new Matrix3f().rotationXYZ(startAngles.x, startAngles.y, startAngles.z));
                     EntryUtil.setVector(entry, EntryUtil.ANGLES, turned.getEulerAnglesXYZ(new Vector3f()));
                 }
@@ -150,6 +186,14 @@ public final class GizmoService {
 
     /** The mouse is up: the drag is done and is one step of the history */
     public void release() {
+        if (lightDrag != null) {
+            lightDrag = null;
+            lightTaken = null;
+            edits.endDrag();
+            session.getOverlay().setLightHandle(-1);
+            return;
+        }
+
         if (drag == null)
             return;
 
@@ -159,7 +203,56 @@ public final class GizmoService {
     }
 
     public boolean isDragging() {
-        return drag != null;
+        return drag != null || lightDrag != null;
+    }
+
+    /** The chosen light, null when what is chosen is not a light */
+    private LightInstance chosenLight() {
+        return kind == OutlineKind.Light && index >= 0 ? applier.instanceOf(OutlineKind.Light, index) instanceof LightInstance light ? light : null : null;
+    }
+
+    /** The handle of the range or the cone of the chosen light under a point of the viewport, null when there is none */
+    private LightShapeUtil.Handle lightHandleAt(final float x, final float y) {
+        final var light = chosenLight();
+        return light == null ? null : LightShapeUtil.hit(LightShapeUtil.handles(light), engine.rayThrough(x, y), session.getCamera().getPosition());
+    }
+
+    private boolean pressLightHandle(final float x, final float y) {
+        final var light = chosenLight();
+        final var handle = lightHandleAt(x, y);
+        final var entry = entry();
+        if (light == null || handle == null || entry == null || !entry.has("light"))
+            return false;
+
+        final var value = switch (handle.kind()) {
+            case Range -> handle.point().distance(light.getPosition());
+            case Outer -> light.getCone().getOuterAngle();
+            case Inner -> light.getCone().getInnerAngle();
+        };
+
+        lightPath = "lights/" + entry.get("light").getAsString();
+        lightTaken = handle;
+        lightDrag = LightHandleDrag.begin(handle, light.getPosition(), value, engine.rayThrough(x, y));
+        dragKey = "light-handle-" + ++dragCounter;
+        session.getOverlay().setLightHandle(handle.index());
+        edits.beginDrag();
+        return true;
+    }
+
+    /** The mouse moved with a handle of the light taken: the file of the light follows it, so every light of the file does */
+    private void dragLightHandle(final float x, final float y, final boolean snap) {
+        final var light = chosenLight();
+        if (light == null)
+            return;
+
+        final var value = Math.round(lightDrag.update(engine.rayThrough(x, y), snap) * 100.f) / 100.0;
+        switch (lightTaken.kind()) {
+            case Range -> edits.editResource(lightPath, "Range of", dragKey, file -> file.addProperty("range", value));
+            case Outer -> edits.editResource(lightPath, "Outer angle of", dragKey, file -> file.addProperty("outerAngle", Math.max(value, light.getCone().getInnerAngle())));
+            case Inner -> edits.editResource(lightPath, "Inner angle of", dragKey, file -> file.addProperty("innerAngle", Math.min(value, light.getCone().getOuterAngle())));
+            default -> {
+            }
+        }
     }
 
     private GizmoHandle hit(final float x, final float y) {
@@ -179,9 +272,12 @@ public final class GizmoService {
     /** Puts the handles on the chosen thing (or takes them away): they follow the thing while it is dragged, but keep their axes */
     private void refresh() {
         final var overlay = session.getOverlay();
-        final var entry = mode == null || !supports(kind, mode) ? null : entry();
+        final var entry = entry();
 
-        if (entry == null) {
+        if (lightDrag == null)
+            overlay.setLightHandle(-1);
+
+        if (mode == null || entry == null || !supports(kind, mode, entry)) {
             overlay.setGizmoMode(null);
             overlay.setGizmoHandle(null);
             return;
@@ -204,7 +300,7 @@ public final class GizmoService {
     }
 
     /** The chosen thing in the file, null when nothing is chosen or the thing is gone */
-    private com.google.gson.JsonObject entry() {
+    private JsonObject entry() {
         final var document = edits.getDocument();
         if (document == null || kind == null || index < 0 || index >= document.count(kind))
             return null;
@@ -216,8 +312,14 @@ public final class GizmoService {
         return kind == OutlineKind.Object || kind == OutlineKind.Terrain || kind == OutlineKind.Water;
     }
 
-    /** What can be turned and scaled has its angles and scale in the file; everything with a place can be moved */
-    private static boolean supports(final OutlineKind kind, final GizmoMode mode) {
-        return kind != null && (mode == GizmoMode.Translate || hasAngles(kind));
+    /**
+     * What can be turned and scaled has its angles and scale in the file, a light that shines in a direction can be turned; everything with
+     * a place can be moved.
+     */
+    private static boolean supports(final OutlineKind kind, final GizmoMode mode, final JsonObject entry) {
+        if (kind == null || mode == GizmoMode.Translate)
+            return kind != null;
+
+        return hasAngles(kind) || mode == GizmoMode.Rotate && kind == OutlineKind.Light && EntryUtil.has(entry, EntryUtil.DIRECTION);
     }
 }
