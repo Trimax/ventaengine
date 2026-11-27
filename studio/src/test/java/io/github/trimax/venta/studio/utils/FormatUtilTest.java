@@ -31,4 +31,16 @@ final class FormatUtilTest {
     void testFileThatCanNotBeReadHasNoSize(@TempDir final Path directory) {
         assertEquals("", FormatUtil.size(directory.resolve("missing.bin")));
     }
+
+    @Test
+    void testNumberForAFieldHasNoUselessZeros() {
+        assertEquals("0", FormatUtil.number(0.f));
+        assertEquals("0", FormatUtil.number(-0.f));
+        assertEquals("0", FormatUtil.number(-0.00001f));
+        assertEquals("2.5", FormatUtil.number(2.5f));
+        assertEquals("-1.25", FormatUtil.number(-1.25f));
+        assertEquals("10", FormatUtil.number(10.f));
+        assertEquals("0.3333", FormatUtil.number(1.f / 3.f));
+        assertEquals("100", FormatUtil.number(100.f));
+    }
 }

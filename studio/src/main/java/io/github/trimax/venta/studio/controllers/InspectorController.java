@@ -9,7 +9,10 @@ import java.util.Locale;
 import com.google.common.eventbus.Subscribe;
 
 import io.github.trimax.venta.container.annotations.Component;
+import io.github.trimax.venta.studio.controls.EntryEditor;
 import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
+import io.github.trimax.venta.studio.model.event.SceneChangedEvent;
+import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.model.event.ProjectFileSelectedEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineItem;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
@@ -30,19 +33,23 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Shows what is chosen: the fields of an item of the hierarchy, or the contents of a file of the project. Nothing is changed here yet.
  */
 @Component
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class InspectorController {
+    private final SceneEditService edits;
+
     private static final int TEXT_LIMIT = 64 * 1024;
 
     @FXML private Label heading;
     @FXML private Label subheading;
     @FXML private StackPane content;
+
+    private EntryEditor editor;
 
     @FXML
     public void initialize() {
@@ -52,16 +59,33 @@ public final class InspectorController {
     @Subscribe
     public void onOutlineSelected(final OutlineSelectedEvent event) {
         final var item = event.item();
+        editor = null;
+
         if (item == null || item.kind() == OutlineKind.Category) {
             clear();
+            return;
+        }
+
+        if (item.isThing() && edits.getDocument() != null) {
+            editor = new EntryEditor(edits, item.kind(), item.index(), item.detail());
+            show(item.kind().name(), "", editor);
             return;
         }
 
         show(item.name(), item.kind() + (item.detail().isEmpty() ? "" : " · " + item.detail()), createProperties(item));
     }
 
+    /** The scene was changed (an edit, an undo): what is shown is what the file says */
+    @Subscribe
+    public void onSceneChanged(final SceneChangedEvent event) {
+        if (editor != null)
+            editor.refresh();
+    }
+
     @Subscribe
     public void onFileSelected(final ProjectFileSelectedEvent event) {
+        editor = null;
+
         final var file = event.file();
         if (file == null) {
             clear();

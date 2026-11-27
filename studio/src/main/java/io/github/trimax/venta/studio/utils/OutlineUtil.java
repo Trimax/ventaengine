@@ -3,6 +3,7 @@ package io.github.trimax.venta.studio.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import org.joml.Vector3f;
 
@@ -56,40 +57,9 @@ public final class OutlineUtil {
         return positions;
     }
 
-    /**
-     * The item of a thing of a scene. Things are made from the file in its order, and may share a name, so the thing is told by its name
-     * and by how many things of the kind with the same name come before it.
-     *
-     * @param occurrence how many things of the kind with this name come before the thing
-     * @return the item, null when the scene has no such thing
-     */
-    public OutlineItem find(@NonNull final OutlineNode scene, @NonNull final OutlineKind kind, @NonNull final String name, final int occurrence) {
-        var seen = 0;
-        for (final var item : items(scene, kind)) {
-            if (!item.name().equals(name))
-                continue;
-
-            if (seen++ == occurrence)
-                return item;
-        }
-
-        return null;
-    }
-
-    /**
-     * How many items of the kind with the same name come before the item, the number {@link #find} takes.
-     */
-    public int occurrence(@NonNull final OutlineNode scene, @NonNull final OutlineItem item) {
-        var seen = 0;
-        for (final var other : items(scene, item.kind())) {
-            if (other == item)
-                return seen;
-
-            if (other.name().equals(item.name()))
-                seen++;
-        }
-
-        return -1;
+    /** The item of the thing of a kind that has a place in the file, null when the scene has no such thing */
+    public OutlineItem at(@NonNull final OutlineNode scene, @NonNull final OutlineKind kind, final int index) {
+        return items(scene, kind).stream().filter(item -> item.index() == index).findFirst().orElse(null);
     }
 
     /** The items of a kind in the order of the file */
@@ -134,7 +104,9 @@ public final class OutlineUtil {
         if (dtos == null)
             return List.of();
 
-        return dtos.stream().map(dto -> new OutlineNode(new OutlineItem(kind, name.apply(dto), detail.apply(dto), dto))).toList();
+        return IntStream.range(0, dtos.size())
+                .mapToObj(index -> new OutlineNode(new OutlineItem(kind, name.apply(dtos.get(index)), detail.apply(dtos.get(index)), dtos.get(index), index)))
+                .toList();
     }
 
     private <T> void collect(final List<Vector3f> positions, final List<T> dtos, final Function<T, Vector3f> position) {

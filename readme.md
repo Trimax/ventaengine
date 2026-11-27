@@ -236,7 +236,12 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   the finished image, they are hidden by what is in front of them and are not touched by the exposure
 * **Panels** — Project (the folders and the files, a scene opens with a double click), Hierarchy (the settings and the things of the
   scene that is open), Inspector (the fields of what is chosen, the contents of a file), Console (the log of the engine)
-* The scene is not edited yet; the whole program of the studio is in [ROADMAP.md](ROADMAP.md)
+* **Editing** — the Inspector changes the name, the place, the angles (in degrees) and the scale of the thing that is chosen (and the
+  direction of a light and the size of a billboard); a drag of the name of an axis over its field changes the number, the arrows step
+  it. Every change is a command: `Cmd+Z` and `Cmd+Shift+Z` undo and redo it (the steps of a drag are one command), the title of the
+  window has a star while the scene has changes that are not saved, `Cmd+S` writes the file (in one piece, with the order of the fields
+  and the fields that the studio doesn't know kept), and closing the window or opening another scene asks about the changes
+* The things of the scene are not created, deleted or moved with the mouse yet; the whole program of the studio is in [ROADMAP.md](ROADMAP.md)
 
 ## Examples
 Every example is a separate application in `examples` (`io.github.trimax.examples...`). Run them from the repository root:

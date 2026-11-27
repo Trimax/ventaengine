@@ -11,15 +11,15 @@
         <MenuItem text="Open Project…" accelerator="Shortcut+O" onAction="#onProjectOpen"/>
         <Menu fx:id="menuRecent" text="Open Recent"/>
         <SeparatorMenuItem/>
-        <MenuItem text="Save" accelerator="Shortcut+S" disable="true"/>
+        <MenuItem fx:id="menuSave" text="Save" accelerator="Shortcut+S" disable="true" onAction="#onSave"/>
         <MenuItem text="Save As…" accelerator="Shortcut+Shift+S" disable="true"/>
         <MenuItem text="Build Archive…" disable="true"/>
         <SeparatorMenuItem/>
         <MenuItem text="Quit" accelerator="Shortcut+Q" onAction="#onQuit"/>
     </Menu>
     <Menu text="Edit">
-        <MenuItem text="Undo" accelerator="Shortcut+Z" disable="true"/>
-        <MenuItem text="Redo" accelerator="Shortcut+Shift+Z" disable="true"/>
+        <MenuItem fx:id="menuUndo" text="Undo" accelerator="Shortcut+Z" disable="true" onAction="#onUndo"/>
+        <MenuItem fx:id="menuRedo" text="Redo" accelerator="Shortcut+Shift+Z" disable="true" onAction="#onRedo"/>
         <SeparatorMenuItem/>
         <MenuItem text="Cut" accelerator="Shortcut+X" disable="true"/>
         <MenuItem text="Copy" accelerator="Shortcut+C" disable="true"/>

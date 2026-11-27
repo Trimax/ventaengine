@@ -24,6 +24,19 @@ final class SceneInstanceImplementationTest {
     }
 
     @Test
+    void testThingsAreKeptInTheOrderTheyWereAdded() {
+        final var scene = scene("ordered");
+        final var lights = new java.util.ArrayList<LightInstanceImplementation>();
+        for (int index = 0; index < 30; index++) {
+            final var light = light();
+            lights.add(light);
+            scene.add(light);
+        }
+
+        assertEquals(lights, new java.util.ArrayList<>(scene.getLights()), "An editor finds a thing by its place in the file of the scene");
+    }
+
+    @Test
     void testInstanceCanNotBeAddedToAnotherScene() {
         final var first = scene("first");
         final var second = scene("second");

@@ -39,6 +39,13 @@ public abstract class AbstractRepositoryImplementation<T extends P, P extends Ab
         prefabs.clear();
     }
 
+    @Override
+    public final void forget(@NonNull final String resourcePath) {
+        final var prefab = prefabs.remove(resourcePath);
+        if (prefab != null)
+            unload(prefab);
+    }
+
     protected abstract T load(@NonNull final String resourcePath);
 
     protected abstract void unload(@NonNull final T entity);

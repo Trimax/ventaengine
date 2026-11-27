@@ -9,12 +9,15 @@ import com.google.common.eventbus.Subscribe;
 
 import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.WireframeTarget;
+import io.github.trimax.venta.studio.model.event.HistoryChangedEvent;
 import io.github.trimax.venta.studio.model.event.WireframeChangedEvent;
 import io.github.trimax.venta.studio.model.CameraView;
 import io.github.trimax.venta.studio.model.event.ProjectOpenedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
 import io.github.trimax.venta.studio.services.ProjectService;
+import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.services.SceneService;
+import io.github.trimax.venta.studio.services.UnsavedChangesService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,8 +43,13 @@ public final class MenuController {
     private final ProjectService projects;
     private final SceneService scenes;
     private final MainController main;
+    private final SceneEditService edits;
+    private final UnsavedChangesService unsaved;
 
     @FXML private Menu menuRecent;
+    @FXML private MenuItem menuSave;
+    @FXML private MenuItem menuUndo;
+    @FXML private MenuItem menuRedo;
     @FXML private CheckMenuItem viewHierarchy;
     @FXML private CheckMenuItem viewInspector;
     @FXML private CheckMenuItem viewBottom;
@@ -71,7 +79,33 @@ public final class MenuController {
 
     @FXML
     public void onQuit(final ActionEvent event) {
-        Platform.exit();
+        if (unsaved.confirm())
+            Platform.exit();
+    }
+
+    @FXML
+    public void onSave(final ActionEvent event) {
+        edits.save();
+    }
+
+    @FXML
+    public void onUndo(final ActionEvent event) {
+        edits.undo();
+    }
+
+    @FXML
+    public void onRedo(final ActionEvent event) {
+        edits.redo();
+    }
+
+    /** What can be undone or redone changed: the menu says what it would do */
+    @Subscribe
+    public void onHistoryChanged(final HistoryChangedEvent event) {
+        menuSave.setDisable(session.getScene() == null);
+        menuUndo.setDisable(event.undoLabel().isEmpty());
+        menuUndo.setText(event.undoLabel().isEmpty() ? "Undo" : "Undo " + event.undoLabel());
+        menuRedo.setDisable(event.redoLabel().isEmpty());
+        menuRedo.setText(event.redoLabel().isEmpty() ? "Redo" : "Redo " + event.redoLabel());
     }
 
     @FXML

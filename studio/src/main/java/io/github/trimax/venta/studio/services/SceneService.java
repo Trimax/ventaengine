@@ -1,5 +1,8 @@
 package io.github.trimax.venta.studio.services;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.EnumSet;
 import java.util.Optional;
 
@@ -9,10 +12,9 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.enums.DrawMode;
-import io.github.trimax.venta.engine.model.dto.SceneDTO;
-import io.github.trimax.venta.engine.services.ResourceService;
 import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.WireframeTarget;
+import io.github.trimax.venta.studio.model.document.SceneDocument;
 import io.github.trimax.venta.studio.model.event.SceneOpenedEvent;
 import io.github.trimax.venta.studio.model.event.WireframeChangedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
@@ -32,7 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 public final class SceneService {
     private final StudioSession session;
     private final VentaContext context;
-    private final ResourceService resources;
+    private final SceneEditService edits;
+    private final UnsavedChangesService unsaved;
 
     /**
      * Opens a scene of the project.
@@ -41,10 +44,15 @@ public final class SceneService {
      * @return whether the scene is open; when it isn't, the scene that was open stays
      */
     public boolean open(@NonNull final String name) {
+        if (!unsaved.confirm())
+            return false;
+
         try {
-            final var file = resources.getAsObject("/scenes/" + name, SceneDTO.class);
-            if (file == null)
-                throw new IllegalStateException("The scene file is empty");
+            final var path = session.getProject().resolve("scenes").resolve(name);
+            final var document = new SceneDocument(name, Files.readString(path, StandardCharsets.UTF_8));
+
+            // The scene is made from the file as it is on the disk: what was loaded before may be older
+            context.getSceneRepository().forget(name);
 
             final var manager = context.getSceneManager();
             final var previous = manager.getCurrent();
@@ -54,15 +62,16 @@ public final class SceneService {
                 manager.delete(previous);
 
             session.setScene(name);
+            edits.open(document);
             applyWireframe();
 
-            final var frame = FramingUtil.frame(OutlineUtil.positions(file));
+            final var frame = FramingUtil.frame(OutlineUtil.positions(document.getScene()));
             session.getCamera().frame(frame == null ? new FramingUtil.Frame(new Vector3f(0.f, 2.f, 0.f), FramingUtil.MINIMAL_RADIUS) : frame);
 
-            EventUtil.post(new SceneOpenedEvent(name, file, OutlineUtil.build(name, file)));
+            EventUtil.post(new SceneOpenedEvent(name, document.getScene(), OutlineUtil.build(name, document.getScene())));
             EventUtil.post(new StatusEvent("Scene %s is open", name));
             return true;
-        } catch (final RuntimeException exception) {
+        } catch (final IOException | RuntimeException exception) {
             log.error("Can't open the scene {}", name, exception);
             EventUtil.post(new StatusEvent("Can't open the scene %s: %s", name, Optional.ofNullable(exception.getMessage()).orElse(exception.getClass().getSimpleName())));
             return false;

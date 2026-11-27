@@ -13,6 +13,7 @@ import io.github.trimax.venta.studio.services.ConsoleLog;
 import io.github.trimax.venta.studio.services.ProjectService;
 import io.github.trimax.venta.studio.services.SceneService;
 import io.github.trimax.venta.studio.services.SelectionService;
+import io.github.trimax.venta.studio.services.UnsavedChangesService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -74,6 +75,14 @@ public final class StudioApplication extends Application implements AbstractVent
 
         stage.setTitle("Venta Studio");
         stage.setScene(scene);
+
+        // Changes that are not saved are asked about before the window goes
+        final var unsaved = VentaApplication.getComponent(UnsavedChangesService.class);
+        stage.setOnCloseRequest(event -> {
+            if (!unsaved.confirm())
+                event.consume();
+        });
+
         stage.show();
 
         viewport.start();

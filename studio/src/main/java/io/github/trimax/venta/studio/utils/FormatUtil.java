@@ -36,4 +36,14 @@ public final class FormatUtil {
             return "";
         }
     }
+
+    /**
+     * A number for a field: at most four decimals, none that are zeros: {@code 2.5}, {@code 0}, {@code -1.25}.
+     */
+    public String number(final float value) {
+        final var text = String.format(Locale.ROOT, "%.4f", value);
+        final var trimmed = text.replaceAll("0+$", "").replaceAll("\\.$", "");
+
+        return trimmed.equals("-0") || trimmed.isEmpty() ? "0" : trimmed;
+    }
 }

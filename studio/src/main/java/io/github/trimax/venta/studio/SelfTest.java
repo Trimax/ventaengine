@@ -9,8 +9,11 @@ import io.github.trimax.venta.container.VentaApplication;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
+import io.github.trimax.venta.studio.services.SceneApplier;
+import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.services.SceneService;
 import io.github.trimax.venta.studio.services.SelectionService;
+import io.github.trimax.venta.studio.utils.EntryUtil;
 import io.github.trimax.venta.studio.utils.OutlineUtil;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -88,6 +91,9 @@ final class SelfTest extends AnimationTimer {
             flyCamera.place(Float.parseFloat(values[0]), Float.parseFloat(values[1]), Float.parseFloat(values[2]), Float.parseFloat(values[3]), Float.parseFloat(values[4]));
         }
 
+        if (System.getProperty("studio.edit") != null)
+            edit();
+
         if (frame == 25)
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "d", "d", KeyCode.D, false, false, false, false));
 
@@ -110,6 +116,40 @@ final class SelfTest extends AnimationTimer {
 
         if (frame == frames)
             report();
+    }
+
+    /** Moves the chosen object, undoes the move, does it again, saves the scene and reads the file: the whole of the editing, with the numbers */
+    private void edit() {
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var applier = VentaApplication.getComponent(SceneApplier.class);
+        final var name = System.getProperty("studio.edit");
+        final var outline = VentaApplication.getComponent(SelectionService.class).getOutline();
+        final var item = OutlineUtil.items(outline, OutlineKind.Object).stream().filter(candidate -> candidate.name().equals(name)).findFirst().orElse(null);
+        if (item == null)
+            return;
+
+        final var engine = (io.github.trimax.venta.engine.model.instance.ObjectInstance) applier.instanceOf(OutlineKind.Object, item.index());
+
+        if (frame == 50) {
+            System.out.printf("SELFTEST edit: before the move x=%.2f%n", engine.getPosition().x());
+            edits.edit(OutlineKind.Object, item.index(), "Move", "position", entry -> {
+                final var position = EntryUtil.getVector(entry, EntryUtil.POSITION, new org.joml.Vector3f());
+                EntryUtil.setVector(entry, EntryUtil.POSITION, position.add(1.f, 0.f, 0.f));
+            });
+            System.out.printf("SELFTEST edit: moved x=%.2f, file x=%.2f, dirty=%s%n", engine.getPosition().x(),
+                    EntryUtil.getVector(edits.getDocument().getEntry(OutlineKind.Object, item.index()), EntryUtil.POSITION, new org.joml.Vector3f()).x, edits.isDirty());
+        }
+
+        if (frame == 60) {
+            edits.undo();
+            System.out.printf("SELFTEST edit: undone x=%.2f, dirty=%s%n", engine.getPosition().x(), edits.isDirty());
+        }
+
+        if (frame == 70) {
+            edits.redo();
+            final var saved = edits.save();
+            System.out.printf("SELFTEST edit: redone x=%.2f, saved=%s, dirty=%s%n", engine.getPosition().x(), saved, edits.isDirty());
+        }
     }
 
     /** Chooses an object of the scene in the hierarchy, as a click on it would */
