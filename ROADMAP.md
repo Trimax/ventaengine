@@ -38,6 +38,5 @@ its own. What the engine can do already is in the [readme](readme.md). Paths of 
   3. Groups of things (the engine needs scene nodes with a parent first).
   4. The editors of the terrain, the water, the emitters and the sounds (the tools of the old `editor` become panels); playing a scene
      in the editor and building the archive.
-  5. Smaller things: a dropped thing lands on the ground (needs a ray against the terrain), a silhouette instead of the frame of the
-     chosen thing, choosing by pixels (an id buffer), choosing the ground and the water, panels as strips of buttons at the edges, and
-     the old `editor` goes when its tools are in the studio.
+  5. Smaller things: a silhouette instead of the frame of the chosen thing, choosing by pixels (an id buffer), panels as strips of
+     buttons at the edges, and the old `editor` goes when its tools are in the studio.

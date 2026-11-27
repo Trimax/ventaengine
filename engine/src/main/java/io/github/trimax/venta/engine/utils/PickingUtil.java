@@ -7,12 +7,14 @@ import org.joml.Vector3f;
 import io.github.trimax.venta.engine.model.common.pick.PickResult;
 import io.github.trimax.venta.engine.model.instance.SceneInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.TerrainSurfaceInstanceImplementation;
+import io.github.trimax.venta.engine.model.instance.implementation.WaterSurfaceInstanceImplementation;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 /**
- * Finds the thing of a scene under a point of the screen: the ray of the point meets the boxes of the objects and the marks of the
- * things that have no shape, and the nearest is chosen. The ground and the water are not chosen by a click.
+ * Finds the thing of a scene under a point of the screen: the ray of the point meets the boxes of the objects, the ground, the water and the
+ * marks of the things that have no shape, and the nearest is chosen.
  */
 @UtilityClass
 public final class PickingUtil {
@@ -40,6 +42,24 @@ public final class PickingUtil {
             final var distance = RayUtil.intersectBox(ray, entity.getBox(), entity.getTransform().getMatrix());
             if (distance != RayUtil.MISS && (nearest == null || distance < nearest.distance()))
                 nearest = new PickResult(object, distance);
+        }
+
+        for (final var terrain : scene.getTerrainSurfaces()) {
+            if (!(terrain instanceof TerrainSurfaceInstanceImplementation entity))
+                continue;
+
+            final var distance = GroundUtil.terrain(ray, entity, GroundUtil.MAXIMAL_DISTANCE);
+            if (distance != RayUtil.MISS && (nearest == null || distance < nearest.distance()))
+                nearest = new PickResult(terrain, distance);
+        }
+
+        for (final var water : scene.getWaterSurfaces()) {
+            if (!(water instanceof WaterSurfaceInstanceImplementation entity))
+                continue;
+
+            final var distance = GroundUtil.water(ray, entity);
+            if (distance != RayUtil.MISS && (nearest == null || distance < nearest.distance()))
+                nearest = new PickResult(water, distance);
         }
 
         for (final var mark : OverlayUtil.marks(scene)) {

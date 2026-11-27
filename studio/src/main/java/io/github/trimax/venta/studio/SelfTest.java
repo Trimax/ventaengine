@@ -119,6 +119,9 @@ final class SelfTest extends AnimationTimer {
         if (System.getProperty("studio.recreate") != null)
             recreate();
 
+        if (System.getProperty("studio.ground") != null)
+            ground();
+
         if (System.getProperty("studio.lighthandle") != null)
             lightHandle();
 
@@ -397,6 +400,29 @@ final class SelfTest extends AnimationTimer {
             edits.redo();
             final var saved = edits.save();
             System.out.printf("SELFTEST recreate: redone and saved=%s, emitters=%d, dirty=%s%n", saved, scene.getEmitters().size(), edits.isDirty());
+        }
+    }
+
+    /** Clicks on the ground and on the water, and drops a file on the ground: what is chosen, and where the thing lands */
+    private void ground() {
+        final var selection = VentaApplication.getComponent(SelectionService.class);
+        final var session = VentaApplication.getComponent(StudioSession.class);
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var values = System.getProperty("studio.ground").split(",");
+        final var x = Float.parseFloat(values[0]);
+        final var y = Float.parseFloat(values[1]);
+
+        if (frame == 50) {
+            selection.pick(x, y);
+            final var item = selection.getSelected();
+            System.out.printf("SELFTEST ground: clicked (%.2f, %.2f): %s%n", x, y, item == null ? "nothing" : item.kind() + " " + item.name());
+        }
+
+        if (frame == 60) {
+            final var before = edits.getDocument().count(OutlineKind.Object);
+            VentaApplication.getComponent(PlacementService.class).place(session.getProject().resolve(values[2]), x, y);
+            final var entry = edits.getDocument().getEntry(OutlineKind.Object, before);
+            System.out.printf("SELFTEST ground: dropped at %s%n", EntryUtil.getVector(entry, EntryUtil.POSITION, new org.joml.Vector3f()));
         }
     }
 

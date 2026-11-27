@@ -231,8 +231,8 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   camera flies (the right mouse button looks, and only while it is held `W` `A` `S` `D` `Q` `E` move the camera, `Shift` is faster, the wheel dollies), orbits the chosen thing
   (`Alt` and the left button), pans (the middle button), turns to the chosen thing (`F`, or a double click in the hierarchy) and goes to
   the views Perspective, Top, Front and Side
-* **Choosing** — a click chooses the thing under the mouse: the ray of the pixel meets the boxes of the objects and the marks of the
-  lights, the emitters, the billboards and the sounds. The chosen thing has a frame; a grid of the ground and the marks are drawn over
+* **Choosing** — a click chooses the thing under the mouse: the ray of the pixel meets the boxes of the objects, the ground, the water and the marks of the
+  lights, the emitters, the billboards and the sounds (`Esc` lets go of what is chosen). The chosen thing has a frame; a grid of the ground and the marks are drawn over
   the finished image, they are hidden by what is in front of them and are not touched by the exposure
 * **Panels** — Project (the folders and the files, a scene opens with a double click), Hierarchy (the settings and the things of the
   scene that is open), Inspector (the fields of what is chosen, the contents of a file), Console (the log of the engine)
@@ -242,8 +242,8 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   window has a star while the scene has changes that are not saved, `Cmd+S` writes the file (in one piece, with the order of the fields
   and the fields that the studio doesn't know kept), and closing the window or opening another scene asks about the changes
 * **Creating things** — a file of the project that a scene holds (an object, a light, an emitter, a billboard, a sound source, a terrain,
-  a water) is dragged from the Project panel into the viewport, where it lands on the plane at the height of the point the camera turns
-  round, or into the Hierarchy; the Object menu makes the same from a list of the files. `Cmd+D` copies the chosen thing (the copy is the
+  a water) is dragged from the Project panel into the viewport, where it lands on the ground under the mouse (on the plane at the height of the point the camera turns
+  round when there is no ground), or into the Hierarchy; the Object menu makes the same from a list of the files. `Cmd+D` copies the chosen thing (the copy is the
   next one, a meter aside, with the next number in its name), `Delete` or `Cmd+Backspace` deletes it. All of it is undone and redone with
   the rest, and a thing that can't be made (its file doesn't load) is not put in the scene file
 * **Environment** — the sun, the ambient light, the fog, the wind, the bloom, the light shafts, the ambient occlusion, the antialiasing, the

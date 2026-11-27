@@ -85,6 +85,7 @@ public final class ViewportPanel extends Region {
     private BiConsumer<Float, Float> onPick = (x, y) -> { };
     private Runnable onFocus = () -> { };
     private Runnable onDelete = () -> { };
+    private Runnable onDeselect = () -> { };
     private Predicate<Path> dropAcceptor = file -> false;
     private DropHandler onDrop = (file, x, y) -> { };
     private long lastPulse;
@@ -134,6 +135,8 @@ public final class ViewportPanel extends Region {
                 onFocus.run();
             else if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
                 onDelete.run();
+            else if (event.getCode() == KeyCode.ESCAPE)
+                onDeselect.run();
             else if (flying)
                 flyCamera.press(event.getCode());
             else if (!event.isShortcutDown() && !event.isAltDown() && TOOL_KEYS.contains(event.getCode()))
@@ -192,6 +195,11 @@ public final class ViewportPanel extends Region {
 
         default void release() {
         }
+    }
+
+    /** The key that lets go of what is chosen is pressed */
+    public void setOnDeselect(final Runnable onDeselect) {
+        this.onDeselect = onDeselect;
     }
 
     /** The key that deletes the chosen thing is pressed */
