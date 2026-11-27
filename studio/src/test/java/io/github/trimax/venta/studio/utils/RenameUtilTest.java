@@ -166,4 +166,39 @@ final class RenameUtilTest {
         assertEquals(SCENE, Files.readString(project.resolve("scenes/a.json")), "The scene is as it was");
         assertEquals(OBJECT, Files.readString(project.resolve("objects/chest.json")));
     }
+
+    @Test
+    void testRenamingAFolderChangesEveryNameThatStartsWithIt() throws IOException {
+        Files.createDirectories(project.resolve("textures/chest/inner"));
+        Files.writeString(project.resolve("textures/chest/inner/n.png"), "png");
+        Files.writeString(project.resolve("materials/second.json"), "{\"textures\": {\"diffuse\": \"chest/diffuse.png\", \"normal\": \"chest/inner/n.png\", \"roughness\": \"chests/x.png\"}}");
+
+        final var plan = RenameUtil.plan(project, project.resolve("textures/chest"), "box");
+
+        assertEquals(3, plan.references(), "Two in the second material and one in the first, not `chests/`");
+        RenameUtil.apply(plan);
+
+        assertEquals("{\"textures\": {\"diffuse\": \"box/diffuse.png\", \"normal\": \"box/inner/n.png\", \"roughness\": \"chests/x.png\"}}", Files.readString(project.resolve("materials/second.json")));
+        assertEquals(MATERIAL.replace("chest/diffuse.png", "box/diffuse.png"), Files.readString(project.resolve("materials/chest.json")));
+        assertTrue(Files.exists(project.resolve("textures/box/inner/n.png")));
+        assertFalse(Files.exists(project.resolve("textures/chest")));
+    }
+
+    @Test
+    void testFolderOfAGroupAndTheProjectKeepTheirNames() {
+        assertThrows(IllegalArgumentException.class, () -> RenameUtil.plan(project, project.resolve("textures"), "images"));
+        assertThrows(IllegalArgumentException.class, () -> RenameUtil.plan(project, project, "other"));
+    }
+
+    @Test
+    void testFolderOutsideOfTheGroupsIsJustMoved() throws IOException {
+        Files.createDirectories(project.resolve("notes"));
+        Files.writeString(project.resolve("notes/a.txt"), "x");
+
+        final var plan = RenameUtil.plan(project, project.resolve("notes"), "docs");
+        RenameUtil.apply(plan);
+
+        assertEquals(0, plan.references());
+        assertTrue(Files.exists(project.resolve("docs/a.txt")));
+    }
 }

@@ -14,6 +14,7 @@ import io.github.trimax.venta.studio.model.event.ProjectFileSelectedEvent;
 import io.github.trimax.venta.studio.model.event.ProjectOpenedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
 import io.github.trimax.venta.studio.services.AssetService;
+import io.github.trimax.venta.studio.services.DiskWatchService;
 import io.github.trimax.venta.studio.services.PlacementService;
 import io.github.trimax.venta.studio.services.SceneService;
 import io.github.trimax.venta.studio.utils.FormatUtil;
@@ -52,6 +53,7 @@ public final class ProjectController {
     private final SceneService scenes;
     private final PlacementService placement;
     private final AssetService assets;
+    private final DiskWatchService diskWatch;
 
     @FXML private TextField filter;
     @FXML private TreeView<Path> folders;
@@ -81,7 +83,7 @@ public final class ProjectController {
                 super.updateItem(file, empty);
 
                 setText(empty || file == null ? null : file.getFileName().toString() + "  ·  " + FormatUtil.size(file));
-                setGraphic(empty || file == null ? null : IconViewUtil.file());
+                setGraphic(empty || file == null ? null : IconViewUtil.file(file));
             }
         });
         files.getSelectionModel().selectedItemProperty().addListener((observable, was, is) -> EventUtil.post(new ProjectFileSelectedEvent(is)));
@@ -90,6 +92,13 @@ public final class ProjectController {
                 openSelected();
         });
         files.setContextMenu(createContextMenu());
+
+        final var renameFolder = new MenuItem("Rename...");
+        renameFolder.setOnAction(event -> {
+            if (selectedFolder != null && session.getProject() != null && assets.rename(selectedFolder))
+                refresh();
+        });
+        folders.setContextMenu(new ContextMenu(renameFolder));
         files.setOnDragDetected(event -> {
             final var file = files.getSelectionModel().getSelectedItem();
             if (file == null || !placement.isPlaceable(file))
@@ -131,8 +140,10 @@ public final class ProjectController {
 
         // A file that was added or changed in another program shows when the window is entered again
         session.getStage().focusedProperty().addListener((observable, was, is) -> {
-            if (is && session.getProject() != null)
+            if (is && session.getProject() != null) {
+                diskWatch.check();
                 refresh();
+            }
         });
     }
 

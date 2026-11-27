@@ -11,6 +11,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.engine.enums.GroupType;
 import io.github.trimax.venta.studio.StudioSession;
+import io.github.trimax.venta.studio.model.event.FilesWrittenEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
 import io.github.trimax.venta.studio.utils.ImportUtil;
 import io.github.trimax.venta.studio.utils.ProjectUtil;
@@ -74,8 +75,10 @@ public final class AssetService {
             }
         }
 
-        if (!imported.isEmpty())
+        if (!imported.isEmpty()) {
+            EventUtil.post(new FilesWrittenEvent());
             EventUtil.post(new StatusEvent("Imported %s", imported.size() == 1 ? project.relativize(imported.getFirst()).toString().replace('\\', '/') : imported.size() + " files"));
+        }
 
         return imported;
     }
@@ -144,6 +147,7 @@ public final class AssetService {
             return false;
         }
 
+        EventUtil.post(new FilesWrittenEvent());
         reopenScene(project, plan);
         EventUtil.post(new StatusEvent("Renamed %s to %s, %d places changed", file.getFileName(), plan.to().getFileName(), plan.references()));
         return true;

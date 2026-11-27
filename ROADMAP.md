@@ -31,11 +31,10 @@ its own. What the engine can do already is in the [readme](readme.md). Paths of 
 ## Editor
 
 - [ ] **5. Studio.** The editor of scenes (`studio/`) edits a scene in its viewport and inspector: it chooses, creates, copies,
-  deletes, moves, turns and scales things, edits the environment and the files of the things and of their materials (a light also with handles for its range and cone), with
-  undo and redo, and saves the files. What is left, in the order of the work:
-  1. The assets that are left: thumbnails, reloading what changed on the disk, renaming folders and the names in the text of the meshes.
-  2. Groups of things (the engine needs scene nodes with a parent first).
-  3. The editors of the terrain, the water, the emitters and the sounds (the tools of the old `editor` become panels); playing a scene
+  deletes, moves, turns and scales things, edits the environment and the files of the things and of their materials (a light also with handles for its range and cone), brings
+  in and renames files with the references updated, follows the changes of the files on the disk, with undo and redo, and saves the files. What is left, in the order of the work:
+  1. Groups of things (the engine needs scene nodes with a parent first).
+  2. The editors of the terrain, the water, the emitters and the sounds (the tools of the old `editor` become panels); playing a scene
      in the editor and building the archive.
-  4. Smaller things: a silhouette instead of the frame of the chosen thing, choosing by pixels (an id buffer), panels as strips of
+  3. Smaller things: a silhouette instead of the frame of the chosen thing, choosing by pixels (an id buffer), panels as strips of
      buttons at the edges, and the old `editor` goes when its tools are in the studio.

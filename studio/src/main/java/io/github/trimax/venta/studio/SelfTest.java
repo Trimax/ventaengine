@@ -120,6 +120,9 @@ final class SelfTest extends AnimationTimer {
         if (System.getProperty("studio.recreate") != null)
             recreate();
 
+        if (System.getProperty("studio.disk") != null)
+            disk();
+
         if (System.getProperty("studio.assets") != null)
             assets();
 
@@ -487,6 +490,40 @@ final class SelfTest extends AnimationTimer {
             final var now = VentaApplication.getComponent(io.github.trimax.venta.engine.context.VentaContext.class).getSceneManager().getCurrent();
             System.out.printf("SELFTEST assets: after reopening objects=%d, dirty=%s%n", now.getObjects().size(), edits.isDirty());
         }
+    }
+
+    /** Changes files on the disk as another program would (a file of an emitter, a texture, the scene) and looks at what the studio shows */
+    @SneakyThrows
+    private void disk() {
+        final var watch = VentaApplication.getComponent(io.github.trimax.venta.studio.services.DiskWatchService.class);
+        final var applier = VentaApplication.getComponent(SceneApplier.class);
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var session = VentaApplication.getComponent(StudioSession.class);
+        final var project = session.getProject();
+
+        if (frame == 40)
+            watch.sync();
+
+        if (frame == 50) {
+            final var emitter = applier.instanceOf(OutlineKind.Emitter, 0);
+            final var file = project.resolve("emitters/campfire-flame.json");
+            java.nio.file.Files.writeString(file, java.nio.file.Files.readString(file).replace("\"emissionRate\": 60", "\"emissionRate\": 5"));
+            file.toFile().setLastModified(System.currentTimeMillis() + 5000);
+            System.out.printf("SELFTEST disk: an emitter file changed: found=%d, made again=%s, dirty=%s%n", watch.check(), applier.instanceOf(OutlineKind.Emitter, 0) != emitter, edits.isDirty());
+
+            final var again = applier.instanceOf(OutlineKind.Emitter, 0);
+            final var texture = project.resolve("textures/sprites/flame.png");
+            texture.toFile().setLastModified(System.currentTimeMillis() + 9000);
+            System.out.printf("SELFTEST disk: a texture changed: found=%d, the emitter that names it made again=%s%n", watch.check(), applier.instanceOf(OutlineKind.Emitter, 0) != again);
+
+            final var scenePath = project.resolve("scenes/" + session.getScene());
+            java.nio.file.Files.writeString(scenePath, java.nio.file.Files.readString(scenePath).replace("Campfire sound", "Fire sound"));
+            scenePath.toFile().setLastModified(System.currentTimeMillis() + 15000);
+            System.out.printf("SELFTEST disk: the scene file changed: found=%d%n", watch.check());
+        }
+
+        if (frame == 60)
+            System.out.printf("SELFTEST disk: the scene was read again: sound is `%s`, dirty=%s%n", io.github.trimax.venta.studio.utils.EntryUtil.getName(edits.getDocument().getEntry(OutlineKind.Sound, 0)), edits.isDirty());
     }
 
     private org.joml.Vector3f position(final SceneEditService edits, final io.github.trimax.venta.studio.model.outline.OutlineItem item) {

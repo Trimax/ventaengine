@@ -121,4 +121,15 @@ final class ReferenceScanUtilTest {
         assertEquals(GroupType.Material, ReferenceScanUtil.groupOf("material"));
         assertEquals(GroupType.Texture, ReferenceScanUtil.groupOf("diffuse"));
     }
+
+    @Test
+    void testNamesInsideOfAFolderAreFoundByTheirPrefix() {
+        final var json = "{\"textures\": [\"chest/a.png\", \"chests/b.png\", \"chest\"], \"texture\": \"chest/c.png\"}";
+
+        final var places = ReferenceScanUtil.inside(json, GroupType.Texture, "chest/");
+
+        assertEquals(2, places.size());
+        assertEquals("{\"textures\": [\"box/a.png\", \"chests/b.png\", \"chest\"], \"texture\": \"box/c.png\"}",
+                ReferenceScanUtil.replaceEach(json, places, value -> "box/" + value.substring("chest/".length())));
+    }
 }
