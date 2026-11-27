@@ -54,4 +54,13 @@ final class ResourceKindUtilTest {
             assertNotNull(ResourceKindUtil.typeOf(kind), kind.name());
         }
     }
+
+    @Test
+    void testMaterialFileIsToldFromTheFilesOfThings() {
+        assertEquals("chest.json", ResourceKindUtil.materialOf("materials/chest.json").orElseThrow());
+        assertEquals("lod/rock.json", ResourceKindUtil.materialOf("materials/lod/rock.json").orElseThrow());
+        assertTrue(ResourceKindUtil.materialOf("objects/chest.json").isEmpty());
+        assertTrue(ResourceKindUtil.materialOf("materials/").isEmpty());
+        assertTrue(ResourceKindUtil.of("materials/chest.json").isEmpty(), "No thing of a scene is made of a material");
+    }
 }

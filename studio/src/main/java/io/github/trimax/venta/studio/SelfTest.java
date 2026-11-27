@@ -119,6 +119,9 @@ final class SelfTest extends AnimationTimer {
         if (System.getProperty("studio.recreate") != null)
             recreate();
 
+        if (System.getProperty("studio.material") != null)
+            material();
+
         if (System.getProperty("studio.ground") != null)
             ground();
 
@@ -423,6 +426,36 @@ final class SelfTest extends AnimationTimer {
             VentaApplication.getComponent(PlacementService.class).place(session.getProject().resolve(values[2]), x, y);
             final var entry = edits.getDocument().getEntry(OutlineKind.Object, before);
             System.out.printf("SELFTEST ground: dropped at %s%n", EntryUtil.getVector(entry, EntryUtil.POSITION, new org.joml.Vector3f()));
+        }
+    }
+
+    /** Changes the file of a material that an object uses (the objects that use it are made again), tries a texture that isn't there, undoes and saves */
+    private void material() {
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var applier = VentaApplication.getComponent(SceneApplier.class);
+        final var scene = VentaApplication.getComponent(io.github.trimax.venta.engine.context.VentaContext.class).getSceneManager().getCurrent();
+        final var path = System.getProperty("studio.material");
+        final var chest = applier.instanceOf(OutlineKind.Object, 0);
+        final var second = applier.instanceOf(OutlineKind.Object, 1);
+
+        if (frame == 50) {
+            System.out.printf("SELFTEST material: before: objects=%d, first=%s%n", scene.getObjects().size(), ((io.github.trimax.venta.engine.model.instance.ObjectInstance) chest).getName());
+            edits.editResource(path, "Change", "roughness", file -> file.addProperty("roughness", 0.9));
+            final var again = applier.instanceOf(OutlineKind.Object, 0);
+            System.out.printf("SELFTEST material: changed: objects=%d, made again=%s, name=%s, second the same=%s, dirty=%s%n", scene.getObjects().size(), again != chest,
+                    ((io.github.trimax.venta.engine.model.instance.ObjectInstance) again).getName(), applier.instanceOf(OutlineKind.Object, 1) == second, edits.isDirty());
+            edits.editResource(path, "Change", "diffuse", file -> file.getAsJsonObject("textures").addProperty("diffuse", "chest/nothing.png"));
+            System.out.printf("SELFTEST material: refused a texture that is not there: objects=%d%n", scene.getObjects().size());
+        }
+
+        if (frame == 60) {
+            edits.undo();
+            System.out.printf("SELFTEST material: undone: objects=%d, dirty=%s%n", scene.getObjects().size(), edits.isDirty());
+        }
+
+        if (frame == 70) {
+            edits.redo();
+            System.out.printf("SELFTEST material: redone and saved=%s, objects=%d%n", edits.save(), scene.getObjects().size());
         }
     }
 

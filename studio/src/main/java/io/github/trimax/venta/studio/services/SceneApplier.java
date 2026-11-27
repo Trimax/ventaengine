@@ -3,6 +3,7 @@ package io.github.trimax.venta.studio.services;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -138,6 +139,51 @@ public final class SceneApplier {
 
         for (final var index : users)
             create(target.kind(), index, document.getEntry(target.kind(), index));
+    }
+
+    /** Makes again the things of the scene that are made of the files: the places among the things of their kinds are the same */
+    private void remakeUsersOf(final List<ResourceKindUtil.Target> targets, final SceneDocument document) {
+        // Every thing once, by its kind and its place among the things of the kind
+        final var all = new ArrayList<Map.Entry<OutlineKind, Integer>>();
+        targets.forEach(target -> usersOf(target, document).forEach(index -> all.add(Map.entry(target.kind(), index))));
+        all.sort(java.util.Comparator.comparing((Map.Entry<OutlineKind, Integer> entry) -> entry.getKey()).thenComparing(Map.Entry::getValue));
+
+        // From the last: taking a thing out moves the ones after it of its kind
+        for (int position = all.size() - 1; position >= 0; position--)
+            remove(all.get(position).getKey(), all.get(position).getValue());
+
+        all.forEach(entry -> create(entry.getKey(), entry.getValue(), document.getEntry(entry.getKey(), entry.getValue())));
+    }
+
+    /**
+     * Shows a file of a material as it is edited: the things that are made of the files that use the material are made again, so they
+     * take the material from the contents that the studio gives instead of the file.
+     *
+     * @param path       the place of the file of the material, like {@code materials/chest.json}
+     * @param value      the contents of the file
+     * @param dependents the files of the things (objects, terrains) that name the material
+     */
+    public void applyMaterial(@NonNull final String path, @NonNull final JsonObject value, @NonNull final SceneDocument document,
+                              @NonNull final List<ResourceKindUtil.Target> dependents) {
+        final var file = ResourceKindUtil.materialOf(path).orElseThrow();
+        resources.override(path, value.toString().getBytes(StandardCharsets.UTF_8));
+
+        // What is made of the material is read before anything is taken out: what can't be read leaves the scene as it is
+        context.getMaterialRegistry().forget(file);
+        for (final var dependent : dependents) {
+            forget(dependent.kind(), dependent.file());
+            if (!usersOf(dependent, document).isEmpty())
+                load(dependent.kind(), dependent.file());
+        }
+
+        remakeUsersOf(dependents, document);
+    }
+
+    /** The files of the things that use a material are made again with the material that the disk has */
+    public void discardMaterial(@NonNull final String path, @NonNull final List<ResourceKindUtil.Target> dependents) {
+        resources.restore(path);
+        ResourceKindUtil.materialOf(path).ifPresent(context.getMaterialRegistry()::forget);
+        dependents.forEach(dependent -> forget(dependent.kind(), dependent.file()));
     }
 
     /** What the file at a path is again what the disk has: the engine forgets what it has made of the edited contents */

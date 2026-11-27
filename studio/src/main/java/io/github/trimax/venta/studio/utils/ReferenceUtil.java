@@ -29,7 +29,16 @@ public final class ReferenceUtil {
             Map.entry("sound", new Place("sounds", List.of(".ogg"))),
             Map.entry("texture", new Place("textures", List.of(".png", ".jpg", ".jpeg"))),
             Map.entry("gridMesh", new Place("gridmeshes", List.of(".json"))),
-            Map.entry("heightmap", new Place("textures", List.of(".png", ".jpg", ".jpeg"))));
+            Map.entry("heightmap", new Place("textures", List.of(".png", ".jpg", ".jpeg"))),
+
+            // The textures of a material are named by what they are for
+            Map.entry("ambientOcclusion", new Place("textures", List.of(".png", ".jpg", ".jpeg"))),
+            Map.entry("diffuse", new Place("textures", List.of(".png", ".jpg", ".jpeg"))),
+            Map.entry("emissive", new Place("textures", List.of(".png", ".jpg", ".jpeg"))),
+            Map.entry("height", new Place("textures", List.of(".png", ".jpg", ".jpeg"))),
+            Map.entry("metalness", new Place("textures", List.of(".png", ".jpg", ".jpeg"))),
+            Map.entry("normal", new Place("textures", List.of(".png", ".jpg", ".jpeg"))),
+            Map.entry("roughness", new Place("textures", List.of(".png", ".jpg", ".jpeg"))));
 
     /** Where the files are that a field with the name names, null for a field that doesn't name a file */
     public Place placeOf(@NonNull final String field) {

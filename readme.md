@@ -255,7 +255,8 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
 * **Resources** — under the fields of a thing the Inspector has the fields of the file it is made of (a light, an emitter, a sound, a
   billboard, an object, a terrain, a water), made the same way from what the file holds: numbers, switches, lists of the values of an
   enum, color pickers, rows of vectors, and the elements of a list as groups. A field that names another file (a program, a material, a
-  mesh, a texture, a sound, a sprite, a grid mesh) is a list of the files of the project. The form says when the file is shared by
+  mesh, a texture, a sound, a sprite, a grid mesh) is a list of the files of the project, and next to a material the button Edit opens
+  the fields of the material file (its colors, textures, alpha mode, ...): the things that use it are made again. The form says when the file is shared by
   several things of the scene. A change of a file is a command of the same history; a light shows it where it is, the other things are
   made again from the edited file (the engine reads the contents given by the studio until they are written), and a file that can't be
   loaded is refused. The handles on a chosen light (a cube for the range on every axis of a point light, one at the end of the axis of

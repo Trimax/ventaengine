@@ -11,7 +11,9 @@ import com.google.gson.JsonObject;
 
 import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.utils.PropertyUtil;
+import io.github.trimax.venta.engine.model.dto.MaterialDTO;
 import io.github.trimax.venta.studio.utils.ReferenceUtil;
+import io.github.trimax.venta.studio.utils.ResourceKindUtil;
 import io.github.trimax.venta.studio.utils.SchemaUtil;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,6 +22,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -105,6 +108,17 @@ public final class SectionEditor extends VBox {
                 final var place = path.isEmpty() ? null : ReferenceUtil.placeOf(path.getLast());
                 return place == null ? null : service.filesOf(place.folder(), place.extensions());
             }
+
+            @Override
+            public boolean hasReferenceEditor(final List<String> path) {
+                return !path.isEmpty() && "material".equals(path.getLast());
+            }
+
+            @Override
+            public SectionEditor referenceEditor(final List<String> path, final String value) {
+                final var file = ResourceKindUtil.MATERIALS + value;
+                return value == null || value.isEmpty() || service.readResource(file) == null ? null : ofResource(service, file, MaterialDTO.class);
+            }
         });
     }
 
@@ -155,7 +169,7 @@ public final class SectionEditor extends VBox {
             else if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber())
                 box.getChildren().add(row(entry.getKey(), number(child)));
             else if (value.isJsonPrimitive())
-                box.getChildren().add(row(entry.getKey(), text(child)));
+                box.getChildren().add(source.hasReferenceEditor(child) ? referenceRow(entry.getKey(), child) : row(entry.getKey(), text(child)));
         }
     }
 
@@ -200,6 +214,50 @@ public final class SectionEditor extends VBox {
         row.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(control, Priority.ALWAYS);
         return row;
+    }
+
+    /** A field that names a file with a form (a material): the form is under the field while the button is down */
+    private VBox referenceRow(final String title, final List<String> path) {
+        final var row = row(title, text(path));
+        final var toggle = new ToggleButton("Edit");
+        row.getChildren().add(toggle);
+
+        final var holder = new VBox(row);
+        final var shown = new String[1];
+        final var nested = new SectionEditor[1];
+
+        final Runnable sync = () -> {
+            holder.getChildren().remove(1, holder.getChildren().size());
+            nested[0] = null;
+            shown[0] = null;
+
+            final var value = valueAt(path);
+            if (!toggle.isSelected() || value == null || !value.isJsonPrimitive())
+                return;
+
+            final var editor = source.referenceEditor(path, value.getAsString());
+            if (editor == null)
+                return;
+
+            editor.setPadding(new Insets(4, 0, 0, 14));
+            holder.getChildren().add(editor);
+            nested[0] = editor;
+            shown[0] = value.getAsString();
+        };
+
+        toggle.setOnAction(event -> sync.run());
+        refreshers.add(() -> {
+            final var value = valueAt(path);
+            if (!toggle.isSelected() || value == null || !value.isJsonPrimitive())
+                return;
+
+            if (nested[0] == null || !value.getAsString().equals(shown[0]))
+                sync.run();
+            else
+                nested[0].refresh();
+        });
+
+        return holder;
     }
 
     private NumberField number(final List<String> path) {

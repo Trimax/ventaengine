@@ -23,6 +23,16 @@ public interface JsonSource {
     /** The type that the engine reads a field as, null when it is not known */
     Class<?> typeOf(List<String> path);
 
+    /** Whether the field names a file that has a form of its own (a material), shown under the field when the user asks for it */
+    default boolean hasReferenceEditor(final List<String> path) {
+        return false;
+    }
+
+    /** The form of the file that a field names, null when there is none or the file can't be read */
+    default SectionEditor referenceEditor(final List<String> path, final String value) {
+        return null;
+    }
+
     /** The values a text field may have, null when it may have any text */
     default List<String> optionsOf(final List<String> path) {
         return null;

@@ -43,6 +43,12 @@ public abstract class AbstractRegistryImplementation<T extends E, E extends Abst
     }
 
     @Override
+    public final void forget(@NonNull final String resourcePath) {
+        final var keys = StreamEx.of(entities.keySet()).filter(key -> key.equals(resourcePath) || key.startsWith(resourcePath + "#")).toList();
+        keys.forEach(key -> unload(entities.remove(key)));
+    }
+
+    @Override
     public final Iterator<E> iterator() {
         return StreamEx.ofValues(entities).map(this::toView).iterator();
     }

@@ -62,6 +62,16 @@ public final class ResourceKindUtil {
                 .map(entry -> new Target(entry.getKey(), path.substring(entry.getValue().getArchiveFolder().length() + 1), TYPES.get(entry.getKey())));
     }
 
+    /** The folder of the files of the materials */
+    public static final String MATERIALS = "materials/";
+
+    /**
+     * The name of a material file as the files that use it name it ({@code lod/rock.json}), empty when the path is not of a material.
+     */
+    public Optional<String> materialOf(@NonNull final String path) {
+        return path.startsWith(MATERIALS) && path.length() > MATERIALS.length() ? Optional.of(path.substring(MATERIALS.length())) : Optional.empty();
+    }
+
     /** The record that the engine reads the files of the things of a kind into, null for a kind that is not made of a file */
     public Class<?> typeOf(@NonNull final OutlineKind kind) {
         return TYPES.get(kind);

@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.github.trimax.venta.container.annotations.Component;
@@ -30,6 +32,7 @@ import io.github.trimax.venta.studio.model.outline.OutlineItem;
 import io.github.trimax.venta.studio.model.outline.OutlineNode;
 import io.github.trimax.venta.studio.utils.NamingUtil;
 import io.github.trimax.venta.studio.utils.PlacementUtil;
+import io.github.trimax.venta.studio.utils.ResourceKindUtil;
 import io.github.trimax.venta.studio.model.command.ReplaceEntryCommand;
 import io.github.trimax.venta.studio.model.command.ReplaceResourceCommand;
 import io.github.trimax.venta.studio.model.command.ReplaceSectionCommand;
@@ -79,7 +82,14 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
      * them: a scene that is opened next is made of the files as they are.
      */
     public void discardResources() {
-        overridden.forEach(applier::discard);
+        for (final var path : overridden) {
+            final var material = ResourceKindUtil.materialOf(path);
+            if (material.isPresent())
+                applier.discardMaterial(path, dependentsOf(material.get()));
+            else
+                applier.discard(path);
+        }
+
         overridden.clear();
         resources.clear();
     }
@@ -206,6 +216,47 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
             log.warn("Can't list {}", folder, exception);
             return List.of();
         }
+    }
+
+    /** Shows the contents of a file of a resource to the engine */
+    private void show(final String path, final JsonObject value) {
+        final var material = ResourceKindUtil.materialOf(path);
+        if (material.isPresent())
+            applier.applyMaterial(path, value, document, dependentsOf(material.get()));
+        else
+            applier.applyResource(path, value, document);
+    }
+
+    /**
+     * The files of the things (objects, terrains) that name a material, as the things of the scene name them: the files that the scene
+     * doesn't use are in the list too, they may have been loaded before.
+     *
+     * @param material the file of the material as the files name it, like {@code chest.json}
+     */
+    private List<ResourceKindUtil.Target> dependentsOf(final String material) {
+        final var targets = new ArrayList<ResourceKindUtil.Target>();
+
+        for (final var kind : List.of(OutlineKind.Object, OutlineKind.Terrain)) {
+            final var folder = PlacementUtil.groupOf(kind).getArchiveFolder();
+            for (final var file : filesOf(folder, List.of(".json"))) {
+                final var contents = readResource(folder + "/" + file);
+                if (contents != null && names(contents, material))
+                    targets.add(new ResourceKindUtil.Target(kind, file, ResourceKindUtil.typeOf(kind)));
+            }
+        }
+
+        return targets;
+    }
+
+    /**
+     * Whether a field called {@code material} anywhere in the file has the value.
+     */
+    private static boolean names(final JsonElement element, final String material) {
+        if (element.isJsonObject())
+            return element.getAsJsonObject().entrySet().stream().anyMatch(entry -> "material".equals(entry.getKey()) && entry.getValue().isJsonPrimitive()
+                    && material.equals(entry.getValue().getAsString()) || names(entry.getValue(), material));
+
+        return element.isJsonArray() && element.getAsJsonArray().asList().stream().anyMatch(child -> names(child, material));
     }
 
     private ResourceDocument resource(final String path) {
@@ -384,12 +435,12 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Repla
 
         try {
             overridden.add(path);
-            applier.applyResource(path, value, document);
+            show(path, value);
         } catch (final RuntimeException exception) {
             // The engine can't show it (a file is missing, a number is out of range): the file is as it was, and so is what is made of it
             resource.set(previous);
             try {
-                applier.applyResource(path, previous, document);
+                show(path, previous);
             } catch (final RuntimeException again) {
                 log.error("Can't show {} as it was", path, again);
             }

@@ -13,6 +13,12 @@ final class ReferenceUtilTest {
     }
 
     @Test
+    void testTexturesOfAMaterialAreFilesOfTheTextures() {
+        for (final var type : io.github.trimax.venta.engine.enums.TextureType.values())
+            assertEquals("textures", ReferenceUtil.placeOf(type.getFieldName()).folder(), type.getFieldName());
+    }
+
+    @Test
     void testOtherFieldsNameNoFile() {
         assertNull(ReferenceUtil.placeOf("intensity"));
         assertNull(ReferenceUtil.placeOf("name"));
