@@ -241,7 +241,12 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   it. Every change is a command: `Cmd+Z` and `Cmd+Shift+Z` undo and redo it (the steps of a drag are one command), the title of the
   window has a star while the scene has changes that are not saved, `Cmd+S` writes the file (in one piece, with the order of the fields
   and the fields that the studio doesn't know kept), and closing the window or opening another scene asks about the changes
-* The things of the scene are not created, deleted or moved with the mouse yet; the whole program of the studio is in [ROADMAP.md](ROADMAP.md)
+* **Creating things** — a file of the project that a scene holds (an object, a light, an emitter, a billboard, a sound source, a terrain,
+  a water) is dragged from the Project panel into the viewport, where it lands on the plane at the height of the point the camera turns
+  round, or into the Hierarchy; the Object menu makes the same from a list of the files. `Cmd+D` copies the chosen thing (the copy is the
+  next one, a meter aside, with the next number in its name), `Delete` or `Cmd+Backspace` deletes it. All of it is undone and redone with
+  the rest, and a thing that can't be made (its file doesn't load) is not put in the scene file
+* The things of the scene are not moved with the mouse in the viewport yet; the whole program of the studio is in [ROADMAP.md](ROADMAP.md)
 
 ## Examples
 Every example is a separate application in `examples` (`io.github.trimax.examples...`). Run them from the repository root:

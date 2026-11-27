@@ -11,6 +11,8 @@ import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.studio.services.ConsoleLog;
 import io.github.trimax.venta.studio.services.ProjectService;
+import io.github.trimax.venta.studio.services.PlacementService;
+import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.services.SceneService;
 import io.github.trimax.venta.studio.services.SelectionService;
 import io.github.trimax.venta.studio.services.UnsavedChangesService;
@@ -63,6 +65,15 @@ public final class StudioApplication extends Application implements AbstractVent
         final var selection = VentaApplication.getComponent(SelectionService.class);
         viewport.setOnPick(selection::pick);
         viewport.setOnFocus(selection::focusSelection);
+
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var placement = VentaApplication.getComponent(PlacementService.class);
+        viewport.setOnDelete(() -> {
+            final var item = selection.getSelected();
+            if (item != null && item.isThing())
+                edits.delete(item.kind(), item.index());
+        });
+        viewport.setDrop(placement::isPlaceable, (file, x, y) -> placement.place(file, x, y));
 
         final var loader = new FXMLLoader(StudioApplication.class.getResource("/layouts/main.fxml"));
         loader.setControllerFactory(VentaApplication::getComponent);

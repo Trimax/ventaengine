@@ -78,8 +78,16 @@ public final class InspectorController {
     /** The scene was changed (an edit, an undo): what is shown is what the file says */
     @Subscribe
     public void onSceneChanged(final SceneChangedEvent event) {
-        if (editor != null)
+        if (editor == null)
+            return;
+
+        try {
             editor.refresh();
+        } catch (final IndexOutOfBoundsException exception) {
+            // The thing that was shown is gone (undone, deleted)
+            editor = null;
+            clear();
+        }
     }
 
     @Subscribe

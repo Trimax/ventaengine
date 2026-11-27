@@ -9,6 +9,7 @@ import io.github.trimax.venta.container.VentaApplication;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
+import io.github.trimax.venta.studio.services.PlacementService;
 import io.github.trimax.venta.studio.services.SceneApplier;
 import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.services.SceneService;
@@ -94,6 +95,9 @@ final class SelfTest extends AnimationTimer {
         if (System.getProperty("studio.edit") != null)
             edit();
 
+        if (System.getProperty("studio.create") != null)
+            structure();
+
         if (frame == 25)
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "d", "d", KeyCode.D, false, false, false, false));
 
@@ -150,6 +154,42 @@ final class SelfTest extends AnimationTimer {
             final var saved = edits.save();
             System.out.printf("SELFTEST edit: redone x=%.2f, saved=%s, dirty=%s%n", engine.getPosition().x(), saved, edits.isDirty());
         }
+    }
+
+    /** Puts a file of the project in the scene, copies it, deletes it and takes everything back: the counts of the things of the file and of the engine */
+    private void structure() {
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var context = VentaApplication.getComponent(io.github.trimax.venta.engine.context.VentaContext.class);
+        final var session = VentaApplication.getComponent(StudioSession.class);
+        final var placement = VentaApplication.getComponent(PlacementService.class);
+        final var step = switch (frame) {
+            case 50 -> "created";
+            case 60 -> "undone";
+            case 70 -> "redone";
+            case 80 -> "duplicated";
+            case 90 -> "deleted";
+            case 100 -> "undone the delete";
+            case 110 -> "moved the copy";
+            default -> null;
+        };
+        if (step == null)
+            return;
+
+        switch (frame) {
+            case 50 -> placement.place(session.getProject().resolve(System.getProperty("studio.create")), 0.5f, 0.8f);
+            case 60, 100 -> edits.undo();
+            case 70 -> edits.redo();
+            case 80 -> edits.duplicate(OutlineKind.Object, edits.getDocument().count(OutlineKind.Object) - 1);
+            case 90 -> edits.delete(OutlineKind.Object, edits.getDocument().count(OutlineKind.Object) - 1);
+            default -> {
+            }
+        }
+
+        final var count = edits.getDocument().count(OutlineKind.Object);
+        final var last = edits.getDocument().getEntry(OutlineKind.Object, count - 1);
+        System.out.printf("SELFTEST structure: %s: file has %d objects, engine has %d, last is `%s` at %s, dirty=%s%n", step, count,
+                context.getSceneManager().getCurrent().getObjects().size(), EntryUtil.getName(last), EntryUtil.getVector(last, EntryUtil.POSITION, new org.joml.Vector3f()),
+                edits.isDirty());
     }
 
     /** Chooses an object of the scene in the hierarchy, as a click on it would */

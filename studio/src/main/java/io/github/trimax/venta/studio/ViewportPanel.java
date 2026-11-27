@@ -5,7 +5,9 @@ import static org.lwjgl.opengl.GL12C.GL_BGRA;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.file.Path;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 import org.lwjgl.system.MemoryStack;
 
@@ -16,11 +18,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelBuffer;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Region;
 import lombok.Getter;
 
@@ -67,6 +71,9 @@ public final class ViewportPanel extends Region {
 
     private BiConsumer<Float, Float> onPick = (x, y) -> { };
     private Runnable onFocus = () -> { };
+    private Runnable onDelete = () -> { };
+    private Predicate<Path> dropAcceptor = file -> false;
+    private DropHandler onDrop = (file, x, y) -> { };
     private long lastPulse;
 
     /** What the last frames cost, for the status line (the averages of the last second) */
@@ -91,10 +98,28 @@ public final class ViewportPanel extends Region {
         addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
         addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
         addEventHandler(MouseEvent.MOUSE_RELEASED, this::onMouseReleased);
+        setOnDragOver(event -> {
+            if (droppedFile(event.getDragboard()) != null)
+                event.acceptTransferModes(TransferMode.COPY);
+
+            event.consume();
+        });
+        setOnDragDropped(event -> {
+            final var file = droppedFile(event.getDragboard());
+            if (file != null && getWidth() > 0 && getHeight() > 0) {
+                final var point = sceneToLocal(event.getSceneX(), event.getSceneY());
+                onDrop.drop(file, (float) (point.getX() / getWidth()), (float) (point.getY() / getHeight()));
+            }
+
+            event.setDropCompleted(file != null);
+            event.consume();
+        });
         addEventHandler(ScrollEvent.SCROLL, event -> flyCamera.dolly(event.getDeltaY() * 0.02));
         addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.F && !event.isShortcutDown())
                 onFocus.run();
+            else if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
+                onDelete.run();
             else
                 flyCamera.press(event.getCode());
 
@@ -120,6 +145,33 @@ public final class ViewportPanel extends Region {
     /** A click in the viewport: the point is from 0 to 1 over the viewport, from its top left corner */
     public void setOnPick(final BiConsumer<Float, Float> onPick) {
         this.onPick = onPick;
+    }
+
+    /** The key that deletes the chosen thing is pressed */
+    public void setOnDelete(final Runnable onDelete) {
+        this.onDelete = onDelete;
+    }
+
+    /**
+     * What is dropped on the viewport: which files it takes, and what it does with a file that is dropped.
+     */
+    public void setDrop(final Predicate<Path> acceptor, final DropHandler handler) {
+        this.dropAcceptor = acceptor;
+        this.onDrop = handler;
+    }
+
+    /**
+     * A file is dropped on the viewport.
+     */
+    @FunctionalInterface
+    public interface DropHandler {
+        /**
+         * The file is dropped at a point of the viewport.
+         *
+         * @param x the point from 0 (the left edge) to 1 (the right one)
+         * @param y the point from 0 (the top edge) to 1 (the bottom one)
+         */
+        void drop(Path file, float x, float y);
     }
 
     /** The key that turns the camera to the chosen thing is pressed */
@@ -204,6 +256,15 @@ public final class ViewportPanel extends Region {
         buffer.updateBuffer(ignored -> null);
 
         readNanoseconds = System.nanoTime() - started;
+    }
+
+    /** The file that is dragged over the viewport when the viewport takes it, null otherwise */
+    private Path droppedFile(final Dragboard board) {
+        if (!board.hasFiles() || board.getFiles().isEmpty())
+            return null;
+
+        final var file = board.getFiles().getFirst().toPath();
+        return dropAcceptor.test(file) ? file : null;
     }
 
     private void onMousePressed(final MouseEvent event) {

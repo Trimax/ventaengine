@@ -52,6 +52,11 @@ public final class SelectionService {
     private OutlineNode outline;
     private OutlineItem selected;
 
+    /** The item that is chosen, null for none */
+    public OutlineItem getSelected() {
+        return selected;
+    }
+
     /** The hierarchy of the scene that is open, null before one is open */
     public OutlineNode getOutline() {
         return outline;

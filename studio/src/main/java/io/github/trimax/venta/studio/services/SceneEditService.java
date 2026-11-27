@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.function.Consumer;
+
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import com.google.gson.JsonObject;
 
@@ -12,7 +16,14 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.studio.StudioSession;
+import io.github.trimax.venta.studio.model.command.Command;
 import io.github.trimax.venta.studio.model.command.History;
+import io.github.trimax.venta.studio.model.command.StructureCommand;
+import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
+import io.github.trimax.venta.studio.model.outline.OutlineItem;
+import io.github.trimax.venta.studio.model.outline.OutlineNode;
+import io.github.trimax.venta.studio.utils.NamingUtil;
+import io.github.trimax.venta.studio.utils.PlacementUtil;
 import io.github.trimax.venta.studio.model.command.ReplaceEntryCommand;
 import io.github.trimax.venta.studio.model.document.SceneDocument;
 import io.github.trimax.venta.studio.model.event.HistoryChangedEvent;
@@ -34,10 +45,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SceneEditService implements ReplaceEntryCommand.Writer {
+public final class SceneEditService implements ReplaceEntryCommand.Writer, StructureCommand.Store {
     private final StudioSession session;
     private final VentaContext context;
     private final SceneApplier applier;
+
+    /** A copy is put this far from the thing it is made of (meters), so it is seen */
+    private static final float DUPLICATE_OFFSET = 1.f;
 
     private final History history = new History();
 
@@ -78,6 +92,68 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer {
 
         history.perform(new ReplaceEntryCommand(this, kind, index, before, after, label + " " + EntryUtil.getName(before), field));
         announceHistory();
+    }
+
+    /**
+     * Puts a thing made of a file of the project in the scene, at the end of the things of its kind, and chooses it.
+     *
+     * @param resource the file of the thing as the scene names it, like {@code trees/pine.json}
+     * @return whether the thing is in the scene: it is not when the file can't be loaded
+     */
+    public boolean create(@NonNull final OutlineKind kind, @NonNull final String resource, @NonNull final Vector3fc position) {
+        if (document == null)
+            return false;
+
+        final var name = NamingUtil.unique(namesOf(kind), NamingUtil.nameOf(resource));
+        return perform(StructureCommand.insertion(this, kind, document.count(kind), PlacementUtil.entryFor(kind, resource, name, position), "Create " + name));
+    }
+
+    /** Makes a copy of a thing: it is the next one of its kind, one meter aside, and has a name of its own */
+    public boolean duplicate(@NonNull final OutlineKind kind, final int index) {
+        if (document == null || index < 0 || index >= document.count(kind))
+            return false;
+
+        final var entry = document.getEntry(kind, index);
+        final var name = NamingUtil.unique(namesOf(kind), EntryUtil.getName(entry));
+        EntryUtil.setName(entry, name);
+        EntryUtil.setVector(entry, EntryUtil.POSITION, EntryUtil.getVector(entry, EntryUtil.POSITION, new Vector3f()).add(DUPLICATE_OFFSET, 0.f, 0.f));
+
+        return perform(StructureCommand.insertion(this, kind, index + 1, entry, "Duplicate " + name));
+    }
+
+    /** Takes a thing out of the scene; undo brings it back to its place */
+    public boolean delete(@NonNull final OutlineKind kind, final int index) {
+        if (document == null || index < 0 || index >= document.count(kind))
+            return false;
+
+        final var entry = document.getEntry(kind, index);
+        return perform(StructureCommand.removal(this, kind, index, entry, "Delete " + EntryUtil.getName(entry)));
+    }
+
+    @Override
+    public void insert(final OutlineKind kind, final int index, final JsonObject entry) {
+        document.insertEntry(kind, index, entry);
+
+        try {
+            applier.create(kind, index, entry);
+        } catch (final RuntimeException exception) {
+            // The thing can't be made (its file is not loaded): the file of the scene is as it was
+            document.removeEntry(kind, index);
+            throw exception;
+        }
+
+        // The hierarchy that the panels got is the one whose items are chosen: the items are told apart by identity
+        EventUtil.post(new OutlineSelectionRequestEvent(OutlineUtil.at(announce(), kind, index)));
+    }
+
+    @Override
+    public void remove(final OutlineKind kind, final int index) {
+        applier.remove(kind, index);
+        document.removeEntry(kind, index);
+
+        // Nothing is chosen: what was chosen may be the thing that is gone, or the one that has its place now
+        EventUtil.post(new OutlineSelectionRequestEvent(null));
+        announce();
     }
 
     public void undo() {
@@ -121,7 +197,32 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer {
         document.setEntry(kind, index, entry);
         applier.apply(kind, index, entry);
 
-        EventUtil.post(new SceneChangedEvent(document.getScene(), OutlineUtil.build(document.getName(), document.getScene())));
+        announce();
+    }
+
+    /** Does a command that changes what is in the scene; a command that can't be done is not kept, and the user is told */
+    private boolean perform(final Command command) {
+        try {
+            history.perform(command);
+            announceHistory();
+            return true;
+        } catch (final RuntimeException exception) {
+            log.error("Can't do `{}`", command.label(), exception);
+            EventUtil.post(new StatusEvent("Can't do `%s`: %s", command.label(), exception.getMessage()));
+            return false;
+        }
+    }
+
+    private List<String> namesOf(final OutlineKind kind) {
+        return OutlineUtil.items(OutlineUtil.build(document.getName(), document.getScene()), kind).stream().map(OutlineItem::name).toList();
+    }
+
+    /** Tells the panels that the scene changed; returns the hierarchy that they got */
+    private OutlineNode announce() {
+        final var outline = OutlineUtil.build(document.getName(), document.getScene());
+        EventUtil.post(new SceneChangedEvent(document.getScene(), outline));
+
+        return outline;
     }
 
     private void announceHistory() {

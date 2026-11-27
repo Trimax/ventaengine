@@ -21,7 +21,9 @@ import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.model.common.geo.Ray;
 import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
+import io.github.trimax.venta.engine.utils.RayUtil;
 import io.github.trimax.venta.engine.model.common.pick.PickResult;
 import io.github.trimax.venta.engine.utils.PickingUtil;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
@@ -101,6 +103,18 @@ public final class Engine {
     /** What the editor puts over the finished image: the grid, the marks and the frame of the chosen thing, null for none */
     public void setOverlay(final EditorOverlay overlay) {
         engineRenderer.setOverlay(overlay);
+    }
+
+    /**
+     * The ray of a point of the last frame of an embedded engine (the point is as in {@link #pick}): where a thing that is dropped there goes.
+     *
+     * @return the ray from the near plane of the camera through the point
+     */
+    public Ray rayThrough(final float x, final float y) {
+        final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
+        final var window = controllerFactory.get(WindowController.class).get();
+
+        return RayUtil.through(x * 2.f - 1.f, 1.f - y * 2.f, new org.joml.Matrix4f(window.getProjectionMatrix()).mul(camera.getViewMatrix()).invert());
     }
 
     /**

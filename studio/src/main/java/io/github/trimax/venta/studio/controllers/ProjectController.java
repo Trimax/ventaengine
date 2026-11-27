@@ -1,6 +1,7 @@
 package io.github.trimax.venta.studio.controllers;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Locale;
 
 import com.google.common.eventbus.Subscribe;
@@ -11,6 +12,7 @@ import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.event.ProjectFileSelectedEvent;
 import io.github.trimax.venta.studio.model.event.ProjectOpenedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
+import io.github.trimax.venta.studio.services.PlacementService;
 import io.github.trimax.venta.studio.services.SceneService;
 import io.github.trimax.venta.studio.utils.FormatUtil;
 import io.github.trimax.venta.studio.utils.IconViewUtil;
@@ -28,6 +30,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.TransferMode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class ProjectController {
     private final StudioSession session;
     private final SceneService scenes;
+    private final PlacementService placement;
 
     @FXML private TextField filter;
     @FXML private TreeView<Path> folders;
@@ -79,6 +83,17 @@ public final class ProjectController {
                 openSelected();
         });
         files.setContextMenu(createContextMenu());
+        files.setOnDragDetected(event -> {
+            final var file = files.getSelectionModel().getSelectedItem();
+            if (file == null || !placement.isPlaceable(file))
+                return;
+
+            final var board = files.startDragAndDrop(TransferMode.COPY);
+            final var content = new ClipboardContent();
+            content.putFiles(List.of(file.toFile()));
+            board.setContent(content);
+            event.consume();
+        });
 
         filter.textProperty().addListener((observable, was, is) -> showFiles());
 

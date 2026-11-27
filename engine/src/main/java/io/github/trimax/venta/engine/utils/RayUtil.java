@@ -85,6 +85,22 @@ public final class RayUtil {
     }
 
     /**
+     * The distance from the start of the ray to a plane.
+     *
+     * @param point  a point of the plane
+     * @param normal the normal of the plane
+     * @return the distance along the ray, {@link #MISS} when the ray is parallel to the plane or goes away from it
+     */
+    public float intersectPlane(@NonNull final Ray ray, @NonNull final Vector3fc point, @NonNull final Vector3fc normal) {
+        final var slope = normal.dot(ray.direction());
+        if (Math.abs(slope) < 1e-6f)
+            return MISS;
+
+        final var distance = new Vector3f(point).sub(ray.origin()).dot(normal) / slope;
+        return distance < 0.f ? MISS : distance;
+    }
+
+    /**
      * The distance from the start of the ray to a sphere, {@link #MISS} when the ray doesn't meet it.
      */
     public float intersectSphere(@NonNull final Ray ray, @NonNull final Vector3fc center, final float radius) {

@@ -92,4 +92,17 @@ final class RayUtilTest {
         assertEquals(0.f, RayUtil.intersectSphere(ray(0.f, 0.f, 0.f, 0.f, 0.f, -1.f), new Vector3f(), 1.f), "A start inside");
         assertEquals(RayUtil.MISS, RayUtil.intersectSphere(ray(0.f, 0.f, 5.f, 0.f, 0.f, 1.f), new Vector3f(), 1.f), "Behind");
     }
+
+    @Test
+    void testRayMeetsAPlane() {
+        assertEquals(5.f, RayUtil.intersectPlane(ray(0.f, 5.f, 0.f, 0.f, -1.f, 0.f), new Vector3f(), new Vector3f(0.f, 1.f, 0.f)), EPSILON);
+        assertEquals(5.f * (float) Math.sqrt(2.0), RayUtil.intersectPlane(ray(0.f, 5.f, 0.f, 1.f, -1.f, 0.f), new Vector3f(), new Vector3f(0.f, 1.f, 0.f)), EPSILON, "A slanted ray");
+    }
+
+    @Test
+    void testRayThatDoesNotCrossAPlaneMissesIt() {
+        assertEquals(RayUtil.MISS, RayUtil.intersectPlane(ray(0.f, 5.f, 0.f, 1.f, 0.f, 0.f), new Vector3f(), new Vector3f(0.f, 1.f, 0.f)), "Parallel");
+        assertEquals(RayUtil.MISS, RayUtil.intersectPlane(ray(0.f, 5.f, 0.f, 0.f, 1.f, 0.f), new Vector3f(), new Vector3f(0.f, 1.f, 0.f)), "Away from it");
+        assertEquals(0.f, RayUtil.intersectPlane(ray(3.f, 0.f, 0.f, 0.f, -1.f, 0.f), new Vector3f(), new Vector3f(0.f, 1.f, 0.f)), EPSILON, "A start on the plane");
+    }
 }

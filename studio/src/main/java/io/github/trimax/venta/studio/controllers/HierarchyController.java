@@ -20,6 +20,8 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.TransferMode;
+import io.github.trimax.venta.studio.services.PlacementService;
 import io.github.trimax.venta.studio.services.SelectionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HierarchyController {
     private final SelectionService selection;
+    private final PlacementService placement;
 
     @FXML private TextField filter;
     @FXML private TreeView<OutlineItem> tree;
@@ -66,6 +69,19 @@ public final class HierarchyController {
         });
 
         filter.textProperty().addListener((observable, was, is) -> rebuild());
+        tree.setOnDragOver(event -> {
+            if (event.getDragboard().hasFiles() && !event.getDragboard().getFiles().isEmpty() && placement.isPlaceable(event.getDragboard().getFiles().getFirst().toPath()))
+                event.acceptTransferModes(TransferMode.COPY);
+
+            event.consume();
+        });
+        tree.setOnDragDropped(event -> {
+            final var accepted = event.getDragboard().hasFiles() && !event.getDragboard().getFiles().isEmpty()
+                    && placement.place(event.getDragboard().getFiles().getFirst().toPath(), null, null);
+
+            event.setDropCompleted(accepted);
+            event.consume();
+        });
         tree.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2)
                 selection.focusSelection();

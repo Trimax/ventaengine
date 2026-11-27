@@ -24,8 +24,8 @@
         <MenuItem text="Cut" accelerator="Shortcut+X" disable="true"/>
         <MenuItem text="Copy" accelerator="Shortcut+C" disable="true"/>
         <MenuItem text="Paste" accelerator="Shortcut+V" disable="true"/>
-        <MenuItem text="Duplicate" accelerator="Shortcut+D" disable="true"/>
-        <MenuItem text="Delete" disable="true"/>
+        <MenuItem fx:id="menuDuplicate" text="Duplicate" accelerator="Shortcut+D" disable="true" onAction="#onDuplicate"/>
+        <MenuItem fx:id="menuDelete" text="Delete" accelerator="Shortcut+BACK_SPACE" disable="true" onAction="#onDelete"/>
         <SeparatorMenuItem/>
         <MenuItem text="Select All" accelerator="Shortcut+A" disable="true"/>
     </Menu>
@@ -39,21 +39,14 @@
         <SeparatorMenuItem/>
         <MenuItem text="Refresh" accelerator="F5" onAction="#onRefresh"/>
     </Menu>
-    <Menu text="Object" disable="true">
-        <Menu text="Create">
-            <MenuItem text="Object"/>
-            <Menu text="Light">
-                <MenuItem text="Point"/>
-                <MenuItem text="Spot"/>
-                <MenuItem text="Sun"/>
-            </Menu>
-            <MenuItem text="Camera"/>
-            <MenuItem text="Terrain"/>
-            <MenuItem text="Water"/>
-            <MenuItem text="Emitter"/>
-            <MenuItem text="Billboard"/>
-            <MenuItem text="Sound source"/>
-        </Menu>
+    <Menu fx:id="menuObject" text="Object" disable="true">
+        <MenuItem text="Create Object…" userData="Object" onAction="#onCreate"/>
+        <MenuItem text="Create Light…" userData="Light" onAction="#onCreate"/>
+        <MenuItem text="Create Emitter…" userData="Emitter" onAction="#onCreate"/>
+        <MenuItem text="Create Billboard…" userData="Billboard" onAction="#onCreate"/>
+        <MenuItem text="Create Sound Source…" userData="Sound" onAction="#onCreate"/>
+        <MenuItem text="Create Terrain…" userData="Terrain" onAction="#onCreate"/>
+        <MenuItem text="Create Water…" userData="Water" onAction="#onCreate"/>
     </Menu>
     <Menu text="View">
         <CheckMenuItem fx:id="viewHierarchy" text="Hierarchy" selected="true" onAction="#onPanels"/>
