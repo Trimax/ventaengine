@@ -145,6 +145,9 @@ public final class StudioApplication extends Application implements AbstractVent
 
     @Override
     public void stop() {
+        // The engine writes hundreds of lines while it is shut down, and the console is gone by then
+        VentaApplication.getComponent(ConsoleLog.class).close();
+
         if (viewport != null)
             viewport.stop();
 
