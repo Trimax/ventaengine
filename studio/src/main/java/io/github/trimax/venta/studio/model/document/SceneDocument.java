@@ -1,5 +1,6 @@
 package io.github.trimax.venta.studio.model.document;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.GsonBuilder;
@@ -29,6 +30,25 @@ public final class SceneDocument {
             OutlineKind.Sound, "soundSources",
             OutlineKind.Terrain, "terrainSurfaces",
             OutlineKind.Water, "waterSurfaces");
+
+    /**
+     * The sections of the environment that can be edited, by the names of the hierarchy: the fields of the file that hold them. A section
+     * is the object of its field, or (the output) the fields themselves.
+     */
+    private static final Map<String, List<String>> SECTIONS = Map.ofEntries(
+            Map.entry("Sun", List.of("directionalLight")),
+            Map.entry("Ambient light", List.of("ambientLight")),
+            Map.entry("Fog", List.of("fog")),
+            Map.entry("Wind", List.of("wind")),
+            Map.entry("Bloom", List.of("bloom")),
+            Map.entry("Light shafts", List.of("lightShafts")),
+            Map.entry("Ambient occlusion", List.of("ambientOcclusion")),
+            Map.entry("Antialiasing", List.of("antialiasing")),
+            Map.entry("View", List.of("view")),
+            Map.entry("Output", List.of("exposure", "toneMapping")));
+
+    /** The sections that are the fields of the file themselves, not objects */
+    private static final String OUTPUT = "Output";
 
     private static final com.google.gson.Gson WRITER = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
@@ -99,6 +119,51 @@ public final class SceneDocument {
     public void removeEntry(@NonNull final OutlineKind kind, final int index) {
         array(kind, true).remove(checked(kind, index));
         read();
+    }
+
+    /** Whether the name is a section of the environment that can be edited and the file has it */
+    public boolean hasSection(@NonNull final String name) {
+        final var keys = SECTIONS.get(name);
+        return keys != null && keys.stream().anyMatch(root::has);
+    }
+
+    /** A copy of a section of the environment: the object of its field, or the fields of the output together */
+    public JsonObject getSection(@NonNull final String name) {
+        final var keys = sectionKeys(name);
+        if (!OUTPUT.equals(name))
+            return root.get(keys.getFirst()).getAsJsonObject().deepCopy();
+
+        final var section = new JsonObject();
+        keys.stream().filter(root::has).forEach(key -> section.add(key, root.get(key).deepCopy()));
+        return section;
+    }
+
+    /** Puts a section in the file in place of the one that is there; the fields that the section doesn't have are taken out (the output only) */
+    public void setSection(@NonNull final String name, @NonNull final JsonObject section) {
+        final var keys = sectionKeys(name);
+        if (OUTPUT.equals(name))
+            keys.forEach(key -> {
+                if (section.has(key))
+                    root.add(key, section.get(key).deepCopy());
+                else
+                    root.remove(key);
+            });
+        else
+            root.add(keys.getFirst(), section.deepCopy());
+
+        read();
+    }
+
+    /** The fields of the file that a section is made of, empty for a name that is not a section */
+    public static List<String> fieldsOf(@NonNull final String name) {
+        return SECTIONS.getOrDefault(name, List.of());
+    }
+
+    private List<String> sectionKeys(final String name) {
+        if (!hasSection(name))
+            throw new IllegalArgumentException(name + " is not a section of the scene " + this.name);
+
+        return SECTIONS.get(name);
     }
 
     /** The text of the file as it is written: indented by two spaces, the order of the fields is kept */

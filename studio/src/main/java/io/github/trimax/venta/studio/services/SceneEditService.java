@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.joml.Vector3f;
@@ -25,6 +26,7 @@ import io.github.trimax.venta.studio.model.outline.OutlineNode;
 import io.github.trimax.venta.studio.utils.NamingUtil;
 import io.github.trimax.venta.studio.utils.PlacementUtil;
 import io.github.trimax.venta.studio.model.command.ReplaceEntryCommand;
+import io.github.trimax.venta.studio.model.command.ReplaceSectionCommand;
 import io.github.trimax.venta.studio.model.document.SceneDocument;
 import io.github.trimax.venta.studio.model.event.HistoryChangedEvent;
 import io.github.trimax.venta.studio.model.event.SceneChangedEvent;
@@ -45,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SceneEditService implements ReplaceEntryCommand.Writer, StructureCommand.Store {
+public final class SceneEditService implements ReplaceEntryCommand.Writer, ReplaceSectionCommand.Writer, StructureCommand.Store {
     private final StudioSession session;
     private final VentaContext context;
     private final SceneApplier applier;
@@ -91,6 +93,26 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Struc
             return;
 
         history.perform(new ReplaceEntryCommand(this, kind, index, before, after, label + " " + EntryUtil.getName(before), field));
+        announceHistory();
+    }
+
+    /**
+     * Changes a section of the environment (the sun, the fog, ...) as a command, as {@link #edit} does for a thing.
+     *
+     * @param section the name of the section in the hierarchy
+     */
+    public void editSection(@NonNull final String section, @NonNull final String label, @NonNull final String field, @NonNull final Consumer<JsonObject> change) {
+        if (document == null || !document.hasSection(section))
+            return;
+
+        final var before = document.getSection(section);
+        final var after = before.deepCopy();
+        change.accept(after);
+
+        if (before.equals(after))
+            return;
+
+        history.perform(new ReplaceSectionCommand(this, section, before, after, label + " " + section.toLowerCase(Locale.ROOT), field));
         announceHistory();
     }
 
@@ -207,6 +229,14 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Struc
     public void write(final OutlineKind kind, final int index, final JsonObject entry) {
         document.setEntry(kind, index, entry);
         applier.apply(kind, index, entry);
+
+        announce();
+    }
+
+    @Override
+    public void write(final String section, final JsonObject value) {
+        document.setSection(section, value);
+        applier.applySection(section, document.getScene());
 
         announce();
     }

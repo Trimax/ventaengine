@@ -110,6 +110,9 @@ final class SelfTest extends AnimationTimer {
             Event.fireEvent(viewport, mouse(MouseEvent.MOUSE_RELEASED, 140, 100));
         }
 
+        if (System.getProperty("studio.section") != null)
+            section();
+
         if (System.getProperty("studio.gizmo") != null)
             gizmo();
 
@@ -208,7 +211,8 @@ final class SelfTest extends AnimationTimer {
     private void select(final String name) {
         final var outline = VentaApplication.getComponent(SelectionService.class).getOutline();
 
-        OutlineUtil.items(outline, OutlineKind.Object).stream().filter(item -> item.name().equals(name)).findFirst()
+        java.util.stream.Stream.of(OutlineKind.Object, OutlineKind.Setting, OutlineKind.Light).flatMap(kind -> OutlineUtil.items(outline, kind).stream())
+                .filter(item -> item.name().equals(name)).findFirst()
                 .ifPresent(item -> EventUtil.post(new OutlineSelectionRequestEvent(item)));
     }
 
@@ -256,6 +260,30 @@ final class SelfTest extends AnimationTimer {
         if (gizmoFrom != null && frame == 60) {
             edits.undo();
             System.out.printf("SELFTEST gizmo: undone x=%.2f, dirty=%s (one step)%n", position(edits, item).x, edits.isDirty());
+        }
+    }
+
+    /** Changes the fog and the sun through the editor of the scene, undoes it and does it again: the numbers of the file and of the engine */
+    private void section() {
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var scene = VentaApplication.getComponent(io.github.trimax.venta.engine.context.VentaContext.class).getSceneManager().getCurrent();
+
+        if (frame == 50) {
+            System.out.printf("SELFTEST section: before: fog density=%.4f, sun intensity=%.2f%n", scene.getFog().getDensity(), scene.getDirectionalLight().getIntensity());
+            edits.editSection("Fog", "Change", "density", fog -> fog.addProperty("density", 0.02));
+            edits.editSection("Sun", "Change", "intensity", sun -> sun.addProperty("intensity", 3.0));
+            System.out.printf("SELFTEST section: changed: fog density=%.4f, sun intensity=%.2f, dirty=%s%n", scene.getFog().getDensity(), scene.getDirectionalLight().getIntensity(), edits.isDirty());
+        }
+
+        if (frame == 60) {
+            edits.undo();
+            edits.undo();
+            System.out.printf("SELFTEST section: undone: fog density=%.4f, sun intensity=%.2f, dirty=%s%n", scene.getFog().getDensity(), scene.getDirectionalLight().getIntensity(), edits.isDirty());
+        }
+
+        if (frame == 70) {
+            edits.redo();
+            System.out.printf("SELFTEST section: redone: fog density=%.4f%n", scene.getFog().getDensity());
         }
     }
 

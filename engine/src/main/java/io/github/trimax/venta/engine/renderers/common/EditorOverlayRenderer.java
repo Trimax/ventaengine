@@ -18,12 +18,14 @@ import io.github.trimax.venta.engine.memory.Memory;
 import io.github.trimax.venta.engine.model.common.geo.BoundingBox;
 import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
 import io.github.trimax.venta.engine.model.common.overlay.Mark;
+import io.github.trimax.venta.engine.model.instance.LightInstance;
 import io.github.trimax.venta.engine.model.instance.implementation.CameraInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanceImplementation;
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
 import io.github.trimax.venta.engine.utils.GizmoUtil;
+import io.github.trimax.venta.engine.utils.LightShapeUtil;
 import io.github.trimax.venta.engine.utils.OverlayUtil;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -131,6 +133,9 @@ public final class EditorOverlayRenderer {
             addBrackets(batch, object.getBox(), object.getTransform().getMatrix());
         else if (selected != null)
             marks.stream().filter(mark -> mark.instance() == selected).forEach(mark -> addMark(batch, mark, camera.getPosition(), SELECTION_COLOR, 1.6f));
+
+        if (selected instanceof LightInstance light)
+            LightShapeUtil.lines(light).forEach(line -> batch.add(line.start(), line.end(), line.color(), 0.9f));
 
         batch.flush();
 

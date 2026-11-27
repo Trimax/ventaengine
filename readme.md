@@ -246,6 +246,12 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   round, or into the Hierarchy; the Object menu makes the same from a list of the files. `Cmd+D` copies the chosen thing (the copy is the
   next one, a meter aside, with the next number in its name), `Delete` or `Cmd+Backspace` deletes it. All of it is undone and redone with
   the rest, and a thing that can't be made (its file doesn't load) is not put in the scene file
+* **Environment** — the sun, the ambient light, the fog, the wind, the bloom, the light shafts, the ambient occlusion, the antialiasing, the
+  view and the output (exposure and tone mapping) of the scene are edited in the Inspector: the fields are made from what the section of
+  the file holds (a number, a switch, a list of the values of an enum, a color picker, a row of a vector), so a new field of a section is
+  edited without a line of code. A change is a command (the steps of a drag are one), and the scene of the engine shows it at once. The
+  skybox is not edited yet. A chosen light shows how far it shines: three circles of the range for a point light, the cone of the angles
+  and of the range for a spot light; a spot light that has a direction in the file is turned with the rotate tool
 * **Handles** — the chosen thing has handles that the engine draws over the image and picks under the mouse; the studio only forwards the
   mouse and writes the result to the scene as a command (a whole drag is one step of the history). The tools are `Q` (only choose),
   `W` (move: arrows and the squares of the planes), `E` (turn: a ring for every axis) and `R` (scale: a cube for every axis, and one in

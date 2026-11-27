@@ -4,6 +4,7 @@ import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.gson.JsonObject;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
@@ -54,6 +55,7 @@ public final class GizmoService {
     private Vector3f startPosition;
     private Vector3f startAngles;
     private Vector3f startScale;
+    private Vector3f startDirection;
 
     /** The tool is chosen: null is the one that only chooses */
     public void setMode(final GizmoMode mode) {
@@ -113,6 +115,7 @@ public final class GizmoService {
         startPosition = EntryUtil.getVector(entry, EntryUtil.POSITION, new Vector3f());
         startAngles = EntryUtil.getVector(entry, EntryUtil.ANGLES, new Vector3f());
         startScale = EntryUtil.getVector(entry, EntryUtil.SCALE, new Vector3f(1.f));
+        startDirection = EntryUtil.getVector(entry, EntryUtil.DIRECTION, new Vector3f(0.f, -1.f, 0.f));
 
         dragMode = mode;
         dragKey = "gizmo-" + ++dragCounter;
@@ -138,6 +141,12 @@ public final class GizmoService {
             switch (dragMode) {
                 case Translate -> EntryUtil.setVector(entry, EntryUtil.POSITION, new Vector3f(startPosition).add(result.translation()));
                 case Rotate -> {
+                    if (kind == OutlineKind.Light) {
+                        // A spot light has a direction and no angles: the direction is turned
+                        EntryUtil.setVector(entry, EntryUtil.DIRECTION, result.rotation().transform(new Vector3f(startDirection)).normalize());
+                        return;
+                    }
+
                     final var turned = new Matrix3f(result.rotation()).mul(new Matrix3f().rotationXYZ(startAngles.x, startAngles.y, startAngles.z));
                     EntryUtil.setVector(entry, EntryUtil.ANGLES, turned.getEulerAnglesXYZ(new Vector3f()));
                 }
@@ -179,9 +188,9 @@ public final class GizmoService {
     /** Puts the handles on the chosen thing (or takes them away): they follow the thing while it is dragged, but keep their axes */
     private void refresh() {
         final var overlay = session.getOverlay();
-        final var entry = mode == null || !supports(kind, mode) ? null : entry();
+        final var entry = entry();
 
-        if (entry == null) {
+        if (mode == null || entry == null || !supports(kind, mode, entry)) {
             overlay.setGizmoMode(null);
             overlay.setGizmoHandle(null);
             return;
@@ -204,7 +213,7 @@ public final class GizmoService {
     }
 
     /** The chosen thing in the file, null when nothing is chosen or the thing is gone */
-    private com.google.gson.JsonObject entry() {
+    private JsonObject entry() {
         final var document = edits.getDocument();
         if (document == null || kind == null || index < 0 || index >= document.count(kind))
             return null;
@@ -216,8 +225,14 @@ public final class GizmoService {
         return kind == OutlineKind.Object || kind == OutlineKind.Terrain || kind == OutlineKind.Water;
     }
 
-    /** What can be turned and scaled has its angles and scale in the file; everything with a place can be moved */
-    private static boolean supports(final OutlineKind kind, final GizmoMode mode) {
-        return kind != null && (mode == GizmoMode.Translate || hasAngles(kind));
+    /**
+     * What can be turned and scaled has its angles and scale in the file, a light that shines in a direction can be turned; everything with
+     * a place can be moved.
+     */
+    private static boolean supports(final OutlineKind kind, final GizmoMode mode, final JsonObject entry) {
+        if (kind == null || mode == GizmoMode.Translate)
+            return kind != null;
+
+        return hasAngles(kind) || mode == GizmoMode.Rotate && kind == OutlineKind.Light && EntryUtil.has(entry, EntryUtil.DIRECTION);
     }
 }

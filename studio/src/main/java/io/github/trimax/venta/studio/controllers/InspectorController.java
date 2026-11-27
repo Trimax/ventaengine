@@ -10,6 +10,7 @@ import com.google.common.eventbus.Subscribe;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.studio.controls.EntryEditor;
+import io.github.trimax.venta.studio.controls.SectionEditor;
 import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
 import io.github.trimax.venta.studio.model.event.SceneChangedEvent;
 import io.github.trimax.venta.studio.services.SceneEditService;
@@ -36,7 +37,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Shows what is chosen: the fields of an item of the hierarchy, or the contents of a file of the project. Nothing is changed here yet.
+ * Shows what is chosen: the fields of an item of the hierarchy, which can be changed for a thing and for a section of the environment, or
+ * the contents of a file of the project.
  */
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -49,7 +51,8 @@ public final class InspectorController {
     @FXML private Label subheading;
     @FXML private StackPane content;
 
-    private EntryEditor editor;
+    /** Shows the thing or the section that is chosen as the file says now; null when nothing that is edited is shown */
+    private Runnable refresher;
 
     @FXML
     public void initialize() {
@@ -59,7 +62,7 @@ public final class InspectorController {
     @Subscribe
     public void onOutlineSelected(final OutlineSelectedEvent event) {
         final var item = event.item();
-        editor = null;
+        refresher = null;
 
         if (item == null || item.kind() == OutlineKind.Category) {
             clear();
@@ -67,8 +70,16 @@ public final class InspectorController {
         }
 
         if (item.isThing() && edits.getDocument() != null) {
-            editor = new EntryEditor(edits, item.kind(), item.index(), item.detail());
+            final var editor = new EntryEditor(edits, item.kind(), item.index(), item.detail());
+            refresher = editor::refresh;
             show(item.kind().name(), "", editor);
+            return;
+        }
+
+        if (item.kind() == OutlineKind.Setting && edits.getDocument() != null && edits.getDocument().hasSection(item.name())) {
+            final var editor = new SectionEditor(edits, item.name());
+            refresher = editor::refresh;
+            show(item.name(), "Environment", editor);
             return;
         }
 
@@ -78,21 +89,21 @@ public final class InspectorController {
     /** The scene was changed (an edit, an undo): what is shown is what the file says */
     @Subscribe
     public void onSceneChanged(final SceneChangedEvent event) {
-        if (editor == null)
+        if (refresher == null)
             return;
 
         try {
-            editor.refresh();
-        } catch (final IndexOutOfBoundsException exception) {
+            refresher.run();
+        } catch (final IndexOutOfBoundsException | IllegalArgumentException exception) {
             // The thing that was shown is gone (undone, deleted)
-            editor = null;
+            refresher = null;
             clear();
         }
     }
 
     @Subscribe
     public void onFileSelected(final ProjectFileSelectedEvent event) {
-        editor = null;
+        refresher = null;
 
         final var file = event.file();
         if (file == null) {

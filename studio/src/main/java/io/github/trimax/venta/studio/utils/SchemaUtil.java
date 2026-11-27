@@ -1,0 +1,58 @@
+package io.github.trimax.venta.studio.utils;
+
+import java.lang.reflect.RecordComponent;
+import java.util.Arrays;
+import java.util.List;
+
+import io.github.trimax.venta.engine.model.dto.SceneDTO;
+import io.github.trimax.venta.studio.model.document.SceneDocument;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+
+/**
+ * What the file of a scene may hold, by the records that the engine reads it into: the type of a field of a section of the environment,
+ * so the editor knows the values of an enum and a whole number from a fraction.
+ */
+@UtilityClass
+public final class SchemaUtil {
+    /**
+     * The type of a field of a section.
+     *
+     * @param section the name of the section in the hierarchy ({@code Fog})
+     * @param path    the names of the fields from the section to the field; empty for the section itself
+     * @return the type, null when the engine doesn't read such a field
+     */
+    public Class<?> typeOf(@NonNull final String section, @NonNull final List<String> path) {
+        final var fields = SceneDocument.fieldsOf(section);
+        if (fields.isEmpty())
+            return null;
+
+        // The output is not an object of the file: its fields are the fields of the scene, so the first name of the path is one of them
+        var type = fields.size() == 1 ? component(SceneDTO.class, fields.getFirst()) : SceneDTO.class;
+        for (final var name : path) {
+            if (type == null)
+                return null;
+
+            type = component(type, name);
+        }
+
+        return type;
+    }
+
+    /** The names of the values of an enum, null for a type that is not one */
+    public List<String> constantsOf(final Class<?> type) {
+        return type == null || !type.isEnum() ? null : Arrays.stream(type.getEnumConstants()).map(constant -> ((Enum<?>) constant).name()).toList();
+    }
+
+    /** Whether the type holds only whole numbers */
+    public boolean isWhole(final Class<?> type) {
+        return type == int.class || type == Integer.class || type == long.class || type == Long.class || type == short.class || type == Short.class;
+    }
+
+    private Class<?> component(final Class<?> type, final String name) {
+        if (!type.isRecord())
+            return null;
+
+        return Arrays.stream(type.getRecordComponents()).filter(component -> component.getName().equals(name)).map(RecordComponent::getType).findFirst().orElse(null);
+    }
+}

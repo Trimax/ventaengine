@@ -1,6 +1,7 @@
 package io.github.trimax.venta.studio.services;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import org.joml.Vector2f;
@@ -10,6 +11,15 @@ import com.google.gson.JsonObject;
 
 import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.engine.context.VentaContext;
+import io.github.trimax.venta.engine.model.common.shared.AmbientOcclusion;
+import io.github.trimax.venta.engine.model.common.shared.Antialiasing;
+import io.github.trimax.venta.engine.model.common.shared.Bloom;
+import io.github.trimax.venta.engine.model.common.shared.DirectionalLight;
+import io.github.trimax.venta.engine.model.common.shared.Fog;
+import io.github.trimax.venta.engine.model.common.shared.LightShafts;
+import io.github.trimax.venta.engine.model.common.shared.View;
+import io.github.trimax.venta.engine.model.common.shared.Wind;
+import io.github.trimax.venta.engine.model.dto.SceneDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneBillboardDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneEmitterDTO;
 import io.github.trimax.venta.engine.model.dto.scene.SceneLightDTO;
@@ -45,6 +55,35 @@ public final class SceneApplier {
     private static final Vector2f ONE_BY_ONE = new Vector2f(1.f);
 
     private final VentaContext context;
+
+    /**
+     * Shows a section of the environment as the file says: the fog, the sun, the bloom, ... of the scene of the engine are made again from it.
+     *
+     * @param name  the name of the section in the hierarchy
+     * @param scene the scene as the file says now
+     */
+    public void applySection(@NonNull final String name, @NonNull final SceneDTO scene) {
+        final var current = context.getSceneManager().getCurrent();
+        if (current == null)
+            return;
+
+        switch (name) {
+            case "Sun" -> current.setDirectionalLight(Optional.ofNullable(scene.directionalLight()).map(DirectionalLight::new).orElse(null));
+            case "Ambient light" -> Optional.ofNullable(scene.ambientLight()).ifPresent(color -> current.setAmbientLight(color.toVector3f()));
+            case "Fog" -> current.setFog(Optional.ofNullable(scene.fog()).map(Fog::new).orElse(null));
+            case "Wind" -> current.setWind(Optional.ofNullable(scene.wind()).map(Wind::new).orElse(null));
+            case "Bloom" -> current.setBloom(Optional.ofNullable(scene.bloom()).map(Bloom::new).orElse(null));
+            case "Light shafts" -> current.setLightShafts(Optional.ofNullable(scene.lightShafts()).map(LightShafts::new).orElse(null));
+            case "Ambient occlusion" -> current.setAmbientOcclusion(Optional.ofNullable(scene.ambientOcclusion()).map(AmbientOcclusion::new).orElse(null));
+            case "Antialiasing" -> current.setAntialiasing(Optional.ofNullable(scene.antialiasing()).map(Antialiasing::new).orElse(null));
+            case "View" -> current.setView(Optional.ofNullable(scene.view()).map(View::new).orElse(null));
+            case "Output" -> {
+                Optional.ofNullable(scene.exposure()).ifPresent(current::setExposure);
+                Optional.ofNullable(scene.toneMapping()).ifPresent(current::setToneMapping);
+            }
+            default -> throw new IllegalArgumentException(name + " is not a section of the environment");
+        }
+    }
 
     /** The thing of the scene that has the place among the things of the kind, null when the scene has no such thing */
     public AbstractInstance instanceOf(@NonNull final OutlineKind kind, final int index) {

@@ -32,9 +32,10 @@ its own. What the engine can do already is in the [readme](readme.md). Paths of 
 
 - [ ] **5. Studio.** The editor of scenes (`studio/`) shows a scene in its viewport, chooses things with a click, changes the
   name, the place, the angles and the scale of a thing in the inspector, creates (a file dragged from the project, or the menu),
-  copies and deletes things, moves, turns and scales them with the handles of the viewport, with undo and redo, and saves the
-  scene file. What is left, in the order of the work: groups of things (the engine needs scene nodes with a parent first); the lights
-  and the settings of the environment with handles for their ranges and cones; the assets (importing files, thumbnails, the editor of
+  copies and deletes things, moves, turns and scales them with the handles of the viewport, edits the settings of the environment, with undo and
+  redo, and saves the scene file. What is left, in the order of the work: groups of things (the engine needs scene nodes with a parent first); the files
+  of the resources (the range, the cone, the color and the intensity of a light, the skybox of the scene, then the same for the materials
+  and the rest), edited with the same fields and with handles for the range and the cone; the assets (importing files, thumbnails, the editor of
   materials, renaming with the references updated, reloading what changed on the disk); the editors of the terrain, the water, the
   emitters and the sounds (the tools of the old `editor` become panels of the studio); playing a scene in the editor and building
   the archive. Smaller things: a thing that is dropped lands on the ground (now it lands on the plane at the height of the pivot, the
