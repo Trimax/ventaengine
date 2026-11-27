@@ -3,6 +3,7 @@ package io.github.trimax.venta.studio.controls;
 import java.util.function.BiConsumer;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -30,6 +31,7 @@ public final class VectorRow extends HBox {
      */
     public VectorRow(final String title, final int count, final float step, final BiConsumer<Integer, Float> onChange) {
         super(6);
+        setAlignment(Pos.CENTER_LEFT);
         setPadding(new Insets(2, 0, 2, 0));
 
         final var name = new Label(title);
@@ -50,6 +52,7 @@ public final class VectorRow extends HBox {
             label.setOnMousePressed(event -> label.setUserData(event.getSceneX()));
 
             final var cell = new HBox(3, label, field);
+            cell.setAlignment(Pos.CENTER_LEFT);
             HBox.setHgrow(cell, Priority.ALWAYS);
             HBox.setHgrow(field, Priority.ALWAYS);
             field.setMinWidth(40);

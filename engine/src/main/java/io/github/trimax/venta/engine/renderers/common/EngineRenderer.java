@@ -42,6 +42,7 @@ public final class EngineRenderer {
     private final EditorOverlayRenderer editorOverlayRenderer;
     private VentaEngineFrameListener frameListener;
     private EditorOverlay overlay;
+    private boolean eventsPolled = true;
     private final LightShaftRenderer lightShaftRenderer;
     private final AmbientOcclusionRenderer ambientOcclusionRenderer;
     private final EnvironmentRenderer environmentRenderer;
@@ -73,6 +74,14 @@ public final class EngineRenderer {
     /**
      * Gets every finished frame (see {@link VentaEngineFrameListener}), null for none.
      */
+    /**
+     * Whether the events of the window are taken at the end of every frame (the default). The host of an embedded engine takes its own
+     * events, and the hidden window of the engine has none.
+     */
+    public void setEventsPolled(final boolean eventsPolled) {
+        this.eventsPolled = eventsPolled;
+    }
+
     public void setOverlay(final EditorOverlay overlay) {
         this.overlay = overlay;
     }
@@ -174,6 +183,9 @@ public final class EngineRenderer {
             windowRenderer.render(window);
         }
 
-        glfwPollEvents();
+        // An engine that is a part of another application leaves the events to it: they are handled in the middle of its frame otherwise, where
+        // a dialog can't be shown
+        if (eventsPolled)
+            glfwPollEvents();
     }
 }
