@@ -21,7 +21,9 @@ import io.github.trimax.venta.engine.exceptions.EngineInitializationException;
 import io.github.trimax.venta.engine.factories.ControllerFactory;
 import io.github.trimax.venta.engine.managers.implementation.CameraManagerImplementation;
 import io.github.trimax.venta.engine.managers.implementation.SceneManagerImplementation;
+import io.github.trimax.venta.engine.model.common.geo.Ray;
 import io.github.trimax.venta.engine.model.common.overlay.EditorOverlay;
+import io.github.trimax.venta.engine.utils.RayUtil;
 import io.github.trimax.venta.engine.model.common.pick.PickResult;
 import io.github.trimax.venta.engine.utils.PickingUtil;
 import io.github.trimax.venta.engine.interfaces.VentaEngineApplication;
@@ -78,6 +80,7 @@ public final class Engine {
         try {
             initialize(application);
             engineRenderer.setFrameListener(frameListener);
+            engineRenderer.setEventsPolled(false);
             application.getStartupHandler().onStartup(args, context);
 
             glEnable(GL_DEPTH_TEST);
@@ -103,6 +106,18 @@ public final class Engine {
     }
 
     /**
+     * The ray of a point of the last frame of an embedded engine (the point is as in {@link #pick}): where a thing that is dropped there goes.
+     *
+     * @return the ray from the near plane of the camera through the point
+     */
+    public Ray rayThrough(final float x, final float y) {
+        final var camera = cameraManager.getInstance(cameraManager.getCurrent().getID());
+        final var window = controllerFactory.get(WindowController.class).get();
+
+        return RayUtil.through(x * 2.f - 1.f, 1.f - y * 2.f, new org.joml.Matrix4f(window.getProjectionMatrix()).mul(camera.getViewMatrix()).invert());
+    }
+
+    /**
      * The thing that is under a point of the last frame of an embedded engine.
      *
      * @param x the point from 0 (the left edge of the frame) to 1 (the right one)
@@ -118,7 +133,12 @@ public final class Engine {
 
     /** The size of the window of an embedded engine, which is the size of its frames in pixels */
     public void resize(final int width, final int height) {
-        glfwSetWindowSize(controllerFactory.get(WindowController.class).get().getInternalID(), width, height);
+        final var window = controllerFactory.get(WindowController.class).get();
+        glfwSetWindowSize(window.getInternalID(), width, height);
+
+        // The events of the window are not taken, so the callback of the size doesn't come: the state of the window gets the size here
+        window.setWidth(width);
+        window.setHeight(height);
     }
 
     /** Stops an embedded engine and releases everything it owns */

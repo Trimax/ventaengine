@@ -1,5 +1,10 @@
 package io.github.trimax.venta.engine.model.common.overlay;
 
+import org.joml.Matrix3f;
+import org.joml.Vector3f;
+
+import io.github.trimax.venta.engine.model.common.gizmo.GizmoHandle;
+import io.github.trimax.venta.engine.model.common.gizmo.GizmoMode;
 import io.github.trimax.venta.engine.model.instance.AbstractInstance;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +24,16 @@ public final class EditorOverlay {
 
     /** The thing that is chosen, it gets a frame; null for none */
     private AbstractInstance selected;
+
+    /** What the handles of the gizmo do: move, turn or scale; null hides the gizmo */
+    private GizmoMode gizmoMode;
+
+    /** Where the gizmo is: the place of the thing that is chosen */
+    private final Vector3f gizmoOrigin = new Vector3f();
+
+    /** The axes of the gizmo as the columns: the axes of the world, or the axes of the thing that is chosen */
+    private final Matrix3f gizmoAxes = new Matrix3f();
+
+    /** The handle that the mouse is over or that is dragged, it is drawn in another color; null for none */
+    private GizmoHandle gizmoHandle;
 }

@@ -145,7 +145,8 @@ public final class FlyCamera {
         updateDirections();
     }
 
-    Vector3f getPosition() {
+    /** Where the camera is (not a copy) */
+    public Vector3f getPosition() {
         return position;
     }
 

@@ -1,7 +1,6 @@
 package io.github.trimax.venta.studio.services;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.joml.Vector3f;
 
@@ -23,6 +22,7 @@ import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanc
 import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
 import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
+import io.github.trimax.venta.studio.model.event.SceneChangedEvent;
 import io.github.trimax.venta.studio.model.event.SceneOpenedEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineItem;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Ties the hierarchy to the viewport: a click on a thing in the viewport chooses its item in the hierarchy, and the item that is chosen
- * gets its frame in the viewport. The thing of an item is found by the name and the place in the file, see {@link OutlineUtil#find}.
+ * gets its frame in the viewport. The thing of an item is the one that has the same place in the file.
  */
 @Slf4j
 @Component
@@ -47,9 +47,15 @@ public final class SelectionService {
     private final StudioSession session;
     private final Engine engine;
     private final VentaContext context;
+    private final SceneApplier applier;
 
     private OutlineNode outline;
     private OutlineItem selected;
+
+    /** The item that is chosen, null for none */
+    public OutlineItem getSelected() {
+        return selected;
+    }
 
     /** The hierarchy of the scene that is open, null before one is open */
     public OutlineNode getOutline() {
@@ -61,6 +67,19 @@ public final class SelectionService {
         outline = event.outline();
         selected = null;
         overlay().setSelected(null);
+    }
+
+    /** The hierarchy was made again: the chosen item is the one in the same place, or the one with the same name for what has no place */
+    @Subscribe
+    public void onSceneChanged(final SceneChangedEvent event) {
+        outline = event.outline();
+
+        if (selected == null)
+            return;
+
+        selected = selected.isThing()
+                ? OutlineUtil.at(outline, selected.kind(), selected.index())
+                : OutlineUtil.items(outline, selected.kind()).stream().filter(item -> item.name().equals(selected.name())).findFirst().orElse(null);
     }
 
     @Subscribe
@@ -100,27 +119,9 @@ public final class SelectionService {
         return session.getOverlay();
     }
 
-    /** The thing of the item in the scene that is open, null for an item that is not a thing (a setting, a category, the ground) */
+    /** The thing of the item in the scene that is open, null for an item that is not a thing (a setting, a category) */
     private AbstractInstance instanceOf(final OutlineItem item) {
-        if (item == null || outline == null)
-            return null;
-
-        final var scene = context.getSceneManager().getCurrent();
-        final List<? extends AbstractInstance> things = switch (item.kind()) {
-            case Object -> List.copyOf(scene.getObjects());
-            case Light -> List.copyOf(scene.getLights());
-            case Emitter -> List.copyOf(scene.getEmitters());
-            case Billboard -> List.copyOf(scene.getBillboards());
-            case Sound -> List.copyOf(scene.getSoundSources());
-            default -> List.of();
-        };
-
-        var skip = OutlineUtil.occurrence(outline, item);
-        for (final var thing : things)
-            if (thing.getName().equals(item.name()) && skip-- == 0)
-                return thing;
-
-        return null;
+        return item == null || !item.isThing() ? null : applier.instanceOf(item.kind(), item.index());
     }
 
     /** The item of a thing of the scene, null when the hierarchy has none for it */
@@ -129,25 +130,8 @@ public final class SelectionService {
         if (kind == null)
             return null;
 
-        final var scene = context.getSceneManager().getCurrent();
-        final List<? extends AbstractInstance> things = switch (kind) {
-            case Object -> List.copyOf(scene.getObjects());
-            case Light -> List.copyOf(scene.getLights());
-            case Emitter -> List.copyOf(scene.getEmitters());
-            case Billboard -> List.copyOf(scene.getBillboards());
-            default -> List.copyOf(scene.getSoundSources());
-        };
-
-        var occurrence = 0;
-        for (final var thing : things) {
-            if (thing == instance)
-                return OutlineUtil.find(outline, kind, instance.getName(), occurrence);
-
-            if (thing.getName().equals(instance.getName()))
-                occurrence++;
-        }
-
-        return null;
+        final var index = applier.indexOf(kind, instance);
+        return index < 0 ? null : OutlineUtil.at(outline, kind, index);
     }
 
     private OutlineKind kindOf(final AbstractInstance instance) {

@@ -95,27 +95,22 @@ final class OutlineUtilTest {
     void testThingsThatShareANameAreToldByTheirPlaceInTheFile() {
         final var outline = OutlineUtil.build("s.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
 
-        assertEquals("a.json", OutlineUtil.find(outline, OutlineKind.Object, "Tree", 0).detail());
-        assertEquals("b.json", OutlineUtil.find(outline, OutlineKind.Object, "Tree", 1).detail());
-        assertEquals("r.json", OutlineUtil.find(outline, OutlineKind.Object, "Rock", 0).detail());
-        assertNull(OutlineUtil.find(outline, OutlineKind.Object, "Tree", 2));
-        assertNull(OutlineUtil.find(outline, OutlineKind.Light, "Tree", 0), "Another kind");
+        assertEquals("a.json", OutlineUtil.at(outline, OutlineKind.Object, 0).detail());
+        assertEquals("r.json", OutlineUtil.at(outline, OutlineKind.Object, 1).detail());
+        assertEquals("b.json", OutlineUtil.at(outline, OutlineKind.Object, 2).detail());
+        assertEquals("Tree", OutlineUtil.at(outline, OutlineKind.Object, 2).name());
+        assertNull(OutlineUtil.at(outline, OutlineKind.Object, 3));
+        assertNull(OutlineUtil.at(outline, OutlineKind.Light, 0), "Another kind");
     }
 
     @Test
-    void testOccurrenceIsTheNumberTheLookupTakes() {
-        final var outline = OutlineUtil.build("s.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
+    void testThingsKnowTheirPlacesAndSettingsHaveNone() {
+        final var outline = OutlineUtil.build("s.json", ParsingUtil.asObject(SCENE, SceneDTO.class));
 
-        for (final var item : OutlineUtil.items(outline, OutlineKind.Object))
-            assertSame(item, OutlineUtil.find(outline, item.kind(), item.name(), OutlineUtil.occurrence(outline, item)));
-    }
-
-    @Test
-    void testItemThatIsNotInTheSceneHasNoOccurrence() {
-        final var outline = OutlineUtil.build("s.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
-        final var other = OutlineUtil.build("o.json", ParsingUtil.asObject(DUPLICATES, SceneDTO.class));
-
-        assertEquals(-1, OutlineUtil.occurrence(outline, OutlineUtil.items(other, OutlineKind.Object).getFirst()), "The items are compared as they are, not by their names");
+        assertTrue(OutlineUtil.items(outline, OutlineKind.Object).stream().allMatch(item -> item.isThing()));
+        assertEquals(List.of(0, 1), OutlineUtil.items(outline, OutlineKind.Object).stream().map(item -> item.index()).toList());
+        assertTrue(OutlineUtil.items(outline, OutlineKind.Setting).stream().noneMatch(item -> item.isThing()));
+        assertFalse(outline.item().isThing());
     }
 
     @Test

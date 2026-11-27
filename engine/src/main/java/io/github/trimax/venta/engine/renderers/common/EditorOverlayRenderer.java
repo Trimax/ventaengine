@@ -23,6 +23,7 @@ import io.github.trimax.venta.engine.model.instance.implementation.ObjectInstanc
 import io.github.trimax.venta.engine.model.instance.implementation.SceneInstanceImplementation;
 import io.github.trimax.venta.engine.model.states.WindowState;
 import io.github.trimax.venta.engine.registries.implementation.ProgramRegistryImplementation;
+import io.github.trimax.venta.engine.utils.GizmoUtil;
 import io.github.trimax.venta.engine.utils.OverlayUtil;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -39,6 +40,7 @@ public final class EditorOverlayRenderer {
     private static final int MAXIMAL_SEGMENTS = 96;
     private static final float[] SELECTION_COLOR = {1.f, 0.62f, 0.12f};
     private static final float MARK_ALPHA = 0.95f;
+    private static final float HIDDEN_ALPHA = 0.28f;
 
     /** How much of an edge of the frame is drawn at every corner of it */
     private static final float BRACKET = 0.25f;
@@ -131,6 +133,18 @@ public final class EditorOverlayRenderer {
             marks.stream().filter(mark -> mark.instance() == selected).forEach(mark -> addMark(batch, mark, camera.getPosition(), SELECTION_COLOR, 1.6f));
 
         batch.flush();
+
+        if (overlay.getGizmoMode() != null) {
+            // The handles are not dimmed by what is in front of them
+            glUniform1f(glGetUniformLocation(program, "hiddenAlpha"), 1.f);
+
+            final var size = GizmoUtil.size(overlay.getGizmoOrigin(), camera.getPosition());
+            for (final var line : GizmoUtil.lines(overlay.getGizmoMode(), overlay.getGizmoOrigin(), overlay.getGizmoAxes(), size, overlay.getGizmoHandle()))
+                batch.add(line.start(), line.end(), line.color(), 1.f);
+
+            batch.flush();
+            glUniform1f(glGetUniformLocation(program, "hiddenAlpha"), HIDDEN_ALPHA);
+        }
     }
 
     /** A cross of three lines at the place of the mark: of the same size on the screen whatever the distance */

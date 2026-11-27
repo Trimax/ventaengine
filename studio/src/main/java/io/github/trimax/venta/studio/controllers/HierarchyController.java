@@ -8,6 +8,7 @@ import io.github.trimax.venta.container.annotations.Component;
 import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.studio.model.event.OutlineSelectedEvent;
 import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
+import io.github.trimax.venta.studio.model.event.SceneChangedEvent;
 import io.github.trimax.venta.studio.model.event.SceneOpenedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineItem;
@@ -19,6 +20,8 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.TransferMode;
+import io.github.trimax.venta.studio.services.PlacementService;
 import io.github.trimax.venta.studio.services.SelectionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +33,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class HierarchyController {
     private final SelectionService selection;
+    private final PlacementService placement;
 
     @FXML private TextField filter;
     @FXML private TreeView<OutlineItem> tree;
 
     private OutlineNode outline;
+
+    /** Whether the tree is made again: what it chooses then is not a choice of the user */
+    private boolean rebuilding;
 
     @FXML
     public void initialize() {
@@ -51,6 +58,9 @@ public final class HierarchyController {
         });
 
         tree.getSelectionModel().selectedItemProperty().addListener((observable, was, is) -> {
+            if (rebuilding)
+                return;
+
             final var item = is == null ? null : is.getValue();
             EventUtil.post(new OutlineSelectedEvent(item));
 
@@ -59,6 +69,19 @@ public final class HierarchyController {
         });
 
         filter.textProperty().addListener((observable, was, is) -> rebuild());
+        tree.setOnDragOver(event -> {
+            if (event.getDragboard().hasFiles() && !event.getDragboard().getFiles().isEmpty() && placement.isPlaceable(event.getDragboard().getFiles().getFirst().toPath()))
+                event.acceptTransferModes(TransferMode.COPY);
+
+            event.consume();
+        });
+        tree.setOnDragDropped(event -> {
+            final var accepted = event.getDragboard().hasFiles() && !event.getDragboard().getFiles().isEmpty()
+                    && placement.place(event.getDragboard().getFiles().getFirst().toPath(), null, null);
+
+            event.setDropCompleted(accepted);
+            event.consume();
+        });
         tree.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2)
                 selection.focusSelection();
@@ -76,6 +99,41 @@ public final class HierarchyController {
 
         tree.getSelectionModel().select(found);
         tree.scrollTo(tree.getRow(found));
+    }
+
+    /** The scene was changed: the tree shows it, and the thing that was chosen is chosen again (by its place in the file: its name may be new) */
+    @Subscribe
+    public void onSceneChanged(final SceneChangedEvent event) {
+        final var chosen = tree.getSelectionModel().getSelectedItem() == null ? null : tree.getSelectionModel().getSelectedItem().getValue();
+        outline = event.outline();
+
+        rebuilding = true;
+        try {
+            rebuild();
+
+            final var found = chosen == null ? null : findAgain(tree.getRoot(), chosen);
+            if (found != null)
+                tree.getSelectionModel().select(found);
+        } finally {
+            rebuilding = false;
+        }
+    }
+
+    private TreeItem<OutlineItem> findAgain(final TreeItem<OutlineItem> node, final OutlineItem chosen) {
+        if (node == null)
+            return null;
+
+        final var value = node.getValue();
+        if (value.kind() == chosen.kind() && (chosen.isThing() ? value.index() == chosen.index() : value.name().equals(chosen.name())))
+            return node;
+
+        for (final var child : node.getChildren()) {
+            final var found = findAgain(child, chosen);
+            if (found != null)
+                return found;
+        }
+
+        return null;
     }
 
     @Subscribe

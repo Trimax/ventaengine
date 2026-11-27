@@ -11,8 +11,13 @@ import io.github.trimax.venta.engine.context.VentaContext;
 import io.github.trimax.venta.engine.core.Engine;
 import io.github.trimax.venta.studio.services.ConsoleLog;
 import io.github.trimax.venta.studio.services.ProjectService;
+import io.github.trimax.venta.studio.services.PlacementService;
+import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.services.SceneService;
+import io.github.trimax.venta.engine.model.common.gizmo.GizmoMode;
+import io.github.trimax.venta.studio.services.GizmoService;
 import io.github.trimax.venta.studio.services.SelectionService;
+import io.github.trimax.venta.studio.services.UnsavedChangesService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -63,6 +68,44 @@ public final class StudioApplication extends Application implements AbstractVent
         viewport.setOnPick(selection::pick);
         viewport.setOnFocus(selection::focusSelection);
 
+        final var gizmos = VentaApplication.getComponent(GizmoService.class);
+        viewport.setGizmo(new ViewportPanel.Gizmo() {
+            @Override
+            public void hover(final float x, final float y) {
+                gizmos.hover(x, y);
+            }
+
+            @Override
+            public boolean press(final float x, final float y) {
+                return gizmos.press(x, y);
+            }
+
+            @Override
+            public void drag(final float x, final float y, final boolean snap) {
+                gizmos.drag(x, y, snap);
+            }
+
+            @Override
+            public void release() {
+                gizmos.release();
+            }
+        });
+        viewport.setOnTool(key -> gizmos.setMode(switch (key) {
+            case W -> GizmoMode.Translate;
+            case E -> GizmoMode.Rotate;
+            case R -> GizmoMode.Scale;
+            default -> null;
+        }));
+
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var placement = VentaApplication.getComponent(PlacementService.class);
+        viewport.setOnDelete(() -> {
+            final var item = selection.getSelected();
+            if (item != null && item.isThing())
+                edits.delete(item.kind(), item.index());
+        });
+        viewport.setDrop(placement::isPlaceable, (file, x, y) -> placement.place(file, x, y));
+
         final var loader = new FXMLLoader(StudioApplication.class.getResource("/layouts/main.fxml"));
         loader.setControllerFactory(VentaApplication::getComponent);
         final Parent root = loader.load();
@@ -74,6 +117,14 @@ public final class StudioApplication extends Application implements AbstractVent
 
         stage.setTitle("Venta Studio");
         stage.setScene(scene);
+
+        // Changes that are not saved are asked about before the window goes
+        final var unsaved = VentaApplication.getComponent(UnsavedChangesService.class);
+        stage.setOnCloseRequest(event -> {
+            if (!unsaved.confirm())
+                event.consume();
+        });
+
         stage.show();
 
         viewport.start();

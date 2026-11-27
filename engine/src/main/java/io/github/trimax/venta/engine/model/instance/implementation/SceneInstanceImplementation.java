@@ -22,20 +22,23 @@ import one.util.streamex.StreamEx;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Slf4j
 @Getter
 public final class SceneInstanceImplementation extends AbstractInstanceImplementation implements SceneInstance {
     private final Vector3f ambientLight = new Vector3f(0.3f);
-    private final Set<TerrainSurfaceInstanceImplementation> terrainSurfaces = new HashSet<>();
-    private final Set<WaterSurfaceInstanceImplementation> waterSurfaces = new HashSet<>();
-    private final Set<SoundSourceInstanceImplementation> soundSources = new HashSet<>();
-    private final Set<BillboardInstanceImplementation> billboards = new HashSet<>();
-    private final Set<EmitterInstanceImplementation> emitters = new HashSet<>();
-    private final Set<ObjectInstanceImplementation> objects = new HashSet<>();
-    private final Set<LightInstanceImplementation> lights = new HashSet<>();
+
+    // The things are kept in the order they were added: the scene is made from its file in the order of the file, and an editor finds a
+    // thing by its place in the file
+    private final Set<TerrainSurfaceInstanceImplementation> terrainSurfaces = new LinkedHashSet<>();
+    private final Set<WaterSurfaceInstanceImplementation> waterSurfaces = new LinkedHashSet<>();
+    private final Set<SoundSourceInstanceImplementation> soundSources = new LinkedHashSet<>();
+    private final Set<BillboardInstanceImplementation> billboards = new LinkedHashSet<>();
+    private final Set<EmitterInstanceImplementation> emitters = new LinkedHashSet<>();
+    private final Set<ObjectInstanceImplementation> objects = new LinkedHashSet<>();
+    private final Set<LightInstanceImplementation> lights = new LinkedHashSet<>();
 
     private CubemapEntityImplementation skybox;
 

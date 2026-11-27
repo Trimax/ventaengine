@@ -228,7 +228,7 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   `textures/`, ...): its files are the resources of the studio before the archives and the classpath, and they are read from the disk
   whenever they are needed. `examples/src/main/resources` is a project. Opening a project when one is open starts another window
 * **Viewport** — the engine draws into a hidden window of the size of the panel, and the finished image is shown in the window. The
-  camera flies (right mouse button looks, `W` `A` `S` `D` `Q` `E` move, `Shift` is faster, the wheel dollies), orbits the chosen thing
+  camera flies (the right mouse button looks, and only while it is held `W` `A` `S` `D` `Q` `E` move the camera, `Shift` is faster, the wheel dollies), orbits the chosen thing
   (`Alt` and the left button), pans (the middle button), turns to the chosen thing (`F`, or a double click in the hierarchy) and goes to
   the views Perspective, Top, Front and Side
 * **Choosing** — a click chooses the thing under the mouse: the ray of the pixel meets the boxes of the objects and the marks of the
@@ -236,7 +236,23 @@ When `isConsoleEnabled` is set in the render configuration, F12 opens the consol
   the finished image, they are hidden by what is in front of them and are not touched by the exposure
 * **Panels** — Project (the folders and the files, a scene opens with a double click), Hierarchy (the settings and the things of the
   scene that is open), Inspector (the fields of what is chosen, the contents of a file), Console (the log of the engine)
-* The scene is not edited yet; the whole program of the studio is in [ROADMAP.md](ROADMAP.md)
+* **Editing** — the Inspector changes the name, the place, the angles (in degrees) and the scale of the thing that is chosen (and the
+  direction of a light and the size of a billboard); a drag of the name of an axis over its field changes the number, the arrows step
+  it. Every change is a command: `Cmd+Z` and `Cmd+Shift+Z` undo and redo it (the steps of a drag are one command), the title of the
+  window has a star while the scene has changes that are not saved, `Cmd+S` writes the file (in one piece, with the order of the fields
+  and the fields that the studio doesn't know kept), and closing the window or opening another scene asks about the changes
+* **Creating things** — a file of the project that a scene holds (an object, a light, an emitter, a billboard, a sound source, a terrain,
+  a water) is dragged from the Project panel into the viewport, where it lands on the plane at the height of the point the camera turns
+  round, or into the Hierarchy; the Object menu makes the same from a list of the files. `Cmd+D` copies the chosen thing (the copy is the
+  next one, a meter aside, with the next number in its name), `Delete` or `Cmd+Backspace` deletes it. All of it is undone and redone with
+  the rest, and a thing that can't be made (its file doesn't load) is not put in the scene file
+* **Handles** — the chosen thing has handles that the engine draws over the image and picks under the mouse; the studio only forwards the
+  mouse and writes the result to the scene as a command (a whole drag is one step of the history). The tools are `Q` (only choose),
+  `W` (move: arrows and the squares of the planes), `E` (turn: a ring for every axis) and `R` (scale: a cube for every axis, and one in
+  the middle for all of them), also as buttons of the toolbar, which also switches the handles between the axes of the world (Global)
+  and of the thing (Local; the scale always goes along the axes of the thing). Holding `Cmd` (`Ctrl` elsewhere) while dragging snaps to
+  a quarter of a meter, 15 degrees and a tenth. Everything can be moved; turning and scaling are for objects, terrains and waters
+* The whole program of the studio is in [ROADMAP.md](ROADMAP.md)
 
 ## Examples
 Every example is a separate application in `examples` (`io.github.trimax.examples...`). Run them from the repository root:
