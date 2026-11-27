@@ -107,6 +107,11 @@
     -fx-border-color: transparent transparent -studio-line transparent;
 }
 
+.tool-bar .toggle-button:selected {
+    -fx-background-color: -studio-selection;
+    -fx-text-fill: white;
+}
+
 .tab-pane > .tab-header-area > .headers-region > .tab {
     -fx-background-color: -studio-panel;
 }

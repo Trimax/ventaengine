@@ -40,6 +40,7 @@ final class SelfTest extends AnimationTimer {
     private int frame;
     private float startX;
     private float startYaw;
+    private double[] gizmoFrom;
 
     SelfTest(final Stage stage, final ViewportPanel viewport, final FlyCamera flyCamera, final int frames) {
         this.stage = stage;
@@ -55,9 +56,15 @@ final class SelfTest extends AnimationTimer {
         if (frame == 5 && System.getProperty("studio.camera") == null) {
             startX = flyCamera.getPosition().x;
             startYaw = flyCamera.getYaw();
+            // The keys fly the camera only while the secondary button is down
+            Event.fireEvent(viewport, mouse(MouseEvent.MOUSE_PRESSED, 100, 100));
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "d", "d", KeyCode.D, false, false, false, false));
-            drag(40);
+            Event.fireEvent(viewport, mouse(MouseEvent.MOUSE_DRAGGED, 140, 100));
         }
+
+        if (frame == 10 && System.getProperty("studio.tool") != null)
+            VentaApplication.getComponent(io.github.trimax.venta.studio.services.GizmoService.class)
+                    .setMode(io.github.trimax.venta.engine.model.common.gizmo.GizmoMode.valueOf(System.getProperty("studio.tool")));
 
         if (frame == 30 && System.getProperty("studio.select") != null)
             select(System.getProperty("studio.select"));
@@ -98,8 +105,13 @@ final class SelfTest extends AnimationTimer {
         if (System.getProperty("studio.create") != null)
             structure();
 
-        if (frame == 25)
+        if (frame == 25) {
             viewport.fireEvent(new KeyEvent(KeyEvent.KEY_RELEASED, "d", "d", KeyCode.D, false, false, false, false));
+            Event.fireEvent(viewport, mouse(MouseEvent.MOUSE_RELEASED, 140, 100));
+        }
+
+        if (System.getProperty("studio.gizmo") != null)
+            gizmo();
 
         if (frame >= 100 && frame < 220 && frame % 6 == 0) {
             stage.setWidth(1200 + (frame - 100) * 2);
@@ -200,10 +212,62 @@ final class SelfTest extends AnimationTimer {
                 .ifPresent(item -> EventUtil.post(new OutlineSelectionRequestEvent(item)));
     }
 
-    private void drag(final double deltaX) {
-        Event.fireEvent(viewport, mouse(MouseEvent.MOUSE_PRESSED, 100, 100));
-        Event.fireEvent(viewport, mouse(MouseEvent.MOUSE_DRAGGED, 100 + deltaX, 100));
-        Event.fireEvent(viewport, mouse(MouseEvent.MOUSE_RELEASED, 100 + deltaX, 100));
+    /**
+     * Takes the x handle of the gizmo of the chosen object with the primary button, drags it in three steps, lets it go, and undoes it:
+     * the handle is found by looking for a point of the viewport that the engine says is on it, the mouse events are the real ones.
+     */
+    private void gizmo() {
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var selection = VentaApplication.getComponent(SelectionService.class);
+        final var engine = VentaApplication.getComponent(io.github.trimax.venta.engine.core.Engine.class);
+        final var overlay = VentaApplication.getComponent(StudioSession.class).getOverlay();
+        final var item = selection.getSelected();
+        if (item == null)
+            return;
+
+        final var width = viewport.getWidth();
+        final var height = viewport.getHeight();
+
+        if (frame == 50) {
+            System.out.printf("SELFTEST gizmo: mode=%s, origin=%s, x=%.2f%n", overlay.getGizmoMode(), overlay.getGizmoOrigin(), position(edits, item).x);
+
+            for (int row = 1; row < 100 && gizmoFrom == null; row++)
+                for (int column = 1; column < 100 && gizmoFrom == null; column++) {
+                    final var x = column / 100.f;
+                    final var y = row / 100.f;
+                    if (io.github.trimax.venta.engine.utils.GizmoUtil.hit(overlay.getGizmoMode(), overlay.getGizmoOrigin(), overlay.getGizmoAxes(),
+                            engine.rayThrough(x, y), flyCamera.getPosition()) == io.github.trimax.venta.engine.model.common.gizmo.GizmoHandle.AxisX)
+                        gizmoFrom = new double[]{x * width, y * height};
+                }
+
+            System.out.println("SELFTEST gizmo: x handle at " + (gizmoFrom == null ? "none" : (int) gizmoFrom[0] + "," + (int) gizmoFrom[1]));
+            if (gizmoFrom != null)
+                Event.fireEvent(viewport, primary(MouseEvent.MOUSE_PRESSED, gizmoFrom[0], gizmoFrom[1]));
+        }
+
+        if (gizmoFrom != null && frame >= 51 && frame <= 53)
+            Event.fireEvent(viewport, primary(MouseEvent.MOUSE_DRAGGED, gizmoFrom[0] + (frame - 50) * 15, gizmoFrom[1]));
+
+        if (gizmoFrom != null && frame == 54) {
+            Event.fireEvent(viewport, primary(MouseEvent.MOUSE_RELEASED, gizmoFrom[0] + 45, gizmoFrom[1]));
+            System.out.printf("SELFTEST gizmo: dragged x=%.2f, dirty=%s%n", position(edits, item).x, edits.isDirty());
+        }
+
+        if (gizmoFrom != null && frame == 60) {
+            edits.undo();
+            System.out.printf("SELFTEST gizmo: undone x=%.2f, dirty=%s (one step)%n", position(edits, item).x, edits.isDirty());
+        }
+    }
+
+    private org.joml.Vector3f position(final SceneEditService edits, final io.github.trimax.venta.studio.model.outline.OutlineItem item) {
+        return EntryUtil.getVector(edits.getDocument().getEntry(item.kind(), item.index()), EntryUtil.POSITION, new org.joml.Vector3f());
+    }
+
+    /** A button of the mouse at a point of the viewport (in its own pixels) */
+    private MouseEvent primary(final EventType<MouseEvent> type, final double x, final double y) {
+        final var point = viewport.localToScene(x, y);
+        return new MouseEvent(type, point.getX(), point.getY(), point.getX(), point.getY(), MouseButton.PRIMARY, 1, false, false, false, false,
+                type != MouseEvent.MOUSE_RELEASED, false, false, false, false, false, null);
     }
 
     private MouseEvent mouse(final EventType<MouseEvent> type, final double x, final double y) {

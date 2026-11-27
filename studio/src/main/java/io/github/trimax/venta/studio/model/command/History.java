@@ -27,6 +27,9 @@ public final class History {
     private int saved;
     private long lastTime;
 
+    /** Whether a drag is on: its steps are one command however long it takes */
+    private boolean holding;
+
     public History() {
         this(System::currentTimeMillis);
     }
@@ -48,7 +51,7 @@ public final class History {
 
         final var previous = done.isEmpty() ? null : done.getLast();
         if (previous != null && saved != done.size() && command.mergeKey() != null && Objects.equals(previous.mergeKey(), command.mergeKey())
-                && now - lastTime <= MERGE_WINDOW) {
+                && (holding || now - lastTime <= MERGE_WINDOW)) {
             final var merged = previous.merge(command);
             if (merged != null) {
                 done.set(done.size() - 1, merged);
@@ -64,6 +67,20 @@ public final class History {
             done.removeFirst();
             saved = saved > 0 ? saved - 1 : -1;
         }
+    }
+
+    /**
+     * A drag begins: the commands of the same key that are done until {@link #release()} are one, even when the mouse rests.
+     */
+    public void hold() {
+        holding = true;
+        lastTime = 0;
+    }
+
+    /** The drag is over: the next command is a new one */
+    public void release() {
+        holding = false;
+        lastTime = 0;
     }
 
     public boolean canUndo() {

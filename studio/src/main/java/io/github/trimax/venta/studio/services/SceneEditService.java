@@ -156,6 +156,17 @@ public final class SceneEditService implements ReplaceEntryCommand.Writer, Struc
         announce();
     }
 
+    /**
+     * A drag begins: all the changes with the same field are one command until {@link #endDrag()}.
+     */
+    public void beginDrag() {
+        history.hold();
+    }
+
+    public void endDrag() {
+        history.release();
+    }
+
     public void undo() {
         history.undo();
         announceHistory();

@@ -14,6 +14,8 @@ import io.github.trimax.venta.studio.services.ProjectService;
 import io.github.trimax.venta.studio.services.PlacementService;
 import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.services.SceneService;
+import io.github.trimax.venta.engine.model.common.gizmo.GizmoMode;
+import io.github.trimax.venta.studio.services.GizmoService;
 import io.github.trimax.venta.studio.services.SelectionService;
 import io.github.trimax.venta.studio.services.UnsavedChangesService;
 import javafx.application.Application;
@@ -65,6 +67,35 @@ public final class StudioApplication extends Application implements AbstractVent
         final var selection = VentaApplication.getComponent(SelectionService.class);
         viewport.setOnPick(selection::pick);
         viewport.setOnFocus(selection::focusSelection);
+
+        final var gizmos = VentaApplication.getComponent(GizmoService.class);
+        viewport.setGizmo(new ViewportPanel.Gizmo() {
+            @Override
+            public void hover(final float x, final float y) {
+                gizmos.hover(x, y);
+            }
+
+            @Override
+            public boolean press(final float x, final float y) {
+                return gizmos.press(x, y);
+            }
+
+            @Override
+            public void drag(final float x, final float y, final boolean snap) {
+                gizmos.drag(x, y, snap);
+            }
+
+            @Override
+            public void release() {
+                gizmos.release();
+            }
+        });
+        viewport.setOnTool(key -> gizmos.setMode(switch (key) {
+            case W -> GizmoMode.Translate;
+            case E -> GizmoMode.Rotate;
+            case R -> GizmoMode.Scale;
+            default -> null;
+        }));
 
         final var edits = VentaApplication.getComponent(SceneEditService.class);
         final var placement = VentaApplication.getComponent(PlacementService.class);

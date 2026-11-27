@@ -106,6 +106,11 @@ final class EditorOverlayShaderTest {
 
     /** Draws segments with the lines program: the view is the identity, the camera looks along -z with a 90 degree field */
     private static float[][] lines(final float[] starts, final float[] ends, final float[] colors, final int count) {
+        return lines(starts, ends, colors, count, -1.f);
+    }
+
+    /** The same, with how strong a line is behind the scene (a negative value is the strength of the lines of the overlay) */
+    private static float[][] lines(final float[] starts, final float[] ends, final float[] colors, final int count, final float hiddenAlpha) {
         final var program = TestPrograms.get("editor-lines.json");
         begin();
         glUseProgram(program);
@@ -120,6 +125,8 @@ final class EditorOverlayShaderTest {
         glUniform1f(glGetUniformLocation(program, "thickness"), 4.f);
         glUniform1f(glGetUniformLocation(program, "nearPlane"), 0.1f);
         glUniform1i(glGetUniformLocation(program, "textureDepth"), 0);
+        // The program is shared by the tests, so its uniform is always set
+        glUniform1f(glGetUniformLocation(program, "hiddenAlpha"), hiddenAlpha >= 0.f ? hiddenAlpha : 0.28f);
         glUniform3fv(glGetUniformLocation(program, "segmentStart"), starts);
         glUniform3fv(glGetUniformLocation(program, "segmentEnd"), ends);
         glUniform4fv(glGetUniformLocation(program, "segmentColor"), colors);
@@ -164,6 +171,14 @@ final class EditorOverlayShaderTest {
 
         final var alpha = pixel(image, SIZE / 2, SIZE / 2)[3];
         assertTrue(alpha > 0.1f && alpha < 0.5f, "It is seen faintly: " + alpha);
+    }
+
+    @Test
+    void testLineOfAGizmoIsNotDimmedBehindTheScene() {
+        fillDepth(0.f);
+        final var image = lines(new float[]{-1.f, 0.f, -2.f}, new float[]{1.f, 0.f, -2.f}, new float[]{1.f, 0.5f, 0.25f, 1.f}, 1, 1.f);
+
+        assertEquals(1.f, pixel(image, SIZE / 2, SIZE / 2)[3], 0.02f);
     }
 
     @Test

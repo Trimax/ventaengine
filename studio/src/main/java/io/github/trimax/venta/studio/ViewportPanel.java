@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.lwjgl.system.MemoryStack;
@@ -43,6 +44,9 @@ public final class ViewportPanel extends Region {
     /** The pixels the mouse may move while a button is down and it is still a click */
     private static final double CLICK_TOLERANCE = 4.0;
 
+    /** The keys that choose the tool: Q chooses, W moves, E turns, R scales */
+    private static final java.util.Set<KeyCode> TOOL_KEYS = java.util.Set.of(KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R);
+
     private final Engine engine;
     private final VentaContext context;
     private final FlyCamera flyCamera;
@@ -68,6 +72,15 @@ public final class ViewportPanel extends Region {
     private double pressedX;
     private double pressedY;
     private boolean dragged;
+
+    /** Whether the secondary button is down: only then the keys fly the camera (as in Unity), the others are the keys of the tools */
+    private boolean flying;
+
+    /** Whether a handle of the gizmo is taken */
+    private boolean handling;
+
+    private Gizmo gizmo = new Gizmo() { };
+    private Consumer<KeyCode> onTool = key -> { };
 
     private BiConsumer<Float, Float> onPick = (x, y) -> { };
     private Runnable onFocus = () -> { };
@@ -96,6 +109,7 @@ public final class ViewportPanel extends Region {
         setMinSize(200, 150);
 
         addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
+        addEventHandler(MouseEvent.MOUSE_MOVED, this::onMouseMoved);
         addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
         addEventHandler(MouseEvent.MOUSE_RELEASED, this::onMouseReleased);
         setOnDragOver(event -> {
@@ -120,8 +134,10 @@ public final class ViewportPanel extends Region {
                 onFocus.run();
             else if (event.getCode() == KeyCode.DELETE || event.getCode() == KeyCode.BACK_SPACE)
                 onDelete.run();
-            else
+            else if (flying)
                 flyCamera.press(event.getCode());
+            else if (!event.isShortcutDown() && !event.isAltDown() && TOOL_KEYS.contains(event.getCode()))
+                onTool.accept(event.getCode());
 
             event.consume();
         });
@@ -130,8 +146,10 @@ public final class ViewportPanel extends Region {
             event.consume();
         });
         focusedProperty().addListener((observable, was, is) -> {
-            if (!is)
+            if (!is) {
+                flying = false;
                 flyCamera.releaseAll();
+            }
         });
 
         timer = new AnimationTimer() {
@@ -145,6 +163,35 @@ public final class ViewportPanel extends Region {
     /** A click in the viewport: the point is from 0 to 1 over the viewport, from its top left corner */
     public void setOnPick(final BiConsumer<Float, Float> onPick) {
         this.onPick = onPick;
+    }
+
+    /** The handles of the chosen thing: the mouse is over the viewport, takes a handle, drags it and lets it go */
+    public void setGizmo(final Gizmo gizmo) {
+        this.gizmo = gizmo;
+    }
+
+    /** A key of a tool (Q, W, E, R) is pressed while the camera is not flying */
+    public void setOnTool(final Consumer<KeyCode> onTool) {
+        this.onTool = onTool;
+    }
+
+    /**
+     * What the mouse does with the handles of the gizmo; the points are from 0 to 1 over the viewport, from its top left corner.
+     */
+    public interface Gizmo {
+        default void hover(final float x, final float y) {
+        }
+
+        /** Whether a handle is taken, then the click is not a click that chooses */
+        default boolean press(final float x, final float y) {
+            return false;
+        }
+
+        default void drag(final float x, final float y, final boolean snap) {
+        }
+
+        default void release() {
+        }
     }
 
     /** The key that deletes the chosen thing is pressed */
@@ -274,10 +321,35 @@ public final class ViewportPanel extends Region {
         pressedX = mouseX;
         pressedY = mouseY;
         dragged = false;
+
+        if (event.getButton() == MouseButton.SECONDARY)
+            flying = true;
+        else if (event.getButton() == MouseButton.PRIMARY && !event.isAltDown() && getWidth() > 0 && getHeight() > 0) {
+            final var point = sceneToLocal(event.getSceneX(), event.getSceneY());
+            handling = gizmo.press((float) (point.getX() / getWidth()), (float) (point.getY() / getHeight()));
+        }
+    }
+
+    private void onMouseMoved(final MouseEvent event) {
+        if (getWidth() > 0 && getHeight() > 0 && !flying) {
+            final var point = sceneToLocal(event.getSceneX(), event.getSceneY());
+            gizmo.hover((float) (point.getX() / getWidth()), (float) (point.getY() / getHeight()));
+        }
     }
 
     /** A click of the primary button that didn't move the mouse chooses what is under it */
     private void onMouseReleased(final MouseEvent event) {
+        if (event.getButton() == MouseButton.SECONDARY) {
+            flying = false;
+            flyCamera.releaseAll();
+        }
+
+        if (handling && event.getButton() == MouseButton.PRIMARY) {
+            handling = false;
+            gizmo.release();
+            return;
+        }
+
         if (event.getButton() == MouseButton.PRIMARY && !dragged && !event.isAltDown() && getWidth() > 0 && getHeight() > 0) {
             final var point = sceneToLocal(event.getSceneX(), event.getSceneY());
             onPick.accept((float) (point.getX() / getWidth()), (float) (point.getY() / getHeight()));
@@ -289,6 +361,14 @@ public final class ViewportPanel extends Region {
         final var deltaY = event.getSceneY() - mouseY;
         mouseX = event.getSceneX();
         mouseY = event.getSceneY();
+
+        if (handling) {
+            if (getWidth() > 0 && getHeight() > 0) {
+                final var point = sceneToLocal(event.getSceneX(), event.getSceneY());
+                gizmo.drag((float) (point.getX() / getWidth()), (float) (point.getY() / getHeight()), event.isShortcutDown());
+            }
+            return;
+        }
 
         if (Math.hypot(event.getSceneX() - pressedX, event.getSceneY() - pressedY) > CLICK_TOLERANCE)
             dragged = true;

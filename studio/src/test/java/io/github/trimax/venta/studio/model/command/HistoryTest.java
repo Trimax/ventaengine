@@ -149,6 +149,32 @@ final class HistoryTest {
     }
 
     @Test
+    void testHeldDragIsOneCommandHoweverLongTheMouseRests() {
+        history.hold();
+        history.perform(new MergeableStep("x", 0, 1));
+        clock.addAndGet(History.MERGE_WINDOW * 5);
+        history.perform(new MergeableStep("x", 1, 5));
+        history.release();
+
+        history.undo();
+
+        assertFalse(history.canUndo(), "The pause didn't split the drag");
+    }
+
+    @Test
+    void testDragThatIsLetGoIsNotMergedWithTheNext() {
+        history.hold();
+        history.perform(new MergeableStep("x", 0, 1));
+        history.release();
+        clock.addAndGet(10);
+        history.perform(new MergeableStep("x", 1, 2));
+
+        history.undo();
+
+        assertTrue(history.canUndo(), "Two commands: the first was let go");
+    }
+
+    @Test
     void testSavedCommandIsNotChangedByAMerge() {
         history.perform(new MergeableStep("x", 0, 1));
         history.markSaved();

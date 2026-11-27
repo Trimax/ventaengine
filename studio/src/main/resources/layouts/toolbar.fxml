@@ -6,9 +6,17 @@
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Tooltip?>
 <ToolBar xmlns:fx="http://javafx.com/fxml" fx:controller="io.github.trimax.venta.studio.controllers.ToolbarController">
+    <ToggleButton fx:id="selectTool" text="Select" onAction="#onSelectTool"><toggleGroup><ToggleGroup fx:id="tools"/></toggleGroup><tooltip><Tooltip text="Only choose things (Q)"/></tooltip></ToggleButton>
+    <ToggleButton fx:id="moveTool" text="Move" selected="true" toggleGroup="$tools" onAction="#onMoveTool"><tooltip><Tooltip text="Move the chosen thing by its handles (W)"/></tooltip></ToggleButton>
+    <ToggleButton fx:id="rotateTool" text="Rotate" toggleGroup="$tools" onAction="#onRotateTool"><tooltip><Tooltip text="Turn the chosen thing by its rings (E)"/></tooltip></ToggleButton>
+    <ToggleButton fx:id="scaleTool" text="Scale" toggleGroup="$tools" onAction="#onScaleTool"><tooltip><Tooltip text="Scale the chosen thing by its cubes (R)"/></tooltip></ToggleButton>
+    <ToggleButton fx:id="space" text="Global" onAction="#onSpace"><tooltip><Tooltip text="The handles go along the axes of the world (Global) or of the thing (Local); hold Shortcut while dragging to snap"/></tooltip></ToggleButton>
+    <Separator orientation="VERTICAL"/>
     <Button text="Perspective" onAction="#onPerspective"><tooltip><Tooltip text="Look at the scene from a corner"/></tooltip></Button>
     <Button text="Top" onAction="#onTop"><tooltip><Tooltip text="Look at the scene from above"/></tooltip></Button>
     <Button text="Front" onAction="#onFront"><tooltip><Tooltip text="Look at the scene along the z axis"/></tooltip></Button>
