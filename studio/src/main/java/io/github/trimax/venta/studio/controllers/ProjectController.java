@@ -1,5 +1,6 @@
 package io.github.trimax.venta.studio.controllers;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
@@ -12,6 +13,7 @@ import io.github.trimax.venta.studio.StudioSession;
 import io.github.trimax.venta.studio.model.event.ProjectFileSelectedEvent;
 import io.github.trimax.venta.studio.model.event.ProjectOpenedEvent;
 import io.github.trimax.venta.studio.model.event.StatusEvent;
+import io.github.trimax.venta.studio.services.AssetService;
 import io.github.trimax.venta.studio.services.PlacementService;
 import io.github.trimax.venta.studio.services.SceneService;
 import io.github.trimax.venta.studio.utils.FormatUtil;
@@ -22,13 +24,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import lombok.AccessLevel;
@@ -45,6 +51,7 @@ public final class ProjectController {
     private final StudioSession session;
     private final SceneService scenes;
     private final PlacementService placement;
+    private final AssetService assets;
 
     @FXML private TextField filter;
     @FXML private TreeView<Path> folders;
@@ -93,6 +100,31 @@ public final class ProjectController {
             content.putFiles(List.of(file.toFile()));
             board.setContent(content);
             event.consume();
+        });
+
+        // Files from outside the project are brought in by dropping them on the panel (not the ones that are in the project already)
+        for (final Node target : List.<Node>of(files, folders)) {
+            target.setOnDragOver(event -> {
+                if (importable(event.getDragboard()))
+                    event.acceptTransferModes(TransferMode.COPY);
+
+                event.consume();
+            });
+            target.setOnDragDropped(event -> {
+                final var imported = importable(event.getDragboard()) ? assets.importFiles(event.getDragboard().getFiles().stream().map(File::toPath).toList(), selectedFolder) : List.<Path>of();
+                event.setDropCompleted(!imported.isEmpty());
+                event.consume();
+
+                if (!imported.isEmpty())
+                    refresh();
+            });
+        }
+
+        files.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.F2) {
+                renameSelected();
+                event.consume();
+            }
         });
 
         filter.textProperty().addListener((observable, was, is) -> showFiles());
@@ -187,10 +219,31 @@ public final class ProjectController {
             }
         });
 
+        final var rename = new MenuItem("Rename...");
+        rename.setOnAction(event -> renameSelected());
+
+        final var importFiles = new MenuItem("Import Files...");
+        importFiles.setOnAction(event -> {
+            if (!assets.chooseAndImport(selectedFolder).isEmpty())
+                refresh();
+        });
+
         final var refresh = new MenuItem("Refresh");
         refresh.setOnAction(event -> refresh());
 
-        return new ContextMenu(open, reveal, copy, refresh);
+        return new ContextMenu(open, rename, importFiles, new SeparatorMenuItem(), reveal, copy, refresh);
+    }
+
+    private void renameSelected() {
+        final var file = files.getSelectionModel().getSelectedItem();
+        if (file != null && session.getProject() != null && assets.rename(file))
+            refresh();
+    }
+
+    /** Whether what is dragged over the panel is files that can be brought in: they are from outside of the project */
+    private boolean importable(final Dragboard board) {
+        return session.getProject() != null && board.hasFiles()
+                && board.getFiles().stream().noneMatch(file -> file.toPath().toAbsolutePath().normalize().startsWith(session.getProject().toAbsolutePath().normalize()));
     }
 
     private void reveal(final Path file) {

@@ -10,6 +10,7 @@ import io.github.trimax.venta.container.utils.EventUtil;
 import io.github.trimax.venta.studio.model.event.OutlineSelectionRequestEvent;
 import io.github.trimax.venta.studio.model.outline.OutlineKind;
 import io.github.trimax.venta.studio.services.PlacementService;
+import io.github.trimax.venta.studio.services.AssetService;
 import io.github.trimax.venta.studio.services.SceneApplier;
 import io.github.trimax.venta.studio.services.SceneEditService;
 import io.github.trimax.venta.studio.services.SceneService;
@@ -118,6 +119,9 @@ final class SelfTest extends AnimationTimer {
 
         if (System.getProperty("studio.recreate") != null)
             recreate();
+
+        if (System.getProperty("studio.assets") != null)
+            assets();
 
         if (System.getProperty("studio.material") != null)
             material();
@@ -456,6 +460,32 @@ final class SelfTest extends AnimationTimer {
         if (frame == 70) {
             edits.redo();
             System.out.printf("SELFTEST material: redone and saved=%s, objects=%d%n", edits.save(), scene.getObjects().size());
+        }
+    }
+
+    /** Brings a file into the project and renames an object file that the scene names: the scene is read again with the new name */
+    @SneakyThrows
+    private void assets() {
+        final var assets = VentaApplication.getComponent(AssetService.class);
+        final var edits = VentaApplication.getComponent(SceneEditService.class);
+        final var session = VentaApplication.getComponent(StudioSession.class);
+        final var scene = VentaApplication.getComponent(io.github.trimax.venta.engine.context.VentaContext.class).getSceneManager().getCurrent();
+
+        if (frame == 50) {
+            final var outside = java.nio.file.Files.createTempFile("studio-import", ".png");
+            final var imported = assets.importFiles(java.util.List.of(outside), null);
+            System.out.println("SELFTEST assets: imported " + imported.stream().map(path -> session.getProject().relativize(path).getParent()).toList());
+            java.nio.file.Files.delete(outside);
+
+            final var old = session.getProject().resolve("objects/chest-beach.json");
+            System.out.println("SELFTEST assets: renamed=" + assets.rename(old, "crate.json", false));
+            System.out.printf("SELFTEST assets: objects=%d, entry names `%s`, scene=%s, file moved=%s%n", scene.getObjects().size(),
+                    edits.getDocument().getEntry(OutlineKind.Object, 0).get("object").getAsString(), session.getScene(), java.nio.file.Files.exists(session.getProject().resolve("objects/crate.json")));
+        }
+
+        if (frame == 60) {
+            final var now = VentaApplication.getComponent(io.github.trimax.venta.engine.context.VentaContext.class).getSceneManager().getCurrent();
+            System.out.printf("SELFTEST assets: after reopening objects=%d, dirty=%s%n", now.getObjects().size(), edits.isDirty());
         }
     }
 
